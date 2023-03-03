@@ -1,20 +1,26 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Waste Tracking Service
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+See the associated [Confluence site][1] for a description of the Waste Tracking
+Project and its aims.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Getting Started
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+It's worth installing the Nx CLI: `npm install -g nx@latest`, also the [Nx
+Console][2] extension for Visual Studio Code.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Run a development server with for example:
+
+```
+nx serve waste-tracking-service
+```
+
+## Nx Workspace
+
+The repository comprises an Nx _integrated_ monorepo, so see the [Nx
+documentation][3] with respect to how to manage this.
+
+Run `nx graph` to see a diagram of the dependencies of the projects.
+
+[1]: https://eaflood.atlassian.net/wiki/spaces/WTPG/overview
+[2]: https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console
+[3]: https://nx.dev/
