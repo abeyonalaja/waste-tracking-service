@@ -10,7 +10,8 @@
       "defaultConfiguration": "production",
       "options": {
         "root": "apps/waste-tracking-service",
-        "outputPath": "dist/apps/waste-tracking-service"
+        "outputPath": "dist/apps/waste-tracking-service",
+        "generateLockfile": true
       },
       "configurations": {
         "development": {
@@ -63,7 +64,24 @@
       "options": {
         "lintFilePatterns": ["apps/waste-tracking-service/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "engine": "docker",
+        "metadata": {
+          "images": ["wts/waste-tracking-service"],
+          "load": true,
+          "tags": [
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
     }
   },
-  "tags": []
+  "tags": ["type:app"]
 }
