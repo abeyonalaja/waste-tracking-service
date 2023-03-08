@@ -26,6 +26,12 @@ param subnet object = {
 @description('Frontend IP on which Application Gateway should listen.')
 param privateIpAddress string
 
+@description('Internal Load Balancer Private IP on which Application Gateway connects to the backend.')
+param internalLbPrivateIp string
+
+@description('Application host/domain name.')
+param hostName string
+
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
@@ -57,6 +63,9 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
 var applicationGatewayName = join(
   [ env, svc, role, 'VN', envNum, padLeft(instance0, 3, '0') ], ''
 )
+
+var backendHttpSettingsName = 'appGatewayBackendHttpSettings'
+var backendPoolName = 'appGatewayBackendPool'
 
 resource applicationGateway 'Microsoft.Network/applicationGateways@2022-07-01' = {
   name: applicationGatewayName
@@ -112,11 +121,11 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-07-01' =
 
     backendAddressPools: [
       {
-        name: 'placeholder'
+        name: backendPoolName
         properties: {
           backendAddresses: [
             {
-              fqdn: 'environment.data.gov.uk'
+              ipAddress: internalLbPrivateIp
             }
           ]
         }
@@ -125,11 +134,12 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-07-01' =
 
     backendHttpSettingsCollection: [
       {
-        name: 'placeholder'
+        name: backendHttpSettingsName
         properties: {
-          pickHostNameFromBackendAddress: true
-          port: 443
-          protocol: 'Https'
+          pickHostNameFromBackendAddress: false
+          hostName: hostName
+          port: 80
+          protocol: 'Http'
         }
       }
     ]
@@ -174,14 +184,14 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-07-01' =
             id: resourceId(
               'Microsoft.Network/applicationGateways/backendAddressPools',
               applicationGatewayName,
-              'placeholder'
+              backendPoolName
             )
           }
           backendHttpSettings: {
             id: resourceId(
               'Microsoft.Network/applicationGateways/backendHttpSettingsCollection',
               applicationGatewayName,
-              'placeholder'
+              backendHttpSettingsName
             )
           }
         }
