@@ -41,7 +41,7 @@ import {
       Template type
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     What is this template for?
     </Heading>
   

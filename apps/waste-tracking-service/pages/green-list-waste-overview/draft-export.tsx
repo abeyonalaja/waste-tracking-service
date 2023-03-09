@@ -41,7 +41,7 @@ import {
       Draft exports
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     Draft exports
     </Heading>
   
