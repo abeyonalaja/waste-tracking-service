@@ -41,7 +41,7 @@ import {
       All submitted exports
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     All submitted exports
     </Heading>
   

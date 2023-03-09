@@ -41,7 +41,7 @@ import {
       Update an export with actual details
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     Update an export with actual details
     </Heading>
   

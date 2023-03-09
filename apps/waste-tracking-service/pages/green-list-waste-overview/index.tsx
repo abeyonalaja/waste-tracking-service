@@ -52,16 +52,16 @@ export function Index() {
     
                 
     <Paragraph>
-      <Link href="green-list-waste-overview/your-reference" data-testid="your-reference">{t('greenListOverview.tellExport.linkOne')}</Link>
+      <Link href="green-list-waste-overview/your-reference" id="your-reference">{t('greenListOverview.tellExport.linkOne')}</Link>
     </Paragraph>        
     <Paragraph>
-    <Link href="green-list-waste-overview/template-submit-export" data-testid="template-submit-export">{t('greenListOverview.tellExport.linkTwo')}</Link>
+    <Link href="green-list-waste-overview/template-submit-export" id="template-submit-export">{t('greenListOverview.tellExport.linkTwo')}</Link>
     </Paragraph>  
     <Paragraph>
-    <Link href="green-list-waste-overview/template-submit-csv" data-testid="template-submit-csv">{t('greenListOverview.tellExport.linkThree')}</Link>
+    <Link href="green-list-waste-overview/template-submit-csv" id="template-submit-csv">{t('greenListOverview.tellExport.linkThree')}</Link>
     </Paragraph>  
     <Paragraph>
-    <Link href="green-list-waste-overview/draft-export" data-testid="draft-export">{t('greenListOverview.tellExport.linkFour')} (6)</Link>
+    <Link href="green-list-waste-overview/draft-export" id="draft-export">{t('greenListOverview.tellExport.linkFour')} (6)</Link>
     </Paragraph>  
 
     <H4>
@@ -69,10 +69,10 @@ export function Index() {
     </H4>
 
     <Paragraph>
-    <Link href="green-list-waste-overview/update-export-with-actual-details" data-testid="update-export-with-actual-details">{t('greenListOverview.allExport.linkOne')} (6)</Link>
+    <Link href="green-list-waste-overview/update-export-with-actual-details" id="update-export-with-actual-details">{t('greenListOverview.allExport.linkOne')} (6)</Link>
     </Paragraph>        
     <Paragraph>
-    <Link href="green-list-waste-overview/check-all-submitted-exports" data-testid="check-all-submitted-exports">{t('greenListOverview.allExport.linkTwo')} (20)</Link>
+    <Link href="green-list-waste-overview/check-all-submitted-exports" id="check-all-submitted-exports">{t('greenListOverview.allExport.linkTwo')} (20)</Link>
     </Paragraph>  
     
     <H4>
@@ -80,10 +80,10 @@ export function Index() {
     </H4>
 
     <Paragraph>
-    <Link href="green-list-waste-overview/create-new-template" data-testid="create-new-template">{t('greenListOverview.templates.linkOne')}</Link>
+    <Link href="green-list-waste-overview/create-new-template" id="create-new-template">{t('greenListOverview.templates.linkOne')}</Link>
     </Paragraph>        
     <Paragraph>
-    <Link href="green-list-waste-overview/manage-your-template" data-testid="manage-your-template">{t('greenListOverview.templates.linkTwo')}</Link>
+    <Link href="green-list-waste-overview/manage-your-template" id="manage-your-template">{t('greenListOverview.templates.linkTwo')}</Link>
     </Paragraph>  
   </Main>
 

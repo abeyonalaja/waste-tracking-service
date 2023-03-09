@@ -41,7 +41,7 @@ import {
       Template submit export
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     Which template would you like to use?
     </Heading>
   

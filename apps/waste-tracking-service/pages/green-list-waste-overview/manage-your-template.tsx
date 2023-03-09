@@ -41,7 +41,7 @@ import {
       Your templates
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
         Your templates
     </Heading>
   

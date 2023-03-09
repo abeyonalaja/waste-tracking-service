@@ -61,7 +61,7 @@ const InputFieldStyled = styled(Input)`
     <GridRow>
         <GridCol setWidth="two-thirds">
 
-    <H3 data-testid="template-heading">
+    <H3 id="template-heading">
     Do you want to add your own reference to this export?
     </H3>
     <HintText>
@@ -73,13 +73,13 @@ const InputFieldStyled = styled(Input)`
     <Radio name="group1">
         Yes
     </Radio>
-    <InsetTextStyled data-testid="input1">
+    <InsetTextStyled id="input1">
 
         <Label>
             <LabelText aria-label="Enter your reference">
                 Enter your reference
             </LabelText>
-            <InputFieldStyled data-testid="input2" />
+            <InputFieldStyled id="input2" />
         </Label>
   
     </InsetTextStyled>
