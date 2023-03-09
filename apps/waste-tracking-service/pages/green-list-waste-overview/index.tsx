@@ -1,86 +1,106 @@
-
+import styled from 'styled-components'
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import {
 
-  BackLink, Breadcrumbs, Page, H1, Footer, Paragraph, Heading, Tag, SectionBreak, Main
+  BackLink, Breadcrumbs, Page, H1, Footer, Heading, Tag, SectionBreak, Main, Link, H4, PhaseBanner
   
 } from "govuk-react";
 
-
+const Paragraph = styled.div`
+  margin-bottom: 20px;
+`
+const PhaseBannerStyled = styled(PhaseBanner)`
+  margin-top: -25px;
+`;
 
 export function Index() {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.styled-components file.
-   */
+
+  const { t } = useTranslation();
+
   return (
     
 <Page>
  
-  <Tag>
-  PROTOTYPE
-  </Tag>
+<PhaseBannerStyled level={t('tag')}>
+  This part of GOV.UK is being rebuilt –{' '}
+  <Link href="https://example.com">
+    find out what that means
+  </Link>
+</PhaseBannerStyled>
+ 
   
-  <SectionBreak
-    level="LARGE"
-    visible
-  />
+
   <Breadcrumbs>
     <Breadcrumbs.Link href="/">
-    Waste tracking service
+    {t('app.title')}
     </Breadcrumbs.Link>
-    Green list waste overview
+    {t('app.channel.title')}
   </Breadcrumbs>
 
-  <Heading size="LARGE">
-  Green list waste overview
-  </Heading>
+
 
   <Main>
-  
+    <Heading size="LARGE">
+    {t('greenListOverview.heading')}
+  </Heading>
 
 
-    <Heading size="MEDIUM">
-    Tell us about an export
-    </Heading>
+    <H4>
+    {t('greenListOverview.tellExport.heading')}
+    </H4>
     
                 
     <Paragraph>
-      [Submit a single waste export](green-list-waste-overview/your-reference)
+      <Link href="green-list-waste-overview/your-reference" data-testid="your-reference">{t('greenListOverview.tellExport.linkOne')}</Link>
     </Paragraph>        
     <Paragraph>
-      [Submit a waste export from a template](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/template-submit-export" data-testid="template-submit-export">{t('greenListOverview.tellExport.linkTwo')}</Link>
     </Paragraph>  
     <Paragraph>
-      [Submit multiple exports from a CSV file](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/template-submit-csv" data-testid="template-submit-csv">{t('greenListOverview.tellExport.linkThree')}</Link>
     </Paragraph>  
     <Paragraph>
-      [Continue a draft export (6)](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/draft-export" data-testid="draft-export">{t('greenListOverview.tellExport.linkFour')} (6)</Link>
     </Paragraph>  
 
-    <Heading size="MEDIUM">
-      All exports
-    </Heading>
+    <H4>
+    {t('greenListOverview.allExport.heading')}
+    </H4>
 
     <Paragraph>
-      [Update an export with actual details (6)](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/update-export-with-actual-details" data-testid="update-export-with-actual-details">{t('greenListOverview.allExport.linkOne')} (6)</Link>
     </Paragraph>        
     <Paragraph>
-      [Check all submitted exports (20)](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/check-all-submitted-exports" data-testid="check-all-submitted-exports">{t('greenListOverview.allExport.linkTwo')} (20)</Link>
     </Paragraph>  
     
-    <Heading size="MEDIUM">
-      Templates
-    </Heading>
+    <H4>
+    {t('greenListOverview.allExport.heading')}
+    </H4>
 
     <Paragraph>
-      [Create a new template](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/create-new-template" data-testid="create-new-template">{t('greenListOverview.templates.linkOne')}</Link>
     </Paragraph>        
     <Paragraph>
-      [Manage your templates](https://en.wikipedia.org/wiki/Markdown)
+    <Link href="green-list-waste-overview/manage-your-template" data-testid="manage-your-template">{t('greenListOverview.templates.linkTwo')}</Link>
     </Paragraph>  
   </Main>
-  <Footer />
+
+  <Footer
+   meta={<><Footer.Link href="/">Accessibility statement</Footer.Link><Footer.Link href="/footer-meta-item-2">Cookies</Footer.Link><Footer.Link href="/">Privacy notice</Footer.Link><Footer.MetaCustom>Built by the{' '}<Footer.Link href="/">Government Digital Service</Footer.Link></Footer.MetaCustom></>}
+  copyright={{
+    image: {
+      height: 102,
+      src: "https://www.gov.uk//assets/static/govuk-crest-2x-f88404651d3e759ad54ebb8fa59ce10dafa0f8788571c8a9adc7597dd9823220.png",
+      width: 125
+    },
+    link: 'https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/',
+    text: 'Crown copyright'
+  }}
+ />
+
+
   </Page>
 
   

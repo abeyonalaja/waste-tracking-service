@@ -1,0 +1,17 @@
+{
+    "tag" : "PROTOTYPE" ,
+    "app.title" : "Waste tracking service" ,
+    "app.channel.title": "Green list waste overview" ,
+    "greenListOverview.heading": "Green list waste overview" ,
+    "greenListOverview.tellExport.heading": "Tell us about an export" ,
+    "greenListOverview.tellExport.linkOne": "Submit a single waste export" ,
+    "greenListOverview.tellExport.linkTwo": "Submit a waste export from a template" ,
+    "greenListOverview.tellExport.linkThree": "Submit multiple exports from a CSV file" ,
+    "greenListOverview.tellExport.linkFour": "Continue a draft export" ,
+    "greenListOverview.allExport.heading": "All exports" ,
+    "greenListOverview.allExport.linkOne": "Update an export with actual details" ,
+    "greenListOverview.allExport.linkTwo": "Check all submitted exports" ,
+    "greenListOverview.templates.heading": "Templates" ,
+    "greenListOverview.templates.linkOne": "Create a new template" ,
+    "greenListOverview.templates.linkTwo": "Manage your templates" 
+   }
