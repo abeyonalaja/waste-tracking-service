@@ -44,7 +44,7 @@ var instance0 = {
 }[primaryRegion]
 
 var containerRegistryName = join(
-  [ env, svc, role, 'CR', envNum, padLeft(instance0, 3, '0') ], ''
+  [ env, svc, role, 'CR', 2, padLeft(instance0, 3, '0') ], ''
 )
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' = {

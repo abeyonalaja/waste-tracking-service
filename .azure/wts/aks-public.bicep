@@ -98,8 +98,12 @@ param sshRsaPublicKeyValue string
 @description('Kubernetes version to be installed on AKS.')
 param kubernetesVersion string = '1.24.9'
 
-@description('References to existing Private DNS Zone.')
-param privateDnsZoneId string
+@description('''
+IP ranges authorized to contact the Kubernetes API server. 
+Passing an empty array will result in no IP restrictions. 
+If any are provided, remember to also provide the public IP of the egress Azure Firewall 
+otherwise your nodes will not be able to talk to the API server (e.g. Flux).''')
+param clusterAuthorizedIpRanges array = []
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
@@ -150,7 +154,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
   }
   properties: {
     aadProfile: {
-      enableAzureRBAC: true // isUsingAzureRBACasKubernetesRBAC
+      enableAzureRBAC: true
       managed: true
       adminGroupObjectIDs: clusterAdminGroupObjectIds
       tenantID: subscription().tenantId
@@ -171,29 +175,20 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
         osDiskSizeGB: aksAgentPoolProfiles.system.osDiskSizeGB
         osDiskType: aksAgentPoolProfiles.system.osDiskType
         osType: aksAgentPoolProfiles.system.osType
-        osSKU: 'Ubuntu'
+        osSKU: aksAgentPoolProfiles.system.osSKU
         minCount: aksAgentPoolProfiles.system.minCount
         maxCount: aksAgentPoolProfiles.system.maxCount
         vnetSubnetID: subnet.id
         enableAutoScaling: aksAgentPoolProfiles.system.enableAutoScaling
-
         type: aksAgentPoolProfiles.system.type
         mode: aksAgentPoolProfiles.system.mode
         scaleSetPriority: aksAgentPoolProfiles.system.scaleSetPriority
-
         maxPods: aksAgentPoolProfiles.system.maxPods
-
-        availabilityZones: [
-          '1'
-          '2'
-          '3'
-        ]
+        availabilityZones: aksAgentPoolProfiles.system.availabilityZones
         upgradeSettings: {
-          maxSurge: '33%'
+          maxSurge: aksAgentPoolProfiles.system.maxSurge
         }
-        nodeTaints: [
-          'CriticalAddonsOnly=true:NoSchedule'
-        ]
+        nodeTaints: aksAgentPoolProfiles.system.nodeTaints
       }
       {
         name: 'npuser01'
@@ -228,8 +223,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
       }
     ]
     apiServerAccessProfile: {
-      enablePrivateCluster: true
-      privateDNSZone: privateDnsZoneId
+      enablePrivateCluster: false
+      authorizedIPRanges: clusterAuthorizedIpRanges
     }
     autoUpgradeProfile: {
       upgradeChannel: 'stable'

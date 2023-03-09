@@ -136,7 +136,7 @@ resource kubeletManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentitie
 }
 
 var containerRegistryName = join(
-  [ env, svc, 'HUB', 'CR', envNum, padLeft(instance0, 3, '0') ], ''
+  [ env, svc, 'HUB', 'CR', 2, padLeft(instance0, 3, '0') ], ''
 )
 
 resource acr 'Microsoft.ContainerRegistry/registries@2022-12-01' existing = {

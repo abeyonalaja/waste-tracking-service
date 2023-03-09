@@ -49,12 +49,6 @@ param addressSpace object = {
   }
 }
 
-@description('Internal Load Balancer Private IP on which Application Gateway connects to the backend.')
-param internalLbPrivateIp string
-
-@description('Application host/domain name.')
-param hostName string
-
 @description('''
   The CSC tagging policy requires all resources to be tagged with a created
   date. A default value is provided but a value will have to be supplied in
@@ -62,9 +56,15 @@ param hostName string
 ''')
 param createdDate string = utcNow('yyyyMMdd')
 
-@secure()
-@description('Admin password assigned to created Virtual Machines.')
-param vmssAdminPassword string
+// @secure()
+// @description('Admin password assigned to created Virtual Machines.')
+// param vmssAdminPassword string
+
+// @description('Internal Load Balancer Private IP on which Application Gateway connects to the backend.')
+// param internalLbPrivateIp string
+
+// @description('Application host/domain name.')
+// param hostName string
 
 module tags '../util/tags.bicep' = {
   name: 'hub-tags'
@@ -96,33 +96,34 @@ module dns './dns.bicep' = {
   }
 }
 
-module management './management.bicep' = {
-  name: 'hub-management'
-  params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
-    primaryRegion: primaryRegion
-    adminPassword: vmssAdminPassword
-    subnets: network.outputs.subnets
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
-  }
-}
+// TODO: 2022-03-09 To match CCoE patterns; currently bastion host and app gateway resource creation are blocked by policy
+// module management './management.bicep' = {
+//   name: 'hub-management'
+//   params: {
+//     env: environment
+//     svc: serviceCode
+//     envNum: environmentNumber
+//     primaryRegion: primaryRegion
+//     adminPassword: vmssAdminPassword
+//     subnets: network.outputs.subnets
+//     defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
+//   }
+// }
 
-module gateway './gateway.bicep' = {
-  name: 'hub-gateway'
-  params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
-    primaryRegion: primaryRegion
-    privateIpAddress: '${take(addressSpace.subnets.gateway, lastIndexOf(addressSpace.subnets.gateway, '.'))}.4'
-    subnet: network.outputs.subnets.gateway
-    internalLbPrivateIp: internalLbPrivateIp
-    hostName: hostName
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'WEB' })
-  }
-}
+// module gateway './gateway.bicep' = {
+//   name: 'hub-gateway'
+//   params: {
+//     env: environment
+//     svc: serviceCode
+//     envNum: environmentNumber
+//     primaryRegion: primaryRegion
+//     privateIpAddress: '${take(addressSpace.subnets.gateway, lastIndexOf(addressSpace.subnets.gateway, '.'))}.4'
+//     subnet: network.outputs.subnets.gateway
+//     internalLbPrivateIp: internalLbPrivateIp
+//     hostName: hostName
+//     defaultTags: union(tags.outputs.defaultTags, { Tier: 'WEB' })
+//   }
+// }
 
 module data './data.bicep' = {
   name: 'hub-data'

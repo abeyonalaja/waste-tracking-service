@@ -32,18 +32,31 @@ param environmentNumber int = 1
 param primaryRegion string = 'uksouth'
 
 @description('''
-  CIDR prefixes for the created virtual network and its subnet. See the default
-  parameters file for an example. Subnets are:
-  - _ingress_ - Recommend _/24_ prefix.
-  - _aks_ - Recommended _/24_ prefix.
-  - _data_ - Recommend _/24_ prefix.
+  CIDR prefixes for the created virtual networks and their subnets.
 ''')
-param addressSpace object = {
-  virtualNetwork: null
-  subnets: {
-    ingress: null
-    aks: null
-    data: null
+param addressSpaces object = {
+  hub: {
+    virtualNetwork: null
+    subnets: {
+      gateway: null
+      endpoints: null
+      ado: null
+      bastion: null
+    }
+  }
+  security: {
+    virtualNetwork: null
+    subnets: {
+      firewall: null
+    }
+  }
+  spoke: {
+    virtualNetwork: null
+    subnets: {
+      ingress: null
+      aks: null
+      data: null
+    }
   }
 }
 
@@ -53,6 +66,16 @@ param addressSpace object = {
   order to have idempotent deployments.
 ''')
 param createdDate string = utcNow('yyyyMMdd')
+
+// @secure()
+// @description('Admin password assigned to created Virtual Machines.')
+// param vmssAdminPassword string
+
+// @description('Internal Load Balancer Private IP on which Application Gateway connects to the backend.')
+// param internalLbPrivateIp string
+
+// @description('Application host/domain name.')
+// param hostName string
 
 @description('Firewall Private IP address for egress configuration.')
 param firewallPrivateIp string
@@ -142,7 +165,7 @@ If any are provided, remember to also provide the public IP of the egress Azure 
 otherwise your nodes will not be able to talk to the API server (e.g. Flux).''')
 param clusterAuthorizedIpRanges array = []
 
-module tags '../util/tags.bicep' = {
+module tags './util/tags.bicep' = {
   name: 'hub-tags'
   params: {
     environment: environment
@@ -152,121 +175,45 @@ module tags '../util/tags.bicep' = {
   }
 }
 
-module network './network.bicep' = {
-  name: 'wts-network'
+module hub './hub/main.bicep' = {
+  name: 'wts-hub'
   params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
+    environment: environment
+    serviceCode: serviceCode
+    environmentNumber: environmentNumber
     primaryRegion: primaryRegion
-    addressSpace: addressSpace
+    addressSpace: addressSpaces.hub
+    createdDate: createdDate
+
+    // Config needed for App Gateway and VMSS
+    // internalLbPrivateIp: internalLbPrivateIp
+    // hostName: hostName
+    // vmssAdminPassword: vmssAdminPassword
+  }
+}
+
+module spoke './wts/main.bicep' = {
+  name: 'wts-spoke'
+  dependsOn: [
+    hub
+  ]
+  params: {
+    environment: environment
+    serviceCode: serviceCode
+    environmentNumber: environmentNumber
+    primaryRegion: primaryRegion
+    addressSpace: addressSpaces.spoke
+    createdDate: createdDate
     firewallPrivateIp: firewallPrivateIp
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
-module wtsToHubVnetPeering './vnetPeering.bicep' = {
-  name: 'peerWtsToHub'
-  scope: resourceGroup()
-  params: {
-    localVirtualNetworkName: network.outputs.virtualNetwork.name
-    remoteVirtualNetworkName: hubVirtualNetworkName
-    remoteVirtualNetworkResourceGroupName: resourceGroup().name
-    role: 'WTH'
-  }
-}
-
-module hubToWtsVnetPeering './vnetPeering.bicep' = {
-  name: 'peerHubToWts'
-  scope: resourceGroup()
-  params: {
-    localVirtualNetworkName: hubVirtualNetworkName
-    remoteVirtualNetworkName: network.outputs.virtualNetwork.name
-    remoteVirtualNetworkResourceGroupName: resourceGroup().name
-    role: 'HTW'
-  }
-}
-
-module wtsToSecurityVnetPeering './vnetPeering.bicep' = {
-  name: 'peerWtsToSecurity'
-  scope: resourceGroup()
-  params: {
-    localVirtualNetworkName: network.outputs.virtualNetwork.name
-    remoteVirtualNetworkName: securityVirtualNetworkName
-    remoteVirtualNetworkResourceGroupName: securityResourceGroupName
-    role: 'WTS'
-  }
-}
-
-module securityToWtsVnetPeering './vnetPeering.bicep' = {
-  name: 'peerSecurityToWts'
-  scope: resourceGroup(securityResourceGroupName)
-  params: {
-    localVirtualNetworkName: securityVirtualNetworkName
-    remoteVirtualNetworkName: network.outputs.virtualNetwork.name
-    remoteVirtualNetworkResourceGroupName: resourceGroup().name
-    role: 'STW'
-  }
-}
-
-// For public cluster this is not needed:
-module dns './dns.bicep' = {
-  name: 'wts-dns'
-  params: {
     hubVirtualNetworkName: hubVirtualNetworkName
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
-module identity './identity.bicep' = {
-  name: 'wts-identity'
-  params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
-    primaryRegion: primaryRegion
+    securityResourceGroupName: securityResourceGroupName
+    securityVirtualNetworkName: securityVirtualNetworkName
     clusterAdminGroupObjectId: clusterAdminGroupObjectId
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'IDENTITY' })
-  }
-}
-
-// module aks './aks.bicep' = {
-module aks './aks-public.bicep' = {
-  name: 'wts-aks'
-  params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
-    primaryRegion: primaryRegion
-
-    subnet: network.outputs.subnets.aks
-
-    clusterAdminGroupObjectIds: identity.outputs.clusterAdminGroupObjectIds
-
-    identities: {
-      aks: {
-        id: identity.outputs.identities.aks.id
-      }
-      kubelet: {
-        id: identity.outputs.identities.kubelet.id
-      }
-    }
-
-    // privateDnsZoneId: dns.outputs.privateDnsZoneId
-
-    clusterAuthorizedIpRanges: clusterAuthorizedIpRanges
-
     aksNetworkProfile: aksNetworkProfile
-    
     aksAgentPoolProfiles: aksAgentPoolProfiles
-    
     linuxAdminUsername: linuxAdminUsername
-
     sshRsaPublicKeyValue: sshRsaPublicKeyValue
-    
     kubernetesVersion: kubernetesVersion
-
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'AKS' })
+    clusterAuthorizedIpRanges: clusterAuthorizedIpRanges
   }
 }
-

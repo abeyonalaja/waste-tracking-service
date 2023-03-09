@@ -47,6 +47,9 @@ resource firewallPolicy 'Microsoft.Network/firewallPolicies@2022-01-01'= {
 resource networkRuleCollectionGroup 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2022-01-01' = {
   parent: firewallPolicy
   name: 'DefaultNetworkRuleCollectionGroup'
+  dependsOn: [
+    firewallPolicy
+  ]
   properties: {
     priority: 100
     ruleCollections: [
@@ -147,6 +150,7 @@ resource applicationRuleCollectionGroup 'Microsoft.Network/firewallPolicies/rule
   parent: firewallPolicy
   name: 'DefaultApplicationRuleCollectionGroup'
   dependsOn: [
+    firewallPolicy
     networkRuleCollectionGroup
   ]
   properties: {
@@ -294,6 +298,12 @@ resource firewall 'Microsoft.Network/azureFirewalls@2021-03-01' = {
   name: firewallName
   location: primaryRegion
   zones: ((length(availabilityZones) == 0) ? null : availabilityZones)
+  dependsOn: [
+    firewallPolicy
+    networkRuleCollectionGroup
+    applicationRuleCollectionGroup
+    firewallPublicIp
+  ]
   properties: {
     ipConfigurations: [
       {
