@@ -4,6 +4,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+ BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
 steps:
 
 - task: AzureCLI@1
@@ -22,6 +24,6 @@ steps:
    npx nx container waste-tracking-service
   displayName: 'nx container waste-tracking-service'
 - script: |
-   docker image tag docker.io/wts/waste-tracking-service:build-and-push-container-pipeline sndwtshubcr2401.azurecr.io/demo:1.0
+   docker image tag docker.io/wts/waste-tracking-service:$(BRANCH_NAME) sndwtshubcr2401.azurecr.io/demo:1.0
    docker image push "sndwtshubcr2401.azurecr.io/demo:1.0"
   displayName: Docker list, tag and push
