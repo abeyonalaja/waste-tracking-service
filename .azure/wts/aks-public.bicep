@@ -143,6 +143,25 @@ var logAnalyticsWorkspaceName = join(
   [ env, svc, 'HUB', 'LA', envNum, padLeft(instance0, 3, '0') ], ''
 )
 
+var loadBalancerPublicIpName = join(
+  [ env, svc, 'ALB', 'IP', envNum, padLeft(instance0, 3, '0') ], ''
+)
+
+resource loadBalancerPublicIp 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
+  name: loadBalancerPublicIpName
+  location: primaryRegion
+
+  sku: {
+    name: 'Standard'
+  }
+
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+
+  tags: union(defaultTags, { Name: loadBalancerPublicIpName })
+}
+
 resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
   name: aksName
   location: primaryRegion

@@ -175,28 +175,28 @@ module tags './util/tags.bicep' = {
   }
 }
 
-module hub './hub/main.bicep' = {
-  name: 'wts-hub'
-  params: {
-    environment: environment
-    serviceCode: serviceCode
-    environmentNumber: environmentNumber
-    primaryRegion: primaryRegion
-    addressSpace: addressSpaces.hub
-    createdDate: createdDate
+// module hub './hub/main.bicep' = {
+//   name: 'wts-hub'
+//   params: {
+//     environment: environment
+//     serviceCode: serviceCode
+//     environmentNumber: environmentNumber
+//     primaryRegion: primaryRegion
+//     addressSpace: addressSpaces.hub
+//     createdDate: createdDate
 
-    // Config needed for App Gateway and VMSS
-    // internalLbPrivateIp: internalLbPrivateIp
-    // hostName: hostName
-    // vmssAdminPassword: vmssAdminPassword
-  }
-}
+//     // Config needed for App Gateway and VMSS
+//     // internalLbPrivateIp: internalLbPrivateIp
+//     // hostName: hostName
+//     // vmssAdminPassword: vmssAdminPassword
+//   }
+// }
 
 module spoke './wts/main.bicep' = {
   name: 'wts-spoke'
-  dependsOn: [
-    hub
-  ]
+  // dependsOn: [
+  //   hub
+  // ]
   params: {
     environment: environment
     serviceCode: serviceCode
@@ -214,6 +214,6 @@ module spoke './wts/main.bicep' = {
     linuxAdminUsername: linuxAdminUsername
     sshRsaPublicKeyValue: sshRsaPublicKeyValue
     kubernetesVersion: kubernetesVersion
-    clusterAuthorizedIpRanges: clusterAuthorizedIpRanges
+    // clusterAuthorizedIpRanges: clusterAuthorizedIpRanges
   }
 }

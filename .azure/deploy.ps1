@@ -41,5 +41,4 @@ az deployment group create `
     --parameters ".\main.params.json" `
     --parameters linuxAdminUsername=$SshKeyFileUsername `
     --parameters sshRsaPublicKeyValue=$SshPublicKey `
-    --parameters clusterAuthorizedIpRanges="($FwPublicIp,$LocalMachineIp)" `
     --debug

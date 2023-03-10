@@ -19,6 +19,7 @@ param virtualNetworks array = [
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
+// TODO: Link DNS zone with spoke to allow access to ACR through private endpoint
 resource privatelink_azurecr_io 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: 'privatelink.azurecr.io'
   location: 'global'
