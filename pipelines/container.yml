@@ -1,0 +1,27 @@
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: AzureCLI@1
+  displayName: Login to ACR and list the registry
+  inputs:
+    connectedServiceNameARM: 'AZD-WTS-SND1'
+    scriptLocation: 'inlineScript'   
+    inlineScript: |
+     az acr login -n SNDWTSHUBCR2401
+     
+
+- script: |
+   npm ci
+  displayName: 'npm ci'
+- script: |
+   npx nx container waste-tracking-service
+  displayName: 'nx container waste-tracking-service'
+- script: |
+   docker image tag docker.io/wts/waste-tracking-service:build-and-push-container-pipeline sndwtshubcr2401.azurecr.io/demo:1.0
+   docker image push "sndwtshubcr2401.azurecr.io/demo:1.0"
+  displayName: Docker list, tag and push

@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+source 'https://rubygems.org'
+
+gem 'cucumber', '~> 4.1.0'
+gem 'cucumber-core', '~> 7.1.0'
+gem 'cucumber-expressions', '~> 8.3.0'
+gem 'rspec-expectations', '~> 3.9.2'
+gem 'concurrent-ruby', '~> 1.1.6'
+
+gem 'httparty', '~> 0.18.1'
+gem 'json', '~> 2.3.1'
+gem 'guid'
+gem 'uuidtools', '~> 2.2.0'
+gem 'rubocop'
+gem 'rubocop-performance'
+gem 'activerecord', '~>5.1'
+gem 'arel','~>8.0'
+gem 'yaml','~> 0.2.0'
+gem 'psych', '~> 4.0','>=4.0.4'
