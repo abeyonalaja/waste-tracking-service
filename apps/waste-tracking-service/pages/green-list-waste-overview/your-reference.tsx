@@ -129,10 +129,6 @@ const InputFieldStyled = styled(Input)`
     <Footer />
     </Page>
   
-    
-     
-        
-     
     );
   }
   

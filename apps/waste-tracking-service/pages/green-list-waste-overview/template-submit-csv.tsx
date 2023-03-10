@@ -41,7 +41,7 @@ import {
       Upload multiple exports
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" data-testid="template-heading">
+    <Heading size="MEDIUM" id="template-heading">
     Upload multiple waste exports
     </Heading>
   
