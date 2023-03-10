@@ -171,60 +171,42 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
         osDiskSizeGB: aksAgentPoolProfiles.system.osDiskSizeGB
         osDiskType: aksAgentPoolProfiles.system.osDiskType
         osType: aksAgentPoolProfiles.system.osType
-        osSKU: 'Ubuntu'
+        osSKU: aksAgentPoolProfiles.system.osSKU
         minCount: aksAgentPoolProfiles.system.minCount
         maxCount: aksAgentPoolProfiles.system.maxCount
         vnetSubnetID: subnet.id
         enableAutoScaling: aksAgentPoolProfiles.system.enableAutoScaling
-
         type: aksAgentPoolProfiles.system.type
         mode: aksAgentPoolProfiles.system.mode
         scaleSetPriority: aksAgentPoolProfiles.system.scaleSetPriority
-
         maxPods: aksAgentPoolProfiles.system.maxPods
-
-        availabilityZones: [
-          '1'
-          '2'
-          '3'
-        ]
+        availabilityZones: aksAgentPoolProfiles.system.availabilityZones
         upgradeSettings: {
-          maxSurge: '33%'
+          maxSurge: aksAgentPoolProfiles.system.maxSurge
         }
-        nodeTaints: [
-          'CriticalAddonsOnly=true:NoSchedule'
-        ]
+        nodeTaints: aksAgentPoolProfiles.system.nodeTaints
       }
       {
-        name: 'npuser01'
-        count: 2
-        vmSize: 'Standard_DS3_v2'
-        osDiskSizeGB: 120
-        osDiskType: 'Ephemeral'
-        osType: 'Linux'
-        osSKU: 'Ubuntu'
-        minCount: 2
-        maxCount: 5
+        name: aksAgentPoolProfiles.user.name
+        count: aksAgentPoolProfiles.user.count
+        vmSize: aksAgentPoolProfiles.user.vmSize
+        osDiskSizeGB: aksAgentPoolProfiles.user.osDiskSizeGB
+        osDiskType: aksAgentPoolProfiles.user.osDiskType
+        osType: aksAgentPoolProfiles.user.osType
+        osSKU: aksAgentPoolProfiles.user.osSKU
+        minCount: aksAgentPoolProfiles.user.minCount
+        maxCount: aksAgentPoolProfiles.user.maxCount
         vnetSubnetID: subnet.id
-        enableAutoScaling: true
-        enableCustomCATrust: false
-        enableFIPS: false
-        enableEncryptionAtHost: false
-        type: 'VirtualMachineScaleSets'
-        mode: 'User'
-        scaleSetPriority: 'Regular'
-        scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: kubernetesVersion
-        enableNodePublicIP: false
-        maxPods: 30
-        availabilityZones: [
-          '1'
-          '2'
-          '3'
-        ]
+        enableAutoScaling: aksAgentPoolProfiles.user.enableAutoScaling
+        type: aksAgentPoolProfiles.user.type
+        mode: aksAgentPoolProfiles.user.mode
+        scaleSetPriority: aksAgentPoolProfiles.user.scaleSetPriority
+        maxPods: aksAgentPoolProfiles.user.maxPods
+        availabilityZones: aksAgentPoolProfiles.user.availabilityZones
         upgradeSettings: {
-          maxSurge: '33%'
+          maxSurge: aksAgentPoolProfiles.user.maxSurge
         }
+        nodeTaints: aksAgentPoolProfiles.user.nodeTaints
       }
     ]
     apiServerAccessProfile: {
