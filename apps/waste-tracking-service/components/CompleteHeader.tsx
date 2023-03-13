@@ -45,7 +45,7 @@ export class CompleteHeader extends Component {
       <>
 <TopNavStyled
   company={<TopNavAnchor href="https://example.com" target="new"><TopNav.IconTitle icon={<CrownIcon height="32" width="36"/>}>GOV.UK</TopNav.IconTitle></TopNavAnchor>}
-  serviceTitle={<TopNav.NavLink href="https://example.com" target="new">Export green list waste</TopNav.NavLink>}
+  serviceTitle={<TopNav.NavLink href="https://example.com" target="new" aria-roledescription='heading'>Export green list waste</TopNav.NavLink>}
  
 >
   
@@ -66,3 +66,4 @@ export class CompleteHeader extends Component {
   }
 
 }
+export default CompleteHeader;

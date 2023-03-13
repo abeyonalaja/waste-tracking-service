@@ -40,3 +40,4 @@ export  class CompleteFooter extends Component {
   }
 
 }
+export default CompleteFooter;
