@@ -43,7 +43,7 @@ export function Index() {
 
 
   
-    <Heading size="LARGE" data-testid="main-heading" role="heading">
+  <Heading size="LARGE" role="heading">
     {t('greenListOverview.heading')}
   </Heading>
 

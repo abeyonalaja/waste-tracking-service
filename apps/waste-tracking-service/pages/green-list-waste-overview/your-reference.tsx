@@ -10,7 +10,7 @@ import {
     Label,
     LabelText,
     HintText,
-    H2,
+    Heading,
     Button,
     FormGroup,
     GridRow,
@@ -69,9 +69,9 @@ const InputFieldStyled = styled(Input)`
     <GridRow>
         <GridCol setWidth="two-thirds">
 
-    <H2>
-    <span id='template-heading'>{t('yourReference.title')}</span>
-    </H2>
+    <Heading size="LARGE" role="heading" id='template-heading'>
+      {t('yourReference.title')}
+    </Heading>
     <HintText>
     {t('yourReference.description')}
     </HintText>
