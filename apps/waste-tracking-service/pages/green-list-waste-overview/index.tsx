@@ -78,7 +78,7 @@ export function Index() {
     </Paragraph>  
     
     <H4>
-    {t('greenListOverview.allExport.heading')}
+    {t('greenListOverview.templates.heading')}
     </H4>
 
     <Paragraph>
