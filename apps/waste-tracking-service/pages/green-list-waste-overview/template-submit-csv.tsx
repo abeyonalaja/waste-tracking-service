@@ -1,62 +1,58 @@
-import styled from 'styled-components'
-import CrownIcon from '@govuk-react/icon-crown';
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import {
 
-    BackLink, Breadcrumbs, Page, H1, Footer, Paragraph, Heading, Tag, SectionBreak, Main, TopNav, 
+    Breadcrumbs,
+    Heading,
+    Main,
+    GridCol,
+    GridRow
     
   } from "govuk-react";
-  
-  const PageStyled = styled(Page)`
- .bottom-nav-wrapper {
-    width: 100%;
- }
- .czzhCh {
-    width: 100%;
- }
-`;
+import {CompleteHeader} from '../../components/CompleteHeader'
+import {CompleteFooter} from '../../components/CompleteFooter'  
+
   
   export function TemplateSubmitCSV() {
 
-    
+    const { t } = useTranslation();
 
     return (
       
-  <Page>
-  
-    <Tag>
-    PROTOTYPE
-    </Tag>
-  
-    <SectionBreak
-      level="LARGE"
-      visible
-    />
+<div>
+
+<CompleteHeader />
+<Main>
+    
     <Breadcrumbs>
       <Breadcrumbs.Link href="/">
-      Waste tracking service
+      {t('app.title')}
       </Breadcrumbs.Link>
       <Breadcrumbs.Link href="/green-list-waste-overview">
-      Green list waste overview
+      {t('app.channel.title')}
       </Breadcrumbs.Link>
-      Upload multiple exports
+      {t('templateSubmitCSV.breadcrumb')}
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" id="template-heading">
-    Upload multiple waste exports
-    </Heading>
-  
-    <Page.Main>
     
-  
-  
+  </Main>
+    <Main>
+
+
+  <GridRow>
+      <GridCol setWidth="two-thirds">
    
-    </Page.Main>
-    <Footer />
-    </Page>
-  
-    
+        <Heading size="MEDIUM" id="template-heading">
+        {t('templateSubmitCSV.title')}
+        </Heading>
+      
+      </GridCol>
+  </GridRow>
+   
+    </Main>
+    <CompleteFooter />
      
-        
+    </div>  
      
     );
   }

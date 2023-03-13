@@ -1,25 +1,23 @@
 import styled from 'styled-components'
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
+import {CompleteHeader} from '../../components/CompleteHeader'
+import {CompleteFooter} from '../../components/CompleteFooter'
+
 import {
 
   Breadcrumbs,
-  Page,
-  Footer,
   Heading,
   Main,
   Link,
   H4,
-  PhaseBanner
   
 } from "govuk-react";
 
 const Paragraph = styled.div`
   margin-bottom: 20px;
 `
-const PhaseBannerStyled = styled(PhaseBanner)`
-  margin-top: -25px;
-`;
+
 
 export function Index() {
 
@@ -27,17 +25,14 @@ export function Index() {
 
   return (
     
-<Page>
+<div>
+
+<CompleteHeader />
  
-<PhaseBannerStyled level={t('tag')}>
-  This part of GOV.UK is being rebuilt –{' '}
-  <Link href="https://example.com">
-    find out what that means
-  </Link>
-</PhaseBannerStyled>
+
  
   
-
+<Main>
   <Breadcrumbs>
     <Breadcrumbs.Link href="/">
     {t('app.title')}
@@ -47,8 +42,8 @@ export function Index() {
 
 
 
-  <Main>
-    <Heading size="LARGE">
+  
+    <Heading size="LARGE" data-testid="main-heading" role="heading">
     {t('greenListOverview.heading')}
   </Heading>
 
@@ -94,21 +89,10 @@ export function Index() {
     </Paragraph>  
   </Main>
 
-  <Footer
-   meta={<><Footer.Link href="/">Accessibility statement</Footer.Link><Footer.Link href="/footer-meta-item-2">Cookies</Footer.Link><Footer.Link href="/">Privacy notice</Footer.Link><Footer.MetaCustom>Built by the{' '}<Footer.Link href="/">Government Digital Service</Footer.Link></Footer.MetaCustom></>}
-  copyright={{
-    image: {
-      height: 102,
-      src: "https://www.gov.uk//assets/static/govuk-crest-2x-f88404651d3e759ad54ebb8fa59ce10dafa0f8788571c8a9adc7597dd9823220.png",
-      width: 125
-    },
-    link: 'https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/',
-    text: 'Crown copyright'
-  }}
- />
+  <CompleteFooter />
 
 
-  </Page>
+  </div>
 
   
    

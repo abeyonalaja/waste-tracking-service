@@ -1,65 +1,55 @@
-import styled from 'styled-components'
-import CrownIcon from '@govuk-react/icon-crown';
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import {
 
-    BackLink, Breadcrumbs, Page, H1, Footer, Paragraph, Heading, Tag, SectionBreak, Main, TopNav, 
+     BackLink,
+     Heading,
+     Main,
+     GridRow,
+     GridCol,
     
   } from "govuk-react";
-  
-  const PageStyled = styled(Page)`
- .bottom-nav-wrapper {
-    width: 100%;
- }
- .czzhCh {
-    width: 100%;
- }
-`;
-  
+  import {CompleteHeader} from '../../components/CompleteHeader'
+  import {CompleteFooter} from '../../components/CompleteFooter'  
+
   export function ManageTemplate() {
 
+ 
     
+    const { t } = useTranslation();  
 
     return (
       
-  <Page>
+      <div>
 
-    <Tag>
-    PROTOTYPE
-    </Tag>
-  
-    <SectionBreak
-      level="LARGE"
-      visible
-    />
-    <Breadcrumbs>
-      <Breadcrumbs.Link href="/">
-      Waste tracking service
-      </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
-      Green list waste overview
-      </Breadcrumbs.Link>
-      Your templates
-    </Breadcrumbs>
-  
-    <Heading size="MEDIUM" id="template-heading">
-        Your templates
-    </Heading>
-  
-    <Page.Main>
-    
-  
-  
-   
-    </Page.Main>
-    <Footer />
-    </Page>
-  
-    
-     
+      <CompleteHeader />
+      <Main>
+          
+      <BackLink onClick={function noRefCheck(){history.back()}}>
+    {t('back')}
+    </BackLink>
         
-     
-    );
-  }
-  
+
+        <GridRow>
+            <GridCol setWidth="two-thirds">
+        
+          
+            <Heading size="MEDIUM" id="template-heading">
+              {t('manageYourTemplates.title')}
+              </Heading>
+            
+            </GridCol>
+        </GridRow>
+        
+        
+         
+      
+          </Main>
+          <CompleteFooter />
+           
+          </div>    
+           
+          );
+        }
   export default ManageTemplate;
   

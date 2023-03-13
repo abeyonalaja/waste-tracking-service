@@ -18,7 +18,7 @@ export function Index() {
 
   return (
     
-<Page>
+<div>
 
 <PhaseBanner level={t('tag')}>
   This part of GOV.UK is being rebuilt –{' '}
@@ -63,10 +63,10 @@ export function Index() {
     text: 'Crown copyright'
   }}
  />
-  </Page>
+  
 
   
-   
+  </div>  
       
    
   );

@@ -1,62 +1,48 @@
 import styled from 'styled-components'
-import CrownIcon from '@govuk-react/icon-crown';
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
+import {CompleteHeader} from '../../components/CompleteHeader'
+import {CompleteFooter} from '../../components/CompleteFooter'
 import {
 
-    BackLink, Breadcrumbs, Page, H1, Footer, Paragraph, Heading, Tag, SectionBreak, Main, TopNav, 
-    
+    BackLink,
+    Page,
+    Heading,
+    Main,
+
+
   } from "govuk-react";
   
-  const PageStyled = styled(Page)`
- .bottom-nav-wrapper {
-    width: 100%;
- }
- .czzhCh {
-    width: 100%;
- }
-`;
+ 
   
   export function TemplateSubmitExport() {
 
-    
+    const { t } = useTranslation();
 
     return (
       
-  <Page>
+<div>
 
-    <Tag>
-    PROTOTYPE
-    </Tag>
-  
-    <SectionBreak
-      level="LARGE"
-      visible
-    />
-    <Breadcrumbs>
-      <Breadcrumbs.Link href="/">
-      Waste tracking service
-      </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
-      Green list waste overview
-      </Breadcrumbs.Link>
-      Template submit export
-    </Breadcrumbs>
+  <CompleteHeader />
+  <Main>
+    
+    <BackLink onClick={function noRefCheck(){history.back()}}>
+    {t('back')}
+    </BackLink>
   
     <Heading size="MEDIUM" id="template-heading">
-    Which template would you like to use?
+    {t('templateSubmitExport.title')}
     </Heading>
   
-    <Page.Main>
-    
+   
   
   
    
-    </Page.Main>
-    <Footer />
-    </Page>
-  
-    
-     
-        
+  </Main>
+  <CompleteFooter />
+
+
+</div> 
      
     );
   }

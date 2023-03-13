@@ -1,18 +1,16 @@
 import styled from 'styled-components'
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import {
 
     Breadcrumbs,
-    Page,
-    Footer,
     Radio,
-    Tag,
-    SectionBreak,
     Main,
     InsetText,
     Label,
     LabelText,
     HintText,
-    H3,
+    H2,
     Button,
     FormGroup,
     GridRow,
@@ -20,7 +18,8 @@ import {
     Input
     
   } from "govuk-react";
-  
+import {CompleteHeader} from '../../components/CompleteHeader'
+import {CompleteFooter} from '../../components/CompleteFooter'
   
 
   const InsetTextStyled = styled(InsetText)`
@@ -42,70 +41,63 @@ const InputFieldStyled = styled(Input)`
 `;
   
   export function YourReference() {
-    /*
-     * Replace the elements below with your own.
-     *
-     * Note: The corresponding styles are in the ./index.styled-components file.
-     */
+
+    const { t } = useTranslation();
+
     return (
       
-  <Page>
-   
-    <Tag>
-    PROTOTYPE
-    </Tag>
-  
-    <SectionBreak
-      level="LARGE"
-      visible
-    />
+<div>
+
+<CompleteHeader />
+<Main>
+    
     <Breadcrumbs>
       <Breadcrumbs.Link href="/">
-      Waste tracking service
+      {t('app.title')}
       </Breadcrumbs.Link>
       <Breadcrumbs.Link href="/green-list-waste-overview">
-      Green list waste overview
+      {t('app.channel.title')}
       </Breadcrumbs.Link>
-      Your reference
+      {t('yourReference.breadcrumb')}
     </Breadcrumbs>
   
     
-  
+  </Main>
     <Main>
 
 
     <GridRow>
         <GridCol setWidth="two-thirds">
 
-    <H3 id="template-heading">
-    Do you want to add your own reference to this export?
-    </H3>
+    <H2>
+    <span id='template-heading'>{t('yourReference.title')}</span>
+    </H2>
     <HintText>
-        Your reference number should be unique to the shipment. You can use it to find your submission.
+    {t('yourReference.description')}
     </HintText>
   
             <div>
             <FormGroup> 
     <Radio name="group1">
-        Yes
+    {t('radio.yes')}
     </Radio>
-    <InsetTextStyled id="input1">
 
+
+    <InsetTextStyled id="input1">
         <Label>
             <LabelText aria-label="Enter your reference">
-                Enter your reference
+            {t('yourReference.input')}
             </LabelText>
             <InputFieldStyled id="input2" />
         </Label>
-  
     </InsetTextStyled>
     <Radio name="group1">
-        No
+    {t('radio.no')}
     </Radio>
     </FormGroup>
     <FormGroup>
         <Button>
-            Save and continue
+        {t('yourReference.button')}
         </Button>
     </FormGroup>
             </div>
@@ -126,9 +118,11 @@ const InputFieldStyled = styled(Input)`
     </>
    
     </Main>
-    <Footer />
-    </Page>
-  
+    <CompleteFooter />
+
+
+</div>
+
     );
   }
   

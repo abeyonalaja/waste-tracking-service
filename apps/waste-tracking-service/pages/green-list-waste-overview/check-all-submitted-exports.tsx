@@ -1,65 +1,65 @@
-import styled from 'styled-components'
-import CrownIcon from '@govuk-react/icon-crown';
+import '../../i18n/config';
+import { useTranslation } from 'react-i18next';
 import {
 
-    BackLink, Breadcrumbs, Page, H1, Footer, Paragraph, Heading, Tag, SectionBreak, Main, TopNav, 
+     Breadcrumbs,
+     Heading,
+     Main,
+     GridRow,
+     GridCol,
     
   } from "govuk-react";
+  import {CompleteHeader} from '../../components/CompleteHeader'
+  import {CompleteFooter} from '../../components/CompleteFooter'  
+
   
-  const PageStyled = styled(Page)`
- .bottom-nav-wrapper {
-    width: 100%;
- }
- .czzhCh {
-    width: 100%;
- }
-`;
   
   export function AllSumbittedExports() {
 
-    
+    const { t } = useTranslation();  
 
     return (
       
-  <Page>
-  
-    <Tag>
-    PROTOTYPE
-    </Tag>
-  
-    <SectionBreak
-      level="LARGE"
-      visible
-    />
+<div>
+
+<CompleteHeader />
+<Main>
+    
     <Breadcrumbs>
       <Breadcrumbs.Link href="/">
-      Waste tracking service
+      {t('app.title')}
       </Breadcrumbs.Link>
       <Breadcrumbs.Link href="/green-list-waste-overview">
-      Green list waste overview
+      {t('app.channel.title')}
       </Breadcrumbs.Link>
-      All submitted exports
+      {t('checkAllSubmittedExports.breadcrumb')}
     </Breadcrumbs>
   
-    <Heading size="MEDIUM" id="template-heading">
-    All submitted exports
-    </Heading>
-  
-    <Page.Main>
     
+  </Main>
+    <Main>
+
+
+  <GridRow>
+      <GridCol setWidth="two-thirds">
+  
+    
+      <Heading size="MEDIUM" id="template-heading">
+        {t('checkAllSubmittedExports.title')}
+        </Heading>
+      
+      </GridCol>
+  </GridRow>
   
   
    
-    </Page.Main>
-    <Footer />
-    </Page>
-  
-    
+
+    </Main>
+    <CompleteFooter />
      
-        
+    </div>    
      
     );
   }
-  
   export default AllSumbittedExports;
   
