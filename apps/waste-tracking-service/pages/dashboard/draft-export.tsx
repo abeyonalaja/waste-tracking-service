@@ -11,11 +11,10 @@ import {
   } from "govuk-react";
   import {CompleteHeader} from '../../components/CompleteHeader'
   import {CompleteFooter} from '../../components/CompleteFooter'  
-
   
-  export function UpdateWithActualExport() {
+  export function DraftExports() {
 
-    const { t } = useTranslation();  
+    const { t } = useTranslation();
 
     return (
       
@@ -28,10 +27,10 @@ import {
       <Breadcrumbs.Link href="/">
       {t('app.title')}
       </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
+      <Breadcrumbs.Link href="/dashboard">
       {t('app.channel.title')}
       </Breadcrumbs.Link>
-      {t('updateExportWithActualDetails.breadcrumb')}
+      {t('draftExports.breadcrumb')}
     </Breadcrumbs>
   
     
@@ -44,7 +43,7 @@ import {
   
     
       <Heading size="MEDIUM" id="template-heading">
-        {t('updateExportWithActualDetails.title')}
+        {t('draftExports.title')}
         </Heading>
       
       </GridCol>
@@ -56,10 +55,11 @@ import {
     </Main>
     <CompleteFooter />
      
-    </div>    
+    </div>  
+        
      
     );
   }
   
-  export default UpdateWithActualExport;
+  export default DraftExports;
   

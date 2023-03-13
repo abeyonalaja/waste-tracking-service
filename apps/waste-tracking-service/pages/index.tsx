@@ -38,7 +38,7 @@ export function Index() {
 
 
   <Paragraph>
-    <Link href="green-list-waste-overview">{t('app.channel.title')}</Link>
+    <Link href="dashboard">{t('app.channel.title')}</Link>
   </Paragraph>
            
 

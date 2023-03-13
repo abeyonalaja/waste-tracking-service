@@ -2,17 +2,18 @@ import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
 
-     Breadcrumbs,
-     Heading,
-     Main,
-     GridRow,
-     GridCol,
+    Breadcrumbs,
+    Heading,
+    Main,
+    GridCol,
+    GridRow
     
   } from "govuk-react";
-  import {CompleteHeader} from '../../components/CompleteHeader'
-  import {CompleteFooter} from '../../components/CompleteFooter'  
+import {CompleteHeader} from '../../components/CompleteHeader'
+import {CompleteFooter} from '../../components/CompleteFooter'  
+
   
-  export function DraftExports() {
+  export function TemplateSubmitCSV() {
 
     const { t } = useTranslation();
 
@@ -27,10 +28,10 @@ import {
       <Breadcrumbs.Link href="/">
       {t('app.title')}
       </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
+      <Breadcrumbs.Link href="/dashboard">
       {t('app.channel.title')}
       </Breadcrumbs.Link>
-      {t('draftExports.breadcrumb')}
+      {t('templateSubmitCSV.breadcrumb')}
     </Breadcrumbs>
   
     
@@ -40,26 +41,21 @@ import {
 
   <GridRow>
       <GridCol setWidth="two-thirds">
-  
-    
-      <Heading size="MEDIUM" id="template-heading">
-        {t('draftExports.title')}
+   
+        <Heading size="MEDIUM" id="template-heading">
+        {t('templateSubmitCSV.title')}
         </Heading>
       
       </GridCol>
   </GridRow>
-  
-  
    
-
     </Main>
     <CompleteFooter />
      
     </div>  
-        
      
     );
   }
   
-  export default DraftExports;
+  export default TemplateSubmitCSV;
   

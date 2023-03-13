@@ -29,7 +29,7 @@ import {
       <Breadcrumbs.Link href="/">
       {t('app.title')}
       </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
+      <Breadcrumbs.Link href="/dashboard">
       {t('app.channel.title')}
       </Breadcrumbs.Link>
       {t('checkAllSubmittedExports.breadcrumb')}

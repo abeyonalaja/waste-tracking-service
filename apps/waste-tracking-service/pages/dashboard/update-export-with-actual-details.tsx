@@ -2,20 +2,20 @@ import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
 
-    Breadcrumbs,
-    Heading,
-    Main,
-    GridCol,
-    GridRow
+     Breadcrumbs,
+     Heading,
+     Main,
+     GridRow,
+     GridCol,
     
   } from "govuk-react";
-import {CompleteHeader} from '../../components/CompleteHeader'
-import {CompleteFooter} from '../../components/CompleteFooter'  
+  import {CompleteHeader} from '../../components/CompleteHeader'
+  import {CompleteFooter} from '../../components/CompleteFooter'  
 
   
-  export function TemplateSubmitCSV() {
+  export function UpdateWithActualExport() {
 
-    const { t } = useTranslation();
+    const { t } = useTranslation();  
 
     return (
       
@@ -28,10 +28,10 @@ import {CompleteFooter} from '../../components/CompleteFooter'
       <Breadcrumbs.Link href="/">
       {t('app.title')}
       </Breadcrumbs.Link>
-      <Breadcrumbs.Link href="/green-list-waste-overview">
+      <Breadcrumbs.Link href="/dashboard">
       {t('app.channel.title')}
       </Breadcrumbs.Link>
-      {t('templateSubmitCSV.breadcrumb')}
+      {t('updateExportWithActualDetails.breadcrumb')}
     </Breadcrumbs>
   
     
@@ -41,21 +41,25 @@ import {CompleteFooter} from '../../components/CompleteFooter'
 
   <GridRow>
       <GridCol setWidth="two-thirds">
-   
-        <Heading size="MEDIUM" id="template-heading">
-        {t('templateSubmitCSV.title')}
+  
+    
+      <Heading size="MEDIUM" id="template-heading">
+        {t('updateExportWithActualDetails.title')}
         </Heading>
       
       </GridCol>
   </GridRow>
+  
+  
    
+
     </Main>
     <CompleteFooter />
      
-    </div>  
+    </div>    
      
     );
   }
   
-  export default TemplateSubmitCSV;
+  export default UpdateWithActualExport;
   
