@@ -6,7 +6,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Welcome to waste-tracking-service!</title>
+        <title>Green list waste overview</title>
       </Head>
       <main className="app">
         <Component {...pageProps} />
