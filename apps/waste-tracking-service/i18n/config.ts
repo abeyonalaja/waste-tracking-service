@@ -5,7 +5,7 @@ import translation from './en.json';
 export const resources = {
   en: {
     translation,
-  }
+  },
 };
 
 i18next.use(initReactI18next).init({

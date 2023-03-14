@@ -7,8 +7,6 @@ describe(CompleteFooter, () => {
   it('renders Footer component', () => {
     render('<CompleteFooter />');
 
-    expect(screen.findByText("Accessibility statement")).toBeTruthy();
+    expect(screen.findByText('Accessibility statement')).toBeTruthy();
   });
 });
-  
- 

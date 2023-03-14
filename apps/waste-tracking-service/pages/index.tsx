@@ -1,57 +1,42 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 
 import {
-
-   Breadcrumbs, Page, Footer, Tag, SectionBreak, Main, Link, PhaseBanner
-  
-} from "govuk-react";
-import {CompleteHeader} from '../components/CompleteHeader'
-import {CompleteFooter} from '../components/CompleteFooter'
+  Breadcrumbs,
+  Page,
+  Footer,
+  Tag,
+  SectionBreak,
+  Main,
+  Link,
+  PhaseBanner,
+} from 'govuk-react';
+import { CompleteHeader } from '../components/CompleteHeader';
+import { CompleteFooter } from '../components/CompleteFooter';
 
 const Paragraph = styled.div`
   margin-bottom: 20px;
-`
+`;
 
 export function Index() {
-
   const { t } = useTranslation();
 
   return (
-    
-<div>
+    <div>
+      <CompleteHeader />
 
-<CompleteHeader />
- 
+      <Main>
+        <Breadcrumbs>{t('app.title')}</Breadcrumbs>
+      </Main>
+      <Main>
+        <Paragraph>
+          <Link href="dashboard">{t('app.channel.title')}</Link>
+        </Paragraph>
+      </Main>
 
- 
-  
-<Main>
- 
-  <Breadcrumbs>
-    {t('app.title')}
-  </Breadcrumbs>
-
-  </Main>
-  <Main>
-
-
-  <Paragraph>
-    <Link href="dashboard">{t('app.channel.title')}</Link>
-  </Paragraph>
-           
-
-  </Main>
-
-  <CompleteFooter />
-
-
-  </div>
-
-  
-   
-   
+      <CompleteFooter />
+    </div>
   );
 }
 

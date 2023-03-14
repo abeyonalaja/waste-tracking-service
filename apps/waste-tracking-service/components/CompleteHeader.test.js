@@ -5,6 +5,6 @@ describe(CompleteHeader, () => {
   it('renders Header component', () => {
     render('<CompleteHeader />');
 
-    expect(screen.findByText("Green list waste overview")).toBeTruthy();
+    expect(screen.findByText('Green list waste overview')).toBeTruthy();
   });
 });
