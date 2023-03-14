@@ -4,7 +4,7 @@ import CrownIcon from '@govuk-react/icon-crown';
 import { GlobalStyle, Main, TopNav, Link, PhaseBanner } from 'govuk-react';
 
 const PhaseBannerStyled = styled(PhaseBanner)`
-  margin-top: -25px;
+  margin-top: -30px;
 `;
 
 const TopNavStyled = styled(TopNav)`

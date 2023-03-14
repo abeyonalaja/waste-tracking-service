@@ -6,6 +6,10 @@ import { CompleteFooter } from '../../components/CompleteFooter';
 
 import { Breadcrumbs, Heading, Main, Link, H4 } from 'govuk-react';
 
+const BreadCrumbWrap = styled(Main)`
+  padding-top: 0;
+`;
+
 const Paragraph = styled.div`
   margin-bottom: 20px;
 `;
@@ -16,12 +20,15 @@ export function Index() {
   return (
     <div>
       <CompleteHeader />
-
-      <Main>
+      <BreadCrumbWrap>
         <Breadcrumbs>
           <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
           {t('app.channel.title')}
         </Breadcrumbs>
+      </BreadCrumbWrap>
+
+      <Main>
+
 
         <Heading size="LARGE" role="heading">
           {t('greenListOverview.heading')}
