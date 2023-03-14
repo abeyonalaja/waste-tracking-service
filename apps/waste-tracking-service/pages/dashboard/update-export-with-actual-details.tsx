@@ -3,14 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { Breadcrumbs, Heading, Main, GridRow, GridCol } from 'govuk-react';
 import { CompleteHeader } from '../../components/CompleteHeader';
 import { CompleteFooter } from '../../components/CompleteFooter';
+import styled from 'styled-components';
 
 export function UpdateWithActualExport() {
   const { t } = useTranslation();
 
+  const BreadCrumbWrap = styled(Main)`
+  padding-top: 0;
+`;
+
   return (
     <div>
       <CompleteHeader />
-      <Main>
+      <BreadCrumbWrap>
         <Breadcrumbs>
           <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
           <Breadcrumbs.Link href="/dashboard">
@@ -18,7 +23,7 @@ export function UpdateWithActualExport() {
           </Breadcrumbs.Link>
           {t('updateExportWithActualDetails.breadcrumb')}
         </Breadcrumbs>
-      </Main>
+      </BreadCrumbWrap>
       <Main>
         <GridRow>
           <GridCol setWidth="two-thirds">

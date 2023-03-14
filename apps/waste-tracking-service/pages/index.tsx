@@ -14,6 +14,10 @@ const Paragraph = styled.div`
   margin-bottom: 20px;
 `;
 
+const BreadCrumbWrap = styled(Main)`
+  padding-top: 0;
+`;
+
 export function Index() {
   const { t } = useTranslation();
 
@@ -21,9 +25,9 @@ export function Index() {
     <div>
       <CompleteHeader />
 
-      <Main>
+      <BreadCrumbWrap>
         <Breadcrumbs>{t('app.title')}</Breadcrumbs>
-      </Main>
+      </BreadCrumbWrap>
       <Main>
         <Paragraph>
           <Link href="dashboard">{t('app.channel.title')}</Link>

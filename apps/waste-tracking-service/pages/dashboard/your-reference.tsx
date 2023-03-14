@@ -19,6 +19,10 @@ import {
 import { CompleteHeader } from '../../components/CompleteHeader';
 import { CompleteFooter } from '../../components/CompleteFooter';
 
+const BreadCrumbWrap = styled(Main)`
+  padding-top: 0;
+`;
+
 const InsetTextStyled = styled(InsetText)`
   margin-left: 17px;
   border-left: 4px solid #b1b4b6;
@@ -40,7 +44,7 @@ export function YourReference() {
   return (
     <div>
       <CompleteHeader />
-      <Main>
+      <BreadCrumbWrap>
         <Breadcrumbs>
           <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
           <Breadcrumbs.Link href="/dashboard">
@@ -48,7 +52,7 @@ export function YourReference() {
           </Breadcrumbs.Link>
           {t('yourReference.breadcrumb')}
         </Breadcrumbs>
-      </Main>
+      </BreadCrumbWrap>
       <Main>
         <GridRow>
           <GridCol setWidth="two-thirds">
