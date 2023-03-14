@@ -4,13 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
   Breadcrumbs,
-  Page,
-  Footer,
-  Tag,
-  SectionBreak,
   Main,
   Link,
-  PhaseBanner,
 } from 'govuk-react';
 import { CompleteHeader } from '../components/CompleteHeader';
 import { CompleteFooter } from '../components/CompleteFooter';
