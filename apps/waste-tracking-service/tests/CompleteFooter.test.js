@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import CompleteFooter from './CompleteFooter.tsx';
+import CompleteFooter from '../components/CompleteFooter';
 
 describe(CompleteFooter, () => {
   it('renders Footer component', () => {

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Index from './index';
+import Index from '../pages/index';
 
 describe(Index, () => {
   it('renders Green list waste overview page', () => {

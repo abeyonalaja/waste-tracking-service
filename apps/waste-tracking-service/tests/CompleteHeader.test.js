@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import CompleteHeader from './CompleteHeader.tsx';
+import CompleteHeader from '../components/CompleteHeader';
 
 describe(CompleteHeader, () => {
   it('renders Header component', () => {
