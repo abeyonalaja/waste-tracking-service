@@ -1,0 +1,3 @@
+default: --publish-quiet --profile allure_report
+
+allure_report: --format pretty --publish-quiet --color --format AllureCucumber::CucumberFormatter --out Allure_results/
