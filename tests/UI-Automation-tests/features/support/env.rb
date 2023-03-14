@@ -14,17 +14,5 @@ AllureCucumber.configure do |config|
   config.logger = Logger.new($stdin, Logger::DEBUG)
   config.environment = 'Test'
 
-  # config.environment_properties = {
-  #   Test_Environment: "Dev"
-  # }
-
-  # config.categories = File.new('categories/cat.json')
 end
 
-# Cucumber::Core::Test::Step.module_eval do
-#   def name
-#     return text if self.text == 'Before hook'
-#     return text if self.text == 'After hook'
-#     "#{source.last.keyword}#{text}"
-#   end
-# end

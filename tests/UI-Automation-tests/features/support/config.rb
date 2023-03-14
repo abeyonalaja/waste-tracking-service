@@ -17,7 +17,7 @@ require 'report_builder'
 
 World(Capybara::DSL)
 
-# Webdrivers.logger.level = :DEBUG
+Webdrivers.logger.level = :DEBUG
 
 # Defaults
 Capybara.default_selector = :id
