@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CrownIcon from '@govuk-react/icon-crown';
-import { Main, TopNav, Link, PhaseBanner } from 'govuk-react';
+import { GlobalStyle, Main, TopNav, Link, PhaseBanner } from 'govuk-react';
 
 const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -25px;
@@ -29,6 +29,7 @@ export class CompleteHeader extends Component {
   render() {
     return (
       <>
+        <GlobalStyle />
         <TopNavStyled
           company={
             <TopNavAnchor href="https://example.com" target="new">
