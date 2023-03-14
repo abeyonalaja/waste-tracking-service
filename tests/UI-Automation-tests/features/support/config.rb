@@ -12,11 +12,12 @@ require 'yaml'
 require 'rspec/matchers'
 require 'active_support/time'
 require_relative 'page_helpers/generic_page'
+require 'report_builder'
 
 
 World(Capybara::DSL)
 
-# Webdrivers.logger.level = :DEBUG
+Webdrivers.logger.level = :DEBUG
 
 # Defaults
 Capybara.default_selector = :id
@@ -50,7 +51,7 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app,
                                  browser: :chrome,
                                  # url: 'http://seleniumtestbss:4444/wd/hub',
-                                 desired_capabilities: options)
+                                 capabilities: options)
 
 end
 
@@ -70,7 +71,7 @@ Capybara.register_driver :remote_browser do |app|
   Capybara::Selenium::Driver.new(app,
                                  :browser => :remote,
                                  url: 'http://seleniumtestbss:4444/wd/hub',
-                                 desired_capabilities: options)
+                                 capabilities: options)
 end
 
 # # firefox
