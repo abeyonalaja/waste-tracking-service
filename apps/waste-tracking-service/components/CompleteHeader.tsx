@@ -49,7 +49,7 @@ export class CompleteHeader extends Component {
           }
         ></TopNavStyled>
         <Main>
-          <PhaseBannerStyled level="PROTOTYPE">
+          <PhaseBannerStyled level="PRIVATE BETA">
             This part of GOV.UK is being rebuilt –{' '}
             <Link href="https://example.com">find out what that means</Link>
           </PhaseBannerStyled>
