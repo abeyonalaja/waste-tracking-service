@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@wts/api/waste-tracking-gateway": [
+        "libs/api/waste-tracking-gateway/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
