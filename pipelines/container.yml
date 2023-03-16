@@ -38,6 +38,8 @@ steps:
     inlineScript: |
      sudo az aks install-cli
      az aks get-credentials -n $(AKS_NAME) -g $(RG_NAME)
+     kubectl get pods
+     kubectl get nodes
 - task: Kubernetes@1
   inputs:
     connectionType: Azure Resource Manager
