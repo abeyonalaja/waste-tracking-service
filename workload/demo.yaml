@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: waste-tracking-service-deploy
-        image: ${IMAGE_NAME} # sndwtshubcr2401.azurecr.io/demo:1.0
+        image: sndwtshubcr2401.azurecr.io/demo:1.0  #  ${IMAGE_NAME}
         resources:
           limits:
             memory: "128Mi"
