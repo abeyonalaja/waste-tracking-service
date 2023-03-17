@@ -1,1 +1,1 @@
-export * from './lib/api-waste-tracking-gateway';
+export * from "./lib/submission"
