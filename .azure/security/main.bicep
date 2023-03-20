@@ -34,18 +34,12 @@ param primaryRegion string = 'uksouth'
 @description('''
   CIDR prefixes for the created virtual network and its subnet. See the default
   parameters file for an example. Subnets are:
-  - _gateway_ - Requires _/24_ prefix.
-  - _endpoints_ - Recommended _/26_ prefix.
-  - _ado_ - Recommend _/26_ prefix.
-  - _bastion_ - Recommend _/26_ prefix, requires _/27_ prefix or larger subnet.
+  - _firewall_ - Recommend _/24_ prefix.
 ''')
 param addressSpace object = {
   virtualNetwork: null
   subnets: {
-    gateway: null
-    endpoints: null
-    ado: null
-    bastion: null
+    firewall: null
   }
 }
 
@@ -55,16 +49,6 @@ param addressSpace object = {
   order to have idempotent deployments.
 ''')
 param createdDate string = utcNow('yyyyMMdd')
-
-// @secure()
-// @description('Admin password assigned to created Virtual Machines.')
-// param vmssAdminPassword string
-
-// @description('Internal Load Balancer Private IP on which Application Gateway connects to the backend.')
-// param internalLbPrivateIp string
-
-// @description('Application host/domain name.')
-// param hostName string
 
 module tags '../util/tags.bicep' = {
   name: 'hub-tags'
@@ -77,7 +61,7 @@ module tags '../util/tags.bicep' = {
 }
 
 module network './network.bicep' = {
-  name: 'hub-network'
+  name: 'wts-network'
   params: {
     env: environment
     svc: serviceCode
@@ -88,52 +72,15 @@ module network './network.bicep' = {
   }
 }
 
-module dns './dns.bicep' = {
-  name: 'hub-dns'
-  params: {
-    virtualNetworks: [ network.outputs.virtualNetwork ]
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
-// TODO: 2022-03-09 To match CCoE patterns; currently bastion host and app gateway resource creation are blocked by policy
-// module management './management.bicep' = {
-//   name: 'hub-management'
-//   params: {
-//     env: environment
-//     svc: serviceCode
-//     envNum: environmentNumber
-//     primaryRegion: primaryRegion
-//     adminPassword: vmssAdminPassword
-//     subnets: network.outputs.subnets
-//     defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
-//   }
-// }
-
-// module gateway './gateway.bicep' = {
-//   name: 'hub-gateway'
-//   params: {
-//     env: environment
-//     svc: serviceCode
-//     envNum: environmentNumber
-//     primaryRegion: primaryRegion
-//     privateIpAddress: '${take(addressSpace.subnets.gateway, lastIndexOf(addressSpace.subnets.gateway, '.'))}.4'
-//     subnet: network.outputs.subnets.gateway
-//     internalLbPrivateIp: internalLbPrivateIp
-//     hostName: hostName
-//     defaultTags: union(tags.outputs.defaultTags, { Tier: 'WEB' })
-//   }
-// }
-
-module data './data.bicep' = {
-  name: 'hub-data'
+module firewall './firewall.bicep' = {
+  name: 'wts-firewall'
   params: {
     env: environment
     svc: serviceCode
     envNum: environmentNumber
     primaryRegion: primaryRegion
-    subnet: network.outputs.subnets.endpoints
-    privateDnsZones: dns.outputs.privateZones
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
+    subnet: network.outputs.subnets.firewall
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
   }
 }
+
