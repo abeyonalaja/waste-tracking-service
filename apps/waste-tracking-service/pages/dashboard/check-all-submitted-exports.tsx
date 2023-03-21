@@ -9,8 +9,8 @@ export function AllSumbittedExports() {
   const { t } = useTranslation();
 
   const BreadCrumbWrap = styled(Main)`
-  padding-top: 0;
-`;
+    padding-top: 0;
+  `;
 
   return (
     <div>

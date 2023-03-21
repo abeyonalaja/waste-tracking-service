@@ -1,58 +1,57 @@
 trigger:
-- none
+  - none
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
- BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
- IMAGE_NAME: sndwtshubcr3401.azurecr.io/demo:1.0
- RG_NAME: SNDWTSAKSRG2401
- AKS_NAME: SNDWTSSPKKS3401
- ACR_NAME: SNDWTSHUBCR3401
+  BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
+  IMAGE_NAME: sndwtshubcr3401.azurecr.io/demo:1.0
+  RG_NAME: SNDWTSAKSRG2401
+  AKS_NAME: SNDWTSSPKKS3401
+  ACR_NAME: SNDWTSHUBCR3401
 
 steps:
-
-- task: AzureCLI@1
-  displayName: Login to ACR and list the registry
-  inputs:
-    connectedServiceNameARM: 'AZD-WTS-SND1'
-    scriptLocation: 'inlineScript'   
-    inlineScript: |
-     az acr login -n $(ACR_NAME)
-- script: |
-   npm ci
-  displayName: 'npm ci'
-- script: |
-   npx nx container waste-tracking-service
-  displayName: 'nx container waste-tracking-service'
-- script: |
-   docker image tag docker.io/wts/waste-tracking-service:$(BRANCH_NAME) $(IMAGE_NAME)
-   docker image push $(IMAGE_NAME)
-  displayName: Docker list, tag and push
-- task: AzureCLI@1
-  displayName: install additional kubectl tools
-  inputs:
-    connectedServiceNameARM: 'AZD-WTS-SND1'
-    scriptLocation: 'inlineScript'   
-    inlineScript: |
-     sudo az aks install-cli
-     az aks get-credentials -n $(AKS_NAME) -g $(RG_NAME)
-     kubectl get pods
-     kubectl get nodes
-- task: Kubernetes@1
-  inputs:
-    connectionType: Azure Resource Manager
-    azureSubscriptionEndpoint: 'AZD-WTS-SND1'   
-    azureResourceGroup: '$(RG_NAME)'   
-    kubernetesCluster: '$(AKS_NAME)' 
-    command: 'apply'
-    useConfigurationFile: true 
-    configurationType: 'configuration' 
-    configuration: '$(Build.SourcesDirectory)/pipelines/workload.yaml'  
-    secretType: dockerRegistry
-    containerRegistryType: Azure Container Registry 
-    azureSubscriptionEndpointForSecrets: 'AZD-WTS-SND1' 
-    azureContainerRegistry: 'sndwtshubcr3401.azurecr.io' 
-    versionOrlocation: 'version'
-    versionSpec: '1.24.9'
+  - task: AzureCLI@1
+    displayName: Login to ACR and list the registry
+    inputs:
+      connectedServiceNameARM: 'AZD-WTS-SND1'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az acr login -n $(ACR_NAME)
+  - script: |
+      npm ci
+    displayName: 'npm ci'
+  - script: |
+      npx nx container waste-tracking-service
+    displayName: 'nx container waste-tracking-service'
+  - script: |
+      docker image tag docker.io/wts/waste-tracking-service:$(BRANCH_NAME) $(IMAGE_NAME)
+      docker image push $(IMAGE_NAME)
+    displayName: Docker list, tag and push
+  - task: AzureCLI@1
+    displayName: install additional kubectl tools
+    inputs:
+      connectedServiceNameARM: 'AZD-WTS-SND1'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        sudo az aks install-cli
+        az aks get-credentials -n $(AKS_NAME) -g $(RG_NAME)
+        kubectl get pods
+        kubectl get nodes
+  - task: Kubernetes@1
+    inputs:
+      connectionType: Azure Resource Manager
+      azureSubscriptionEndpoint: 'AZD-WTS-SND1'
+      azureResourceGroup: '$(RG_NAME)'
+      kubernetesCluster: '$(AKS_NAME)'
+      command: 'apply'
+      useConfigurationFile: true
+      configurationType: 'configuration'
+      configuration: '$(Build.SourcesDirectory)/pipelines/workload.yaml'
+      secretType: dockerRegistry
+      containerRegistryType: Azure Container Registry
+      azureSubscriptionEndpointForSecrets: 'AZD-WTS-SND1'
+      azureContainerRegistry: 'sndwtshubcr3401.azurecr.io'
+      versionOrlocation: 'version'
+      versionSpec: '1.24.9'

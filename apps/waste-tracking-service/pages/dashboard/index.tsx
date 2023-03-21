@@ -28,8 +28,6 @@ export function Index() {
       </BreadCrumbWrap>
 
       <Main>
-
-
         <Heading size="LARGE" role="heading">
           {t('greenListOverview.heading')}
         </Heading>

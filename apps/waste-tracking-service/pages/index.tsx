@@ -2,11 +2,7 @@ import styled from 'styled-components';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 
-import {
-  Breadcrumbs,
-  Main,
-  Link,
-} from 'govuk-react';
+import { Breadcrumbs, Main, Link } from 'govuk-react';
 import { CompleteHeader } from '../components/CompleteHeader';
 import { CompleteFooter } from '../components/CompleteFooter';
 

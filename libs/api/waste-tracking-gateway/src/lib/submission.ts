@@ -5,29 +5,29 @@ export interface Submission {
 
 //GET /submissions/{id}
 export interface GetSubmissionRequest {
-id: string;
+  id: string;
 }
 
 export interface GetSubmissionResponse {
-value: Submission | undefined;
+  value: Submission | undefined;
 }
 
 //POST /submissions
 export interface CreateSubmissionRequest {
-value: Submission;
+  value: Submission;
 }
 
 export interface CreateSubmissionResponse {
   value: Submission | undefined;
-  }
+}
 
 //PUT /submissions
 export interface UpdateSubmissionRequest {
-value: Submission;
+  value: Submission;
 }
 
 export interface UpdateSubmissionResponse {
-value: Submission;
+  value: Submission;
 }
 
 //Delete /submissions/{id}
@@ -38,5 +38,3 @@ export interface DeleteSubmissionRequest {
 export interface DeleteSubmissionResponse {
   deleted: boolean;
 }
-
-

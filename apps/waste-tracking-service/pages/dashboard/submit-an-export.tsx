@@ -9,14 +9,13 @@ const BreadCrumbWrap = styled(Main)`
   padding-top: 0;
 `;
 
-
 export function SubmitAnExport() {
   const { t } = useTranslation();
 
   return (
     <div>
       <CompleteHeader />
-      
+
       <BreadCrumbWrap>
         <Breadcrumbs>
           <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
@@ -24,7 +23,7 @@ export function SubmitAnExport() {
             {t('app.channel.title')}
           </Breadcrumbs.Link>
           <Breadcrumbs.Link href="/dashboard/your-reference">
-          {t('yourReference.breadcrumb')}
+            {t('yourReference.breadcrumb')}
           </Breadcrumbs.Link>
           {t('exportJourney.submitAnExport.breadcrumb')}
         </Breadcrumbs>

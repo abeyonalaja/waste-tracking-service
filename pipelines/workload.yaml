@@ -12,14 +12,14 @@ spec:
         app: waste-tracking-service-deploy
     spec:
       containers:
-      - name: waste-tracking-service-deploy
-        image: sndwtshubcr3401.azurecr.io/demo:1.0 #${IMAGE_NAME}
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "50m"
-        ports:
-        - containerPort: 3000
+        - name: waste-tracking-service-deploy
+          image: sndwtshubcr3401.azurecr.io/demo:1.0 #${IMAGE_NAME}
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'
+          ports:
+            - containerPort: 3000
 
 ---
 apiVersion: v1
@@ -32,7 +32,7 @@ spec:
   selector:
     app: waste-tracking-service-deploy
   ports:
-  - port: 80
-    targetPort: 3000
+    - port: 80
+      targetPort: 3000
   type: LoadBalancer
   loadBalancerIP: 52.151.120.75
