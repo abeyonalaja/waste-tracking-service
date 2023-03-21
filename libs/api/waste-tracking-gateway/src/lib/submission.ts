@@ -1,24 +1,51 @@
 export interface Submission {
   id: string;
-  value: string;
+  reference: string;
+  accountName: string;
+  wasteDescriptionStatus: SectionStatus;
+  wasteDescriptionData: object;
+  quantityOfWasteStatus: SectionStatus;
+  quantityOfWasteData: object;
+  exporterImporterStatus: SectionStatus;
+  exporterDetailsStatus: SectionStatus;
+  exporterData: object;
+  importerDetailsStatus: SectionStatus;
+  importerData: object;
+  journeyofWasteStatus: SectionStatus;
+  collectionDateStatus: SectionStatus;
+  collectionDateData: object;
+  wasteCarriersStatus: SectionStatus;
+  wasteCarriersData: object;
+  wasteCollectionDetailsStatus: SectionStatus;
+  wasteCollectionDetailsData: object;
+  locationWasteLeavesUKStatus: SectionStatus;
+  locationWasteLeavesUKStatusData: SectionStatus;
+  treatmentOfWasteStatus: SectionStatus;
+  recoveryFacilityStatus: SectionStatus;
+  recoveryFacilityData: object;
 }
 
-//GET /submissions/{id}
-export interface GetSubmissionRequest {
+export enum SectionStatus {
+  CannotStart,
+  NotStarted,
+  Started,
+  Completed,
+}
+//GET /submissions/{reference}
+export interface GetSubmissionByReferenceRequest {
+  reference: string;
+}
+
+export interface GetSubmissionByIdRequest {
   id: string;
 }
 
-export interface GetSubmissionResponse {
-  value: Submission | undefined;
+export interface GetSubmissionByReferenceResponse {
+  results: Submission[];
 }
 
-//POST /submissions
-export interface CreateSubmissionRequest {
-  value: Submission;
-}
-
-export interface CreateSubmissionResponse {
-  value: Submission | undefined;
+export interface GetSubmissionByIdResponse {
+  result: Submission;
 }
 
 //PUT /submissions
@@ -27,7 +54,7 @@ export interface UpdateSubmissionRequest {
 }
 
 export interface UpdateSubmissionResponse {
-  value: Submission;
+  updated: boolean;
 }
 
 //Delete /submissions/{id}

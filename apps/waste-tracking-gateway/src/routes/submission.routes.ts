@@ -1,7 +1,8 @@
 import { Server } from '@hapi/hapi';
 import {
   listSubmissions,
-  getSubmission,
+  getSubmissionByReference,
+  getSubmissionById,
   updateSubmission,
   deleteSubmission,
   createSubmission,
@@ -16,25 +17,31 @@ export const routes = (server: Server) => {
 
   server.route({
     method: 'GET',
-    path: '/submissions/{id}',
-    handler: getSubmission,
+    path: '/submissions/{reference}',
+    handler: getSubmissionByReference,
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/submission/{id}',
+    handler: getSubmissionById,
   });
 
   server.route({
     method: 'POST',
-    path: '/submissions',
+    path: '/submission',
     handler: createSubmission,
   });
 
   server.route({
     method: 'DELETE',
-    path: '/submissions/{id}',
+    path: '/submission/{id}',
     handler: deleteSubmission,
   });
 
   server.route({
     method: 'PUT',
-    path: '/submissions/{id}',
+    path: '/submission/{id}',
     handler: updateSubmission,
   });
 };

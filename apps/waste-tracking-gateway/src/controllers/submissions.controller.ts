@@ -1,16 +1,18 @@
 import { Request, ResponseToolkit } from '@hapi/hapi';
 import data from '../db.json';
 import fs from 'fs/promises';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Submission,
-  GetSubmissionRequest,
-  GetSubmissionResponse,
-  CreateSubmissionRequest,
-  CreateSubmissionResponse,
+  GetSubmissionByIdRequest,
+  GetSubmissionByIdResponse,
+  GetSubmissionByReferenceRequest,
+  GetSubmissionByReferenceResponse,
   DeleteSubmissionRequest,
   DeleteSubmissionResponse,
   UpdateSubmissionRequest,
   UpdateSubmissionResponse,
+  SectionStatus,
 } from '@wts/api/waste-tracking-gateway';
 
 //List all submissions
@@ -23,16 +25,34 @@ export const listSubmissions = async (request: Request, h: ResponseToolkit) => {
   }
 };
 
-export function createSubmissionRequest(request: {
-  value: Submission;
-}): CreateSubmissionRequest {
-  return { value: request.value };
-}
-
-export function createSubmissionResponse(
-  submission: Submission | undefined
-): CreateSubmissionResponse {
-  return { value: submission };
+function createBaseSubmission() {
+  const submission: Submission = {
+    id: uuidv4(),
+    accountName: null,
+    reference: null,
+    wasteDescriptionStatus: SectionStatus.NotStarted,
+    wasteDescriptionData: {},
+    quantityOfWasteStatus: SectionStatus.CannotStart,
+    quantityOfWasteData: {},
+    exporterImporterStatus: SectionStatus.NotStarted,
+    exporterDetailsStatus: SectionStatus.NotStarted,
+    exporterData: {},
+    importerDetailsStatus: SectionStatus.NotStarted,
+    importerData: {},
+    journeyofWasteStatus: SectionStatus.NotStarted,
+    collectionDateStatus: SectionStatus.NotStarted,
+    collectionDateData: {},
+    wasteCarriersStatus: SectionStatus.NotStarted,
+    wasteCarriersData: {},
+    wasteCollectionDetailsStatus: SectionStatus.NotStarted,
+    wasteCollectionDetailsData: {},
+    locationWasteLeavesUKStatus: SectionStatus.NotStarted,
+    locationWasteLeavesUKStatusData: SectionStatus.NotStarted,
+    treatmentOfWasteStatus: SectionStatus.NotStarted,
+    recoveryFacilityStatus: SectionStatus.CannotStart,
+    recoveryFacilityData: {},
+  };
+  return submission;
 }
 
 //Create a new submission
@@ -41,18 +61,18 @@ export const createSubmission = async (
   h: ResponseToolkit
 ) => {
   try {
-    const submissionRequest = createSubmissionRequest({
-      value: request.payload as Submission,
-    });
-    const submission = submissionRequest.value;
+    const submission = createBaseSubmission();
 
     // Add the new submission to the data array
     data.push(submission);
 
     // Write the updated data to the file
-    await fs.writeFile('./db.json', JSON.stringify(data, null, 2));
+    await fs.writeFile(
+      './apps/waste-tracking-gateway/src/db.json',
+      JSON.stringify(data, null, 2)
+    );
 
-    const submissionResponse = createSubmissionResponse(submission);
+    const submissionResponse = { created: true };
 
     return h.response(submissionResponse).code(201);
   } catch (error) {
@@ -60,27 +80,31 @@ export const createSubmission = async (
   }
 };
 
-export function getSubmissionRequest(data: {
+function getSubmissionByIdRequest(data: {
   id: string;
-}): GetSubmissionRequest {
+}): GetSubmissionByIdRequest {
   return { id: data.id };
 }
 
-export function getSubmissionResponse(
-  submission: Submission | undefined
-): GetSubmissionResponse {
-  return { value: submission };
+function getSubmissionByIdResponse(
+  submission: Submission
+): GetSubmissionByIdResponse {
+  return { result: submission };
 }
 
-//Get a single submission
-export const getSubmission = async (request: Request, h: ResponseToolkit) => {
+//Get the submission with matching id
+export const getSubmissionById = async (
+  request: Request,
+  h: ResponseToolkit
+) => {
   try {
-    const submissionRequest = getSubmissionRequest({ id: request.params.id });
-    const submissionFound = data.find(
-      (submission) => submission.id === submissionRequest.id
+    const submissionRequest = getSubmissionByIdRequest({
+      id: request.params.id,
+    });
+    const submissionResponse = getSubmissionByIdResponse(
+      data.find((submission) => submission.id === submissionRequest.id)
     );
-    const submissionResponse = getSubmissionResponse(submissionFound);
-    if (!submissionResponse.value) {
+    if (!submissionResponse.result) {
       return h.response().code(404);
     }
     return h.response(submissionResponse).code(200);
@@ -89,16 +113,46 @@ export const getSubmission = async (request: Request, h: ResponseToolkit) => {
   }
 };
 
-export function deleteSubmissionRequest(
+function getSubmissionByReferenceRequest(
   request: Request
-): DeleteSubmissionRequest {
+): GetSubmissionByReferenceRequest {
+  const { reference } = request.params;
+  return { reference };
+}
+
+function getSubmissionByReferenceResponse(
+  submissions: Submission[]
+): GetSubmissionByReferenceResponse {
+  return { results: submissions };
+}
+
+//Get all submissions with matching references
+export const getSubmissionByReference = async (
+  request: Request,
+  h: ResponseToolkit
+) => {
+  try {
+    const submissionRequest = getSubmissionByReferenceRequest(request);
+    const submissionResponse = getSubmissionByReferenceResponse(
+      data.filter(
+        (submission) => submission.reference === submissionRequest.reference
+      )
+    );
+    if (submissionResponse.results.length === 0) {
+      return h.response().code(404);
+    }
+    return h.response(submissionResponse).code(200);
+  } catch (error) {
+    return h.response(error).code(500);
+  }
+};
+
+function deleteSubmissionRequest(request: Request): DeleteSubmissionRequest {
   const { id } = request.params;
   return { id };
 }
 
-export function deleteSubmissionResponse(
-  success: boolean
-): DeleteSubmissionResponse {
+function deleteSubmissionResponse(success: boolean): DeleteSubmissionResponse {
   return { deleted: success };
 }
 
@@ -120,7 +174,10 @@ export const deleteSubmission = async (
     data.splice(indexToDelete, 1);
 
     // Write the updated data to the file
-    await fs.writeFile('./db.json', JSON.stringify(data, null, 2));
+    await fs.writeFile(
+      './apps/waste-tracking-gateway/src/db.json',
+      JSON.stringify(data, null, 2)
+    );
 
     const deleteResponse = deleteSubmissionResponse(true);
 
@@ -130,17 +187,13 @@ export const deleteSubmission = async (
   }
 };
 
-export function updateSubmissionRequest(
-  request: Request
-): UpdateSubmissionRequest {
-  const { id, value } = request.payload as Submission;
-  return { value: { id, value } };
+function updateSubmissionRequest(request: Request): UpdateSubmissionRequest {
+  const submission = request.payload as Submission;
+  return { value: submission };
 }
 
-export function updateSubmissionResponse(
-  submission: Submission
-): UpdateSubmissionResponse {
-  return { value: submission };
+function updateSubmissionResponse(success: boolean): UpdateSubmissionResponse {
+  return { updated: success };
 }
 
 //Update a submission
@@ -162,9 +215,12 @@ export const updateSubmission = async (
 
     data[submissionToUpdateIndex] = updatedSubmission;
 
-    await fs.writeFile('./db.json', JSON.stringify(data, null, 2));
+    await fs.writeFile(
+      './apps/waste-tracking-gateway/src/db.json',
+      JSON.stringify(data, null, 2)
+    );
 
-    const submissionResponse = updateSubmissionResponse(updatedSubmission);
+    const submissionResponse = updateSubmissionResponse(true);
 
     return h.response(submissionResponse).code(200);
   } catch (error) {
