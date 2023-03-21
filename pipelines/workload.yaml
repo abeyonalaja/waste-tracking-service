@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: waste-tracking-service-deploy
-        image: sndwtshubcr2401.azurecr.io/demo:1.0 #${IMAGE_NAME}
+        image: sndwtshubcr3401.azurecr.io/demo:1.0 #${IMAGE_NAME}
         resources:
           limits:
             memory: "128Mi"
@@ -26,9 +26,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: waste-tracking-service-svc
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: SNDWTSAKSRG2401
 spec:
   selector:
-    app: waste-tracking-service-svc
+    app: waste-tracking-service-deploy
   ports:
-  - port: 8080
+  - port: 80
     targetPort: 3000
+  type: LoadBalancer
+  loadBalancerIP: 52.151.120.75

@@ -6,10 +6,10 @@ pool:
 
 variables:
  BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
- IMAGE_NAME: sndwtshubcr2401.azurecr.io/demo:1.0
- RG_NAME: SNDWTSAKSRG1401
- AKS_NAME: SNDWTSSPKKS1401
- ACR_NAME: SNDWTSHUBCR2401
+ IMAGE_NAME: sndwtshubcr3401.azurecr.io/demo:1.0
+ RG_NAME: SNDWTSAKSRG2401
+ AKS_NAME: SNDWTSSPKKS3401
+ ACR_NAME: SNDWTSHUBCR3401
 
 steps:
 
@@ -53,6 +53,6 @@ steps:
     secretType: dockerRegistry
     containerRegistryType: Azure Container Registry 
     azureSubscriptionEndpointForSecrets: 'AZD-WTS-SND1' 
-    azureContainerRegistry: 'sndwtshubcr2401.azurecr.io' 
+    azureContainerRegistry: 'sndwtshubcr3401.azurecr.io' 
     versionOrlocation: 'version'
     versionSpec: '1.24.9'
