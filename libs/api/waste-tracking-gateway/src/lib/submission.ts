@@ -31,6 +31,11 @@ export enum SectionStatus {
   Started,
   Completed,
 }
+
+export interface SubmissionRequestPayload {
+  reference: string;
+}
+
 //GET /submissions/{reference}
 export interface GetSubmissionByReferenceRequest {
   reference: string;

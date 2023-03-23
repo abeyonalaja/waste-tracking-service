@@ -13,6 +13,7 @@ import {
   UpdateSubmissionRequest,
   UpdateSubmissionResponse,
   SectionStatus,
+  SubmissionRequestPayload,
 } from '@wts/api/waste-tracking-gateway';
 
 //List all submissions
@@ -62,7 +63,11 @@ export const createSubmission = async (
 ) => {
   try {
     const submission = createBaseSubmission();
+    const submissionRequestPayload = request.payload as SubmissionRequestPayload;
 
+    if (submissionRequestPayload) {
+      submission.reference = submissionRequestPayload.reference;
+    }
     // Add the new submission to the data array
     data.push(submission);
 
@@ -71,8 +76,7 @@ export const createSubmission = async (
       './apps/waste-tracking-gateway/src/db.json',
       JSON.stringify(data, null, 2)
     );
-
-    const submissionResponse = { created: true };
+    const submissionResponse = { created: true, submissionId: submission.id };
 
     return h.response(submissionResponse).code(201);
   } catch (error) {
