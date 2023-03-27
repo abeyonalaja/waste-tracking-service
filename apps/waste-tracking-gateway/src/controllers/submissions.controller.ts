@@ -63,9 +63,10 @@ export const createSubmission = async (
 ) => {
   try {
     const submission = createBaseSubmission();
-    const submissionRequestPayload = request.payload as SubmissionRequestPayload;
+    const submissionRequestPayload =
+      request.payload as SubmissionRequestPayload;
 
-    if (submissionRequestPayload) {
+    if (submissionRequestPayload?.reference) {
       submission.reference = submissionRequestPayload.reference;
     }
     // Add the new submission to the data array
@@ -206,6 +207,7 @@ export const updateSubmission = async (
   h: ResponseToolkit
 ) => {
   try {
+    // Find the submission to update
     const { id } = request.params;
     const submissionToUpdateIndex = data.findIndex(
       (submission) => submission.id === id
@@ -214,18 +216,64 @@ export const updateSubmission = async (
       return h.response().code(404);
     }
 
-    const submissionRequest = updateSubmissionRequest(request);
-    const updatedSubmission = submissionRequest.value;
+    if (!request.payload) {
+      return h.response().code(400);
+    }
 
+    // Get the existing submission object
+    const existingSubmission = data[submissionToUpdateIndex];
+    const submissionRequest = updateSubmissionRequest(request);
+
+    //Filter payload object with submission attributes
+    const filteredSubmissionRequest = Object.fromEntries(
+      Object.entries(submissionRequest.value).filter(
+        ([key]) =>
+          key.includes('accountName') ||
+          key.includes('reference') ||
+          key.includes('wasteDescriptionStatus') ||
+          key.includes('wasteDescriptionData') ||
+          key.includes('quantityOfWasteStatus') ||
+          key.includes('quantityOfWasteData') ||
+          key.includes('exporterImporterStatus') ||
+          key.includes('exporterDetailsStatus') ||
+          key.includes('exporterData') ||
+          key.includes('importerDetailsStatus') ||
+          key.includes('importerData') ||
+          key.includes('journeyofWasteStatus') ||
+          key.includes('collectionDateStatus') ||
+          key.includes('collectionDateData') ||
+          key.includes('wasteCarriersStatus') ||
+          key.includes('wasteCarriersData') ||
+          key.includes('wasteCollectionDetailsStatus') ||
+          key.includes('wasteCollectionDetailsData') ||
+          key.includes('locationWasteLeavesUKStatus') ||
+          key.includes('locationWasteLeavesUKStatusData') ||
+          key.includes('treatmentOfWasteStatus') ||
+          key.includes('recoveryFacilityStatus') ||
+          key.includes('recoveryFacilityData')
+      )
+    );
+
+    if (Object.keys(filteredSubmissionRequest).length === 0) {
+      return h.response().code(400);
+    }
+    // Merge the existing submission with the updated attributes
+    const updatedSubmission = {
+      ...existingSubmission,
+      ...filteredSubmissionRequest,
+    };
+
+    // Update the data array with the updated submission
     data[submissionToUpdateIndex] = updatedSubmission;
 
+    // Write the updated data array to the JSON file
     await fs.writeFile(
       './apps/waste-tracking-gateway/src/db.json',
       JSON.stringify(data, null, 2)
     );
 
+    // Send a success response
     const submissionResponse = updateSubmissionResponse(true);
-
     return h.response(submissionResponse).code(200);
   } catch (error) {
     return h.response(error).code(500);
