@@ -1,9 +1,8 @@
-import styled from 'styled-components';
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import { CompleteHeader } from '../../components/CompleteHeader';
 import { CompleteFooter } from '../../components/CompleteFooter';
-import { BackLink, Page, Heading, Main } from 'govuk-react';
+import { BackLink, Heading, Main } from 'govuk-react';
 
 export function TemplateSubmitExport() {
   const { t } = useTranslation();

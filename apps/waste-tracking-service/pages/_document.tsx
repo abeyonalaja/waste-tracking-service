@@ -31,9 +31,9 @@ export default class CustomDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html className="govuk-template" lang="en">
         <Head>{this.props.styles}</Head>
-        <body>
+        <body className="govuk-template__body">
           <Main />
           <NextScript />
         </body>

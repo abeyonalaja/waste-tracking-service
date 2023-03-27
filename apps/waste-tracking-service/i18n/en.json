@@ -21,8 +21,8 @@
   "greenListOverview.templates.linkTwo": "Manage your templates",
   "yourReference.breadcrumb": "Your reference",
   "yourReference.title": "Do you want to add your own reference to this export?",
-  "yourReference.description": "Your reference number should be unique to the shipment. You can use it to find your submission.",
-  "yourReference.input": "Enter your reference",
+  "yourReference.hint": "Your reference number should be unique to the shipment. You can use it to find your submission.",
+  "yourReference.inputLabel": "Enter your reference",
   "yourReference.button": "Save and continue",
   "templateSubmitExport.title": "Which template would you like to use?",
   "templateSubmitCSV.breadcrumb": "Upload multiple exports",
@@ -38,6 +38,7 @@
   "radio.yes": "Yes",
   "radio.no": "No",
   "back": "Back",
+  "errorSummary.title": "There is a problem",
   "exportJourney.submitAnExport.title": "Submit an export",
   "exportJourney.submitAnExport.breadcrumb": "Submit an export"
 }

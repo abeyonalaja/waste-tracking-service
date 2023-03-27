@@ -35,7 +35,7 @@ export function Index() {
         <H4>{t('greenListOverview.tellExport.heading')}</H4>
 
         <Paragraph>
-          <Link href="dashboard/your-reference" id="your-reference">
+          <Link href="/add-your-own-export-reference" id="your-reference">
             {t('greenListOverview.tellExport.linkOne')}
           </Link>
         </Paragraph>

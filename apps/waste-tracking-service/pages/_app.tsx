@@ -1,5 +1,8 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import "./styles.css"
+
+import { SubmissionContextProvider } from '../contexts/submissionContext';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -7,9 +10,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Green list waste overview</title>
       </Head>
-      <main className="app">
+      <SubmissionContextProvider>
         <Component {...pageProps} />
-      </main>
+      </SubmissionContextProvider>
     </>
   );
 }

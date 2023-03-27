@@ -5,6 +5,13 @@ export const wasteTrackingGateway = async () => {
   const server: Server = new Server({
     port: 3000,
     host: 'localhost',
+    routes: {
+      cors: {
+        origin: ["http://localhost:4200"],
+        headers: ["Accept", "Content-Type"],
+        additionalHeaders: ["X-Requested-With"]
+      }
+    }
   });
 
   routes(server);

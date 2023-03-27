@@ -77,6 +77,7 @@ export const createSubmission = async (
       './apps/waste-tracking-gateway/src/db.json',
       JSON.stringify(data, null, 2)
     );
+
     const submissionResponse = { created: true, submissionId: submission.id };
 
     return h.response(submissionResponse).code(201);

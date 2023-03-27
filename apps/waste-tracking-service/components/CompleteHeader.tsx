@@ -1,53 +1,34 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CrownIcon from '@govuk-react/icon-crown';
-import { GlobalStyle, Main, TopNav, Link, PhaseBanner } from 'govuk-react';
+import { GlobalStyle, Main, TopNav, Link, PhaseBanner, SkipLink } from 'govuk-react';
 
 const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;
-`;
-
-const TopNavStyled = styled(TopNav)`
-  .logo-search-wrapper {
-    max-width: 200px;
-  }
-
-  .src__ServiceTitleWrapper-sc-140rlix-0 {
-    float: left;
-  }
-
-  .src__MenuButtonWrapper-sc-140rlix-1 .eLocyj {
-    -webkit-flex-direction: row;
-  }
-`;
-
-const TopNavAnchor = styled(TopNav.Anchor)`
-  max-width: 240px !important;
 `;
 
 export class CompleteHeader extends Component {
   render() {
     return (
       <>
+        <SkipLink />
         <GlobalStyle />
-        <TopNavStyled
+        <TopNav
           company={
-            <TopNavAnchor href="https://example.com" target="new">
+            <TopNav.Anchor href="https://www.gov.uk/" target="_blank">
               <TopNav.IconTitle icon={<CrownIcon height="32" width="36" />}>
                 GOV.UK
               </TopNav.IconTitle>
-            </TopNavAnchor>
+            </TopNav.Anchor>
           }
           serviceTitle={
             <TopNav.NavLink
-              href="https://example.com"
-              target="new"
-              aria-roledescription="heading"
+              href="/"
             >
               Export green list waste
             </TopNav.NavLink>
           }
-        ></TopNavStyled>
+        ></TopNav>
         <Main>
           <PhaseBannerStyled level="PRIVATE BETA">
             This part of GOV.UK is being rebuilt –{' '}
