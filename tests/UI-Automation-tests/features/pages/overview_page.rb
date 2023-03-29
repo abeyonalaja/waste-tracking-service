@@ -7,4 +7,8 @@ class OverviewPage < GenericPage
     expect(self).to have_css 'h1', text: 'Green list waste overview', exact_text: true
   end
 
+  def submit_a_single_waste_export
+    click_link('Submit a single waste export')
+  end
+
 end

@@ -7,17 +7,20 @@ require 'time'
 require 'capybara/cucumber'
 require 'capybara-screenshot/cucumber'
 require 'selenium/webdriver'
+require 'faker'
 require 'webdrivers'
 require 'yaml'
 require 'rspec/matchers'
 require 'active_support/time'
 require_relative 'page_helpers/generic_page'
 require 'report_builder'
+require 'axe-cucumber-steps'
+require "axe-capybara"
 
 
 World(Capybara::DSL)
 
-Webdrivers.logger.level = :DEBUG
+# Webdrivers.logger.level = :DEBUG
 
 # Defaults
 Capybara.default_selector = :id
@@ -91,6 +94,14 @@ Capybara.register_driver :firefox do |app|
     opts.add_argument '-headless'
   end
   Capybara::Selenium::Driver.new(app, **{ :browser => :firefox, desired_capabilities: capabilities, options: browser_options })
+end
+
+
+
+# configure `AxeCapybara`
+driver = AxeCapybara.configure(:chrome) do |c|
+  # see below for a full list of configuration
+  c.jslib_path = "next-version/axe.js"
 end
 
 # Should prevent error - Text file busy - /home/jenkins/.webdrivers/chromedriver (Errno::ETXTBSY)

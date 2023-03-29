@@ -1,5 +1,6 @@
 Given(/^I login to waste tracking portal$/) do
   # refactor this when login page is implemented
+  Log.info("Start url: #{Env.start_page_url}")
   visit(Env.start_page_url)
 end
 
@@ -25,3 +26,6 @@ And(/^I can see links for each sections$/) do
   expect(page).to have_link('Manage your templates')
 end
 
+Then(/^Green list overview page is displayed$/) do
+  OverviewPage.new.check_page_displayed
+end
