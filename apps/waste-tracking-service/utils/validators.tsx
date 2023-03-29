@@ -14,6 +14,9 @@ export const validateReference: (ownReference?: string, reference?: string) => s
   if (reference.length > 50)
     return 'Enter a reference using 50 character or less';
 
+  const regex = new RegExp('^[a-zA-Z0-9\\-\\/]{1,50}$');
+  if (!regex.test(reference))
+    return 'The reference must only include letters a to z, numbers, hyphens and forward slashes';
 
 }
 

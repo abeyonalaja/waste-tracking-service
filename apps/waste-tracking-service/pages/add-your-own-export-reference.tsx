@@ -24,10 +24,36 @@ export function AddYourOwnExportReference() {
   }>({});
 
 
-const postData = () => {
+    const postData = () => {
+      try {
+        fetch(`${process.env.NX_API_GATEWAY_URL}/submission`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            reference: reference
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            const { submissionId } = data
+            setSubmission({
+              id: submissionId,
+              ownReference: ownReference,
+              reference: reference
+            })
+            router.push("/dashboard/submit-an-export")
+          })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+  const updateData = () => {
     try {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submission`, {
-        method: 'POST',
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submission/${submission.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -39,15 +65,15 @@ const postData = () => {
         .then(data => {
           const { submissionId } = data
           setSubmission({
-            id: submissionId,
+            id: submission.id,
             ownReference: ownReference,
             reference: reference
           })
           router.push("/dashboard/submit-an-export")
         })
-    } catch (e) {
-      console.error(e)
-    }
+      } catch (e) {
+        console.error(e)
+      }
   }
 
   const handleSubmit = useCallback((e: FormEvent) => {
@@ -59,10 +85,16 @@ const postData = () => {
       setErrors(newErrors);
     } else {
       setErrors(null);
-      postData()
+      if (submission?.id === undefined) {
+        postData();
+      } else {
+        updateData();
+      }
     }
     e.preventDefault()
   }, [ownReference, reference])
+
+
   return (
     <>
       <Head>
@@ -145,6 +177,14 @@ const postData = () => {
       <CompleteFooter />
     </>
   );
+}
+
+export async function getStaticProps(submission){
+  return {
+    props: {
+      jk: submission.id || null
+    }
+  }
 }
 
 export default AddYourOwnExportReference;
