@@ -66,6 +66,10 @@ export const createSubmission = async (
     const submissionRequestPayload =
       request.payload as SubmissionRequestPayload;
 
+    if (submissionRequestPayload.reference?.length > 50) {
+      return h.response().code(400);
+    }
+
     if (submissionRequestPayload?.reference) {
       submission.reference = submissionRequestPayload.reference;
     }
@@ -255,7 +259,11 @@ export const updateSubmission = async (
       )
     );
 
-    if (Object.keys(filteredSubmissionRequest).length === 0) {
+    if (
+      Object.keys(filteredSubmissionRequest).length === 0 ||
+      submissionRequest.value.reference?.length > 50 ||
+      submissionRequest.value.accountName?.length > 50
+    ) {
       return h.response().code(400);
     }
     // Merge the existing submission with the updated attributes
