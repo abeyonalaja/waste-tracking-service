@@ -26,33 +26,19 @@ param subnet object = {
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
-var role = 'SVB'
+var role = 'ENV'
 
 var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
 }[primaryRegion]
 
 var serviceBusName = join(
-  [ env, svc, role, 'NME', envNum, padLeft(instance0, 3, '0') ], ''
+  [ env, svc, role, 'SB', envNum, padLeft(instance0, 3, '0') ], ''
 )
 
-var serviceBusPrivateEndpointName = join(
-  [ env, svc, role, 'PE', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-var serviceBusQueueName = join(
-  [ env, svc, role, 'QUE', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
-
+resource serviceBus 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: serviceBusName
-  
   location: primaryRegion
-
-  identity: {
-    type: 'SystemAssigned'
-  }
 
   sku: {
     name: 'Premium'
@@ -65,30 +51,17 @@ resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
   }
 
   tags: union(defaultTags, { Name: serviceBusName })
-
 }
 
-resource serviceBusNetRuleSet 'Microsoft.ServiceBus/namespaces/networkRuleSets@2022-10-01-preview' = {
-  
-  parent: serviceBus
-  
-  name: 'default'
-  
-  properties: {
-    publicNetworkAccess: 'Disabled'
-    trustedServiceAccessEnabled: false
-  }
+var serviceBusPrivateEndpointName = join(
+  [ env, svc, 'SBS', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
+)
 
-}
-
-resource serviceBusPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-01' = {
-
+resource serviceBusPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   name: serviceBusPrivateEndpointName
-  
   location: primaryRegion
 
   properties: {
-    
     subnet: {
       id: subnet.id
     }
@@ -98,9 +71,7 @@ resource serviceBusPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-0
         name: serviceBus.name
         properties: {
           privateLinkServiceId: serviceBus.id
-          groupIds: [
-            'namespace'
-          ]
+          groupIds: [ 'namespace' ]
         }
       }
     ]
@@ -108,16 +79,4 @@ resource serviceBusPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-0
   }
 
   tags: union(defaultTags, { Name: serviceBusPrivateEndpointName })
-
-}
-
-resource serviceBusQueue 'Microsoft.ServiceBus/namespaces/queues@2022-10-01-preview' = {
-
-  parent: serviceBus
-
-  name: serviceBusQueueName
-
-  properties: {
-  }
-  
 }

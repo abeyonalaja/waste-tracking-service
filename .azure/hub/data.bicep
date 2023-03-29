@@ -44,7 +44,7 @@ var instance0 = {
 }[primaryRegion]
 
 var containerRegistryName = join(
-  [ env, svc, role, 'CR', 2, padLeft(instance0, 3, '0') ], ''
+  [ env, svc, role, 'CR', envNum, padLeft(instance0, 3, '0') ], ''
 )
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' = {
@@ -56,17 +56,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' =
   }
 
   tags: union(defaultTags, { Name: containerRegistryName })
-}
-
-var logAnalyticsWorkspaceName = join(
-  [ env, svc, role, 'LA', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
-  name: logAnalyticsWorkspaceName
-  location: primaryRegion
-
-  tags: union(defaultTags, { Name: logAnalyticsWorkspaceName })
 }
 
 var containerRegistryEndpointName = join(
@@ -128,18 +117,11 @@ resource monitorPrivateLinkScope 'microsoft.insights/privateLinkScopes@2021-07-0
 
   tags: union(
     defaultTags,
-    { 
+    {
       Name: monitorPrivateLinkScopeName
       Location: 'global'
     }
   )
-
-  resource logAnalyticsResource 'scopedResources' = {
-    name: logAnalyticsWorkspace.name
-    properties: {
-      linkedResourceId: logAnalyticsWorkspace.id
-    }
-  }
 }
 
 var amplsEndpointName = join(
@@ -149,10 +131,6 @@ var amplsEndpointName = join(
 resource amplsEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   name: amplsEndpointName
   location: primaryRegion
-
-  dependsOn: [
-    containerRegistryEndpont
-  ]
 
   properties: {
     subnet: {
@@ -212,4 +190,9 @@ resource amplsEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
       ]
     }
   }
+}
+
+@description('Reference to created Azure Monitor Private Link Scope.')
+output monitorPrivateLinkScope object = {
+  name: monitorPrivateLinkScope.name
 }

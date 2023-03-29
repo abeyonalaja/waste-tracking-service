@@ -22,10 +22,8 @@ param primaryRegion string = 'uksouth'
 param addressSpace object = {
   virtualNetwork: null
   subnets: {
-    gateway: null
-    endpoints: null
+    data: null
     ado: null
-    bastion: null
   }
 }
 
@@ -41,17 +39,11 @@ var instance0 = {
 var virtualNetworkName = join(
   [ env, svc, role, 'VN', envNum, padLeft(instance0, 3, '0') ], ''
 )
-var gatewaySubnetName = join(
+
+var dataSubnetName = join(
   [
     virtualNetworkName
-    join([ env, svc, 'GAT', 'SN', envNum, padLeft(instance0, 3, '0') ], '')
-  ],
-  '-'
-)
-var endpointSubnetName = join(
-  [
-    virtualNetworkName
-    join([ env, svc, 'END', 'SN', envNum, padLeft(instance0, 3, '0') ], '')
+    join([ env, svc, 'DAT', 'SN', envNum, padLeft(instance0, 3, '0') ], '')
   ],
   '-'
 )
@@ -74,18 +66,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
 
     subnets: [
       {
-        name: gatewaySubnetName
+        name: dataSubnetName
         properties: {
-          addressPrefix: addressSpace.subnets.gateway
-          networkSecurityGroup: {
-            id: gatewayNsg.id
-          }
-        }
-      }
-      {
-        name: endpointSubnetName
-        properties: {
-          addressPrefix: addressSpace.subnets.endpoints
+          addressPrefix: addressSpace.subnets.data
           privateEndpointNetworkPolicies: 'Disabled'
         }
       }
@@ -95,106 +78,24 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
           addressPrefix: addressSpace.subnets.ado
         }
       }
-      {
-        name: 'AzureBastionSubnet'
-        properties: {
-          addressPrefix: addressSpace.subnets.bastion
-        }
-      }
     ]
   }
 
   tags: union(defaultTags, { Name: virtualNetworkName })
 }
 
-var gatewayNsgName = join(
-  [ env, svc, 'GAT', 'SG', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource gatewayNsg 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
-  name: gatewayNsgName
-  location: primaryRegion
-
-  properties: {
-    securityRules: [
-      {
-        name: 'Inbound_GatewayManager'
-        properties: {
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
-          priority: 2000
-
-          sourcePortRange: '*'
-          destinationPortRange: '65200-65535'
-          sourceAddressPrefix: 'GatewayManager'
-          destinationAddressPrefix: '*'
-
-          description: 'Azure infrastructure communication'
-        }
-      }
-      {
-        name: 'Inbound_AzureLoadBalancer'
-        properties: {
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: '*'
-          priority: 2010
-
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: 'AzureLoadBalancer'
-          destinationAddressPrefix: '*'
-
-          description: 'Azure Infrastructure Load Balancer'
-        }
-      }
-      {
-        name: 'Inbound_Internet'
-        properties: {
-          access: 'Deny'
-          direction: 'Inbound'
-          protocol: '*'
-          priority: 2020
-
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: 'Internet'
-          destinationAddressPrefix: '*'
-
-          description: 'No gateway listeners associated with public IP'
-        }
-      }
-    ]
-  }
-
-  tags: union(defaultTags, { Name: gatewayNsgName })
-}
-
 @description('References to created subnets.')
 output subnets object = {
-  gateway: {
+  data: {
     id: first(filter(
       virtualNetwork.properties.subnets,
-      subnet => subnet.name == gatewaySubnetName
-    ))!.id
-  }
-  endpoints: {
-    id: first(filter(
-      virtualNetwork.properties.subnets,
-      subnet => subnet.name == endpointSubnetName
+      subnet => subnet.name == dataSubnetName
     ))!.id
   }
   ado: {
     id: first(filter(
       virtualNetwork.properties.subnets,
       subnet => subnet.name == adoSubnetName
-    ))!.id
-  }
-  bastion: {
-    id: first(filter(
-      virtualNetwork.properties.subnets,
-      subnet => subnet.name == 'AzureBastionSubnet'
     ))!.id
   }
 }

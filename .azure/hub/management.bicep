@@ -19,23 +19,14 @@ param envNum int = 1
 param primaryRegion string = 'uksouth'
 
 @description('Admin username assigned to created Virtual Machines.')
-param adminUsername string = 'vmssadmin'
+param vmAdminUsername string = 'azadmin'
 
 @description('''
-  References to subnets in which to deploy _ado_ and _bastion_ resources'.
+  Reference to subnets in which to deploy _ado_ resources'.
 ''')
-param subnets object = {
-  ado: {
-    id: null
-  }
-  bastion: {
-    id: null
-  }
+param adoSubnet object = {
+  id: null
 }
-
-@secure()
-@description('Admin password assigned to created Virtual Machines.')
-param adminPassword string
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
@@ -46,52 +37,23 @@ var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
 }[primaryRegion]
 
-var bastionPublicIpName = join(
-  [ env, svc, 'BAS', 'IP', envNum, padLeft(instance0, 3, '0') ], ''
+var keyVaultName = join(
+  [ env, svc, role, 'KV', envNum, padLeft(instance0, 3, '0') ], ''
 )
 
-resource bastionPublicIp 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
-  name: bastionPublicIpName
-  location: primaryRegion
-
-  sku: {
-    name: 'Standard'
-  }
-
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
-
-  tags: union(defaultTags, { Name: bastionPublicIpName })
-}
-
-var bastionName = join(
-  [ env, svc, role, 'BA', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource bastion 'Microsoft.Network/bastionHosts@2022-07-01' = {
-  name: bastionName
+resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
+  name: keyVaultName
   location: primaryRegion
 
   properties: {
-    ipConfigurations: [
-      {
-        name: 'default'
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
 
-        properties: {
-          publicIPAddress: {
-            id: bastionPublicIp.id
-          }
-
-          subnet: {
-            id: subnets.bastion.id
-          }
-        }
-      }
-    ]
+    tenantId: subscription().tenantId
+    enableRbacAuthorization: true
   }
-
-  tags: union(defaultTags, { Name: bastionName })
 }
 
 var vmssName = join(
@@ -103,28 +65,41 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-11-01' = {
   location: primaryRegion
 
   sku: {
-    name: 'Standard_A1_v2'
-    capacity: 1
+    name: 'Standard_D2_v3'
+    capacity: 0
   }
 
   properties: {
     overprovision: false
 
     virtualMachineProfile: {
-
       storageProfile: {
         imageReference: {
-          publisher: 'MicrosoftWindowsServer'
-          offer: 'WindowsServer'
-          sku: '2016-Datacenter'
+          publisher: 'Canonical'
+          offer: '0001-com-ubuntu-server-jammy'
+          sku: '22_04-lts'
           version: 'latest'
+        }
+
+        osDisk: {
+          caching: 'ReadOnly'
+          createOption: 'FromImage'
         }
       }
 
       osProfile: {
-        computerNamePrefix: take(vmssName, 9)
-        adminUsername: adminUsername
-        adminPassword: adminPassword
+        computerNamePrefix: vmssName
+        adminUsername: vmAdminUsername
+        linuxConfiguration: {
+          ssh: {
+            publicKeys: [
+              {
+                keyData: loadTextContent('./id_rsa.pub')
+                path: '/home/${vmAdminUsername}/.ssh/authorized_keys'
+              }
+            ]
+          }
+        }
       }
 
       networkProfile: {
@@ -139,7 +114,7 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-11-01' = {
                   properties: {
                     primary: true
                     subnet: {
-                      id: subnets.ado.id
+                      id: adoSubnet.id
                     }
                   }
                 }
@@ -155,5 +130,19 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-11-01' = {
     }
   }
 
-  tags: union(defaultTags, { Name: bastionName })
+  resource script 'extensions' = {
+    name: 'CustomScript'
+
+    properties: {
+      publisher: 'Microsoft.Azure.Extensions'
+      type: 'CustomScript'
+      typeHandlerVersion: '2.1'
+
+      settings: any({
+        script: loadFileAsBase64('./script.sh')
+      })
+    }
+  }
+
+  tags: union(defaultTags, { Name: vmssName })
 }

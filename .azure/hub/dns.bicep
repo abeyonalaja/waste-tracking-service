@@ -16,10 +16,13 @@ param virtualNetworks array = [
   }
 ]
 
+@allowed([ 'northeurope', 'westeurope', 'uksouth', 'ukwest' ])
+@description('Primary Azure region for all deployed resources.')
+param primaryRegion string = 'uksouth'
+
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
-// TODO: Link DNS zone with spoke to allow access to ACR through private endpoint
 resource privatelink_azurecr_io 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: 'privatelink.azurecr.io'
   location: 'global'
@@ -190,6 +193,30 @@ resource privatelink_applicationinsights_azure_com 'Microsoft.Network/privateDns
   }]
 }
 
+resource privatelink_primaryregion_azmk8s_io 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: 'privatelink.${primaryRegion}.azmk8s.io'
+  location: 'global'
+
+  tags: union(
+    defaultTags,
+    {
+      Name: 'privatelink.${primaryRegion}.azmk8s.io'
+      Location: 'global'
+    }
+  )
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = [for item in virtualNetworks: {
+    name: item.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: item.id
+      }
+    }
+  }]
+}
+
 @description('References to created Private DNS Zones.')
 output privateZones object = {
   'privatelink.azurecr.io': { id: privatelink_azurecr_io.id }
@@ -200,4 +227,5 @@ output privateZones object = {
   #disable-next-line no-hardcoded-env-urls
   'privatelink.blob.core.windows.net': { id: privatelink_blob_core_windows_net.id }
   'privatelink.applicationinsights.azure.com': { id: privatelink_applicationinsights_azure_com.id }
+  'privatelink.${primaryRegion}.azmk8s.io': { id: privatelink_primaryregion_azmk8s_io.id }
 }

@@ -22,20 +22,21 @@ param primaryRegion string = 'uksouth'
 param addressSpace object = {
   virtualNetwork: null
   subnets: {
-    gateway: null
-    endpoints: null
-    ado: null
-    bastion: null
+    aks: null
+    data: null
   }
 }
 
-@description('Egress Firewall Private IP address used for hop IP address in the AKS subnet UDR.')
-param firewallPrivateIp string = '10.0.8.4'
+@description('''
+  Remote networks to peer from created Virtual Network. Structure of each
+  element is `{ name: <virtualNetworkName>, id: <virtualNetworkResourceId> }`.
+''')
+param remoteVirtualNetworks array = []
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
-var role = 'SPK'
+var role = 'ENV'
 
 var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
@@ -44,13 +45,7 @@ var instance0 = {
 var virtualNetworkName = join(
   [ env, svc, role, 'VN', envNum, padLeft(instance0, 3, '0') ], ''
 )
-var ingressSubnetName = join(
-  [
-    virtualNetworkName
-    join([ env, svc, 'ING', 'SN', envNum, padLeft(instance0, 3, '0') ], '')
-  ],
-  '-'
-)
+
 var aksSubnetName = join(
   [
     virtualNetworkName
@@ -58,6 +53,7 @@ var aksSubnetName = join(
   ],
   '-'
 )
+
 var dataSubnetName = join(
   [
     virtualNetworkName
@@ -65,39 +61,6 @@ var dataSubnetName = join(
   ],
   '-'
 )
-var aksRouteTableName = join(
-  [ 
-    aksSubnetName
-    join([ env, svc, 'AKS', 'RT', envNum, padLeft(instance0, 3, '0') ], '')
-  ], 
-  '-'
-)
-var aksRouteTableRouteName = join(
-  [ 
-    aksRouteTableName
-    join([ env, svc, 'AKS', 'RO', envNum, padLeft(instance0, 3, '0') ], '') 
-  ], 
-  '-'
-)
-
-resource aksRouteTable 'Microsoft.Network/routeTables@2022-07-01' = {
-  name: aksRouteTableName
-
-  location: primaryRegion
-
-  properties: {
-    routes: [
-      {
-        name: aksRouteTableRouteName
-        properties: {
-          addressPrefix: '0.0.0.0/0'
-          nextHopIpAddress: firewallPrivateIp
-          nextHopType: 'VirtualAppliance'
-        }
-      }
-    ]
-  }
-}
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
   name: virtualNetworkName
@@ -110,41 +73,35 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
 
     subnets: [
       {
-        name: ingressSubnetName
-        properties: {
-          addressPrefix: addressSpace.subnets.ingress
-        }
-      }
-      {
         name: aksSubnetName
         properties: {
           addressPrefix: addressSpace.subnets.aks
-          privateEndpointNetworkPolicies: 'Disabled'
-          routeTable: {
-            id: resourceId(resourceGroup().name, aksRouteTable.type, aksRouteTable.name)
-          }
         }
       }
       {
         name: dataSubnetName
         properties: {
           addressPrefix: addressSpace.subnets.data
+          privateEndpointNetworkPolicies: 'Disabled'
         }
       }
     ]
   }
+
+  resource peerings 'virtualNetworkPeerings' = [for network in remoteVirtualNetworks: {
+    name: network.name
+    properties: {
+      remoteVirtualNetwork: {
+        id: network.id
+      }
+    }
+  }]
 
   tags: union(defaultTags, { Name: virtualNetworkName })
 }
 
 @description('References to created subnets.')
 output subnets object = {
-  ingress: {
-    id: first(filter(
-      virtualNetwork.properties.subnets,
-      subnet => subnet.name == ingressSubnetName
-    ))!.id
-  }
   aks: {
     id: first(filter(
       virtualNetwork.properties.subnets,
@@ -159,7 +116,7 @@ output subnets object = {
   }
 }
 
-@description('Reference to created virtual network.')
+@description('Reference to created Virtual Network.')
 output virtualNetwork object = {
   id: virtualNetwork.id
   name: virtualNetwork.name

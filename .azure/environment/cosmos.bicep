@@ -26,72 +26,47 @@ param subnet object = {
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
-var role = 'CDB'
+var role = 'ENV'
 
 var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
 }[primaryRegion]
 
-var cosmosDBAccountName = join(
-  [ env, svc, role, 'ACC', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-var cosmosDBPrivateEndpointName = join(
-  [ env, svc, role, 'PE', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-var cosmosDBName = join(
-  [ env, svc, role, 'SQL', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-var cosmosDBContainerName = join(
-  [ env, svc, role, 'CON', envNum, padLeft(instance0, 3, '0') ], ''
+var cosmosDBAccountName = toLower(
+  join([ env, svc, role, 'CO', envNum, padLeft(instance0, 3, '0') ], '')
 )
 
 resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
-
-  name: toLower(cosmosDBAccountName)
-
+  name: cosmosDBAccountName
   location: primaryRegion
 
-  identity: {
-    type: 'SystemAssigned'
-  }
-
-  kind:'GlobalDocumentDB'
+  kind: 'GlobalDocumentDB'
 
   properties: {
-
-    enableFreeTier: true
-
     databaseAccountOfferType: 'Standard'
-
     locations: [
       {
         locationName: primaryRegion
       }
     ]
-    
+
     backupPolicy: {
       type: 'Continuous'
     }
-
-    publicNetworkAccess: 'Disabled'
-
   }
 
   tags: union(defaultTags, { Name: cosmosDBAccountName })
-
 }
 
-resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-01' = {
+var cosmosDBPrivateEndpointName = join(
+  [ env, svc, 'COS', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
+)
 
+resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   name: cosmosDBPrivateEndpointName
-  
   location: primaryRegion
 
   properties: {
-    
     subnet: {
       id: subnet.id
     }
@@ -101,9 +76,7 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-01'
         name: cosmosDBAccount.name
         properties: {
           privateLinkServiceId: cosmosDBAccount.id
-          groupIds: [
-            'Sql'
-          ]
+          groupIds: [ 'Sql' ]
         }
       }
     ]
@@ -111,54 +84,4 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2021-08-01'
   }
 
   tags: union(defaultTags, { Name: cosmosDBPrivateEndpointName })
-
-}
-
-resource cosmosDBDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15' = {
-  
-  parent: cosmosDBAccount
-
-  name: cosmosDBName
-  
-  properties: {
-    
-    resource: {
-      id: cosmosDBName
-    }
-
-  }
-
-  tags: union(defaultTags, { Name: cosmosDBName })
-
-}
-
-resource cosmosDBContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-05-15' = {
-  
-  parent: cosmosDBDatabase
-  
-  name: cosmosDBContainerName
-  
-  properties: {
-    
-    resource: {
-      
-      id: cosmosDBContainerName
-
-      partitionKey: {
-        paths: [
-          '/id'
-        ]
-        kind: 'Hash'
-      }
-  
-    }
- 
-      options: {
-        throughput: 1000
-    }
-
-  }
-
-  tags: union(defaultTags, { Name: cosmosDBContainerName })
-
 }
