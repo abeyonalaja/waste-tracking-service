@@ -6,7 +6,7 @@ pool:
 
 variables:
   BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
-  IMAGE_NAME: sndwtshubcr3401.azurecr.io/waste-tracking-service:1.0
+  IMAGE_NAME: sndwtshubcr3401.azurecr.io/waste-tracking-service
   RG_NAME: SNDWTSAKSRG2401
   AKS_NAME: SNDWTSSPKKS2401
   ACR_NAME: SNDWTSHUBCR3401
@@ -29,13 +29,13 @@ steps:
     displayName: 'nx container $(APP_NAME)'
   - script: |
       echo "Tag docker image"
-      docker image tag docker.io/wts/$(APP_NAME):$(BRANCH_NAME) $(IMAGE_NAME)
+      docker image tag docker.io/wts/$(APP_NAME):$(BRANCH_NAME) $(IMAGE_NAME):$(Build.BuildNumber)
       echo "Push docker image to ACR"
-      docker image push $(IMAGE_NAME)
+      docker image push $(IMAGE_NAME):$(Build.BuildNumber)
     displayName: Docker list, tag and push
   - powershell: |
       Write-Host "Inputing image name variable into $(MANIFEST_FILE_PATH)"
-      ((Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH) -Raw) -replace "IMAGE_NAME","$(IMAGE_NAME)") | Set-Content -Path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
+      ((Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH) -Raw) -replace "IMAGE_NAME","$(IMAGE_NAME):$(Build.BuildNumber)") | Set-Content -Path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
       Write-Host "Display contents of $(MANIFEST_FILE_PATH)"
       Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
       Write-Host "Inputing app name variable into $(MANIFEST_FILE_PATH)"
