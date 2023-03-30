@@ -11,37 +11,37 @@ import {
 export const routes = (server: Server) => {
   server.route({
     method: 'GET',
-    path: '/submissions',
+    path: '/api/submissions',
     handler: listSubmissions,
   });
 
   server.route({
     method: 'GET',
-    path: '/submissions/{reference}',
+    path: '/api/submissions/{reference}',
     handler: getSubmissionByReference,
   });
 
   server.route({
     method: 'GET',
-    path: '/submission/{id}',
+    path: '/api/submission/{id}',
     handler: getSubmissionById,
   });
 
   server.route({
     method: 'POST',
-    path: '/submission',
+    path: '/api/submission',
     handler: createSubmission,
   });
 
   server.route({
     method: 'DELETE',
-    path: '/submission/{id}',
+    path: '/api/submission/{id}',
     handler: deleteSubmission,
   });
 
   server.route({
     method: 'PUT',
-    path: '/submission/{id}',
+    path: '/api/submission/{id}',
     handler: updateSubmission,
   });
 };
