@@ -6,10 +6,12 @@ pool:
 
 variables:
   BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
-  IMAGE_NAME: sndwtshubcr3401.azurecr.io/demo:2.0
+  IMAGE_NAME: sndwtshubcr3401.azurecr.io/waste-tracking-service:1.0
   RG_NAME: SNDWTSAKSRG2401
   AKS_NAME: SNDWTSSPKKS2401
   ACR_NAME: SNDWTSHUBCR3401
+  APP_NAME: waste-tracking-service
+  MANIFEST_FILE_PATH: /workloads/waste-tracking-service.yaml
 
 steps:
   - task: AzureCLI@1
@@ -23,19 +25,23 @@ steps:
       npm ci
     displayName: 'npm ci'
   - script: |
-      npx nx container waste-tracking-service
-    displayName: 'nx container waste-tracking-service'
+      npx nx container $(APP_NAME)
+    displayName: 'nx container $(APP_NAME)'
   - script: |
       echo "Tag docker image"
-      docker image tag docker.io/wts/waste-tracking-service:$(BRANCH_NAME) $(IMAGE_NAME)
+      docker image tag docker.io/wts/$(APP_NAME):$(BRANCH_NAME) $(IMAGE_NAME)
       echo "Push docker image to ACR"
       docker image push $(IMAGE_NAME)
     displayName: Docker list, tag and push
   - powershell: |
-      Write-Host "Inputing image name variable into workload.yaml"
-      ((Get-Content -path $(Build.SourcesDirectory)/workload/workload.yaml -Raw) -replace "IMAGE_NAME","$(IMAGE_NAME)") | Set-Content -Path $(Build.SourcesDirectory)/workload/workload.yaml
-      Write-Host "Display contents of workload.yaml"
-      Get-Content -path $(Build.SourcesDirectory)/workload/workload.yaml
+      Write-Host "Inputing image name variable into $(MANIFEST_FILE_PATH)"
+      ((Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH) -Raw) -replace "IMAGE_NAME","$(IMAGE_NAME)") | Set-Content -Path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
+      Write-Host "Display contents of $(MANIFEST_FILE_PATH)"
+      Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
+      Write-Host "Inputing app name variable into $(MANIFEST_FILE_PATH)"
+      ((Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH) -Raw) -replace "APP_NAME","$(APP_NAME)") | Set-Content -Path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
+      Write-Host "Display contents of $(MANIFEST_FILE_PATH)"
+      Get-Content -path $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
     displayName: Set Image Name in manifest file
   - task: AzureCLI@1
     displayName: Deploy to AKS
@@ -58,7 +64,7 @@ steps:
         kubectl get pods
         echo "Get AKS Nodes"
         kubectl get nodes
+        echo "Create App Namespace"
+        kubectl create namespace $(APP_NAME)
         echo "Apply manifest file"
-        kubectl apply -f $(Build.SourcesDirectory)/workload/workload.yaml
-
-
+        kubectl apply -f $(Build.SourcesDirectory)$(MANIFEST_FILE_PATH)
