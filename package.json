@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@hapi/hapi": "^21.3.0",
+    "accessible-autocomplete": "^2.0.4",
     "govuk-frontend": "^4.5.0",
     "govuk-react": "^0.10.5",
     "next": "13.1.1",
