@@ -85,3 +85,78 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01'
 
   tags: union(defaultTags, { Name: cosmosDBPrivateEndpointName })
 }
+
+resource cosmosDBDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15' = {
+  
+  parent: cosmosDBAccount
+
+  name: 'annexvii'
+  
+  properties: {  
+    resource: {
+      id: 'annexvii'
+    }
+
+    /*options: {
+      autoscaleSettings: {
+        maxThroughput: maxThroughput
+      }
+    }*/
+
+  }
+
+  tags: union(defaultTags, { Name: 'annexvii' })
+
+}
+
+resource cosmosDBContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-11-15' = {
+  
+  parent: cosmosDBDatabase
+  
+  name: 'referencedata'
+  
+  properties: {
+
+    resource: {
+     
+      id: 'referencedata'
+     
+      indexingPolicy: {
+        indexingMode: 'consistent'
+        automatic: true        
+        includedPaths: [
+          {
+            path: '/*'
+          }
+        ]        
+        excludedPaths: [
+          {
+            path: '/"_etag"/?'
+          }
+        ]
+      }
+
+      partitionKey: {
+        paths: [
+          '/type'
+        ]
+        kind: 'Hash'
+        version: 2
+      }
+
+      uniqueKeyPolicy: {
+        uniqueKeys: [
+          {
+            paths: [
+              '/code'
+            ]
+          }
+        ]
+      }
+
+    }
+  }
+
+  tags: union(defaultTags, { Name: 'referencedata' })
+
+}
