@@ -52,6 +52,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       importerDetail: { status: 'NotStarted' },
       collectionDate: { status: 'NotStarted' },
       carriers: { status: 'NotStarted' },
+      collectionDetail: { status: 'NotStarted' },
       ukExitLocation: { status: 'NotStarted' },
       transitCountries: { status: 'NotStarted' },
       recoveryFacilityDetail: { status: 'CannotStart' },

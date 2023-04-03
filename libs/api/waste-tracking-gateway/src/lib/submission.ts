@@ -32,6 +32,7 @@ export type Submission = {
   importerDetail: NotStartedSection;
   collectionDate: NotStartedSection;
   carriers: NotStartedSection;
+  collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
   transitCountries: NotStartedSection;
   recoveryFacilityDetail: { status: 'CannotStart' };
