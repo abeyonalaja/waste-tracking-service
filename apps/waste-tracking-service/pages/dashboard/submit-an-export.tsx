@@ -104,7 +104,7 @@ export function SubmitAnExport() {
               <Breadcrumbs.Link href="/dashboard">
                 {t('app.channel.title')}
               </Breadcrumbs.Link>
-              <Breadcrumbs.Link href="/dashboard/your-reference">
+              <Breadcrumbs.Link href="../add-your-own-export-reference">
                 {t('yourReference.breadcrumb')}
               </Breadcrumbs.Link>
               {t('exportJourney.submitAnExport.breadcrumb')}
@@ -267,7 +267,7 @@ export function SubmitAnExport() {
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="location-waste-leaves-uk">
+                          <Link href="" id="location-waste-leaves-the-uk">
                             {t(
                               'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK'
                             )}
