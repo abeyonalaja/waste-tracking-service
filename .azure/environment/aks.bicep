@@ -19,8 +19,23 @@ param envNum int = 1
 param primaryRegion string = 'uksouth'
 
 @description('Reference to existing subnet for AKS cluster.')
-param subnet object = {
-  id: null
+param subnets object = {
+  aks: {
+    id: null
+  }
+  data: {
+    id: null
+  }
+}
+
+@description('''
+  Reference to Resource Group that contains existing Private DNS Zone Group
+  resources; this module assumes that this resource group contains the zone
+  _privatelink.vaultcore.azure.net_.
+''')
+param privateDnsResourceGroup object = {
+  name: null
+  subscriptionId: null
 }
 
 @description('Admin username assigned to created Virtual Machines.')
@@ -58,7 +73,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
         vmSize: 'Standard_D2s_v3'
         osType: 'Linux'
         mode: 'System'
-        vnetSubnetID: subnet.id
+        vnetSubnetID: subnets.aks.id
       }
       {
         name: 'user'
@@ -66,7 +81,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
         vmSize: 'Standard_DS3_v2'
         osType: 'Linux'
         mode: 'User'
-        vnetSubnetID: subnet.id
+        vnetSubnetID: subnets.aks.id
       }
     ]
 
@@ -85,4 +100,75 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
   }
 
   tags: union(defaultTags, { Name: aksName })
+}
+
+var keyVaultName = join(
+  [ env, svc, 'AKS', 'KV', envNum, padLeft(instance0, 3, '0') ], ''
+)
+
+resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
+  name: keyVaultName
+  location: primaryRegion
+
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+
+    tenantId: subscription().tenantId
+    enableRbacAuthorization: true
+  }
+
+  tags: union(defaultTags, { Name: keyVaultName })
+}
+
+resource privatelink_vaultcore_azure_net 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  scope: resourceGroup(
+    privateDnsResourceGroup.subscriptionId,
+    privateDnsResourceGroup.name
+  )
+  name: 'privatelink.vaultcore.azure.net'
+}
+
+var keyVaultPrivateEndpointName = join(
+  [ env, svc, 'KKV', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
+)
+
+resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
+  name: keyVaultPrivateEndpointName
+  location: primaryRegion
+
+  properties: {
+    subnet: {
+      id: subnets.data.id
+    }
+
+    privateLinkServiceConnections: [
+      {
+        name: keyVault.name
+        properties: {
+          privateLinkServiceId: keyVault.id
+          groupIds: [ 'vault' ]
+        }
+      }
+    ]
+  }
+
+  tags: union(defaultTags, { Name: keyVaultPrivateEndpointName })
+
+  resource dnsZoneGroup 'privateDnsZoneGroups' = {
+    name: keyVault.name
+
+    properties: {
+      privateDnsZoneConfigs: [
+        {
+          name: 'privatelink.vaultcore.azure.net'
+          properties: {
+            privateDnsZoneId: privatelink_vaultcore_azure_net.id
+          }
+        }
+      ]
+    }
+  }
 }

@@ -46,7 +46,7 @@ param addressSpace object = {
 }
 
 @description('''
-  Name of the Resource Group that contains all Private DNS Zones.
+  Reference to a Resource Group that contains all Private DNS Zones.
   
   This module assumes that this Resource Group contains at least the following
   Private DNS Zones:
@@ -57,13 +57,20 @@ param addressSpace object = {
    - privatelink.agentsvc.azure-automation.net
    - privatelink.applicationinsights.azure.com
    - privatelink.primaryRegion.azmk8s.io
+   - privatelink.vaultcore.azure.net
+   - privatelink.servicebus.windows.net
+   - privatelink.documents.azure.com
 ''')
-param privateDnsResourceGroupName string
+param privateDnsResourceGroup object = {
+  name: null
+  subscriptionId: null
+}
 
 @description('Reference to existing Azure Monitor Private Link Scope.')
 param monitorPrivateLinkScope object = {
   name: null
   resourceGroupName: null
+  subscriptionId: null
 }
 
 @description('Reference to hub Virtual Network for peering.')
@@ -71,6 +78,7 @@ param hubVirtualNetwork object = {
   id: null
   name: null
   resourceGroupName: null
+  subscriptionId: null
 }
 
 @description('''
@@ -115,8 +123,19 @@ module aks './aks.bicep' = {
     svc: serviceCode
     envNum: environmentNumber
     primaryRegion: primaryRegion
-    subnet: network.outputs.subnets.aks
+    subnets: network.outputs.subnets
+    privateDnsResourceGroup: privateDnsResourceGroup
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'APPLICATION' })
+  }
+}
+
+module dns './dns.bicep' = {
+  name: 'env-dns'
+  params: {
+    env: environment
+    primaryRegion: primaryRegion
+    apexIpAddress: '${take(addressSpace.subnets.aks, lastIndexOf(addressSpace.subnets.aks, '.'))}.4'
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
   }
 }
 
@@ -141,8 +160,11 @@ module cosmos './cosmos.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
+    privateDnsResourceGroup: privateDnsResourceGroup
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
+
+  dependsOn: [ aks ]
 }
 
 module serviceBus './service-bus.bicep' = {
@@ -154,13 +176,19 @@ module serviceBus './service-bus.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
+    privateDnsResourceGroup: privateDnsResourceGroup
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
+
+  dependsOn: [ cosmos ]
 }
 
 module hub_network './hub_network.bicep' = {
   name: 'env-hub-network'
-  scope: resourceGroup(hubVirtualNetwork.resourceGroupName)
+  scope: resourceGroup(
+    hubVirtualNetwork.subscriptionId,
+    hubVirtualNetwork.resourceGroupName
+  )
 
   params: {
     remoteVirtualNetwork: network.outputs.virtualNetwork
@@ -172,7 +200,9 @@ module hub_network './hub_network.bicep' = {
 
 module hub_dns './hub_dns.bicep' = {
   name: 'env-hub-dns'
-  scope: resourceGroup(privateDnsResourceGroupName)
+  scope: resourceGroup(
+    privateDnsResourceGroup.subscriptionId, privateDnsResourceGroup.name
+  )
 
   params: {
     virtualNetwork: network.outputs.virtualNetwork
@@ -181,7 +211,10 @@ module hub_dns './hub_dns.bicep' = {
 
 module hub_data 'hub_data.bicep' = {
   name: 'env-hub-data'
-  scope: resourceGroup(monitorPrivateLinkScope.resourceGroupName)
+  scope: resourceGroup(
+    monitorPrivateLinkScope.subscriptionId,
+    monitorPrivateLinkScope.resourceGroupName
+  )
 
   params: {
     logAnalyticsWorkspace: monitor.outputs.logAnalyticsWorkspace

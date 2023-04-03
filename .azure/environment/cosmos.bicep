@@ -23,6 +23,16 @@ param subnet object = {
   id: null
 }
 
+@description('''
+  Reference to Resource Group that contains existing Private DNS Zone Group
+  resources; this module assumes that this resource group contains the zone
+  _privatelink.documents.azure.com_.
+''')
+param privateDnsResourceGroup object = {
+  name: null
+  subscriptionId: null
+}
+
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
@@ -56,6 +66,74 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
   }
 
   tags: union(defaultTags, { Name: cosmosDBAccountName })
+
+  resource annexViiDatabase 'sqlDatabases' = {
+    name: 'annex-vii'
+
+    properties: {
+      resource: {
+        id: 'annex-vii'
+      }
+      options: {
+        throughput: 400
+      }
+    }
+
+    tags: union(defaultTags, { Name: 'annex-vii' })
+
+    resource cosmosDBContainer 'containers' = {
+      name: 'reference-data'
+
+      properties: {
+        resource: {
+          id: 'reference-data'
+
+          indexingPolicy: {
+            indexingMode: 'consistent'
+            automatic: true
+            includedPaths: [
+              {
+                path: '/*'
+              }
+            ]
+            excludedPaths: [
+              {
+                path: '/"_etag"/?'
+              }
+            ]
+          }
+
+          partitionKey: {
+            paths: [
+              '/type'
+            ]
+            kind: 'Hash'
+            version: 2
+          }
+
+          uniqueKeyPolicy: {
+            uniqueKeys: [
+              {
+                paths: [
+                  '/code'
+                ]
+              }
+            ]
+          }
+        }
+      }
+
+      tags: union(defaultTags, { Name: 'reference-data' })
+    }
+  }
+}
+
+resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  scope: resourceGroup(
+    privateDnsResourceGroup.subscriptionId,
+    privateDnsResourceGroup.name
+  )
+  name: 'privatelink.documents.azure.com'
 }
 
 var cosmosDBPrivateEndpointName = join(
@@ -80,83 +158,22 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01'
         }
       }
     ]
-
   }
 
   tags: union(defaultTags, { Name: cosmosDBPrivateEndpointName })
-}
 
-resource cosmosDBDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15' = {
-  
-  parent: cosmosDBAccount
+  resource dnsZoneGroup 'privateDnsZoneGroups' = {
+    name: cosmosDBAccount.name
 
-  name: 'annexvii'
-  
-  properties: {  
-    resource: {
-      id: 'annexvii'
-    }
-
-    /*options: {
-      autoscaleSettings: {
-        maxThroughput: maxThroughput
-      }
-    }*/
-
-  }
-
-  tags: union(defaultTags, { Name: 'annexvii' })
-
-}
-
-resource cosmosDBContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-11-15' = {
-  
-  parent: cosmosDBDatabase
-  
-  name: 'referencedata'
-  
-  properties: {
-
-    resource: {
-     
-      id: 'referencedata'
-     
-      indexingPolicy: {
-        indexingMode: 'consistent'
-        automatic: true        
-        includedPaths: [
-          {
-            path: '/*'
+    properties: {
+      privateDnsZoneConfigs: [
+        {
+          name: 'privatelink.documents.azure.com'
+          properties: {
+            privateDnsZoneId: privatelink_documents_azure_com.id
           }
-        ]        
-        excludedPaths: [
-          {
-            path: '/"_etag"/?'
-          }
-        ]
-      }
-
-      partitionKey: {
-        paths: [
-          '/type'
-        ]
-        kind: 'Hash'
-        version: 2
-      }
-
-      uniqueKeyPolicy: {
-        uniqueKeys: [
-          {
-            paths: [
-              '/code'
-            ]
-          }
-        ]
-      }
-
+        }
+      ]
     }
   }
-
-  tags: union(defaultTags, { Name: 'referencedata' })
-
 }

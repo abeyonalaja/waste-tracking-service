@@ -131,3 +131,48 @@ resource privatelink_primaryregion_azmk8s_io 'Microsoft.Network/privateDnsZones@
     }
   }
 }
+
+resource privatelink_vaultcore_azure_net 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: 'privatelink.vaultcore.azure.net'
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = {
+    name: virtualNetwork.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: virtualNetwork.id
+      }
+    }
+  }
+}
+
+resource privatelink_servicebus_windows_net 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: 'privatelink.servicebus.windows.net'
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = {
+    name: virtualNetwork.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: virtualNetwork.id
+      }
+    }
+  }
+}
+
+resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: 'privatelink.documents.azure.com'
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = {
+    name: virtualNetwork.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: virtualNetwork.id
+      }
+    }
+  }
+}

@@ -23,6 +23,16 @@ param subnet object = {
   id: null
 }
 
+@description('''
+  Reference to Resource Group that contains existing Private DNS Zone Group
+  resources; this module assumes that this resource group contains the zone
+  _privatelink.servicebus.windows.net_.
+''')
+param privateDnsResourceGroup object = {
+  name: null
+  subscriptionId: null
+}
+
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
@@ -53,6 +63,14 @@ resource serviceBus 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   tags: union(defaultTags, { Name: serviceBusName })
 }
 
+resource privatelink_servicebus_windows_net 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  scope: resourceGroup(
+    privateDnsResourceGroup.subscriptionId,
+    privateDnsResourceGroup.name
+  )
+  name: 'privatelink.servicebus.windows.net'
+}
+
 var serviceBusPrivateEndpointName = join(
   [ env, svc, 'SBS', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
 )
@@ -75,8 +93,22 @@ resource serviceBusPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-0
         }
       }
     ]
-
   }
 
   tags: union(defaultTags, { Name: serviceBusPrivateEndpointName })
+
+  resource dnsZoneGroup 'privateDnsZoneGroups' = {
+    name: serviceBus.name
+
+    properties: {
+      privateDnsZoneConfigs: [
+        {
+          name: 'privatelink.servicebus.windows.net'
+          properties: {
+            privateDnsZoneId: privatelink_servicebus_windows_net.id
+          }
+        }
+      ]
+    }
+  }
 }

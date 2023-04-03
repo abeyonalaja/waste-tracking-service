@@ -54,6 +54,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
     tenantId: subscription().tenantId
     enableRbacAuthorization: true
   }
+
+  tags: union(defaultTags, { Name: keyVaultName })
 }
 
 var vmssName = join(

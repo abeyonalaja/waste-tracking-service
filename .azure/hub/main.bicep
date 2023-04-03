@@ -109,17 +109,22 @@ module data './data.bicep' = {
 
 @description('Reference to created Virtual Network.')
 output virtualNetwork object = union(
-  network.outputs.virtualNetwork, { resourceGroupName: resourceGroup().name }
+  network.outputs.virtualNetwork,
+  {
+    subscriptionId: subscription().subscriptionId
+    resourceGroupName: resourceGroup().name
+  }
 )
 
-@description('References to created Private DNS Zones.')
-output privateDnsZones object = dns.outputs.privateZones
-
 @description('Resource Group for created Private DNS Zones.')
-output privateDnsResourceGroupName string = resourceGroup().name
+output privateDnsResourceGroup object = {
+  name: resourceGroup().name
+  subscriptionId: subscription().subscriptionId
+}
 
 @description('Reference to created Azure Monitor Private Link Scope.')
 output monitorPrivateLinkScope object = {
   name: data.outputs.monitorPrivateLinkScope.name
   resourceGroupName: resourceGroup().name
+  subscriptionId: subscription().subscriptionId
 }

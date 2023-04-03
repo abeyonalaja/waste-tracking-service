@@ -217,6 +217,78 @@ resource privatelink_primaryregion_azmk8s_io 'Microsoft.Network/privateDnsZones@
   }]
 }
 
+resource privatelink_vaultcore_azure_net 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: 'privatelink.vaultcore.azure.net'
+  location: 'global'
+
+  tags: union(
+    defaultTags,
+    {
+      Name: 'privatelink.vaultcore.azure.net'
+      Location: 'global'
+    }
+  )
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = [for item in virtualNetworks: {
+    name: item.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: item.id
+      }
+    }
+  }]
+}
+
+resource privatelink_servicebus_windows_net 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: 'privatelink.servicebus.windows.net'
+  location: 'global'
+
+  tags: union(
+    defaultTags,
+    {
+      Name: 'privatelink.servicebus.windows.net'
+      Location: 'global'
+    }
+  )
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = [for item in virtualNetworks: {
+    name: item.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: item.id
+      }
+    }
+  }]
+}
+
+resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: 'privatelink.documents.azure.com'
+  location: 'global'
+
+  tags: union(
+    defaultTags,
+    {
+      Name: 'privatelink.documents.azure.com'
+      Location: 'global'
+    }
+  )
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = [for item in virtualNetworks: {
+    name: item.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: item.id
+      }
+    }
+  }]
+}
+
 @description('References to created Private DNS Zones.')
 output privateZones object = {
   'privatelink.azurecr.io': { id: privatelink_azurecr_io.id }
@@ -228,4 +300,7 @@ output privateZones object = {
   'privatelink.blob.core.windows.net': { id: privatelink_blob_core_windows_net.id }
   'privatelink.applicationinsights.azure.com': { id: privatelink_applicationinsights_azure_com.id }
   'privatelink.${primaryRegion}.azmk8s.io': { id: privatelink_primaryregion_azmk8s_io.id }
+  'privatelink.vaultcore.azure.net': { id: privatelink_vaultcore_azure_net.id }
+  'privatelink.servicebus.windows.net': { id: privatelink_servicebus_windows_net.id }
+  'privatelink.documents.azure.com': { id: privatelink_documents_azure_com.id }
 }
