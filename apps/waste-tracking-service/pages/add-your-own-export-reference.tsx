@@ -26,7 +26,7 @@ export function AddYourOwnExportReference() {
 
     const postData = () => {
       try {
-        fetch(`${process.env.NX_API_GATEWAY_URL}/submission`, {
+        fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
