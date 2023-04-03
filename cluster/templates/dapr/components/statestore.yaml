@@ -1,0 +1,23 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  # We will use this name to configure the dapr-client SDK
+  # in our Order service code so Dapr sidecar can connect
+  # to this Redis store
+  name: statestore
+  namespace: dapr-demo
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+    # The Redis host and password below are the default
+    # values after installing Redis using Helm. You should
+    # provide your values if you have your own Redis instance.
+    - name: redisHost
+      value: redis-master:6379
+    - name: redisPassword
+      secretKeyRef:
+        name: redis
+        key: redis-password
+auth:
+  secretStore: kubernetes # to use native Kubernetes secret store or <SECRET_STORE_NAME> for custom
