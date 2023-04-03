@@ -47,7 +47,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       id,
       reference,
       wasteDescription: { status: 'NotStarted' },
-      wasteQuantity: { status: 'NotStarted' },
+      wasteQuantity: { status: 'CannotStart' },
       exporterDetail: { status: 'NotStarted' },
       importerDetail: { status: 'NotStarted' },
       collectionDate: { status: 'NotStarted' },
