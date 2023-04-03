@@ -1,72 +1,46 @@
-export interface Submission {
-  id: string;
-  reference: string;
-  accountName: string;
-  wasteDescriptionStatus: SectionStatus;
-  wasteDescriptionData: object;
-  quantityOfWasteStatus: SectionStatus;
-  quantityOfWasteData: object;
-  exporterImporterStatus: SectionStatus;
-  exporterDetailsStatus: SectionStatus;
-  exporterData: object;
-  importerDetailsStatus: SectionStatus;
-  importerData: object;
-  journeyofWasteStatus: SectionStatus;
-  collectionDateStatus: SectionStatus;
-  collectionDateData: object;
-  wasteCarriersStatus: SectionStatus;
-  wasteCarriersData: object;
-  wasteCollectionDetailsStatus: SectionStatus;
-  wasteCollectionDetailsData: object;
-  locationWasteLeavesUKStatus: SectionStatus;
-  locationWasteLeavesUKStatusData: SectionStatus;
-  treatmentOfWasteStatus: SectionStatus;
-  recoveryFacilityStatus: SectionStatus;
-  recoveryFacilityData: object;
+export type CustomerReference = string | undefined
+
+export type WasteDescriptionData = {
+  wasteCode: { type: 'NotApplicable' } | {
+    type: 'BaselAnnexIX' | 'Oecd' | 'AnnexIIIA' | 'AnnexIIIB'
+    value: string
+  }
+  ecaCodes: string[]
+  nationalCode: { provided: 'Yes'; value: string } | { provided: 'No' }
+  description: string
 }
 
-export enum SectionStatus {
-  CannotStart,
-  NotStarted,
-  Started,
-  Completed,
+export type WasteDescription =
+  { status: 'NotStarted' }
+  | { status: 'Started' } & Partial<WasteDescriptionData>
+  | { status: 'Complete' } & WasteDescriptionData
+
+type NotStartedSection = { status: 'NotStarted' }
+
+export type Submission = {
+  id: string
+  reference: CustomerReference
+  wasteDescription: WasteDescription
+  wasteQuantity: NotStartedSection
+  exporterDetail: NotStartedSection
+  importerDetail: NotStartedSection
+  collectionDate: NotStartedSection
+  carriers: NotStartedSection
+  ukExitLocation: NotStartedSection
+  transitCountries: NotStartedSection
+  recoveryFacilityDetail: { status: 'CannotStart' }
 }
 
-export interface SubmissionRequestPayload {
-  reference: string;
-}
+export type ListSubmissionsResponse = Submission[]
 
-//GET /submissions/{reference}
-export interface GetSubmissionByReferenceRequest {
-  reference: string;
-}
+export type GetSubmissionResponse = Submission
+export type CreateSubmissionRequest = Pick<Submission, 'reference'>
+export type CreateSubmissionResponse = Submission
 
-export interface GetSubmissionByIdRequest {
-  id: string;
-}
+export type PutReferenceRequest = CustomerReference
+export type PutReferenceResponse = CustomerReference
+export type GetReferenceResponse = CustomerReference
 
-export interface GetSubmissionByReferenceResponse {
-  results: Submission[];
-}
-
-export interface GetSubmissionByIdResponse {
-  result: Submission;
-}
-
-//PUT /submissions
-export interface UpdateSubmissionRequest {
-  value: Submission;
-}
-
-export interface UpdateSubmissionResponse {
-  updated: boolean;
-}
-
-//Delete /submissions/{id}
-export interface DeleteSubmissionRequest {
-  id: string;
-}
-
-export interface DeleteSubmissionResponse {
-  deleted: boolean;
-}
+export type PutWasteDescriptionRequest = WasteDescription
+export type PutWasteDescriptionResponse = WasteDescription
+export type GetWasteDescriptionResponse = WasteDescription

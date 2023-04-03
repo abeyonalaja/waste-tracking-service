@@ -4,7 +4,9 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "rules": {
+        "semi": [2, "always"]
+      }
     },
     {
       "files": ["*.ts", "*.tsx"],

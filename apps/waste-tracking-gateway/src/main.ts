@@ -1,28 +1,40 @@
-import { Server } from '@hapi/hapi';
-import { routes } from './routes/submission.routes';
+import { server } from '@hapi/hapi';
+import * as winston from 'winston';
+import {
+  InMemorySubmissionBackend,
+  SubmissionController,
+  submissionPlugin,
+} from './modules/submission';
 
-export const wasteTrackingGateway = async () => {
-  const server: Server = new Server({
-    port: 3000,
-    host: '0.0.0.0',
-    routes: {
-      cors: {
-        origin: ["http://localhost:4200"],
-        headers: ["Accept", "Content-Type"],
-        additionalHeaders: ["X-Requested-With"]
-      }
-    }
-  });
-
-  routes(server);
-
-  await server.start();
-  console.log('Server running on %s', server.info.uri);
-};
-
-process.on('unhandledRejection', (err) => {
-  console.log(err);
-  process.exit(0);
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
+  defaultMeta: { appId: process.env['APP_ID'] },
+  transports: [new winston.transports.Console()],
 });
 
-wasteTrackingGateway();
+const app = server({
+  port: process.env['PORT'] || 3000,
+  host: '0.0.0.0',
+  routes: {
+    cors: true,
+  },
+});
+
+await app.register({
+  plugin: submissionPlugin,
+  options: {
+    controller: new SubmissionController(new InMemorySubmissionBackend()),
+  },
+  routes: {
+    prefix: '/api/submissions',
+  },
+});
+
+process.on('unhandledRejection', (err) => {
+  logger.error(err);
+  process.exit(1);
+});
+
+await app.start();
+logger.info('server running', { uri: app.info.uri });
