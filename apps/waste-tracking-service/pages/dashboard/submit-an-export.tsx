@@ -309,7 +309,7 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="recovery-faciltiy-or-lab">
+                          <Link href="" id="recovery-faciltiy-or-laboratory">
                             {t(
                               'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
                             )}
@@ -317,7 +317,7 @@ export function SubmitAnExport() {
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
-                            id="recovery-faciltiy-or-lab-status"
+                            id="recovery-faciltiy-or-laboratory-status"
                             status={content.recoveryFacilityDetail.status}
                           />
                         </TableCellRight>
