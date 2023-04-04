@@ -67,7 +67,7 @@ export function SubmitAnExport() {
             .then((data) => {
               setContent(data);
               setIsReady(true);
-       
+
             });
         } catch (e) {
           console.error(e);
@@ -75,8 +75,8 @@ export function SubmitAnExport() {
       };
       fetchData();
     }
-  }, );
-  const {id} = router.query; 
+  }, [isReady, router.isReady]);
+  const {id} = router.query;
   const BreadCrumbHref = (`../add-your-own-export-reference?id=${id}`);
   const WasteCodesHref = (`/waste-code?id=${id}`);
 
