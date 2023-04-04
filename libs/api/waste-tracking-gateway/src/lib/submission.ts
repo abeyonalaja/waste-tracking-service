@@ -1,4 +1,4 @@
-export type CustomerReference = string | undefined;
+export type CustomerReference = string | null;
 
 export type WasteDescriptionData = {
   wasteCode:

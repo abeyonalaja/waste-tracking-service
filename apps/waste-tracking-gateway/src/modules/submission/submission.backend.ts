@@ -14,15 +14,22 @@ export class ValdiationError extends Error {
 
 export interface SubmissionBackend {
   listSubmissions(): Promise<Submission[]>;
-  createSubmission(reference?: string): Promise<Submission>;
-  getSubmissionById(id: string): Promise<Submission | undefined>;
-  getWasteDescriptionById(
+  createSubmission(reference: CustomerReference): Promise<Submission>;
+  getSubmission(id: string): Promise<Submission | undefined>;
+  getWasteDescription(
     submissionId: string
   ): Promise<WasteDescription | undefined>;
-  setWasteDescriptionById(
+  setWasteDescription(
     submissionId: string,
     wasteDescription: WasteDescription
   ): Promise<WasteDescription | undefined>;
+  getCustomerReference(
+    submissionId: string
+  ): Promise<CustomerReference | undefined>;
+  setCustomerReference(
+    submissionId: string,
+    reference: CustomerReference
+  ): Promise<CustomerReference | undefined>;
 }
 
 /**
@@ -35,7 +42,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve(Array.from(this.submissions.values()));
   }
 
-  createSubmission(reference?: string): Promise<Submission> {
+  createSubmission(reference: CustomerReference): Promise<Submission> {
     if (reference && reference.length > 50) {
       return Promise.reject(
         new ValdiationError('Supplied reference cannot exceed 50 characters')
@@ -62,14 +69,14 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve(value);
   }
 
-  getSubmissionById(id: string): Promise<Submission | undefined> {
+  getSubmission(id: string): Promise<Submission | undefined> {
     return Promise.resolve(this.submissions.get(id));
   }
 
-  async getWasteDescriptionById(
+  async getWasteDescription(
     submissionId: string
   ): Promise<WasteDescription | undefined> {
-    const submission = await this.getSubmissionById(submissionId);
+    const submission = await this.getSubmission(submissionId);
     if (submission === undefined) {
       return undefined;
     }
@@ -77,11 +84,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return submission.wasteDescription;
   }
 
-  async setWasteDescriptionById(
+  async setWasteDescription(
     submissionId: string,
     wasteDescription: WasteDescription
   ): Promise<WasteDescription | undefined> {
-    const submission = await this.getSubmissionById(submissionId);
+    const submission = await this.getSubmission(submissionId);
     if (submission === undefined) {
       return undefined;
     }
@@ -96,5 +103,30 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     this.submissions.set(submissionId, submission);
     return wasteDescription;
+  }
+
+  async getCustomerReference(
+    submissionId: string
+  ): Promise<CustomerReference | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+
+    return submission.reference;
+  }
+
+  async setCustomerReference(
+    submissionId: string,
+    reference: CustomerReference
+  ): Promise<CustomerReference | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+
+    submission.reference = reference;
+    this.submissions.set(submissionId, submission);
+    return submission.reference;
   }
 }

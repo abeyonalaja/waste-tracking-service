@@ -3,6 +3,7 @@ import * as dto from '@wts/api/waste-tracking-gateway';
 import {
   validateCreateSubmissionRequest,
   validatePutWasteDescriptionRequest,
+  validatePutReferenceRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -27,7 +28,7 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}',
       handler: async function ({ params }) {
-        const value = await backend.getSubmissionById(params.id);
+        const value = await backend.getSubmission(params.id);
         if (value === undefined) {
           return Boom.notFound();
         }
@@ -48,7 +49,7 @@ const plugin: Plugin<PluginOptions> = {
         return h
           .response(
             (await backend.createSubmission(
-              reference
+              reference === undefined ? null : reference
             )) as dto.CreateSubmissionResponse
           )
           .code(201);
@@ -59,7 +60,7 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/waste-description',
       handler: async function ({ params }) {
-        const value = await backend.getWasteDescriptionById(params.id);
+        const value = await backend.getWasteDescription(params.id);
         if (value === undefined) {
           return Boom.notFound();
         }
@@ -77,12 +78,43 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const request = payload as dto.PutWasteDescriptionRequest;
-        const value = await backend.setWasteDescriptionById(params.id, request);
+        const value = await backend.setWasteDescription(params.id, request);
         if (value === undefined) {
           return Boom.notFound();
         }
 
         return value as dto.PutWasteDescriptionResponse;
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/reference',
+      handler: async function ({ params }) {
+        const value = await backend.getCustomerReference(params.id);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.GetReferenceResponse;
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/reference',
+      handler: async function ({ params, payload }) {
+        if (!validatePutReferenceRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutReferenceRequest;
+        const value = await backend.setCustomerReference(params.id, request);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.PutReferenceResponse;
       },
     });
   },

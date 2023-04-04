@@ -1,21 +1,35 @@
 import { faker } from '@faker-js/faker';
 import { server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
-import { Submission, WasteDescription } from './submission.backend';
+import {
+  CustomerReference,
+  Submission,
+  SubmissionBackend,
+  WasteDescription,
+} from './submission.backend';
 import submissionPlugin from './submission.plugin';
 
 const mockBackend = {
   listSubmissions: jest.fn<() => Promise<Submission[]>>(),
   createSubmission: jest.fn<(reference?: string) => Promise<Submission>>(),
-  getSubmissionById: jest.fn<(id: string) => Promise<Submission | undefined>>(),
-  getWasteDescriptionById:
+  getSubmission: jest.fn<(id: string) => Promise<Submission | undefined>>(),
+  getWasteDescription:
     jest.fn<(submissionId: string) => Promise<WasteDescription | undefined>>(),
-  setWasteDescriptionById:
+  setWasteDescription:
     jest.fn<
       (
         submissionId: string,
         wasteDescription: WasteDescription
       ) => Promise<WasteDescription | undefined>
+    >(),
+  getCustomerReference:
+    jest.fn<(submissionId: string) => Promise<CustomerReference | undefined>>(),
+  setCustomerReference:
+    jest.fn<
+      (
+        submissionId: string,
+        reference: CustomerReference
+      ) => Promise<CustomerReference | undefined>
     >(),
 };
 
@@ -28,8 +42,7 @@ beforeAll(async () => {
   await app.register({
     plugin: submissionPlugin,
     options: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      backend: mockBackend,
+      backend: mockBackend as SubmissionBackend,
     },
     routes: {
       prefix: '/submissions',
@@ -47,9 +60,11 @@ describe('SubmissionPlugin', () => {
   beforeEach(() => {
     mockBackend.listSubmissions.mockClear();
     mockBackend.createSubmission.mockClear();
-    mockBackend.getSubmissionById.mockClear();
-    mockBackend.getWasteDescriptionById.mockClear();
-    mockBackend.setWasteDescriptionById.mockClear();
+    mockBackend.getSubmission.mockClear();
+    mockBackend.getWasteDescription.mockClear();
+    mockBackend.setWasteDescription.mockClear();
+    mockBackend.getCustomerReference.mockClear();
+    mockBackend.setCustomerReference.mockClear();
   });
 
   describe('GET /submissions', () => {
@@ -85,9 +100,55 @@ describe('SubmissionPlugin', () => {
         url: `/submissions/${faker.datatype.uuid()}`,
       };
 
-      mockBackend.getSubmissionById.mockResolvedValue(undefined);
+      mockBackend.getSubmission.mockResolvedValue(undefined);
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('GET /submissions/{id}/reference', () => {
+    it("Responds 404 if submission doesn't exist", async () => {
+      const options = {
+        method: 'GET',
+        url: `/submissions/${faker.datatype.uuid()}/reference`,
+      };
+
+      mockBackend.getCustomerReference.mockResolvedValue(undefined);
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('PUT /submissions/{id}/reference', () => {
+    it('Supports null values', async () => {
+      const id = faker.datatype.uuid();
+      mockBackend.setCustomerReference.mockResolvedValue(null);
+      const response = await app.inject({
+        method: 'PUT',
+        url: `/submissions/${id}/reference`,
+        payload: JSON.stringify(null),
+      });
+
+      expect(response.result).toBeNull();
+      expect(response.statusCode).toBe(204);
+      expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
+      expect(mockBackend.setCustomerReference).toBeCalledWith(id, null);
+    });
+
+    it('Supports string values', async () => {
+      const id = faker.datatype.uuid();
+      const reference = faker.datatype.string(10);
+      mockBackend.setCustomerReference.mockResolvedValue(reference);
+      const response = await app.inject({
+        method: 'PUT',
+        url: `/submissions/${id}/reference`,
+        payload: JSON.stringify(reference),
+      });
+
+      expect(response.result).toEqual(reference);
+      expect(response.statusCode).toBe(200);
+      expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
+      expect(mockBackend.setCustomerReference).toBeCalledWith(id, reference);
     });
   });
 });

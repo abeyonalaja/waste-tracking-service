@@ -13,8 +13,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('persists a created submission', async () => {
-    const { id } = await subject.createSubmission();
-    const result = await subject.getSubmissionById(id);
+    const { id } = await subject.createSubmission(null);
+    const result = await subject.getSubmission(id);
 
     expect(result).toBeDefined();
     if (result === undefined) {
@@ -26,8 +26,8 @@ describe(InMemorySubmissionBackend, () => {
 
   it('lists created submissions', async () => {
     const values = await Promise.all([
-      subject.createSubmission(),
-      subject.createSubmission(),
+      subject.createSubmission(null),
+      subject.createSubmission(null),
     ]);
 
     const result = await subject.listSubmissions();
@@ -46,8 +46,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('creates submission without a reference', async () => {
-    const result = await subject.createSubmission();
-    expect(result.reference).not.toBeDefined();
+    const result = await subject.createSubmission(null);
+    expect(result.reference).toBeNull();
   });
 
   it('creates a submission with a reference', async () => {
@@ -57,8 +57,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('enables waste quantity on completion of waste description', async () => {
-    const { id } = await subject.createSubmission();
-    await subject.setWasteDescriptionById(id, {
+    const { id } = await subject.createSubmission(null);
+    await subject.setWasteDescription(id, {
       status: 'Complete',
       wasteCode: { type: 'NotApplicable' },
       ecaCodes: [],
@@ -66,7 +66,25 @@ describe(InMemorySubmissionBackend, () => {
       description: '',
     });
 
-    const result = await subject.getSubmissionById(id);
+    const result = await subject.getSubmission(id);
     expect(result?.wasteQuantity.status).toBe('NotStarted');
+  });
+
+  it('lets us change a customer reference', async () => {
+    const { id } = await subject.createSubmission(null);
+
+    const reference = faker.datatype.string(10);
+    let response = await subject.setCustomerReference(id, reference);
+    expect(response).toBe(reference);
+
+    response = await subject.setCustomerReference(id, null);
+    expect(response).toBeNull();
+  });
+
+  it('returns undefined where reference not found', async () => {
+    const id = faker.datatype.uuid();
+    expect(await subject.getSubmission(id)).toBeUndefined();
+    expect(await subject.getWasteDescription(id)).toBeUndefined();
+    expect(await subject.getCustomerReference(id)).toBeUndefined();
   });
 });
