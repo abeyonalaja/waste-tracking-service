@@ -1,11 +1,11 @@
 export const validateOwnReference: (value?: string) => string | undefined = (value) =>
   value ? undefined : 'Select yes if you want to add a reference';
 
-export const validateReference: (ownReference?: string, reference?: string) => string | undefined = (ownReference, reference) => {
+export const validateReference: (ownReference?: string, reference?: string) => string | null = (ownReference, reference) => {
   if (ownReference !== 'yes')
     return
 
-  if (reference === undefined || reference === '')
+  if (reference === null || reference === '')
     return 'Enter a reference ';
 
   if (reference.length === 1)

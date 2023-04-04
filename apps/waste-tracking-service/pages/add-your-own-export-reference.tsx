@@ -1,4 +1,4 @@
-import React, { useState, useCallback, FormEvent } from 'react';
+import React, { useState, useCallback, FormEvent, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -21,27 +21,56 @@ export function AddYourOwnExportReference() {
   const { t } = useTranslation();
   const router = useRouter();
   const { submission, setSubmission } = useSubmissionContext();
+  const [id, setId] = useState<string>(
+    submission?.id || null
+  );
   const [ownReference, setOwnReference] = useState<string>(
     submission?.ownReference
   );
   const [reference, setReference] = useState<string>(
-    submission?.reference || ''
+    submission?.reference || null
   );
   const [errors, setErrors] = useState<{
     ownReference?: string;
     reference?: string;
   }>({});
 
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { id } = router.query;
+      if (id !== undefined) {
+        try {
+          fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+            .then((response) => response.json())
+            .then((data) => {
+              const { id, reference } = data
+              setId(id)
+              setReference(reference);
+              setOwnReference(reference === null ? 'no' : 'yes')
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  }, [router.isReady]);
+
   const postData = () => {
+    let body
+    const url = `${process.env.NX_API_GATEWAY_URL}/submissions`
+    if (ownReference === 'yes') {
+      body = JSON.stringify({reference: reference})
+    } else {
+      body = JSON.stringify({})
+    }
     try {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`, {
-        method: 'POST',
+      fetch(url, {
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          reference: reference,
-        }),
+        body: body,
       })
         .then((response) => response.json())
         .then((data) => {
@@ -49,11 +78,11 @@ export function AddYourOwnExportReference() {
           setSubmission({
             id: id,
             ownReference: ownReference,
-            reference: reference,
-          });
+            reference: ownReference === 'yes' ? reference : null
+          })
           router.push({
             pathname: '/dashboard/submit-an-export',
-            query: { id: id, reference: reference },
+            query: { id: id },
           });
         });
     } catch (e) {
@@ -61,34 +90,29 @@ export function AddYourOwnExportReference() {
     }
   };
 
+
   const updateData = () => {
+    const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/reference`
     try {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${submission.id}`, {
-        method: 'PUT',
+      fetch(url, {
+        method: "PUT",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          reference: reference,
-        }),
+        body: JSON.stringify(ownReference === 'yes' ? reference : null)
       })
-        .then((response) => response.json())
-        .then((data) => {
-          const { submissionId } = data;
-          setSubmission({
-            id: submission.id,
-            ownReference: ownReference,
-            reference: reference,
-          });
+        .then(() => {
           router.push({
             pathname: '/dashboard/submit-an-export',
-            query: { id: submission.id, reference: reference },
+            query: { id: id },
           });
         });
     } catch (e) {
       console.error(e);
     }
   };
+
+
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -100,7 +124,7 @@ export function AddYourOwnExportReference() {
         setErrors(newErrors);
       } else {
         setErrors(null);
-        if (submission?.id === undefined) {
+        if (id === null) {
           postData();
         } else {
           updateData();
@@ -170,7 +194,7 @@ export function AddYourOwnExportReference() {
                           input={{
                             name: 'reference',
                             id: 'reference',
-                            value: reference,
+                            value: reference === null ? '' : reference,
                             maxLength: 50,
                             onChange: (e) => setReference(e.target.value),
                           }}
