@@ -8,10 +8,15 @@ Project and its aims.
 It's worth installing the Nx CLI: `npm install -g nx@latest`, also the [Nx
 Console][2] extension for Visual Studio Code.
 
-Run a development server with for example:
+Run a development server UI:
 
 ```
 nx serve waste-tracking-service
+```
+Run a development server API:
+
+```
+nx serve waste-tracking-gateway
 ```
 
 ## Nx Workspace
@@ -24,3 +29,8 @@ Run `nx graph` to see a diagram of the dependencies of the projects.
 [1]: https://eaflood.atlassian.net/wiki/spaces/WTPG/overview
 [2]: https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console
 [3]: https://nx.dev/
+
+
+To get this running locally you will need a .env.local containing 
+
+NX_API_GATEWAY_URL=http://localhost:3000/api
