@@ -76,6 +76,10 @@ export function SubmitAnExport() {
       fetchData();
     }
   }, );
+  const {id} = router.query; 
+  const BreadCrumbHref = (`../add-your-own-export-reference?id=${id}`);
+  const WasteCodesHref = (`/waste-code?id=${id}`);
+
 
   const aboutTheWastetatus = 0;
   const exporterImporterStatus = 0;
@@ -104,7 +108,7 @@ export function SubmitAnExport() {
               <Breadcrumbs.Link href="/dashboard">
                 {t('app.channel.title')}
               </Breadcrumbs.Link>
-              <Breadcrumbs.Link href="../add-your-own-export-reference">
+              <Breadcrumbs.Link href={BreadCrumbHref}>
                 {t('yourReference.breadcrumb')}
               </Breadcrumbs.Link>
               {t('exportJourney.submitAnExport.breadcrumb')}
@@ -146,7 +150,7 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="waste-codes-and-description">
+                          <Link href={WasteCodesHref} id="waste-codes-and-description">
                             {t(
                               'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription'
                             )}
