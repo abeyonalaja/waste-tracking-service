@@ -2,7 +2,6 @@ import { server } from '@hapi/hapi';
 import * as winston from 'winston';
 import {
   InMemorySubmissionBackend,
-  SubmissionController,
   submissionPlugin,
 } from './modules/submission';
 
@@ -24,7 +23,7 @@ const app = server({
 await app.register({
   plugin: submissionPlugin,
   options: {
-    controller: new SubmissionController(new InMemorySubmissionBackend()),
+    backend: new InMemorySubmissionBackend(),
   },
   routes: {
     prefix: '/api/submissions',

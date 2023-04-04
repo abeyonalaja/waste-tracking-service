@@ -55,4 +55,18 @@ describe(InMemorySubmissionBackend, () => {
     const result = await subject.createSubmission(reference);
     expect(result.reference).toBe(reference);
   });
+
+  it('enables waste quantity on completion of waste description', async () => {
+    const { id } = await subject.createSubmission();
+    await subject.setWasteDescriptionById(id, {
+      status: 'Complete',
+      wasteCode: { type: 'NotApplicable' },
+      ecaCodes: [],
+      nationalCode: { provided: 'No' },
+      description: '',
+    });
+
+    const result = await subject.getSubmissionById(id);
+    expect(result?.wasteQuantity.status).toBe('NotStarted');
+  });
 });

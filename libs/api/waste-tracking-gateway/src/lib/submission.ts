@@ -19,9 +19,9 @@ export type WasteDescription =
 
 type NotStartedSection = { status: 'NotStarted' };
 
-export type WasteQuantity = {
-  status: 'CannotStart';
-};
+export type WasteQuantity =
+  | { status: 'CannotStart' }
+  | { status: 'NotStarted' };
 
 export type Submission = {
   id: string;

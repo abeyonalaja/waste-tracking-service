@@ -1,25 +1,25 @@
 import { Plugin } from '@hapi/hapi';
-import SubmissionController from './submission.controller';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import {
   validateCreateSubmissionRequest,
   validatePutWasteDescriptionRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
+import { SubmissionBackend } from './submission.backend';
 
 export interface PluginOptions {
-  controller: SubmissionController;
+  backend: SubmissionBackend;
 }
 
 const plugin: Plugin<PluginOptions> = {
   name: 'submissions',
   version: '1.0.0',
-  register: async function (server, { controller }) {
+  register: async function (server, { backend }) {
     server.route({
       method: 'GET',
       path: '/',
       handler: async function () {
-        return await controller.listSubmissions();
+        return (await backend.listSubmissions()) as dto.ListSubmissionsResponse;
       },
     });
 
@@ -27,12 +27,12 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}',
       handler: async function ({ params }) {
-        const value = await controller.getSubmission(params.id);
+        const value = await backend.getSubmissionById(params.id);
         if (value === undefined) {
           return Boom.notFound();
         }
 
-        return value;
+        return value as dto.GetSubmissionResponse;
       },
     });
 
@@ -44,8 +44,14 @@ const plugin: Plugin<PluginOptions> = {
           return Boom.badRequest();
         }
 
-        const request = payload as dto.CreateSubmissionRequest;
-        return h.response(await controller.createSubmission(request)).code(201);
+        const { reference } = payload as dto.CreateSubmissionRequest;
+        return h
+          .response(
+            (await backend.createSubmission(
+              reference
+            )) as dto.CreateSubmissionResponse
+          )
+          .code(201);
       },
     });
 
@@ -53,12 +59,12 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/waste-description',
       handler: async function ({ params }) {
-        const value = await controller.getWasteDescription(params.id);
+        const value = await backend.getWasteDescriptionById(params.id);
         if (value === undefined) {
           return Boom.notFound();
         }
 
-        return value;
+        return value as dto.GetWasteDescriptionResponse;
       },
     });
 
@@ -71,12 +77,12 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const request = payload as dto.PutWasteDescriptionRequest;
-        const value = await controller.putWasteDescription(params.id, request);
+        const value = await backend.setWasteDescriptionById(params.id, request);
         if (value === undefined) {
           return Boom.notFound();
         }
 
-        return value;
+        return value as dto.PutWasteDescriptionResponse;
       },
     });
   },

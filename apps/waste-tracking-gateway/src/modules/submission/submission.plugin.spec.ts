@@ -1,23 +1,23 @@
 import { faker } from '@faker-js/faker';
 import { server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
-import SubmissionController from './submission.controller';
+import { Submission, WasteDescription } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 
-const mockGetSubmission =
-  jest.fn<typeof SubmissionController.prototype.getSubmission>();
-const mockListSubmissions =
-  jest.fn<typeof SubmissionController.prototype.listSubmissions>();
-const mockCreateSubmission =
-  jest.fn<typeof SubmissionController.prototype.createSubmission>();
-
-jest.mock('./submission.controller', () =>
-  jest.fn().mockImplementation(() => ({
-    getSubmission: mockGetSubmission,
-    listSubmissions: mockListSubmissions,
-    createSubmission: mockCreateSubmission,
-  }))
-);
+const mockBackend = {
+  listSubmissions: jest.fn<() => Promise<Submission[]>>(),
+  createSubmission: jest.fn<(reference?: string) => Promise<Submission>>(),
+  getSubmissionById: jest.fn<(id: string) => Promise<Submission | undefined>>(),
+  getWasteDescriptionById:
+    jest.fn<(submissionId: string) => Promise<WasteDescription | undefined>>(),
+  setWasteDescriptionById:
+    jest.fn<
+      (
+        submissionId: string,
+        wasteDescription: WasteDescription
+      ) => Promise<WasteDescription | undefined>
+    >(),
+};
 
 const app = server({
   host: 'localhost',
@@ -29,7 +29,7 @@ beforeAll(async () => {
     plugin: submissionPlugin,
     options: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      controller: new SubmissionController({} as any),
+      backend: mockBackend,
     },
     routes: {
       prefix: '/submissions',
@@ -45,9 +45,11 @@ afterAll(async () => {
 
 describe('SubmissionPlugin', () => {
   beforeEach(() => {
-    mockGetSubmission.mockClear();
-    mockListSubmissions.mockClear();
-    mockCreateSubmission.mockClear();
+    mockBackend.listSubmissions.mockClear();
+    mockBackend.createSubmission.mockClear();
+    mockBackend.getSubmissionById.mockClear();
+    mockBackend.getWasteDescriptionById.mockClear();
+    mockBackend.setWasteDescriptionById.mockClear();
   });
 
   describe('GET /submissions', () => {
@@ -57,7 +59,7 @@ describe('SubmissionPlugin', () => {
     };
 
     it('Handles empty collection', async () => {
-      mockListSubmissions.mockResolvedValue([]);
+      mockBackend.listSubmissions.mockResolvedValue([]);
       const response = await app.inject(options);
       expect(response.statusCode).toBe(200);
       expect(response.result).toEqual([]);
@@ -83,7 +85,7 @@ describe('SubmissionPlugin', () => {
         url: `/submissions/${faker.datatype.uuid()}`,
       };
 
-      mockGetSubmission.mockResolvedValue(undefined);
+      mockBackend.getSubmissionById.mockResolvedValue(undefined);
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
     });
