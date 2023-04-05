@@ -1,3 +1,5 @@
+import aOrAn from './aOrAn';
+
 export const validateOwnReference: (value?: string) => string | undefined = (value) =>
   value ? undefined : 'Select yes if you want to add a reference';
 
@@ -17,6 +19,22 @@ export const validateReference: (ownReference?: string, reference?: string) => s
   const regex = new RegExp('^[a-zA-Z0-9\\-\\/]{1,50}$');
   if (!regex.test(reference))
     return 'The reference must only include letters a to z, numbers, hyphens and forward slashes';
+
+}
+
+
+
+export const validateWasteCodeCategory: (wasteCodeCategory?: string) => string | undefined = (wasteCodeCategory) =>
+  wasteCodeCategory ? undefined : 'Select a waste code';
+
+
+
+export const validateWasteCode: (wasteCodeCategory?: string, wasteCode?: string, wasteCodeCategoryLabel?: string) => string | undefined = (wasteCodeCategory, wasteCode, wasteCodeCategoryLabel) => {
+  if (wasteCodeCategory === 'NotApplicable')
+    return
+
+  if (wasteCodeCategory !== 'NotApplicable' && wasteCode === undefined && (wasteCodeCategory?.toLowerCase() === wasteCodeCategoryLabel.toLowerCase().replace(/ /g, '')) )
+    return `Enter ${aOrAn(wasteCodeCategory.charAt(0))} ${wasteCodeCategoryLabel} waste code`
 
 }
 

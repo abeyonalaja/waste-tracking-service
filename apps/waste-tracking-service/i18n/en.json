@@ -23,7 +23,6 @@
   "yourReference.title": "Do you want to add your own reference to this export?",
   "yourReference.hint": "Your reference number should be unique to the shipment. You can use it to find your submission.",
   "yourReference.inputLabel": "Enter your reference",
-  "yourReference.button": "Save and continue",
   "templateSubmitExport.title": "Which template would you like to use?",
   "templateSubmitCSV.breadcrumb": "Upload multiple exports",
   "templateSubmitCSV.title": "Upload multiple waste exports",
@@ -37,7 +36,11 @@
   "manageYourTemplates.title": "Your templates",
   "radio.yes": "Yes",
   "radio.no": "No",
+  "notApplicable": "Not applicable",
+  "autocompleteHint": "Choose from the list or start typing",
   "back": "Back",
+  "saveButton": "Save and continue",
+  "saveReturnLink": "Save and return to draft",
   "errorSummary.title": "There is a problem",
   "exportJourney.submitAnExport.title": "Submit an export",
   "exportJourney.submitAnExport.breadcrumb": "Submit an export",
@@ -65,5 +68,7 @@
   "exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory": "Recovery facility or laboratory",
   "exportJourney.submitAnExport.finalCheck.title": "Final check",
   "exportJourney.submitAnExport.finalCheck.description": "You'll be able to check and submit this export once you've completed all the sections.",
-  "exportJourney.submitAnExport.returnLink": "Return to this draft later"
+  "exportJourney.submitAnExport.returnLink": "Return to this draft later",
+  "exportJourney.whatsTheWasteCode.title": "What's the waste code?",
+  "exportJourney.whatsTheWasteCode.naHint": "Only select this option if the waste is going to a laboratory."
 }

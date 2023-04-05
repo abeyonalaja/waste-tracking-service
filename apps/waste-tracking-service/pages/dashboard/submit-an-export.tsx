@@ -75,7 +75,7 @@ export function SubmitAnExport() {
       };
       fetchData();
     }
-  }, [isReady, router.isReady]);
+  }, [isReady, router.isReady, router.query]);
   const {id} = router.query;
   const BreadCrumbHref = (`../add-your-own-export-reference?id=${id}`);
   const WasteCodesHref = (`/waste-code?id=${id}`);

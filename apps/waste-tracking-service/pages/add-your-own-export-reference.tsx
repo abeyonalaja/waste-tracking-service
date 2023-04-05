@@ -54,68 +54,72 @@ export function AddYourOwnExportReference() {
         }
       }
     }
-  }, [router.isReady]);
-
-  const postData = () => {
-    let body
-    const url = `${process.env.NX_API_GATEWAY_URL}/submissions`
-    if (ownReference === 'yes') {
-      body = JSON.stringify({reference: reference})
-    } else {
-      body = JSON.stringify({})
-    }
-    try {
-      fetch(url, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const { id } = data;
-          setSubmission({
-            id: id,
-            ownReference: ownReference,
-            reference: ownReference === 'yes' ? reference : null
-          })
-          router.push({
-            pathname: '/dashboard/submit-an-export',
-            query: { id: id },
-          });
-        });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  }, [router.isReady, router.query]);
 
 
-  const updateData = () => {
-    const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/reference`
-    try {
-      fetch(url, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ownReference === 'yes' ? reference : null)
-      })
-        .then(() => {
-          router.push({
-            pathname: '/dashboard/submit-an-export',
-            query: { id: id },
-          });
-        });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+
+
 
 
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
+
+      const updateData = () => {
+        const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/reference`
+        try {
+          fetch(url, {
+            method: "PUT",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ownReference === 'yes' ? reference : null)
+          })
+            .then(() => {
+              router.push({
+                pathname: '/dashboard/submit-an-export',
+                query: { id },
+              });
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const postData = () => {
+        let body
+        const url = `${process.env.NX_API_GATEWAY_URL}/submissions`
+        if (ownReference === 'yes') {
+          body = JSON.stringify({reference})
+        } else {
+          body = JSON.stringify({})
+        }
+        try {
+          fetch(url, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: body,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const { id } = data;
+              setSubmission({
+                id: id,
+                ownReference: ownReference,
+                reference: ownReference === 'yes' ? reference : null
+              })
+              router.push({
+                pathname: '/dashboard/submit-an-export',
+                query: { id },
+              });
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
       const newErrors = {
         ownReference: validateOwnReference(ownReference),
         reference: validateReference(ownReference, reference),
@@ -132,7 +136,7 @@ export function AddYourOwnExportReference() {
       }
       e.preventDefault();
     },
-    [ownReference, reference]
+    [ownReference, reference, id, router, setSubmission]
   );
 
   return (
@@ -218,7 +222,7 @@ export function AddYourOwnExportReference() {
                   </GovUK.MultiChoice>
                 </GovUK.Fieldset>
                 <GovUK.Button id="saveButton">
-                  {t('yourReference.button')}
+                  {t('saveButton')}
                 </GovUK.Button>
               </form>
             </GovUK.GridCol>

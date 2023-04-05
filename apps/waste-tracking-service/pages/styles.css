@@ -28,7 +28,7 @@
 }
 
 * {
-  font-family: "GDS Transport",arial,sans-serif;
+  font-family: "GDS Transport",arial,sans-serif !important;
 }
 
 .autocomplete__wrapper {
@@ -67,7 +67,7 @@
 }
 
 .autocomplete__input--show-all-values {
-  padding: 5px 34px 5px 5px; /* Space for arrow. Other padding should match .autocomplete__input--default. */
+  padding: 5px;
   cursor: pointer;
 }
 

@@ -32,7 +32,7 @@ export class CompleteHeader extends Component {
         <Main>
           <PhaseBannerStyled level="PRIVATE BETA">
             This part of GOV.UK is being rebuilt –{' '}
-            <Link href="https://example.com">find out what that means</Link>
+            <Link href="https://example.com" noVisitedState>find out what that means</Link>
           </PhaseBannerStyled>
         </Main>
       </>

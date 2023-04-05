@@ -30,7 +30,7 @@ export class CompleteFooter extends Component {
           copyright={{
             image: {
               height: 102,
-              src: 'https://www.gov.uk//assets/static/govuk-crest-2x-f88404651d3e759ad54ebb8fa59ce10dafa0f8788571c8a9adc7597dd9823220.png',
+              src: 'https://www.gov.uk/assets/static/govuk-crest-87038e62e594b5f83ea40e0fb480fe7a5f41ba0db3917f709dfb39043f19a0f7.png',
               width: 125,
             },
             link: 'https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/',
