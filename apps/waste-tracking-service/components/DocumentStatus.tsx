@@ -1,50 +1,45 @@
 import React from 'react';
 import { Tag } from 'govuk-react';
 
-function DocumentStatus(props) {
-  const status = props.status;
-
+export const DocumentStatus = (props) => {
+  const { status } = props;
   let name;
-
   switch (status) {
     case 'CannotStart':
       name = (
         <Tag id={props.id} data-testid="CST" tint="GREY">
-          CANNOT START YET
+          Cannot start yet
         </Tag>
       );
       break;
     case 'NotStarted':
       name = (
         <Tag id={props.id} data-testid="NS" tint="GREY">
-          NOT STARTED
+          Not started
         </Tag>
       );
       break;
-    case 'InProgress':
+    case 'Started':
       name = (
         <Tag id={props.id} data-testid="NS" tint="BLUE">
-          IN PROGRESS
+          In progress
         </Tag>
       );
       break;
     case 'Completed':
       name = (
         <Tag id={props.id} data-testid="C">
-          COMPLETED
+          Completed
         </Tag>
       );
       break;
     default:
       name = (
         <Tag id={props.id} tint="GREY">
-          NOT STARTED
+          Not started
         </Tag>
       );
       break;
   }
-
-  return <>{name}</>;
+  return name;
 }
-
-export default DocumentStatus;

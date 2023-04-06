@@ -23,8 +23,8 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
+  DocumentStatus
 } from '../../components';
-import DocumentStatus from '../../components/DocumentStatus';
 
 const TableCellRight = styled(Table.Cell)`
   text-align: right;

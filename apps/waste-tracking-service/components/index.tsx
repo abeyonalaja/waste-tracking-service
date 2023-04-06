@@ -4,5 +4,5 @@ import { BreadcrumbWrap } from './BreadcrumbWrap'
 import { ConditionalRadioWrap } from './ConditionalRadioWrap'
 import { RadiosDivider } from './RadiosDivider';
 import { SaveReturnLink } from './SaveReturnLInk';
-
-export { CompleteHeader, CompleteFooter, BreadcrumbWrap, ConditionalRadioWrap, RadiosDivider, SaveReturnLink }
+import { DocumentStatus } from './DocumentStatus'
+export { CompleteHeader, CompleteFooter, BreadcrumbWrap, ConditionalRadioWrap, RadiosDivider, SaveReturnLink, DocumentStatus }
