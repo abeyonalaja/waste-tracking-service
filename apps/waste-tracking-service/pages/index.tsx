@@ -1,37 +1,41 @@
 import styled from 'styled-components';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
+import * as GovUK from 'govuk-react';
+import { CompleteFooter, CompleteHeader, BreadcrumbWrap } from '../components';
+import React from 'react';
 
-import { Breadcrumbs, Main, Link } from 'govuk-react';
-import { CompleteHeader } from '../components/CompleteHeader';
-import { CompleteFooter } from '../components/CompleteFooter';
-
-const Paragraph = styled.div`
+const Paragraph = styled.p`
   margin-bottom: 20px;
+  font-size: 19px;
 `;
 
-const BreadCrumbWrap = styled(Main)`
-  padding-top: 0;
-`;
+const BreadCrumbs = () => {
+  const { t } = useTranslation();
+  return (
+    <BreadcrumbWrap>
+      <GovUK.Breadcrumbs>{t('app.title')}</GovUK.Breadcrumbs>
+    </BreadcrumbWrap>
+  );
+};
 
 export function Index() {
   const { t } = useTranslation();
-
   return (
-    <div>
-      <CompleteHeader />
-
-      <BreadCrumbWrap>
-        <Breadcrumbs>{t('app.title')}</Breadcrumbs>
-      </BreadCrumbWrap>
-      <Main>
+    <>
+      <GovUK.Page
+        id="content"
+        header={<CompleteHeader />}
+        footer={<CompleteFooter />}
+        beforeChildren={<BreadCrumbs />}
+      >
         <Paragraph>
-          <Link href="dashboard">{t('app.channel.title')}</Link>
+          <GovUK.Link href="dashboard" noVisitedState>
+            {t('app.channel.title')}
+          </GovUK.Link>
         </Paragraph>
-      </Main>
-
-      <CompleteFooter />
-    </div>
+      </GovUK.Page>
+    </>
   );
 }
 

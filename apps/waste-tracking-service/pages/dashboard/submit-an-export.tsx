@@ -8,7 +8,7 @@ import {
   Breadcrumbs,
   Heading,
   Caption,
-  Main,
+  Page,
   GridRow,
   GridCol,
   Paragraph,
@@ -19,13 +19,12 @@ import {
   SectionBreak,
   Link,
 } from 'govuk-react';
-import { CompleteHeader } from '../../components/CompleteHeader';
-import { CompleteFooter } from '../../components/CompleteFooter';
+import {
+  CompleteFooter,
+  CompleteHeader,
+  BreadcrumbWrap,
+} from '../../components';
 import DocumentStatus from '../../components/DocumentStatus';
-
-const BreadCrumbWrap = styled(Main)`
-  padding-top: 0;
-`;
 
 const TableCellRight = styled(Table.Cell)`
   text-align: right;
@@ -67,7 +66,6 @@ export function SubmitAnExport() {
             .then((data) => {
               setContent(data);
               setIsReady(true);
-
             });
         } catch (e) {
           console.error(e);
@@ -76,10 +74,9 @@ export function SubmitAnExport() {
       fetchData();
     }
   }, [isReady, router.isReady, router.query]);
-  const {id} = router.query;
-  const BreadCrumbHref = (`../add-your-own-export-reference?id=${id}`);
-  const WasteCodesHref = (`/waste-code?id=${id}`);
-
+  const { id } = router.query;
+  const BreadCrumbHref = `../add-your-own-export-reference?id=${id}`;
+  const WasteCodesHref = `/waste-code?id=${id}`;
 
   const aboutTheWastetatus = 0;
   const exporterImporterStatus = 0;
@@ -93,6 +90,23 @@ export function SubmitAnExport() {
     treatmentOfWasteStatus
   );
 
+  const BreadCrumbs = () => {
+    return (
+      <BreadcrumbWrap>
+        <Breadcrumbs>
+          <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
+          <Breadcrumbs.Link href="/dashboard">
+            {t('app.channel.title')}
+          </Breadcrumbs.Link>
+          <Breadcrumbs.Link href={BreadCrumbHref}>
+            {t('yourReference.breadcrumb')}
+          </Breadcrumbs.Link>
+          {t('exportJourney.submitAnExport.breadcrumb')}
+        </Breadcrumbs>
+      </BreadcrumbWrap>
+    );
+  };
+
   return (
     <>
       {isReady && (
@@ -100,21 +114,12 @@ export function SubmitAnExport() {
           <Head>
             <title>{t('exportJourney.submitAnExport.title')}</title>
           </Head>
-          <CompleteHeader />
-
-          <BreadCrumbWrap>
-            <Breadcrumbs>
-              <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
-              <Breadcrumbs.Link href="/dashboard">
-                {t('app.channel.title')}
-              </Breadcrumbs.Link>
-              <Breadcrumbs.Link href={BreadCrumbHref}>
-                {t('yourReference.breadcrumb')}
-              </Breadcrumbs.Link>
-              {t('exportJourney.submitAnExport.breadcrumb')}
-            </Breadcrumbs>
-          </BreadCrumbWrap>
-          <Main>
+          <Page
+            id="content"
+            header={<CompleteHeader />}
+            footer={<CompleteFooter />}
+            beforeChildren={<BreadCrumbs />}
+          >
             <GridRow>
               <GridCol setWidth="two-thirds">
                 {content.reference ? (
@@ -150,7 +155,10 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href={WasteCodesHref} id="waste-codes-and-description">
+                          <Link
+                            href={WasteCodesHref}
+                            id="waste-codes-and-description"
+                          >
                             {t(
                               'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription'
                             )}
@@ -342,8 +350,7 @@ export function SubmitAnExport() {
                 </Lower>
               </GridCol>
             </GridRow>
-          </Main>
-          <CompleteFooter />
+          </Page>
         </>
       )}
     </>
