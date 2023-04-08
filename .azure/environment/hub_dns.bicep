@@ -7,6 +7,14 @@ param virtualNetwork object = {
   name: null
 }
 
+@description('Reference to existing user-assigned managed identites.')
+param identities object = {
+  aks: {
+    id: null
+    principalId: null
+  }
+}
+
 @allowed([ 'northeurope', 'westeurope', 'uksouth', 'ukwest' ])
 @description('Primary Azure region for all deployed resources.')
 param primaryRegion string = 'uksouth'
@@ -174,5 +182,16 @@ resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020
         id: virtualNetwork.id
       }
     }
+  }
+}
+
+var dnsZoneContributorRoleId = 'b12aa53e-6015-4669-85d0-8515ebb3ae7f'
+resource dnsZoneContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(privatelink_primaryregion_azmk8s_io.id, identities.aks.id, resourceId('Microsoft.Authorization/roleDefinitions', dnsZoneContributorRoleId))
+  scope: privatelink_primaryregion_azmk8s_io
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', dnsZoneContributorRoleId)
+    principalId: identities.aks.principalId
+    principalType: 'ServicePrincipal'
   }
 }

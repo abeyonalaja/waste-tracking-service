@@ -192,6 +192,12 @@ resource amplsEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   }
 }
 
+@description('Reference to created Azure Container Registry.')
+output containerRegistry object = {
+  name: containerRegistry.name
+  id: containerRegistry.id
+}
+
 @description('Reference to created Azure Monitor Private Link Scope.')
 output monitorPrivateLinkScope object = {
   name: monitorPrivateLinkScope.name

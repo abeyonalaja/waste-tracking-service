@@ -81,6 +81,18 @@ param hubVirtualNetwork object = {
   subscriptionId: null
 }
 
+@description('Reference to hub Azure Container Registry.')
+param acr object = {
+  name: null
+  resourceGroupName: null
+  subscriptionId: null
+}
+
+@description('''
+  Pre-created Cluster Admin AAD Group Object Id(s).
+''')
+param clusterAdminGroupObjectIds array = []
+
 @description('''
   The CSC tagging policy requires all resources to be tagged with a created
   date. A default value is provided but a value will have to be supplied in
@@ -116,6 +128,29 @@ module network './network.bicep' = {
   }
 }
 
+module monitor './monitor.bicep' = {
+  name: 'env-monitor'
+
+  params: {
+    env: environment
+    svc: serviceCode
+    envNum: environmentNumber
+    primaryRegion: primaryRegion
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
+  }
+}
+
+module identity './identity.bicep' = {
+  name: 'env-identity'
+  params: {
+    env: environment
+    svc: serviceCode
+    envNum: environmentNumber
+    primaryRegion: primaryRegion
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'IDENTITY' })
+  }
+}
+
 module aks './aks.bicep' = {
   name: 'env-aks'
   params: {
@@ -125,6 +160,16 @@ module aks './aks.bicep' = {
     primaryRegion: primaryRegion
     subnets: network.outputs.subnets
     privateDnsResourceGroup: privateDnsResourceGroup
+    clusterAdminGroupObjectIds: clusterAdminGroupObjectIds
+    identities: {
+      aks: {
+        id: identity.outputs.identities.aks.id
+      }
+      kubelet: {
+        id: identity.outputs.identities.kubelet.id
+      }
+    }
+    logAnalyticsWorkspace: monitor.outputs.logAnalyticsWorkspace
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'APPLICATION' })
   }
 }
@@ -136,18 +181,6 @@ module dns './dns.bicep' = {
     primaryRegion: primaryRegion
     apexIpAddress: '${take(addressSpace.subnets.aks, lastIndexOf(addressSpace.subnets.aks, '.'))}.4'
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
-module monitor './monitor.bicep' = {
-  name: 'env-monitor'
-
-  params: {
-    env: environment
-    svc: serviceCode
-    envNum: environmentNumber
-    primaryRegion: primaryRegion
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
 }
 
@@ -206,6 +239,12 @@ module hub_dns './hub_dns.bicep' = {
 
   params: {
     virtualNetwork: network.outputs.virtualNetwork
+    identities: {
+      aks: {
+        id: identity.outputs.identities.aks.id
+        principalId: identity.outputs.identities.aks.principalId
+      }
+    }
   }
 }
 
@@ -221,6 +260,15 @@ module hub_data 'hub_data.bicep' = {
     applicationInsights: monitor.outputs.applicationInsights
     monitorPrivateLinkScope: {
       name: monitorPrivateLinkScope.name
+    }
+    acr: {
+      name: acr.Name
+    }
+    identities: {
+      kubelet: {
+        id: identity.outputs.identities.kubelet.id
+        principalId: identity.outputs.identities.kubelet.principalId
+      }
     }
   }
 }

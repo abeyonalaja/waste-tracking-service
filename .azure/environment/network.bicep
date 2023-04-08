@@ -62,6 +62,42 @@ var dataSubnetName = join(
   '-'
 )
 
+var aksRouteTableName = join(
+  [ 
+    aksSubnetName
+    join([ env, svc, 'AKS', 'RT', envNum, padLeft(instance0, 3, '0') ], '')
+  ], 
+  '-'
+)
+var aksRouteTableRouteName = join(
+  [ 
+    aksRouteTableName
+    join([ env, svc, 'AKS', 'RO', envNum, padLeft(instance0, 3, '0') ], '') 
+  ], 
+  '-'
+)
+
+resource aksRouteTable 'Microsoft.Network/routeTables@2022-07-01' = {
+  name: aksRouteTableName
+
+  location: primaryRegion
+
+  properties: {
+    routes: [
+      {
+        name: aksRouteTableRouteName
+        properties: {
+          addressPrefix: '0.0.0.0/0'
+          nextHopType: 'Internet'
+          // Defaulting to Internet Until one is obtained.
+          // nextHopIpAddress: firewallPrivateIp
+          // nextHopType: 'VirtualAppliance'
+        }
+      }
+    ]
+  }
+}
+
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
   name: virtualNetworkName
   location: primaryRegion
@@ -76,6 +112,10 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-07-01' = {
         name: aksSubnetName
         properties: {
           addressPrefix: addressSpace.subnets.aks
+          privateEndpointNetworkPolicies: 'Disabled'
+          routeTable: {
+            id: aksRouteTable.id
+          }
         }
       }
       {

@@ -2,7 +2,7 @@
   'APS', 'CAT', 'DEV', 'LOG', 'MST', 'OPS', 'PRD', 'PRE', 'SEC', 'SND', 'TST'
 ])
 @description('CSC environment code.')
-param env string = 'SND'
+param env string
 
 @minLength(3)
 @maxLength(3)
@@ -12,7 +12,7 @@ param svc string = 'WTS'
 @minValue(1)
 @maxValue(9)
 @description('CSC environment number.')
-param envNum int = 1
+param envNum int
 
 @allowed([ 'northeurope', 'westeurope', 'uksouth', 'ukwest' ])
 @description('Primary Azure region for all deployed resources.')

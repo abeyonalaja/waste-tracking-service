@@ -38,8 +38,36 @@ param privateDnsResourceGroup object = {
   subscriptionId: null
 }
 
+@description('Reference to existing AAD Group for cluster Admin access.')
+param clusterAdminGroupObjectIds array = []
+
+@description('Reference to existing user-assigned managed identites.')
+param identities object = {
+  aks: {
+    id: null
+  }
+  kubelet: {
+    id: null
+  }
+}
+
+@description('Reference to created Log Analytics Worspace resource.')
+param logAnalyticsWorkspace object = {
+  id: null
+  name: null
+}
+
 @description('Admin username assigned to created Virtual Machines.')
 param vmAdminUsername string = 'azadmin'
+
+@description('Kubernetes version to be installed on AKS.')
+param kubernetesVersion string = '1.24.10'
+
+@description('AKS virtual machine size.')
+param aksVmSize string = 'Standard_DS2_v2'
+
+@description('AKS outbound traffic type.')
+param aksOutboundType string = 'loadBalancer'
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
@@ -55,36 +83,120 @@ var aksName = join(
   ''
 )
 
-resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
+var loadBalancerPublicIpName = join(
+  [ env, svc, 'ALB', 'IP', envNum, padLeft(instance0, 3, '0') ], ''
+)
+
+resource loadBalancerPublicIp 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
+  name: loadBalancerPublicIpName
+  location: primaryRegion
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+  tags: union(defaultTags, { Name: loadBalancerPublicIpName })
+}
+
+resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
   name: aksName
   location: primaryRegion
-
-  identity: {
-    type: 'SystemAssigned'
+  tags: union(defaultTags, { Name: aksName })
+  sku: {
+    name: 'Basic'
+    tier: 'Free'
   }
-
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identities.aks.id}': {}
+    }
+  }
   properties: {
-    dnsPrefix: toLower(svc)
-
+    aadProfile: {
+      enableAzureRBAC: true
+      managed: true
+      adminGroupObjectIDs: clusterAdminGroupObjectIds
+      tenantID: subscription().tenantId
+    }
+    addonProfiles: {
+      omsagent: {
+        config: {
+          logAnalyticsWorkspaceResourceID: logAnalyticsWorkspace.id
+        }
+        enabled: true
+      }
+    }
     agentPoolProfiles: [
       {
-        name: 'system'
+        availabilityZones: [ '1', '2', '3' ]
         count: 3
-        vmSize: 'Standard_D2s_v3'
-        osType: 'Linux'
+        enableAutoScaling: true
+        maxCount: 5
+        maxPods: 110
+        minCount: 3
         mode: 'System'
+        name: 'nodepool1'
+        nodeTaints: [ 'CriticalAddonsOnly=true:NoSchedule' ]
+        osDiskSizeGB: 128
+        osDiskType: 'Managed'
+        osType: 'Linux'
+        osSKU: 'Ubuntu'
+        type: 'VirtualMachineScaleSets'
+        vmSize: aksVmSize
         vnetSubnetID: subnets.aks.id
       }
       {
-        name: 'user'
+        availabilityZones: [ '1', '2', '3' ]
         count: 2
-        vmSize: 'Standard_DS3_v2'
-        osType: 'Linux'
+        enableAutoScaling: true
+        maxCount: 5
+        maxPods: 110
+        minCount: 2
         mode: 'User'
+        name: 'nodepool2'
+        nodeTaints: []
+        osDiskSizeGB: 128
+        osDiskType: 'Managed'
+        osType: 'Linux'
+        osSKU: 'Ubuntu'
+        type: 'VirtualMachineScaleSets'
+        vmSize: aksVmSize
         vnetSubnetID: subnets.aks.id
       }
     ]
-
+    apiServerAccessProfile: {
+      enablePrivateCluster: false
+    }
+    autoScalerProfile: {
+      'balance-similar-node-groups': 'false'
+      'expander': 'random'
+      'max-empty-bulk-delete': '10'
+      'max-graceful-termination-sec': '600'
+      'max-node-provision-time': '15m'
+      'max-total-unready-percentage': '45'
+      'new-pod-scale-up-delay': '0s'
+      'ok-total-unready-count': '3'
+      'scale-down-delay-after-add': '10m'
+      'scale-down-delay-after-delete': '10s'
+      'scale-down-delay-after-failure': '3m'
+      'scale-down-unneeded-time': '10m'
+      'scale-down-unready-time': '20m'
+      'scale-down-utilization-threshold': '0.5'
+      'scan-interval': '10s'
+      'skip-nodes-with-local-storage': 'false'
+      'skip-nodes-with-system-pods': 'true'
+    }
+    disableLocalAccounts: true
+    dnsPrefix: toLower(svc)
+    enableRBAC: true
+    identityProfile: {
+      kubeletidentity: {
+        resourceId: identities.kubelet.id
+      }
+    }
+    kubernetesVersion: kubernetesVersion
     linuxProfile: {
       adminUsername: vmAdminUsername
       ssh: {
@@ -95,11 +207,25 @@ resource aks 'Microsoft.ContainerService/managedClusters@2022-11-02-preview' = {
         ]
       }
     }
-
+    networkProfile: {
+      dnsServiceIP: '10.0.0.10'
+      dockerBridgeCidr: '172.17.0.1/16'
+      loadBalancerSku: 'Standard'
+      networkPlugin: 'kubenet'
+      networkPolicy: 'calico'
+      outboundType: aksOutboundType
+      serviceCidr: '10.0.0.0/16'
+    }
     nodeResourceGroup: aksName
+    oidcIssuerProfile: {
+      enabled: true
+    }
+    securityProfile: {
+      workloadIdentity: {
+        enabled: true
+      }
+    }
   }
-
-  tags: union(defaultTags, { Name: aksName })
 }
 
 var keyVaultName = join(
