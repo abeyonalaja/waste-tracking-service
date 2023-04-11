@@ -34,7 +34,7 @@ param primaryRegion string = 'uksouth'
 @description('''
   CIDR prefixes for the created virtual network and its subnet. See the default
   parameters file for an example. Subnets are:
-  - _aks_ - Recommended _/24_ prefix.
+  - _aks_ - Recommended _/25_ prefix.
   - _data_ - Recommend _/26_ prefix.
 ''')
 param addressSpace object = {

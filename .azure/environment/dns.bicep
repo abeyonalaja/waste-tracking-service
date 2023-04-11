@@ -18,7 +18,7 @@ var regionCode = {
   northeurope: 'neu', westeurope: 'weu', uksouth: 'uks', ukwest: 'ukw'
 }[primaryRegion]
 
-var dnsZoneName = 'wts-uks${regionCode}.${toLower(env)}.azure.defra.cloud'
+var dnsZoneName = 'wts-${regionCode}be-${toLower(env)}.azure.defra.cloud'
 
 resource dnsZone 'Microsoft.Network/dnsZones@2018-05-01' = {
   name: dnsZoneName
