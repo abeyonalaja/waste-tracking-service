@@ -1,15 +1,16 @@
 FROM node:18-alpine
 
-ENV NODE_ENV production
-ENV PORT 3000
+ENV NODE_ENV=production \
+    PORT=3000
 
 WORKDIR /app
 COPY --chown=node:node dist/apps/waste-tracking-gateway/main.js ./main.js
+COPY --chown=node:node dist/apps/waste-tracking-gateway/tracing.js ./tracing.js
 COPY --chown=node:node dist/apps/waste-tracking-gateway/package*.json ./
 
 RUN npm ci
 
 USER node
-EXPOSE 3000
+EXPOSE ${PORT}
 
-CMD [ "main.js" ]
+CMD [ "--require", "./tracing.js", "main.js" ]

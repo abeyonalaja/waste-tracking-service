@@ -17,7 +17,13 @@
         "assets": ["apps/waste-tracking-gateway/src/assets"],
         "isolatedConfig": true,
         "webpackConfig": "apps/waste-tracking-gateway/webpack.config.js",
-        "generatePackageJson": true
+        "generatePackageJson": true,
+        "additionalEntryPoints": [
+          {
+            "entryName": "tracing",
+            "entryPath": "apps/waste-tracking-gateway/src/tracing.ts"
+          }
+        ]
       },
       "configurations": {
         "development": {},
@@ -28,7 +34,11 @@
       "executor": "@nrwl/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "waste-tracking-gateway:build"
+        "buildTarget": "waste-tracking-gateway:build",
+        "runtimeArgs": [
+          "--require",
+          "./dist/apps/waste-tracking-gateway/tracing.js"
+        ]
       },
       "configurations": {
         "development": {
