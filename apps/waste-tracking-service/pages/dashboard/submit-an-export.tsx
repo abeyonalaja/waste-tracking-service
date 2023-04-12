@@ -23,7 +23,7 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  DocumentStatus
+  DocumentStatus,
 } from '../../components';
 
 const TableCellRight = styled(Table.Cell)`

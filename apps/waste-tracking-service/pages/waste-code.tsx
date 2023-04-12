@@ -23,7 +23,7 @@ function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
 
-export function WasteCode() {
+const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>();
@@ -78,7 +78,7 @@ export function WasteCode() {
         setIsLoading(false);
       }
     }
-  }, [router.isReady, router.query, id]);
+  }, [router.isReady, router.query]);
 
   const [errors, setErrors] = useState<{
     wasteCodeCategory?: string;
@@ -395,6 +395,6 @@ export function WasteCode() {
       </GovUK.Page>
     </>
   );
-}
+};
 
 export default WasteCode;

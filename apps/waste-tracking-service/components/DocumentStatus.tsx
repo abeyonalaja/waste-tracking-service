@@ -42,4 +42,4 @@ export const DocumentStatus = (props) => {
       break;
   }
   return name;
-}
+};

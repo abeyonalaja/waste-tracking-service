@@ -70,5 +70,9 @@
   "exportJourney.submitAnExport.finalCheck.description": "You'll be able to check and submit this export once you've completed all the sections.",
   "exportJourney.submitAnExport.returnLink": "Return to this draft later",
   "exportJourney.whatsTheWasteCode.title": "What's the waste code?",
-  "exportJourney.whatsTheWasteCode.naHint": "Only select this option if the waste is going to a laboratory."
+  "exportJourney.whatsTheWasteCode.naHint": "Only select this option if the waste is going to a laboratory.",
+  "exportJourney.nationalCode.title": "Do you have a national code?",
+  "exportJourney.nationalCode.intro": "A national code is also known as a commodity code and may be required by the country you’re exporting to. ",
+  "exportJourney.nationalCode.hint": "This information is optional.",
+  "exportJourney.nationalCode.inputLabel": "Enter code"
 }
