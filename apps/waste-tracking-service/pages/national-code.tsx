@@ -174,7 +174,7 @@ const NationalCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: '/dashboard/submit-an-export',
+              pathname: '/ewc-code',
               query: { id: id.current },
             });
           }}

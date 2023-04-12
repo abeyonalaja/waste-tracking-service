@@ -27,6 +27,7 @@ const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>();
+  const [data, setData] = useState<object>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasValidId, setHasValidId] = useState<boolean>(false);
 
@@ -65,6 +66,7 @@ const WasteCode = () => {
               if (data !== undefined) {
                 const { id } = router.query;
                 setId(id);
+                setData(data)
                 setWasteCodeCategory(data.wasteCode?.type);
                 setWasteCode(data.wasteCode?.type, data.wasteCode?.value);
                 setHasValidId(true);
@@ -134,6 +136,7 @@ const WasteCode = () => {
       } else {
         setErrors(null);
         const body = {
+          ...data,
           status: 'Started',
           wasteCode: {
             type: wasteCodeCategory,
