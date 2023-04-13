@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link'
+import Link from 'next/link';
 import { BreadcrumbWrap, CompleteFooter, CompleteHeader } from '../components';
 import * as GovUK from 'govuk-react';
 
 const EwcCode = () => {
-
   const router = useRouter();
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
 
   useEffect(() => {
     if (router.isReady) {
-      setId(router.query.id)
+      setId(router.query.id);
     }
-  }, [router.isReady, id])
+  }, [router.isReady, router.query.id]);
 
   const BreadCrumbs = () => {
     return (
@@ -42,15 +41,19 @@ const EwcCode = () => {
         beforeChildren={<BreadCrumbs />}
       >
         <h1>EWC code pages will appear here...</h1>
-        <p><Link
-          href={{
-            pathname: '/national-code',
-            query: { id },
-          }}
-        >Continue to National code page</Link></p>
+        <p>
+          <Link
+            href={{
+              pathname: '/national-code',
+              query: { id },
+            }}
+          >
+            Continue to National code page
+          </Link>{' '}
+        </p>
       </GovUK.Page>
     </>
-  )
-}
+  );
+};
 
-export default EwcCode
+export default EwcCode;

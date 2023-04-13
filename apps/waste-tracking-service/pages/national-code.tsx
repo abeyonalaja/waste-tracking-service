@@ -1,4 +1,10 @@
-import React, { FormEvent, useCallback, useEffect, useState, useReducer, useRef } from 'react';
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+  useReducer
+} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -40,8 +46,8 @@ const nationalCodeReducer = (state, action) => {
     case 'DATA_UPDATE':
       return {
         ...state,
-        data: {...state.data, nationalCode: action.payload}
-      }
+        data: { ...state.data, nationalCode: action.payload },
+      };
     default:
       throw new Error();
   }
@@ -56,13 +62,13 @@ const NationalCode = () => {
     { data: {}, isLoading: false, isError: false }
   );
 
-  const id = useRef(null)
+  const [id, setId] = useState(null);
 
   useEffect(() => {
     if (router.isReady) {
-      id.current = router.query.id
+      setId(router.query.id);
     }
-  }, [router.isReady])
+  }, [router.isReady, router.query.id]);
 
   const [errors, setErrors] = useState<{
     nationalCode?: string;
@@ -70,42 +76,42 @@ const NationalCode = () => {
 
   useEffect(() => {
     dispatchNationalCodePage({ type: 'DATA_FETCH_INIT' });
-    if (id.current !== null) {
-        fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${id.current}/waste-description`
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-            else {
-              dispatchNationalCodePage({ type: 'DATA_FETCH_FAILURE' });
-            }
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              dispatchNationalCodePage({
-                type: 'DATA_FETCH_SUCCESS',
-                payload: data
-              });
-            }
-          });
-      }
-  }, [router.isReady]);
+    if (id !== null) {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchNationalCodePage({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            dispatchNationalCodePage({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: data,
+            });
+          }
+        });
+    }
+  }, [router.isReady, id]);
 
   const handleInputChange = (input) => {
-    let payload
+    let payload;
     switch (input.target.name) {
       case 'nationalCode':
-        payload = { provided: "Yes", value: input.target.value }
+        payload = { provided: 'Yes', value: input.target.value };
         break;
       case 'hasNationalCode':
-        payload = { provided: input.target.value }
+        payload = { provided: input.target.value };
         break;
     }
     dispatchNationalCodePage({
       type: 'DATA_UPDATE',
-      payload: payload
+      payload: payload,
     });
-  }
+  };
 
   const handleLinkSubmit = (e) => {
     handleSubmit(e, true);
@@ -113,14 +119,13 @@ const NationalCode = () => {
 
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
-
-      const nationalCode = nationalCodePage.data.nationalCode?.value
-      const hasNationalCode = nationalCodePage.data.nationalCode?.provided
+      const nationalCode = nationalCodePage.data.nationalCode?.value;
+      const hasNationalCode = nationalCodePage.data.nationalCode?.provided;
 
       if (hasNationalCode === undefined) {
         router.push({
           pathname: '/describe-waste',
-          query: { id: id.current }
+          query: { id },
         });
       }
 
@@ -134,7 +139,7 @@ const NationalCode = () => {
         setErrors(null);
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id.current}/waste-description`,
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             {
               method: 'PUT',
               headers: {
@@ -153,7 +158,7 @@ const NationalCode = () => {
                   : '/describe-waste';
                 router.push({
                   pathname: path,
-                  query: { id: id.current }
+                  query: { id },
                 });
               }
             });
@@ -164,7 +169,7 @@ const NationalCode = () => {
 
       e.preventDefault();
     },
-    [id, nationalCodePage.data]
+    [id, nationalCodePage.data, router]
   );
 
   const BreadCrumbs = () => {
@@ -175,7 +180,7 @@ const NationalCode = () => {
           onClick={() => {
             router.push({
               pathname: '/ewc-code',
-              query: { id: id.current },
+              query: { id },
             });
           }}
         >
@@ -198,14 +203,11 @@ const NationalCode = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-
-            { nationalCodePage.isError && !nationalCodePage.isLoading &&
+            {nationalCodePage.isError && !nationalCodePage.isLoading && (
               <p>No valid record found</p>
-            }
-            { nationalCodePage.isLoading &&
-              <p>Loading</p>
-            }
-            { !nationalCodePage.isError && !nationalCodePage.isLoading && (
+            )}
+            {nationalCodePage.isLoading && <p>Loading</p>}
+            {!nationalCodePage.isError && !nationalCodePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
@@ -232,19 +234,26 @@ const NationalCode = () => {
                       <GovUK.Radio
                         name="hasNationalCode"
                         id="hasNationalCodeYes"
-                        checked={nationalCodePage.data.nationalCode?.provided === 'Yes'}
+                        checked={
+                          nationalCodePage.data.nationalCode?.provided === 'Yes'
+                        }
                         onChange={(e) => handleInputChange(e)}
                         value="Yes"
                       >
                         Yes
                       </GovUK.Radio>
-                      {nationalCodePage.data.nationalCode?.provided === 'Yes' && (
+                      {nationalCodePage.data.nationalCode?.provided ===
+                        'Yes' && (
                         <ConditionalRadioWrap>
                           <GovUK.InputField
                             input={{
                               name: 'nationalCode',
                               id: 'nationalCode',
-                              value: nationalCodePage.data.nationalCode?.value === undefined ? "" : nationalCodePage.data.nationalCode?.value,
+                              value:
+                                nationalCodePage.data.nationalCode?.value ===
+                                undefined
+                                  ? ''
+                                  : nationalCodePage.data.nationalCode?.value,
                               maxLength: 50,
                               onChange: (e) => handleInputChange(e),
                             }}
@@ -260,7 +269,9 @@ const NationalCode = () => {
                       <GovUK.Radio
                         name="hasNationalCode"
                         id="hasNationalCodeNo"
-                        checked={nationalCodePage.data.nationalCode?.provided === 'No'}
+                        checked={
+                          nationalCodePage.data.nationalCode?.provided === 'No'
+                        }
                         onChange={(e) => handleInputChange(e)}
                         value="No"
                       >

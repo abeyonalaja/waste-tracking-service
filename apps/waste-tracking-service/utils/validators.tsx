@@ -61,7 +61,16 @@ export const validateNationalCode: (
   if (nationalCode.length > 50)
     return 'Enter a reference using 50 character or less';
 
-  const regex = new RegExp('^[a-zA-Z0-9\\-\\/]{1,50}$');
+  const regex = new RegExp('^[a-zA-Z0-9\\\\\\-]{1,50}$');
   if (!regex.test(nationalCode))
-    return 'The code must only include letters a to z, numbers, hyphens and forward slashes';
+    return 'The code must only include letters a to z, numbers, hyphens and bacl slashes';
+};
+
+export const validateWasteDescription: (
+  description?: string
+) => string | undefined = (description) => {
+  if (description === undefined || description?.length === 0)
+    return 'Enter a description';
+  if (description?.length > 100)
+    return 'Description must be 100 characters or less';
 };

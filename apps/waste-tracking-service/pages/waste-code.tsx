@@ -66,7 +66,7 @@ const WasteCode = () => {
               if (data !== undefined) {
                 const { id } = router.query;
                 setId(id);
-                setData(data)
+                setData(data);
                 setWasteCodeCategory(data.wasteCode?.type);
                 setWasteCode(data.wasteCode?.type, data.wasteCode?.value);
                 setHasValidId(true);
@@ -135,6 +135,7 @@ const WasteCode = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
+
         const body = {
           ...data,
           status: 'Started',
@@ -143,6 +144,7 @@ const WasteCode = () => {
             value: getWasteCode(),
           },
         };
+
         try {
           fetch(url, {
             method: 'PUT',
@@ -180,6 +182,7 @@ const WasteCode = () => {
       id,
       router,
       url,
+      data
     ]
   );
 

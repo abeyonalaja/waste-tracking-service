@@ -2,6 +2,8 @@
   "tag": "PROTOTYPE",
   "app.title": "Waste tracking service",
   "app.channel.title": "Green list waste overview",
+  "charCount.positive": "You have {{n}} character remaining",
+  "charCount.negative": "You have {{n}} characters too many",
   "cookies.title": "Cookies",
   "cookies.description1": "Cookies are small files saved on your phone, tablet or computer when you visit a website.",
   "cookies.description2": "We use cookies to make [service name] work and collect information about how you use our service.",
@@ -74,5 +76,7 @@
   "exportJourney.nationalCode.title": "Do you have a national code?",
   "exportJourney.nationalCode.intro": "A national code is also known as a commodity code and may be required by the country you’re exporting to. ",
   "exportJourney.nationalCode.hint": "This information is optional.",
-  "exportJourney.nationalCode.inputLabel": "Enter code"
+  "exportJourney.nationalCode.inputLabel": "Enter code",
+  "exportJourney.describeWaste.title": "Describe the waste",
+  "exportJourney.describeWaste.hint": "Give the usual description of the waste. For example, baled PET bottles, bagged HDPE pellets or OCC paper."
 }
