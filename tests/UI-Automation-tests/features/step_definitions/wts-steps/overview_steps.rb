@@ -1,6 +1,7 @@
 Given(/^I login to waste tracking portal$/) do
   # refactor this when login page is implemented
   Log.info("Start url: #{Env.start_page_url}")
+  TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
 end
 
@@ -10,9 +11,9 @@ And(/^I navigate to the overview page$/) do
 end
 
 Then(/^I can see all the sections$/) do
-  expect(page).to have_css 'h4', text: 'Tell us about an export', exact_text: true
-  expect(page).to have_css 'h4', text: 'All exports', exact_text: true
-  expect(page).to have_css 'h4', text: 'Templates', exact_text: true
+  expect(page).to have_css 'h2', text: 'Tell us about an export', exact_text: true
+  expect(page).to have_css 'h2', text: 'All exports', exact_text: true
+  expect(page).to have_css 'h2', text: 'Templates', exact_text: true
 end
 
 And(/^I can see links for each sections$/) do

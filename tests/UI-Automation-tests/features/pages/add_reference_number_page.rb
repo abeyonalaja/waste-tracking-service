@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'shared_components/save_and_continue'
+require_relative 'shared_components/general_helpers'
 require_relative 'shared_components/error_box'
 # this page is for Add Reference Number page details
 class AddReferenceNumberPage < GenericPage
-  include SaveAndContinue
+  include GeneralHelpers
   include ErrorBox
 
   REFERENCE_NUMBER_INPUT_ID = 'reference'

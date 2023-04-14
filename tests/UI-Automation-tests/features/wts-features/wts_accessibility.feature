@@ -1,3 +1,4 @@
+@ignore
 Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility

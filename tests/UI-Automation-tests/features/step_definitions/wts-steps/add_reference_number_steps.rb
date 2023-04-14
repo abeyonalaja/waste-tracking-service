@@ -25,10 +25,6 @@ When(/^I have selected the No option$/) do
   AddReferenceNumberPage.new.choose_option 'No'
 end
 
-And(/^I click the button Save and continue$/) do
-  AddReferenceNumberPage.new.save_and_continue
-end
-
 When(/^I have neither selected the Yes or No option$/) do
   puts "don't select anything"
 end
@@ -41,4 +37,12 @@ end
 When(/^I have entered less than the required character length$/) do
   AddReferenceNumberPage.new.choose_option 'Yes'
   AddReferenceNumberPage.new.enter_reference_number Faker::Base.regexify(%r{[a-zA-Z0-9\-/]{1}})
+end
+
+When(/^I amend the previously entered reference$/) do
+  reference = 'new/reference'
+  add_reference_number_page = AddReferenceNumberPage.new
+  add_reference_number_page.enter_reference_number reference
+  add_reference_number_page.save_and_continue
+  TestStatus.set_test_status(:new_application_reference_number, reference)
 end

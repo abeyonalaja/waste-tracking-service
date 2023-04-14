@@ -27,6 +27,14 @@ module Log
   end
 
   def self.info(message)
-    @logger.info(c :green, message)
+    @logger.info(c(:green, message))
+  end
+
+  def self.warn(message)
+    @logger.warn(c(:yellow, message))
+  end
+
+  def self.console(message)
+    puts(message)
   end
 end

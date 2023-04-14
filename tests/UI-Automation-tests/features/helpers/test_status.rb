@@ -14,6 +14,9 @@ module TestStatus
   end
 
   def self.test_status(key = 'all')
+    if key.eql?('all')
+      @test_status
+    end
     @test_status[key.to_sym]
   end
 end

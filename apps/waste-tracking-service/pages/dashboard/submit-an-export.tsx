@@ -181,7 +181,7 @@ export function SubmitAnExport() {
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
-                            id="quanitity-of-waste-status"
+                            id="quantity-of-waste-status"
                             status={content.wasteQuantity.status}
                           />
                         </TableCellRight>
@@ -287,7 +287,7 @@ export function SubmitAnExport() {
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
-                            id="location-waste-leaves-uk-status"
+                            id="location-waste-leaves-the-uk-status"
                             status={content.ukExitLocation.status}
                           />
                         </TableCellRight>
@@ -321,7 +321,7 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="recovery-faciltiy-or-laboratory">
+                          <Link href="" id="recovery-facility-or-laboratory">
                             {t(
                               'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
                             )}
@@ -329,7 +329,7 @@ export function SubmitAnExport() {
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
-                            id="recovery-faciltiy-or-laboratory-status"
+                            id="recovery-facility-or-laboratory-status"
                             status={content.recoveryFacilityDetail.status}
                           />
                         </TableCellRight>
