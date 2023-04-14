@@ -70,6 +70,22 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.wasteQuantity.status).toBe('NotStarted');
   });
 
+  it('cannot initially start recovery facility section', async () => {
+    const { recoveryFacilityDetail } = await subject.createSubmission(null);
+    expect(recoveryFacilityDetail.status).toBe('CannotStart');
+  });
+
+  it('enables recovery facility where some waste code is provided', async () => {
+    const { id } = await subject.createSubmission(null);
+    await subject.setWasteDescription(id, {
+      status: 'Started',
+      wasteCode: { type: 'AnnexIIIA', value: 'X' },
+    });
+
+    const result = await subject.getSubmission(id);
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
   it('lets us change a customer reference', async () => {
     const { id } = await subject.createSubmission(null);
 

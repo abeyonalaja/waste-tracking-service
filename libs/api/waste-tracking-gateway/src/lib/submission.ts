@@ -17,6 +17,10 @@ export type WasteDescription =
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
   | ({ status: 'Complete' } & WasteDescriptionData);
 
+export type RecoveryFacilityDetail =
+  | { status: 'CannotStart' }
+  | { status: 'NotStarted' };
+
 type NotStartedSection = { status: 'NotStarted' };
 
 export type WasteQuantity =
@@ -35,7 +39,7 @@ export type Submission = {
   collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
   transitCountries: NotStartedSection;
-  recoveryFacilityDetail: { status: 'CannotStart' };
+  recoveryFacilityDetail: RecoveryFacilityDetail;
 };
 
 export type ListSubmissionsResponse = Submission[];

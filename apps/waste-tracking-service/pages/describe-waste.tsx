@@ -29,16 +29,15 @@ function isNotEmpty(obj) {
 }
 
 type State = {
-  data: GetWasteDescriptionResponse,
+  data: { status: 'Started' } & GetWasteDescriptionResponse,
   isLoading: boolean,
   isError: boolean
 }
 
-type Action =
-  | { type: 'DATA_FETCH_INIT' }
-  | { type: 'DATA_FETCH_SUCCESS' }
-  | { type: 'DATA_FETCH_FAILURE' }
-  | { type: 'DATA_UPDATE' };
+type Action = {
+  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE' | 'DATA_UPDATE',
+  payload?: { status: 'Started' } & GetWasteDescriptionResponse
+}
 
 const initialWasteDescState: State = {
   data: { status: 'Started' },
@@ -71,7 +70,7 @@ const describeWasteReducer = (state: State, action: Action) => {
     case 'DATA_UPDATE':
       return {
         ...state,
-        data: { ...state.data, status: 'Started', description: action.payload },
+        data: action.payload
       };
     default:
       throw new Error();
@@ -129,7 +128,7 @@ const DescribeWaste = () => {
   const handleInputChange = (input) => {
     dispatchDescribeWastePage({
       type: 'DATA_UPDATE',
-      payload: input.target.value,
+      payload: { ...describeWastePage.data, description: input.target.value }
     });
   };
 

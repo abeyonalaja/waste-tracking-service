@@ -94,11 +94,20 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.wasteDescription = wasteDescription;
+
     if (
       wasteDescription.status === 'Complete' &&
       submission.wasteQuantity.status === 'CannotStart'
     ) {
       submission.wasteQuantity = { status: 'NotStarted' };
+    }
+
+    if (
+      submission.recoveryFacilityDetail.status === 'CannotStart' &&
+      wasteDescription.status !== 'NotStarted' &&
+      wasteDescription.wasteCode !== undefined
+    ) {
+      submission.recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
     this.submissions.set(submissionId, submission);
