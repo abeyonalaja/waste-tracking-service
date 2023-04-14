@@ -68,6 +68,8 @@
   "exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel": "Countries waste will travel through",
   "exportJourney.submitAnExport.SectionFour.heading": "Treatment of waste",
   "exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory": "Recovery facility or laboratory",
+  "exportJourney.submitAnExport.SectionFour.laboratoryDetails": "Laboratory details",
+  "exportJourney.submitAnExport.SectionFour.recoveryDetails": "Recovery facility",
   "exportJourney.submitAnExport.finalCheck.title": "Final check",
   "exportJourney.submitAnExport.finalCheck.description": "You'll be able to check and submit this export once you've completed all the sections.",
   "exportJourney.submitAnExport.returnLink": "Return to this draft later",

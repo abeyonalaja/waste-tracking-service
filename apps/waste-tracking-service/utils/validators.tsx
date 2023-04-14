@@ -18,9 +18,9 @@ export const validateReference: (
   if (reference.length > 50)
     return 'Enter a reference using 50 character or less';
 
-  const regex = new RegExp('^[a-zA-Z0-9\\-\\/]{1,50}$');
+  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
   if (!regex.test(reference))
-    return 'The reference must only include letters a to z, numbers, hyphens and forward slashes';
+    return 'The reference must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };
 
 export const validateWasteCodeCategory: (
@@ -61,9 +61,9 @@ export const validateNationalCode: (
   if (nationalCode.length > 50)
     return 'Enter a reference using 50 character or less';
 
-  const regex = new RegExp('^[a-zA-Z0-9\\\\\\-]{1,50}$');
+  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
   if (!regex.test(nationalCode))
-    return 'The code must only include letters a to z, numbers, hyphens and bacl slashes';
+    return 'The code must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };
 
 export const validateWasteDescription: (

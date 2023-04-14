@@ -321,11 +321,13 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="recovery-facility-or-laboratory">
-                            {t(
-                              'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
+                          {content.recoveryFacilityDetail.status === "CannotStart" &&
+                            t(
+                            'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
                             )}
-                          </Link>
+                          {content.recoveryFacilityDetail.status !== "CannotStart" && content.wasteDescription.wasteCode !== undefined &&
+                            <Link href="">{ content.wasteDescription.wasteCode.type === "NotApplicable" ? t('exportJourney.submitAnExport.SectionFour.laboratoryDetails') : t('exportJourney.submitAnExport.SectionFour.recoveryDetails') }</Link>
+                          }
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
