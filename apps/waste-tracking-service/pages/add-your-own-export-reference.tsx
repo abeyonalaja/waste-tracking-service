@@ -66,7 +66,7 @@ export function AddYourOwnExportReference() {
             body: JSON.stringify(ownReference === 'yes' ? reference : null),
           }).then(() => {
             router.push({
-              pathname: '/dashboard/submit-an-export',
+              pathname: '/submit-an-export-tasklist',
               query: { id },
             });
           });
@@ -100,7 +100,7 @@ export function AddYourOwnExportReference() {
                 reference: ownReference === 'yes' ? reference : null,
               });
               router.push({
-                pathname: '/dashboard/submit-an-export',
+                pathname: '/submit-an-export-tasklist',
                 query: { id },
               });
             });

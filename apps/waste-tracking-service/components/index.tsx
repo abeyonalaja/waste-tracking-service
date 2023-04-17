@@ -6,8 +6,10 @@ import { RadiosDivider } from './RadiosDivider';
 import { SaveReturnLink } from './SaveReturnLInk';
 import { DocumentStatus } from './DocumentStatus';
 import { TextareaCharCount } from './TextareaCharCount';
+import { AppLink } from './AppLink'
 
 export {
+  AppLink,
   CompleteHeader,
   CompleteFooter,
   BreadcrumbWrap,

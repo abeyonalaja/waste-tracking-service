@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react';
-import { Link } from 'govuk-react';
+import { AppLink } from './AppLink';
 import styled from 'styled-components';
 
 interface Props {
@@ -8,21 +8,15 @@ interface Props {
 }
 
 const StyledSaveReturnLink = styled('p')`
-  font-size: 16px;
   margin-top: 0;
-  @media (min-width: 40.0625em) {
-    font-size: 19px;
-  }
 `;
-
-const StyledLink = styled(Link)``;
 
 export const SaveReturnLink = ({ callBack, testId }: Props) => {
   return (
     <StyledSaveReturnLink data-testid={testId}>
-      <StyledLink href="#" noVisitedState onClick={callBack}>
+      <AppLink href="#" noVisitedState onClick={callBack}>
         Save and return to draft
-      </StyledLink>
+      </AppLink>
     </StyledSaveReturnLink>
   );
 };

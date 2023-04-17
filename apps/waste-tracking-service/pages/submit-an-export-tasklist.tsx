@@ -1,30 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React, {
+  useEffect,
+  useState,
+  useReducer
+} from 'react';
 import Head from 'next/head';
-import styled from 'styled-components';
-import '../../i18n/config';
+import { useRouter } from 'next/router';
+import * as GovUK from 'govuk-react';
+import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
-  Breadcrumbs,
-  Heading,
-  Caption,
-  Page,
-  GridRow,
-  GridCol,
-  Paragraph,
-  OrderedList,
-  ListItem,
-  H2,
-  Table,
-  SectionBreak,
-  Link,
-} from 'govuk-react';
-import {
+  AppLink,
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  DocumentStatus,
-} from '../../components';
+  DocumentStatus
+} from '../components';
+import styled from 'styled-components';
+
+import { Submission } from '@wts/api/waste-tracking-gateway';
+import { H2, Heading, ListItem, OrderedList, Paragraph, SectionBreak, Table } from 'govuk-react';
+
+type State = {
+  data: Submission,
+  isLoading: boolean,
+  isError: boolean
+}
+
+type Action = {
+  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE',
+  payload?: Submission
+}
+
+const initialWasteDescState: State = {
+  data: null,
+  isLoading: false,
+  isError: false
+}
+
+const tasklistReducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case 'DATA_FETCH_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'DATA_FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload,
+      };
+    case 'DATA_FETCH_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+    default:
+      throw new Error();
+  }
+};
+
 
 const TableCellRight = styled(Table.Cell)`
   text-align: right;
@@ -40,112 +78,108 @@ const Lower = styled('div')`
   padding-bottom: 60px;
 `;
 
-export function SubmitAnExport() {
+
+const Tasklist = () => {
   const { t } = useTranslation();
-
-  const [content, setContent] = useState(null);
-  const [isReady, setIsReady] = useState(false);
-
-  function addFourNumbers(
-    num1: number,
-    num2: number,
-    num3: number,
-    num4: number
-  ): number {
-    return num1 + num2 + num3 + num4;
-  }
-
   const router = useRouter();
+
+  const [tasklistPage, dispatchTasklistPage] = useReducer(
+    tasklistReducer,
+    initialWasteDescState
+  );
+
+  const [id, setId] = useState(null);
+
   useEffect(() => {
     if (router.isReady) {
-      const { id } = router.query;
-      const fetchData = async () => {
-        try {
-          await fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-              setContent(data);
-              setIsReady(true);
-            });
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      fetchData();
+      setId(router.query.id);
     }
-  }, [isReady, router.isReady, router.query]);
-  const { id } = router.query;
-  const BreadCrumbHref = `../add-your-own-export-reference?id=${id}`;
-  const WasteCodesHref = `/waste-code?id=${id}`;
+  }, [router.isReady, router.query.id]);
 
-  const aboutTheWastetatus = 0;
-  const exporterImporterStatus = 0;
-  const journeyofWasteStatus = 0;
-  const treatmentOfWasteStatus = 0;
+  useEffect(() => {
+    dispatchTasklistPage({ type: 'DATA_FETCH_INIT' });
+    if (id !== null) {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchTasklistPage({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            dispatchTasklistPage({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: data,
+            });
+          }
+        });
+    }
+  }, [router.isReady, id]);
 
-  const sectionStatus = addFourNumbers(
-    aboutTheWastetatus,
-    exporterImporterStatus,
-    journeyofWasteStatus,
-    treatmentOfWasteStatus
-  );
+  const sectionStatus = 0
 
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
-        <Breadcrumbs>
-          <Breadcrumbs.Link href="/">{t('app.title')}</Breadcrumbs.Link>
-          <Breadcrumbs.Link href="/dashboard">
+        <GovUK.Breadcrumbs>
+          <GovUK.Breadcrumbs.Link href="/">{t('app.title')}</GovUK.Breadcrumbs.Link>
+          <GovUK.Breadcrumbs.Link href="/dashboard">
             {t('app.channel.title')}
-          </Breadcrumbs.Link>
-          <Breadcrumbs.Link href={BreadCrumbHref}>
+          </GovUK.Breadcrumbs.Link>
+          <GovUK.Breadcrumbs.Link href={`../add-your-own-export-reference?id=${id}`}>
             {t('yourReference.breadcrumb')}
-          </Breadcrumbs.Link>
+          </GovUK.Breadcrumbs.Link>
           {t('exportJourney.submitAnExport.breadcrumb')}
-        </Breadcrumbs>
+        </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
     );
   };
 
   return (
     <>
-      {isReady && (
-        <>
-          <Head>
-            <title>{t('exportJourney.submitAnExport.title')}</title>
-          </Head>
-          <Page
-            id="content"
-            header={<CompleteHeader />}
-            footer={<CompleteFooter />}
-            beforeChildren={<BreadCrumbs />}
-          >
-            <GridRow>
-              <GridCol setWidth="two-thirds">
-                {content.reference ? (
-                  <Caption id="my-reference">
+      <Head>
+        <title>{t('exportJourney.submitAnExport.title')}</title>
+      </Head>
+      <GovUK.Page
+        id="content"
+        header={<CompleteHeader />}
+        footer={<CompleteFooter />}
+        beforeChildren={<BreadCrumbs />}
+      >
+        <GovUK.GridRow>
+          <GovUK.GridCol setWidth="two-thirds">
+            {tasklistPage.isError && !tasklistPage.isLoading && (
+              <p>No valid record found</p>
+            )}
+            {tasklistPage.isLoading && <p>Loading</p>}
+            {!tasklistPage.isError && !tasklistPage.isLoading && (
+              <>
+                {tasklistPage.data?.reference ? (
+                  <GovUK.Caption id="my-reference">
                     {t('exportJourney.submitAnExport.yourRef')}:{' '}
-                    {content.reference}
-                  </Caption>
+                    {tasklistPage.data?.reference}
+                  </GovUK.Caption>
                 ) : (
                   <></>
                 )}
 
-                <Heading size="LARGE" id="template-heading">
+                <GovUK.Heading size="LARGE" id="template-heading">
                   {t('exportJourney.submitAnExport.title')}
-                </Heading>
+                </GovUK.Heading>
 
                 <Heading size="SMALL">
                   {sectionStatus < 4
                     ? t('exportJourney.submitAnExport.submissionIncomplete')
                     : t('exportJourney.submitAnExport.submissionComplete')}
                 </Heading>
-                <p
-                  id="completed-section-count"
-                  data-testid="completed-section-count"
-                >
-                  You have completed {sectionStatus} of 4 sections.
-                </p>
+
+                <Paragraph>
+                  { `You have completed ${sectionStatus} of 4 sections.` }
+                </Paragraph>
+
                 <OrderedList>
                   <BoldListItem>
                     <H2 size="MEDIUM">
@@ -155,19 +189,21 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link
-                            href={WasteCodesHref}
-                            id="waste-codes-and-description"
+                          <AppLink
+                            href={{
+                              pathname: '/waste-code',
+                              query: { id },
+                            }}
                           >
                             {t(
                               'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="waste-codes-and-description-status"
-                            status={content.wasteDescription.status}
+                            status={tasklistPage.data?.wasteDescription.status}
                           />
                         </TableCellRight>
                       </Table.Row>
@@ -182,7 +218,7 @@ export function SubmitAnExport() {
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="quantity-of-waste-status"
-                            status={content.wasteQuantity.status}
+                            status={tasklistPage.data?.wasteQuantity.status}
                           />
                         </TableCellRight>
                       </Table.Row>
@@ -196,31 +232,31 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="exporter-details">
+                          <AppLink href="" id="exporter-details">
                             {t(
                               'exportJourney.submitAnExport.SectionTwo.exporterDetails'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="exporter-details-status"
-                            status={content.exporterDetail.status}
+                            status={tasklistPage.data?.exporterDetail.status}
                           />
                         </TableCellRight>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="importer-details">
+                          <AppLink href="" id="importer-details">
                             {t(
                               'exportJourney.submitAnExport.SectionTwo.importerDetails'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="importer-details-status"
-                            status={content.importerDetail.status}
+                            status={tasklistPage.data?.importerDetail.status}
                           />
                         </TableCellRight>
                       </Table.Row>
@@ -234,79 +270,79 @@ export function SubmitAnExport() {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="collection-details">
+                          <AppLink href="" id="collection-details">
                             {t(
                               'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="collection-details-status"
-                            status={content.collectionDate.status}
+                            status={tasklistPage.data?.collectionDate.status}
                           />
                         </TableCellRight>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="waste-carriers">
+                          <AppLink href="" id="waste-carriers">
                             {t(
                               'exportJourney.submitAnExport.SectionThree.wasteCarriers'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="waste-carriers-status"
-                            status={content.carriers.status}
+                            status={tasklistPage.data?.carriers.status}
                           />
                         </TableCellRight>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="waste-collection-details">
+                          <AppLink href="" id="waste-collection-details">
                             {t(
                               'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="waste-collection-details-status"
-                            status={content.collectionDetail.status}
+                            status={tasklistPage.data?.collectionDetail.status}
                           />
                         </TableCellRight>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link href="" id="location-waste-leaves-the-uk">
+                          <AppLink href="" id="location-waste-leaves-the-uk">
                             {t(
                               'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="location-waste-leaves-the-uk-status"
-                            status={content.ukExitLocation.status}
+                            status={tasklistPage.data?.ukExitLocation.status}
                           />
                         </TableCellRight>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <Link
+                          <AppLink
                             href=""
                             id="countries-waste-will-travel-through"
                           >
                             {t(
                               'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel'
                             )}
-                          </Link>
+                          </AppLink>
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="countries-waste-will-travel-through-status"
-                            status={content.transitCountries.status}
+                            status={tasklistPage.data?.transitCountries.status}
                           />
                         </TableCellRight>
                       </Table.Row>
@@ -316,23 +352,27 @@ export function SubmitAnExport() {
                     <H2 size="MEDIUM">
                       {t('exportJourney.submitAnExport.SectionFour.heading')}
                     </H2>
-
                     <SectionBreak level="SMALL" visible />
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          {content.recoveryFacilityDetail.status === "CannotStart" &&
-                            t(
+                          {tasklistPage.data?.recoveryFacilityDetail.status === "CannotStart" &&
+                          t(
                             'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
-                            )}
-                          {content.recoveryFacilityDetail.status !== "CannotStart" && content.wasteDescription.wasteCode !== undefined &&
-                            <Link href="">{ content.wasteDescription.wasteCode.type === "NotApplicable" ? t('exportJourney.submitAnExport.SectionFour.laboratoryDetails') : t('exportJourney.submitAnExport.SectionFour.recoveryDetails') }</Link>
+                          )}
+                          {
+                            ( tasklistPage.data?.wasteDescription.status === "Started" || tasklistPage.data?.wasteDescription.status === "Complete") &&
+                            <AppLink href="">
+                              { tasklistPage.data?.wasteDescription?.wasteCode.type === "NotApplicable" ?
+                                t('exportJourney.submitAnExport.SectionFour.laboratoryDetails') :
+                                t('exportJourney.submitAnExport.SectionFour.recoveryDetails') }
+                            </AppLink>
                           }
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="recovery-facility-or-laboratory-status"
-                            status={content.recoveryFacilityDetail.status}
+                            status={tasklistPage.data?.recoveryFacilityDetail.status}
                           />
                         </TableCellRight>
                       </Table.Row>
@@ -346,17 +386,17 @@ export function SubmitAnExport() {
                   <Paragraph>
                     {t('exportJourney.submitAnExport.finalCheck.description')}
                   </Paragraph>
-                  <Link href="">
+                  <AppLink href="/dashboard">
                     {t('exportJourney.submitAnExport.returnLink')}
-                  </Link>
+                  </AppLink>
                 </Lower>
-              </GridCol>
-            </GridRow>
-          </Page>
-        </>
-      )}
+              </>
+            )}
+          </GovUK.GridCol>
+        </GovUK.GridRow>
+      </GovUK.Page>
     </>
   );
-}
+};
 
-export default SubmitAnExport;
+export default Tasklist;

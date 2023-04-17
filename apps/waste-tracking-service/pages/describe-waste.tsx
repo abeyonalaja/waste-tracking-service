@@ -165,7 +165,7 @@ const DescribeWaste = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? '/dashboard/submit-an-export'
+                  ? '/submit-an-export-tasklist'
                   : '/quantity';
                 router.push({
                   pathname: path,

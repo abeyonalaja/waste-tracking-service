@@ -159,7 +159,7 @@ const WasteCode = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? '/dashboard/submit-an-export'
+                  ? '/submit-an-export-tasklist'
                   : '/ewc-code';
                 router.push({
                   pathname: path,
@@ -193,7 +193,7 @@ const WasteCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: '/dashboard/submit-an-export',
+              pathname: '/submit-an-export-tasklist',
               query: { id },
             });
           }}

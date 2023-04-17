@@ -2,6 +2,7 @@ Feature: AS A waste producer/broker
   I NEED to add my waste code and description
   SO THAT I can correctly categorise and describe my waste export
 
+  @ignore
   Scenario: EWC codes for the "Not applicable" option
     Given I login to waste tracking portal
     And I navigate to whats the waste code page

@@ -154,7 +154,7 @@ const NationalCode = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? '/dashboard/submit-an-export'
+                  ? '/submit-an-export-tasklist'
                   : '/describe-waste';
                 router.push({
                   pathname: path,
