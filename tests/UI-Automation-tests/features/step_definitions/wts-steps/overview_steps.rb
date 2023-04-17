@@ -30,3 +30,7 @@ end
 Then(/^Green list overview page is displayed$/) do
   OverviewPage.new.check_page_displayed
 end
+
+Then(/^I should green list waste overview page$/) do
+  OverviewPage.new.check_page_displayed
+end

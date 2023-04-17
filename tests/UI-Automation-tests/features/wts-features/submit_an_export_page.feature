@@ -32,5 +32,11 @@ Feature: AS A Waste Producer/Broker
     When I amend the previously entered reference
     And the new reference should be displayed
 
+  Scenario: Return to this draft later should navigate user to Green list waste overview
+    Given I login to waste tracking portal
+    When I navigate to the submit an export with reference
+    And I click the link Return to this draft later
+    Then I should green list waste overview page
+
 
 

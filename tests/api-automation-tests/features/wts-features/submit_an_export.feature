@@ -9,6 +9,6 @@ Feature:AS A Waste Producer/Broker
     Scenario: Update the reference number for the existing export
       Given I POST reference number "API Testing" for waste export
       Then reference number should be successfully created
-      When I amend the reference number to "Amend API testing reference" for waste export
-      Then reference number should be successfully created
+      When I amend the reference number to "Amend reference" for waste export
+      Then  reference number should be successfully updated
 

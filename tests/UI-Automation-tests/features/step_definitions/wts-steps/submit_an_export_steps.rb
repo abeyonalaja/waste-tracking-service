@@ -39,3 +39,7 @@ end
 When(/^I click the "([^"]*)" link$/) do |option|
   click_link option
 end
+
+And(/^I click the link Return to this draft later$/) do
+  click_link 'Return to this draft later'
+end

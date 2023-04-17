@@ -48,7 +48,7 @@ Feature: AS A waste producer/broker
     And select a first option as waste code description
     And I click the Save and return to draft
     Then the task "Waste codes and description" should be "In progress"
-    #And the task "Recovery Facility or laboratory" should be "Not started"
+    And the task "Recovery Facility or laboratory" should be "Not started"
 
   Scenario: Continue without selecting any waste code
     Given I login to waste tracking portal

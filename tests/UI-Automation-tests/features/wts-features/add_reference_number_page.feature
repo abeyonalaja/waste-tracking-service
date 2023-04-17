@@ -44,4 +44,4 @@ Feature: AS A Waste Producer/Broker
     And I navigate to the add reference page
     When  I have entered an invalid special character as part of the reference
     And I click the button Save and continue
-    Then I remain on the Add Reference Number page with an "The reference must only include letters a to z, numbers, hyphens and forward slashes" error message displayed
+    Then I remain on the Add Reference Number page with an "The reference must only include letters a to z, numbers, spaces, hyphens and back slashes" error message displayed

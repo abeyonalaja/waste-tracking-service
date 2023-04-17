@@ -40,7 +40,7 @@ When(/^I have entered less than the required character length$/) do
 end
 
 When(/^I amend the previously entered reference$/) do
-  reference = 'new/reference'
+  reference = 'new reference'
   add_reference_number_page = AddReferenceNumberPage.new
   add_reference_number_page.enter_reference_number reference
   add_reference_number_page.save_and_continue
