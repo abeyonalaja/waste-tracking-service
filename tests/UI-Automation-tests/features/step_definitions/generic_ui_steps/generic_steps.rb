@@ -10,8 +10,8 @@ And(/^I click browser back button$/) do
   page.go_back
 end
 
-And(/^clicking "([^"]*)" link should display "([^"]*)" page$/) do |back, page_name|
-  click_link 'Back'
+And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_name|
+  click_link link
   camel_case_page_name = page_name.split.map(&:capitalize).push('Page').join
   page_class = Object.const_get camel_case_page_name
   page_object = page_class.new

@@ -70,7 +70,7 @@ export const TextareaCharCount = ({
         >
           {}
         </TextArea>
-        <StyledHint error={error}>{ message }</StyledHint>
+        <StyledHint error={error} id={`${id}-character-remaining-text`}>{ message }</StyledHint>
       </FormGroup>
     </>
   );

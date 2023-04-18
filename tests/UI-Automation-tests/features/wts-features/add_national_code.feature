@@ -8,6 +8,7 @@ Feature:AS A Waste Producer/Broker
     Then I navigate to National Code page
     Then I verify copy text is present on the page
     And I have selected Yes and entered valid national code
+    When I click the button Save and continue
     Then I verify Describe waste page is displayed
     And I click browser back button
     Then I verify Yes option is selected
