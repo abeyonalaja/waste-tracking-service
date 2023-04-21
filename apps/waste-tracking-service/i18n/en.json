@@ -2,6 +2,10 @@
   "tag": "PROTOTYPE",
   "app.title": "Waste tracking service",
   "app.channel.title": "Green list waste overview",
+  "404.title": "Page not found",
+  "404.paragraph1": "If you typed the web address, check it is correct.",
+  "404.paragraph2": "If you pasted the web address, check you copied the entire address.",
+  "404.link": "Return to the homepage",
   "charCount.positive": "You have {{n}} character remaining",
   "charCount.negative": "You have {{n}} characters too many",
   "cookies.title": "Cookies",
@@ -80,5 +84,9 @@
   "exportJourney.nationalCode.hint": "This information is optional.",
   "exportJourney.nationalCode.inputLabel": "Enter code",
   "exportJourney.describeWaste.title": "Describe the waste",
-  "exportJourney.describeWaste.hint": "Give the usual description of the waste. For example, baled PET bottles, bagged HDPE pellets or OCC paper."
+  "exportJourney.describeWaste.hint": "Give the usual description of the waste. For example, baled PET bottles, bagged HDPE pellets or OCC paper.",
+  "exportJourney.exporterPostcode.title": "What's the exporter's address?",
+  "exportJourney.exporterPostcode.hint": "The exporter is the person who arranges the shipment. This must be a UK address.",
+  "exportJourney.exporterPostcode.postCodeLabel": "Postcode",
+  "exportJourney.exporterPostcode.manualAddressLink": "Enter address manually"
 }

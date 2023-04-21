@@ -74,3 +74,7 @@ export const validateWasteDescription: (
   if (description?.length > 100)
     return 'Description must be 100 characters or less';
 };
+
+export const validatePostcode: (postcode?: string) => string = (postcode) => {
+  if (postcode?.length === 0) return 'Enter a postcode';
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { AppLink } from '../components';
 import { BreadcrumbWrap, CompleteFooter, CompleteHeader } from '../components';
 import * as GovUK from 'govuk-react';
 
@@ -42,14 +42,14 @@ const EwcCode = () => {
       >
         <h1>EWC code pages will appear here...</h1>
         <p>
-          <Link
+          <AppLink
             href={{
               pathname: '/national-code',
               query: { id },
             }}
           >
             Continue to National code page
-          </Link>{' '}
+          </AppLink>{' '}
         </p>
       </GovUK.Page>
     </>

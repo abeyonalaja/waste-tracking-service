@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useReducer
+  useReducer,
 } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -280,7 +280,7 @@ const NationalCode = () => {
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink callBack={handleLinkSubmit} />
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}

@@ -1,16 +1,15 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { screen } from '@testing-library/dom'
+import { screen } from '@testing-library/dom';
+import AddYourOwnExportReference from '../pages/add-your-own-export-reference';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
-    json: () => Promise.resolve({ reference: "12345" }),
+    json: () => Promise.resolve({ reference: '12345' }),
   })
 );
 
 jest.mock('next/router', () => require('next-router-mock'));
-
-import AddYourOwnExportReference from '../pages/add-your-own-export-reference';
 
 describe('AddYourOwnExportReference', () => {
   it('renders without crashing', () => {
@@ -22,7 +21,9 @@ describe('AddYourOwnExportReference', () => {
     const submitButton = getByText('Save and continue');
     fireEvent.click(submitButton);
     expect(getByText('There is a problem')).toBeTruthy();
-    expect(screen.getAllByText('Select yes if you want to add a reference')[0]).toBeTruthy();
+    expect(
+      screen.getAllByText('Select yes if you want to add a reference')[0]
+    ).toBeTruthy();
   });
 
   it('displays a validation message when "Yes" is selected but no reference is entered', () => {
@@ -34,5 +35,4 @@ describe('AddYourOwnExportReference', () => {
     expect(getByText('There is a problem')).toBeTruthy();
     expect(screen.getAllByText('Enter a reference')[0]).toBeTruthy();
   });
-
 });

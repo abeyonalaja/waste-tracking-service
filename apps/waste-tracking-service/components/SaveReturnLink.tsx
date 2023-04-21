@@ -3,7 +3,8 @@ import { AppLink } from './AppLink';
 import styled from 'styled-components';
 
 interface Props {
-  callBack: (e: FormEvent) => void;
+  href?: string | object;
+  onClick?: (e: FormEvent) => void;
   testId?: string;
 }
 
@@ -11,10 +12,10 @@ const StyledSaveReturnLink = styled('p')`
   margin-top: 0;
 `;
 
-export const SaveReturnLink = ({ callBack, testId }: Props) => {
+export const SaveReturnLink = ({ onClick, href = '#', testId }: Props) => {
   return (
     <StyledSaveReturnLink data-testid={testId}>
-      <AppLink href="#" noVisitedState onClick={callBack}>
+      <AppLink href={href} onClick={onClick}>
         Save and return to draft
       </AppLink>
     </StyledSaveReturnLink>

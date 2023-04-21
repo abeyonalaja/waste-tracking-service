@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useReducer
-} from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -13,29 +9,37 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  DocumentStatus
+  DocumentStatus,
 } from '../components';
 import styled from 'styled-components';
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
-import { H2, Heading, ListItem, OrderedList, Paragraph, SectionBreak, Table } from 'govuk-react';
+import {
+  H2,
+  Heading,
+  ListItem,
+  OrderedList,
+  Paragraph,
+  SectionBreak,
+  Table,
+} from 'govuk-react';
 
 type State = {
-  data: Submission,
-  isLoading: boolean,
-  isError: boolean
-}
+  data: Submission;
+  isLoading: boolean;
+  isError: boolean;
+};
 
 type Action = {
-  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE',
-  payload?: Submission
-}
+  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
+  payload?: Submission;
+};
 
 const initialWasteDescState: State = {
   data: null,
   isLoading: false,
-  isError: false
-}
+  isError: false,
+};
 
 const tasklistReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -63,7 +67,6 @@ const tasklistReducer = (state: State, action: Action) => {
   }
 };
 
-
 const TableCellRight = styled(Table.Cell)`
   text-align: right;
 `;
@@ -77,7 +80,6 @@ const Lower = styled('div')`
   padding-top: 20px;
   padding-bottom: 60px;
 `;
-
 
 const Tasklist = () => {
   const { t } = useTranslation();
@@ -99,9 +101,7 @@ const Tasklist = () => {
   useEffect(() => {
     dispatchTasklistPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}`
-      )
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -119,17 +119,21 @@ const Tasklist = () => {
     }
   }, [router.isReady, id]);
 
-  const sectionStatus = 0
+  const sectionStatus = 0;
 
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">{t('app.title')}</GovUK.Breadcrumbs.Link>
+          <GovUK.Breadcrumbs.Link href="/">
+            {t('app.title')}
+          </GovUK.Breadcrumbs.Link>
           <GovUK.Breadcrumbs.Link href="/dashboard">
             {t('app.channel.title')}
           </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href={`../add-your-own-export-reference?id=${id}`}>
+          <GovUK.Breadcrumbs.Link
+            href={`../add-your-own-export-reference?id=${id}`}
+          >
             {t('yourReference.breadcrumb')}
           </GovUK.Breadcrumbs.Link>
           {t('exportJourney.submitAnExport.breadcrumb')}
@@ -177,7 +181,7 @@ const Tasklist = () => {
                 </Heading>
 
                 <Paragraph>
-                  { `You have completed ${sectionStatus} of 4 sections.` }
+                  {`You have completed ${sectionStatus} of 4 sections.`}
                 </Paragraph>
 
                 <OrderedList>
@@ -209,7 +213,7 @@ const Tasklist = () => {
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <span id="quanitity-of-waste">
+                          <span id="quantity-of-waste">
                             {t(
                               'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
                             )}
@@ -232,7 +236,13 @@ const Tasklist = () => {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <AppLink href="" id="exporter-details">
+                          <AppLink
+                            href={{
+                              pathname: '/exporter-postcode',
+                              query: { id },
+                            }}
+                            id="exporter-details"
+                          >
                             {t(
                               'exportJourney.submitAnExport.SectionTwo.exporterDetails'
                             )}
@@ -356,23 +366,33 @@ const Tasklist = () => {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          {tasklistPage.data?.recoveryFacilityDetail.status === "CannotStart" &&
-                          t(
-                            'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
-                          )}
-                          {
-                            ( tasklistPage.data?.wasteDescription.status === "Started" || tasklistPage.data?.wasteDescription.status === "Complete") &&
+                          {tasklistPage.data?.recoveryFacilityDetail.status ===
+                            'CannotStart' &&
+                            t(
+                              'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
+                            )}
+                          {(tasklistPage.data?.wasteDescription.status ===
+                            'Started' ||
+                            tasklistPage.data?.wasteDescription.status ===
+                              'Complete') && (
                             <AppLink href="">
-                              { tasklistPage.data?.wasteDescription?.wasteCode.type === "NotApplicable" ?
-                                t('exportJourney.submitAnExport.SectionFour.laboratoryDetails') :
-                                t('exportJourney.submitAnExport.SectionFour.recoveryDetails') }
+                              {tasklistPage.data?.wasteDescription?.wasteCode
+                                .type === 'NotApplicable'
+                                ? t(
+                                    'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
+                                  )
+                                : t(
+                                    'exportJourney.submitAnExport.SectionFour.recoveryDetails'
+                                  )}
                             </AppLink>
-                          }
+                          )}
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
                             id="recovery-facility-or-laboratory-status"
-                            status={tasklistPage.data?.recoveryFacilityDetail.status}
+                            status={
+                              tasklistPage.data?.recoveryFacilityDetail.status
+                            }
                           />
                         </TableCellRight>
                       </Table.Row>

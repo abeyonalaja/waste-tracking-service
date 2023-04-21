@@ -182,7 +182,7 @@ const WasteCode = () => {
       id,
       router,
       url,
-      data
+      data,
     ]
   );
 
@@ -392,7 +392,7 @@ const WasteCode = () => {
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink callBack={handleLinkSubmit} />
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}

@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useReducer
+  useReducer,
 } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -20,30 +20,32 @@ import {
 import { validateWasteDescription } from '../utils/validators';
 import styled from 'styled-components';
 
-import {
-  GetWasteDescriptionResponse,
-} from '@wts/api/waste-tracking-gateway';
+import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
 function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
 
 type State = {
-  data: { status: 'Started' } & GetWasteDescriptionResponse,
-  isLoading: boolean,
-  isError: boolean
-}
+  data: { status: 'Started' } & GetWasteDescriptionResponse;
+  isLoading: boolean;
+  isError: boolean;
+};
 
 type Action = {
-  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE' | 'DATA_UPDATE',
-  payload?: { status: 'Started' } & GetWasteDescriptionResponse
-}
+  type:
+    | 'DATA_FETCH_INIT'
+    | 'DATA_FETCH_SUCCESS'
+    | 'DATA_FETCH_FAILURE'
+    | 'DATA_UPDATE';
+  payload?: { status: 'Started' } & GetWasteDescriptionResponse;
+};
 
 const initialWasteDescState: State = {
   data: { status: 'Started' },
   isLoading: false,
-  isError: false
-}
+  isError: false,
+};
 
 const describeWasteReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -70,7 +72,7 @@ const describeWasteReducer = (state: State, action: Action) => {
     case 'DATA_UPDATE':
       return {
         ...state,
-        data: action.payload
+        data: action.payload,
       };
     default:
       throw new Error();
@@ -128,7 +130,7 @@ const DescribeWaste = () => {
   const handleInputChange = (input) => {
     dispatchDescribeWastePage({
       type: 'DATA_UPDATE',
-      payload: { ...describeWastePage.data, description: input.target.value }
+      payload: { ...describeWastePage.data, description: input.target.value },
     });
   };
 
@@ -250,7 +252,7 @@ const DescribeWaste = () => {
                     <Heading />
                   </TextareaCharCount>
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink callBack={handleLinkSubmit} />
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}

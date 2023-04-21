@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { CompleteFooter, CompleteHeader, BreadcrumbWrap } from '../components';
+import {
+  AppLink,
+  CompleteFooter,
+  CompleteHeader,
+  BreadcrumbWrap,
+} from '../components';
 import React from 'react';
 
 const Paragraph = styled.p`
@@ -30,9 +35,7 @@ export function Index() {
         beforeChildren={<BreadCrumbs />}
       >
         <Paragraph>
-          <GovUK.Link href="dashboard" noVisitedState>
-            {t('app.channel.title')}
-          </GovUK.Link>
+          <AppLink href="dashboard">{t('app.channel.title')}</AppLink>
         </Paragraph>
       </GovUK.Page>
     </>
