@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'shared_components/general_helpers'
-require_relative 'shared_components/error_box'
-require_relative 'shared_components/page_helper'
+require_relative '../shared_components/general_helpers'
+require_relative '../shared_components/error_box'
+require_relative '../shared_components/page_helper'
 # this page is for National Code page details
 class NationalCodePage < GenericPage
   include GeneralHelpers

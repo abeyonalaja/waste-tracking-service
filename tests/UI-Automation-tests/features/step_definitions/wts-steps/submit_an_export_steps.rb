@@ -36,10 +36,6 @@ And(/^the new reference should be displayed$/) do
   expect(SubmitAnExportPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:new_application_reference_number)}")
 end
 
-When(/^I click the "([^"]*)" link$/) do |option|
-  click_link option
-end
-
 And(/^I click the link Return to this draft later$/) do
   click_link 'Return to this draft later'
 end

@@ -19,9 +19,21 @@ And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_nam
 end
 
 And(/^I click the Save and return to draft$/) do
-  AddReferenceNumberPage.new.save_and_return_to_draft
+  click_on GetTag.get_value 'saveReturnLink'
 end
 
 And(/^I click the button Save and continue$/) do
-  AddReferenceNumberPage.new.save_and_continue
+  click_on GetTag.get_value 'saveButton'
+end
+
+When(/^I click the "([^"]*)" link$/) do |option|
+  get_key = GetTag.get_key(option)
+  click_link GetTag.get_value(get_key)
+end
+
+Then(/^the "([^"]*)" page is displayed$/) do |page_name|
+  camel_case_page_name = page_name.split.map(&:capitalize).push('Page').join
+  page_class = Object.const_get camel_case_page_name
+  page_object = page_class.new
+  page_object.check_page_displayed
 end
