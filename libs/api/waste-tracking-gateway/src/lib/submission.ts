@@ -12,6 +12,16 @@ export type WasteDescriptionData = {
   description: string;
 };
 
+export type WasteQuantityData = {
+  wasteQuantity:
+    | { type: 'NotApplicable' }
+    | {
+        type: 'EstimateData' | 'ActualData';
+        quantityType: 'Volume' | 'Weight';
+        value: number;
+      };
+};
+
 export type WasteDescription =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
@@ -25,7 +35,9 @@ type NotStartedSection = { status: 'NotStarted' };
 
 export type WasteQuantity =
   | { status: 'CannotStart' }
-  | { status: 'NotStarted' };
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<WasteQuantityData>)
+  | ({ status: 'Complete' } & WasteQuantityData);
 
 export type Submission = {
   id: string;
@@ -55,3 +67,6 @@ export type GetReferenceResponse = CustomerReference;
 export type PutWasteDescriptionRequest = WasteDescription;
 export type PutWasteDescriptionResponse = WasteDescription;
 export type GetWasteDescriptionResponse = WasteDescription;
+export type PutWasteQuantityRequest = WasteQuantity;
+export type PutWasteQuantityResponse = WasteQuantity;
+export type GetWasteQuantityResponse = WasteQuantity;

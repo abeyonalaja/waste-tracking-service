@@ -4,6 +4,7 @@ import {
   validateCreateSubmissionRequest,
   validatePutWasteDescriptionRequest,
   validatePutReferenceRequest,
+  validatePutWasteQuantityRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -84,6 +85,36 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         return value as dto.PutWasteDescriptionResponse;
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/waste-quantity',
+      handler: async function ({ params }) {
+        const value = await backend.getWasteQuantity(params.id);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.GetWasteQuantityResponse;
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/waste-quantity',
+      handler: async function ({ params, payload }) {
+        if (!validatePutWasteQuantityRequest(payload)) {
+          return Boom.badRequest();
+        }
+        const request = payload as dto.PutWasteQuantityRequest;
+        const value = await backend.setWasteQuantity(params.id, request);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.PutWasteQuantityResponse;
       },
     });
 

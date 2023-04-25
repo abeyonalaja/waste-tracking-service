@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 export type Submission = dto.Submission;
 export type CustomerReference = dto.CustomerReference;
 export type WasteDescription = dto.WasteDescription;
+export type WasteQuantity = dto.WasteQuantity;
 
 export class ValdiationError extends Error {
   constructor(message: string) {
@@ -23,6 +24,11 @@ export interface SubmissionBackend {
     submissionId: string,
     wasteDescription: WasteDescription
   ): Promise<WasteDescription | undefined>;
+  getWasteQuantity(submissionId: string): Promise<WasteQuantity | undefined>;
+  setWasteQuantity(
+    submissionId: string,
+    WasteQuantity: WasteQuantity
+  ): Promise<WasteQuantity | undefined>;
   getCustomerReference(
     submissionId: string
   ): Promise<CustomerReference | undefined>;
@@ -112,6 +118,30 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     this.submissions.set(submissionId, submission);
     return wasteDescription;
+  }
+
+  async getWasteQuantity(
+    submissionId: string
+  ): Promise<WasteQuantity | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+
+    return submission.wasteQuantity;
+  }
+
+  async setWasteQuantity(
+    submissionId: string,
+    wasteQuantity: WasteQuantity
+  ): Promise<WasteQuantity | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+    submission.wasteQuantity = wasteQuantity;
+    this.submissions.set(submissionId, submission);
+    return wasteQuantity;
   }
 
   async getCustomerReference(

@@ -3,6 +3,7 @@ import {
   validateCreateSubmissionRequest,
   validatePutReferenceRequest,
   validatePutWasteDescriptionRequest,
+  validatePutWasteQuantityRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -96,6 +97,90 @@ describe('validatePutWasteDescriptionRequest', () => {
         ecaCodes: ['Z'],
         nationalCode: { provided: 'No' },
         description: 'Waste',
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutWasteQuantityRequest', () => {
+  const validate = validatePutWasteQuantityRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Started',
+        wasteQuantity: {
+          type: 'NotApplicable',
+          value: faker.datatype.string(10),
+        },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'NotStarted',
+        wasteQuantity: {
+          type: 'ActualData',
+          quantityType: 'Volume',
+          value: faker.datatype.number(10),
+        },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        wasteCode: { type: 'EstimateData', value: faker.datatype.number(10) },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Started',
+        wasteQuantity: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.string(10),
+        },
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        status: 'NotStarted',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
+        wasteQuantity: { type: 'NotApplicable' },
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
+        wasteQuantity: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.float({ precision: 0.01 }),
+        },
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Complete',
+        wasteQuantity: {
+          type: 'ActualData',
+          quantityType: 'Volume',
+          value: faker.datatype.float({ precision: 0.01 }),
+        },
       })
     ).toBe(true);
   });

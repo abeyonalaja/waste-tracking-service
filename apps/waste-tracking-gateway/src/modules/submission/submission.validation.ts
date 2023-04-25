@@ -2,6 +2,7 @@ import {
   CreateSubmissionRequest,
   PutReferenceRequest,
   PutWasteDescriptionRequest,
+  PutWasteQuantityRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -62,6 +63,50 @@ export const validatePutWasteDescriptionRequest =
           nationalCode: { ref: 'nationalCode' },
           ecaCodes: { ref: 'ecaCodes' },
           description: { ref: 'description' },
+        },
+      },
+    },
+  });
+
+export const validatePutWasteQuantityRequest =
+  ajv.compile<PutWasteQuantityRequest>({
+    definitions: {
+      wasteQuantity: {
+        discriminator: 'type',
+        mapping: {
+          NotApplicable: { properties: {} },
+          EstimateData: {
+            properties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              value: { type: 'float64' },
+            },
+          },
+          ActualData: {
+            properties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              value: { type: 'float64' },
+            },
+          },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      CannotStart: {
+        properties: {},
+      },
+      NotStarted: {
+        properties: {},
+      },
+      Started: {
+        properties: {},
+        optionalProperties: {
+          wasteQuantity: { ref: 'wasteQuantity' },
+        },
+      },
+      Complete: {
+        properties: {
+          wasteQuantity: { ref: 'wasteQuantity' },
         },
       },
     },
