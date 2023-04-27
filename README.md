@@ -13,10 +13,18 @@ Run a development server UI:
 ```
 nx serve waste-tracking-service
 ```
+
 Run a development server API:
 
 ```
 nx serve waste-tracking-gateway
+```
+
+Run and test address lookup service
+
+```
+dapr run --app-id address-lookup-service --app-port 5000 --resources-path ./components -- nx serve address-lookup-service
+dapr run --app-id address-lookup-service --app-port 5000 --resources-path ./components -- nx test address-lookup-service
 ```
 
 ## Nx Workspace
@@ -30,7 +38,6 @@ Run `nx graph` to see a diagram of the dependencies of the projects.
 [2]: https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console
 [3]: https://nx.dev/
 
-
-To get this running locally you will need a .env.local containing 
+To get this running locally you will need a .env.local containing
 
 NX_API_GATEWAY_URL=http://localhost:3000/api
