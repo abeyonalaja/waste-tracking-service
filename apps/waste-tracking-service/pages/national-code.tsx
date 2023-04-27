@@ -178,10 +178,7 @@ const NationalCode = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            router.push({
-              pathname: '/dashboard/added-ewc-code',
-              query: { id },
-            });
+            history.back();
           }}
         >
           Back
