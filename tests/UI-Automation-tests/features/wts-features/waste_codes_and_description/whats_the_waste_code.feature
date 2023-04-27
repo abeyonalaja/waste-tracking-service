@@ -13,13 +13,14 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     And I click "Back" link should display "What is the waste code" page
 
-#  Scenario: Display "laboratory details" as an option on the "submit an export" page
-#    Given I login to waste tracking portal
-#    And I navigate to the submit an export with reference
-#    When I navigate to You have added EWC codes page with Not applicable waste code and select first EWC code
-#    And I click the Save and return to draft
-#    Then Submit an export page is displayed
+  Scenario: Display "laboratory details" as an option on the "submit an export" page
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    When I navigate to You have added EWC codes page with Not applicable waste code
+    And I click the Save and return to draft
+    Then Submit an export page is displayed
 #    And the task "Quantity of waste" should be "Not started"
+    And the task "Laboratory details" should be "Not started"
 
   Scenario: Waste code selection
     Given I login to waste tracking portal

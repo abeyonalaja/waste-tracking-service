@@ -13,6 +13,7 @@ require 'yaml'
 require 'rspec/matchers'
 require 'active_support/time'
 require_relative 'page_helpers/generic_page'
+require_relative '../pages/shared_components/translations'
 require 'report_builder'
 require 'axe-cucumber-steps'
 require "axe-capybara"

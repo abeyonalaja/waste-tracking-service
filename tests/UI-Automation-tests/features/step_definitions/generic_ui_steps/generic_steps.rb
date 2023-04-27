@@ -11,7 +11,7 @@ And(/^I click browser back button$/) do
 end
 
 And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_name|
-  click_link link
+  click_link Translations.value link.downcase
   camel_case_page_name = page_name.split.map(&:capitalize).push('Page').join
   page_class = Object.const_get camel_case_page_name
   page_object = page_class.new
@@ -19,16 +19,16 @@ And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_nam
 end
 
 And(/^I click the Save and return to draft$/) do
-  click_on GetTag.get_value 'saveReturnLink'
+  click_on Translations.value 'saveReturnLink'
 end
 
 And(/^I click the button Save and continue$/) do
-  click_on GetTag.get_value 'saveButton'
+  click_on Translations.value 'saveButton'
 end
 
 When(/^I click the "([^"]*)" link$/) do |option|
-  get_key = GetTag.get_key(option)
-  click_link GetTag.get_value(get_key)
+  get_key = Translations.key(option)
+  click_link Translations.value(get_key)
 end
 
 Then(/^the "([^"]*)" page is displayed$/) do |page_name|
@@ -36,4 +36,8 @@ Then(/^the "([^"]*)" page is displayed$/) do |page_name|
   page_class = Object.const_get camel_case_page_name
   page_object = page_class.new
   page_object.check_page_displayed
+end
+
+When(/^I choose "([^"]*)" radio button$/) do |option|
+  choose(option, visible: false)
 end

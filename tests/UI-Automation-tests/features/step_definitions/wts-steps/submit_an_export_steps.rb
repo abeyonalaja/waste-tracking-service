@@ -39,3 +39,15 @@ end
 And(/^I click the link Return to this draft later$/) do
   click_link 'Return to this draft later'
 end
+
+And(/^I complete Waste codes and description task$/) do
+  SubmitAnExportPage.new.waste_codes_and_description
+  WasteCodeController.complete
+  NationalCodeController.complete
+  DescribeTheWasteController.complete
+  QuantityOfWastePage.new.save_and_return_to_draft
+end
+
+And(/^I have (\d+) of 4 sections completed$/) do |completed|
+  expect(page).to have_text("You have completed #{completed} of 4 sections.")
+end
