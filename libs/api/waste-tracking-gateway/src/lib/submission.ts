@@ -7,7 +7,7 @@ export type WasteDescriptionData = {
         type: 'BaselAnnexIX' | 'Oecd' | 'AnnexIIIA' | 'AnnexIIIB';
         value: string;
       };
-  ecaCodes: string[];
+  ewcCodes: string[];
   nationalCode: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
 };

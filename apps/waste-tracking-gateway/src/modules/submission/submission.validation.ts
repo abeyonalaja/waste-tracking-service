@@ -33,7 +33,7 @@ export const validatePutWasteDescriptionRequest =
           AnnexIIIB: { properties: { value: { type: 'string' } } },
         },
       },
-      ecaCodes: { elements: { type: 'string' } },
+      ewcCodes: { elements: { type: 'string' } },
       nationalCode: {
         discriminator: 'provided',
         mapping: {
@@ -53,7 +53,7 @@ export const validatePutWasteDescriptionRequest =
         optionalProperties: {
           wasteCode: { ref: 'wasteCode' },
           nationalCode: { ref: 'nationalCode' },
-          ecaCodes: { ref: 'ecaCodes' },
+          ewcCodes: { ref: 'ewcCodes' },
           description: { ref: 'description' },
         },
       },
@@ -61,7 +61,7 @@ export const validatePutWasteDescriptionRequest =
         properties: {
           wasteCode: { ref: 'wasteCode' },
           nationalCode: { ref: 'nationalCode' },
-          ecaCodes: { ref: 'ecaCodes' },
+          ewcCodes: { ref: 'ewcCodes' },
           description: { ref: 'description' },
         },
       },

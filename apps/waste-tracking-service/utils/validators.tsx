@@ -50,6 +50,21 @@ export const validateWasteCode: (
     )} ${wasteCodeCategoryLabel} waste code`;
 };
 
+export const validateDoYouHaveAnEWCCode: (value?: string) => string | null = (
+  value
+) => {
+  console.log(value);
+  return value ? null : 'Select yes if you want to add an EWC code';
+};
+
+export const validateEwcCodes: (
+  ewcCodes?: string[],
+  showInput?: string
+) => string | undefined = (ewcCodes, showInput) => {
+  if (showInput !== 'yes') return;
+  if (ewcCodes === undefined) return 'Select an EWC code ';
+};
+
 export const validateNationalCode: (
   hasNationalCode?: string,
   nationalCode?: string

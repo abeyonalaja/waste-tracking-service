@@ -179,7 +179,7 @@ const NationalCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: '/ewc-code',
+              pathname: '/dashboard/added-ewc-code',
               query: { id },
             });
           }}

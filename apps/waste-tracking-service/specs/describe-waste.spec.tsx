@@ -24,7 +24,12 @@ describe('Describe the waste page', () => {
   });
 
   it('should display a loading message while data is being fetched', async () => {
-    global.fetch.mockImplementationOnce(() => new Promise(() => { return }));
+    global.fetch.mockImplementationOnce(
+      () =>
+        new Promise(() => {
+          return;
+        })
+    );
 
     await act(async () => {
       render(<DescribeWaste />);
@@ -55,7 +60,9 @@ describe('Describe the waste page', () => {
     const textareaElement = screen.getByLabelText('Describe the waste');
     fireEvent.change(textareaElement, { target: { value: null } });
 
-    const messageElement = screen.getByText('You have 100 character remaining');
+    const messageElement = screen.getByText(
+      'You have 100 characters remaining'
+    );
     expect(messageElement).toBeTruthy();
 
     const submitButton = screen.getByText('Save and continue');

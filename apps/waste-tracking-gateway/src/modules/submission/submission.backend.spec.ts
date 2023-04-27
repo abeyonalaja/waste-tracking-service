@@ -61,7 +61,7 @@ describe(InMemorySubmissionBackend, () => {
     await subject.setWasteDescription(id, {
       status: 'Complete',
       wasteCode: { type: 'NotApplicable' },
-      ecaCodes: [],
+      ewcCodes: [],
       nationalCode: { provided: 'No' },
       description: '',
     });

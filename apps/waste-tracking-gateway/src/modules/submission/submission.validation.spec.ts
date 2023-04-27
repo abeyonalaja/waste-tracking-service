@@ -94,7 +94,7 @@ describe('validatePutWasteDescriptionRequest', () => {
       validate({
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: faker.datatype.string(10) },
-        ecaCodes: ['Z'],
+        ewcCodes: ['Z'],
         nationalCode: { provided: 'No' },
         description: 'Waste',
       })
