@@ -16,9 +16,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@wts/api/annex-vii": ["libs/api/annex-vii/src/index.ts"],
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
-      ]
+      ],
+      "@wts/util/dapr-winston-logging": [
+        "libs/util/dapr-winston-logging/src/index.ts"
+      ],
+      "@wts/util/invocation": ["libs/util/invocation/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

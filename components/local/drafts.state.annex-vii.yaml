@@ -1,0 +1,20 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: drafts.state.annex-vii
+spec:
+  type: state.azure.cosmosdb
+  version: v1
+  metadata:
+    - name: url
+      value: ''
+    - name: masterKey
+      value: ''
+    - name: database
+      value: annex-vii
+    - name: collection
+      value: drafts
+    - name: keyPrefix
+      value: none
+  scopes:
+    - annex-vii
