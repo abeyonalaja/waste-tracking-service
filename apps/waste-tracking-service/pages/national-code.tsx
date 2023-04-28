@@ -59,7 +59,7 @@ const NationalCode = () => {
 
   const [nationalCodePage, dispatchNationalCodePage] = useReducer(
     nationalCodeReducer,
-    { data: {}, isLoading: false, isError: false }
+    { data: {}, isLoading: true, isError: false }
   );
 
   const [id, setId] = useState(null);

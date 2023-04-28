@@ -37,7 +37,7 @@ type Action = {
 
 const initialWasteDescState: State = {
   data: null,
-  isLoading: false,
+  isLoading: true,
   isError: false,
 };
 
@@ -214,8 +214,22 @@ const Tasklist = () => {
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
                           <span id="quantity-of-waste">
-                            {t(
-                              'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
+                            {tasklistPage.data?.wasteQuantity.status ===
+                            'CannotStart' ? (
+                              t(
+                                'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
+                              )
+                            ) : (
+                              <AppLink
+                                href={{
+                                  pathname: '/waste-quantity',
+                                  query: { id },
+                                }}
+                              >
+                                {t(
+                                  'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
+                                )}
+                              </AppLink>
                             )}
                           </span>
                         </Table.Cell>

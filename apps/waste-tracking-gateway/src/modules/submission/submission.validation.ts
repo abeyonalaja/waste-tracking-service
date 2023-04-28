@@ -77,13 +77,13 @@ export const validatePutWasteQuantityRequest =
         mapping: {
           NotApplicable: { properties: {} },
           EstimateData: {
-            properties: {
+            optionalProperties: {
               quantityType: { enum: ['Volume', 'Weight'] },
               value: { type: 'float64' },
             },
           },
           ActualData: {
-            properties: {
+            optionalProperties: {
               quantityType: { enum: ['Volume', 'Weight'] },
               value: { type: 'float64' },
             },

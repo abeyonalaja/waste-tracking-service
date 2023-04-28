@@ -89,9 +89,6 @@ const ExporterPostcode = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            <GovUK.Heading size={'LARGE'}>
-              {t('exportJourney.exporterPostcode.title')}
-            </GovUK.Heading>
             {errors && !!Object.keys(errors).length && (
               <GovUK.ErrorSummary
                 heading={t('errorSummary.title')}
@@ -101,6 +98,9 @@ const ExporterPostcode = () => {
                 }))}
               />
             )}
+            <GovUK.Heading size={'LARGE'}>
+              {t('exportJourney.exporterPostcode.title')}
+            </GovUK.Heading>
             <form onSubmit={handleSubmit}>
               <GovUK.HintText>
                 {t('exportJourney.exporterPostcode.hint')}

@@ -26,7 +26,7 @@ export const DocumentStatus = (props) => {
         </Tag>
       );
       break;
-    case 'Completed':
+    case 'Complete':
       name = (
         <Tag id={props.id} data-testid="C">
           Completed

@@ -47,6 +47,8 @@
   "back": "Back",
   "saveButton": "Save and continue",
   "saveReturnLink": "Save and return to draft",
+  "weight.tonnes": "tonnes",
+  "volume.cubemeters": "m3",
   "errorSummary.title": "There is a problem",
   "exportJourney.submitAnExport.title": "Submit an export",
   "exportJourney.submitAnExport.breadcrumb": "Submit an export",
@@ -94,5 +96,16 @@
   "exportJourney.exporterPostcode.title": "What's the exporter's address?",
   "exportJourney.exporterPostcode.hint": "The exporter is the person who arranges the shipment. This must be a UK address.",
   "exportJourney.exporterPostcode.postCodeLabel": "Postcode",
-  "exportJourney.exporterPostcode.manualAddressLink": "Enter address manually"
+  "exportJourney.exporterPostcode.manualAddressLink": "Enter address manually",
+  "exportJourney.quantity.title": "Do you know the net weight or volume of the waste?",
+  "exportJourney.quantity.intro": "This does not include the weight of the container or vehicle.",
+  "exportJourney.quantity.radioYes": "Yes, I know the actual amount",
+  "exportJourney.quantity.radioEstimate": "No, I will enter an estimate",
+  "exportJourney.quantity.radioNo": "No, I do not know the amount yet",
+  "exportJourney.quantityValue.Actual.title": "What is the actual net weight or volume of the waste?",
+  "exportJourney.quantityValue.Estimate.title": "What is the estimated net weight or volume of the waste?",
+  "exportJourney.quantityValue.intro": "Do not include the weight of the container or vehicle.",
+  "exportJourney.quantityValue.weightLabel": "Weight in tonnes",
+  "exportJourney.quantityValue.volumeLabel": "Volume in cubic metres",
+  "exportJourney.quantityValue.inputHint": "Enter up to two decimal places, for example 5.25"
 }

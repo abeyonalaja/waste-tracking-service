@@ -17,14 +17,10 @@ import {
   TextareaCharCount,
   SaveReturnLink,
 } from '../components';
-import { validateWasteDescription } from '../utils/validators';
+import { isNotEmpty, validateWasteDescription } from '../utils/validators';
 import styled from 'styled-components';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 type State = {
   data: { status: 'Started' } & GetWasteDescriptionResponse;
@@ -43,7 +39,7 @@ type Action = {
 
 const initialWasteDescState: State = {
   data: { status: 'Started' },
-  isLoading: false,
+  isLoading: true,
   isError: false,
 };
 
@@ -141,7 +137,6 @@ const DescribeWaste = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const description = describeWastePage.data?.description;
-
       const newErrors = {
         description: validateWasteDescription(description),
       };
@@ -168,7 +163,7 @@ const DescribeWaste = () => {
               if (data !== undefined) {
                 const path = returnToDraft
                   ? '/submit-an-export-tasklist'
-                  : '/quantity';
+                  : '/waste-quantity';
                 router.push({
                   pathname: path,
                   query: { id },

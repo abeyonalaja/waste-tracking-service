@@ -159,6 +159,12 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'Started',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
         wasteQuantity: { type: 'NotApplicable' },
       })
     ).toBe(true);

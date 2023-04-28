@@ -108,7 +108,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.wasteDescription = wasteDescription;
 
     if (
-      wasteDescription.status === 'Complete' &&
+      (wasteDescription.status === 'Started' ||
+        wasteDescription.status === 'Complete') &&
       submission.wasteQuantity.status === 'CannotStart'
     ) {
       submission.wasteQuantity = { status: 'NotStarted' };

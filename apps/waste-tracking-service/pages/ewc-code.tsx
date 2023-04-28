@@ -44,7 +44,7 @@ const EwcCode = () => {
         <p>
           <AppLink
             href={{
-              pathname: '/national-code',
+              pathname: '/submit-an-export-tasklist',
               query: { id },
             }}
           >

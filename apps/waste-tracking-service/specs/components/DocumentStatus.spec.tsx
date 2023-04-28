@@ -20,8 +20,8 @@ describe('DocumentStatus', () => {
     expect(getByText('In progress')).toBeInTheDocument();
   });
 
-  test('renders "COMPLETED" tag when status is Completed', () => {
-    const { getByText } = render(<DocumentStatus status="Completed" />);
+  test('renders "COMPLETED" tag when status is Complete', () => {
+    const { getByText } = render(<DocumentStatus status="Complete" />);
     expect(getByText('Completed')).toBeInTheDocument();
   });
 

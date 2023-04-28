@@ -1,5 +1,9 @@
 import aOrAn from './aOrAn';
 
+export function isNotEmpty(obj) {
+  return Object.keys(obj).some((key) => obj[key]?.length > 0);
+}
+
 export const validateOwnReference: (value?: string) => string | undefined = (
   value
 ) => (value ? undefined : 'Select yes if you want to add a reference');
@@ -92,4 +96,27 @@ export const validateWasteDescription: (
 
 export const validatePostcode: (postcode?: string) => string = (postcode) => {
   if (postcode?.length === 0) return 'Enter a postcode';
+};
+
+export const validateQuantityType: (quantityType?: string) => string = (
+  quantityType
+) => {
+  if (quantityType === null) return 'Select an option';
+};
+
+export const validateQuantityValue: (
+  quantityType?: boolean,
+  quantityValue?: string,
+  label?: string
+) => string = (quantityType, quantityValue, label) => {
+  if (!quantityType) return;
+  if (quantityType) {
+    if (quantityValue === '') {
+      return `${label} is required`;
+    }
+    const regex = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$');
+    if (!regex.test(quantityValue)) {
+      return `${label} must be a number, up to two decimal places`;
+    }
+  }
 };
