@@ -5,6 +5,7 @@ import {
   validatePutWasteDescriptionRequest,
   validatePutReferenceRequest,
   validatePutWasteQuantityRequest,
+  validatePutExporterDetailRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -146,6 +147,36 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         return value as dto.PutReferenceResponse;
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/exporter-detail',
+      handler: async function ({ params }) {
+        const value = await backend.getExporterDetail(params.id);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.GetExporterDetailResponse;
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/exporter-detail',
+      handler: async function ({ params, payload }) {
+        if (!validatePutExporterDetailRequest(payload)) {
+          return Boom.badRequest();
+        }
+        const request = payload as dto.PutExporterDetailRequest;
+        const value = await backend.setExporterDetail(params.id, request);
+        if (value === undefined) {
+          return Boom.notFound();
+        }
+
+        return value as dto.PutExporterDetailRequest;
       },
     });
   },

@@ -4,6 +4,7 @@ import {
   validatePutReferenceRequest,
   validatePutWasteDescriptionRequest,
   validatePutWasteQuantityRequest,
+  validatePutExporterDetailRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -183,5 +184,68 @@ describe('validatePutWasteQuantityRequest', () => {
         },
       })
     ).toBe(true);
+  });
+});
+
+describe('validatePutExporterDetailRequest', () => {
+  test('should return true for object with status: NotStarted', () => {
+    expect(validatePutExporterDetailRequest({ status: 'NotStarted' })).toBe(
+      true
+    );
+  });
+
+  it('should return false for a request with a missing property', () => {
+    const data = {
+      status: 'Complete',
+      exporterAddress: {
+        addressLine1: '123 Main St',
+        addressLine2: '',
+        townCity: 'Anytown',
+        postcode: '12345',
+      },
+      exporterContactDetails: {
+        organisationName: 'Acme Inc.',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+
+    expect(validatePutExporterDetailRequest(data)).toBe(false);
+  });
+
+  test('should return false for object with invalid exporterAddress', () => {
+    const data = {
+      status: 'Started',
+      exporterAddress: {
+        addressLine1: 123,
+        townCity: 'Anytown',
+        postcode: '12345',
+        country: 'UK',
+      },
+    };
+    expect(validatePutExporterDetailRequest(data)).toBe(false);
+  });
+
+  test('should return false for object with invalid exporterContactDetails', () => {
+    const data = {
+      status: 'Started',
+      exporterContactDetails: {
+        fullName: 'John Doe',
+        emailAddress: 123,
+      },
+    };
+    expect(validatePutExporterDetailRequest(data)).toBe(false);
+  });
+
+  test('should return false for object where status is not started', () => {
+    const data = {
+      status: 'NotStarted',
+      exporterContactDetails: {
+        fullName: 'John Doe',
+      },
+    };
+    expect(validatePutExporterDetailRequest(data)).toBe(false);
   });
 });

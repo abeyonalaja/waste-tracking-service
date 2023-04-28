@@ -7,6 +7,7 @@ import {
   SubmissionBackend,
   WasteDescription,
   WasteQuantity,
+  ExporterDetail,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 
@@ -31,6 +32,15 @@ const mockBackend = {
         submissionId: string,
         wasteDescription: WasteQuantity
       ) => Promise<WasteQuantity | undefined>
+    >(),
+  getExporterDetail:
+    jest.fn<(submissionId: string) => Promise<ExporterDetail | undefined>>(),
+  setExporterDetail:
+    jest.fn<
+      (
+        submissionId: string,
+        exporterDetail: ExporterDetail
+      ) => Promise<ExporterDetail | undefined>
     >(),
   getCustomerReference:
     jest.fn<(submissionId: string) => Promise<CustomerReference | undefined>>(),
@@ -77,6 +87,8 @@ describe('SubmissionPlugin', () => {
     mockBackend.setWasteQuantity.mockClear();
     mockBackend.getCustomerReference.mockClear();
     mockBackend.setCustomerReference.mockClear();
+    mockBackend.getExporterDetail.mockClear();
+    mockBackend.setExporterDetail.mockClear();
   });
 
   describe('GET /submissions', () => {

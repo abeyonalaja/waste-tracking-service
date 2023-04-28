@@ -22,6 +22,23 @@ export type WasteQuantityData = {
       };
 };
 
+export type ExporterDetailData = {
+  exporterAddress: {
+    addressLine1: 'string';
+    addressLine2: 'string';
+    townCity: 'string';
+    postcode: 'string';
+    country: 'string';
+  };
+  exporterContactDetails: {
+    organisationName: 'string';
+    fullName: 'string';
+    emailAddress: 'string';
+    phoneNumber: 'string';
+    faxNumber: 'string';
+  };
+};
+
 export type WasteDescription =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
@@ -39,12 +56,17 @@ export type WasteQuantity =
   | ({ status: 'Started' } & Partial<WasteQuantityData>)
   | ({ status: 'Complete' } & WasteQuantityData);
 
+export type ExporterDetail =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<ExporterDetailData>)
+  | ({ status: 'Complete' } & ExporterDetailData);
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
   wasteDescription: WasteDescription;
   wasteQuantity: WasteQuantity;
-  exporterDetail: NotStartedSection;
+  exporterDetail: ExporterDetail;
   importerDetail: NotStartedSection;
   collectionDate: NotStartedSection;
   carriers: NotStartedSection;
@@ -70,3 +92,6 @@ export type GetWasteDescriptionResponse = WasteDescription;
 export type PutWasteQuantityRequest = WasteQuantity;
 export type PutWasteQuantityResponse = WasteQuantity;
 export type GetWasteQuantityResponse = WasteQuantity;
+export type PutExporterDetailRequest = ExporterDetail;
+export type PutExporterDetailResponse = ExporterDetail;
+export type GetExporterDetailResponse = ExporterDetail;

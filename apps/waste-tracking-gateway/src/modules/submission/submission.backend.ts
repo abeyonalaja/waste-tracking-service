@@ -5,6 +5,7 @@ export type Submission = dto.Submission;
 export type CustomerReference = dto.CustomerReference;
 export type WasteDescription = dto.WasteDescription;
 export type WasteQuantity = dto.WasteQuantity;
+export type ExporterDetail = dto.ExporterDetail;
 
 export class ValdiationError extends Error {
   constructor(message: string) {
@@ -29,6 +30,11 @@ export interface SubmissionBackend {
     submissionId: string,
     WasteQuantity: WasteQuantity
   ): Promise<WasteQuantity | undefined>;
+  getExporterDetail(submissionId: string): Promise<ExporterDetail | undefined>;
+  setExporterDetail(
+    submissionId: string,
+    ExporterDetail: ExporterDetail
+  ): Promise<ExporterDetail | undefined>;
   getCustomerReference(
     submissionId: string
   ): Promise<CustomerReference | undefined>;
@@ -167,5 +173,28 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.reference = reference;
     this.submissions.set(submissionId, submission);
     return submission.reference;
+  }
+
+  async getExporterDetail(
+    submissionId: string
+  ): Promise<ExporterDetail | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+    return submission.exporterDetail;
+  }
+
+  async setExporterDetail(
+    submissionId: string,
+    exporterDetail: ExporterDetail
+  ): Promise<ExporterDetail | undefined> {
+    const submission = await this.getSubmission(submissionId);
+    if (submission === undefined) {
+      return undefined;
+    }
+    submission.exporterDetail = exporterDetail;
+    this.submissions.set(submissionId, submission);
+    return submission.exporterDetail;
   }
 }
