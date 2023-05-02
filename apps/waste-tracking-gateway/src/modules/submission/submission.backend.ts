@@ -1,7 +1,19 @@
-import * as dto from '@wts/api/waste-tracking-gateway';
 import Boom from '@hapi/boom';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  CreateDraftResponse,
+  GetDraftByIdResponse,
+  GetDraftCustomerReferenceByIdResponse,
+  GetDraftExporterDetailByIdResponse,
+  GetDraftWasteDescriptionByIdResponse,
+  GetDraftWasteQuantityByIdResponse,
+  SetDraftCustomerReferenceByIdResponse,
+  SetDraftExporterDetailByIdResponse,
+  SetDraftWasteDescriptionByIdResponse,
+  SetDraftWasteQuantityByIdResponse,
+} from '@wts/api/annex-vii';
+import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 
 export type Submission = dto.Submission;
@@ -201,77 +213,85 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     accountId: string,
     reference: CustomerReference
   ): Promise<Submission> {
+    let response: CreateDraftResponse;
     try {
-      const response = await this.client.createDraft({ accountId, reference });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
+      response = await this.client.createDraft({ accountId, reference });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async getSubmission({ id, accountId }: SubmissionRef): Promise<Submission> {
+    let response: GetDraftByIdResponse;
     try {
-      const response = await this.client.getDraftById({ id, accountId });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
+      response = await this.client.getDraftById({ id, accountId });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async getCustomerReference({
     id,
     accountId,
   }: SubmissionRef): Promise<CustomerReference> {
+    let response: GetDraftCustomerReferenceByIdResponse;
     try {
-      const response = await this.client.getDraftCustomerReferenceById({
+      response = await this.client.getDraftCustomerReferenceById({
         id,
         accountId,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async setCustomerReference(
     { id, accountId }: SubmissionRef,
     value: CustomerReference
   ): Promise<void> {
+    let response: SetDraftCustomerReferenceByIdResponse;
     try {
-      const response = await this.client.setDraftCustomerReferenceById({
+      response = await this.client.setDraftCustomerReferenceById({
         id,
         accountId,
         value,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
     }
   }
 
@@ -279,42 +299,46 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     id,
     accountId,
   }: SubmissionRef): Promise<WasteDescription> {
+    let response: GetDraftWasteDescriptionByIdResponse;
     try {
-      const response = await this.client.getDraftWasteDescriptionById({
+      response = await this.client.getDraftWasteDescriptionById({
         id,
         accountId,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
     value: WasteDescription
   ): Promise<void> {
+    let response: SetDraftWasteDescriptionByIdResponse;
     try {
-      const response = await this.client.setDraftWasteDescriptionById({
+      response = await this.client.setDraftWasteDescriptionById({
         id,
         accountId,
         value,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
     }
   }
 
@@ -322,42 +346,43 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     id,
     accountId,
   }: SubmissionRef): Promise<WasteQuantity> {
+    let response: GetDraftWasteQuantityByIdResponse;
     try {
-      const response = await this.client.getDraftWasteQuantityById({
-        id,
-        accountId,
-      });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
+      response = await this.client.getDraftWasteQuantityById({ id, accountId });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async setWasteQuantity(
     { id, accountId }: SubmissionRef,
     value: WasteQuantity
   ): Promise<void> {
+    let response: SetDraftWasteQuantityByIdResponse;
     try {
-      const response = await this.client.setDraftWasteQuantityById({
+      response = await this.client.setDraftWasteQuantityById({
         id,
         accountId,
         value,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
     }
   }
 
@@ -365,42 +390,46 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     id,
     accountId,
   }: SubmissionRef): Promise<ExporterDetail> {
+    let response: GetDraftExporterDetailByIdResponse;
     try {
-      const response = await this.client.getDraftExporterDetailById({
+      response = await this.client.getDraftExporterDetailById({
         id,
         accountId,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
-
-      return response.value;
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
     }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async setExporterDetail(
     { id, accountId }: SubmissionRef,
     value: ExporterDetail
   ): Promise<void> {
+    let response: SetDraftExporterDetailByIdResponse;
     try {
-      const response = await this.client.setDraftExporterDetailById({
+      response = await this.client.setDraftExporterDetailById({
         id,
         accountId,
         value,
       });
-      if (!response.success) {
-        throw new Boom.Boom(response.error.message, {
-          statusCode: response.error.statusCode,
-        });
-      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
     }
   }
 }
