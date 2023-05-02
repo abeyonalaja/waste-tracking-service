@@ -24,6 +24,7 @@ await app.register({
   plugin: submissionPlugin,
   options: {
     backend: new InMemorySubmissionBackend(),
+    logger,
   },
   routes: {
     prefix: '/api/submissions',

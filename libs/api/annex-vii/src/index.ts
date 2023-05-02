@@ -1,1 +1,1 @@
-export * from './lib/drafts';
+export * from './lib';

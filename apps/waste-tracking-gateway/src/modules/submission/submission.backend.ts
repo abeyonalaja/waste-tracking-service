@@ -1,4 +1,5 @@
 import * as dto from '@wts/api/waste-tracking-gateway';
+import Boom from '@hapi/boom';
 import { v4 as uuidv4 } from 'uuid';
 
 export type Submission = dto.Submission;
@@ -7,41 +8,31 @@ export type WasteDescription = dto.WasteDescription;
 export type WasteQuantity = dto.WasteQuantity;
 export type ExporterDetail = dto.ExporterDetail;
 
-export class ValdiationError extends Error {
-  constructor(message: string) {
-    super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
+export type SubmissionRef = {
+  id: string;
+  accountId: string;
+};
 
 export interface SubmissionBackend {
-  listSubmissions(): Promise<Submission[]>;
-  createSubmission(reference: CustomerReference): Promise<Submission>;
-  getSubmission(id: string): Promise<Submission | undefined>;
-  getWasteDescription(
-    submissionId: string
-  ): Promise<WasteDescription | undefined>;
-  setWasteDescription(
-    submissionId: string,
-    wasteDescription: WasteDescription
-  ): Promise<WasteDescription | undefined>;
-  getWasteQuantity(submissionId: string): Promise<WasteQuantity | undefined>;
-  setWasteQuantity(
-    submissionId: string,
-    WasteQuantity: WasteQuantity
-  ): Promise<WasteQuantity | undefined>;
-  getExporterDetail(submissionId: string): Promise<ExporterDetail | undefined>;
-  setExporterDetail(
-    submissionId: string,
-    ExporterDetail: ExporterDetail
-  ): Promise<ExporterDetail | undefined>;
-  getCustomerReference(
-    submissionId: string
-  ): Promise<CustomerReference | undefined>;
-  setCustomerReference(
-    submissionId: string,
+  createSubmission(
+    accountId: string,
     reference: CustomerReference
-  ): Promise<CustomerReference | undefined>;
+  ): Promise<Submission>;
+  getSubmission(ref: SubmissionRef): Promise<Submission>;
+  getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
+  setCustomerReference(
+    ref: SubmissionRef,
+    value: CustomerReference
+  ): Promise<void>;
+  getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
+  setWasteDescription(
+    ref: SubmissionRef,
+    value: WasteDescription
+  ): Promise<void>;
+  getWasteQuantity(ref: SubmissionRef): Promise<WasteQuantity>;
+  setWasteQuantity(ref: SubmissionRef, value: WasteQuantity): Promise<void>;
+  getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
+  setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
 }
 
 /**
@@ -50,14 +41,13 @@ export interface SubmissionBackend {
 export class InMemorySubmissionBackend implements SubmissionBackend {
   readonly submissions = new Map<string, Submission>();
 
-  listSubmissions(): Promise<Submission[]> {
-    return Promise.resolve(Array.from(this.submissions.values()));
-  }
-
-  createSubmission(reference: CustomerReference): Promise<Submission> {
+  createSubmission(
+    _: string,
+    reference: CustomerReference
+  ): Promise<Submission> {
     if (reference && reference.length > 50) {
       return Promise.reject(
-        new ValdiationError('Supplied reference cannot exceed 50 characters')
+        Boom.badRequest('Supplied reference cannot exceed 50 characters')
       );
     }
 
@@ -81,35 +71,66 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve(value);
   }
 
-  getSubmission(id: string): Promise<Submission | undefined> {
-    return Promise.resolve(this.submissions.get(id));
-  }
-
-  async getWasteDescription(
-    submissionId: string
-  ): Promise<WasteDescription | undefined> {
-    const submission = await this.getSubmission(submissionId);
-    if (submission === undefined) {
-      return undefined;
+  getSubmission({ id }: SubmissionRef): Promise<Submission> {
+    const value = this.submissions.get(id);
+    if (value === undefined) {
+      return Promise.reject(Boom.notFound());
     }
 
-    return submission.wasteDescription;
+    return Promise.resolve(value);
   }
 
-  async setWasteDescription(
-    submissionId: string,
-    wasteDescription: WasteDescription
-  ): Promise<WasteDescription | undefined> {
-    const submission = await this.getSubmission(submissionId);
+  getCustomerReference({ id }: SubmissionRef): Promise<CustomerReference> {
+    const submission = this.submissions.get(id);
     if (submission === undefined) {
-      return undefined;
+      return Promise.reject(Boom.notFound());
     }
 
-    submission.wasteDescription = wasteDescription;
+    return Promise.resolve(submission.reference);
+  }
+
+  setCustomerReference(
+    { id }: SubmissionRef,
+    value: CustomerReference
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (value && value.length > 50) {
+      return Promise.reject(
+        Boom.badRequest('Supplied reference cannot exceed 50 characters')
+      );
+    }
+
+    submission.reference = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getWasteDescription({ id }: SubmissionRef): Promise<WasteDescription> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.wasteDescription);
+  }
+
+  setWasteDescription(
+    { id }: SubmissionRef,
+    value: WasteDescription
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.wasteDescription = value;
 
     if (
-      (wasteDescription.status === 'Started' ||
-        wasteDescription.status === 'Complete') &&
+      (value.status === 'Started' || value.status === 'Complete') &&
       submission.wasteQuantity.status === 'CannotStart'
     ) {
       submission.wasteQuantity = { status: 'NotStarted' };
@@ -117,85 +138,56 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     if (
       submission.recoveryFacilityDetail.status === 'CannotStart' &&
-      wasteDescription.status !== 'NotStarted' &&
-      wasteDescription.wasteCode !== undefined
+      value.status !== 'NotStarted' &&
+      value.wasteCode !== undefined
     ) {
       submission.recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
-    this.submissions.set(submissionId, submission);
-    return wasteDescription;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
   }
 
-  async getWasteQuantity(
-    submissionId: string
-  ): Promise<WasteQuantity | undefined> {
-    const submission = await this.getSubmission(submissionId);
+  getWasteQuantity({ id }: SubmissionRef): Promise<WasteQuantity> {
+    const submission = this.submissions.get(id);
     if (submission === undefined) {
-      return undefined;
+      return Promise.reject(Boom.notFound());
     }
 
-    return submission.wasteQuantity;
+    return Promise.resolve(submission.wasteQuantity);
   }
 
-  async setWasteQuantity(
-    submissionId: string,
-    wasteQuantity: WasteQuantity
-  ): Promise<WasteQuantity | undefined> {
-    const submission = await this.getSubmission(submissionId);
+  setWasteQuantity({ id }: SubmissionRef, value: WasteQuantity): Promise<void> {
+    const submission = this.submissions.get(id);
     if (submission === undefined) {
-      return undefined;
+      return Promise.reject(Boom.notFound());
     }
-    submission.wasteQuantity = wasteQuantity;
-    this.submissions.set(submissionId, submission);
-    return wasteQuantity;
+
+    submission.wasteQuantity = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
   }
 
-  async getCustomerReference(
-    submissionId: string
-  ): Promise<CustomerReference | undefined> {
-    const submission = await this.getSubmission(submissionId);
+  getExporterDetail({ id }: SubmissionRef): Promise<ExporterDetail> {
+    const submission = this.submissions.get(id);
     if (submission === undefined) {
-      return undefined;
+      return Promise.reject(Boom.notFound());
     }
 
-    return submission.reference;
+    return Promise.resolve(submission.exporterDetail);
   }
 
-  async setCustomerReference(
-    submissionId: string,
-    reference: CustomerReference
-  ): Promise<CustomerReference | undefined> {
-    const submission = await this.getSubmission(submissionId);
+  setExporterDetail(
+    { id }: SubmissionRef,
+    value: ExporterDetail
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
     if (submission === undefined) {
-      return undefined;
+      return Promise.reject(Boom.notFound());
     }
 
-    submission.reference = reference;
-    this.submissions.set(submissionId, submission);
-    return submission.reference;
-  }
-
-  async getExporterDetail(
-    submissionId: string
-  ): Promise<ExporterDetail | undefined> {
-    const submission = await this.getSubmission(submissionId);
-    if (submission === undefined) {
-      return undefined;
-    }
-    return submission.exporterDetail;
-  }
-
-  async setExporterDetail(
-    submissionId: string,
-    exporterDetail: ExporterDetail
-  ): Promise<ExporterDetail | undefined> {
-    const submission = await this.getSubmission(submissionId);
-    if (submission === undefined) {
-      return undefined;
-    }
-    submission.exporterDetail = exporterDetail;
-    this.submissions.set(submissionId, submission);
-    return submission.exporterDetail;
+    submission.exporterDetail = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
   }
 }

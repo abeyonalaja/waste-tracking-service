@@ -124,5 +124,125 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalled();
       expect(response.error.statusCode).toBe(418);
     });
+
+    it('cannot initially start recovery facility section', async () => {
+      mockRepository.saveDraft.mockResolvedValue();
+      const response = await subject.createDraft({
+        accountId: faker.datatype.uuid(),
+      });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value.recoveryFacilityDetail.status).toBe('CannotStart');
+    });
+  });
+
+  describe('setWasteDescriptionById', () => {
+    it('enables waste quantity on completion of waste description', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          wasteCode: { type: 'NotApplicable' },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: { type: 'NotApplicable' },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+    });
+
+    it('enables recovery facility where some waste code is provided', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Started',
+          wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Started',
+            wasteCode: { type: 'AnnexIIIA', value: 'X' },
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+    });
   });
 });

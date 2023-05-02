@@ -76,8 +76,6 @@ export type Submission = {
   recoveryFacilityDetail: RecoveryFacilityDetail;
 };
 
-export type ListSubmissionsResponse = Submission[];
-
 export type GetSubmissionResponse = Submission;
 export type CreateSubmissionRequest = Pick<Submission, 'reference'>;
 export type CreateSubmissionResponse = Submission;

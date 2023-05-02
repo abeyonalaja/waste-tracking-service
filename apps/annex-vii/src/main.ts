@@ -4,7 +4,7 @@ import * as api from '@wts/api/annex-vii';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
-import { DraftController } from './controller';
+import { DraftController, parse, validate } from './controller';
 import { DaprDraftRepository } from './data';
 
 const logger = winston.createLogger({
@@ -34,33 +34,191 @@ const draftController = new DraftController(
   logger
 );
 
-await server.invoker.listen(api.getDraftById.name, async ({ body }) => {
-  if (body === undefined) {
-    return fromBoom(Boom.badRequest());
-  }
+await server.invoker.listen(
+  api.getDraftById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
 
-  const request = JSON.parse(body) as api.GetDraftByIdRequest;
-  return await draftController.getDraftById(request);
-});
+    const request = parse.getDraftByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
 
-await server.invoker.listen(api.getDrafts.name, async ({ body }) => {
-  if (body === undefined) {
-    return fromBoom(Boom.badRequest());
-  }
+    return await draftController.getDraftById(request);
+  },
+  { method: HttpMethod.POST }
+);
 
-  const request = JSON.parse(body) as api.GetDraftsRequest;
-  return await draftController.getDrafts(request);
-});
+await server.invoker.listen(
+  api.getDrafts.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDrafts(request);
+  },
+  { method: HttpMethod.POST }
+);
 
 await server.invoker.listen(
   api.createDraft.name,
   async ({ body }) => {
     if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.createDraftRequest(body);
+    if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
 
-    const request = JSON.parse(body) as api.CreateDraftRequest;
     return await draftController.createDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftCustomerReferenceById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftCustomerReferenceByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftCustomerReferenceById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftCustomerReferenceById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.SetDraftCustomerReferenceByIdRequest;
+    if (!validate.setDraftCustomerReferenceByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftCustomerReferenceById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftWasteDescriptionById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftWasteDescriptionByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftWasteDescriptionById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftWasteDescriptionById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftWasteDescriptionByIdRequest;
+    if (!validate.setDraftWasteDescriptionByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftWasteDescriptionById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftWasteQuantityById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftWasteQuantityByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftWasteQuantityById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftWasteQuantityById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftWasteQuantityByIdRequest;
+    if (!validate.setDraftWasteQuantityByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftWasteQuantityById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftExporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftExporterDetailByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftExporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftExporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftExporterDetailByIdRequest;
+    if (!validate.setDraftExporterDetailByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftExporterDetailById(request);
   },
   { method: HttpMethod.POST }
 );

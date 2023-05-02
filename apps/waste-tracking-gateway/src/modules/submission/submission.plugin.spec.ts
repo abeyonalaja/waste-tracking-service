@@ -1,56 +1,54 @@
 import { faker } from '@faker-js/faker';
 import { server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
+import winston from 'winston';
 import {
   CustomerReference,
   Submission,
   SubmissionBackend,
+  SubmissionRef,
   WasteDescription,
   WasteQuantity,
   ExporterDetail,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
+import Boom from '@hapi/boom';
+
+jest.mock('winston', () => ({
+  Logger: jest.fn().mockImplementation(() => ({
+    error: jest.fn(),
+  })),
+}));
+
+const accountId = 'c3c99728-3d5e-4357-bfcb-32dd913a55e8';
 
 const mockBackend = {
-  listSubmissions: jest.fn<() => Promise<Submission[]>>(),
-  createSubmission: jest.fn<(reference?: string) => Promise<Submission>>(),
-  getSubmission: jest.fn<(id: string) => Promise<Submission | undefined>>(),
-  getWasteDescription:
-    jest.fn<(submissionId: string) => Promise<WasteDescription | undefined>>(),
-  setWasteDescription:
+  createSubmission:
     jest.fn<
-      (
-        submissionId: string,
-        wasteDescription: WasteDescription
-      ) => Promise<WasteDescription | undefined>
+      (accountId: string, reference: CustomerReference) => Promise<Submission>
     >(),
-  getWasteQuantity:
-    jest.fn<(submissionId: string) => Promise<WasteQuantity | undefined>>(),
-  setWasteQuantity:
-    jest.fn<
-      (
-        submissionId: string,
-        wasteDescription: WasteQuantity
-      ) => Promise<WasteQuantity | undefined>
-    >(),
-  getExporterDetail:
-    jest.fn<(submissionId: string) => Promise<ExporterDetail | undefined>>(),
-  setExporterDetail:
-    jest.fn<
-      (
-        submissionId: string,
-        exporterDetail: ExporterDetail
-      ) => Promise<ExporterDetail | undefined>
-    >(),
+
+  getSubmission: jest.fn<(ref: SubmissionRef) => Promise<Submission>>(),
   getCustomerReference:
-    jest.fn<(submissionId: string) => Promise<CustomerReference | undefined>>(),
+    jest.fn<(ref: SubmissionRef) => Promise<CustomerReference>>(),
   setCustomerReference:
     jest.fn<
-      (
-        submissionId: string,
-        reference: CustomerReference
-      ) => Promise<CustomerReference | undefined>
+      (ref: SubmissionRef, reference: CustomerReference) => Promise<void>
     >(),
+  getWasteDescription:
+    jest.fn<(ref: SubmissionRef) => Promise<WasteDescription>>(),
+  setWasteDescription:
+    jest.fn<
+      (ref: SubmissionRef, wasteDescription: WasteDescription) => Promise<void>
+    >(),
+  getWasteQuantity: jest.fn<(ref: SubmissionRef) => Promise<WasteQuantity>>(),
+  setWasteQuantity:
+    jest.fn<
+      (ref: SubmissionRef, wasteDescription: WasteQuantity) => Promise<void>
+    >(),
+  getExporterDetail: jest.fn<(ref: SubmissionRef) => Promise<ExporterDetail>>(),
+  setExporterDetail:
+    jest.fn<(ref: SubmissionRef, value: ExporterDetail) => Promise<void>>(),
 };
 
 const app = server({
@@ -63,6 +61,7 @@ beforeAll(async () => {
     plugin: submissionPlugin,
     options: {
       backend: mockBackend as SubmissionBackend,
+      logger: new winston.Logger(),
     },
     routes: {
       prefix: '/submissions',
@@ -78,7 +77,6 @@ afterAll(async () => {
 
 describe('SubmissionPlugin', () => {
   beforeEach(() => {
-    mockBackend.listSubmissions.mockClear();
     mockBackend.createSubmission.mockClear();
     mockBackend.getSubmission.mockClear();
     mockBackend.getWasteDescription.mockClear();
@@ -89,20 +87,6 @@ describe('SubmissionPlugin', () => {
     mockBackend.setCustomerReference.mockClear();
     mockBackend.getExporterDetail.mockClear();
     mockBackend.setExporterDetail.mockClear();
-  });
-
-  describe('GET /submissions', () => {
-    const options = {
-      method: 'GET',
-      url: '/submissions',
-    };
-
-    it('Handles empty collection', async () => {
-      mockBackend.listSubmissions.mockResolvedValue([]);
-      const response = await app.inject(options);
-      expect(response.statusCode).toBe(200);
-      expect(response.result).toEqual([]);
-    });
   });
 
   describe('POST /submissions', () => {
@@ -124,7 +108,7 @@ describe('SubmissionPlugin', () => {
         url: `/submissions/${faker.datatype.uuid()}`,
       };
 
-      mockBackend.getSubmission.mockResolvedValue(undefined);
+      mockBackend.getSubmission.mockRejectedValue(Boom.notFound());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
     });
@@ -137,7 +121,7 @@ describe('SubmissionPlugin', () => {
         url: `/submissions/${faker.datatype.uuid()}/reference`,
       };
 
-      mockBackend.getCustomerReference.mockResolvedValue(undefined);
+      mockBackend.getCustomerReference.mockRejectedValue(Boom.notFound());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
     });
@@ -146,7 +130,7 @@ describe('SubmissionPlugin', () => {
   describe('PUT /submissions/{id}/reference', () => {
     it('Supports null values', async () => {
       const id = faker.datatype.uuid();
-      mockBackend.setCustomerReference.mockResolvedValue(null);
+      mockBackend.setCustomerReference.mockResolvedValue();
       const response = await app.inject({
         method: 'PUT',
         url: `/submissions/${id}/reference`,
@@ -156,13 +140,16 @@ describe('SubmissionPlugin', () => {
       expect(response.result).toBeNull();
       expect(response.statusCode).toBe(204);
       expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
-      expect(mockBackend.setCustomerReference).toBeCalledWith(id, null);
+      expect(mockBackend.setCustomerReference).toBeCalledWith(
+        { id, accountId },
+        null
+      );
     });
 
     it('Supports string values', async () => {
       const id = faker.datatype.uuid();
       const reference = faker.datatype.string(10);
-      mockBackend.setCustomerReference.mockResolvedValue(reference);
+      mockBackend.setCustomerReference.mockResolvedValue();
       const response = await app.inject({
         method: 'PUT',
         url: `/submissions/${id}/reference`,
@@ -172,7 +159,10 @@ describe('SubmissionPlugin', () => {
       expect(response.result).toEqual(reference);
       expect(response.statusCode).toBe(200);
       expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
-      expect(mockBackend.setCustomerReference).toBeCalledWith(id, reference);
+      expect(mockBackend.setCustomerReference).toBeCalledWith(
+        { id, accountId },
+        reference
+      );
     });
   });
 });

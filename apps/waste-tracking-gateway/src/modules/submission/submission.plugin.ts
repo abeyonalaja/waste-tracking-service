@@ -9,33 +9,41 @@ import {
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
+import { Logger } from 'winston';
 
 export interface PluginOptions {
   backend: SubmissionBackend;
+  logger: Logger;
 }
+
+/**
+ * This is a placeholder for an account-ID that will be drawn from an identity
+ * token; we are currently simulating a single account.
+ */
+const accountId = 'c3c99728-3d5e-4357-bfcb-32dd913a55e8';
 
 const plugin: Plugin<PluginOptions> = {
   name: 'submissions',
   version: '1.0.0',
-  register: async function (server, { backend }) {
-    server.route({
-      method: 'GET',
-      path: '/',
-      handler: async function () {
-        return (await backend.listSubmissions()) as dto.ListSubmissionsResponse;
-      },
-    });
-
+  register: async function (server, { backend, logger }) {
     server.route({
       method: 'GET',
       path: '/{id}',
       handler: async function ({ params }) {
-        const value = await backend.getSubmission(params.id);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          const value = await backend.getSubmission({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetSubmissionResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.GetSubmissionResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -48,13 +56,23 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const { reference } = payload as dto.CreateSubmissionRequest;
-        return h
-          .response(
-            (await backend.createSubmission(
-              reference === undefined ? null : reference
-            )) as dto.CreateSubmissionResponse
-          )
-          .code(201);
+        try {
+          return h
+            .response(
+              (await backend.createSubmission(
+                accountId,
+                reference === undefined ? null : reference
+              )) as dto.CreateSubmissionResponse
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -62,12 +80,20 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/waste-description',
       handler: async function ({ params }) {
-        const value = await backend.getWasteDescription(params.id);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          const value = await backend.getWasteDescription({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetWasteDescriptionResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.GetWasteDescriptionResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -80,12 +106,20 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const request = payload as dto.PutWasteDescriptionRequest;
-        const value = await backend.setWasteDescription(params.id, request);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          await backend.setWasteDescription(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutWasteDescriptionResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.PutWasteDescriptionResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -93,12 +127,20 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/waste-quantity',
       handler: async function ({ params }) {
-        const value = await backend.getWasteQuantity(params.id);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          const value = await backend.getWasteQuantity({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetWasteQuantityResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.GetWasteQuantityResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -109,13 +151,19 @@ const plugin: Plugin<PluginOptions> = {
         if (!validatePutWasteQuantityRequest(payload)) {
           return Boom.badRequest();
         }
-        const request = payload as dto.PutWasteQuantityRequest;
-        const value = await backend.setWasteQuantity(params.id, request);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
 
-        return value as dto.PutWasteQuantityResponse;
+        const request = payload as dto.PutWasteQuantityRequest;
+        try {
+          await backend.setWasteQuantity({ id: params.id, accountId }, request);
+          return request as dto.PutWasteDescriptionRequest;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -123,12 +171,20 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/reference',
       handler: async function ({ params }) {
-        const value = await backend.getCustomerReference(params.id);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          const value = await backend.getCustomerReference({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetReferenceResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.GetReferenceResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -141,12 +197,20 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const request = payload as dto.PutReferenceRequest;
-        const value = await backend.setCustomerReference(params.id, request);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          await backend.setCustomerReference(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutReferenceResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.PutReferenceResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -154,12 +218,20 @@ const plugin: Plugin<PluginOptions> = {
       method: 'GET',
       path: '/{id}/exporter-detail',
       handler: async function ({ params }) {
-        const value = await backend.getExporterDetail(params.id);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
+        try {
+          const value = await backend.getExporterDetail({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetExporterDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
 
-        return value as dto.GetExporterDetailResponse;
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
 
@@ -170,13 +242,22 @@ const plugin: Plugin<PluginOptions> = {
         if (!validatePutExporterDetailRequest(payload)) {
           return Boom.badRequest();
         }
-        const request = payload as dto.PutExporterDetailRequest;
-        const value = await backend.setExporterDetail(params.id, request);
-        if (value === undefined) {
-          return Boom.notFound();
-        }
 
-        return value as dto.PutExporterDetailRequest;
+        const request = payload as dto.PutExporterDetailRequest;
+        try {
+          await backend.setExporterDetail(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutExporterDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
       },
     });
   },

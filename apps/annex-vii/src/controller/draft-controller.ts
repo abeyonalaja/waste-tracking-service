@@ -71,4 +71,172 @@ export default class DraftController {
         return fromBoom(Boom.internal());
       }
     };
+
+  getDraftCustomerReferenceById: Handler<
+    api.GetDraftCustomerReferenceByIdRequest,
+    api.GetDraftCustomerReferenceByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.reference);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftCustomerReferenceById: Handler<
+    api.SetDraftCustomerReferenceByIdRequest,
+    api.SetDraftCustomerReferenceByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      await this.repository.saveDraft(
+        { ...draft, reference: value },
+        accountId
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftWasteDescriptionById: Handler<
+    api.GetDraftWasteDescriptionByIdRequest,
+    api.GetDraftWasteDescriptionByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.wasteDescription);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftWasteDescriptionById: Handler<
+    api.SetDraftWasteDescriptionByIdRequest,
+    api.SetDraftCustomerReferenceByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+
+      await this.repository.saveDraft(
+        {
+          ...draft,
+          wasteDescription: value,
+          wasteQuantity:
+            (value.status === 'Started' || value.status === 'Complete') &&
+            draft.wasteQuantity.status === 'CannotStart'
+              ? { status: 'NotStarted' }
+              : draft.wasteQuantity,
+          recoveryFacilityDetail:
+            draft.recoveryFacilityDetail.status === 'CannotStart' &&
+            value.status !== 'NotStarted' &&
+            value.wasteCode !== undefined
+              ? { status: 'NotStarted' }
+              : draft.recoveryFacilityDetail,
+        },
+        accountId
+      );
+
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftWasteQuantityById: Handler<
+    api.GetDraftWasteQuantityByIdRequest,
+    api.GetDraftWasteQuantityByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.wasteQuantity);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftWasteQuantityById: Handler<
+    api.SetDraftWasteQuantityByIdRequest,
+    api.SetDraftWasteQuantityByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      await this.repository.saveDraft(
+        { ...draft, wasteQuantity: value },
+        accountId
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftExporterDetailById: Handler<
+    api.GetDraftExporterDetailByIdRequest,
+    api.GetDraftExporterDetailByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.exporterDetail);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftExporterDetailById: Handler<
+    api.SetDraftExporterDetailByIdRequest,
+    api.SetDraftExporterDetailByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      await this.repository.saveDraft(
+        { ...draft, exporterDetail: value },
+        accountId
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

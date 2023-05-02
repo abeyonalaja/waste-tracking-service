@@ -1,0 +1,42 @@
+export {
+  createDraft,
+  getDraftById,
+  getDraftCustomerReferenceById,
+  getDraftExporterDetailById,
+  getDraftWasteDescriptionById,
+  getDraftWasteQuantityById,
+  getDrafts,
+  setDraftCustomerReferenceById,
+  setDraftExporterDetailById,
+  setDraftWasteDescriptionById,
+  setDraftWasteQuantityById,
+} from './dto';
+
+export type {
+  CreateDraftRequest,
+  CreateDraftResponse,
+  DraftSubmission,
+  DraftSubmissionSummary,
+  GetDraftByIdRequest,
+  GetDraftByIdResponse,
+  GetDraftCustomerReferenceByIdRequest,
+  GetDraftCustomerReferenceByIdResponse,
+  GetDraftExporterDetailByIdRequest,
+  GetDraftExporterDetailByIdResponse,
+  GetDraftWasteDescriptionByIdRequest,
+  GetDraftWasteDescriptionByIdResponse,
+  GetDraftWasteQuantityByIdRequest,
+  GetDraftWasteQuantityByIdResponse,
+  GetDraftsRequest,
+  GetDraftsResponse,
+  SetDraftCustomerReferenceByIdRequest,
+  SetDraftCustomerReferenceByIdResponse,
+  SetDraftExporterDetailByIdRequest,
+  SetDraftExporterDetailByIdResponse,
+  SetDraftWasteDescriptionByIdRequest,
+  SetDraftWasteDescriptionByIdResponse,
+  SetDraftWasteQuantityByIdRequest,
+  SetDraftWasteQuantityByIdResponse,
+} from './dto';
+
+export * as schema from './schema';
