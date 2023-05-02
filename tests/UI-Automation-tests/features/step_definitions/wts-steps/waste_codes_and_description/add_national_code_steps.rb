@@ -3,8 +3,8 @@ Given(/^I navigate to National Code page$/) do
   OverviewPage.new.submit_a_single_waste_export
   AddReferenceNumberController.complete
   SubmitAnExportPage.new.waste_codes_and_description
-  WasteCodeController.complete()
-  click_link('Continue to National code page')
+  WasteCodeController.complete
+  EwcCodeController.complete
   NationalCodePage.new.check_page_displayed
 end
 
@@ -37,4 +37,8 @@ end
 
 Then(/^I should see national code pre-populated$/) do
   expect(NationalCodePage.new).to have_reference TestStatus.test_status(:national_code)
+end
+
+Then(/^I should see national code page is displayed$/) do
+  NationalCodePage.new.check_page_displayed
 end

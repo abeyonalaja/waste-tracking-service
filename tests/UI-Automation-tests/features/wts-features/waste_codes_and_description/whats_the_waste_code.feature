@@ -2,14 +2,13 @@ Feature: AS A waste producer/broker
   I NEED to add my waste code and description
   SO THAT I can correctly categorise and describe my waste export
 
-  @ignore
   Scenario: EWC codes for the "Not applicable" option
     Given I login to waste tracking portal
     And I navigate to whats the waste code page
     When I choose Not applicable option
-#    And I click the button Save and continue
-#    Then Enter an EWC code is displayed
-#    And I choose first EWC code description from list
+    And I click the button Save and continue
+    Then Enter an EWC code is displayed
+    And I choose first EWC code description from list
     And I click the button Save and continue
     And I click "Back" link should display "What is the waste code" page
 
@@ -19,7 +18,7 @@ Feature: AS A waste producer/broker
     When I navigate to You have added EWC codes page with Not applicable waste code
     And I click the Save and return to draft
     Then Submit an export page is displayed
-#    And the task "Quantity of waste" should be "Not started"
+    And the task "Quantity of waste" should be "Not started"
     And the task "Laboratory details" should be "Not started"
 
   Scenario: Waste code selection

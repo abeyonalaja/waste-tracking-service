@@ -1,14 +1,16 @@
-When(/^the page quality of waste page is displayed$/) do
+When(/^the quality of waste page is displayed$/) do
   QuantityOfWastePage.new.check_page_displayed
 end
 
 Then(/^I have options "([^"]*)"$/) do |option|
-  expect(page).to have_text(Translations.key(option))
+  value = Translations.key(option)
+  expect(page).to have_text(Translations.value(value))
 end
 
 And(/^I navigate to Quantity of waste page$/) do
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete
+  EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
 end
@@ -33,7 +35,7 @@ Then(/^I should see quantity option "([^"]*)" is selected$/) do |option|
 end
 
 Then(/^I should see previously entered weight in tonnes pre\-populated$/) do
-  expect(QuantityOfWastePage.new).to have_reference TestStatus.test_status(:weight_in_tonnes)
+  expect(QuantityOfWastePage.new.weight_in_tonnes).to eq TestStatus.test_status(:weight_in_tonnes).to_s
 end
 
 And(/^I enter valid weight in cubic meters$/) do
@@ -44,7 +46,7 @@ And(/^I enter valid weight in cubic meters$/) do
 end
 
 Then(/^I should see previously entered weight in cubic meters pre\-populated$/) do
-  expect(QuantityOfWastePage.new).to have_reference TestStatus.test_status(:weight_in_cubic_meters)
+  expect(QuantityOfWastePage.new.weight_in_cubic_meters).to eq TestStatus.test_status(:weight_in_cubic_meters).to_s
 end
 
 When(/^I enter invalid weight in cubic meters$/) do
@@ -59,4 +61,12 @@ When(/^I enter invalid weight in tonnes$/) do
   NetWeightPage.new.enter_weight_in_tonnes weight_in_tonnes
   TestStatus.set_test_status(:weight_in_tonnes, weight_in_tonnes)
   Log.info("Weight in tonnes, #{weight_in_tonnes}")
+end
+
+Then(/^the What is the estimate net weight of the waste is displayed$/) do
+  EstimatedWeightPage.new.check_page_displayed
+end
+
+And(/^I should see estimate net weight page is correctly translated$/) do
+  EstimatedWeightPage.new.check_translation
 end

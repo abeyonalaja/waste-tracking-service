@@ -11,7 +11,7 @@ class Translations
       return key if value == value_to_find
     end
     # If the value is not found, return nil
-    nil
+    # nil
   end
 
   def self.value(key_to_find)
@@ -22,7 +22,7 @@ class Translations
     end
 
     # If the value is not found, return nil
-    nil
+    # nil
   end
 end
 

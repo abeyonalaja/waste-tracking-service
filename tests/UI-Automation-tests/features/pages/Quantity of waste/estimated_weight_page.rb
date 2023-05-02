@@ -3,11 +3,11 @@
 require_relative '../shared_components/general_helpers'
 require_relative '../shared_components/error_box'
 # this page is for Exporter details page details
-class NetWeightPage < GenericPage
+class EstimatedWeightPage < GenericPage
   include GeneralHelpers
   include ErrorBox
 
-  TITLE = Translations.value 'exportJourney.quantityValue.Actual.title'
+  TITLE = Translations.value 'exportJourney.quantityValue.Estimate.title'
   SUB_TEXT = Translations.value 'exportJourney.quantityValue.intro'
   WEIGHT_IN_KG = ''
   HELPER_TEXT = Translations.value 'exportJourney.quantityValue.inputHint'
@@ -24,14 +24,5 @@ class NetWeightPage < GenericPage
     expect(self).to have_text WEIGHT_IN_CUBIC_METERS
     expect(self).to have_text HELPER_TEXT
   end
-
-  def enter_weight_in_tonnes(weight)
-    fill_in 'valueWeight', with: weight, visible: false
-  end
-
-  def enter_weight_in_cubic_meters(weight)
-    fill_in 'valueVolume', with: weight, visible: false
-  end
-
 
 end

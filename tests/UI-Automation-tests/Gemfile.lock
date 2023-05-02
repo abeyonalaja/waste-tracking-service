@@ -82,6 +82,7 @@ GEM
     faker (2.17.0)
       i18n (>= 1.6, < 2)
     ffi (1.15.5)
+    ffi (1.15.5-x64-mingw32)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -103,6 +104,8 @@ GEM
     multi_json (1.15.0)
     multi_test (1.1.0)
     nokogiri (1.14.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.14.2-x64-mingw32)
       racc (~> 1.4)
     oj (3.14.2)
     parallel (1.22.1)
@@ -174,6 +177,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x64-mingw32
 
 DEPENDENCIES
   activesupport (~> 6.1.4.1)

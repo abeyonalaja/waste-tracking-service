@@ -43,6 +43,7 @@ end
 And(/^I complete Waste codes and description task$/) do
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete
+  EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
   QuantityOfWastePage.new.save_and_return_to_draft

@@ -4,7 +4,7 @@ And(/^I navigate on the Describe the waste$/) do
   AddReferenceNumberController.complete
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete
-  click_link('Continue to National code page')
+  EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWastePage.new.check_page_displayed
 end
