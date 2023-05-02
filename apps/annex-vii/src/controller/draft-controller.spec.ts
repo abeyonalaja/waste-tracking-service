@@ -114,6 +114,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockRejectedValue(Boom.teapot());
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
+        reference: null,
       });
 
       expect(response.success).toBe(false);
@@ -129,6 +130,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockResolvedValue();
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
+        reference: null,
       });
 
       expect(response.success).toBe(true);

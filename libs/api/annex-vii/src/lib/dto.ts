@@ -113,7 +113,9 @@ export type GetDraftByIdRequest = IdRequest & AccountIdRequest;
 export type GetDraftByIdResponse = Response<DraftSubmission>;
 export const getDraftById: Method = { name: 'getDraftById', httpVerb: 'POST' };
 
-export type CreateDraftRequest = AccountIdRequest;
+export type CreateDraftRequest = AccountIdRequest & {
+  reference: CustomerReference;
+};
 export type CreateDraftResponse = Response<DraftSubmission>;
 export const createDraft: Method = { name: 'createDraft', httpVerb: 'POST' };
 

@@ -8,6 +8,7 @@ import {
   GetDraftCustomerReferenceByIdResponse,
   GetDraftExporterDetailByIdRequest,
   GetDraftExporterDetailByIdResponse,
+  GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdRequest,
   GetDraftWasteQuantityByIdResponse,
@@ -90,7 +91,7 @@ export class DaprAnnexViiClient {
   }
 
   async getDraftWasteDescriptionById(
-    req: GetDraftWasteDescriptionByIdResponse
+    req: GetDraftWasteDescriptionByIdRequest
   ): Promise<GetDraftWasteDescriptionByIdResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiAppId,

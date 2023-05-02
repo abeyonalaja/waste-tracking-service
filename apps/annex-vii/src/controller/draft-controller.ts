@@ -43,11 +43,11 @@ export default class DraftController {
     };
 
   createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
-    async ({ accountId }) => {
+    async ({ accountId, reference }) => {
       try {
         const value: DraftSubmission = {
           id: uuidv4(),
-          reference: null,
+          reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'CannotStart' },
           exporterDetail: { status: 'NotStarted' },

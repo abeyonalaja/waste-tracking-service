@@ -2,13 +2,16 @@ import { server } from '@hapi/hapi';
 import * as winston from 'winston';
 import {
   InMemorySubmissionBackend,
+  AnnexViiServiceBackend,
   submissionPlugin,
 } from './modules/submission';
+import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { DaprClient } from '@dapr/dapr';
 
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.simple(),
-  defaultMeta: { appId: process.env['APP_ID'] },
+  defaultMeta: { appId: process.env['APP_ID'] || 'waste-tracking-gateway' },
   transports: [new winston.transports.Console()],
 });
 
@@ -20,10 +23,18 @@ const app = server({
   },
 });
 
+const backend =
+  process.env['NODE_ENV'] === 'development'
+    ? new InMemorySubmissionBackend()
+    : new AnnexViiServiceBackend(
+        new DaprAnnexViiClient(new DaprClient()),
+        logger
+      );
+
 await app.register({
   plugin: submissionPlugin,
   options: {
-    backend: new InMemorySubmissionBackend(),
+    backend,
     logger,
   },
   routes: {

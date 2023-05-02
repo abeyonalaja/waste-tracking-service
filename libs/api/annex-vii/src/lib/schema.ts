@@ -243,7 +243,10 @@ export const getDraftByIdResponse: SchemaObject = {
 };
 
 export const createDraftRequest: JTDSchemaType<CreateDraftRequest> = {
-  properties: { accountId: { type: 'string' } },
+  properties: {
+    accountId: { type: 'string' },
+    reference: customerReference,
+  },
 };
 
 export const createDraftResponse: SchemaObject = {

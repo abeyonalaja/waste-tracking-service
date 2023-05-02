@@ -1,6 +1,8 @@
 import * as dto from '@wts/api/waste-tracking-gateway';
 import Boom from '@hapi/boom';
 import { v4 as uuidv4 } from 'uuid';
+import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { Logger } from 'winston';
 
 export type Submission = dto.Submission;
 export type CustomerReference = dto.CustomerReference;
@@ -189,5 +191,216 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.exporterDetail = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
+  }
+}
+
+export class AnnexViiServiceBackend implements SubmissionBackend {
+  constructor(private client: DaprAnnexViiClient, private logger: Logger) {}
+
+  async createSubmission(
+    accountId: string,
+    reference: CustomerReference
+  ): Promise<Submission> {
+    try {
+      const response = await this.client.createDraft({ accountId, reference });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async getSubmission({ id, accountId }: SubmissionRef): Promise<Submission> {
+    try {
+      const response = await this.client.getDraftById({ id, accountId });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async getCustomerReference({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CustomerReference> {
+    try {
+      const response = await this.client.getDraftCustomerReferenceById({
+        id,
+        accountId,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async setCustomerReference(
+    { id, accountId }: SubmissionRef,
+    value: CustomerReference
+  ): Promise<void> {
+    try {
+      const response = await this.client.setDraftCustomerReferenceById({
+        id,
+        accountId,
+        value,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async getWasteDescription({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<WasteDescription> {
+    try {
+      const response = await this.client.getDraftWasteDescriptionById({
+        id,
+        accountId,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async setWasteDescription(
+    { id, accountId }: SubmissionRef,
+    value: WasteDescription
+  ): Promise<void> {
+    try {
+      const response = await this.client.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async getWasteQuantity({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<WasteQuantity> {
+    try {
+      const response = await this.client.getDraftWasteQuantityById({
+        id,
+        accountId,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async setWasteQuantity(
+    { id, accountId }: SubmissionRef,
+    value: WasteQuantity
+  ): Promise<void> {
+    try {
+      const response = await this.client.setDraftWasteQuantityById({
+        id,
+        accountId,
+        value,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async getExporterDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<ExporterDetail> {
+    try {
+      const response = await this.client.getDraftExporterDetailById({
+        id,
+        accountId,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+
+      return response.value;
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+  }
+
+  async setExporterDetail(
+    { id, accountId }: SubmissionRef,
+    value: ExporterDetail
+  ): Promise<void> {
+    try {
+      const response = await this.client.setDraftExporterDetailById({
+        id,
+        accountId,
+        value,
+      });
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
   }
 }
