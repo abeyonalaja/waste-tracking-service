@@ -64,6 +64,7 @@
     "@dapr/dapr": "^3.0.0",
     "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^20.2.2",
+    "@opentelemetry/instrumentation-grpc": "^0.38.0",
     "@opentelemetry/instrumentation-hapi": "^0.31.1",
     "@opentelemetry/instrumentation-http": "^0.37.0",
     "@opentelemetry/sdk-trace-node": "^1.11.0",

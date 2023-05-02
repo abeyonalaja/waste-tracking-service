@@ -16,7 +16,14 @@
         "tsConfig": "apps/annex-vii/tsconfig.app.json",
         "assets": ["apps/annex-vii/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/annex-vii/webpack.config.js"
+        "webpackConfig": "apps/annex-vii/webpack.config.js",
+        "generatePackageJson": true,
+        "additionalEntryPoints": [
+          {
+            "entryName": "tracing",
+            "entryPath": "apps/annex-vii/src/tracing.ts"
+          }
+        ]
       },
       "configurations": {
         "development": {},
@@ -27,7 +34,8 @@
       "executor": "@nrwl/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "annex-vii:build"
+        "buildTarget": "annex-vii:build",
+        "runtimeArgs": ["--require", "./dist/apps/annex-vii/tracing.js"]
       },
       "configurations": {
         "development": {
