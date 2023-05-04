@@ -1,0 +1,93 @@
+# Default values for waste-tracking-gateway.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Custom labels for a deployment
+labels: {}
+
+# Number of pod replicas if horizontal pod autoscaler is not enable
+replicaCount: 1
+
+# Profile of the image used to create the pod containers
+image:
+  repository: sndwtshubcr3401.azurecr.io/waste-tracking-gateway
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: '20230502.3'
+
+# Override the default name specified
+nameOverride: ''
+# Override the default full name specified
+fullnameOverride: ''
+
+# Profile of the service account used for Kubernetes auth
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations:
+    {}
+    # Required for using Managed Identities on pod level
+    # azure.workload.identity/client-id: USER_ASSIGNED_CLIENT_ID # of the application MI
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ''
+  labels:
+    {}
+    # Required for using Managed Identities on pod level
+    # azure.workload.identity/use: "true"
+
+# Custom labels for a pod
+podLabels:
+  {}
+  # Required for using Managed Identities on pod level
+  # azure.workload.identity/use: "true"
+
+# Annotations on pod level
+podAnnotations:
+  dapr.io/enabled: 'true'
+  # The client service will use this name to locate the Node service through the Dapr sidecar.
+  dapr.io/app-id: 'waste-tracking-gateway'
+  dapr.io/enable-api-logging: 'true'
+  dapr.io/app-health-probe-interval: '600'
+
+# Container resource allocation
+resources:
+  limits:
+    cpu: 50m
+    memory: 128Mi
+
+# Profile of the secret and values used for environment variable config
+secret:
+  name: ''
+  env:
+    APPINSIGHTS_CONNECTION_STRING: ''
+
+# Profile of the horizontal pod autoscaler used to create pod replicas
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  labels: {}
+
+# Profile of the service exposing containers
+service:
+  type: ClusterIP
+  port: 80
+  # Exposed container port
+  targetPort: 3000
+  labels: {}
+
+# Profile of the ingress exposing apps outside of the cluster
+ingress:
+  enabled: true
+  className: 'nginx'
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+  hosts:
+    - paths:
+        - path: /api
+          pathType: Prefix
+  labels: {}
