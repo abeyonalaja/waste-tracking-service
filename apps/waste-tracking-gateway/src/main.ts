@@ -1,12 +1,13 @@
+import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
+import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import * as winston from 'winston';
+import { addressPlugin } from './modules/address';
 import {
-  InMemorySubmissionBackend,
   AnnexViiServiceBackend,
+  InMemorySubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
-import { DaprClient } from '@dapr/dapr';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -39,6 +40,13 @@ await app.register({
   },
   routes: {
     prefix: '/api/submissions',
+  },
+});
+
+await app.register({
+  plugin: addressPlugin,
+  routes: {
+    prefix: '/api/addresses',
   },
 });
 
