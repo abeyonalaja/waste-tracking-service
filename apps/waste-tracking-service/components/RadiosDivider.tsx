@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 interface Props {
-  children?: ReactNode,
-  testId?: string
+  children?: ReactNode;
+  testId?: string;
 }
 
 const StyledRadiosDivider = styled('div')`
@@ -17,8 +17,6 @@ const StyledRadiosDivider = styled('div')`
 
 export const RadiosDivider = ({ children, testId }: Props) => {
   return (
-    <StyledRadiosDivider data-testid={testId}>
-      {children}
-    </StyledRadiosDivider>
-  )
-}
+    <StyledRadiosDivider data-testid={testId}>{children}</StyledRadiosDivider>
+  );
+};

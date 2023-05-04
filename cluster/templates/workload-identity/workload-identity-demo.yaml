@@ -13,19 +13,19 @@ spec:
     metadata:
       labels:
         app: workload-identity-demo
-        azure.workload.identity/use: "true" # if not added the container will fail with exit code 255
+        azure.workload.identity/use: 'true' # if not added the container will fail with exit code 255
     spec:
       serviceAccountName: workload-identity-sa
       containers:
-      - image: ghcr.io/azure/azure-workload-identity/msal-go
-        name: oidc
-        resources:
+        - image: ghcr.io/azure/azure-workload-identity/msal-go
+          name: oidc
+          resources:
             limits:
               memory: '128Mi'
               cpu: '50m'
-        env:
-        - name: KEYVAULT_URL
-          value: KEYVAULT_URL # of the key vault resource on Azure
-        - name: SECRET_NAME
-          value: KEYVAULT_SECRET_NAME # to get its value
+          env:
+            - name: KEYVAULT_URL
+              value: KEYVAULT_URL # of the key vault resource on Azure
+            - name: SECRET_NAME
+              value: KEYVAULT_SECRET_NAME # to get its value
 

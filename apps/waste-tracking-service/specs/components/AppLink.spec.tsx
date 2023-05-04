@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { AppLink } from '../../components/';
 
 describe('App Link', () => {
@@ -10,7 +10,11 @@ describe('App Link', () => {
   const testId = 'app-link';
 
   it('renders a link with correct text and href', () => {
-    render(<AppLink href={href} testId={testId}>{children}</AppLink>);
+    render(
+      <AppLink href={href} testId={testId}>
+        {children}
+      </AppLink>
+    );
     const link = screen.getByTestId(testId);
     expect(link).toBeTruthy();
     expect(link).toHaveAttribute('href', href);
@@ -18,10 +22,13 @@ describe('App Link', () => {
   });
 
   it('calls onClick handler when clicked', () => {
-    render(<AppLink href={href} testId={testId} onClick={onClick}>{children}</AppLink>);
+    render(
+      <AppLink href={href} testId={testId} onClick={onClick}>
+        {children}
+      </AppLink>
+    );
     const link = screen.getByTestId(testId);
     fireEvent.click(link);
     expect(onClick).toHaveBeenCalled();
   });
-
 });

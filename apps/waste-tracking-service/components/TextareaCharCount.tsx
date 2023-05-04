@@ -48,7 +48,10 @@ export const TextareaCharCount = ({
     setCount(e.target.value.length);
     setError(e.target.value.length > charCount);
   };
-  const message = count > charCount ? t('charCount.negative', { n: count - charCount }) : t('charCount.positive', { n: charCount - count });
+  const message =
+    count > charCount
+      ? t('charCount.negative', { n: count - charCount })
+      : t('charCount.positive', { n: charCount - count });
   return (
     <>
       <FormGroup>
@@ -70,7 +73,9 @@ export const TextareaCharCount = ({
         >
           {}
         </TextArea>
-        <StyledHint error={error} id={`${id}-character-remaining-text`}>{ message }</StyledHint>
+        <StyledHint error={error} id={`${id}-character-remaining-text`}>
+          {message}
+        </StyledHint>
       </FormGroup>
     </>
   );

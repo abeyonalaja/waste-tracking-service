@@ -1,5 +1,4 @@
 default: --publish --format pretty --format html --out  reports1.html
-
 #html_report: --format progress --format html --out html_report/report.html
 #
 #allure_report: --format pretty --publish-quiet --color --format AllureCucumber::CucumberFormatter --out Allure_results/

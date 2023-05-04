@@ -1,7 +1,6 @@
-const aOrAn = (firstLetter:string) => {
-  if (/[aeiou]/.test(firstLetter.toLowerCase()))
-    return 'an'
-  return 'a'
-}
+const aOrAn = (firstLetter: string) => {
+  if (/[aeiou]/.test(firstLetter.toLowerCase())) return 'an';
+  return 'a';
+};
 
-export default aOrAn
+export default aOrAn;

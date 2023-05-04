@@ -10,9 +10,9 @@ spec:
   selector:
     app: node
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
   type: ClusterIP
 
 ---
@@ -33,26 +33,26 @@ spec:
       labels:
         app: node
       annotations:
-        dapr.io/enabled: "true"
+        dapr.io/enabled: 'true'
         # The client service will use this name to locate the Node service through the Dapr sidecar.
-        dapr.io/app-id: "nodeapp"
+        dapr.io/app-id: 'nodeapp'
         # The port that your application is listening on
-        dapr.io/app-port: "3000"
-        dapr.io/enable-api-logging: "true"
+        dapr.io/app-port: '3000'
+        dapr.io/enable-api-logging: 'true'
     spec:
       containers:
-      - name: node
-        image: ghcr.io/dapr/samples/hello-k8s-node:latest
-        resources:
-          limits:
-            memory: '128Mi'
-            cpu: '50m'
-        env:
-        - name: APP_PORT
-          value: "3000"
-        ports:
-        - containerPort: 3000
-        imagePullPolicy: Always
+        - name: node
+          image: ghcr.io/dapr/samples/hello-k8s-node:latest
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'
+          env:
+            - name: APP_PORT
+              value: '3000'
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
 
 ---
 apiVersion: apps/v1
@@ -72,14 +72,14 @@ spec:
       labels:
         app: python
       annotations:
-        dapr.io/enabled: "true"
-        dapr.io/app-id: "pythonapp"
-        dapr.io/enable-api-logging: "true"
+        dapr.io/enabled: 'true'
+        dapr.io/app-id: 'pythonapp'
+        dapr.io/enable-api-logging: 'true'
     spec:
       containers:
-      - name: python
-        image: ghcr.io/dapr/samples/hello-k8s-python:latest
-        resources:
-          limits:
-            memory: '128Mi'
-            cpu: '50m'
+        - name: python
+          image: ghcr.io/dapr/samples/hello-k8s-python:latest
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'

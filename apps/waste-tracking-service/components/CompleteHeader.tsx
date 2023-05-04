@@ -1,13 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import CrownIcon from '@govuk-react/icon-crown';
-import {
-  GlobalStyle,
-  Main,
-  TopNav,
-  Link,
-  PhaseBanner,
-} from 'govuk-react';
+import { GlobalStyle, Main, TopNav, Link, PhaseBanner } from 'govuk-react';
 
 const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;

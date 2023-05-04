@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 interface Props {
-  children: ReactNode,
-  testId?: string
+  children: ReactNode;
+  testId?: string;
 }
 
 const StyledConditionalRadioWrap = styled.div`
@@ -15,8 +15,8 @@ const StyledConditionalRadioWrap = styled.div`
 
 export const ConditionalRadioWrap = ({ children, testId }: Props) => {
   return (
-      <StyledConditionalRadioWrap data-testid={testId}>
-        {children}
-      </StyledConditionalRadioWrap>
-  )
-}
+    <StyledConditionalRadioWrap data-testid={testId}>
+      {children}
+    </StyledConditionalRadioWrap>
+  );
+};

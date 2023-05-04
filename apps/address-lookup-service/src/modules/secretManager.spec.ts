@@ -43,5 +43,4 @@ describe('getSecret', () => {
     );
     expect(result).toEqual(mockSecretValue);
   });
-
 });

@@ -3,10 +3,10 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 interface Props {
-  href: string | object,
-  id?: string,
-  noVisitedState?: boolean,
-  onClick?: (e: FormEvent) => void,
+  href: string | object;
+  id?: string;
+  noVisitedState?: boolean;
+  onClick?: (e: FormEvent) => void;
   children: ReactNode;
   testId?: string;
 }
@@ -31,7 +31,7 @@ const StyledLink = styled(Link)`
     text-decoration-skip-ink: none;
   }
   &:focus {
-    outline: 3px solid rgba(0,0,0,0);
+    outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
     background-color: #fd0;
     box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
@@ -43,6 +43,8 @@ const StyledLink = styled(Link)`
 
 export const AppLink = ({ href, id, children, onClick, testId }: Props) => {
   return (
-    <StyledLink href={href} id={id} onClick={onClick} data-testid={testId}>{ children }</StyledLink>
+    <StyledLink href={href} id={id} onClick={onClick} data-testid={testId}>
+      {children}
+    </StyledLink>
   );
 };

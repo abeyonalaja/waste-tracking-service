@@ -59,8 +59,9 @@ const wasteCodeData = {
     'B3140: Waste pneumatic tyres, excluding those destined for Annex IVA operations',
     'B4010: Wastes consisting mainly of water-based/latex paints, inks and hardened varnishes not',
     'B4020: Wastes from production, formulation and use of resins, latex, plasticisers',
-    'B4030: Used single use cameras, with batteries not included on list A'
-  ], Oecd: [
+    'B4030: Used single use cameras, with batteries not included on list A',
+  ],
+  Oecd: [
     'GB040: Slags from precious metals and copper processing for further refining',
     'GC010: Electrical assemblies consisting only of metals or alloys',
     'GC020: Electronic scrap (e.g. printed circuit boards, electronic components, wire, etc.)',
@@ -72,8 +73,9 @@ const wasteCodeData = {
     'GG040: Coal fired power plants fly ash',
     'GN010: Waste of pigs’, hogs’ or boars’ bristles and hair or of badger hair and other brush making hair',
     'GN020: Horsehair waste, whether or not put up as a layer with or without supporting material',
-    'GN030: Waste of skins and other parts of birds, with their feathers or down'
-  ], AnnexIIIA: [
+    'GN030: Waste of skins and other parts of birds, with their feathers or down',
+  ],
+  AnnexIIIA: [
     'B1010 and B1050: mixtures of wastes classified under Basel entries B1010 and B1050',
     'B1010 and B1070: mixtures of wastes classified under Basel entries B1010 and B1070',
     'B3040 and B3080: mixtures of wastes classified under Basel entries B3040 and B3080',
@@ -85,11 +87,12 @@ const wasteCodeData = {
     'B3020: mixtures of wastes classified under Basel entry B3020 restricted to unbleached paper or paperboard or of corrugated paper or paperboard, other paper or paperboard, made mainly of bleached chemical pulp, not coloured in the mass, paper or paperboard made mainly of mechanical pulp (for example, newspapers, journals and similar printed matter)',
     'B3030: mixtures of wastes classified under Basel entry B3030',
     'B3040: mixtures of wastes classified under Basel entry B3040',
-    'B3050: mixtures of wastes classified under Basel entry B3050'
-  ], AnnexIIIB: [
+    'B3050: mixtures of wastes classified under Basel entry B3050',
+  ],
+  AnnexIIIB: [
     'BEU04: Composite packaging consisting of mainly paper and some plastic, not containing residues and not covered by Basel entry B3020',
-    'BEU05: Clean biodegradable waste from agriculture, horticulture, forestry, gardens, parks and cemeteries'
-  ]
-}
+    'BEU05: Clean biodegradable waste from agriculture, horticulture, forestry, gardens, parks and cemeteries',
+  ],
+};
 
-export { wasteCodeData }
+export { wasteCodeData };

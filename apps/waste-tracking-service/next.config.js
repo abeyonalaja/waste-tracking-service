@@ -9,7 +9,7 @@ const { withNx } = require('@nrwl/next/plugins/with-nx');
 const nextConfig = {
   compiler: {
     // Enables the styled-components SWC transform
-    styledComponents: true
+    styledComponents: true,
   },
   nx: {
     // Set this to true if you would like to to use SVGR
