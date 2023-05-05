@@ -9,5 +9,5 @@ When(/^I add a description of the waste up to 100 characters$/) do
 end
 
 Then(/^the number of characters decreases on the counter$/) do
-  expect(DescribeTheWastePage.new.remaining_characters.text).to eq('You have 0 character remaining')
+  expect(DescribeTheWastePage.new.remaining_characters.text).to eq('You have 0 characters remaining')
 end

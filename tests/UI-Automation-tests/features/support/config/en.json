@@ -6,8 +6,10 @@
   "404.paragraph1": "If you typed the web address, check it is correct.",
   "404.paragraph2": "If you pasted the web address, check you copied the entire address.",
   "404.link": "Return to the homepage",
-  "charCount.positive": "You have {{n}} character remaining",
-  "charCount.negative": "You have {{n}} characters too many",
+  "charCount.positive": "You have 1 character remaining",
+  "charCount.negative": "You have 1 character too many",
+  "charsCount.positive": "You have {{n}} characters remaining",
+  "charsCount.negative": "You have {{n}} characters too many",
   "cookies.title": "Cookies",
   "cookies.description1": "Cookies are small files saved on your phone, tablet or computer when you visit a website.",
   "cookies.description2": "We use cookies to make [service name] work and collect information about how you use our service.",
@@ -48,6 +50,7 @@
   "saveButton": "Save and continue",
   "saveReturnLink": "Save and return to draft",
   "weight.tonnes": "tonnes",
+  "weight.kg": "kg",
   "volume.cubemeters": "m3",
   "errorSummary.title": "There is a problem",
   "exportJourney.submitAnExport.title": "Submit an export",
@@ -107,5 +110,9 @@
   "exportJourney.quantityValue.intro": "Do not include the weight of the container or vehicle.",
   "exportJourney.quantityValue.weightLabel": "Weight in tonnes",
   "exportJourney.quantityValue.volumeLabel": "Volume in cubic metres",
-  "exportJourney.quantityValue.inputHint": "Enter up to two decimal places, for example 5.25"
+  "exportJourney.quantityValue.inputHint": "Enter up to two decimal places, for example 5.25",
+  "exportJourney.quantityValueSmall.Actual.title": "What is the actual net weight of the waste?",
+  "exportJourney.quantityValueSmall.Estimate.title": "What is the estimated net weight of the waste?",
+  "exportJourney.quantityValueSmall.intro": "It must be under 25kg. Do not include the weight of the container or vehicle.",
+  "exportJourney.quantityValueSmall.weightLabel": "Weight in kilograms"
 }

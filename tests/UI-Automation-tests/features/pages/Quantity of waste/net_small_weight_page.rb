@@ -3,16 +3,14 @@
 require_relative '../shared_components/general_helpers'
 require_relative '../shared_components/error_box'
 # this page is for Exporter details page details
-class EstimatedWeightPage < GenericPage
+class NetSmallWeightPage < GenericPage
   include GeneralHelpers
   include ErrorBox
 
-  TITLE = Translations.value 'exportJourney.quantityValue.Estimate.title'
-  SUB_TEXT = Translations.value 'exportJourney.quantityValue.intro'
-  WEIGHT_IN_KG = ''
+  TITLE = Translations.value 'exportJourney.quantityValueSmall.Actual.title'
+  SUB_TEXT = Translations.value 'exportJourney.quantityValueSmall.intro'
+  WEIGHT_IN_KG = Translations.value 'exportJourney.quantityValueSmall.weightLabel'
   HELPER_TEXT = Translations.value 'exportJourney.quantityValue.inputHint'
-  WEIGHT_IN_TONNES = Translations.value 'exportJourney.quantityValue.weightLabel'
-  WEIGHT_IN_CUBIC_METERS = Translations.value 'exportJourney.quantityValue.volumeLabel'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -20,9 +18,7 @@ class EstimatedWeightPage < GenericPage
 
   def check_translation
     expect(self).to have_text SUB_TEXT
-    expect(self).to have_text WEIGHT_IN_TONNES
-    expect(self).to have_text WEIGHT_IN_CUBIC_METERS
+    expect(self).to have_text WEIGHT_IN_KG
     expect(self).to have_text HELPER_TEXT
   end
-
 end

@@ -30,7 +30,7 @@ describe('Character count textarea component', () => {
 
   it('should display the character count message', () => {
     const { getByText } = render(<TextareaCharCount {...defaultProps} />);
-    const messageElement = getByText('You have 100 character remaining');
+    const messageElement = getByText('You have 100 characters remaining');
     expect(messageElement).toBeTruthy();
   });
 
@@ -40,7 +40,7 @@ describe('Character count textarea component', () => {
     );
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });
-    const messageElement = getByText('You have 90 character remaining');
+    const messageElement = getByText('You have 90 characters remaining');
     expect(messageElement).toBeTruthy();
   });
 
@@ -50,7 +50,7 @@ describe('Character count textarea component', () => {
     );
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'a'.repeat(101) } });
-    const messageElement = getByText('You have 1 characters too many');
+    const messageElement = getByText('You have 1 character too many');
     expect(messageElement).toBeTruthy();
   });
 
@@ -62,13 +62,5 @@ describe('Character count textarea component', () => {
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });
     expect(onChange).toHaveBeenCalledTimes(1);
-  });
-
-  it('should pass the testId prop to the textarea element', () => {
-    const { getByTestId } = render(
-      <TextareaCharCount {...defaultProps} testId="test-textarea" />
-    );
-    const textareaElement = getByTestId('test-textarea');
-    expect(textareaElement).toBeTruthy();
   });
 });

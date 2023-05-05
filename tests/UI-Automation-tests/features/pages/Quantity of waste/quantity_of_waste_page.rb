@@ -39,4 +39,8 @@ class QuantityOfWastePage < GenericPage
   def weight_in_cubic_meters
     find('valueVolume').value
   end
+
+  def weight_in_kilograms
+    find('valueWeight').value
+  end
 end

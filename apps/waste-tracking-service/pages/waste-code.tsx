@@ -26,17 +26,16 @@ function isNotEmpty(obj) {
 const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [id, setId] = useState<string | string[]>();
+  const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState<object>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasValidId, setHasValidId] = useState<boolean>(false);
-
   const [wasteCodeCategory, setWasteCodeCategory] = useState<string>();
-
   const [baselAnnexIXCode, setBaselAnnexIXCode] = useState<string>();
   const [oecdCode, setOecdCode] = useState<string>();
   const [annexIIIACode, setAnnexIIIACode] = useState<string>();
   const [annexIIIBCode, setAnnexIIIBCode] = useState<string>();
+  const [isBulkOrSmall, setIsBulkOrSmall] = useState<string>(null);
 
   const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`;
 
@@ -47,40 +46,53 @@ const WasteCode = () => {
     if (category === 'AnnexIIIB') setAnnexIIIBCode(code);
   };
 
-  useEffect(() => {
-    if (router.isReady) {
-      const { id } = router.query;
-      if (id !== undefined) {
-        try {
-          fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`
-          )
-            .then((response) => {
-              if (response.ok) return response.json();
-              else {
-                setHasValidId(false);
-                setIsLoading(false);
-              }
-            })
-            .then((data) => {
-              if (data !== undefined) {
-                const { id } = router.query;
-                setId(id);
-                setData(data);
-                setWasteCodeCategory(data.wasteCode?.type);
-                setWasteCode(data.wasteCode?.type, data.wasteCode?.value);
-                setHasValidId(true);
-                setIsLoading(false);
-              }
-            });
-        } catch (e) {
-          console.error(e);
-        }
+  const getWasteCodeType = (category) => {
+    if (category !== undefined) {
+      if (category === 'NotApplicable') {
+        return 'Small';
       } else {
-        setIsLoading(false);
+        return 'Bulk';
       }
     }
-  }, [router.isReady, router.query]);
+    return null;
+  };
+
+  useEffect(() => {
+    if (router.isReady) {
+      setId(router.query.id);
+    }
+  }, [router.isReady, router.query.id]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setHasValidId(false);
+    if (id !== null) {
+      try {
+        fetch(
+          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setHasValidId(false);
+              setIsLoading(false);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setWasteCodeCategory(data.wasteCode?.type);
+              setIsBulkOrSmall(getWasteCodeType(data.wasteCode?.type));
+              setWasteCode(data.wasteCode?.type, data.wasteCode?.value);
+              setHasValidId(true);
+              setIsLoading(false);
+            }
+          });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [router.isReady, id]);
 
   const [errors, setErrors] = useState<{
     wasteCodeCategory?: string;
@@ -144,6 +156,28 @@ const WasteCode = () => {
             value: getWasteCode(),
           },
         };
+
+        if (isBulkOrSmall !== null) {
+          const submittedWasteCodeType = getWasteCodeType(wasteCodeCategory);
+          if (isBulkOrSmall !== submittedWasteCodeType) {
+            try {
+              fetch(
+                `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
+                {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    status: 'NotStarted',
+                  }),
+                }
+              );
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
 
         try {
           fetch(url, {

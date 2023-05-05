@@ -48,10 +48,12 @@ export const TextareaCharCount = ({
     setCount(e.target.value.length);
     setError(e.target.value.length > charCount);
   };
-  const message =
+  let message =
     count > charCount
-      ? t('charCount.negative', { n: count - charCount })
-      : t('charCount.positive', { n: charCount - count });
+      ? t('charsCount.negative', { n: count - charCount })
+      : t('charsCount.positive', { n: charCount - count });
+  if (count - charCount === 1) message = t('charCount.negative');
+  if (count - charCount === -1) message = t('charCount.positive');
   return (
     <>
       <FormGroup>

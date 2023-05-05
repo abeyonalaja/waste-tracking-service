@@ -223,7 +223,7 @@ const Tasklist = () => {
                               <AppLink
                                 href={{
                                   pathname: '/waste-quantity',
-                                  query: { id },
+                                  query: { id, dashboard: true },
                                 }}
                               >
                                 {t(

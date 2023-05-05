@@ -64,9 +64,71 @@ When(/^I enter invalid weight in tonnes$/) do
 end
 
 Then(/^the What is the estimate net weight of the waste is displayed$/) do
-  EstimatedWeightPage.new.check_page_displayed
+  EstimateWeightPage.new.check_page_displayed
 end
 
 And(/^I should see estimate net weight page is correctly translated$/) do
-  EstimatedWeightPage.new.check_translation
+  EstimateWeightPage.new.check_translation
+end
+
+And(/^I navigate to Quantity of waste page with "([^"]*)" has waste code$/) do |waste_code|
+  SubmitAnExportPage.new.waste_codes_and_description
+  WasteCodeController.complete waste_code
+  EwcCodeController.complete ' '
+  NationalCodeController.complete
+  DescribeTheWasteController.complete
+end
+
+And(/^I complete Waste codes and description task with "([^"]*)" has waste code$/) do |waste_code|
+  SubmitAnExportPage.new.waste_codes_and_description
+  WasteCodeController.complete waste_code
+  EwcCodeController.complete ' '
+  NationalCodeController.complete
+  DescribeTheWasteController.complete
+  QuantityOfWastePage.new.save_and_return_to_draft
+end
+
+Then(/^What is the actual net weight of the small weight waste is displayed$/) do
+  NetSmallWeightPage.new.check_page_displayed
+end
+
+And(/^I should see net small weight page is correctly translated$/) do
+  NetSmallWeightPage.new.check_translation
+end
+
+Then(/^the What is the estimate net weight of the small weight waste is displayed$/) do
+  EstimateSmallWeightPage.new.check_page_displayed
+end
+
+And(/^I should see estimate net small weight page is correctly translated$/) do
+  EstimateSmallWeightPage.new.check_translation
+end
+
+And(/^I enter valid weight in kilograms$/) do
+  weight_in_kilograms = Faker::Number.between(from: 0.0, to: 25.0).round(2)
+  NetWeightPage.new.enter_weight_in_kilograms weight_in_kilograms
+  TestStatus.set_test_status(:weight_in_kilograms, weight_in_kilograms)
+  Log.info("Weight in kilograms, #{weight_in_kilograms}")
+end
+
+Then(/^I should see previously entered weight in kilograms pre\-populated$/) do
+  expect(QuantityOfWastePage.new.weight_in_kilograms).to eq TestStatus.test_status(:weight_in_kilograms).to_s
+end
+
+Then(/^I should see quantity option "([^"]*)" is not selected$/) do |option|
+  expect(QuantityOfWastePage.new.quantity_of_weight(option)).not_to be_checked
+end
+
+When(/^I enter invalid weight in kilograms$/) do
+  weight_in_kilometers = Faker::Number.decimal(l_digits: 3, r_digits: 4)
+  NetWeightPage.new.enter_weight_in_kilograms weight_in_kilometers
+  TestStatus.set_test_status(:weight_in_kilometers, weight_in_kilometers)
+  Log.info("Weight in kilograms, #{weight_in_kilometers}")
+end
+
+And(/^I enter weight more than 25 kilograms$/) do
+  weight_in_kilometers = Faker::Number.between(from: 25.0, to: 1000.0).round(2)
+  NetWeightPage.new.enter_weight_in_kilograms weight_in_kilometers
+  TestStatus.set_test_status(:weight_in_kilometers, weight_in_kilometers)
+  Log.info("Weight in kilograms, #{weight_in_kilometers}")
 end

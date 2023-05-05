@@ -17,7 +17,8 @@ import {
   validateQuantityType,
   validateQuantityValue,
 } from '../utils/validators';
-import { GetWasteQuantityResponse } from '@wts/api/waste-tracking-gateway';
+import { Submission } from '@wts/api/waste-tracking-gateway';
+import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
@@ -48,7 +49,7 @@ const WasteQuantityEntry = () => {
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
   const [estimate, setEstimate] = useState<boolean>(false);
-  const [data, setData] = useState<GetWasteQuantityResponse>(null);
+  const [bulkWaste, setBulkWaste] = useState<boolean>(true);
   const [quantityType, setQuantityType] = useState(null);
   const [weight, setWeight] = useState('');
   const [volume, setVolume] = useState('');
@@ -71,9 +72,7 @@ const WasteQuantityEntry = () => {
     setIsLoading(true);
     setIsError(false);
     if (id !== null) {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`
-      )
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -83,14 +82,22 @@ const WasteQuantityEntry = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setData(data);
-            setEstimate(data.wasteQuantity.type === 'EstimateData');
-            setQuantityType(data.wasteQuantity.quantityType || null);
+            setEstimate(
+              data.wasteQuantity.wasteQuantity.type === 'EstimateData'
+            );
+            setQuantityType(
+              data.wasteQuantity.wasteQuantity.quantityType || null
+            );
 
-            if (data.wasteQuantity.quantityType === 'Weight')
-              setWeight(data.wasteQuantity.value);
-            if (data.wasteQuantity.quantityType === 'Volume')
-              setVolume(data.wasteQuantity.value);
+            if (data.wasteQuantity.wasteQuantity.quantityType === 'Weight')
+              setWeight(data.wasteQuantity.wasteQuantity.value);
+            if (data.wasteQuantity.wasteQuantity.quantityType === 'Volume')
+              setVolume(data.wasteQuantity.wasteQuantity.value);
+
+            if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
+              setBulkWaste(false);
+              setQuantityType('Weight');
+            }
 
             setIsLoading(false);
             setIsError(false);
@@ -110,12 +117,14 @@ const WasteQuantityEntry = () => {
         quantityWeightError: validateQuantityValue(
           quantityType === 'Weight',
           weight,
-          quantityType
+          quantityType,
+          bulkWaste
         ),
         quantityVolumeError: validateQuantityValue(
           quantityType === 'Volume',
           volume,
-          quantityType
+          quantityType,
+          bulkWaste
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -123,13 +132,10 @@ const WasteQuantityEntry = () => {
       } else {
         setErrors(null);
 
-        const updatedData: GetWasteQuantityResponse = {
+        const updatedData: PutWasteQuantityRequest = {
           status: 'Complete',
           wasteQuantity: {
-            type:
-              data.status === 'Started' || data.status === 'Complete'
-                ? data.wasteQuantity.type
-                : null,
+            type: estimate ? 'EstimateData' : 'ActualData',
             quantityType: quantityType,
             value: parseFloat(quantityType === 'Weight' ? weight : volume),
           },
@@ -170,9 +176,13 @@ const WasteQuantityEntry = () => {
     <>
       <Head>
         <title>
-          {estimate
-            ? t('exportJourney.quantityValue.Estimate.title')
-            : t('exportJourney.quantityValue.Actual.title')}
+          {bulkWaste
+            ? estimate
+              ? t('exportJourney.quantityValue.Estimate.title')
+              : t('exportJourney.quantityValue.Actual.title')
+            : estimate
+            ? t('exportJourney.quantityValueSmall.Estimate.title')
+            : t('exportJourney.quantityValueSmall.Actual.title')}
         </title>
       </Head>
       <GovUK.Page
@@ -196,71 +206,104 @@ const WasteQuantityEntry = () => {
                     }))}
                   />
                 )}
-                <form onSubmit={handleSubmit}>
-                  <GovUK.Fieldset>
-                    <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                {bulkWaste && (
+                  <form onSubmit={handleSubmit}>
+                    <GovUK.Fieldset>
+                      <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                        {estimate
+                          ? t('exportJourney.quantityValue.Estimate.title')
+                          : t('exportJourney.quantityValue.Actual.title')}
+                      </GovUK.Fieldset.Legend>
+                      <GovUK.Paragraph>
+                        {t('exportJourney.quantityValue.intro')}
+                      </GovUK.Paragraph>
+                      <GovUK.MultiChoice
+                        mb={8}
+                        label=""
+                        meta={{
+                          error: errors?.quantityTypeError,
+                          touched: !!errors?.quantityTypeError,
+                        }}
+                      >
+                        <GovUK.Radio
+                          name="quantityType"
+                          id="quantityTypeYes"
+                          checked={quantityType === 'Weight'}
+                          onChange={(e) => setQuantityType('Weight')}
+                          value="Weight"
+                        >
+                          {t('exportJourney.quantityValue.weightLabel')}
+                        </GovUK.Radio>
+                        <StyledInputWrap>
+                          <InputWithSuffix
+                            id="valueWeight"
+                            label="Weight"
+                            labelHidden={true}
+                            onChange={(e) => setWeight(e.target.value)}
+                            value={weight}
+                            errorMessage={errors?.quantityWeightError}
+                            suffix={t('weight.tonnes')}
+                            hint={t('exportJourney.quantityValue.inputHint')}
+                          />
+                        </StyledInputWrap>
+                        <GovUK.Radio
+                          name="quantityType"
+                          id="quantityTypeEstimate"
+                          checked={quantityType === 'Volume'}
+                          onChange={(e) => setQuantityType('Volume')}
+                          value="Volume"
+                        >
+                          {t('exportJourney.quantityValue.volumeLabel')}
+                        </GovUK.Radio>
+                        <StyledInputWrap>
+                          <InputWithSuffix
+                            id="valueVolume"
+                            label="Volume"
+                            labelHidden={true}
+                            onChange={(e) => setVolume(e.target.value)}
+                            value={volume}
+                            errorMessage={errors?.quantityVolumeError}
+                            suffix={t('volume.cubemeters')}
+                            hint={t('exportJourney.quantityValue.inputHint')}
+                          />
+                        </StyledInputWrap>
+                      </GovUK.MultiChoice>
+                    </GovUK.Fieldset>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnLink onClick={handleLinkSubmit} />
+                  </form>
+                )}
+                {!bulkWaste && (
+                  <>
+                    <GovUK.Heading size="LARGE">
                       {estimate
-                        ? t('exportJourney.quantityValue.Estimate.title')
-                        : t('exportJourney.quantityValue.Actual.title')}
-                    </GovUK.Fieldset.Legend>
+                        ? t('exportJourney.quantityValueSmall.Estimate.title')
+                        : t('exportJourney.quantityValueSmall.Actual.title')}
+                    </GovUK.Heading>
                     <GovUK.Paragraph>
-                      {t('exportJourney.quantityValue.intro')}
+                      {t('exportJourney.quantityValueSmall.intro')}
                     </GovUK.Paragraph>
-                    <GovUK.MultiChoice
-                      mb={8}
-                      label=""
-                      meta={{
-                        error: errors?.quantityTypeError,
-                        touched: !!errors?.quantityTypeError,
-                      }}
-                    >
-                      <GovUK.Radio
-                        name="quantityType"
-                        id="quantityTypeYes"
-                        checked={quantityType === 'Weight'}
-                        onChange={(e) => setQuantityType('Weight')}
-                        value="Weight"
-                      >
-                        {t('exportJourney.quantityValue.weightLabel')}
-                      </GovUK.Radio>
-                      <StyledInputWrap>
-                        <InputWithSuffix
-                          id="valueWeight"
-                          label="Weight"
-                          labelHidden={true}
-                          onChange={(e) => setWeight(e.target.value)}
-                          value={weight}
-                          errorMessage={errors?.quantityWeightError}
-                          suffix={t('weight.tonnes')}
-                          hint={t('exportJourney.quantityValue.inputHint')}
-                        />
-                      </StyledInputWrap>
-                      <GovUK.Radio
-                        name="quantityType"
-                        id="quantityTypeEstimate"
-                        checked={quantityType === 'Volume'}
-                        onChange={(e) => setQuantityType('Volume')}
-                        value="Volume"
-                      >
-                        {t('exportJourney.quantityValue.volumeLabel')}
-                      </GovUK.Radio>
-                      <StyledInputWrap>
-                        <InputWithSuffix
-                          id="valueVolume"
-                          label="Volume"
-                          labelHidden={true}
-                          onChange={(e) => setVolume(e.target.value)}
-                          value={volume}
-                          errorMessage={errors?.quantityVolumeError}
-                          suffix={t('volume.cubemeters')}
-                          hint={t('exportJourney.quantityValue.inputHint')}
-                        />
-                      </StyledInputWrap>
-                    </GovUK.MultiChoice>
-                  </GovUK.Fieldset>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
-                </form>
+                    <form onSubmit={handleSubmit}>
+                      <InputWithSuffix
+                        id="valueWeight"
+                        label={t(
+                          'exportJourney.quantityValueSmall.weightLabel'
+                        )}
+                        onChange={(e) => setWeight(e.target.value)}
+                        value={weight}
+                        errorMessage={errors?.quantityWeightError}
+                        suffix={t('weight.kg')}
+                        hint={t('exportJourney.quantityValue.inputHint')}
+                      />
+                      <GovUK.Button id="saveButton">
+                        {t('saveButton')}
+                      </GovUK.Button>
+                      <SaveReturnLink onClick={handleLinkSubmit} />
+                    </form>
+                  </>
+                )}
               </>
             )}
           </GovUK.GridCol>

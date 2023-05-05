@@ -105,18 +105,22 @@ export const validateQuantityType: (quantityType?: string) => string = (
 };
 
 export const validateQuantityValue: (
-  quantityType?: boolean,
-  quantityValue?: string,
-  label?: string
-) => string = (quantityType, quantityValue, label) => {
+  quantityType: boolean,
+  quantityValue: string,
+  label: string,
+  bulk: boolean
+) => string = (quantityType, quantityValue, label, bulk) => {
   if (!quantityType) return;
   if (quantityType) {
-    if (quantityValue === '') {
-      return `${label} is required`;
+    if (quantityValue === '' || Number(quantityValue) === 0) {
+      return `Enter the ${label.toLowerCase()}`;
     }
     const regex = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$');
     if (!regex.test(quantityValue)) {
-      return `${label} must be a number, up to two decimal places`;
+      return `Enter the ${label.toLowerCase()} using only numbers, up to two decimal places`;
+    }
+    if (!bulk && Number(quantityValue) >= 25) {
+      return 'Enter a weight under 25kg';
     }
   }
 };

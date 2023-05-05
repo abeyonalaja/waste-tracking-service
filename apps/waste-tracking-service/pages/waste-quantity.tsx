@@ -13,25 +13,6 @@ import { useRouter } from 'next/router';
 import { isNotEmpty, validateQuantityType } from '../utils/validators';
 import { GetWasteQuantityResponse } from '@wts/api/waste-tracking-gateway';
 
-const BreadCrumbs = ({ id }) => {
-  const router = useRouter();
-  return (
-    <BreadcrumbWrap>
-      <GovUK.BackLink
-        href="#"
-        onClick={() => {
-          router.push({
-            pathname: '/describe-waste',
-            query: { id },
-          });
-        }}
-      >
-        Back
-      </GovUK.BackLink>
-    </BreadcrumbWrap>
-  );
-};
-
 const WasteQuantity = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -105,9 +86,10 @@ const WasteQuantity = () => {
             console.error(e);
           }
         } else {
-          const path = returnToDraft
-            ? '/submit-an-export-tasklist'
-            : '/waste-quantity-entry';
+          const path =
+            returnToDraft || quantityType === 'NotApplicable'
+              ? '/submit-an-export-tasklist'
+              : '/waste-quantity-entry';
           router.push({
             pathname: path,
             query: { id },
@@ -145,6 +127,26 @@ const WasteQuantity = () => {
     }
   }, [router.isReady, id]);
 
+  const BreadCrumbs = () => {
+    return (
+      <BreadcrumbWrap>
+        <GovUK.BackLink
+          href="#"
+          onClick={() => {
+            router.push({
+              pathname: router.query.dashboard
+                ? '/submit-an-export-tasklist'
+                : '/describe-waste',
+              query: { id },
+            });
+          }}
+        >
+          Back
+        </GovUK.BackLink>
+      </BreadcrumbWrap>
+    );
+  };
+
   return (
     <>
       <Head>
@@ -154,7 +156,7 @@ const WasteQuantity = () => {
         id="content"
         header={<CompleteHeader />}
         footer={<CompleteFooter />}
-        beforeChildren={<BreadCrumbs id={id} />}
+        beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">

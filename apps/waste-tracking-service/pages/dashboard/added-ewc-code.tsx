@@ -177,8 +177,7 @@ const EwcCodeList = () => {
         query: { id },
       });
       setAddAnother(null);
-    }
-    if (addAnother === 'no') {
+    } else {
       setAddAnother(null);
       router.push({
         pathname: '/national-code',
