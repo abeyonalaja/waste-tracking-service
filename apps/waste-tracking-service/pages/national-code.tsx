@@ -63,6 +63,7 @@ const NationalCode = () => {
   );
 
   const [id, setId] = useState(null);
+  const [backLink, setBackLink] = useState('/dashboard/added-ewc-code');
 
   useEffect(() => {
     if (router.isReady) {
@@ -92,6 +93,14 @@ const NationalCode = () => {
               type: 'DATA_FETCH_SUCCESS',
               payload: data,
             });
+            if (
+              data.wasteCode.type !== undefined &&
+              data.wasteCode.type !== 'NotApplicable'
+            ) {
+              if (data.ewcCodes === undefined) {
+                setBackLink('/dashboard/ewc-code');
+              }
+            }
           }
         });
     }
@@ -178,7 +187,10 @@ const NationalCode = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            history.back();
+            router.push({
+              pathname: backLink,
+              query: { id },
+            });
           }}
         >
           Back

@@ -247,7 +247,7 @@ const EwcCode = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.ewcCodes.title')}</title>
+        <title>{t('exportJourney.enterEwcCode.title')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -277,18 +277,21 @@ const EwcCode = () => {
                     {t('exportJourney.enterEwcCode.title')}
                   </GovUK.Fieldset.Legend>
                   <GovUK.Fieldset>
-                    <GovUK.HintText>{t('autocompleteHint')}</GovUK.HintText>
-                    <Autocomplete
-                      id="ewcCodes"
-                      source={suggest}
-                      showAllValues
-                      onConfirm={(option) => handleInputChange(option)}
-                      confirmOnBlur={false}
-                      meta={{
-                        error: errors?.ewcCodes,
-                        touched: !!errors?.ewcCodes,
-                      }}
-                    />
+                    <GovUK.FormGroup error={!!errors?.ewcCodes}>
+                      <GovUK.HintText>{t('autocompleteHint')}</GovUK.HintText>
+                      <GovUK.ErrorText>{errors?.ewcCodes}</GovUK.ErrorText>
+                      <Autocomplete
+                        id="ewcCodes"
+                        source={suggest}
+                        showAllValues
+                        onConfirm={(option) => handleInputChange(option)}
+                        confirmOnBlur={false}
+                        meta={{
+                          error: errors?.ewcCodes,
+                          touched: !!errors?.ewcCodes,
+                        }}
+                      />
+                    </GovUK.FormGroup>
                   </GovUK.Fieldset>
                   <Lower>
                     <GovUK.Button onSubmit={handleInputChange} id="saveButton">

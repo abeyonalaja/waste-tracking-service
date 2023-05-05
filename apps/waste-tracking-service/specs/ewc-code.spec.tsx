@@ -1,50 +1,72 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+  act,
+} from '@testing-library/react';
 import EwcCode from '../pages/dashboard/ewc-code';
 
-describe('EwcCode component', () => {
-  it('should render the component', () => {
-    render(<EwcCode />);
-    const header = screen.getByRole('heading', { name: 'EWC Code' });
-    expect(header).toBeInTheDocument();
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    isReady: true,
+    query: { id: '123' },
+  })),
+}));
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ ewcCodes: [1, 2] }),
+  })
+);
+
+describe('EWC Code component', () => {
+  it('should render the component', async () => {
+    await act(async () => {
+      render(<EwcCode />);
+    });
   });
 
-  it('should call the fetch function when component is mounted', async () => {
-    const mockDispatch = jest.fn();
-    jest.spyOn(React, 'useReducer').mockReturnValueOnce([null, mockDispatch]);
-    jest.spyOn(React, 'useEffect').mockImplementationOnce((f) => f());
+  it('displays a validation message when no radio is selected', async () => {
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ data: {} }) })
+    );
 
-    render(<EwcCode />);
-    await waitFor(() => expect(mockDispatch).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      render(<EwcCode />);
+    });
+
+    const submitButton = screen.getByText('Save and continue');
+    fireEvent.click(submitButton);
+
+    const errorHeading = screen.getByText('There is a problem');
+    expect(errorHeading).toBeTruthy();
+
+    expect(
+      screen.getAllByText('Select yes if you want to add an EWC code')[0]
+    ).toBeTruthy();
   });
 
-  it('should call the PUT method when form is submitted', async () => {
-    const mockPush = jest.fn();
-    const mockFetch = jest.fn().mockResolvedValueOnce({ ok: true });
-    jest.spyOn(React, 'useCallback').mockImplementation((f) => f);
-    jest.spyOn(React, 'useState').mockReturnValueOnce([true, jest.fn()]);
-    jest
-      .spyOn(React, 'useReducer')
-      .mockReturnValueOnce([
-        { data: {}, isLoading: false, isError: false },
-        jest.fn(),
-      ]);
-    jest.spyOn(React, 'useRouter').mockReturnValueOnce({
-      isReady: true,
-      query: { id: '123' },
-      push: mockPush,
-    });
-    jest.spyOn(window, 'fetch').mockImplementationOnce(mockFetch);
+  it('displays a validation message when the Yes radio is selected but no EWC code is selected', async () => {
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ data: {} }) })
+    );
 
-    render(<EwcCode />);
-    const saveAndReturnLink = screen.getByText('Save and return later');
-    fireEvent.click(saveAndReturnLink);
-
-    await waitFor(() => expect(mockFetch).toHaveBeenCalledTimes(1));
-    expect(mockFetch.mock.calls[0][1].method).toBe('PUT');
-    expect(mockPush).toHaveBeenCalledWith({
-      pathname: '/submit-an-export-tasklist',
-      query: { id: '123' },
+    await act(async () => {
+      render(<EwcCode />);
     });
+
+    const yesRadioLabel = screen.getByLabelText('Yes');
+    fireEvent.click(yesRadioLabel);
+
+    const submitButton = screen.getByText('Save and continue');
+    fireEvent.click(submitButton);
+
+    const errorHeading = screen.getByText('There is a problem');
+    expect(errorHeading).toBeTruthy();
+
+    expect(screen.getAllByText('Select an EWC code')[0]).toBeTruthy();
   });
 });

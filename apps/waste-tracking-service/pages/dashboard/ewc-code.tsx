@@ -19,15 +19,12 @@ import {
   ConditionalRadioWrap,
 } from '../../components';
 import {
+  isNotEmpty,
   validateDoYouHaveAnEWCCode,
   validateEwcCodes,
 } from '../../utils/validators';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 type State = {
   data: { status: 'Started' } & GetWasteDescriptionResponse;

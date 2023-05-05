@@ -12,7 +12,7 @@ jest.mock('next/router', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({ data: {} }),
+    json: () => Promise.resolve({ wasteCode: { type: 'NotApplicable' } }),
   })
 );
 
@@ -49,10 +49,6 @@ describe('National code page', () => {
   });
 
   it('should show validation message if selected YES and do not enter a National code', async () => {
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({ ok: true, json: () => Promise.resolve({ data: {} }) })
-    );
-
     await act(async () => {
       render(<NationalCode />);
     });
