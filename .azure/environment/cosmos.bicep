@@ -20,7 +20,7 @@ param primaryRegion string = 'uksouth'
 
 @description('Reference to existing subnet for Private Endpoints.')
 param subnet object = {
-  id: null
+  id: null 
 }
 
 @description('''
@@ -29,12 +29,17 @@ param subnet object = {
   _privatelink.documents.azure.com_.
 ''')
 param privateDnsResourceGroup object = {
-  name: null
-  subscriptionId: null
+  name: null 
+  subscriptionId: null 
 }
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
+
+@minValue(-1)
+@maxValue(2147483647)
+@description('Time to Live for data in analytical store. (-1 no expiry)')
+param analyticalStoreTTL int = -1
 
 var role = 'ENV'
 
@@ -68,6 +73,8 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
         backupStorageRedundancy: 'Local'
       }
     }
+
+    enableAnalyticalStorage: true
   }
 
   tags: union(defaultTags, { Name: cosmosDBAccountName })
@@ -86,27 +93,76 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
 
     tags: union(defaultTags, { Name: 'annex-vii' })
 
-    resource cosmosDBContainer 'containers' = {
+    resource cosmosDBContainer1 'containers' = {
+      name: 'drafts'
+
+      properties: {
+        resource: {
+          id: 'drafts'
+
+          analyticalStorageTtl: analyticalStoreTTL
+
+          partitionKey: {
+            paths: [
+              '/value/accountId'
+            ]
+            kind: 'Hash'
+            version: 2
+          }
+
+        }
+      }
+
+      tags: union(defaultTags, { Name: 'drafts' })
+    }
+
+    resource cosmosDBContainer2 'containers' = {
+      name: 'submissions'
+
+      properties: {
+        resource: {
+          id: 'submissions'
+
+          analyticalStorageTtl: analyticalStoreTTL
+
+          partitionKey: {
+            paths: [
+              '/value/accountId'
+            ]
+            kind: 'Hash'
+            version: 2
+          }
+
+        }
+      }
+
+      tags: union(defaultTags, { Name: 'submissions' })
+    }    
+
+  }
+
+  resource wasteTrackingDatabase 'sqlDatabases' = {
+    name: 'waste-tracking'
+
+    properties: {
+      resource: {
+        id: 'waste-tracking'
+      }
+      options: {
+        throughput: 400
+      }
+    }
+
+    tags: union(defaultTags, { Name: 'annex-vii' })
+
+    resource cosmosDBContainer1 'containers' = {
       name: 'reference-data'
 
       properties: {
         resource: {
           id: 'reference-data'
 
-          indexingPolicy: {
-            indexingMode: 'consistent'
-            automatic: true
-            includedPaths: [
-              {
-                path: '/*'
-              }
-            ]
-            excludedPaths: [
-              {
-                path: '/"_etag"/?'
-              }
-            ]
-          }
+          analyticalStorageTtl: analyticalStoreTTL
 
           partitionKey: {
             paths: [
@@ -130,6 +186,30 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
 
       tags: union(defaultTags, { Name: 'reference-data' })
     }
+
+    resource cosmosDBContainer2 'containers' = {
+      name: 'feedback'
+
+      properties: {
+        resource: {
+          id: 'feedback'
+
+          analyticalStorageTtl: analyticalStoreTTL
+
+          partitionKey: {
+            paths: [
+              '/id'
+            ]
+            kind: 'Hash'
+            version: 2
+          }
+
+        }
+      }
+
+      tags: union(defaultTags, { Name: 'feedback' })
+    }  
+
   }
 }
 
@@ -141,12 +221,12 @@ resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020
   name: 'privatelink.documents.azure.com'
 }
 
-var cosmosDBPrivateEndpointName = join(
+var cosmosDBPrivateEndpointNameSql = join(
   [ env, svc, 'COS', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
 )
 
-resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
-  name: cosmosDBPrivateEndpointName
+resource cosmosDBPrivateEndpointSql 'Microsoft.Network/privateEndpoints@2022-07-01' = {
+  name: cosmosDBPrivateEndpointNameSql
   location: primaryRegion
 
   properties: {
@@ -165,7 +245,7 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01'
     ]
   }
 
-  tags: union(defaultTags, { Name: cosmosDBPrivateEndpointName })
+  tags: union(defaultTags, { Name: cosmosDBPrivateEndpointNameSql })
 
   resource dnsZoneGroup 'privateDnsZoneGroups' = {
     name: cosmosDBAccount.name
@@ -178,7 +258,9 @@ resource cosmosDBPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01'
             privateDnsZoneId: privatelink_documents_azure_com.id
           }
         }
+
       ]
     }
   }
 }
+

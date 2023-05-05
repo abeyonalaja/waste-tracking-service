@@ -289,6 +289,30 @@ resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020
   }]
 }
 
+resource privatelink_analytics_cosmos_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: 'privatelink.analytics.cosmos.azure.com'
+  location: 'global'
+
+  tags: union(
+    defaultTags,
+    {
+      Name: 'privatelink.analytics.cosmos.azure.com'
+      Location: 'global'
+    }
+  )
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = [for item in virtualNetworks: {
+    name: item.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: item.id
+      }
+    }
+  }]
+}
+
 @description('References to created Private DNS Zones.')
 output privateZones object = {
   'privatelink.azurecr.io': { id: privatelink_azurecr_io.id }
@@ -303,4 +327,5 @@ output privateZones object = {
   'privatelink.vaultcore.azure.net': { id: privatelink_vaultcore_azure_net.id }
   'privatelink.servicebus.windows.net': { id: privatelink_servicebus_windows_net.id }
   'privatelink.documents.azure.com': { id: privatelink_documents_azure_com.id }
+  'privatelink.analytics.cosmos.azure.com': { id: privatelink_analytics_cosmos_azure_com.id }
 }

@@ -185,6 +185,21 @@ resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020
   }
 }
 
+resource privatelink_analytics_cosmos_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: 'privatelink.analytics.cosmos.azure.com'
+
+  resource virtualNetworkLink 'virtualNetworkLinks' = {
+    name: virtualNetwork.name
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: virtualNetwork.id
+      }
+    }
+  }
+}
+
 var dnsZoneContributorRoleId = 'b12aa53e-6015-4669-85d0-8515ebb3ae7f'
 resource dnsZoneContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(privatelink_primaryregion_azmk8s_io.id, identities.aks.id, resourceId('Microsoft.Authorization/roleDefinitions', dnsZoneContributorRoleId))

@@ -60,6 +60,7 @@ param addressSpace object = {
    - privatelink.vaultcore.azure.net
    - privatelink.servicebus.windows.net
    - privatelink.documents.azure.com
+   - privatelink.analytics.cosmos.azure.com
 ''')
 param privateDnsResourceGroup object = {
   name: null
