@@ -31,36 +31,44 @@ export type DraftWasteDescription =
   | ({ status: 'Started' } & Partial<DraftWasteDescriptionData>)
   | ({ status: 'Complete' } & DraftWasteDescriptionData);
 
-type DraftWasteQuantityData = {
-  wasteQuantity:
-    | { type: 'NotApplicable' }
-    | {
-        type: 'EstimateData' | 'ActualData';
-        quantityType: 'Volume' | 'Weight';
-        value: number;
-      };
-};
-
-export type DraftWasteQuantity =
+type DraftWasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<DraftWasteQuantityData>)
-  | ({ status: 'Complete' } & DraftWasteQuantityData);
+  | {
+      status: 'Started';
+      value?: {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        quantityType?: 'Volume' | 'Weight';
+        value?: number;
+      };
+    }
+  | {
+      status: 'Complete';
+      value:
+        | {
+            type: 'NotApplicable';
+          }
+        | {
+            type: 'EstimateData' | 'ActualData';
+            quantityType: 'Volume' | 'Weight';
+            value: number;
+          };
+    };
 
 type DraftExporterDetailData = {
   exporterAddress: {
-    addressLine1: 'string';
-    addressLine2: 'string';
-    townCity: 'string';
-    postcode: 'string';
-    country: 'string';
+    addressLine1: string;
+    addressLine2: string;
+    townCity: string;
+    postcode: string;
+    country: string;
   };
   exporterContactDetails: {
-    organisationName: 'string';
-    fullName: 'string';
-    emailAddress: 'string';
-    phoneNumber: 'string';
-    faxNumber: 'string';
+    organisationName: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber: string;
   };
 };
 

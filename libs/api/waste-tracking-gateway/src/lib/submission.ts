@@ -12,30 +12,20 @@ export type WasteDescriptionData = {
   description: string;
 };
 
-export type WasteQuantityData = {
-  wasteQuantity:
-    | { type: 'NotApplicable' }
-    | {
-        type: 'EstimateData' | 'ActualData';
-        quantityType: 'Volume' | 'Weight';
-        value: number;
-      };
-};
-
 export type ExporterDetailData = {
   exporterAddress: {
-    addressLine1: 'string';
-    addressLine2: 'string';
-    townCity: 'string';
-    postcode: 'string';
-    country: 'string';
+    addressLine1: string;
+    addressLine2: string;
+    townCity: string;
+    postcode: string;
+    country: string;
   };
   exporterContactDetails: {
-    organisationName: 'string';
-    fullName: 'string';
-    emailAddress: 'string';
-    phoneNumber: 'string';
-    faxNumber: 'string';
+    organisationName: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber: string;
   };
 };
 
@@ -51,10 +41,28 @@ export type RecoveryFacilityDetail =
 type NotStartedSection = { status: 'NotStarted' };
 
 export type WasteQuantity =
-  | { status: 'CannotStart' }
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<WasteQuantityData>)
-  | ({ status: 'Complete' } & WasteQuantityData);
+| { status: 'CannotStart' }
+| { status: 'NotStarted' }
+| {
+    status: 'Started';
+    value?: {
+      type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+      quantityType?: 'Volume' | 'Weight';
+      value?: number;
+    };
+  }
+| {
+    status: 'Complete';
+    value:
+      | {
+          type: 'NotApplicable';
+        }
+      | {
+          type: 'EstimateData' | 'ActualData';
+          quantityType: 'Volume' | 'Weight';
+          value: number;
+        };
+  };
 
 export type ExporterDetail =
   | { status: 'NotStarted' }

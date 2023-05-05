@@ -71,26 +71,6 @@ export const validatePutWasteDescriptionRequest =
 
 export const validatePutWasteQuantityRequest =
   ajv.compile<PutWasteQuantityRequest>({
-    definitions: {
-      wasteQuantity: {
-        discriminator: 'type',
-        mapping: {
-          NotApplicable: { properties: {} },
-          EstimateData: {
-            optionalProperties: {
-              quantityType: { enum: ['Volume', 'Weight'] },
-              value: { type: 'float64' },
-            },
-          },
-          ActualData: {
-            optionalProperties: {
-              quantityType: { enum: ['Volume', 'Weight'] },
-              value: { type: 'float64' },
-            },
-          },
-        },
-      },
-    },
     discriminator: 'status',
     mapping: {
       CannotStart: {
@@ -102,12 +82,36 @@ export const validatePutWasteQuantityRequest =
       Started: {
         properties: {},
         optionalProperties: {
-          wasteQuantity: { ref: 'wasteQuantity' },
+          value: {
+            properties: {},
+            optionalProperties: {
+              type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
+              quantityType: { enum: ['Volume', 'Weight'] },
+              value: { type: 'float64' },
+            },
+          },
         },
       },
       Complete: {
         properties: {
-          wasteQuantity: { ref: 'wasteQuantity' },
+          value: {
+            discriminator: 'type',
+            mapping: {
+              NotApplicable: { properties: {} },
+              EstimateData: {
+                properties: {
+                  quantityType: { enum: ['Volume', 'Weight'] },
+                  value: { type: 'float64' },
+                },
+              },
+              ActualData: {
+                properties: {
+                  quantityType: { enum: ['Volume', 'Weight'] },
+                  value: { type: 'float64' },
+                },
+              },
+            },
+          },
         },
       },
     },

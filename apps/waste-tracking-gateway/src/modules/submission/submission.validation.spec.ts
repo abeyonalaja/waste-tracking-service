@@ -112,7 +112,7 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteQuantity: {
+        value: {
           type: 'NotApplicable',
           value: faker.datatype.string(10),
         },
@@ -122,10 +122,10 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-        wasteQuantity: {
+        value: {
           type: 'ActualData',
           quantityType: 'Volume',
-          value: faker.datatype.number(10),
+          value: faker.datatype.number(),
         },
       })
     ).toBe(false);
@@ -133,14 +133,17 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        wasteCode: { type: 'EstimateData', value: faker.datatype.number(10) },
+        value: {
+          type: 'EstimateData',
+          value: faker.datatype.number(),
+        },
       })
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
-        wasteQuantity: {
+        value: {
           type: 'ActualData',
           quantityType: 'Weight',
           value: faker.datatype.string(10),
@@ -165,14 +168,14 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteQuantity: { type: 'NotApplicable' },
+        value: { type: 'NotApplicable' },
       })
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
-        wasteQuantity: {
+        value: {
           type: 'ActualData',
           quantityType: 'Weight',
           value: faker.datatype.float({ precision: 0.01 }),
@@ -183,7 +186,7 @@ describe('validatePutWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        wasteQuantity: {
+        value: {
           type: 'ActualData',
           quantityType: 'Volume',
           value: faker.datatype.float({ precision: 0.01 }),

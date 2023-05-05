@@ -11,7 +11,10 @@ import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { isNotEmpty, validateQuantityType } from '../utils/validators';
-import { GetWasteQuantityResponse } from '@wts/api/waste-tracking-gateway';
+import {
+  GetWasteQuantityResponse,
+  PutWasteQuantityRequest,
+} from '@wts/api/waste-tracking-gateway';
 
 const WasteQuantity = () => {
   const { t } = useTranslation();
@@ -47,12 +50,17 @@ const WasteQuantity = () => {
       } else {
         setErrors(null);
         if (savedQuantityType !== quantityType) {
-          const newStatus =
-            data.status === 'NotStarted'
-              ? 'Started'
-              : data.status === 'Complete'
-              ? 'Started'
-              : data.status;
+          const newData: PutWasteQuantityRequest = {
+            status:
+              data.status === 'NotStarted'
+                ? 'Started'
+                : data.status === 'Complete'
+                ? 'Started'
+                : data.status,
+            value: {
+              type: quantityType,
+            },
+          };
           try {
             fetch(
               `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
@@ -61,10 +69,7 @@ const WasteQuantity = () => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                  status: newStatus,
-                  wasteQuantity: { type: quantityType },
-                }),
+                body: JSON.stringify(newData),
               }
             )
               .then((response) => {
@@ -115,13 +120,21 @@ const WasteQuantity = () => {
             setIsError(true);
           }
         })
-        .then((data) => {
+        .then((data: GetWasteQuantityResponse) => {
           if (data !== undefined) {
             setData(data);
             setIsLoading(false);
             setIsError(false);
-            setQuantityType(data.wasteQuantity?.type || null);
-            setSavedQuantityType(data.wasteQuantity?.type || null);
+            setQuantityType(
+              data.status === 'CannotStart' || data.status === 'NotStarted'
+                ? null
+                : data.value?.type
+            );
+            setSavedQuantityType(
+              data.status === 'CannotStart' || data.status === 'NotStarted'
+                ? null
+                : data.value?.type
+            );
           }
         });
     }

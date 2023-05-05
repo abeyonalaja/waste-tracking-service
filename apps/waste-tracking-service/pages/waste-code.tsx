@@ -18,6 +18,7 @@ import {
 import Autocomplete from 'accessible-autocomplete/react';
 import { wasteCodeData } from '../utils/wasteCodesData';
 import { SaveReturnLink } from '../components';
+import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
 
 function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
@@ -161,6 +162,7 @@ const WasteCode = () => {
           const submittedWasteCodeType = getWasteCodeType(wasteCodeCategory);
           if (isBulkOrSmall !== submittedWasteCodeType) {
             try {
+              const data: PutWasteQuantityRequest = { status: 'NotStarted' };
               fetch(
                 `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
                 {
@@ -168,9 +170,7 @@ const WasteCode = () => {
                   headers: {
                     'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({
-                    status: 'NotStarted',
-                  }),
+                  body: JSON.stringify(data),
                 }
               );
             } catch (e) {

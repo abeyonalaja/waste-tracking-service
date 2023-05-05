@@ -82,17 +82,13 @@ const WasteQuantityEntry = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setEstimate(
-              data.wasteQuantity.wasteQuantity.type === 'EstimateData'
-            );
-            setQuantityType(
-              data.wasteQuantity.wasteQuantity.quantityType || null
-            );
+            setEstimate(data.wasteQuantity.value.type === 'EstimateData');
+            setQuantityType(data.wasteQuantity.value.quantityType || null);
 
-            if (data.wasteQuantity.wasteQuantity.quantityType === 'Weight')
-              setWeight(data.wasteQuantity.wasteQuantity.value);
-            if (data.wasteQuantity.wasteQuantity.quantityType === 'Volume')
-              setVolume(data.wasteQuantity.wasteQuantity.value);
+            if (data.wasteQuantity.value.quantityType === 'Weight')
+              setWeight(data.wasteQuantity.value.value);
+            if (data.wasteQuantity.value.quantityType === 'Volume')
+              setVolume(data.wasteQuantity.value.value);
 
             if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
               setBulkWaste(false);
@@ -134,7 +130,7 @@ const WasteQuantityEntry = () => {
 
         const updatedData: PutWasteQuantityRequest = {
           status: 'Complete',
-          wasteQuantity: {
+          value: {
             type: estimate ? 'EstimateData' : 'ActualData',
             quantityType: quantityType,
             value: parseFloat(quantityType === 'Weight' ? weight : volume),

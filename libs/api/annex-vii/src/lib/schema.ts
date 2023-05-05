@@ -71,27 +71,6 @@ const draftWasteDescription: SchemaObject = {
   },
 };
 
-const draftWasteQuantityData = {
-  wasteQuantity: {
-    discriminator: 'type',
-    mapping: {
-      NotApplicable: { properties: {} },
-      EstimateData: {
-        properties: {
-          quantityType: { enum: ['Volume', 'Weight'] },
-          value: { type: 'float64' },
-        },
-      },
-      ActualData: {
-        properties: {
-          quantityType: { enum: ['Volume', 'Weight'] },
-          value: { type: 'float64' },
-        },
-      },
-    },
-  },
-};
-
 const draftWasteQuantity: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -104,12 +83,36 @@ const draftWasteQuantity: SchemaObject = {
     Started: {
       properties: {},
       optionalProperties: {
-        wasteQuantity: draftWasteQuantityData.wasteQuantity,
+        value: {
+          properties: {},
+          optionalProperties: {
+            type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
+            quantityType: { enum: ['Volume', 'Weight'] },
+            value: { type: 'float64' },
+          },
+        },
       },
     },
     Complete: {
       properties: {
-        wasteQuantity: draftWasteQuantityData.wasteQuantity,
+        value: {
+          discriminator: 'type',
+          mapping: {
+            NotApplicable: { properties: {} },
+            EstimateData: {
+              properties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                value: { type: 'float64' },
+              },
+            },
+            ActualData: {
+              properties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                value: { type: 'float64' },
+              },
+            },
+          },
+        },
       },
     },
   },

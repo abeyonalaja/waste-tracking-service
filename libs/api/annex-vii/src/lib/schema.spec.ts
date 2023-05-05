@@ -106,16 +106,43 @@ describe('setDraftWasteQuantityByIdRequest', () => {
     setDraftWasteQuantityByIdRequest
   );
 
-  it('is compatible with dto value', () => {
-    const value: SetDraftWasteQuantityByIdRequest = {
+  it('is compatible with dto values', () => {
+    let value: SetDraftWasteQuantityByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: { status: 'NotStarted' },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: { status: 'Started' },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+        value: { type: 'ActualData' },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
         status: 'Complete',
-        wasteQuantity: {
+        value: {
           type: 'ActualData',
           quantityType: 'Volume',
-          value: 10,
+          value: 12,
         },
       },
     };
