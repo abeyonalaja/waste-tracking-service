@@ -28,7 +28,9 @@ const backend =
   process.env['NODE_ENV'] === 'development'
     ? new InMemorySubmissionBackend()
     : new AnnexViiServiceBackend(
-        new DaprAnnexViiClient(new DaprClient()),
+        new DaprAnnexViiClient(
+          new DaprClient(),
+          process.env['ANNEX_VII_APP_ID'] || 'annex-vii'),
         logger
       );
 

@@ -13,7 +13,7 @@ image:
   repository: sndwtshubcr3401.azurecr.io/waste-tracking-service
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '20230502.2'
+  tag: '20230505.1'
 
 # Override the default name specified
 nameOverride: ''
@@ -51,6 +51,12 @@ resources:
   limits:
     cpu: 50m
     memory: 128Mi
+
+# Profile of the secret and values used for environment variable config
+secret:
+  name: ''
+  env:
+    APPINSIGHTS_CONNECTION_STRING: ''
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

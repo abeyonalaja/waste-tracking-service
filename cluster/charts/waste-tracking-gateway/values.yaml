@@ -13,7 +13,7 @@ image:
   repository: sndwtshubcr3401.azurecr.io/waste-tracking-gateway
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '20230502.3'
+  tag: '20230505.2'
 
 # Override the default name specified
 nameOverride: ''
@@ -49,7 +49,10 @@ podAnnotations:
   # The client service will use this name to locate the Node service through the Dapr sidecar.
   dapr.io/app-id: 'waste-tracking-gateway'
   dapr.io/enable-api-logging: 'true'
-  dapr.io/app-health-probe-interval: '600'
+  dapr.io/log-level: 'debug'
+  dapr.io/app-health-probe-interval: '3600'
+  dapr.io/sidecar-liveness-probe-period-seconds: '3600'
+  dapr.io/sidecar-readiness-probe-period-seconds: '3600'
 
 # Container resource allocation
 resources:
@@ -62,6 +65,7 @@ secret:
   name: ''
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
+    ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

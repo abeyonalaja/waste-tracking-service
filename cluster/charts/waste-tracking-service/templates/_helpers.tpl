@@ -60,3 +60,24 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the name of the secret to use
+*/}}
+{{- define "waste-tracking-service.secretName" -}}
+{{- default (include "waste-tracking-service.fullname" .) .Values.secret.name }}
+{{- end }}
+
+{{/*
+Create the environment variables to use
+*/}}
+{{- define "waste-tracking-service.env"}}
+{{- $secretName := default (include "waste-tracking-service.secretName" .) }}
+{{- range $name, $value := .Values.secret.env }}
+- name: {{ $name }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: {{ $name }}
+{{- end }}
+{{- end }}

@@ -38,3 +38,5 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:          
+            {{- include "waste-tracking-service.env" . | nindent 12 }}

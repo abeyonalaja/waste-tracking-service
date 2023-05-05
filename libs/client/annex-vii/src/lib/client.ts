@@ -38,7 +38,7 @@ import {
 export class DaprAnnexViiClient {
   constructor(
     private daprClient: DaprClient,
-    private annexViiAppId: string = 'annex-vii'
+    private annexViiAppId: string
   ) {}
 
   async getDrafts(req: GetDraftsRequest): Promise<GetDraftsResponse> {
@@ -153,6 +153,6 @@ export class DaprAnnexViiClient {
       setDraftExporterDetailById.name,
       HttpMethod.POST,
       req
-    )) as SetDraftWasteQuantityByIdResponse;
+    )) as SetDraftExporterDetailByIdResponse;
   }
 }
