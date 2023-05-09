@@ -21,7 +21,7 @@ describe('Exporter postcode page', () => {
       render(<ExporterPostcode />);
     });
 
-    const submitButton = screen.getByText('Save and continue');
+    const submitButton = screen.getByText('Find address');
     fireEvent.click(submitButton);
 
     const errorHeading = screen.getByText('There is a problem');

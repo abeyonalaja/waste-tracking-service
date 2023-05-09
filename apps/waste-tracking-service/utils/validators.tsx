@@ -57,7 +57,6 @@ export const validateWasteCode: (
 export const validateDoYouHaveAnEWCCode: (value?: string) => string | null = (
   value
 ) => {
-  console.log(value);
   return value ? null : 'Select yes if you want to add an EWC code';
 };
 
@@ -96,6 +95,16 @@ export const validateWasteDescription: (
 
 export const validatePostcode: (postcode?: string) => string = (postcode) => {
   if (postcode?.length === 0) return 'Enter a postcode';
+  const regex = new RegExp('^[a-z]{1,2}\\d[a-z\\d]?\\s*\\d[a-z]{2}$');
+  if (!regex.test(postcode)) {
+    return 'Enter a real postcode';
+  }
+};
+
+export const validateSelectAddress: (address?: string) => string = (
+  address
+) => {
+  if (address === '' || address === undefined) return 'Select an address';
 };
 
 export const validateQuantityType: (quantityType?: string) => string = (
