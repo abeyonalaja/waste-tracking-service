@@ -246,5 +246,76 @@ describe(DraftController, () => {
         accountId
       );
     });
+
+    it('resets waste-quantity section if input denotes small waste', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: {
+          status: 'Complete',
+          wasteCode: {
+            type: 'AnnexIIIA',
+            value: 'A',
+          },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+        wasteQuantity: {
+          status: 'Complete',
+          value: {
+            type: 'ActualData',
+            quantityType: 'Volume',
+            value: 12.0,
+          },
+        },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          wasteCode: { type: 'NotApplicable' },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: { type: 'NotApplicable' },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+    });
   });
 });

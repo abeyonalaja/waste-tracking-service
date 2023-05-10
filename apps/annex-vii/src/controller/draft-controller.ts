@@ -134,21 +134,37 @@ export default class DraftController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
 
+      let wasteQuantity: DraftSubmission['wasteQuantity'] = draft.wasteQuantity;
+
+      if (
+        wasteQuantity.status === 'CannotStart' &&
+        (value.status === 'Started' || value.status === 'Complete')
+      ) {
+        wasteQuantity = { status: 'NotStarted' };
+      }
+
+      if (
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
+        value.status !== 'NotStarted' &&
+        value.wasteCode?.type === 'NotApplicable'
+      ) {
+        wasteQuantity = { status: 'NotStarted' };
+      }
+
+      const recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
+        draft.recoveryFacilityDetail.status === 'CannotStart' &&
+        value.status !== 'NotStarted' &&
+        value.wasteCode !== undefined
+          ? { status: 'NotStarted' }
+          : draft.recoveryFacilityDetail;
+
       await this.repository.saveDraft(
         {
           ...draft,
           wasteDescription: value,
-          wasteQuantity:
-            (value.status === 'Started' || value.status === 'Complete') &&
-            draft.wasteQuantity.status === 'CannotStart'
-              ? { status: 'NotStarted' }
-              : draft.wasteQuantity,
-          recoveryFacilityDetail:
-            draft.recoveryFacilityDetail.status === 'CannotStart' &&
-            value.status !== 'NotStarted' &&
-            value.wasteCode !== undefined
-              ? { status: 'NotStarted' }
-              : draft.recoveryFacilityDetail,
+          wasteQuantity,
+          recoveryFacilityDetail,
         },
         accountId
       );
