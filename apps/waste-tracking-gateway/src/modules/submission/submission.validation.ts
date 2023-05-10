@@ -124,11 +124,13 @@ export const validatePutExporterDetailRequest =
       exporterAddress: {
         properties: {
           addressLine1: { type: 'string' },
-          addressLine2: { type: 'string' },
           townCity: { type: 'string' },
           postcode: { type: 'string' },
           country: { type: 'string' },
         },
+        optionalProperties: {
+          addressLine2: { type: 'string' },
+        }
       },
       exporterContactDetails: {
         properties: {
@@ -136,8 +138,10 @@ export const validatePutExporterDetailRequest =
           fullName: { type: 'string' },
           emailAddress: { type: 'string' },
           phoneNumber: { type: 'string' },
-          faxNumber: { type: 'string' },
         },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        }
       },
     },
     discriminator: 'status',
@@ -172,8 +176,10 @@ export const validatePutImporterDetailRequest =
           fullName: { type: 'string' },
           emailAddress: { type: 'string' },
           phoneNumber: { type: 'string' },
-          faxNumber: { type: 'string' },
         },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        }
       },
     },
     discriminator: 'status',

@@ -15,7 +15,7 @@ export type WasteDescriptionData = {
 export type ExporterDetailData = {
   exporterAddress: {
     addressLine1: string;
-    addressLine2: string;
+    addressLine2?: string;
     townCity: string;
     postcode: string;
     country: string;
@@ -25,7 +25,7 @@ export type ExporterDetailData = {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
-    faxNumber: string;
+    faxNumber?: string;
   };
 };
 
@@ -37,7 +37,7 @@ export type ImporterDetailData = {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
-    faxNumber: string;
+    faxNumber?: string;
   };
 };
 

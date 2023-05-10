@@ -58,7 +58,7 @@ type DraftWasteQuantity =
 type DraftExporterDetailData = {
   exporterAddress: {
     addressLine1: string;
-    addressLine2: string;
+    addressLine2?: string;
     townCity: string;
     postcode: string;
     country: string;
@@ -68,7 +68,7 @@ type DraftExporterDetailData = {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
-    faxNumber: string;
+    faxNumber?: string;
   };
 };
 
@@ -80,7 +80,7 @@ export type DraftImporterDetailData = {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
-    faxNumber: string;
+    faxNumber?: string;
   };
 };
 

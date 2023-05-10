@@ -123,11 +123,13 @@ const draftExporterDetailData = {
   exporterAddress: {
     properties: {
       addressLine1: { type: 'string' },
-      addressLine2: { type: 'string' },
       townCity: { type: 'string' },
       postcode: { type: 'string' },
       country: { type: 'string' },
     },
+    optionalProperties: {
+      addressLine2: { type: 'string' },
+    }
   },
   exporterContactDetails: {
     properties: {
@@ -135,6 +137,8 @@ const draftExporterDetailData = {
       fullName: { type: 'string' },
       emailAddress: { type: 'string' },
       phoneNumber: { type: 'string' },
+    },
+    optionalProperties: {
       faxNumber: { type: 'string' },
     },
   },
@@ -171,8 +175,10 @@ const draftImporterDetailData = {
       fullName: { type: 'string' },
       emailAddress: { type: 'string' },
       phoneNumber: { type: 'string' },
-      faxNumber: { type: 'string' },
     },
+    optionalProperties: {
+      faxNumber: { type: 'string' },
+    }
   },
 };
 
