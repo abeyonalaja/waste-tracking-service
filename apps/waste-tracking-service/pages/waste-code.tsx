@@ -10,8 +10,7 @@ import {
   ConditionalRadioWrap,
   RadiosDivider,
   BreadcrumbWrap,
-  ButtonGroup,
-  SaveReturnButton,
+  SaveReturnLink,
 } from '../components';
 import {
   validateWasteCode,
@@ -457,15 +456,8 @@ const WasteCode = () => {
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
-                  <ButtonGroup>
-                    <GovUK.Button id="saveButton">
-                      {t('saveButton')}
-                    </GovUK.Button>
-                    <SaveReturnButton
-                      id="saveReturnButton"
-                      onClick={handleLinkSubmit}
-                    />
-                  </ButtonGroup>
+                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}
