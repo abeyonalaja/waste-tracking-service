@@ -5,6 +5,7 @@ import {
   GetDraftByIdRequest,
   GetDraftCustomerReferenceByIdRequest,
   GetDraftExporterDetailByIdRequest,
+  GetDraftImporterDetailByIdRequest,
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteQuantityByIdRequest,
   GetDraftsRequest,
@@ -161,6 +162,40 @@ const draftExporterDetail: SchemaObject = {
   },
 };
 
+const draftImporterDetailData = {
+  importerContactDetails: {
+    properties: {
+      organisationName: { type: 'string' },
+      address: { type: 'string' },
+      country: { type: 'string' },
+      fullName: { type: 'string' },
+      emailAddress: { type: 'string' },
+      phoneNumber: { type: 'string' },
+      faxNumber: { type: 'string' },
+    },
+  },
+};
+
+const draftImporterDetail: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {},
+      optionalProperties: {
+        importer: draftImporterDetailData.importerContactDetails,
+      },
+    },
+    Complete: {
+      properties: {
+        importerContactDetails: draftImporterDetailData.importerContactDetails,
+      },
+    },
+  },
+};
+
 const notStartedSection: SchemaObject = {
   properties: {
     status: {
@@ -184,7 +219,7 @@ const draftSubmission: SchemaObject = {
     wasteDescription: draftWasteDescription,
     wasteQuantity: draftWasteQuantity,
     exporterDetail: draftExporterDetail,
-    importerDetail: notStartedSection,
+    importerDetail: draftImporterDetail,
     collectionDate: notStartedSection,
     carriers: notStartedSection,
     collectionDetail: notStartedSection,
@@ -381,6 +416,38 @@ export const setDraftExporterDetailByIdRequest: SchemaObject = {
 };
 
 export const setDraftExporterDetailByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftImporterDetailByIdRequest: JTDSchemaType<GetDraftImporterDetailByIdRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftImporterDetailByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftImporterDetail,
+  },
+};
+
+export const setDraftImporterDetailByIdRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftImporterDetail,
+  },
+};
+
+export const setDraftImporterDetailByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

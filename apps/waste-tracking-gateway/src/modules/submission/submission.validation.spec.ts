@@ -5,6 +5,7 @@ import {
   validatePutWasteDescriptionRequest,
   validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
+  validatePutImporterDetailRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -256,5 +257,56 @@ describe('validatePutExporterDetailRequest', () => {
       },
     };
     expect(validatePutExporterDetailRequest(data)).toBe(false);
+  });
+});
+
+describe('validatePutImporterDetailRequest', () => {
+  test('should return true for object with status: NotStarted', () => {
+    expect(validatePutImporterDetailRequest({ status: 'NotStarted' })).toBe(
+      true
+    );
+  });
+
+  it('should return false for a request with a missing property', () => {
+    const data = {
+      status: 'Complete',
+      importerContactDetails: {
+        organisationName: 'Acme Inc.',
+        address: '123 Anytown',
+        country: undefined,
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+
+    expect(validatePutImporterDetailRequest(data)).toBe(false);
+  });
+
+  test('should return false for object with invalid importerContactDetails', () => {
+    const data = {
+      status: 'Started',
+      importerContactDetails: {
+        organisationName: 'Acme Inc.',
+        address: '123 Anytown',
+        country: 'UK',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: 5551234,
+        faxNumber: '555-5678',
+      },
+    };
+    expect(validatePutImporterDetailRequest(data)).toBe(false);
+  });
+
+  test('should return false for object where status is not started', () => {
+    const data = {
+      status: 'NotStarted',
+      importerContactDetails: {
+        fullName: 'John Doe',
+      },
+    };
+    expect(validatePutImporterDetailRequest(data)).toBe(false);
   });
 });

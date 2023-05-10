@@ -223,4 +223,38 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getDraftImporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftImporterDetailByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftImporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftImporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftImporterDetailByIdRequest;
+    if (!validate.setDraftImporterDetailByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftImporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

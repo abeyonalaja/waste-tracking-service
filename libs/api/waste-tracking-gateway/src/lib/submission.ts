@@ -29,6 +29,18 @@ export type ExporterDetailData = {
   };
 };
 
+export type ImporterDetailData = {
+  importerContactDetails: {
+    organisationName: string;
+    address: string;
+    country: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber: string;
+  };
+};
+
 export type WasteDescription =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
@@ -41,33 +53,38 @@ export type RecoveryFacilityDetail =
 type NotStartedSection = { status: 'NotStarted' };
 
 export type WasteQuantity =
-| { status: 'CannotStart' }
-| { status: 'NotStarted' }
-| {
-    status: 'Started';
-    value?: {
-      type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
-      quantityType?: 'Volume' | 'Weight';
-      value?: number;
+  | { status: 'CannotStart' }
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started';
+      value?: {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        quantityType?: 'Volume' | 'Weight';
+        value?: number;
+      };
+    }
+  | {
+      status: 'Complete';
+      value:
+        | {
+            type: 'NotApplicable';
+          }
+        | {
+            type: 'EstimateData' | 'ActualData';
+            quantityType: 'Volume' | 'Weight';
+            value: number;
+          };
     };
-  }
-| {
-    status: 'Complete';
-    value:
-      | {
-          type: 'NotApplicable';
-        }
-      | {
-          type: 'EstimateData' | 'ActualData';
-          quantityType: 'Volume' | 'Weight';
-          value: number;
-        };
-  };
 
 export type ExporterDetail =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<ExporterDetailData>)
   | ({ status: 'Complete' } & ExporterDetailData);
+
+export type ImporterDetail =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<ImporterDetailData>)
+  | ({ status: 'Complete' } & ImporterDetailData);
 
 export type Submission = {
   id: string;
@@ -75,7 +92,7 @@ export type Submission = {
   wasteDescription: WasteDescription;
   wasteQuantity: WasteQuantity;
   exporterDetail: ExporterDetail;
-  importerDetail: NotStartedSection;
+  importerDetail: ImporterDetail;
   collectionDate: NotStartedSection;
   carriers: NotStartedSection;
   collectionDetail: NotStartedSection;
@@ -101,3 +118,6 @@ export type GetWasteQuantityResponse = WasteQuantity;
 export type PutExporterDetailRequest = ExporterDetail;
 export type PutExporterDetailResponse = ExporterDetail;
 export type GetExporterDetailResponse = ExporterDetail;
+export type PutImporterDetailRequest = ImporterDetail;
+export type PutImporterDetailResponse = ImporterDetail;
+export type GetImporterDetailResponse = ImporterDetail;

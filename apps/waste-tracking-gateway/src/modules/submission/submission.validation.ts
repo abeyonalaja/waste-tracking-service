@@ -4,6 +4,7 @@ import {
   PutWasteDescriptionRequest,
   PutWasteQuantityRequest,
   PutExporterDetailRequest,
+  PutImporterDetailRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -155,6 +156,40 @@ export const validatePutExporterDetailRequest =
         properties: {
           exporterAddress: { ref: 'exporterAddress' },
           exporterContactDetails: { ref: 'exporterContactDetails' },
+        },
+      },
+    },
+  });
+
+export const validatePutImporterDetailRequest =
+  ajv.compile<PutImporterDetailRequest>({
+    definitions: {
+      importerContactDetails: {
+        properties: {
+          organisationName: { type: 'string' },
+          address: { type: 'string' },
+          country: { type: 'string' },
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+          faxNumber: { type: 'string' },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      NotStarted: {
+        properties: {},
+      },
+      Started: {
+        properties: {},
+        optionalProperties: {
+          importerContactDetails: { ref: 'importerContactDetails' },
+        },
+      },
+      Complete: {
+        properties: {
+          importerContactDetails: { ref: 'importerContactDetails' },
         },
       },
     },

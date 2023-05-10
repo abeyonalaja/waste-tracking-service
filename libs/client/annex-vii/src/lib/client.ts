@@ -8,6 +8,8 @@ import {
   GetDraftCustomerReferenceByIdResponse,
   GetDraftExporterDetailByIdRequest,
   GetDraftExporterDetailByIdResponse,
+  GetDraftImporterDetailByIdRequest,
+  GetDraftImporterDetailByIdResponse,
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdRequest,
@@ -18,6 +20,8 @@ import {
   SetDraftCustomerReferenceByIdResponse,
   SetDraftExporterDetailByIdRequest,
   SetDraftExporterDetailByIdResponse,
+  SetDraftImporterDetailByIdRequest,
+  SetDraftImporterDetailByIdResponse,
   SetDraftWasteDescriptionByIdRequest,
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdRequest,
@@ -26,20 +30,19 @@ import {
   getDraftById,
   getDraftCustomerReferenceById,
   getDraftExporterDetailById,
+  getDraftImporterDetailById,
   getDraftWasteDescriptionById,
   getDraftWasteQuantityById,
   getDrafts,
   setDraftCustomerReferenceById,
   setDraftExporterDetailById,
+  setDraftImporterDetailById,
   setDraftWasteDescriptionById,
   setDraftWasteQuantityById,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
-  constructor(
-    private daprClient: DaprClient,
-    private annexViiAppId: string
-  ) {}
+  constructor(private daprClient: DaprClient, private annexViiAppId: string) {}
 
   async getDrafts(req: GetDraftsRequest): Promise<GetDraftsResponse> {
     return (await this.daprClient.invoker.invoke(
@@ -154,5 +157,27 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as SetDraftExporterDetailByIdResponse;
+  }
+
+  async getDraftImporterDetailById(
+    req: GetDraftImporterDetailByIdRequest
+  ): Promise<GetDraftImporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftImporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftImporterDetailByIdResponse;
+  }
+
+  async setDraftImporterDetailById(
+    req: SetDraftImporterDetailByIdRequest
+  ): Promise<SetDraftImporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftImporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftImporterDetailByIdResponse;
   }
 }

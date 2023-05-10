@@ -1,6 +1,7 @@
 import {
   SetDraftCustomerReferenceByIdRequest,
   SetDraftExporterDetailByIdRequest,
+  SetDraftImporterDetailByIdRequest,
   SetDraftWasteDescriptionByIdRequest,
   SetDraftWasteQuantityByIdRequest,
   schema,
@@ -27,4 +28,9 @@ export const setDraftWasteQuantityByIdRequest =
 export const setDraftExporterDetailByIdRequest =
   ajv.compile<SetDraftExporterDetailByIdRequest>(
     schema.setDraftExporterDetailByIdRequest
+  );
+
+export const setDraftImporterDetailByIdRequest =
+  ajv.compile<SetDraftImporterDetailByIdRequest>(
+    schema.setDraftImporterDetailByIdRequest
   );

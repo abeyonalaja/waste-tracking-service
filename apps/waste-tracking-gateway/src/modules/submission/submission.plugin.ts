@@ -6,6 +6,7 @@ import {
   validatePutReferenceRequest,
   validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
+  validatePutImporterDetailRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -250,6 +251,53 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutExporterDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/importer-detail',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getImporterDetail({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetImporterDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/importer-detail',
+      handler: async function ({ params, payload }) {
+        if (!validatePutImporterDetailRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutImporterDetailRequest;
+        try {
+          await backend.setImporterDetail(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutImporterDetailResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

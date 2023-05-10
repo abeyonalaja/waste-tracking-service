@@ -4,10 +4,12 @@ import {
   GetDraftByIdResponse,
   GetDraftCustomerReferenceByIdResponse,
   GetDraftExporterDetailByIdResponse,
+  GetDraftImporterDetailByIdResponse,
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdResponse,
   SetDraftCustomerReferenceByIdResponse,
   SetDraftExporterDetailByIdResponse,
+  SetDraftImporterDetailByIdResponse,
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdResponse,
 } from '@wts/api/annex-vii';
@@ -21,6 +23,7 @@ export type CustomerReference = dto.CustomerReference;
 export type WasteDescription = dto.WasteDescription;
 export type WasteQuantity = dto.WasteQuantity;
 export type ExporterDetail = dto.ExporterDetail;
+export type ImporterDetail = dto.ImporterDetail;
 
 export type SubmissionRef = {
   id: string;
@@ -47,6 +50,8 @@ export interface SubmissionBackend {
   setWasteQuantity(ref: SubmissionRef, value: WasteQuantity): Promise<void>;
   getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
   setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
+  getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
+  setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
 }
 
 /**
@@ -201,6 +206,29 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.exporterDetail = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getImporterDetail({ id }: SubmissionRef): Promise<ImporterDetail> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.importerDetail);
+  }
+
+  setImporterDetail(
+    { id }: SubmissionRef,
+    value: ImporterDetail
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.importerDetail = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -417,6 +445,53 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     let response: SetDraftExporterDetailByIdResponse;
     try {
       response = await this.client.setDraftExporterDetailById({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getImporterDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<ImporterDetail> {
+    let response: GetDraftImporterDetailByIdResponse;
+    try {
+      response = await this.client.getDraftImporterDetailById({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setImporterDetail(
+    { id, accountId }: SubmissionRef,
+    value: ImporterDetail
+  ): Promise<void> {
+    let response: SetDraftImporterDetailByIdResponse;
+    try {
+      response = await this.client.setDraftImporterDetailById({
         id,
         accountId,
         value,

@@ -72,10 +72,27 @@ type DraftExporterDetailData = {
   };
 };
 
+export type DraftImporterDetailData = {
+  importerContactDetails: {
+    organisationName: string;
+    address: string;
+    country: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber: string;
+  };
+};
+
 export type DraftExporterDetail =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<DraftExporterDetailData>)
   | ({ status: 'Complete' } & DraftExporterDetailData);
+
+export type DraftImporterDetail =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<DraftImporterDetailData>)
+  | ({ status: 'Complete' } & DraftImporterDetailData);
 
 type DraftRecoveryFacilityDetail =
   | { status: 'CannotStart' }
@@ -89,7 +106,7 @@ export type DraftSubmission = {
   wasteDescription: DraftWasteDescription;
   wasteQuantity: DraftWasteQuantity;
   exporterDetail: DraftExporterDetail;
-  importerDetail: NotStartedSection;
+  importerDetail: DraftImporterDetail;
   collectionDate: NotStartedSection;
   carriers: NotStartedSection;
   collectionDetail: NotStartedSection;
@@ -185,5 +202,20 @@ export type SetDraftExporterDetailByIdRequest = IdRequest &
 export type SetDraftExporterDetailByIdResponse = Response<void>;
 export const setDraftExporterDetailById: Method = {
   name: 'setDraftExporterDetailById',
+  httpVerb: 'POST',
+};
+
+export type GetDraftImporterDetailByIdRequest = IdRequest & AccountIdRequest;
+export type GetDraftImporterDetailByIdResponse = Response<DraftImporterDetail>;
+export const getDraftImporterDetailById: Method = {
+  name: 'getDraftImporterDetailById',
+  httpVerb: 'POST',
+};
+
+export type SetDraftImporterDetailByIdRequest = IdRequest &
+  AccountIdRequest & { value: DraftImporterDetail };
+export type SetDraftImporterDetailByIdResponse = Response<void>;
+export const setDraftImporterDetailById: Method = {
+  name: 'setDraftImporterDetailById',
   httpVerb: 'POST',
 };

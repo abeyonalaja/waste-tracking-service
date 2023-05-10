@@ -10,6 +10,7 @@ import {
   WasteDescription,
   WasteQuantity,
   ExporterDetail,
+  ImporterDetail,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -49,6 +50,9 @@ const mockBackend = {
   getExporterDetail: jest.fn<(ref: SubmissionRef) => Promise<ExporterDetail>>(),
   setExporterDetail:
     jest.fn<(ref: SubmissionRef, value: ExporterDetail) => Promise<void>>(),
+  getImporterDetail: jest.fn<(ref: SubmissionRef) => Promise<ImporterDetail>>(),
+  setImporterDetail:
+    jest.fn<(ref: SubmissionRef, value: ImporterDetail) => Promise<void>>(),
 };
 
 const app = server({
@@ -87,6 +91,8 @@ describe('SubmissionPlugin', () => {
     mockBackend.setCustomerReference.mockClear();
     mockBackend.getExporterDetail.mockClear();
     mockBackend.setExporterDetail.mockClear();
+    mockBackend.getImporterDetail.mockClear();
+    mockBackend.setImporterDetail.mockClear();
   });
 
   describe('POST /submissions', () => {

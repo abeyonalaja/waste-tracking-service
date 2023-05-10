@@ -3,6 +3,7 @@ import {
   GetDraftByIdRequest,
   GetDraftCustomerReferenceByIdRequest,
   GetDraftExporterDetailByIdRequest,
+  GetDraftImporterDetailByIdRequest,
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteQuantityByIdRequest,
   GetDraftsRequest,
@@ -42,4 +43,9 @@ export const getDraftWasteQuantityByIdRequest =
 export const getDraftExporterDetailByIdRequest =
   ajv.compileParser<GetDraftExporterDetailByIdRequest>(
     schema.getDraftExporterDetailByIdRequest
+  );
+
+export const getDraftImporterDetailByIdRequest =
+  ajv.compileParser<GetDraftImporterDetailByIdRequest>(
+    schema.getDraftImporterDetailByIdRequest
   );
