@@ -9,8 +9,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then Enter an EWC code is displayed
     And I choose first EWC code description from list
-    And I click the button Save and continue
-    And I click "Back" link should display "What is the waste code" page
+    When I click "Back" link should display "What is the waste code" page
 
   Scenario: Display "laboratory details" as an option on the "submit an export" page
     Given I login to waste tracking portal

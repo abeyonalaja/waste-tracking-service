@@ -141,7 +141,7 @@ Feature: AS A waste producer
     Then I remain on the Net weight page with an "Enter the volume" error message displayed
     When I click the Save and return to draft
     Then I remain on the Net weight page with an "Enter the volume" error message displayed
-
+    
   Scenario: User can't enter special character in quantity of units option
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -152,15 +152,15 @@ Feature: AS A waste producer
     And I enter invalid weight in cubic meters
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the volume using only numbers, up to two decimal places" error message displayed
-    When I enter invalid weight in tonnes
-    And I click the button Save and continue
+    And I enter invalid weight in cubic meters
+    And I click the Save and return to draft
     Then I remain on the Net weight page with an "Enter the volume using only numbers, up to two decimal places" error message displayed
     When I choose "Weight in tonnes" radio button
     And I enter invalid weight in tonnes
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
     When I enter invalid weight in tonnes
-    And I click the button Save and continue
+    And I click the Save and return to draft
     Then I remain on the Net weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
 
     ######## Small waste
@@ -177,7 +177,7 @@ Feature: AS A waste producer
     And I have options "No, I do not know the amount yet"
     And I click "Back" link should display "Submit an export" page
 
-  Scenario:Launch quantity of waste page after entering description of the waste
+  Scenario:Launch quantity of waste page after entering description of the waste for small waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
@@ -319,13 +319,13 @@ Feature: AS A waste producer
     And I click the button Save and continue
     Then I remain on the Estimate small weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
 
-    Scenario: Small weight user can't enter more than 25kgs
-      Given I login to waste tracking portal
-      And I navigate to the submit an export with reference
-      And I navigate to Quantity of waste page with "Not applicable" has waste code
-      When I choose "Yes, I know the actual amount" radio button
-      And I click the button Save and continue
-      And I enter weight more than 25 kilograms
-      And I click the button Save and continue
-      Then I remain on the Net small weight page with an "Enter a weight under 25kg" error message displayed
+  Scenario: Small weight user can't enter more than 25kgs
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page with "Not applicable" has waste code
+    When I choose "Yes, I know the actual amount" radio button
+    And I click the button Save and continue
+    And I enter weight more than 25 kilograms
+    And I click the button Save and continue
+    Then I remain on the Net small weight page with an "Enter a weight under 25kg" error message displayed
 

@@ -12,6 +12,7 @@ module NationalCodeController
     end
     add_national_code_page.save_and_continue
     TestStatus.set_test_status(:national_code, national_code)
+    DescribeTheWastePage.new.check_page_displayed
     sleep 1
   end
 end

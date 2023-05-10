@@ -24,4 +24,8 @@ class AddReferenceNumberPage < GenericPage
   def has_reference?(reference)
     find(REFERENCE_NUMBER_INPUT_ID).value == reference
   end
+
+  def current_url
+    page.current_url
+  end
 end

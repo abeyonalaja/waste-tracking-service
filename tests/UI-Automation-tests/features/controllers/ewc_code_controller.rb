@@ -23,7 +23,5 @@ module EwcCodeController
       Log.info("EWC code is : #{ewc_code}")
     end
     TestStatus.set_test_status(:waste_code, ewc_code)
-
-    do_you_have_ewc_code_page.save_and_continue
   end
 end
