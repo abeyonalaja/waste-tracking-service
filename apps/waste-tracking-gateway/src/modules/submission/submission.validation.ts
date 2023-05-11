@@ -130,7 +130,7 @@ export const validatePutExporterDetailRequest =
         },
         optionalProperties: {
           addressLine2: { type: 'string' },
-        }
+        },
       },
       exporterContactDetails: {
         properties: {
@@ -141,7 +141,7 @@ export const validatePutExporterDetailRequest =
         },
         optionalProperties: {
           faxNumber: { type: 'string' },
-        }
+        },
       },
     },
     discriminator: 'status',
@@ -168,18 +168,22 @@ export const validatePutExporterDetailRequest =
 export const validatePutImporterDetailRequest =
   ajv.compile<PutImporterDetailRequest>({
     definitions: {
-      importerContactDetails: {
+      importerAddressDetails: {
         properties: {
           organisationName: { type: 'string' },
           address: { type: 'string' },
           country: { type: 'string' },
+        },
+      },
+      importerContactDetails: {
+        properties: {
           fullName: { type: 'string' },
           emailAddress: { type: 'string' },
           phoneNumber: { type: 'string' },
         },
         optionalProperties: {
           faxNumber: { type: 'string' },
-        }
+        },
       },
     },
     discriminator: 'status',
@@ -190,11 +194,13 @@ export const validatePutImporterDetailRequest =
       Started: {
         properties: {},
         optionalProperties: {
+          importerAddressDetails: { ref: 'importerAddressDetails' },
           importerContactDetails: { ref: 'importerContactDetails' },
         },
       },
       Complete: {
         properties: {
+          importerAddressDetails: { ref: 'importerAddressDetails' },
           importerContactDetails: { ref: 'importerContactDetails' },
         },
       },

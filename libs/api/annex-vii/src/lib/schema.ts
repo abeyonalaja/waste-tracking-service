@@ -129,7 +129,7 @@ const draftExporterDetailData = {
     },
     optionalProperties: {
       addressLine2: { type: 'string' },
-    }
+    },
   },
   exporterContactDetails: {
     properties: {
@@ -167,18 +167,22 @@ const draftExporterDetail: SchemaObject = {
 };
 
 const draftImporterDetailData = {
-  importerContactDetails: {
+  importerAddressDetails: {
     properties: {
       organisationName: { type: 'string' },
       address: { type: 'string' },
       country: { type: 'string' },
+    },
+  },
+  importerContactDetails: {
+    properties: {
       fullName: { type: 'string' },
       emailAddress: { type: 'string' },
       phoneNumber: { type: 'string' },
     },
     optionalProperties: {
       faxNumber: { type: 'string' },
-    }
+    },
   },
 };
 
@@ -191,11 +195,13 @@ const draftImporterDetail: SchemaObject = {
     Started: {
       properties: {},
       optionalProperties: {
-        importer: draftImporterDetailData.importerContactDetails,
+        importerAddressDetails: draftImporterDetailData.importerAddressDetails,
+        importerContactDetails: draftImporterDetailData.importerContactDetails,
       },
     },
     Complete: {
       properties: {
+        importerAddressDetails: draftImporterDetailData.importerAddressDetails,
         importerContactDetails: draftImporterDetailData.importerContactDetails,
       },
     },

@@ -73,10 +73,12 @@ type DraftExporterDetailData = {
 };
 
 export type DraftImporterDetailData = {
-  importerContactDetails: {
+  importerAddressDetails: {
     organisationName: string;
     address: string;
     country: string;
+  };
+  importerContactDetails: {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;

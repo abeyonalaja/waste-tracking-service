@@ -30,10 +30,12 @@ export type ExporterDetailData = {
 };
 
 export type ImporterDetailData = {
-  importerContactDetails: {
+  importerAddressDetails: {
     organisationName: string;
     address: string;
     country: string;
+  };
+  importerContactDetails: {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;

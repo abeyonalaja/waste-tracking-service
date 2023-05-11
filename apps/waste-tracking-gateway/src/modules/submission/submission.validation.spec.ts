@@ -245,7 +245,7 @@ describe('validatePutExporterDetailRequest', () => {
         addressLine1: '123 Main St',
         townCity: 'Anytown',
         postcode: '12345',
-        country: 'UK'
+        country: 'UK',
       },
       exporterContactDetails: {
         organisationName: 'Acme Inc.',
@@ -257,7 +257,7 @@ describe('validatePutExporterDetailRequest', () => {
     };
     expect(validatePutExporterDetailRequest(data)).toBe(true);
   });
-  
+
   test('should return false for object with invalid exporterAddress', () => {
     const data = {
       status: 'Started',
@@ -298,6 +298,24 @@ describe('validatePutImporterDetailRequest', () => {
     expect(validatePutImporterDetailRequest({ status: 'NotStarted' })).toBe(
       true
     );
+  });
+
+  it('should return true for a request with a complete importer detail', () => {
+    const data = {
+      status: 'Started',
+      importerAddressDetails: {
+        organisationName: 'Acme Inc',
+        address: '123 Anytown',
+        country: 'UK',
+      },
+      importerContactDetails: {
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+    expect(validatePutImporterDetailRequest(data)).toBe(true);
   });
 
   it('should return false for a request with a missing property', () => {
