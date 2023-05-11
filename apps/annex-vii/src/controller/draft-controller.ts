@@ -152,6 +152,15 @@ export default class DraftController {
         wasteQuantity = { status: 'NotStarted' };
       }
 
+      if (
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode?.type === 'NotApplicable' &&
+        value.status !== 'NotStarted' &&
+        value.wasteCode?.type !== 'NotApplicable'
+      ) {
+        wasteQuantity = { status: 'NotStarted' };
+      }
+
       const recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
         draft.recoveryFacilityDetail.status === 'CannotStart' &&
         value.status !== 'NotStarted' &&
