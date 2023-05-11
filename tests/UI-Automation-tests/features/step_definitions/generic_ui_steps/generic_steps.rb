@@ -41,3 +41,7 @@ end
 When(/^I choose "([^"]*)" radio button$/) do |option|
   choose(option, visible: false)
 end
+
+And(/^I click Continue button$/) do
+  click_on Translations.value 'continueButton'
+end

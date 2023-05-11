@@ -5,7 +5,6 @@ import * as GovUK from 'govuk-react';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
-  AppLink,
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
@@ -13,27 +12,16 @@ import {
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
-
 import {
-  validateOrganisationName,
-  validateFullName,
-  validateEmail,
-  validatePhone,
+  validatePostcode,
+  validateTownCity,
+  validateCountry,
+  validateAddress,
 } from '../utils/validators';
 
 function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
-
-const Paragraph = styled.p`
-  margin-bottom: 20px;
-  line-height: 1.35;
-  font-size: 19px;
-`;
-
-const LinkP = styled.p`
-  margin-bottom: 40px;
-`;
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -50,32 +38,26 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterDetails = () => {
+const ExporterManual = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isError, setIsError] = useState<boolean>(false);
-
-  const [organisationName, setOrganisationName] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [fax, setFax] = useState<string>('');
+  const [postcode, setPostcode] = useState<string>('');
+  const [townCity, setTownCity] = useState<string>('');
+  const [country, setCountry] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [address2, setAddress2] = useState<string>('');
   const [errors, setErrors] = useState<{
-    organisationName?: string;
-    fullName?: string;
-    email?: string;
-    phone?: string;
-    fax?: string;
+    postcode?: string;
+    townCity?: string;
+    country?: string;
+    address?: string;
+    address2?: string;
   }>({});
 
-  useEffect(() => {
-    if (router.isReady) {
-      setId(router.query.id);
-    }
-  }, [router.isReady, router.query.id]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -93,13 +75,12 @@ const ExporterDetails = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            console.log(data);
             setData(data);
-            setOrganisationName(data.exporterContactDetails?.organisationName);
-            setFullName(data.exporterContactDetails?.fullName);
-            setEmail(data.exporterContactDetails?.emailAddress);
-            setPhone(data.exporterContactDetails?.phoneNumber);
-            setFax(data.exporterContactDetails?.faxNumber);
+            setAddress(data.exporterAddress?.addressLine1);
+            setAddress2(data.exporterAddress?.addressLine2);
+            setTownCity(data.exporterAddress?.townCity);
+            setPostcode(data.exporterAddress?.postcode);
+            setCountry(data.exporterAddress?.country);
             setIsLoading(false);
             setIsError(false);
           }
@@ -107,13 +88,19 @@ const ExporterDetails = () => {
     }
   }, [router.isReady, id]);
 
+  useEffect(() => {
+    if (router.isReady) {
+      setId(router.query.id);
+    }
+  }, [router.isReady, router.query.id]);
+
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       const newErrors = {
-        organisationName: validateOrganisationName(organisationName),
-        fullName: validateFullName(fullName),
-        email: validateEmail(email),
-        phone: validatePhone(phone),
+        postcode: validatePostcode(postcode),
+        townCity: validateTownCity(townCity),
+        country: validateCountry(country),
+        address: validateAddress(address),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -121,13 +108,13 @@ const ExporterDetails = () => {
         setErrors(null);
         const body = {
           ...data,
-          status: 'Complete',
-          exporterContactDetails: {
-            organisationName: organisationName,
-            fullName: fullName,
-            emailAddress: email,
-            phoneNumber: phone,
-            faxNumber: fax,
+          status: 'Started',
+          exporterAddress: {
+            addressLine1: address,
+            addressLine2: address2,
+            townCity: townCity,
+            country: country,
+            postcode: postcode,
           },
         };
         try {
@@ -147,7 +134,7 @@ const ExporterDetails = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: '/submit-an-export-tasklist',
+                  pathname: '/exporter-details',
                   query: { id },
                 });
               }
@@ -158,7 +145,7 @@ const ExporterDetails = () => {
       }
       e.preventDefault();
     },
-    [organisationName, fullName, email, phone, fax]
+    [postcode, townCity, country, address, address2]
   );
 
   const BreadCrumbs = () => {
@@ -168,7 +155,7 @@ const ExporterDetails = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: '/exporter-postcode',
+              pathname: '/submit-an-export-tasklist',
               query: { id },
             });
           }}
@@ -182,7 +169,7 @@ const ExporterDetails = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.exporterDetails.title')}</title>
+        <title>{t('exportJourney.exporterPostcode.title')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -197,7 +184,7 @@ const ExporterDetails = () => {
             {!isError && !isLoading && (
               <>
                 <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.exporterDetails.title')}
+                  {t('exportJourney.exporterPostcode.title')}
                 </GovUK.Heading>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
@@ -208,99 +195,83 @@ const ExporterDetails = () => {
                     }))}
                   />
                 )}
-                <Paragraph>
-                  {data.status !== 'NotStarted'
-                    ? Object.keys(data?.exporterAddress).map((line) => (
-                        <span key={line}>
-                          {data?.exporterAddress[line]}
-                          <br />
-                        </span>
-                      ))
-                    : ''}
-                </Paragraph>
-                <LinkP>
-                  <AppLink
-                    href={{ pathname: '/exporter-details-manual', query: { id } }}
-                  >
-                    Change address
-                  </AppLink>
-                </LinkP>
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
                       input={{
-                        name: 'organisationName',
-                        id: 'organisationName',
-                        value: organisationName,
+                        name: 'address',
+                        id: 'address',
+                        value: address,
                         maxLength: 250,
-                        onChange: (e) => setOrganisationName(e.target.value),
+                        onChange: (e) => setAddress(e.target.value),
                       }}
                       meta={{
-                        error: errors?.organisationName,
-                        touched: !!errors?.organisationName,
+                        error: errors?.address,
+                        touched: !!errors?.address,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.organisationName')}
+                      {t('exportJourney.exporterManual.addressOneLabel')}
                     </AddressInput>
-                    <GovUK.Heading size={'MEDIUM'}>
-                      {t('exportJourney.exporterDetails.contactDetails')}
-                    </GovUK.Heading>
                     <AddressInput
                       input={{
-                        name: 'fullName',
-                        id: 'fullName',
-                        value: fullName,
+                        name: 'address2',
+                        id: 'address2',
+                        value: address2,
                         maxLength: 250,
-                        onChange: (e) => setFullName(e.target.value),
-                      }}
-                      meta={{
-                        error: errors?.fullName,
-                        touched: !!errors?.fullName,
+                        onChange: (e) => setAddress2(e.target.value),
                       }}
                     >
-                      {t('exportJourney.exporterDetails.fullName')}
+                      {t('exportJourney.exporterManual.addressTwoLabel')}
                     </AddressInput>
                     <TownCountryInput
                       input={{
-                        name: 'email',
-                        id: 'email',
-                        value: email,
+                        name: 'townCity',
+                        id: 'townCity',
+                        value: townCity,
                         maxLength: 250,
-                        onChange: (e) => setEmail(e.target.value),
+                        onChange: (e) => setTownCity(e.target.value),
                       }}
                       meta={{
-                        error: errors?.email,
-                        touched: !!errors?.email,
+                        error: errors?.townCity,
+                        touched: !!errors?.townCity,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.email')}
+                      {t('exportJourney.exporterManual.townLabel')}
                     </TownCountryInput>
                     <PostcodeInput
                       input={{
-                        name: 'phone',
-                        id: 'phone',
-                        value: phone,
-                        maxLength: 250,
-                        onChange: (e) => setPhone(e.target.value),
+                        name: 'postcode',
+                        id: 'postcode',
+                        value: postcode,
+                        maxLength: 8,
+                        onChange: (e) => setPostcode(e.target.value),
                       }}
                       meta={{
-                        error: errors?.phone,
-                        touched: !!errors?.phone,
+                        error: errors?.postcode,
+                        touched: !!errors?.postcode,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.phone')}
+                      {t('exportJourney.exporterPostcode.postCodeLabel')}
                     </PostcodeInput>
-                    <PostcodeInput
+
+                    <GovUK.Select
                       input={{
-                        name: 'fax',
-                        id: 'fax',
-                        value: fax,
-                        maxLength: 250,
-                        onChange: (e) => setFax(e.target.value),
+                        name: 'country',
+                        value: country,
+                        onChange: (e) => setCountry(e.target.value),
                       }}
+                      meta={{
+                        error: errors?.country,
+                        touched: !!errors?.country,
+                      }}
+                      label={t('exportJourney.exporterManual.countryLabel')}
                     >
-                      {t('exportJourney.exporterDetails.fax')}
-                    </PostcodeInput>
+                      <option>Select</option>
+                      <option value="England">England</option>
+                      <option value="Scotland">Scotland</option>
+                      <option value="Wales">Wales</option>
+                      <option value="Northern Ireland">Northern Ireland</option>
+                    </GovUK.Select>
                   </GovUK.FormGroup>
 
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
@@ -320,4 +291,4 @@ const ExporterDetails = () => {
   );
 };
 
-export default ExporterDetails;
+export default ExporterManual;

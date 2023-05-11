@@ -95,9 +95,28 @@ export const validateWasteDescription: (
 
 export const validatePostcode: (postcode?: string) => string = (postcode) => {
   if (postcode?.length === 0) return 'Enter a postcode';
-  const regex = new RegExp('^[a-z]{1,2}\\d[a-z\\d]?\\s*\\d[a-z]{2}$');
+  const regex = new RegExp(
+    '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$'
+  );
   if (!regex.test(postcode)) {
     return 'Enter a real postcode';
+  }
+};
+
+export const validateEmail: (email?: string) => string = (email) => {
+  if (email?.length === 0) return 'Enter an email';
+  const regex = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+  if (!regex.test(email)) {
+    return 'Enter a real email';
+  }
+};
+
+export const validatePhone: (phone?: string) => string = (phone) => {
+  if (phone?.length === 0) return 'Enter an phone mumber';
+  const regex = new RegExp(
+    '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
+  );  if (!regex.test(phone)) {
+     return 'Enter a real phone number';
   }
 };
 
@@ -105,6 +124,31 @@ export const validateSelectAddress: (address?: string) => string = (
   address
 ) => {
   if (address === '' || address === undefined) return 'Select an address';
+};
+
+export const validateTownCity: (townCity?: string) => string = (townCity) => {
+  if (townCity?.length === 0 || townCity === undefined)
+    return 'Enter a town or city';
+};
+
+export const validateCountry: (country?: string) => string = (country) => {
+  if (country?.length === 0 || country === undefined) return 'Select an option';
+};
+
+export const validateAddress: (address?: string) => string = (address) => {
+  if (address?.length === 0 || address === undefined) return 'Enter an address';
+};
+
+export const validateOrganisationName: (organisationName?: string) => string = (
+  organisationName
+) => {
+  if (organisationName?.length === 0 || organisationName === undefined)
+    return 'Enter an organisation name';
+};
+
+export const validateFullName: (fullName?: string) => string = (fullName) => {
+  if (fullName?.length === 0 || fullName === undefined)
+    return 'Enter an full name';
 };
 
 export const validateQuantityType: (quantityType?: string) => string = (

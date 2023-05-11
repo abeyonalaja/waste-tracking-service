@@ -252,7 +252,10 @@ const Tasklist = () => {
                         <Table.Cell setWidth="one-half">
                           <AppLink
                             href={{
-                              pathname: '/exporter-postcode',
+                              pathname: (
+                                tasklistPage.data?.exporterDetail.status === 'Started' || tasklistPage.data?.exporterDetail.status === 'Complete')
+                              ? `/exporter-details`
+                              : `/exporter-postcode`,
                               query: { id },
                             }}
                             id="exporter-details"

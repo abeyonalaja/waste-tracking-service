@@ -262,7 +262,7 @@ const ExporterPostcode = () => {
                   <Paragraph>
                     <AppLink
                       href={{
-                        pathname: 'exporter-address',
+                        pathname: 'exporter-details-manual',
                         query: { id },
                       }}
                     >
