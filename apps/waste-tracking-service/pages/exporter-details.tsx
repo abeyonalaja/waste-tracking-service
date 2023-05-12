@@ -167,10 +167,7 @@ const ExporterDetails = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            router.push({
-              pathname: '/exporter-postcode',
-              query: { id },
-            });
+            history.back();
           }}
         >
           Back

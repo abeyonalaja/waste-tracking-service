@@ -154,10 +154,7 @@ const ExporterManual = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            router.push({
-              pathname: '/submit-an-export-tasklist',
-              query: { id },
-            });
+            history.back();
           }}
         >
           Back
