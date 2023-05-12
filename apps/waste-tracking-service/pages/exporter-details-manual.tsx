@@ -94,8 +94,12 @@ const ExporterManual = () => {
     }
   }, [router.isReady, router.query.id]);
 
+  const handleLinkSubmit = (e) => {
+    handleSubmit(e, true);
+  };
+
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
         postcode: validatePostcode(postcode),
         townCity: validateTownCity(townCity),
@@ -133,8 +137,11 @@ const ExporterManual = () => {
             })
             .then((data) => {
               if (data !== undefined) {
+                const path = returnToDraft
+                  ? '/submit-an-export-tasklist'
+                  : '/exporter-details';
                 router.push({
-                  pathname: '/exporter-details',
+                  pathname: path,
                   query: { id },
                 });
               }
@@ -272,12 +279,7 @@ const ExporterManual = () => {
                   </GovUK.FormGroup>
 
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink
-                    href={{
-                      pathname: '/submit-an-export-tasklist',
-                      query: { id },
-                    }}
-                  />
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}

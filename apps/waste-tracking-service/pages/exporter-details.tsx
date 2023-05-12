@@ -107,8 +107,12 @@ const ExporterDetails = () => {
     }
   }, [router.isReady, id]);
 
+  const handleLinkSubmit = (e) => {
+    handleSubmit(e, true);
+  };
+
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
         organisationName: validateOrganisationName(organisationName),
         fullName: validateFullName(fullName),
@@ -146,8 +150,11 @@ const ExporterDetails = () => {
             })
             .then((data) => {
               if (data !== undefined) {
+                const path = returnToDraft
+                  ? '/submit-an-export-tasklist'
+                  : '/submit-an-export-tasklist';
                 router.push({
-                  pathname: '/submit-an-export-tasklist',
+                  pathname: path,
                   query: { id },
                 });
               }
@@ -217,7 +224,10 @@ const ExporterDetails = () => {
                 </Paragraph>
                 <LinkP>
                   <AppLink
-                    href={{ pathname: '/exporter-details-manual', query: { id } }}
+                    href={{
+                      pathname: '/exporter-details-manual',
+                      query: { id },
+                    }}
                   >
                     Change address
                   </AppLink>
@@ -301,12 +311,7 @@ const ExporterDetails = () => {
                   </GovUK.FormGroup>
 
                   <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink
-                    href={{
-                      pathname: '/submit-an-export-tasklist',
-                      query: { id },
-                    }}
-                  />
+                  <SaveReturnLink onClick={handleLinkSubmit} />
                 </form>
               </>
             )}
