@@ -135,10 +135,14 @@ const ExporterPostcode = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            router.push({
-              pathname: '/submit-an-export-tasklist',
-              query: { id },
-            });
+            if (addresses) {
+              setAddresses(null)
+            } else {
+              router.push({
+                pathname: '/submit-an-export-tasklist',
+                query: { id },
+              });
+            }
           }}
         >
           Back
