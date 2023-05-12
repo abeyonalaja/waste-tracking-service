@@ -6,6 +6,7 @@ import {
   GetDraftImporterDetailByIdRequest,
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteQuantityByIdRequest,
+  GetDraftCollectionDateByIdRequest,
   GetDraftsRequest,
   schema,
 } from '@wts/api/annex-vii';
@@ -48,4 +49,9 @@ export const getDraftExporterDetailByIdRequest =
 export const getDraftImporterDetailByIdRequest =
   ajv.compileParser<GetDraftImporterDetailByIdRequest>(
     schema.getDraftImporterDetailByIdRequest
+  );
+
+export const getDraftCollectionDateByIdRequest =
+  ajv.compileParser<GetDraftCollectionDateByIdRequest>(
+    schema.getDraftCollectionDateByIdRequest
   );

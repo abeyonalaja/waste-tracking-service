@@ -86,6 +86,33 @@ export type DraftImporterDetailData = {
   };
 };
 
+export type Date = {
+  day: string;
+  month: string;
+  year: string;
+};
+
+export type DraftCollectionDate =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        day: string;
+        month: string;
+        year: string;
+      };
+    }
+  | {
+      status: 'Complete';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        day: string;
+        month: string;
+        year: string;
+      };
+    };
+
 export type DraftExporterDetail =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<DraftExporterDetailData>)
@@ -109,7 +136,7 @@ export type DraftSubmission = {
   wasteQuantity: DraftWasteQuantity;
   exporterDetail: DraftExporterDetail;
   importerDetail: DraftImporterDetail;
-  collectionDate: NotStartedSection;
+  collectionDate: DraftCollectionDate;
   carriers: NotStartedSection;
   collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
@@ -219,5 +246,20 @@ export type SetDraftImporterDetailByIdRequest = IdRequest &
 export type SetDraftImporterDetailByIdResponse = Response<void>;
 export const setDraftImporterDetailById: Method = {
   name: 'setDraftImporterDetailById',
+  httpVerb: 'POST',
+};
+
+export type GetDraftCollectionDateByIdRequest = IdRequest & AccountIdRequest;
+export type GetDraftCollectionDateByIdResponse = Response<DraftCollectionDate>;
+export const getDraftCollectionDateById: Method = {
+  name: 'getDraftCollectionDateById',
+  httpVerb: 'POST',
+};
+
+export type SetDraftCollectionDateByIdRequest = IdRequest &
+  AccountIdRequest & { value: DraftCollectionDate };
+export type SetDraftCollectionDateByIdResponse = Response<void>;
+export const setDraftCollectionDateById: Method = {
+  name: 'setDraftCollectionDateById',
   httpVerb: 'POST',
 };

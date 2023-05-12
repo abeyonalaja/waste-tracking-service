@@ -6,12 +6,14 @@ export {
   getDraftImporterDetailById,
   getDraftWasteDescriptionById,
   getDraftWasteQuantityById,
+  getDraftCollectionDateById,
   getDrafts,
   setDraftCustomerReferenceById,
   setDraftExporterDetailById,
   setDraftImporterDetailById,
   setDraftWasteDescriptionById,
   setDraftWasteQuantityById,
+  setDraftCollectionDateById,
 } from './dto';
 
 export type {
@@ -31,6 +33,8 @@ export type {
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdRequest,
   GetDraftWasteQuantityByIdResponse,
+  GetDraftCollectionDateByIdRequest,
+  GetDraftCollectionDateByIdResponse,
   GetDraftsRequest,
   GetDraftsResponse,
   SetDraftCustomerReferenceByIdRequest,
@@ -43,6 +47,9 @@ export type {
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdRequest,
   SetDraftWasteQuantityByIdResponse,
+  SetDraftCollectionDateByIdRequest,
+  SetDraftCollectionDateByIdResponse,
+  Date,
 } from './dto';
 
 export * as schema from './schema';

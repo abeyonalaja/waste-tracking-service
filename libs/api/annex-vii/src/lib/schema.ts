@@ -6,6 +6,7 @@ import {
   GetDraftCustomerReferenceByIdRequest,
   GetDraftExporterDetailByIdRequest,
   GetDraftImporterDetailByIdRequest,
+  GetDraftCollectionDateByIdRequest,
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteQuantityByIdRequest,
   GetDraftsRequest,
@@ -208,6 +209,36 @@ const draftImporterDetail: SchemaObject = {
   },
 };
 
+const draftCollectionDate: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {},
+      optionalProperties: {
+        value: {
+          type: { enum: ['EstimateDate', 'ActualDate'] },
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
+        },
+      },
+    },
+    Complete: {
+      properties: {
+        value: {
+          type: { enum: ['EstimateDate', 'ActualDate'] },
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
 const notStartedSection: SchemaObject = {
   properties: {
     status: {
@@ -232,7 +263,7 @@ const draftSubmission: SchemaObject = {
     wasteQuantity: draftWasteQuantity,
     exporterDetail: draftExporterDetail,
     importerDetail: draftImporterDetail,
-    collectionDate: notStartedSection,
+    collectionDate: draftCollectionDate,
     carriers: notStartedSection,
     collectionDetail: notStartedSection,
     ukExitLocation: notStartedSection,
@@ -460,6 +491,38 @@ export const setDraftImporterDetailByIdRequest: SchemaObject = {
 };
 
 export const setDraftImporterDetailByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftCollectionDateByIdRequest: JTDSchemaType<GetDraftCollectionDateByIdRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftCollectionDateByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftCollectionDate,
+  },
+};
+
+export const setDraftCollectionDateByIdRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftCollectionDate,
+  },
+};
+
+export const setDraftCollectionDateByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

@@ -5,8 +5,10 @@ import {
   PutWasteQuantityRequest,
   PutExporterDetailRequest,
   PutImporterDetailRequest,
+  PutCollectionDateRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
+import { JSONSchemaType } from 'ajv';
 
 const ajv = new Ajv();
 
@@ -202,6 +204,67 @@ export const validatePutImporterDetailRequest =
         properties: {
           importerAddressDetails: { ref: 'importerAddressDetails' },
           importerContactDetails: { ref: 'importerContactDetails' },
+        },
+      },
+    },
+  });
+
+// export const validatePutCollectionDateRequest = ajv.compile<PutCollectionDateRequest>({
+//   definitions: {
+//     value: {
+//       properties: {
+//         type: { enum: ['EstimateDate', 'ActualDate'] },
+//         day: { type: 'integer', minimum: 1, maximum: 31 },
+//         month: { type: 'integer', minimum: 1, maximum: 12 },
+//         year: { type: 'integer', minimum: 1900, maximum: 2100 },
+//       },
+//     },
+//   },
+//   discriminator: 'status',
+//   mapping: {
+//     NotStarted: {
+//       properties: {},
+//     },
+//     Started: {
+//       properties: {},
+//       optionalProperties: {
+//         value: { ref: 'value' },
+//       },
+//     },
+//     Complete: {
+//       properties: {
+//         value: { ref: 'value' },
+//       },
+//     },
+//   },
+// });
+
+export const validatePutCollectionDateRequest =
+  ajv.compile<PutCollectionDateRequest>({
+    definitions: {
+      value: {
+        properties: {
+          type: { enum: ['EstimateDate', 'ActualDate'] },
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      NotStarted: {
+        properties: {},
+      },
+      Started: {
+        properties: {},
+        optionalProperties: {
+          value: { ref: 'value' },
+        },
+      },
+      Complete: {
+        properties: {
+          value: { ref: 'value' },
         },
       },
     },

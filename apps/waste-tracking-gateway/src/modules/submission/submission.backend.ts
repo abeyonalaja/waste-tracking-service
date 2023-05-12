@@ -7,11 +7,13 @@ import {
   GetDraftImporterDetailByIdResponse,
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdResponse,
+  GetDraftCollectionDateByIdResponse,
   SetDraftCustomerReferenceByIdResponse,
   SetDraftExporterDetailByIdResponse,
   SetDraftImporterDetailByIdResponse,
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdResponse,
+  SetDraftCollectionDateByIdResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -24,6 +26,7 @@ export type WasteDescription = dto.WasteDescription;
 export type WasteQuantity = dto.WasteQuantity;
 export type ExporterDetail = dto.ExporterDetail;
 export type ImporterDetail = dto.ImporterDetail;
+export type CollectionDate = dto.CollectionDate;
 
 export type SubmissionRef = {
   id: string;
@@ -52,6 +55,8 @@ export interface SubmissionBackend {
   setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
   getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
   setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
+  getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
+  setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
 }
 
 /**
@@ -229,6 +234,29 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.importerDetail = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getCollectionDate({ id }: SubmissionRef): Promise<CollectionDate> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.collectionDate);
+  }
+
+  setCollectionDate(
+    { id }: SubmissionRef,
+    value: CollectionDate
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.collectionDate = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -492,6 +520,53 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     let response: SetDraftImporterDetailByIdResponse;
     try {
       response = await this.client.setDraftImporterDetailById({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getCollectionDate({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CollectionDate> {
+    let response: GetDraftCollectionDateByIdResponse;
+    try {
+      response = await this.client.getDraftCollectionDateById({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setCollectionDate(
+    { id, accountId }: SubmissionRef,
+    value: CollectionDate
+  ): Promise<void> {
+    let response: SetDraftCollectionDateByIdResponse;
+    try {
+      response = await this.client.setDraftCollectionDatelById({
         id,
         accountId,
         value,

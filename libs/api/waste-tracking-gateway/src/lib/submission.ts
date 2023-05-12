@@ -43,6 +43,27 @@ export type ImporterDetailData = {
   };
 };
 
+export type CollectionDate =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        day: string;
+        month: string;
+        year: string;
+      };
+    }
+  | {
+      status: 'Complete';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        day: string;
+        month: string;
+        year: string;
+      };
+    };
+
 export type WasteDescription =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
@@ -95,7 +116,7 @@ export type Submission = {
   wasteQuantity: WasteQuantity;
   exporterDetail: ExporterDetail;
   importerDetail: ImporterDetail;
-  collectionDate: NotStartedSection;
+  collectionDate: CollectionDate;
   carriers: NotStartedSection;
   collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
@@ -123,3 +144,6 @@ export type GetExporterDetailResponse = ExporterDetail;
 export type PutImporterDetailRequest = ImporterDetail;
 export type PutImporterDetailResponse = ImporterDetail;
 export type GetImporterDetailResponse = ImporterDetail;
+export type PutCollectionDateRequest = CollectionDate;
+export type PutCollectionDateResponse = CollectionDate;
+export type GetCollectionDateResponse = CollectionDate;

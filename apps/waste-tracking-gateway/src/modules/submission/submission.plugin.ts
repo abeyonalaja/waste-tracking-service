@@ -7,10 +7,12 @@ import {
   validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
+  validatePutCollectionDateRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
 import { Logger } from 'winston';
+import {isValidCollectionDate} from '@wts/util/date';
 
 export interface PluginOptions {
   backend: SubmissionBackend;
@@ -298,6 +300,60 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutImporterDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/collection-date',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getCollectionDate({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetCollectionDateResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/collection-date',
+      handler: async function ({ params, payload }) {
+        if (!validatePutCollectionDateRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutCollectionDateRequest;
+        if (request.status !== 'NotStarted' && request.value) {
+          const { day, month, year } = request.value;
+          if (!isValidCollectionDate(day, month, year)) {
+            return Boom.badRequest();
+          }
+        }
+
+        try {
+          await backend.setCollectionDate(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutCollectionDateResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

@@ -4,6 +4,7 @@ import {
   SetDraftImporterDetailByIdRequest,
   SetDraftWasteDescriptionByIdRequest,
   SetDraftWasteQuantityByIdRequest,
+  SetDraftCollectionDateByIdRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -33,4 +34,9 @@ export const setDraftExporterDetailByIdRequest =
 export const setDraftImporterDetailByIdRequest =
   ajv.compile<SetDraftImporterDetailByIdRequest>(
     schema.setDraftImporterDetailByIdRequest
+  );
+
+export const setDraftCollectionDateByIdRequest =
+  ajv.compile<SetDraftCollectionDateByIdRequest>(
+    schema.setDraftCollectionDateByIdRequest
   );

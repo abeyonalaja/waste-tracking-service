@@ -6,6 +6,7 @@ import {
   validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
+  validatePutCollectionDateRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -359,5 +360,69 @@ describe('validatePutImporterDetailRequest', () => {
       },
     };
     expect(validatePutImporterDetailRequest(data)).toBe(false);
+  });
+});
+
+describe('validatePutCollectionDateRequest', () => {
+  const validate = validatePutCollectionDateRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'NotStarted',
+        value: {
+          type: 'ActualDate',
+        },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        value: {
+          type: 'EstimateData',
+        },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Started',
+        value: {
+          type: 'ActualDate',
+          day: 10,
+          month: 12,
+          year: 2020,
+        },
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        status: 'NotStarted',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
+        value: {
+          type: 'ActualDate',
+          day: '10',
+          month: '07',
+          year: '2020',
+        },
+      })
+    ).toBe(true);
   });
 });

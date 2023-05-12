@@ -14,6 +14,8 @@ import {
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdRequest,
   GetDraftWasteQuantityByIdResponse,
+  GetDraftCollectionDateByIdResponse,
+  GetDraftCollectionDateByIdRequest,
   GetDraftsRequest,
   GetDraftsResponse,
   SetDraftCustomerReferenceByIdRequest,
@@ -26,6 +28,8 @@ import {
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdRequest,
   SetDraftWasteQuantityByIdResponse,
+  SetDraftCollectionDateByIdRequest,
+  SetDraftCollectionDateByIdResponse,
   createDraft,
   getDraftById,
   getDraftCustomerReferenceById,
@@ -33,12 +37,14 @@ import {
   getDraftImporterDetailById,
   getDraftWasteDescriptionById,
   getDraftWasteQuantityById,
+  getDraftCollectionDateById,
   getDrafts,
   setDraftCustomerReferenceById,
   setDraftExporterDetailById,
   setDraftImporterDetailById,
   setDraftWasteDescriptionById,
   setDraftWasteQuantityById,
+  setDraftCollectionDateById,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -179,5 +185,27 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as SetDraftImporterDetailByIdResponse;
+  }
+
+  async getDraftCollectionDateById(
+    req: GetDraftCollectionDateByIdRequest
+  ): Promise<GetDraftCollectionDateByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftCollectionDateById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftCollectionDateByIdResponse;
+  }
+
+  async setDraftCollectionDatelById(
+    req: SetDraftCollectionDateByIdRequest
+  ): Promise<SetDraftCollectionDateByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftCollectionDateById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftCollectionDateByIdResponse;
   }
 }
