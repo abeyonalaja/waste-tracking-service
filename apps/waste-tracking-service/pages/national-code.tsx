@@ -15,13 +15,12 @@ import {
   CompleteHeader,
   ConditionalRadioWrap,
   BreadcrumbWrap,
+  Loading,
+  SubmissionNotFound,
 } from '../components';
 import { SaveReturnLink } from '../components';
-import { validateNationalCode } from '../utils/validators';
+import { isNotEmpty, validateNationalCode } from '../utils/validators';
 
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 const nationalCodeReducer = (state, action) => {
   switch (action.type) {
     case 'DATA_FETCH_INIT':
@@ -213,9 +212,9 @@ const NationalCode = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {nationalCodePage.isError && !nationalCodePage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {nationalCodePage.isLoading && <p>Loading</p>}
+            {nationalCodePage.isLoading && <Loading />}
             {!nationalCodePage.isError && !nationalCodePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
@@ -236,7 +235,7 @@ const NationalCode = () => {
                       {t('exportJourney.nationalCode.intro')}
                     </GovUK.Paragraph>
                     <GovUK.MultiChoice
-                      mb={8}
+                      mb={6}
                       hint={t('exportJourney.nationalCode.hint')}
                       label=""
                     >
@@ -249,7 +248,7 @@ const NationalCode = () => {
                         onChange={(e) => handleInputChange(e)}
                         value="Yes"
                       >
-                        Yes
+                        {t('radio.yes')}
                       </GovUK.Radio>
                       {nationalCodePage.data.nationalCode?.provided ===
                         'Yes' && (
@@ -284,7 +283,7 @@ const NationalCode = () => {
                         onChange={(e) => handleInputChange(e)}
                         value="No"
                       >
-                        No
+                        {t('radio.no')}
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>

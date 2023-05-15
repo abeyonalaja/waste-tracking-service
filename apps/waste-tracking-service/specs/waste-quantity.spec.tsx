@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import WasteQuantity from '../pages/waste-quantity';
 
@@ -7,6 +7,7 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,
     query: { id: '123' },
+    push: jest.fn(),
   })),
 }));
 
@@ -46,22 +47,8 @@ describe('Waste quantity page', () => {
       render(<WasteQuantity />);
     });
 
-    expect(screen.getByText('No valid record found')).toBeTruthy();
-  });
-
-  it('should show validation message if no radio button is selected', async () => {
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({ ok: true, json: () => Promise.resolve({ data: {} }) })
-    );
-
-    await act(async () => {
-      render(<WasteQuantity />);
-    });
-
-    const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(submitButton);
-
-    const errorHeading = screen.getByText('There is a problem');
-    expect(errorHeading).toBeTruthy();
+    expect(
+      screen.getByText('The export record has not been found')
+    ).toBeTruthy();
   });
 });

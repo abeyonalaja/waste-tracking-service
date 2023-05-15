@@ -45,7 +45,9 @@ describe('National code page', () => {
       render(<NationalCode />);
     });
 
-    expect(screen.getByText('No valid record found')).toBeTruthy();
+    expect(
+      screen.getByText('The export record has not been found')
+    ).toBeTruthy();
   });
 
   it('should show validation message if selected YES and do not enter a National code', async () => {

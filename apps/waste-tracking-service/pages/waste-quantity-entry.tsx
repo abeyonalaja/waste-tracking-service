@@ -4,7 +4,9 @@ import {
   BreadcrumbWrap,
   CompleteFooter,
   CompleteHeader,
+  Loading,
   SaveReturnLink,
+  SubmissionNotFound,
 } from '../components';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import '../i18n/config';
@@ -189,8 +191,8 @@ const WasteQuantityEntry = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {isError && !isLoading && <p>No valid record found</p>}
-            {isLoading && <p>Loading</p>}
+            {isError && !isLoading && <SubmissionNotFound />}
+            {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
@@ -214,7 +216,7 @@ const WasteQuantityEntry = () => {
                         {t('exportJourney.quantityValue.intro')}
                       </GovUK.Paragraph>
                       <GovUK.MultiChoice
-                        mb={8}
+                        mb={6}
                         label=""
                         meta={{
                           error: errors?.quantityTypeError,
@@ -259,7 +261,7 @@ const WasteQuantityEntry = () => {
                             onChange={(e) => setVolume(e.target.value)}
                             value={volume}
                             errorMessage={errors?.quantityVolumeError}
-                            suffix={t('volume.cubemeters')}
+                            suffix={t('volume.m3')}
                             hint={t('exportJourney.quantityValue.inputHint')}
                           />
                         </StyledInputWrap>

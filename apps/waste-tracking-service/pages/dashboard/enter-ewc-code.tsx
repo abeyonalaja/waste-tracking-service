@@ -16,6 +16,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   SaveReturnLink,
+  Loading,
+  SubmissionNotFound,
 } from '../../components';
 import { validateEwcCodes } from '../../utils/validators';
 import styled from 'styled-components';
@@ -258,9 +260,9 @@ const EwcCode = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {ewcCodesPage.isError && !ewcCodesPage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {ewcCodesPage.isLoading && <p>Loading</p>}
+            {ewcCodesPage.isLoading && <Loading />}
             {!ewcCodesPage.isError && !ewcCodesPage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (

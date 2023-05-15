@@ -10,6 +10,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   SaveReturnLink,
+  SubmissionNotFound,
+  Loading,
 } from '../../components';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
@@ -244,9 +246,9 @@ const EwcCodeList = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {ewcCodesPage.isError && !ewcCodesPage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {ewcCodesPage.isLoading && <p>Loading</p>}
+            {ewcCodesPage.isLoading && <Loading />}
             {!ewcCodesPage.isError &&
               !ewcCodesPage.isLoading &&
               ewcCodesPage.data.status === 'Started' && (

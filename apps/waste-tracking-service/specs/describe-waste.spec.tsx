@@ -45,7 +45,9 @@ describe('Describe the waste page', () => {
       render(<DescribeWaste />);
     });
 
-    expect(screen.getByText('No valid record found')).toBeTruthy();
+    expect(
+      screen.getByText('The export record has not been found')
+    ).toBeTruthy();
   });
 
   it('should show validation message if no content is entered', async () => {

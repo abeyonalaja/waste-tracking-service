@@ -11,6 +11,8 @@ import {
   RadiosDivider,
   BreadcrumbWrap,
   SaveReturnLink,
+  SubmissionNotFound,
+  Loading,
 } from '../components';
 import {
   validateWasteCode,
@@ -282,10 +284,8 @@ const WasteCode = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {isLoading && <p>Loading</p>}
-
-            {!isLoading && !hasValidId && <p>No valid record found</p>}
-
+            {isLoading && <Loading />}
+            {!isLoading && !hasValidId && <SubmissionNotFound />}
             {!isLoading && hasValidId && (
               <>
                 {errors && !!Object.keys(errors).length && (
@@ -303,7 +303,7 @@ const WasteCode = () => {
                       {t('exportJourney.whatsTheWasteCode.title')}
                     </GovUK.Fieldset.Legend>
                     <GovUK.MultiChoice
-                      mb={8}
+                      mb={6}
                       label=""
                       meta={{
                         error: errors?.wasteCodeCategory,

@@ -16,6 +16,8 @@ import {
   BreadcrumbWrap,
   TextareaCharCount,
   SaveReturnLink,
+  SubmissionNotFound,
+  Loading,
 } from '../components';
 import { isNotEmpty, validateWasteDescription } from '../utils/validators';
 import styled from 'styled-components';
@@ -220,9 +222,9 @@ const DescribeWaste = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {describeWastePage.isError && !describeWastePage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {describeWastePage.isLoading && <p>Loading</p>}
+            {describeWastePage.isLoading && <Loading />}
             {!describeWastePage.isError && !describeWastePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (

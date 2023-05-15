@@ -17,6 +17,8 @@ import {
   BreadcrumbWrap,
   SaveReturnLink,
   ConditionalRadioWrap,
+  SubmissionNotFound,
+  Loading,
 } from '../../components';
 import {
   isNotEmpty,
@@ -264,9 +266,9 @@ const EwcCode = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {ewcCodesPage.isError && !ewcCodesPage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {ewcCodesPage.isLoading && <p>Loading</p>}
+            {ewcCodesPage.isLoading && <Loading />}
             {!ewcCodesPage.isError && !ewcCodesPage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
@@ -284,7 +286,7 @@ const EwcCode = () => {
                       {t('exportJourney.ewcCode.title')}
                     </GovUK.Fieldset.Legend>
                     <GovUK.MultiChoice
-                      mb={8}
+                      mb={6}
                       hint="An EWC code (European Waste Catalogue code) is also known as an EC list of waste code. You must include all 6 digits."
                       label=""
                       meta={{

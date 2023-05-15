@@ -209,36 +209,6 @@ export const validatePutImporterDetailRequest =
     },
   });
 
-// export const validatePutCollectionDateRequest = ajv.compile<PutCollectionDateRequest>({
-//   definitions: {
-//     value: {
-//       properties: {
-//         type: { enum: ['EstimateDate', 'ActualDate'] },
-//         day: { type: 'integer', minimum: 1, maximum: 31 },
-//         month: { type: 'integer', minimum: 1, maximum: 12 },
-//         year: { type: 'integer', minimum: 1900, maximum: 2100 },
-//       },
-//     },
-//   },
-//   discriminator: 'status',
-//   mapping: {
-//     NotStarted: {
-//       properties: {},
-//     },
-//     Started: {
-//       properties: {},
-//       optionalProperties: {
-//         value: { ref: 'value' },
-//       },
-//     },
-//     Complete: {
-//       properties: {
-//         value: { ref: 'value' },
-//       },
-//     },
-//   },
-// });
-
 export const validatePutCollectionDateRequest =
   ajv.compile<PutCollectionDateRequest>({
     definitions: {

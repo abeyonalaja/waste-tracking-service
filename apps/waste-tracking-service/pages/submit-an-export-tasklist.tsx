@@ -10,6 +10,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   DocumentStatus,
+  SubmissionNotFound,
+  Loading,
 } from '../components';
 import styled from 'styled-components';
 
@@ -156,9 +158,9 @@ const Tasklist = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {tasklistPage.isError && !tasklistPage.isLoading && (
-              <p>No valid record found</p>
+              <SubmissionNotFound />
             )}
-            {tasklistPage.isLoading && <p>Loading</p>}
+            {tasklistPage.isLoading && <Loading />}
             {!tasklistPage.isError && !tasklistPage.isLoading && (
               <>
                 {tasklistPage.data?.reference ? (
@@ -252,11 +254,14 @@ const Tasklist = () => {
                         <Table.Cell setWidth="one-half">
                           <AppLink
                             href={{
-                              pathname: (
-                                tasklistPage.data?.exporterDetail.status === 'Started' || tasklistPage.data?.exporterDetail.status === 'Complete')
-                              ? `/exporter-details`
-                              : `/exporter-postcode`,
-                              query: { id },
+                              pathname:
+                                tasklistPage.data?.exporterDetail.status ===
+                                  'Started' ||
+                                tasklistPage.data?.exporterDetail.status ===
+                                  'Complete'
+                                  ? `/exporter-details`
+                                  : `/exporter-postcode`,
+                              query: { id, dashboard: true },
                             }}
                             id="exporter-details"
                           >
@@ -297,9 +302,15 @@ const Tasklist = () => {
                     <Table>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <AppLink href="" id="collection-details">
+                          <AppLink
+                            href={{
+                              pathname: '/waste-collection-date',
+                              query: { id, dashboard: true },
+                            }}
+                            id="collection-date"
+                          >
                             {t(
-                              'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
+                              'exportJourney.submitAnExport.SectionThree.collectionDate'
                             )}
                           </AppLink>
                         </Table.Cell>

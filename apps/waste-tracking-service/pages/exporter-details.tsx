@@ -10,6 +10,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   SaveReturnLink,
+  Loading,
+  SubmissionNotFound,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -196,8 +198,8 @@ const ExporterDetails = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {isError && !isLoading && <p>No valid record found</p>}
-            {isLoading && <p>Loading</p>}
+            {isError && !isLoading && <SubmissionNotFound />}
+            {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
                 <GovUK.Heading size={'LARGE'}>

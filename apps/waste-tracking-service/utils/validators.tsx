@@ -1,4 +1,7 @@
+import moment from 'moment';
 import aOrAn from './aOrAn';
+import { isValidCollectionDate } from '@wts/util/date';
+import { isPast, isValid, addBusinessDays, differenceInDays } from 'date-fns';
 
 export function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
@@ -115,8 +118,9 @@ export const validatePhone: (phone?: string) => string = (phone) => {
   if (phone?.length === 0) return 'Enter an phone mumber';
   const regex = new RegExp(
     '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
-  );  if (!regex.test(phone)) {
-     return 'Enter a real phone number';
+  );
+  if (!regex.test(phone)) {
+    return 'Enter a real phone number';
   }
 };
 
@@ -176,4 +180,40 @@ export const validateQuantityValue: (
       return 'Enter a weight under 25kg';
     }
   }
+};
+
+export const validateDateType: (value?: string) => string | undefined = (
+  value
+) =>
+  value ? undefined : 'Select yes if you know when the waste will be collected';
+
+interface Date {
+  day: string;
+  month: string;
+  year: string;
+}
+
+const isValidDate = (date) => {
+  const dateParts = date.split('/');
+  const d = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+  return d && d.getMonth() + 1 == dateParts[1];
+};
+export const validateDate: (date: Date) => string | undefined = (
+  date: Date
+) => {
+  const day = Number(date?.day);
+  const month = Number(date?.month);
+  const year = Number(date?.year);
+  const dateString = new Date(year, month - 1, day);
+
+  if (!isValid(dateString)) return 'Enter a real date';
+
+  const dateStringRaw = `${day}/${month}/${year}`;
+  if (!isValidDate(dateStringRaw)) return 'Enter a real date';
+
+  if (isPast(dateString)) return 'Enter a date in the future';
+
+  const threeWorkingDaysFromToday = addBusinessDays(new Date(), 3);
+  if (differenceInDays(dateString, threeWorkingDaysFromToday) < 0)
+    return 'Enter a date at least 3 business days in the future';
 };

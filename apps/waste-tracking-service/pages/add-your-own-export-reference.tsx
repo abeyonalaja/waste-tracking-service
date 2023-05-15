@@ -172,7 +172,7 @@ export function AddYourOwnExportReference() {
                   {t('yourReference.title')}
                 </GovUK.Fieldset.Legend>
                 <GovUK.MultiChoice
-                  mb={8}
+                  mb={6}
                   hint={t('yourReference.hint')}
                   meta={{
                     error: errors?.ownReference,
