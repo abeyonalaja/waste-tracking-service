@@ -31,7 +31,7 @@ Feature: AS A waste producer
     And I select first address from the lookup
     And I click Continue button
     Then the "exporter address" page is displayed
-    And I verify address is visible with Change address link displayed on the page
+    And I should selected address is displayed with Change address link on the page
 
   Scenario: User change already entered address from Change address option
     Given I login to waste tracking portal
@@ -43,7 +43,7 @@ Feature: AS A waste producer
     And I select first address from the lookup
     And I click Continue button
     Then the "Exporter details" page is displayed
-    And I verify address is visible with Change address link displayed on the page
+    And I should selected address is displayed with Change address link on the page
     And I click the "Change address" link
     Then the "Exporter address" page is displayed
 
@@ -83,5 +83,15 @@ Feature: AS A waste producer
     Then the "exporter address" page is displayed
     And I click Find Address button
     Then I remain on the exporter address page with an "Enter a postcode" error message displayed
+
+  Scenario: User can't continue without selecting an address from the list
+    Given I login to waste tracking portal
+    When I navigate to the submit an export with reference
+    And I click the "Exporter details" link
+    Then the "Exporter address" page is displayed
+    When I enter valid postcode
+    And I click Find Address button
+    And I click Continue button
+    Then I remain on the exporter address page with an "Select an address" error message displayed
 
 

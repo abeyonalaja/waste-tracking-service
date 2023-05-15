@@ -29,8 +29,12 @@ class SubmitAnExportPage < GenericPage
     click_on 'Waste codes and description'
   end
 
+  def exporter_details
+    click_on 'Exporter details'
+  end
+
   private
-  
+
   def task_status(status)
     case status.downcase
     when 'completed'

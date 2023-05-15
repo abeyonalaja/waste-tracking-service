@@ -13,12 +13,16 @@ class ExporterAddressPage < GenericPage
     expect(self).to have_css 'h1', text: "What's the exporter's address?", exact_text: true
   end
 
-  def enter_input_value(input_value)
+  def enter_postcode(input_value)
     fill_in POSTCODE_FIELD_ID, with: input_value, visible: false
   end
 
-  def has_reference?(postcode)
-    find(POSTCODE_FIELD_ID).value == postcode
+  def has_postcode?(postocde)
+    find(POSTCODE_FIELD_ID).value == postocde
+  end
+
+  def has_address?(postcode)
+    find(:css, "[class^='exporter-details__Paragraph-sc']").text.gsub(/\n+\s*/m, ',') == postcode.gsub(/, /, ',')
   end
 
   def check_page_translation
@@ -40,6 +44,35 @@ class ExporterAddressPage < GenericPage
 
   def select_first_address
     first('selectedAddress', minimum: 1)
-    find(:css, '#selectedAddress>option:nth-child(2)', minimum: 1).select_option
+    find(:css, '#selectedAddress>option:nth-child(2)').select_option
+    TestStatus.set_test_status(:exporter_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
+  end
+
+  def find_address
+    click_on Translations.value 'postcode.findButton'
+  end
+
+  def enter_address_manually
+    click_on Translations.value 'postcode.manualAddressLink'
+  end
+
+  def address_line_1(address__1)
+    fill_in 'address', with: '', visible: false
+    fill_in 'address', with: address__1, visible: false
+  end
+
+  def address_line_2(address_2)
+    fill_in 'address2', with: '', visible: false
+    fill_in 'address2', with: address_2, visible: false
+  end
+
+  def town_city(town)
+    fill_in 'townCity', with: '', visible: false
+    fill_in 'townCity', with: town, visible: false
+  end
+
+  def exporter_postcode(postcode)
+    fill_in 'postcode', with: '', visible: false
+    fill_in 'postcode', with: postcode, visible: false
   end
 end
