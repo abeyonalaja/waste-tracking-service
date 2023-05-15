@@ -132,7 +132,7 @@ export const validateTownCity: (townCity?: string) => string = (townCity) => {
 };
 
 export const validateCountry: (country?: string) => string = (country) => {
-  if (country?.length === 0 || country === undefined) return 'Select an option';
+  if (country?.length === 0 || country === undefined) return 'Select a country';
 };
 
 export const validateAddress: (address?: string) => string = (address) => {
