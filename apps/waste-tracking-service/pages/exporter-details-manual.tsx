@@ -262,6 +262,7 @@ const ExporterManual = () => {
                       input={{
                         name: 'country',
                         value: country,
+                        id: 'country',
                         onChange: (e) => setCountry(e.target.value),
                       }}
                       meta={{

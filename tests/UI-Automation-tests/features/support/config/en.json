@@ -124,5 +124,10 @@
   "exportJourney.quantityValueSmall.Actual.title": "What is the actual net weight of the waste?",
   "exportJourney.quantityValueSmall.Estimate.title": "What is the estimated net weight of the waste?",
   "exportJourney.quantityValueSmall.intro": "It must be under 25kg. Do not include the weight of the container or vehicle.",
-  "exportJourney.quantityValueSmall.weightLabel": "Weight in kilograms"
+  "exportJourney.quantityValueSmall.weightLabel": "Weight in kilograms",
+  "exportJourney.exporterManual.addressOneLabel": "Address line 1",
+  "exportJourney.exporterManual.addressTwoLabel": "Address line 2 (optional)",
+  "exportJourney.exporterManual.townLabel": "Town or city",
+  "exportJourney.exporterManual.postCodeLabel": "Postcode",
+  "exportJourney.exporterManual.countryLabel": "Country"
 }
