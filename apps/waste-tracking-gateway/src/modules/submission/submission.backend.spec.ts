@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { expect } from '@jest/globals';
 import { InMemorySubmissionBackend } from './submission.backend';
+import { add } from 'date-fns';
 
 describe(InMemorySubmissionBackend, () => {
   let subject: InMemorySubmissionBackend;
@@ -97,6 +98,45 @@ describe(InMemorySubmissionBackend, () => {
     ).rejects.toHaveProperty('isBoom', true);
     expect(
       subject.getCustomerReference({ id, accountId })
+    ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it('rejects if collection date less than three days in future', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const date = add(new Date(), { days: 1 });
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+        }
+      )
+    ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it("rejects if collection date values aren't numbers", async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: 'X',
+            month: '01',
+            day: '01',
+          },
+        }
+      )
     ).rejects.toHaveProperty('isBoom', true);
   });
 });

@@ -12,7 +12,6 @@ import {
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
 import { Logger } from 'winston';
-import {isValidCollectionDate} from '@wts/util/date';
 
 export interface PluginOptions {
   backend: SubmissionBackend;
@@ -341,13 +340,6 @@ const plugin: Plugin<PluginOptions> = {
         }
 
         const request = payload as dto.PutCollectionDateRequest;
-        if (request.status !== 'NotStarted' && request.value) {
-          const { day, month, year } = request.value;
-          if (!isValidCollectionDate(day, month, year)) {
-            return Boom.badRequest();
-          }
-        }
-
         try {
           await backend.setCollectionDate(
             { id: params.id, accountId },

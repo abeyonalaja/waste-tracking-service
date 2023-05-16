@@ -380,6 +380,12 @@ describe('validatePutCollectionDateRequest', () => {
 
     expect(
       validate({
+        status: 'Started',
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
         status: 'Complete',
         value: {
           type: 'EstimateData',
@@ -389,7 +395,7 @@ describe('validatePutCollectionDateRequest', () => {
 
     expect(
       validate({
-        status: 'Started',
+        status: 'Complete',
         value: {
           type: 'ActualDate',
           day: 10,
@@ -409,13 +415,7 @@ describe('validatePutCollectionDateRequest', () => {
 
     expect(
       validate({
-        status: 'Started',
-      })
-    ).toBe(true);
-
-    expect(
-      validate({
-        status: 'Started',
+        status: 'Complete',
         value: {
           type: 'ActualDate',
           day: '10',

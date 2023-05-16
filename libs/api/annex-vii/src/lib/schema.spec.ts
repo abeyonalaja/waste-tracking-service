@@ -3,6 +3,7 @@ import Ajv from 'ajv/dist/jtd';
 import {
   GetDraftByIdResponse,
   GetDraftsResponse,
+  SetDraftCollectionDateByIdRequest,
   SetDraftCustomerReferenceByIdResponse,
   SetDraftWasteQuantityByIdRequest,
 } from './dto';
@@ -11,6 +12,7 @@ import {
   getDraftsResponse,
   setDraftCustomerReferenceByIdResponse,
   setDraftWasteQuantityByIdRequest,
+  setDraftCollectionDateByIdRequest,
 } from './schema';
 
 const ajv = new Ajv();
@@ -143,6 +145,38 @@ describe('setDraftWasteQuantityByIdRequest', () => {
           type: 'ActualData',
           quantityType: 'Volume',
           value: 12,
+        },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftCollectionDateByIdRequest', () => {
+  const validate = ajv.compile<SetDraftCollectionDateByIdRequest>(
+    setDraftCollectionDateByIdRequest
+  );
+
+  it('is compatible with dto values', () => {
+    let value: SetDraftCollectionDateByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: { status: 'NotStarted' },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: '1970',
+          month: '00',
+          day: '01',
         },
       },
     };

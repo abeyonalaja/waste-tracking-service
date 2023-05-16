@@ -8,7 +8,6 @@ import {
   PutCollectionDateRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
-import { JSONSchemaType } from 'ajv';
 
 const ajv = new Ajv();
 
@@ -211,30 +210,21 @@ export const validatePutImporterDetailRequest =
 
 export const validatePutCollectionDateRequest =
   ajv.compile<PutCollectionDateRequest>({
-    definitions: {
-      value: {
-        properties: {
-          type: { enum: ['EstimateDate', 'ActualDate'] },
-          day: { type: 'string' },
-          month: { type: 'string' },
-          year: { type: 'string' },
-        },
-      },
-    },
     discriminator: 'status',
     mapping: {
       NotStarted: {
         properties: {},
       },
-      Started: {
-        properties: {},
-        optionalProperties: {
-          value: { ref: 'value' },
-        },
-      },
       Complete: {
         properties: {
-          value: { ref: 'value' },
+          value: {
+            properties: {
+              type: { enum: ['EstimateDate', 'ActualDate'] },
+              day: { type: 'string' },
+              month: { type: 'string' },
+              year: { type: 'string' },
+            },
+          },
         },
       },
     },

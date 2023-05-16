@@ -64,7 +64,7 @@ const WasteCollectionDate = () => {
         })
         .then((data: GetCollectionDateResponse) => {
           if (data !== undefined) {
-            if (data.status === 'Started' || data.status === 'Complete') {
+            if (data.status === 'Complete') {
               setDateType(data.value.type);
               setCollectionDate({
                 day: data.value.day,

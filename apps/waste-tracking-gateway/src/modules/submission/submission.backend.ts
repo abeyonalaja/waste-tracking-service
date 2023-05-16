@@ -19,6 +19,7 @@ import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
+import { addBusinessDays } from 'date-fns';
 
 export type Submission = dto.Submission;
 export type CustomerReference = dto.CustomerReference;
@@ -254,6 +255,24 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
+    }
+
+    if (value.status !== 'NotStarted') {
+      const { day: dayStr, month: monthStr, year: yearStr } = value.value;
+
+      const [day, month, year] = [
+        parseInt(dayStr),
+        parseInt(monthStr) - 1,
+        parseInt(yearStr),
+      ];
+
+      if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+        return Promise.reject(Boom.badRequest());
+      }
+
+      if (new Date(year, month, day) < addBusinessDays(new Date(), 3)) {
+        return Promise.reject(Boom.badRequest());
+      }
     }
 
     submission.collectionDate = value;

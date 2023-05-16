@@ -49,7 +49,6 @@ export type {
   SetDraftWasteQuantityByIdResponse,
   SetDraftCollectionDateByIdRequest,
   SetDraftCollectionDateByIdResponse,
-  Date,
 } from './dto';
 
 export * as schema from './schema';

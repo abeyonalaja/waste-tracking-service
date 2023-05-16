@@ -86,23 +86,8 @@ export type DraftImporterDetailData = {
   };
 };
 
-export type Date = {
-  day: string;
-  month: string;
-  year: string;
-};
-
 export type DraftCollectionDate =
   | { status: 'NotStarted' }
-  | {
-      status: 'Started';
-      value: {
-        type: 'EstimateDate' | 'ActualDate';
-        day: string;
-        month: string;
-        year: string;
-      };
-    }
   | {
       status: 'Complete';
       value: {

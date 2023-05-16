@@ -30,7 +30,8 @@ const backend =
     : new AnnexViiServiceBackend(
         new DaprAnnexViiClient(
           new DaprClient(),
-          process.env['ANNEX_VII_APP_ID'] || 'annex-vii'),
+          process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+        ),
         logger
       );
 

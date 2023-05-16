@@ -46,15 +46,6 @@ export type ImporterDetailData = {
 export type CollectionDate =
   | { status: 'NotStarted' }
   | {
-      status: 'Started';
-      value: {
-        type: 'EstimateDate' | 'ActualDate';
-        day: string;
-        month: string;
-        year: string;
-      };
-    }
-  | {
       status: 'Complete';
       value: {
         type: 'EstimateDate' | 'ActualDate';

@@ -24,7 +24,6 @@
       "@wts/util/dapr-winston-logging": [
         "libs/util/dapr-winston-logging/src/index.ts"
       ],
-      "@wts/util/date": ["libs/util/date/src/index.ts"],
       "@wts/util/invocation": ["libs/util/invocation/src/index.ts"]
     }
   },

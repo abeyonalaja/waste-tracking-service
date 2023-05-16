@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom';
 import * as api from '@wts/api/annex-vii';
 import { fromBoom, success } from '@wts/util/invocation';
+import { addBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { DraftRepository } from '../data';
@@ -325,6 +326,28 @@ export default class DraftController {
     api.SetDraftCollectionDateByIdResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const { day: dayStr, month: monthStr, year: yearStr } = value.value;
+
+        const [day, month, year] = [
+          parseInt(dayStr),
+          parseInt(monthStr) - 1,
+          parseInt(yearStr),
+        ];
+
+        if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+          return fromBoom(Boom.badRequest('Invalid date'));
+        }
+
+        if (new Date(year, month, day) < addBusinessDays(new Date(), 3)) {
+          return fromBoom(
+            Boom.badRequest(
+              'Date should be at least three business days in the future'
+            )
+          );
+        }
+      }
+
       const draft = await this.repository.getDraft(id, accountId);
       await this.repository.saveDraft(
         { ...draft, collectionDate: value },

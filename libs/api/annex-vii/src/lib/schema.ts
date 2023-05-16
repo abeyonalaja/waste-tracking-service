@@ -215,24 +215,15 @@ const draftCollectionDate: SchemaObject = {
     NotStarted: {
       properties: {},
     },
-    Started: {
-      properties: {},
-      optionalProperties: {
-        value: {
-          type: { enum: ['EstimateDate', 'ActualDate'] },
-          day: { type: 'string' },
-          month: { type: 'string' },
-          year: { type: 'string' },
-        },
-      },
-    },
     Complete: {
       properties: {
         value: {
-          type: { enum: ['EstimateDate', 'ActualDate'] },
-          day: { type: 'string' },
-          month: { type: 'string' },
-          year: { type: 'string' },
+          properties: {
+            type: { enum: ['EstimateDate', 'ActualDate'] },
+            day: { type: 'string' },
+            month: { type: 'string' },
+            year: { type: 'string' },
+          },
         },
       },
     },

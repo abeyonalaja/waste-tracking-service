@@ -4,6 +4,7 @@ import winston from 'winston';
 import { DraftSubmission, DraftSubmissionSummary } from '../model';
 import DraftController from './draft-controller';
 import Boom from '@hapi/boom';
+import { add } from 'date-fns';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -388,6 +389,107 @@ describe(DraftController, () => {
         },
         accountId
       );
+    });
+  });
+
+  describe('setDraftCollectionDateById', () => {
+    it('accepts a valid collection date', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: {
+          status: 'Complete',
+          wasteCode: { type: 'NotApplicable' },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const date = add(new Date(), { weeks: 2 });
+      const response = await subject.setDraftCollectionDateById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: { type: 'NotApplicable' },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: {
+            status: 'Complete',
+            value: {
+              type: 'ActualDate',
+              year: date.getFullYear().toString(),
+              month: (date.getMonth() + 1).toString().padStart(2, '0'),
+              day: date.getDate().toString().padStart(2, '0'),
+            },
+          },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+
+      expect(response.success).toBe(true);
+    });
+
+    it('rejects dates less than three business dates in the future', async () => {
+      const date = add(new Date(), { days: 1 });
+      const response = await subject.setDraftCollectionDateById({
+        id: faker.datatype.uuid(),
+        accountId: faker.datatype.uuid(),
+        value: {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+        },
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.saveDraft).not.toBeCalled();
+      expect(response.error.statusCode).toBe(400);
     });
   });
 });
