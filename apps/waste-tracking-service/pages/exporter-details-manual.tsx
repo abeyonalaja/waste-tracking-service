@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import {
   validatePostcode,
   validateTownCity,
-  validateCountry,
+  validateCountrySelect,
   validateAddress,
 } from '../utils/validators';
 
@@ -105,7 +105,7 @@ const ExporterManual = () => {
       const newErrors = {
         postcode: validatePostcode(postcode),
         townCity: validateTownCity(townCity),
-        country: validateCountry(country),
+        country: validateCountrySelect(country),
         address: validateAddress(address),
       };
       if (isNotEmpty(newErrors)) {

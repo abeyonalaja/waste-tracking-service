@@ -279,7 +279,13 @@ const Tasklist = () => {
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <AppLink href="" id="importer-details">
+                          <AppLink
+                            href={{
+                              pathname: '/importer-details',
+                              query: { id },
+                            }}
+                            id="importer-details"
+                          >
                             {t(
                               'exportJourney.submitAnExport.SectionTwo.importerDetails'
                             )}

@@ -134,22 +134,25 @@ export const validateTownCity: (townCity?: string) => string = (townCity) => {
   if (townCity?.length === 0 || townCity === undefined)
     return 'Enter a town or city';
 };
+export const validateCountrySelect: (country?: string) => string = (
+  country
+) => {
+  if (country?.length === 0 || country === undefined) return 'Select a country';
+};
 
 export const validateCountry: (country?: string) => string = (country) => {
-  if (country?.length === 0 || country === undefined) return 'Select a country';
+  if (country?.length === 0 || country === undefined) return 'Enter a country';
 };
 
 export const validateAddress: (address?: string) => string = (address) => {
   if (address?.length === 0 || address === undefined) return 'Enter an address';
 };
-
 export const validateOrganisationName: (organisationName?: string) => string = (
   organisationName
 ) => {
   if (organisationName?.length === 0 || organisationName === undefined)
     return 'Enter an organisation name';
 };
-
 export const validateFullName: (fullName?: string) => string = (fullName) => {
   if (fullName?.length === 0 || fullName === undefined)
     return 'Enter an full name';
