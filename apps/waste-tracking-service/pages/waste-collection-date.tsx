@@ -85,6 +85,7 @@ const WasteCollectionDate = () => {
 
   const handleRadioChange = (e, dateType) => {
     setDateType(dateType);
+    setCollectionDate({ day: null, month: null, year: null });
   };
 
   const handleReturnClick = (e) => {
@@ -95,7 +96,10 @@ const WasteCollectionDate = () => {
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
         dateType: validateDateType(dateType),
-        date: validateDate(collectionDate),
+        date:
+          dateType === 'ActualDate' || dateType === 'EstimateDate'
+            ? validateDate(collectionDate)
+            : null,
       };
 
       if (isNotEmpty(newErrors)) {
@@ -227,15 +231,19 @@ const WasteCollectionDate = () => {
                           </GovUK.HintText>
                           <GovUK.DateField
                             defaultValues={collectionDate}
+                            errorText={errors?.date}
                             inputs={{
                               day: {
                                 maxLength: 2,
+                                id: 'wasteCollActualDay',
                               },
                               month: {
                                 maxLength: 2,
+                                id: 'wasteCollActualMonth',
                               },
                               year: {
                                 maxLength: 4,
+                                id: 'wasteCollActualYear',
                               },
                             }}
                             input={{
@@ -262,21 +270,23 @@ const WasteCollectionDate = () => {
                       {dateType === 'EstimateDate' && (
                         <ConditionalRadioWrap>
                           <GovUK.HintText>
-                            {t(
-                              'exportJourney.wasteCollectionDate.radioYesHint'
-                            )}
+                            {t('exportJourney.wasteCollectionDate.radioNoHint')}
                           </GovUK.HintText>
                           <GovUK.DateField
                             defaultValues={collectionDate}
+                            errorText={errors?.date}
                             inputs={{
                               day: {
                                 maxLength: 2,
+                                id: 'wasteCollEstimateDay',
                               },
                               month: {
                                 maxLength: 2,
+                                id: 'wasteCollEstimateMonth',
                               },
                               year: {
                                 maxLength: 4,
+                                id: 'wasteCollEstimateYear',
                               },
                             }}
                             input={{

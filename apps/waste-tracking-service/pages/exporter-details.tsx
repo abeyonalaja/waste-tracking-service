@@ -95,7 +95,6 @@ const ExporterDetails = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            console.log(data);
             setData(data);
             setOrganisationName(data.exporterContactDetails?.organisationName);
             setFullName(data.exporterContactDetails?.fullName);

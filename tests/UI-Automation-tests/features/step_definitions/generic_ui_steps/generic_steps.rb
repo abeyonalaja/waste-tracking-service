@@ -26,6 +26,10 @@ And(/^I click the button Save and continue$/) do
   click_on Translations.value 'saveButton'
 end
 
+When(/^I click the Save and return$/) do
+  click_on Translations.value 'saveReturnButton'
+end
+
 When(/^I click the "([^"]*)" link$/) do |option|
   get_key = Translations.key(option)
   click_link Translations.value(get_key)

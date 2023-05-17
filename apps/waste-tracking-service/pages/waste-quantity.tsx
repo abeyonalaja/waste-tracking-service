@@ -16,6 +16,7 @@ import { isNotEmpty, validateQuantityType } from '../utils/validators';
 import {
   GetWasteQuantityResponse,
   PutWasteQuantityRequest,
+  Submission,
 } from '@wts/api/waste-tracking-gateway';
 
 const WasteQuantity = () => {
@@ -23,6 +24,7 @@ const WasteQuantity = () => {
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState<GetWasteQuantityResponse>(null);
+  const [bulkWaste, setBulkWaste] = useState<boolean>(true);
   const [quantityType, setQuantityType] = useState(null);
   const [savedQuantityType, setSavedQuantityType] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -45,7 +47,7 @@ const WasteQuantity = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
-        quantityTypeError: validateQuantityType(quantityType),
+        quantityTypeError: validateQuantityType(quantityType, bulkWaste),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -112,9 +114,7 @@ const WasteQuantity = () => {
     setIsLoading(true);
     setIsError(false);
     if (id !== null) {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`
-      )
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -122,21 +122,30 @@ const WasteQuantity = () => {
             setIsError(true);
           }
         })
-        .then((data: GetWasteQuantityResponse) => {
+        .then((data: Submission) => {
           if (data !== undefined) {
-            setData(data);
+            setData(data.wasteQuantity);
             setIsLoading(false);
             setIsError(false);
             setQuantityType(
-              data.status === 'CannotStart' || data.status === 'NotStarted'
+              data.wasteQuantity?.status === 'CannotStart' ||
+                data.wasteQuantity?.status === 'NotStarted'
                 ? null
-                : data.value?.type
+                : data.wasteQuantity?.value.type
             );
             setSavedQuantityType(
-              data.status === 'CannotStart' || data.status === 'NotStarted'
+              data.wasteQuantity?.status === 'CannotStart' ||
+                data.wasteQuantity?.status === 'NotStarted'
                 ? null
-                : data.value?.type
+                : data.wasteQuantity?.value.type
             );
+            if (
+              (data.wasteDescription?.status === 'Started' ||
+                data.wasteDescription?.status === 'Complete') &&
+              data.wasteDescription?.wasteCode.type === 'NotApplicable'
+            ) {
+              setBulkWaste(false);
+            }
           }
         });
     }
@@ -165,7 +174,11 @@ const WasteQuantity = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.quantity.title')}</title>
+        <title>
+          {bulkWaste
+            ? t('exportJourney.quantity.bulk.title')
+            : t('exportJourney.quantity.small.title')}
+        </title>
       </Head>
       <GovUK.Page
         id="content"
@@ -191,7 +204,9 @@ const WasteQuantity = () => {
                 <form onSubmit={handleSubmit}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                      {t('exportJourney.quantity.title')}
+                      {bulkWaste
+                        ? t('exportJourney.quantity.bulk.title')
+                        : t('exportJourney.quantity.small.title')}
                     </GovUK.Fieldset.Legend>
                     <GovUK.Paragraph>
                       {t('exportJourney.quantity.intro')}

@@ -132,3 +132,15 @@ And(/^I enter weight more than 25 kilograms$/) do
   TestStatus.set_test_status(:weight_in_kilometers, weight_in_kilometers)
   Log.info("Weight in kilograms, #{weight_in_kilometers}")
 end
+
+Then(/^the quality of small waste page is displayed$/) do
+  QuantityOfSmallWastePage.new.check_page_displayed
+end
+
+Then(/^I should see quantity of waste correctly translated$/) do
+  QuantityOfWastePage.new.check_page_translation
+end
+
+And(/^I should see quantity of small waste correctly translated$/) do
+  QuantityOfSmallWastePage.new.check_page_translated
+end

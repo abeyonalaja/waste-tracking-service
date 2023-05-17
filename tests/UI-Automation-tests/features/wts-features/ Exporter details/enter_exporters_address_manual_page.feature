@@ -71,7 +71,7 @@ Scenario: User navigates to enter exporter address manually page and completes i
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
     And I click the "Save and return to draft" link
-    Then I remain on the exporter address page with an "Enter a real postcode" error message displayed
-    And I remain on the exporter address page with an "Enter a town or city" error message displayed
-    And I remain on the exporter address page with an "Select a country" error message displayed
-    And I remain on the exporter address page with an "Enter an address" error message displayed
+    Then I remain on the enter exporter address manual page with an "Enter a real postcode" error message displayed
+    And I remain on the enter exporter address manual page with an "Enter a town or city" error message displayed
+    And I remain on the enter exporter address manual page with an "Select a country" error message displayed
+    And I remain on the enter exporter address manual page with an "Enter an address" error message displayed

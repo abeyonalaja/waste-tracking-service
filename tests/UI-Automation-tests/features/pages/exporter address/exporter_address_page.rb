@@ -8,9 +8,10 @@ class ExporterAddressPage < GenericPage
   include ErrorBox
 
   POSTCODE_FIELD_ID = 'postcode'
+  TITLE = Translations.value 'exportJourney.exporterPostcode.title'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: "What's the exporter's address?", exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
 
   def enter_postcode(input_value)

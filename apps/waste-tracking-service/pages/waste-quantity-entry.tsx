@@ -16,10 +16,9 @@ import { InputWithSuffix } from '../components';
 import styled from 'styled-components';
 import {
   isNotEmpty,
-  validateQuantityType,
+  validateWeightOrVolume,
   validateQuantityValue,
 } from '../utils/validators';
-import { Submission } from '@wts/api/waste-tracking-gateway';
 import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
 
 const StyledInputWrap = styled.div`
@@ -111,18 +110,20 @@ const WasteQuantityEntry = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
-        quantityTypeError: validateQuantityType(quantityType),
+        quantityTypeError: validateWeightOrVolume(quantityType, estimate),
         quantityWeightError: validateQuantityValue(
           quantityType === 'Weight',
           weight,
           quantityType,
-          bulkWaste
+          bulkWaste,
+          bulkWaste ? 'tonnes' : 'kilograms'
         ),
         quantityVolumeError: validateQuantityValue(
           quantityType === 'Volume',
           volume,
           quantityType,
-          bulkWaste
+          bulkWaste,
+          'cubic metres'
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -167,7 +168,7 @@ const WasteQuantityEntry = () => {
       }
       e.preventDefault();
     },
-    [id, quantityType, weight, volume]
+    [id, quantityType, weight, volume, estimate, bulkWaste]
   );
 
   return (
@@ -281,7 +282,9 @@ const WasteQuantityEntry = () => {
                         : t('exportJourney.quantityValueSmall.Actual.title')}
                     </GovUK.Heading>
                     <GovUK.Paragraph>
-                      {t('exportJourney.quantityValueSmall.intro')}
+                      {estimate
+                        ? t('exportJourney.quantityValueSmall.Estimate.intro')
+                        : t('exportJourney.quantityValueSmall.Actual.intro')}
                     </GovUK.Paragraph>
                     <form onSubmit={handleSubmit}>
                       <InputWithSuffix

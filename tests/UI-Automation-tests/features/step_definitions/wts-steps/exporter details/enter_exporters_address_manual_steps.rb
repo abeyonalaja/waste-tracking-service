@@ -3,12 +3,14 @@ When(/^I navigate to Enter exporter address manual page$/) do
   OverviewPage.new.submit_a_single_waste_export
   AddReferenceNumberController.complete
   click_link('Exporter details')
+  ExporterAddressPage.new.check_page_displayed
   click_link('Enter address manually')
   EnterExporterAddressManualPage.new.check_page_displayed
 end
 
 And(/^I verify Enter exporter address manual page is displayed$/) do
   EnterExporterAddressManualPage.new.check_page_displayed
+  EnterExporterAddressManualPage.new.check_page_translation
 end
 
 Then(/^I complete the Enter exporter address manual page$/) do

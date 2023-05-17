@@ -49,7 +49,7 @@ describe('Waste Collection page', () => {
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
 
-    const errorHeading = screen.getByText('Enter a real date');
+    const errorHeading = screen.getAllByText('Enter a real date');
     expect(errorHeading).toBeTruthy();
   });
 
@@ -73,7 +73,7 @@ describe('Waste Collection page', () => {
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
 
-    const errorHeading = screen.getByText('Enter a date in the future');
+    const errorHeading = screen.getAllByText('Enter a date in the future');
     expect(errorHeading).toBeTruthy();
   });
 });

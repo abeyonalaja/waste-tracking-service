@@ -10,6 +10,7 @@ Feature: AS A waste producer
 #    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
     When the quality of waste page is displayed
+    Then I should see quantity of waste correctly translated
     Then I have options "Yes, I know the actual amount"
     And I have options "No, I will enter an estimate"
     And I have options "No, I do not know the amount yet"
@@ -116,9 +117,9 @@ Feature: AS A waste producer
     When I click the button Save and continue
     Then the quality of waste page is displayed
     And I click the button Save and continue
-    Then I remain on the Quantity of waste page with an "Select an option" error message displayed
+    Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Quantity of waste page with an "Select an option" error message displayed
+    Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
 
   Scenario: User can't continue without entering quantity of units option
     Given I login to waste tracking portal
@@ -128,20 +129,20 @@ Feature: AS A waste producer
     And I click the button Save and continue
     Then the What is the actual net weight of the waste is displayed
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Select an option" error message displayed
+    Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Select an option" error message displayed
+    Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
     When I choose "Weight in tonnes" radio button
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the weight" error message displayed
+    Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the weight" error message displayed
+    Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
     When I choose "Volume in cubic metres" radio button
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the volume" error message displayed
+    Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the volume" error message displayed
-    
+    Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
+
   Scenario: User can't enter special character in quantity of units option
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -151,17 +152,17 @@ Feature: AS A waste producer
     When I choose "Volume in cubic metres" radio button
     And I enter invalid weight in cubic meters
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the volume using only numbers, up to two decimal places" error message displayed
+    Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
     And I enter invalid weight in cubic meters
     And I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the volume using only numbers, up to two decimal places" error message displayed
+    Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
     When I choose "Weight in tonnes" radio button
     And I enter invalid weight in tonnes
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
+    Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
     When I enter invalid weight in tonnes
     And I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
+    Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
 
     ######## Small waste
   @translation
@@ -171,7 +172,8 @@ Feature: AS A waste producer
     And I complete Waste codes and description task with "Not applicable" has waste code
 #    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    Then the quality of waste page is displayed
+    Then the quality of small waste page is displayed
+    And I should see quantity of small waste correctly translated
     Then I have options "Yes, I know the actual amount"
     And I have options "No, I will enter an estimate"
     And I have options "No, I do not know the amount yet"
@@ -182,11 +184,11 @@ Feature: AS A waste producer
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
-    When the quality of waste page is displayed
+    When the quality of small waste page is displayed
     And I click "Back" link should display "Describe the waste" page
 
   @translation
-  Scenario:Display actual quantity unit option for waste
+  Scenario:Display actual quantity unit option for small waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
@@ -196,7 +198,7 @@ Feature: AS A waste producer
     Then What is the actual net weight of the small weight waste is displayed
     And I should see net small weight page is correctly translated
     Then I have options "Weight in kilograms"
-    And I click "Back" link should display "Quantity of waste" page
+    And I click "Back" link should display "Quantity of small waste" page
     When I choose "No, I will enter an estimate" radio button
     And I click the button Save and continue
     Then the What is the estimate net weight of the small weight waste is displayed
@@ -250,20 +252,20 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    Then the quality of waste page is displayed
+    Then the quality of small waste page is displayed
     When I click the button Save and continue
-    And I remain on the Quantity of waste page with an "Select an option" error message displayed
+    And I remain on the Quantity of small waste page with an "Select yes if you know the actual quantity of waste" error message displayed
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
     Then What is the actual net weight of the small weight waste is displayed
     When I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter the weight" error message displayed
-    When I click "Back" link should display "Quantity of waste" page
+    Then I remain on the Net small weight page with an "Enter the weight in kilograms" error message displayed
+    When I click "Back" link should display "Quantity of small waste" page
     And I choose "No, I will enter an estimate" radio button
     And I click the button Save and continue
     Then the What is the estimate net weight of the small weight waste is displayed
     And I click the button Save and continue
-    And I remain on the Estimate small weight page with an "Enter the weight" error message displayed
+    And I remain on the Estimate small weight page with an "Enter the weight in kilograms" error message displayed
 
   Scenario: User change the waste code from Not Applicable to other options then quantity of waste should be rest
     Given I login to waste tracking portal
@@ -311,13 +313,13 @@ Feature: AS A waste producer
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
-    When I click "Back" link should display "Quantity of waste" page
+    Then I remain on the Net small weight page with an "Enter the weight using only numbers" error message displayed
+    When I click "Back" link should display "Quantity of small waste" page
     And I choose "No, I will enter an estimate" radio button
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Estimate small weight page with an "Enter the weight using only numbers, up to two decimal places" error message displayed
+    Then I remain on the Estimate small weight page with an "Enter the weight using only numbers" error message displayed
 
   Scenario: Small weight user can't enter more than 25kgs
     Given I login to waste tracking portal
@@ -327,5 +329,5 @@ Feature: AS A waste producer
     And I click the button Save and continue
     And I enter weight more than 25 kilograms
     And I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter a weight under 25kg" error message displayed
+    Then I remain on the Net small weight page with an "Enter a weight 25kg or under" error message displayed
 

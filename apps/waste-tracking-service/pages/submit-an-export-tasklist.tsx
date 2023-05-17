@@ -322,7 +322,7 @@ const Tasklist = () => {
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus
-                            id="collection-details-status"
+                            id="collection-date-status"
                             status={tasklistPage.data?.collectionDate.status}
                           />
                         </TableCellRight>

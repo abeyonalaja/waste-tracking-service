@@ -8,7 +8,7 @@ class NetSmallWeightPage < GenericPage
   include ErrorBox
 
   TITLE = Translations.value 'exportJourney.quantityValueSmall.Actual.title'
-  SUB_TEXT = Translations.value 'exportJourney.quantityValueSmall.intro'
+  SUB_TEXT = Translations.value 'exportJourney.quantityValueSmall.Actual.intro'
   WEIGHT_IN_KG = Translations.value 'exportJourney.quantityValueSmall.weightLabel'
   HELPER_TEXT = Translations.value 'exportJourney.quantityValue.inputHint'
 

@@ -7,10 +7,8 @@ class QuantityOfWastePage < GenericPage
   include GeneralHelpers
   include ErrorBox
 
-  TITLE = Translations.value 'exportJourney.quantity.title'
-  ACTUAL_AMOUNT_OPTION = Translations.value ''
-  ESTIMATE_AMOUNT_OPTION = Translations.value ''
-  DO_NOT_THE_AMOUNT_OPTION = Translations.value ''
+  TITLE = Translations.value 'exportJourney.quantity.bulk.title'
+  HELP_TEXT = Translations.value 'exportJourney.quantity.intro'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -43,4 +41,9 @@ class QuantityOfWastePage < GenericPage
   def weight_in_kilograms
     find('valueWeight').value
   end
+
+  def check_page_translation
+    expect(self).to have_text HELP_TEXT
+  end
+
 end

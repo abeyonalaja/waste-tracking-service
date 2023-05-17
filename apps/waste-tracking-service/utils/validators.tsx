@@ -156,29 +156,50 @@ export const validateFullName: (fullName?: string) => string = (fullName) => {
     return 'Enter an full name';
 };
 
-export const validateQuantityType: (quantityType?: string) => string = (
-  quantityType
-) => {
-  if (quantityType === null) return 'Select an option';
+export const validateQuantityType: (
+  quantityType?: string,
+  isBulkWaste?: boolean
+) => string = (quantityType, isBulkWaste) => {
+  if (quantityType === null) {
+    if (isBulkWaste) {
+      return 'Select yes if you know the actual or estimated amount of waste';
+    } else {
+      return 'Select yes if you know the actual quantity of waste';
+    }
+  }
+};
+
+export const validateWeightOrVolume: (
+  quantityType?: string,
+  estimate?: boolean
+) => string = (quantityType, estimate) => {
+  if (quantityType === null && estimate)
+    return 'Enter the estimated net weight or volume of waste';
+  if (quantityType === null && !estimate)
+    return 'Enter the actual net weight or volume of waste';
 };
 
 export const validateQuantityValue: (
   quantityType: boolean,
   quantityValue: string,
   label: string,
-  bulk: boolean
-) => string = (quantityType, quantityValue, label, bulk) => {
+  bulk: boolean,
+  unit: string
+) => string = (quantityType, quantityValue, label, bulk, unit) => {
   if (!quantityType) return;
   if (quantityType) {
-    if (quantityValue === '' || Number(quantityValue) === 0) {
-      return `Enter the ${label.toLowerCase()}`;
+    if (quantityValue === '') {
+      return `Enter the ${label.toLowerCase()} in ${unit}`;
     }
     const regex = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$');
     if (!regex.test(quantityValue)) {
-      return `Enter the ${label.toLowerCase()} using only numbers, up to two decimal places`;
+      return `Enter the ${label.toLowerCase()} using only numbers`;
     }
-    if (!bulk && Number(quantityValue) >= 25) {
-      return 'Enter a weight under 25kg';
+    if (Number(quantityValue) === 0) {
+      return `The ${label.toLowerCase()} needs to be greater than O`;
+    }
+    if (!bulk && Number(quantityValue) > 25) {
+      return 'Enter a weight 25kg or under';
     }
   }
 };

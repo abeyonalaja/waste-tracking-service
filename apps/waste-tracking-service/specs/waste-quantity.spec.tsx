@@ -7,14 +7,14 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,
     query: { id: '123' },
-    push: jest.fn(),
   })),
 }));
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({ data: {} }),
+    json: () =>
+      Promise.resolve({ data: { wasteQuantity: { status: 'NotStarted' } } }),
   })
 );
 
