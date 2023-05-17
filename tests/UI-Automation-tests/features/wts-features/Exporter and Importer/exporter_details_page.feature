@@ -23,6 +23,7 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference
     And I complete Exporter details with valid postcode
+    And I click the Save and return to draft
     Then the task "Exporter details" should be "COMPLETED"
     When I click the "Exporter details" link
     Then I should selected address is displayed with Change address link on the page
