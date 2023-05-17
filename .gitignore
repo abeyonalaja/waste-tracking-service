@@ -48,4 +48,5 @@ tests/*/Allure_*
 
 /apps/waste-tracking-service/.env.local
 secrets.json
-apps/address-lookup-service/.env
+apps/address/.env.local
+apps/address/mnt/

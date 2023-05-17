@@ -13,7 +13,7 @@ image:
   repository: sndwtshubcr3401.azurecr.io/waste-tracking-gateway
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '20230505.2'
+  tag: '20230517.1'
 
 # Override the default name specified
 nameOverride: ''
@@ -66,6 +66,7 @@ secret:
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
     ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
+    ADDRESS_APP_ID: 'address.address'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

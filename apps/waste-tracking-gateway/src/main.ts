@@ -8,6 +8,11 @@ import {
   InMemorySubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
+import {
+  AddressStub,
+  AddressServiceBackend,
+} from './modules/address/address.backend';
+import { DaprAddressClient } from '@wts/client/address';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -23,6 +28,17 @@ const app = server({
     cors: true,
   },
 });
+
+const addressBackend =
+  process.env['NODE_ENV'] === 'development'
+    ? new AddressStub()
+    : new AddressServiceBackend(
+        new DaprAddressClient(
+          new DaprClient(),
+          process.env['ADDRESS_APP_ID'] || 'address'
+        ),
+        logger
+      );
 
 const backend =
   process.env['NODE_ENV'] === 'development'
@@ -48,6 +64,10 @@ await app.register({
 
 await app.register({
   plugin: addressPlugin,
+  options: {
+    addressBackend,
+    logger,
+  },
   routes: {
     prefix: '/api/addresses',
   },

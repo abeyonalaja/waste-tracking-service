@@ -127,6 +127,9 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
         }
         enabled: true
       }
+      azureKeyvaultSecretsProvider: {
+        enabled: true
+      }
     }
     agentPoolProfiles: [
       {

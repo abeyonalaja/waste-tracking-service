@@ -1,6 +1,6 @@
 controller:
   replicaCount: 2
-  nodeSelector: 
+  nodeSelector:
     kubernetes.io/os: 'linux'
   service:
     annotations:

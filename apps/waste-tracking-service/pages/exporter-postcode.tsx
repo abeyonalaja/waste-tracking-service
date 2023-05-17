@@ -115,7 +115,9 @@ const ExporterPostcode = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: returnToDraft ? '/submit-an-export-tasklist' : '/exporter-details',
+                  pathname: returnToDraft
+                    ? '/submit-an-export-tasklist'
+                    : '/exporter-details',
                   query: { id },
                 });
               }
@@ -136,7 +138,7 @@ const ExporterPostcode = () => {
           href="#"
           onClick={() => {
             if (addresses) {
-              setAddresses(null)
+              setAddresses(null);
             } else {
               router.push({
                 pathname: '/submit-an-export-tasklist',

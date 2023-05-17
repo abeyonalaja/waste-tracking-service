@@ -20,13 +20,6 @@ Run a development server API:
 nx serve waste-tracking-gateway
 ```
 
-Run and test address lookup service
-
-```
-dapr run --app-id address-lookup-service --app-port 5000 --resources-path ./components -- nx serve address-lookup-service
-dapr run --app-id address-lookup-service --app-port 5000 --resources-path ./components -- nx test address-lookup-service
-```
-
 ## Nx Workspace
 
 The repository comprises an Nx _integrated_ monorepo, so see the [Nx
