@@ -216,7 +216,7 @@ const ExporterDetails = () => {
                 <Paragraph>
                   {data.status !== 'NotStarted'
                     ? Object.keys(data?.exporterAddress).map((line) => (
-                        <span key={line}>
+                        <span key={line} id={"output-" + line}>
                           {data?.exporterAddress[line]}
                           <br />
                         </span>

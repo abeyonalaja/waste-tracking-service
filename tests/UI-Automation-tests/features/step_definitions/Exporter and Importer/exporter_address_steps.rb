@@ -37,5 +37,5 @@ When(/^I change exporter address with new address$/) do
   ExporterAddressPage.new.address_line_2 '2 Marsham St'
   ExporterAddressPage.new.town_city 'London'
   ExporterAddressPage.new.exporter_postcode 'SW1P 4DF'
-  TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,United Kingdom,SW1P 4DF')
+  TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,SW1P 4DF,United Kingdom')
 end

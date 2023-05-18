@@ -63,7 +63,7 @@ SO THAT the importer can be tracked
     Then the "who is the importer" page is displayed
     And I click the button Save and continue
     Then I remain on the who is the importer page with an "Enter an organisation name" error message displayed
-    And I remain on the who is the importer page with an "Select a country" error message displayed
+    And I remain on the who is the importer page with an "Enter a country" error message displayed
     And I remain on the who is the importer page with an "Enter an address" error message displayed
     And I click "Back" link should display "Submit an export" page
 

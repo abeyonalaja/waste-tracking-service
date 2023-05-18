@@ -22,8 +22,8 @@ class ExporterAddressPage < GenericPage
     find(POSTCODE_FIELD_ID).value == postocde
   end
 
-  def has_address?(postcode)
-    find(:css, "[class^='exporter-details__Paragraph-sc']").text.gsub(/\n+\s*/m, ',') == postcode.gsub(/, /, ',')
+  def has_address?(address)
+    actual_address == address.gsub(/, /, ',')
   end
 
   def check_page_translation
@@ -75,5 +75,14 @@ class ExporterAddressPage < GenericPage
   def exporter_postcode(postcode)
     fill_in 'postcode', with: '', visible: false
     fill_in 'postcode', with: postcode, visible: false
+  end
+
+  def actual_address
+    address_line_1 = find('output-addressLine1').text
+    address_line_2 = find('output-addressLine2').text
+    town = find('output-townCity').text
+    postcode = find('output-postcode').text
+    country = find('output-country').text
+    "#{address_line_1},#{address_line_2},#{town},#{postcode},#{country}"
   end
 end

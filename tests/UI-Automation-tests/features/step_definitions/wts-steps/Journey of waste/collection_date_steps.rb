@@ -11,7 +11,7 @@ Then(/^I should see estimate collection date helper text correctly translated$/)
 end
 
 And(/^I enter valid Estimate collection date$/) do
-  CollectionDatePage.new.enter_estimate_collection_date DateTime.now.next_day(5).strftime('%d %m %Y')
+  CollectionDatePage.new.enter_estimate_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
 end
 
 Then(/^I should see Collection date option "([^"]*)" is selected$/) do |option|
@@ -23,7 +23,7 @@ And(/^I should see Estimate Collection date pre\-populated$/) do
 end
 
 And(/^I enter valid Actual collection date$/) do
-  CollectionDatePage.new.enter_actual_collection_date DateTime.now.next_day(5).strftime('%d %m %Y')
+  CollectionDatePage.new.enter_actual_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
 end
 
 And(/^I should see Actual Collection date pre\-populated$/) do
