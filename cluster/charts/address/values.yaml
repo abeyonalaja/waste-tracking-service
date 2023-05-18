@@ -68,6 +68,7 @@ secret:
     ADDRESS_LOOKUP_URL: ''
     CERT_FOLDER: ''
     CERT_NAME: ''
+    APP_ID: 'address'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

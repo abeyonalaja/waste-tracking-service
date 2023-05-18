@@ -67,6 +67,7 @@ secret:
     APPINSIGHTS_CONNECTION_STRING: ''
     ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
     ADDRESS_APP_ID: 'address.address'
+    APP_ID: 'waste-tracking-gateway'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
