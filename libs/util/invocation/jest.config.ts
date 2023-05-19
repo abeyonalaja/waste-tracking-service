@@ -8,4 +8,15 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/util/invocation',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        suiteName: 'util-invocation',
+        outputDirectory: 'reports/junit',
+        outputName: 'util-invocation',
+      },
+    ],
+  ],
 };

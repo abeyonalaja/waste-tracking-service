@@ -6,6 +6,7 @@ pool:
 
 steps:
   - bash: npm ci
+    name: dependencies
     displayName: Install dependencies
 
   - bash: |
@@ -15,7 +16,7 @@ steps:
         exit 1
       fi
     displayName: Check formatting
-    continueOnError: true
+    condition: always()
 
   - bash: |
       if ! npx nx run-many --target=lint --all; then
@@ -24,16 +25,18 @@ steps:
         exit 1
       fi
     displayName: Linting
-    continueOnError: true
+    condition: always()
 
-  - bash: npx nx run-many --target=test -- --reporters=jest-junit --verbose --output-style=static
+  - bash: npx nx run-many --target=test --configuration=ci
     displayName: Unit Tests
-    continueOnError: true
+    condition: always()
 
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: JUnit
-      testResultsFiles: junit.xml
+      testResultsFiles: reports/junit/*.xml
+    condition: always()
 
   - bash: npx nx run-many --target=build
     displayName: Build changed projects
+    condition: always()

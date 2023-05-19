@@ -42,11 +42,13 @@ type Info = {
   atomID: string;
 };
 
-export type GetAddressesResponse = {
-  header: Header;
-  results: Result[];
-  _info: Info;
-} | undefined;
+export type GetAddressesResponse =
+  | {
+      header: Header;
+      results: Result[];
+      _info: Info;
+    }
+  | undefined;
 
 type Error = {
   statuscode: string;

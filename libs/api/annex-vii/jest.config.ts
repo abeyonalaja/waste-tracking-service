@@ -8,4 +8,15 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/api/annex-vii',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        suiteName: 'api-annex-vii',
+        outputDirectory: 'reports/junit',
+        outputName: 'api-annex-vii.xml',
+      },
+    ],
+  ],
 };

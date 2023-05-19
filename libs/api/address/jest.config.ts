@@ -8,4 +8,15 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/api/address',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        suiteName: 'api-address',
+        outputDirectory: 'reports/junit',
+        outputName: 'api-address.xml',
+      },
+    ],
+  ],
 };

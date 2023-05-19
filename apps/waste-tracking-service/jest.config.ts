@@ -8,4 +8,15 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/waste-tracking-service',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        suiteName: 'waste-tracking-service',
+        outputDirectory: 'reports/junit',
+        outputName: 'waste-tracking-service.xml',
+      },
+    ],
+  ],
 };

@@ -50,3 +50,5 @@ tests/*/Allure_*
 secrets.json
 apps/address/.env.local
 apps/address/mnt/
+
+reports/
