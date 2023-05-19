@@ -2,10 +2,11 @@ import Head from 'next/head';
 import * as GovUK from 'govuk-react';
 import {
   BreadcrumbWrap,
+  ButtonGroup,
   CompleteFooter,
   CompleteHeader,
   Loading,
-  SaveReturnLink,
+  SaveReturnButton,
   SubmissionNotFound,
 } from '../components';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
@@ -248,8 +249,12 @@ const WasteQuantity = () => {
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

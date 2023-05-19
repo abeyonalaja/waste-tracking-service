@@ -9,9 +9,10 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  SaveReturnLink,
   Loading,
   SubmissionNotFound,
+  SaveReturnButton,
+  ButtonGroup,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -201,9 +202,6 @@ const ExporterDetails = () => {
             {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
-                <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.exporterDetails.title')}
-                </GovUK.Heading>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
                     heading={t('errorSummary.title')}
@@ -213,10 +211,13 @@ const ExporterDetails = () => {
                     }))}
                   />
                 )}
+                <GovUK.Heading size={'LARGE'}>
+                  {t('exportJourney.exporterDetails.title')}
+                </GovUK.Heading>
                 <Paragraph>
                   {data.status !== 'NotStarted'
                     ? Object.keys(data?.exporterAddress).map((line) => (
-                        <span key={line} id={"output-" + line}>
+                        <span key={line} id={'output-' + line}>
                           {data?.exporterAddress[line]}
                           <br />
                         </span>
@@ -259,6 +260,7 @@ const ExporterDetails = () => {
                         id: 'fullName',
                         value: fullName,
                         maxLength: 250,
+                        autoComplete: 'name',
                         onChange: (e) => setFullName(e.target.value),
                       }}
                       meta={{
@@ -273,6 +275,8 @@ const ExporterDetails = () => {
                         name: 'email',
                         id: 'email',
                         value: email,
+                        spellCheck: false,
+                        autoComplete: 'email',
                         maxLength: 250,
                         onChange: (e) => setEmail(e.target.value),
                       }}
@@ -288,6 +292,7 @@ const ExporterDetails = () => {
                         name: 'phone',
                         id: 'phone',
                         value: phone,
+                        autoComplete: 'tel',
                         maxLength: 250,
                         onChange: (e) => setPhone(e.target.value),
                       }}
@@ -311,8 +316,12 @@ const ExporterDetails = () => {
                     </PostcodeInput>
                   </GovUK.FormGroup>
 
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

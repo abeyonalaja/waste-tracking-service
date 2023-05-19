@@ -17,8 +17,9 @@ import {
   BreadcrumbWrap,
   Loading,
   SubmissionNotFound,
+  SaveReturnButton,
+  ButtonGroup,
 } from '../components';
-import { SaveReturnLink } from '../components';
 import { isNotEmpty, validateNationalCode } from '../utils/validators';
 
 const nationalCodeReducer = (state, action) => {
@@ -287,8 +288,12 @@ const NationalCode = () => {
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

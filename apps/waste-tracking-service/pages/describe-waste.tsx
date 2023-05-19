@@ -15,9 +15,10 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   TextareaCharCount,
-  SaveReturnLink,
   SubmissionNotFound,
   Loading,
+  SaveReturnButton,
+  ButtonGroup,
 } from '../components';
 import { isNotEmpty, validateWasteDescription } from '../utils/validators';
 import styled from 'styled-components';
@@ -248,8 +249,12 @@ const DescribeWaste = () => {
                   >
                     <Heading />
                   </TextareaCharCount>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

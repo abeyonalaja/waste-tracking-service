@@ -15,12 +15,12 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  SaveReturnLink,
   Loading,
   SubmissionNotFound,
+  ButtonGroup,
+  SaveReturnButton,
 } from '../../components';
 import { validateEwcCodes } from '../../utils/validators';
-import styled from 'styled-components';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
@@ -81,19 +81,9 @@ const ewcCodesReducer = (state: State, action: Action) => {
   }
 };
 
-const Lower = styled('div')`
-  padding-top: 30px;
-  padding-bottom: 20px;
-`;
-
 const EwcCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [showInput, setShowInput] = useState(false);
-
-  const handleRadioChange = (event) => {
-    setShowInput(event.target.value === 'yes');
-  };
 
   const [ewcCodesPage, dispatchEwcCodePage] = useReducer(
     ewcCodesReducer,
@@ -134,6 +124,7 @@ const EwcCode = () => {
         });
     }
   }, [router.isReady, id]);
+
   const handleInputChange = (option) => {
     if (ewcCodesPage.data.ewcCodes) {
       const updatedEwcCodes = [
@@ -209,7 +200,7 @@ const EwcCode = () => {
 
       e.preventDefault();
     },
-    [id, ewcCodesPage.data, router, showInput]
+    [id, ewcCodesPage.data, router]
   );
 
   function suggest(query, populateResults) {
@@ -295,12 +286,12 @@ const EwcCode = () => {
                       />
                     </GovUK.FormGroup>
                   </GovUK.Fieldset>
-                  <Lower>
-                    <GovUK.Button onSubmit={handleInputChange} id="saveButton">
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
                       {t('saveButton')}
                     </GovUK.Button>
-                    <SaveReturnLink onClick={handleLinkSubmit} />
-                  </Lower>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

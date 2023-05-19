@@ -12,6 +12,8 @@ import {
   SaveReturnLink,
   SubmissionNotFound,
   Loading,
+  ButtonGroup,
+  SaveReturnButton,
 } from '../../components';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
@@ -172,17 +174,23 @@ const EwcCodeList = () => {
     e.preventDefault();
   };
 
-  const handleAddAnotherEWC = (e: FormEvent) => {
+  const handleReturnToDraft = (e) => {
+    handleAddAnotherEWC(e, true);
+  };
+
+  const handleAddAnotherEWC = (e: FormEvent, returnToDraft = false) => {
     if (addAnother === 'yes') {
       router.push({
-        pathname: '/dashboard/enter-ewc-code',
+        pathname: returnToDraft
+          ? '/submit-an-export-tasklist'
+          : '/dashboard/enter-ewc-code',
         query: { id },
       });
-      setAddAnother(null);
     } else {
-      setAddAnother(null);
       router.push({
-        pathname: '/national-code',
+        pathname: returnToDraft
+          ? '/submit-an-export-tasklist'
+          : '/national-code',
         query: { id },
       });
     }
@@ -332,16 +340,12 @@ const EwcCodeList = () => {
                               </GovUK.Radio>
                             </GovUK.MultiChoice>
                           </GovUK.FormGroup>
-                          <GovUK.Button id="saveButton">
-                            {t('saveButton')}
-                          </GovUK.Button>
-                          <SaveReturnLink
-                            data-testid="saveAndReturnLink"
-                            href={{
-                              pathname: '/submit-an-export-tasklist',
-                              query: { id },
-                            }}
-                          />
+                          <ButtonGroup>
+                            <GovUK.Button id="saveButton">
+                              {t('saveButton')}
+                            </GovUK.Button>
+                            <SaveReturnButton onClick={handleReturnToDraft} />
+                          </ButtonGroup>
                         </form>
                       )}
                     </>

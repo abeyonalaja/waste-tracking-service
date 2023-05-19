@@ -19,6 +19,8 @@ import {
   ConditionalRadioWrap,
   SubmissionNotFound,
   Loading,
+  ButtonGroup,
+  SaveReturnButton,
 } from '../../components';
 import {
   isNotEmpty,
@@ -363,10 +365,12 @@ const EwcCode = () => {
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
-                  <GovUK.Button onSubmit={handleInputChange} id="saveButton">
-                    {t('saveButton')}
-                  </GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}

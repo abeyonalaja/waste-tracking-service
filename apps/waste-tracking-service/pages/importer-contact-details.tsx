@@ -9,6 +9,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   SaveReturnLink,
+  SaveReturnButton,
+  ButtonGroup,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -250,8 +252,12 @@ const ImporterContactDetails = () => {
                       {t('exportJourney.importerDetails.fax')}
                     </PostcodeInput>
                   </GovUK.FormGroup>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}
