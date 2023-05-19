@@ -73,6 +73,7 @@
     "date-fns": "^2.30.0",
     "govuk-frontend": "^4.5.0",
     "govuk-react": "^0.10.5",
+    "govuk-colours": "^1.1.0",
     "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
