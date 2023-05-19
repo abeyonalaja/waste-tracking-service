@@ -1,4 +1,4 @@
-$APP_NAME = "waste-tracking-gateway"
+$APP_NAME = "address"
 $CHART_VERSION = "0.1.0" # has to be the same as the one specified in the 'version' field in Chart.yaml
 $NAMESPACE = $APP_NAME
 $ACR_NAME = "SNDWTSHUBCR3401"
@@ -56,7 +56,8 @@ if ($APP_NAME -eq "address")
         --set secretProviderClass.clientId=$MSI_CLIENT_ID `
         --set secretProviderClass.keyVault.name=$KEY_VAULT_NAME `
         --set secretProviderClass.keyVault.tenantId=$KEY_VAULT_TENANT_ID `
-        --set volume.mountPath=$CERT_FOLDER
+        --set volume.mountPath=$CERT_FOLDER `
+        --set "secretProviderClass.keyVault.secrets={$CERT_NAME}"
 }
 else
 {

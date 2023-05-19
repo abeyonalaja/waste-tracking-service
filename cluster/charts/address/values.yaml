@@ -87,14 +87,7 @@ secretProviderClass:
   keyVault:
     name: ''
     tenantId: ''
-
-# TODO: from here and/or helpers.tpl
-# objects:  |
-#   array:
-#     - |
-#       objectName: boomi-api-tst-cert
-#       objectType: cert
-#       objectVersion: "" # [OPTIONAL] object versions, default to latest if empty
+    secrets: []
 
 # Name used to reference the secrets mounted into the container from the key vault csi driver
 volume:
