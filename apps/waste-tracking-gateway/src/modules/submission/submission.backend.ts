@@ -2,24 +2,24 @@ import Boom from '@hapi/boom';
 import {
   CreateDraftResponse,
   GetDraftByIdResponse,
+  GetDraftCollectionDateByIdResponse,
   GetDraftCustomerReferenceByIdResponse,
   GetDraftExporterDetailByIdResponse,
   GetDraftImporterDetailByIdResponse,
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdResponse,
-  GetDraftCollectionDateByIdResponse,
+  SetDraftCollectionDateByIdResponse,
   SetDraftCustomerReferenceByIdResponse,
   SetDraftExporterDetailByIdResponse,
   SetDraftImporterDetailByIdResponse,
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdResponse,
-  SetDraftCollectionDateByIdResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
-import { addBusinessDays } from 'date-fns';
 
 export type Submission = dto.Submission;
 export type CustomerReference = dto.CustomerReference;
@@ -270,7 +270,9 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         return Promise.reject(Boom.badRequest());
       }
 
-      if (new Date(year, month, day) < addBusinessDays(new Date(), 3)) {
+      if (
+        differenceInBusinessDays(new Date(year, month, day), new Date()) < 3
+      ) {
         return Promise.reject(Boom.badRequest());
       }
     }
