@@ -47,6 +47,7 @@ class ExporterAddressPage < GenericPage
     first('selectedAddress', minimum: 1)
     find(:css, '#selectedAddress>option:nth-child(2)').select_option
     TestStatus.set_test_status(:exporter_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
+    Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
   end
 
   def find_address

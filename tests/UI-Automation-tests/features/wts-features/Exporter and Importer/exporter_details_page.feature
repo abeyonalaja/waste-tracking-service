@@ -12,7 +12,7 @@ Feature: AS A waste producer
     And I remain on the exporter details page with an "Enter an full name" error message displayed
     And I remain on the exporter details page with an "Enter a real email" error message displayed
     And I remain on the exporter details page with an "Enter a real phone number" error message displayed
-    When I click the Save and return to draft
+    When I click the Save and return
     Then I remain on the exporter details page with an "Enter an organisation name" error message displayed
     And I remain on the exporter details page with an "Enter an full name" error message displayed
     And I remain on the exporter details page with an "Enter a real email" error message displayed
@@ -23,7 +23,7 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference
     And I complete Exporter details with valid postcode
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Exporter details" should be "COMPLETED"
     When I click the "Exporter details" link
     Then I should selected address is displayed with Change address link on the page
@@ -59,7 +59,7 @@ Feature: AS A waste producer
     And I click the "Change address" link
     Then the "exporter address" page is displayed
     When I change exporter address with new address
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Exporter details" should be "IN PROGRESS"
     When I click the "Exporter details" link
     Then I should selected address is displayed with Change address link on the page

@@ -78,7 +78,7 @@ Feature: AS A waste producer
     And I click the button Save and continue
     And I choose "Weight in tonnes" radio button
     And I enter valid weight in tonnes
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
     And I choose "No, I will enter an estimate" radio button
@@ -106,7 +106,7 @@ Feature: AS A waste producer
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
     #check the error message
@@ -118,7 +118,7 @@ Feature: AS A waste producer
     Then the quality of waste page is displayed
     And I click the button Save and continue
     Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
-    When I click the Save and return to draft
+    When I click the Save and return
     Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
 
   Scenario: User can't continue without entering quantity of units option
@@ -130,17 +130,17 @@ Feature: AS A waste producer
     Then the What is the actual net weight of the waste is displayed
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
-    When I click the Save and return to draft
+    When I click the Save and return
     Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
     When I choose "Weight in tonnes" radio button
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
-    When I click the Save and return to draft
+    When I click the Save and return
     Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
     When I choose "Volume in cubic metres" radio button
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
-    When I click the Save and return to draft
+    When I click the Save and return
     Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
 
   Scenario: User can't enter special character in quantity of units option
@@ -154,14 +154,14 @@ Feature: AS A waste producer
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
     And I enter invalid weight in cubic meters
-    And I click the Save and return to draft
+    And I click the Save and return
     Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
     When I choose "Weight in tonnes" radio button
     And I enter invalid weight in tonnes
     And I click the button Save and continue
     Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
     When I enter invalid weight in tonnes
-    And I click the Save and return to draft
+    And I click the Save and return
     Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
 
     ######## Small waste
@@ -220,7 +220,7 @@ Feature: AS A waste producer
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
     And I choose "No, I will enter an estimate" radio button
@@ -241,11 +241,11 @@ Feature: AS A waste producer
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
     And I choose "No, I will enter an estimate" radio button
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
   Scenario:User can't continue without selecting any option
@@ -274,12 +274,12 @@ Feature: AS A waste producer
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
     And select a first option as waste code description
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "NOT STARTED"
     When I click the "Quantity of waste" link
     Then I should see quantity option "Yes, I know the actual amount" is not selected
@@ -294,11 +294,11 @@ Feature: AS A waste producer
     And I click the button Save and continue
     And I choose "Weight in tonnes" radio button
     And I enter valid weight in tonnes
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Waste codes and description" link
     When I choose "Not applicable" as a waste code
-    And I click the Save and return to draft
+    And I click the Save and return
     Then the task "Quantity of waste" should be "NOT STARTED"
     When I click the "Quantity of waste" link
     Then I should see quantity option "Yes, I know the actual amount" is not selected

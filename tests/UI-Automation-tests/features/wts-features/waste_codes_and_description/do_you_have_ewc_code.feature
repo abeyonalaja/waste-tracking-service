@@ -36,7 +36,7 @@ Feature:AS A waste producer
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
     And I choose "No" radio button
-    And I click the Save and return to draft
+    And I click the Save and return
     Then I verify that Submit an export page is displayed
     When I click the "Waste codes and description" link
     Then "Basel Annex IX" is still selected
@@ -49,7 +49,7 @@ Feature:AS A waste producer
     Then I navigate to Add EWC code page
     And I have selected "Yes" option
     And I have selected valid ewc code
-    When I click the Save and return to draft
+    When I click the Save and return
     And I click the "Waste codes and description" link
     And I click the button Save and continue
     Then I verify Do you need to add another page is displayed

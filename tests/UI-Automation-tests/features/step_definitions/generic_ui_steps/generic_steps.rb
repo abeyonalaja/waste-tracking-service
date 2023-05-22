@@ -18,10 +18,6 @@ And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_nam
   page_object.check_page_displayed
 end
 
-And(/^I click the Save and return to draft$/) do
-  click_on Translations.value 'saveReturnLink'
-end
-
 And(/^I click the button Save and continue$/) do
   click_on Translations.value 'saveButton'
 end

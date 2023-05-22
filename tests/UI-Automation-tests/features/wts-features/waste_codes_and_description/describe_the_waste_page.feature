@@ -25,6 +25,6 @@ Feature: AS A waste producer/broker
 #    Given I login to waste tracking portal
 #    And I navigate on the Describe the waste
 #    When I add a description of the waste up to 100 characters
-#    And I click the Save and return to draft
+#    And I click the Save and return
 #    Then the task "Waste codes and description" should be "COMPLETED"
 

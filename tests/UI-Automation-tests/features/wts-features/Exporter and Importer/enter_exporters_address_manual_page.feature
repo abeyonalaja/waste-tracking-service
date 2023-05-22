@@ -22,7 +22,7 @@ Scenario: User navigates to enter exporter address manually page and completes i
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
     And I complete the Enter exporter address manual page
-    When I click the Save and return to draft
+    When I click the Save and return
     Then the "Submit an export" page is displayed
     And the task "Exporter details" should be "IN PROGRESS"
     And I click the "Exporter details" link
