@@ -365,4 +365,190 @@ export default class DraftController {
       return fromBoom(Boom.internal());
     }
   };
+
+  listDraftCarriers: Handler<
+    api.ListDraftCarriersRequest,
+    api.ListDraftCarriersResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.carriers);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  createDraftCarriers: Handler<
+    api.CreateDraftCarriersRequest,
+    api.CreateDraftCarriersResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      if (value.status !== 'Started') {
+        return fromBoom(
+          Boom.badRequest(
+            `"Status cannot be ${value.status} on carrier detail creation"`
+          )
+        );
+      }
+
+      const draft = await this.repository.getDraft(id, accountId);
+
+      const carrier = { id: uuidv4() };
+      if (draft.carriers.status === 'NotStarted') {
+        draft.carriers = {
+          status: value.status,
+          values: [carrier],
+        };
+
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return success(draft.carriers);
+      }
+
+      if (draft.carriers.values.length === 5) {
+        return fromBoom(Boom.badRequest('Cannot add more than 5 carriers'));
+      }
+
+      const carriers: api.DraftCarrier[] = [];
+      for (const c of draft.carriers.values) {
+        carriers.push(c);
+      }
+      carriers.push(carrier);
+      draft.carriers = {
+        status: value.status,
+        values: carriers,
+      };
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success({
+        status: value.status,
+        values: [carrier],
+      });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftCarriers: Handler<
+    api.GetDraftCarriersRequest,
+    api.GetDraftCarriersResponse
+  > = async ({ id, accountId, carrierId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (draft.carriers.status === 'NotStarted') {
+        return fromBoom(Boom.notFound());
+      }
+
+      const carrier = draft.carriers.values.find((c) => {
+        return c.id === carrierId;
+      });
+
+      if (carrier === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      const value: api.DraftCarriers = {
+        status: draft.carriers.status,
+        values: [carrier],
+      };
+
+      return success(value);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftCarriers: Handler<
+    api.SetDraftCarriersRequest,
+    api.SetDraftCarriersResponse
+  > = async ({ id, accountId, carrierId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (draft.carriers.status === 'NotStarted') {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (value.status === 'NotStarted') {
+        draft.carriers = value;
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return success(undefined);
+      }
+
+      const carrier = value.values.find((c) => {
+        return c.id === carrierId;
+      });
+      if (carrier === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      const index = draft.carriers.values.findIndex((c) => {
+        return c.id === carrierId;
+      });
+      if (index === -1) {
+        return fromBoom(Boom.notFound());
+      }
+
+      draft.carriers.status = value.status;
+      draft.carriers.values[index] = carrier as api.DraftCarrier;
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  deleteDraftCarriers: Handler<
+    api.DeleteDraftCarriersRequest,
+    api.DeleteDraftCarriersResponse
+  > = async ({ id, accountId, carrierId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (draft.carriers.status === 'NotStarted') {
+        return fromBoom(Boom.notFound());
+      }
+
+      const index = draft.carriers.values.findIndex((c) => {
+        return c.id === carrierId;
+      });
+
+      if (index === -1) {
+        return fromBoom(Boom.notFound());
+      }
+
+      draft.carriers.values.splice(index, 1);
+      if (draft.carriers.values.length === 0) {
+        draft.carriers = { status: 'NotStarted' };
+      }
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

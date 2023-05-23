@@ -7,6 +7,7 @@ import {
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
   validatePutCollectionDateRequest,
+  validateSetCarriersRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -424,5 +425,176 @@ describe('validatePutCollectionDateRequest', () => {
         },
       })
     ).toBe(true);
+  });
+});
+
+describe('validateSetCarriersRequest', () => {
+  it('should return true for a request with a complete carrier detail and transport type shipping container', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          addressDetails: {
+            organisationName: 'Acme Inc',
+            address: '123 Anytown',
+            country: 'UK',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 'ShippingContainer',
+            shippingContainerNumber: '2347027',
+            vehicleRegistration: 'TL12 TFL',
+          },
+        },
+      ],
+    };
+    expect(validateSetCarriersRequest(data)).toBe(true);
+  });
+
+  it('should return true for a request with a complete carrier detail and transport type trailer', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          addressDetails: {
+            organisationName: 'Acme Inc',
+            address: '123 Anytown',
+            country: 'UK',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 'Trailer',
+            vehicleRegistration: 'TL12 TFL',
+            trailerNumber: '2347027',
+          },
+        },
+      ],
+    };
+    expect(validateSetCarriersRequest(data)).toBe(true);
+  });
+
+  it('should return true for a request with a complete carrier detail and transport type bulk vessel', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          addressDetails: {
+            organisationName: 'Acme Inc',
+            address: '123 Anytown',
+            country: 'UK',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 'BulkVessel',
+            imo: '2347027',
+          },
+        },
+      ],
+    };
+
+    expect(validateSetCarriersRequest(data)).toBe(true);
+  });
+
+  it('should return false for a request with a invalid transportDetails', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          addressDetails: {
+            organisationName: 'Acme Inc',
+            address: '123 Anytown',
+            country: 'UK',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 0,
+            transportTypeNumber: 'number',
+          },
+        },
+      ],
+    };
+
+    expect(validateSetCarriersRequest(data)).toBe(false);
+  });
+
+  it('should return false for a request with a missing id property', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          addressDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: 5551234,
+            faxNumber: '555-5678',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 'ShippingContainer',
+            shippingContainerNumber: '986960',
+          },
+        },
+      ],
+    };
+
+    expect(validateSetCarriersRequest(data)).toBe(false);
+  });
+
+  it('should return false for object with invalid addressDetails', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          addressDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: 5551234,
+            faxNumber: '555-5678',
+          },
+          contactDetails: {
+            fullName: 'John Doe',
+            emailAddress: 'johndoe@acme.com',
+            phoneNumber: '555-1234',
+            faxNumber: '555-5678',
+          },
+          transportDetails: {
+            type: 'ShippingContainer',
+            shippingContainerNumber: '986960',
+          },
+        },
+      ],
+    };
+
+    expect(validateSetCarriersRequest(data)).toBe(false);
   });
 });

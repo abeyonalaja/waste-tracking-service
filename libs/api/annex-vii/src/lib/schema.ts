@@ -10,6 +10,10 @@ import {
   GetDraftWasteDescriptionByIdRequest,
   GetDraftWasteQuantityByIdRequest,
   GetDraftsRequest,
+  ListDraftCarriersRequest,
+  CreateDraftCarriersRequest,
+  DeleteDraftCarriersRequest,
+  GetDraftCarriersRequest,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -230,6 +234,127 @@ const draftCollectionDate: SchemaObject = {
   },
 };
 
+const draftCarriers: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { type: 'string' },
+            },
+            optionalProperties: {
+              addressDetails: {
+                properties: {
+                  organisationName: { type: 'string' },
+                  address: { type: 'string' },
+                  country: { type: 'string' },
+                },
+              },
+              contactDetails: {
+                properties: {
+                  fullName: { type: 'string' },
+                  emailAddress: { type: 'string' },
+                  phoneNumber: { type: 'string' },
+                },
+                optionalProperties: {
+                  faxNumber: { type: 'string' },
+                },
+              },
+              transportDetails: {
+                discriminator: 'type',
+                mapping: {
+                  ShippingContainer: {
+                    properties: {
+                      shippingContainerNumber: { type: 'string' },
+                    },
+                    optionalProperties: {
+                      vehicleRegistration: { type: 'string' },
+                    },
+                  },
+                  Trailer: {
+                    properties: {
+                      vehicleRegistration: { type: 'string' },
+                    },
+                    optionalProperties: {
+                      trailerNumber: { type: 'string' },
+                    },
+                  },
+                  BulkVessel: {
+                    properties: {
+                      imo: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    Complete: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { type: 'string' },
+            },
+            optionalProperties: {
+              addressDetails: {
+                properties: {
+                  organisationName: { type: 'string' },
+                  address: { type: 'string' },
+                  country: { type: 'string' },
+                },
+              },
+              contactDetails: {
+                properties: {
+                  fullName: { type: 'string' },
+                  emailAddress: { type: 'string' },
+                  phoneNumber: { type: 'string' },
+                },
+                optionalProperties: {
+                  faxNumber: { type: 'string' },
+                },
+              },
+              transportDetails: {
+                discriminator: 'type',
+                mapping: {
+                  ShippingContainer: {
+                    properties: {
+                      shippingContainerNumber: { type: 'string' },
+                    },
+                    optionalProperties: {
+                      vehicleRegistration: { type: 'string' },
+                    },
+                  },
+                  Trailer: {
+                    properties: {
+                      vehicleRegistration: { type: 'string' },
+                    },
+                    optionalProperties: {
+                      trailerNumber: { type: 'string' },
+                    },
+                  },
+                  BulkVessel: {
+                    properties: {
+                      imo: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 const notStartedSection: SchemaObject = {
   properties: {
     status: {
@@ -255,7 +380,7 @@ const draftSubmission: SchemaObject = {
     exporterDetail: draftExporterDetail,
     importerDetail: draftImporterDetail,
     collectionDate: draftCollectionDate,
-    carriers: notStartedSection,
+    carriers: draftCarriers,
     collectionDetail: notStartedSection,
     ukExitLocation: notStartedSection,
     transitCountries: notStartedSection,
@@ -514,6 +639,93 @@ export const setDraftCollectionDateByIdRequest: SchemaObject = {
 };
 
 export const setDraftCollectionDateByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const listDraftCarriersRequest: JTDSchemaType<ListDraftCarriersRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const listDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftCarriers,
+  },
+};
+
+export const createDraftCarriersRequest: JTDSchemaType<CreateDraftCarriersRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+      value: {
+        properties: {
+          status: { enum: ['NotStarted', 'Started', 'Complete'] },
+        },
+      },
+    },
+  };
+
+export const createDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftCarriers,
+  },
+};
+
+export const getDraftCarriersRequest: JTDSchemaType<GetDraftCarriersRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    carrierId: { type: 'string' },
+  },
+};
+
+export const getDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftCarriers,
+  },
+};
+
+export const setDraftCarriersRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    carrierId: { type: 'string' },
+    value: draftCarriers,
+  },
+};
+
+export const setDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const deleteDraftCarriersRequest: JTDSchemaType<DeleteDraftCarriersRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+      carrierId: { type: 'string' },
+    },
+  };
+
+export const deleteDraftCarriersResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

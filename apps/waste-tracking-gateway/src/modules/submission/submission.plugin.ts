@@ -8,6 +8,8 @@ import {
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
   validatePutCollectionDateRequest,
+  validateCreateCarriersRequest,
+  validateSetCarriersRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -346,6 +348,147 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutCollectionDateResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/carriers',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.listCarriers({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.ListCarriersResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/{id}/carriers',
+      handler: async function ({ params, payload }, h) {
+        if (!validateCreateCarriersRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.CreateCarriersRequest;
+        try {
+          return h
+            .response(
+              (await backend.createCarriers(
+                {
+                  id: params.id,
+                  accountId,
+                },
+                request
+              )) as dto.CreateCarriersResponse
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/carriers/{carrierId}',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getCarriers(
+            {
+              id: params.id,
+              accountId,
+            },
+            params.carrierId
+          );
+          return value as dto.GetCarriersResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/carriers/{carrierId}',
+      handler: async function ({ params, payload }) {
+        if (!validateSetCarriersRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.SetCarriersRequest;
+        if (request.status !== 'NotStarted') {
+          for (const c of request.values) {
+            if (c.id !== params.carrierId) {
+              return Boom.badRequest();
+            }
+          }
+        }
+        try {
+          await backend.setCarriers(
+            {
+              id: params.id,
+              accountId,
+            },
+            params.carrierId,
+            request
+          );
+          return request as dto.SetCarriersRequest;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'DELETE',
+      path: '/{id}/carriers/{carrierId}',
+      handler: async function ({ params }, h) {
+        try {
+          return h
+            .response(
+              (await backend.deleteCarriers(
+                {
+                  id: params.id,
+                  accountId,
+                },
+                params.carrierId
+              )) as undefined
+            )
+            .code(204);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

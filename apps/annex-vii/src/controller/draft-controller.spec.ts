@@ -492,4 +492,232 @@ describe(DraftController, () => {
       expect(response.error.statusCode).toBe(400);
     });
   });
+
+  describe('createDraftCarriers', () => {
+    it('successfully creates up to 5 carrier references', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      let response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftCarriers({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(response.success).toBe(false);
+    });
+  });
+
+  describe('setDraftCarriers', () => {
+    it('accepts a valid carrier detail', async () => {
+      const id = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Started',
+          values: [
+            {
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.setDraftCarriers({
+        id,
+        accountId,
+        carrierId,
+        value: {
+          status: 'Complete',
+          values: [
+            {
+              transportDetails: {
+                imo: '',
+                type: 'BulkVessel',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId,
+            },
+          ],
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: {
+            status: 'Complete',
+            values: [
+              {
+                transportDetails: {
+                  imo: '',
+                  type: 'BulkVessel',
+                },
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  organisationName: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: carrierId,
+              },
+            ],
+          },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('deleteDraftCarriers', () => {
+    it('accepts a valid carrier reference', async () => {
+      const id = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Complete',
+          values: [
+            {
+              transportDetails: {
+                shippingContainerNumber: '',
+                type: 'ShippingContainer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.deleteDraftCarriers({
+        id,
+        accountId,
+        carrierId: carrierId,
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+
+      expect(response.success).toBe(true);
+    });
+  });
 });

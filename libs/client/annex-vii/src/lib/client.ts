@@ -30,6 +30,16 @@ import {
   SetDraftWasteQuantityByIdResponse,
   SetDraftCollectionDateByIdRequest,
   SetDraftCollectionDateByIdResponse,
+  ListDraftCarriersRequest,
+  ListDraftCarriersResponse,
+  CreateDraftCarriersRequest,
+  CreateDraftCarriersResponse,
+  GetDraftCarriersRequest,
+  GetDraftCarriersResponse,
+  SetDraftCarriersRequest,
+  SetDraftCarriersResponse,
+  DeleteDraftCarriersRequest,
+  DeleteDraftCarriersResponse,
   createDraft,
   getDraftById,
   getDraftCustomerReferenceById,
@@ -45,6 +55,11 @@ import {
   setDraftWasteDescriptionById,
   setDraftWasteQuantityById,
   setDraftCollectionDateById,
+  listDraftCarriers,
+  createDraftCarriers,
+  getDraftCarriers,
+  setDraftCarriers,
+  deleteDraftCarriers,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -207,5 +222,60 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as SetDraftCollectionDateByIdResponse;
+  }
+
+  async listDraftCarriers(
+    req: ListDraftCarriersRequest
+  ): Promise<ListDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      listDraftCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as ListDraftCarriersResponse;
+  }
+
+  async createDraftCarriers(
+    req: CreateDraftCarriersRequest
+  ): Promise<CreateDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createDraftCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as CreateDraftCarriersResponse;
+  }
+
+  async getDraftCarriers(
+    req: GetDraftCarriersRequest
+  ): Promise<GetDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftCarriersResponse;
+  }
+
+  async setDraftCarriers(
+    req: SetDraftCarriersRequest
+  ): Promise<SetDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftCarriersResponse;
+  }
+
+  async deleteDraftCarriers(
+    req: DeleteDraftCarriersRequest
+  ): Promise<DeleteDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteDraftCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteDraftCarriersResponse;
   }
 }

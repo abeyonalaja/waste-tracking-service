@@ -6,6 +6,8 @@ import {
   PutExporterDetailRequest,
   PutImporterDetailRequest,
   PutCollectionDateRequest,
+  CreateCarriersRequest,
+  SetCarriersRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -229,3 +231,96 @@ export const validatePutCollectionDateRequest =
       },
     },
   });
+
+export const validateCreateCarriersRequest = ajv.compile<CreateCarriersRequest>(
+  {
+    properties: { status: { type: 'string' } },
+  }
+);
+
+export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
+  definitions: {
+    id: { type: 'string' },
+    addressDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        address: { type: 'string' },
+        country: { type: 'string' },
+      },
+    },
+    contactDetails: {
+      properties: {
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+    transportDetails: {
+      discriminator: 'type',
+      mapping: {
+        ShippingContainer: {
+          properties: {
+            shippingContainerNumber: { type: 'string' },
+          },
+          optionalProperties: {
+            vehicleRegistration: { type: 'string' },
+          },
+        },
+        Trailer: {
+          properties: {
+            vehicleRegistration: { type: 'string' },
+          },
+          optionalProperties: {
+            trailerNumber: { type: 'string' },
+          },
+        },
+        BulkVessel: {
+          properties: {
+            imo: { type: 'string' },
+          },
+        },
+      },
+    },
+  },
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { ref: 'id' },
+            },
+            optionalProperties: {
+              addressDetails: { ref: 'addressDetails' },
+              contactDetails: { ref: 'contactDetails' },
+              transportDetails: { ref: 'transportDetails' },
+            },
+          },
+        },
+      },
+    },
+    Complete: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { ref: 'id' },
+            },
+            optionalProperties: {
+              addressDetails: { ref: 'addressDetails' },
+              contactDetails: { ref: 'contactDetails' },
+              transportDetails: { ref: 'transportDetails' },
+            },
+          },
+        },
+      },
+    },
+  },
+});

@@ -14,6 +14,11 @@ import {
   SetDraftImporterDetailByIdResponse,
   SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdResponse,
+  ListDraftCarriersResponse,
+  CreateDraftCarriersResponse,
+  GetDraftCarriersResponse,
+  SetDraftCarriersResponse,
+  DeleteDraftCarriersResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -28,6 +33,8 @@ export type WasteQuantity = dto.WasteQuantity;
 export type ExporterDetail = dto.ExporterDetail;
 export type ImporterDetail = dto.ImporterDetail;
 export type CollectionDate = dto.CollectionDate;
+export type Carriers = dto.Carriers;
+export type CarrierData = dto.CarrierData;
 
 export type SubmissionRef = {
   id: string;
@@ -58,6 +65,19 @@ export interface SubmissionBackend {
   setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
   getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
   setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
+
+  listCarriers(ref: SubmissionRef): Promise<Carriers>;
+  createCarriers(
+    ref: SubmissionRef,
+    value: Omit<Carriers, 'values'>
+  ): Promise<Carriers>;
+  getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
+  setCarriers(
+    ref: SubmissionRef,
+    carrerId: string,
+    value: Carriers
+  ): Promise<void>;
+  deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
 }
 
 /**
@@ -278,6 +298,158 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.collectionDate = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  listCarriers({ id }: SubmissionRef): Promise<Carriers> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.carriers);
+  }
+
+  createCarriers(
+    { id }: SubmissionRef,
+    value: Omit<Carriers, 'values'>
+  ): Promise<Carriers> {
+    if (value.status !== 'Started') {
+      return Promise.reject(
+        Boom.badRequest(
+          `"Status cannot be ${value.status} on carrier detail creation"`
+        )
+      );
+    }
+
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const carrier = { id: uuidv4() };
+    if (submission.carriers.status === 'NotStarted') {
+      submission.carriers = {
+        status: value.status,
+        values: [carrier],
+      };
+
+      this.submissions.set(id, submission);
+      return Promise.resolve(submission.carriers);
+    }
+
+    if (submission.carriers.values.length === 5) {
+      return Promise.reject(Boom.badRequest('Cannot add more than 5 carriers'));
+    }
+
+    const carriers: dto.Carrier[] = [];
+    for (const c of submission.carriers.values) {
+      carriers.push(c);
+    }
+    carriers.push(carrier);
+    submission.carriers = {
+      status: value.status,
+      values: carriers,
+    };
+
+    this.submissions.set(id, submission);
+    return Promise.resolve({
+      status: value.status,
+      values: [carrier],
+    });
+  }
+
+  getCarriers({ id }: SubmissionRef, carrierId: string): Promise<Carriers> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (submission.carriers.status === 'NotStarted') {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const carrier = submission.carriers.values.find((c) => {
+      return c.id === carrierId;
+    });
+
+    if (carrier === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const value: dto.Carriers = {
+      status: submission.carriers.status,
+      values: [carrier],
+    };
+
+    return Promise.resolve(value);
+  }
+
+  setCarriers(
+    { id }: SubmissionRef,
+    carrierId: string,
+    value: Carriers
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (submission.carriers.status === 'NotStarted') {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (value.status === 'NotStarted') {
+      submission.carriers = value;
+      this.submissions.set(id, submission);
+      return Promise.resolve();
+    }
+
+    const carrier = value.values.find((c) => {
+      return c.id === carrierId;
+    });
+    if (carrier === undefined) {
+      return Promise.reject(Boom.badRequest());
+    }
+
+    const index = submission.carriers.values.findIndex((c) => {
+      return c.id === carrierId;
+    });
+    if (index === -1) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.carriers.status = value.status;
+    submission.carriers.values[index] = carrier as dto.Carrier;
+
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  deleteCarriers({ id }: SubmissionRef, carrierId: string): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (submission.carriers.status === 'NotStarted') {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const index = submission.carriers.values.findIndex((c) => {
+      return c.id === carrierId;
+    });
+
+    if (index === -1) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.carriers.values.splice(index, 1);
+    if (submission.carriers.values.length === 0) {
+      submission.carriers = { status: 'NotStarted' };
+    }
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -591,6 +763,129 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
         id,
         accountId,
         value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
+    let response: ListDraftCarriersResponse;
+    try {
+      response = await this.client.listDraftCarriers({ id, accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async createCarriers(
+    { id, accountId }: SubmissionRef,
+    value: Omit<Carriers, 'values'>
+  ): Promise<Carriers> {
+    let response: CreateDraftCarriersResponse;
+    try {
+      response = await this.client.createDraftCarriers({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async getCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<Carriers> {
+    let response: GetDraftCarriersResponse;
+    try {
+      response = await this.client.getDraftCarriers({
+        id,
+        accountId,
+        carrierId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  // Do I need the full Carriers object here or I can get away with carrierId and CarrierData only?
+  async setCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string,
+    value: Carriers
+  ): Promise<void> {
+    if (value.status !== 'NotStarted') {
+      for (const c of value.values) {
+        c.id = carrierId;
+      }
+    }
+
+    let response: SetDraftCarriersResponse;
+    try {
+      response = await this.client.setDraftCarriers({
+        id,
+        accountId,
+        carrierId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async deleteCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<void> {
+    let response: DeleteDraftCarriersResponse;
+    try {
+      response = await this.client.deleteDraftCarriers({
+        id,
+        accountId,
+        carrierId,
       });
     } catch (err) {
       this.logger.error(err);

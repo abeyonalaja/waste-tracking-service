@@ -5,6 +5,8 @@ import {
   SetDraftWasteDescriptionByIdRequest,
   SetDraftWasteQuantityByIdRequest,
   SetDraftCollectionDateByIdRequest,
+  SetDraftCarriersRequest,
+  CreateDraftCarriersRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -40,3 +42,10 @@ export const setDraftCollectionDateByIdRequest =
   ajv.compile<SetDraftCollectionDateByIdRequest>(
     schema.setDraftCollectionDateByIdRequest
   );
+
+export const createDraftCarriersRequest =
+  ajv.compile<CreateDraftCarriersRequest>(schema.createDraftCarriersRequest);
+
+export const setDraftCarriersRequest = ajv.compile<SetDraftCarriersRequest>(
+  schema.setDraftCarriersRequest
+);

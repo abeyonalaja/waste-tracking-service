@@ -100,6 +100,44 @@ export type ImporterDetail =
   | ({ status: 'Started' } & Partial<ImporterDetailData>)
   | ({ status: 'Complete' } & ImporterDetailData);
 
+export type CarrierData = {
+  addressDetails?: {
+    organisationName: string;
+    address: string;
+    country: string;
+  };
+  contactDetails?: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+  transportDetails?:
+    | {
+        type: 'ShippingContainer';
+        shippingContainerNumber: string;
+        vehicleRegistration?: string;
+      }
+    | {
+        type: 'Trailer';
+        vehicleRegistration: string;
+        trailerNumber?: string;
+      }
+    | {
+        type: 'BulkVessel';
+        imo: string;
+      };
+};
+
+export type Carrier = { id: string } & CarrierData;
+
+export type Carriers =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: Carrier[];
+    };
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
@@ -108,7 +146,7 @@ export type Submission = {
   exporterDetail: ExporterDetail;
   importerDetail: ImporterDetail;
   collectionDate: CollectionDate;
-  carriers: NotStartedSection;
+  carriers: Carriers;
   collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
   transitCountries: NotStartedSection;
@@ -138,3 +176,10 @@ export type GetImporterDetailResponse = ImporterDetail;
 export type PutCollectionDateRequest = CollectionDate;
 export type PutCollectionDateResponse = CollectionDate;
 export type GetCollectionDateResponse = CollectionDate;
+
+export type ListCarriersResponse = Carriers;
+export type CreateCarriersRequest = Omit<Carriers, 'values'>;
+export type CreateCarriersResponse = Carriers;
+export type GetCarriersResponse = Carriers;
+export type SetCarriersRequest = Carriers;
+export type SetCarriersResponse = Carriers;

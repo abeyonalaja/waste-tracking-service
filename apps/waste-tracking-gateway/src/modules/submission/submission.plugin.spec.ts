@@ -12,6 +12,7 @@ import {
   ExporterDetail,
   ImporterDetail,
   CollectionDate,
+  Carriers,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -57,6 +58,19 @@ const mockBackend = {
   getCollectionDate: jest.fn<(ref: SubmissionRef) => Promise<CollectionDate>>(),
   setCollectionDate:
     jest.fn<(ref: SubmissionRef, value: CollectionDate) => Promise<void>>(),
+  listCarriers: jest.fn<(ref: SubmissionRef) => Promise<Carriers>>(),
+  createCarriers:
+    jest.fn<
+      (ref: SubmissionRef, value: Omit<Carriers, 'values'>) => Promise<Carriers>
+    >(),
+  getCarriers:
+    jest.fn<(ref: SubmissionRef, carrierId: string) => Promise<Carriers>>(),
+  setCarriers:
+    jest.fn<
+      (ref: SubmissionRef, carrerId: string, value: Carriers) => Promise<void>
+    >(),
+  deleteCarriers:
+    jest.fn<(ref: SubmissionRef, carrierId: string) => Promise<void>>(),
 };
 
 const app = server({
@@ -99,6 +113,11 @@ describe('SubmissionPlugin', () => {
     mockBackend.setImporterDetail.mockClear();
     mockBackend.getCollectionDate.mockClear();
     mockBackend.setCollectionDate.mockClear();
+    mockBackend.listCarriers.mockClear();
+    mockBackend.createCarriers.mockClear();
+    mockBackend.getCarriers.mockClear();
+    mockBackend.setCarriers.mockClear();
+    mockBackend.deleteCarriers.mockClear();
   });
 
   describe('POST /submissions', () => {
@@ -175,6 +194,43 @@ describe('SubmissionPlugin', () => {
         { id, accountId },
         reference
       );
+    });
+  });
+
+  describe('GET /submissions/{id}/carriers/{carrierId}', () => {
+    it("Responds 404 if carrier doesn't exist", async () => {
+      const options = {
+        method: 'GET',
+        url: `/submissions/${faker.datatype.uuid()}/carriers/${faker.datatype.uuid()}`,
+      };
+
+      mockBackend.getCarriers.mockRejectedValue(Boom.notFound());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('PUT /submissions/{id}/carriers/{carrierId}', () => {
+    it("Responds 400 if carrier id doesn't match with id from payload", async () => {
+      const id = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      mockBackend.setCarriers.mockResolvedValue();
+      const options = {
+        method: 'PUT',
+        url: `/submissions/${id}/carriers/${carrierId}`,
+        payload: JSON.stringify({
+          status: 'Started',
+          values: [
+            {
+              id: faker.datatype.uuid(),
+            },
+          ],
+        }),
+      };
+
+      mockBackend.getCarriers.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
     });
   });
 });

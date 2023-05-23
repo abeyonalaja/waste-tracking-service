@@ -14,6 +14,11 @@ export {
   setDraftWasteDescriptionById,
   setDraftWasteQuantityById,
   setDraftCollectionDateById,
+  listDraftCarriers,
+  createDraftCarriers,
+  getDraftCarriers,
+  setDraftCarriers,
+  deleteDraftCarriers,
 } from './dto';
 
 export type {
@@ -49,6 +54,18 @@ export type {
   SetDraftWasteQuantityByIdResponse,
   SetDraftCollectionDateByIdRequest,
   SetDraftCollectionDateByIdResponse,
+  ListDraftCarriersRequest,
+  ListDraftCarriersResponse,
+  CreateDraftCarriersRequest,
+  CreateDraftCarriersResponse,
+  DraftCarrier,
+  DraftCarriers,
+  GetDraftCarriersRequest,
+  GetDraftCarriersResponse,
+  SetDraftCarriersRequest,
+  SetDraftCarriersResponse,
+  DeleteDraftCarriersRequest,
+  DeleteDraftCarriersResponse,
 } from './dto';
 
 export * as schema from './schema';

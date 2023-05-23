@@ -7,6 +7,7 @@ type Method = Readonly<{
 
 type AccountIdRequest = { accountId: string };
 type IdRequest = { id: string };
+type CarrierIdRequest = { carrierId: string };
 
 type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
@@ -112,6 +113,44 @@ type DraftRecoveryFacilityDetail =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' };
 
+export type DraftCarrierData = {
+  addressDetails?: {
+    organisationName: string;
+    address: string;
+    country: string;
+  };
+  contactDetails?: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+  transportDetails?:
+    | {
+        type: 'ShippingContainer';
+        shippingContainerNumber: string;
+        vehicleRegistration?: string;
+      }
+    | {
+        type: 'Trailer';
+        vehicleRegistration: string;
+        trailerNumber?: string;
+      }
+    | {
+        type: 'BulkVessel';
+        imo: string;
+      };
+};
+
+export type DraftCarrier = { id: string } & DraftCarrierData;
+
+export type DraftCarriers =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: DraftCarrier[];
+    };
+
 type NotStartedSection = { status: 'NotStarted' };
 
 export type DraftSubmission = {
@@ -122,7 +161,7 @@ export type DraftSubmission = {
   exporterDetail: DraftExporterDetail;
   importerDetail: DraftImporterDetail;
   collectionDate: DraftCollectionDate;
-  carriers: NotStartedSection;
+  carriers: DraftCarriers;
   collectionDetail: NotStartedSection;
   ukExitLocation: NotStartedSection;
   transitCountries: NotStartedSection;
@@ -246,5 +285,47 @@ export type SetDraftCollectionDateByIdRequest = IdRequest &
 export type SetDraftCollectionDateByIdResponse = Response<void>;
 export const setDraftCollectionDateById: Method = {
   name: 'setDraftCollectionDateById',
+  httpVerb: 'POST',
+};
+
+export type ListDraftCarriersRequest = IdRequest & AccountIdRequest;
+export type ListDraftCarriersResponse = Response<DraftCarriers>;
+export const listDraftCarriers: Method = {
+  name: 'listDraftCarriers',
+  httpVerb: 'POST',
+};
+
+export type CreateDraftCarriersRequest = IdRequest &
+  AccountIdRequest & { value: Omit<DraftCarriers, 'values'> };
+export type CreateDraftCarriersResponse = Response<DraftCarriers>;
+export const createDraftCarriers: Method = {
+  name: 'createDraftCarriers',
+  httpVerb: 'POST',
+};
+
+export type GetDraftCarriersRequest = IdRequest &
+  AccountIdRequest &
+  CarrierIdRequest;
+export type GetDraftCarriersResponse = Response<DraftCarriers>;
+export const getDraftCarriers: Method = {
+  name: 'getDraftCarriers',
+  httpVerb: 'POST',
+};
+
+export type SetDraftCarriersRequest = IdRequest &
+  AccountIdRequest &
+  CarrierIdRequest & { value: DraftCarriers };
+export type SetDraftCarriersResponse = Response<void>;
+export const setDraftCarriers: Method = {
+  name: 'setDraftCarriers',
+  httpVerb: 'POST',
+};
+
+export type DeleteDraftCarriersRequest = IdRequest &
+  AccountIdRequest &
+  CarrierIdRequest;
+export type DeleteDraftCarriersResponse = Response<void>;
+export const deleteDraftCarriers: Method = {
+  name: 'deleteDraftCarriers',
   httpVerb: 'POST',
 };

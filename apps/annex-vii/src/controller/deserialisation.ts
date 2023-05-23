@@ -8,6 +8,9 @@ import {
   GetDraftWasteQuantityByIdRequest,
   GetDraftCollectionDateByIdRequest,
   GetDraftsRequest,
+  GetDraftCarriersRequest,
+  ListDraftCarriersRequest,
+  DeleteDraftCarriersRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -54,4 +57,15 @@ export const getDraftImporterDetailByIdRequest =
 export const getDraftCollectionDateByIdRequest =
   ajv.compileParser<GetDraftCollectionDateByIdRequest>(
     schema.getDraftCollectionDateByIdRequest
+  );
+
+export const getDraftCarriersRequest =
+  ajv.compileParser<GetDraftCarriersRequest>(schema.getDraftCarriersRequest);
+
+export const listDraftCarriersRequest =
+  ajv.compileParser<ListDraftCarriersRequest>(schema.listDraftCarriersRequest);
+
+export const deleteDraftCarriersRequest =
+  ajv.compileParser<DeleteDraftCarriersRequest>(
+    schema.deleteDraftCarriersRequest
   );

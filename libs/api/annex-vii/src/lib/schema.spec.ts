@@ -6,6 +6,10 @@ import {
   SetDraftCollectionDateByIdRequest,
   SetDraftCustomerReferenceByIdResponse,
   SetDraftWasteQuantityByIdRequest,
+  ListDraftCarriersResponse,
+  CreateDraftCarriersRequest,
+  SetDraftCarriersRequest,
+  DeleteDraftCarriersRequest,
 } from './dto';
 import {
   getDraftByIdResponse,
@@ -13,6 +17,10 @@ import {
   setDraftCustomerReferenceByIdResponse,
   setDraftWasteQuantityByIdRequest,
   setDraftCollectionDateByIdRequest,
+  listDraftCarriersResponse,
+  createDraftCarriersRequest,
+  setDraftCarriersRequest,
+  deleteDraftCarriersRequest,
 } from './schema';
 
 const ajv = new Ajv();
@@ -179,6 +187,163 @@ describe('setDraftCollectionDateByIdRequest', () => {
           day: '01',
         },
       },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('listDraftCarriersResponse', () => {
+  const validate = ajv.compile<ListDraftCarriersResponse>(
+    listDraftCarriersResponse
+  );
+
+  it('is compatible with success value', () => {
+    const value: ListDraftCarriersResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            addressDetails: {
+              organisationName: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            transportDetails: {
+              type: 'ShippingContainer',
+              shippingContainerNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error value', () => {
+    validate({
+      success: false,
+      error: {
+        statusCode: 400,
+        name: 'BadRequest',
+        message: 'Bad request',
+      },
+    });
+  });
+});
+
+describe('createDraftCarriersRequest', () => {
+  const validate = ajv.compile<CreateDraftCarriersRequest>(
+    createDraftCarriersRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: CreateDraftCarriersRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftCarrierRequest', () => {
+  const validate = ajv.compile<SetDraftCarriersRequest>(
+    setDraftCarriersRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const carrierId = faker.datatype.uuid();
+    let value: SetDraftCarriersRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      carrierId: carrierId,
+      value: {
+        status: 'Started',
+        values: [
+          {
+            id: carrierId,
+            addressDetails: {
+              organisationName: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            transportDetails: {
+              type: 'ShippingContainer',
+              shippingContainerNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      carrierId: carrierId,
+      value: {
+        status: 'NotStarted',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      carrierId: carrierId,
+      value: {
+        status: 'Started',
+        values: [
+          {
+            id: carrierId,
+            addressDetails: {
+              organisationName: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('deleteDraftCarrierRequest', () => {
+  const validate = ajv.compile<DeleteDraftCarriersRequest>(
+    deleteDraftCarriersRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: DeleteDraftCarriersRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      carrierId: faker.datatype.uuid(),
     };
 
     expect(validate(value)).toBe(true);

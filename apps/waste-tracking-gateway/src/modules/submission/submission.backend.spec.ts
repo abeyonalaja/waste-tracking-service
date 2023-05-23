@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { expect } from '@jest/globals';
-import { InMemorySubmissionBackend } from './submission.backend';
+import { Carriers, InMemorySubmissionBackend } from './submission.backend';
 import { add } from 'date-fns';
 
 describe(InMemorySubmissionBackend, () => {
@@ -138,5 +138,46 @@ describe(InMemorySubmissionBackend, () => {
         }
       )
     ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it('lets us change a carrier detail', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+    const status: Omit<Carriers, 'values'> = { status: 'Started' };
+    const carriers = await subject.createCarriers({ id, accountId }, status);
+
+    if (carriers.status !== 'Started') {
+      expect(false);
+    } else {
+      const carrierId = carriers.values[0].id;
+      const value: Carriers = {
+        status: status.status,
+        values: [
+          {
+            id: carriers.values[0].id,
+            addressDetails: {
+              organisationName: 'Acme Inc',
+              address: '123 Anytown',
+              country: 'UK',
+            },
+            contactDetails: {
+              fullName: 'John Doe',
+              emailAddress: 'johndoe@acme.com',
+              phoneNumber: '555-1234',
+              faxNumber: '555-5678',
+            },
+            transportDetails: {
+              type: 'ShippingContainer',
+              shippingContainerNumber: '2347027',
+              vehicleRegistration: 'TL12 TFL',
+            },
+          },
+        ],
+      };
+
+      await subject.setCarriers({ id, accountId }, carrierId, value);
+      expect(await subject.getCarriers({ id, accountId }, carrierId)).toEqual(
+        value
+      );
+    }
   });
 });
