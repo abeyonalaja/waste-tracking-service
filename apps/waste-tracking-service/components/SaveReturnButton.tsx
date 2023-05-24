@@ -4,9 +4,11 @@ import { BLACK, GREY_3, YELLOW } from 'govuk-colours';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
+  href?: string | object;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   id?: string;
   testId?: string;
+  children?: string;
 }
 
 const StyledLinkAsButton = styled('a')`
@@ -54,7 +56,13 @@ const StyledLinkAsButton = styled('a')`
   }
 `;
 
-export const SaveReturnButton = ({ onClick, id, testId }: Props) => {
+export const SaveReturnButton = ({
+  href,
+  onClick,
+  id,
+  testId,
+  children,
+}: Props) => {
   const { t } = useTranslation();
   return (
     <StyledLinkAsButton
@@ -64,7 +72,7 @@ export const SaveReturnButton = ({ onClick, id, testId }: Props) => {
       onClick={onClick}
       data-testid={testId}
     >
-      {t('saveReturnButton')}
+      {children === undefined ? t('saveReturnButton') : children}
     </StyledLinkAsButton>
   );
 };

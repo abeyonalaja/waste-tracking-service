@@ -10,6 +10,8 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   SaveReturnLink,
+  ButtonGroup,
+  SaveReturnButton,
 } from '../components';
 import styled from 'styled-components';
 import {
@@ -237,10 +239,12 @@ const ExporterPostcode = () => {
                       {t('postcode.notFoundLink')}
                     </AppLink>
                   </Paragraph>
-                  <GovUK.Button id="saveButton">
-                    {t('continueButton')}
-                  </GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}
@@ -265,26 +269,33 @@ const ExporterPostcode = () => {
                       onChange={(e) => setPostcode(e.target.value)}
                     />
                   </GovUK.FormGroup>
-                  <Paragraph>
-                    <AppLink
-                      href={{
-                        pathname: 'exporter-details-manual',
-                        query: { id },
-                      }}
+
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('postcode.findButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton
+                      onClick={() =>
+                        router.push({
+                          pathname: '/submit-an-export-tasklist',
+                          query: { id },
+                        })
+                      }
                     >
-                      {t('postcode.manualAddressLink')}
-                    </AppLink>
-                  </Paragraph>
-                  <GovUK.Button id="saveButton">
-                    {t('postcode.findButton')}
-                  </GovUK.Button>
-                  <SaveReturnLink
+                      {t('returnToDraft')}
+                    </SaveReturnButton>
+                  </ButtonGroup>
+                </form>
+                <Paragraph>
+                  <AppLink
                     href={{
-                      pathname: '/submit-an-export-tasklist',
+                      pathname: 'exporter-details-manual',
                       query: { id },
                     }}
-                  />
-                </form>
+                  >
+                    {t('postcode.manualAddressLink')}
+                  </AppLink>
+                </Paragraph>
               </>
             )}
           </GovUK.GridCol>

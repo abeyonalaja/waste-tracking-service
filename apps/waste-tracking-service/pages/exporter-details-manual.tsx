@@ -11,6 +11,8 @@ import {
   SaveReturnLink,
   Loading,
   SubmissionNotFound,
+  ButtonGroup,
+  SaveReturnButton,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -280,9 +282,12 @@ const ExporterManual = () => {
                       <option value="Northern Ireland">Northern Ireland</option>
                     </GovUK.Select>
                   </GovUK.FormGroup>
-
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnLink onClick={handleLinkSubmit} />
+                  <ButtonGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('saveButton')}
+                    </GovUK.Button>
+                    <SaveReturnButton onClick={handleLinkSubmit} />
+                  </ButtonGroup>
                 </form>
               </>
             )}
