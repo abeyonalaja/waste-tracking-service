@@ -157,5 +157,9 @@
   "exportJourney.wasteCollectionDate.radioYes": "Yes, I’ll enter the actual date",
   "exportJourney.wasteCollectionDate.radioYesHint": "If the date might change, enter an estimate instead.",
   "exportJourney.wasteCollectionDate.radioNo": "No, I’ll enter an estimate date",
-  "exportJourney.wasteCollectionDate.radioNoHint": "You must update this with actual details as soon as possible after submitting this export."
+  "exportJourney.wasteCollectionDate.radioNoHint": "You must update this with actual details as soon as possible after submitting this export.",
+  "exportJourney.pointOfExit.caption": "Location waste leave the UK",
+  "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK",
+  "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
+  "exportJourney.pointOfExit.inputLabel": "Enter the location"
 }

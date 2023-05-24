@@ -78,7 +78,7 @@ export const validateNationalCode: (
   if (nationalCode === undefined || nationalCode === '') return 'Enter code ';
 
   if (nationalCode.length > 50)
-    return 'Enter a reference using 50 character or less';
+    return 'Enter a code using 50 character or less';
 
   const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
   if (!regex.test(nationalCode))
@@ -238,4 +238,28 @@ export const validateDate: (date: Date) => string | undefined = (
   const threeWorkingDaysFromToday = addBusinessDays(new Date(), 3);
   if (differenceInDays(dateString, threeWorkingDaysFromToday) < 0)
     return 'Enter a date at least 3 business days in the future';
+};
+
+export const validateKnowsPointOfExit: (
+  knowsPointOfExit?: string
+) => string | undefined = (knowsPointOfExit) => {
+  if (knowsPointOfExit === undefined)
+    return 'Select yes if you know where the waste will leave the UK';
+};
+
+export const validatePointOfExit: (
+  knowsPointOfExit?: string,
+  pointOfExit?: string
+) => string | undefined = (knowsPointOfExit, pointOfExit) => {
+  if (knowsPointOfExit === undefined || knowsPointOfExit === 'No') return;
+
+  if (pointOfExit === undefined || pointOfExit === '')
+    return 'Enter the location ';
+
+  if (pointOfExit.length > 50)
+    return 'Enter the location using 50 character or less';
+
+  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
+  if (!regex.test(pointOfExit))
+    return 'The location must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };
