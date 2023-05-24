@@ -7,6 +7,7 @@ import {
   SetDraftCollectionDateByIdRequest,
   SetDraftCarriersRequest,
   CreateDraftCarriersRequest,
+  SetDraftExitLocationByIdRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -49,3 +50,8 @@ export const createDraftCarriersRequest =
 export const setDraftCarriersRequest = ajv.compile<SetDraftCarriersRequest>(
   schema.setDraftCarriersRequest
 );
+
+export const setDraftExitLocationByIdRequest =
+  ajv.compile<SetDraftExitLocationByIdRequest>(
+    schema.setDraftExitLocationByIdRequest
+  );

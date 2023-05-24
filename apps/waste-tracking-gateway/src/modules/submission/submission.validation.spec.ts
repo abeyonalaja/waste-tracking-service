@@ -8,6 +8,7 @@ import {
   validatePutImporterDetailRequest,
   validatePutCollectionDateRequest,
   validateSetCarriersRequest,
+  validatePutExitLocationRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -596,5 +597,55 @@ describe('validateSetCarriersRequest', () => {
     };
 
     expect(validateSetCarriersRequest(data)).toBe(false);
+  });
+});
+
+describe('validatePutExitLocationRequest', () => {
+  const validate = validatePutExitLocationRequest;
+
+  it('Rejects an invalid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        exitLocation: {
+          provided: 'No',
+          value: faker.datatype.string(),
+        },
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+        },
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts a valid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Complete',
+        exitLocation: {
+          provided: 'No',
+        },
+      })
+    ).toBe(true);
   });
 });

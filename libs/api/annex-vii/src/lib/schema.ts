@@ -14,6 +14,7 @@ import {
   CreateDraftCarriersRequest,
   DeleteDraftCarriersRequest,
   GetDraftCarriersRequest,
+  GetDraftExitLocationByIdRequest,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -371,6 +372,26 @@ const recoveryFacilityDetail: SchemaObject = {
   },
 };
 
+const draftExitLocation: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Complete: {
+      properties: {
+        exitLocation: {
+          discriminator: 'provided',
+          mapping: {
+            Yes: { properties: { value: { type: 'string' } } },
+            No: { properties: {} },
+          },
+        },
+      },
+    },
+  },
+};
+
 const draftSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
@@ -382,7 +403,7 @@ const draftSubmission: SchemaObject = {
     collectionDate: draftCollectionDate,
     carriers: draftCarriers,
     collectionDetail: notStartedSection,
-    ukExitLocation: notStartedSection,
+    ukExitLocation: draftExitLocation,
     transitCountries: notStartedSection,
     recoveryFacilityDetail: recoveryFacilityDetail,
   },
@@ -726,6 +747,38 @@ export const deleteDraftCarriersRequest: JTDSchemaType<DeleteDraftCarriersReques
   };
 
 export const deleteDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftExitLocationByIdRequest: JTDSchemaType<GetDraftExitLocationByIdRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftExitLocationByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftExitLocation,
+  },
+};
+
+export const setDraftExitLocationByIdRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftExitLocation,
+  },
+};
+
+export const setDraftExitLocationByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

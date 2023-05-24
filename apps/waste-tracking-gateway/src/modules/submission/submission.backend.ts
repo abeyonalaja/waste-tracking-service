@@ -19,6 +19,8 @@ import {
   GetDraftCarriersResponse,
   SetDraftCarriersResponse,
   DeleteDraftCarriersResponse,
+  GetDraftExitLocationByIdResponse,
+  SetDraftExitLocationByIdResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -35,6 +37,7 @@ export type ImporterDetail = dto.ImporterDetail;
 export type CollectionDate = dto.CollectionDate;
 export type Carriers = dto.Carriers;
 export type CarrierData = dto.CarrierData;
+export type ExitLocation = dto.ExitLocation;
 
 export type SubmissionRef = {
   id: string;
@@ -65,7 +68,6 @@ export interface SubmissionBackend {
   setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
   getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
   setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
-
   listCarriers(ref: SubmissionRef): Promise<Carriers>;
   createCarriers(
     ref: SubmissionRef,
@@ -78,6 +80,8 @@ export interface SubmissionBackend {
     value: Carriers
   ): Promise<void>;
   deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
+  getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
+  setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
 }
 
 /**
@@ -450,6 +454,26 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       submission.carriers = { status: 'NotStarted' };
     }
 
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getExitLocation({ id }: SubmissionRef): Promise<ExitLocation> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.ukExitLocation);
+  }
+
+  setExitLocation({ id }: SubmissionRef, value: ExitLocation): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.ukExitLocation = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -886,6 +910,53 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
         id,
         accountId,
         carrierId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getExitLocation({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<ExitLocation> {
+    let response: GetDraftExitLocationByIdResponse;
+    try {
+      response = await this.client.getDraftExitLocationById({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setExitLocation(
+    { id, accountId }: SubmissionRef,
+    value: ExitLocation
+  ): Promise<void> {
+    let response: SetDraftExitLocationByIdResponse;
+    try {
+      response = await this.client.setDraftExitLocationById({
+        id,
+        accountId,
+        value,
       });
     } catch (err) {
       this.logger.error(err);

@@ -137,6 +137,12 @@ export type Carriers =
       status: 'Started' | 'Complete';
       values: Carrier[];
     };
+export type ExitLocation =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Complete';
+      exitLocation: { provided: 'Yes'; value: string } | { provided: 'No' };
+    };
 
 export type Submission = {
   id: string;
@@ -148,7 +154,7 @@ export type Submission = {
   collectionDate: CollectionDate;
   carriers: Carriers;
   collectionDetail: NotStartedSection;
-  ukExitLocation: NotStartedSection;
+  ukExitLocation: ExitLocation;
   transitCountries: NotStartedSection;
   recoveryFacilityDetail: RecoveryFacilityDetail;
 };
@@ -183,3 +189,6 @@ export type CreateCarriersResponse = Carriers;
 export type GetCarriersResponse = Carriers;
 export type SetCarriersRequest = Carriers;
 export type SetCarriersResponse = Carriers;
+export type PutExitLocationRequest = ExitLocation;
+export type PutExitLocationResponse = ExitLocation;
+export type GetExitLocationResponse = ExitLocation;

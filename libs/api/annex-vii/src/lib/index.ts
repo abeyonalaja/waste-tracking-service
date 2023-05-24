@@ -7,6 +7,7 @@ export {
   getDraftWasteDescriptionById,
   getDraftWasteQuantityById,
   getDraftCollectionDateById,
+  getDraftExitLocationById,
   getDrafts,
   setDraftCustomerReferenceById,
   setDraftExporterDetailById,
@@ -19,6 +20,7 @@ export {
   getDraftCarriers,
   setDraftCarriers,
   deleteDraftCarriers,
+  setDraftExitLocationById,
 } from './dto';
 
 export type {
@@ -40,6 +42,8 @@ export type {
   GetDraftWasteQuantityByIdResponse,
   GetDraftCollectionDateByIdRequest,
   GetDraftCollectionDateByIdResponse,
+  GetDraftExitLocationByIdRequest,
+  GetDraftExitLocationByIdResponse,
   GetDraftsRequest,
   GetDraftsResponse,
   SetDraftCustomerReferenceByIdRequest,
@@ -66,6 +70,8 @@ export type {
   SetDraftCarriersResponse,
   DeleteDraftCarriersRequest,
   DeleteDraftCarriersResponse,
+  SetDraftExitLocationByIdRequest,
+  SetDraftExitLocationByIdResponse,
 } from './dto';
 
 export * as schema from './schema';

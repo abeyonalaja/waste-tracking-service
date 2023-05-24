@@ -10,6 +10,7 @@ import {
   validatePutCollectionDateRequest,
   validateCreateCarriersRequest,
   validateSetCarriersRequest,
+  validatePutExitLocationRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -489,6 +490,50 @@ const plugin: Plugin<PluginOptions> = {
               )) as undefined
             )
             .code(204);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/exit-location',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getExitLocation({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetExitLocationResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/exit-location',
+      handler: async function ({ params, payload }) {
+        if (!validatePutExitLocationRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutExitLocationRequest;
+        try {
+          await backend.setExitLocation({ id: params.id, accountId }, request);
+          return request as dto.PutExitLocationResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

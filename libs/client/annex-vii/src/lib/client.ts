@@ -16,6 +16,8 @@ import {
   GetDraftWasteQuantityByIdResponse,
   GetDraftCollectionDateByIdResponse,
   GetDraftCollectionDateByIdRequest,
+  GetDraftExitLocationByIdRequest,
+  GetDraftExitLocationByIdResponse,
   GetDraftsRequest,
   GetDraftsResponse,
   SetDraftCustomerReferenceByIdRequest,
@@ -40,6 +42,8 @@ import {
   SetDraftCarriersResponse,
   DeleteDraftCarriersRequest,
   DeleteDraftCarriersResponse,
+  SetDraftExitLocationByIdRequest,
+  SetDraftExitLocationByIdResponse,
   createDraft,
   getDraftById,
   getDraftCustomerReferenceById,
@@ -48,6 +52,7 @@ import {
   getDraftWasteDescriptionById,
   getDraftWasteQuantityById,
   getDraftCollectionDateById,
+  getDraftExitLocationById,
   getDrafts,
   setDraftCustomerReferenceById,
   setDraftExporterDetailById,
@@ -60,6 +65,7 @@ import {
   getDraftCarriers,
   setDraftCarriers,
   deleteDraftCarriers,
+  setDraftExitLocationById,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -277,5 +283,27 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as DeleteDraftCarriersResponse;
+  }
+
+  async getDraftExitLocationById(
+    req: GetDraftExitLocationByIdRequest
+  ): Promise<GetDraftExitLocationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftExitLocationById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftExitLocationByIdResponse;
+  }
+
+  async setDraftExitLocationById(
+    req: SetDraftExitLocationByIdRequest
+  ): Promise<SetDraftExitLocationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftExitLocationById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftExitLocationByIdResponse;
   }
 }

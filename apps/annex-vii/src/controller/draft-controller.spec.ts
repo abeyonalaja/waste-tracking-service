@@ -5,6 +5,7 @@ import { add } from 'date-fns';
 import winston from 'winston';
 import { DraftSubmission, DraftSubmissionSummary } from '../model';
 import DraftController from './draft-controller';
+import { ExitLocation } from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -716,6 +717,107 @@ describe(DraftController, () => {
       });
 
       expect(mockRepository.saveDraft).toBeCalled();
+
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('setDraftExitLocationById', () => {
+    it('accepts a request if provided is Yes and value given', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const setExitLocationRequest = {
+        status: 'Complete',
+        exitLocation: { provided: 'Yes', value: faker.datatype.string() },
+      } as ExitLocation;
+      const accountId = faker.datatype.uuid();
+      const response = await subject.setDraftExitLocationById({
+        id,
+        accountId,
+        value: setExitLocationRequest,
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: setExitLocationRequest,
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+
+      expect(response.success).toBe(true);
+    });
+
+    it('accepts request if provided is No and no value is given', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const setExitLocationRequest = {
+        status: 'Complete',
+        exitLocation: { provided: 'No' },
+      } as ExitLocation;
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.setDraftExitLocationById({
+        id,
+        accountId,
+        value: setExitLocationRequest,
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: setExitLocationRequest,
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
 
       expect(response.success).toBe(true);
     });

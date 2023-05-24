@@ -10,6 +10,7 @@ import {
   CreateDraftCarriersRequest,
   SetDraftCarriersRequest,
   DeleteDraftCarriersRequest,
+  SetDraftExitLocationByIdRequest,
 } from './dto';
 import {
   getDraftByIdResponse,
@@ -21,6 +22,7 @@ import {
   createDraftCarriersRequest,
   setDraftCarriersRequest,
   deleteDraftCarriersRequest,
+  setDraftExitLocationByIdRequest,
 } from './schema';
 
 const ajv = new Ajv();
@@ -344,6 +346,41 @@ describe('deleteDraftCarrierRequest', () => {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       carrierId: faker.datatype.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftExitLocationByIdRequest', () => {
+  const validate = ajv.compile<SetDraftExitLocationByIdRequest>(
+    setDraftExitLocationByIdRequest
+  );
+
+  it('is compatible with dto values', () => {
+    let value: SetDraftExitLocationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'No',
+        },
+      },
     };
 
     expect(validate(value)).toBe(true);

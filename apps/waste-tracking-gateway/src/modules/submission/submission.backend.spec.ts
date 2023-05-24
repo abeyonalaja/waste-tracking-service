@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { expect } from '@jest/globals';
 import { Carriers, InMemorySubmissionBackend } from './submission.backend';
 import { add } from 'date-fns';
+import { ExitLocation } from '@wts/api/waste-tracking-gateway';
 
 describe(InMemorySubmissionBackend, () => {
   let subject: InMemorySubmissionBackend;
@@ -179,5 +180,109 @@ describe(InMemorySubmissionBackend, () => {
         value
       );
     }
+  });
+
+  it('rejects if collection date less than three days in future', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const date = add(new Date(), { days: 1 });
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+        }
+      )
+    ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it("rejects if collection date values aren't numbers", async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: 'X',
+            month: '01',
+            day: '01',
+          },
+        }
+      )
+    ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it('accepts set exit location if provided is Yes and value is given', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const setExitLocationRequest = {
+      status: 'Complete',
+      exitLocation: { provided: 'Yes', value: faker.datatype.string() },
+    } as ExitLocation;
+
+    expect(
+      subject.setExitLocation({ id, accountId }, setExitLocationRequest)
+    ).resolves.toEqual(undefined);
+  });
+
+  it('accepts set exit location if provided is No and value is not given', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const setExitLocationRequest = {
+      status: 'Complete',
+      exitLocation: { provided: 'No' },
+    } as ExitLocation;
+
+    expect(
+      subject.setExitLocation({ id, accountId }, setExitLocationRequest)
+    ).resolves.toEqual(undefined);
+  });
+
+  it('rejects if collection date less than three days in future', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const date = add(new Date(), { days: 1 });
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+        }
+      )
+    ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it("rejects if collection date values aren't numbers", async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    expect(
+      subject.setCollectionDate(
+        { id, accountId },
+        {
+          status: 'Complete',
+          value: {
+            type: 'ActualDate',
+            year: 'X',
+            month: '01',
+            day: '01',
+          },
+        }
+      )
+    ).rejects.toHaveProperty('isBoom', true);
   });
 });

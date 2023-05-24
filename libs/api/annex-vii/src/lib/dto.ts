@@ -153,6 +153,13 @@ export type DraftCarriers =
 
 type NotStartedSection = { status: 'NotStarted' };
 
+export type DraftExitLocation =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Complete';
+      exitLocation: { provided: 'Yes'; value: string } | { provided: 'No' };
+    };
+
 export type DraftSubmission = {
   id: string;
   reference: CustomerReference;
@@ -163,7 +170,7 @@ export type DraftSubmission = {
   collectionDate: DraftCollectionDate;
   carriers: DraftCarriers;
   collectionDetail: NotStartedSection;
-  ukExitLocation: NotStartedSection;
+  ukExitLocation: DraftExitLocation;
   transitCountries: NotStartedSection;
   recoveryFacilityDetail: DraftRecoveryFacilityDetail;
 };
@@ -327,5 +334,20 @@ export type DeleteDraftCarriersRequest = IdRequest &
 export type DeleteDraftCarriersResponse = Response<void>;
 export const deleteDraftCarriers: Method = {
   name: 'deleteDraftCarriers',
+  httpVerb: 'POST',
+};
+
+export type GetDraftExitLocationByIdRequest = IdRequest & AccountIdRequest;
+export type GetDraftExitLocationByIdResponse = Response<DraftExitLocation>;
+export const getDraftExitLocationById: Method = {
+  name: 'getDraftExitLocationById',
+  httpVerb: 'POST',
+};
+
+export type SetDraftExitLocationByIdRequest = IdRequest &
+  AccountIdRequest & { value: DraftExitLocation };
+export type SetDraftExitLocationByIdResponse = Response<void>;
+export const setDraftExitLocationById: Method = {
+  name: 'setDraftExitLocationById',
   httpVerb: 'POST',
 };

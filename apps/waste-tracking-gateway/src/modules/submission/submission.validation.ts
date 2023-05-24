@@ -8,6 +8,7 @@ import {
   PutCollectionDateRequest,
   CreateCarriersRequest,
   SetCarriersRequest,
+  PutExitLocationRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -324,3 +325,27 @@ export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
     },
   },
 });
+
+export const validatePutExitLocationRequest =
+  ajv.compile<PutExitLocationRequest>({
+    definitions: {
+      exitLocation: {
+        discriminator: 'provided',
+        mapping: {
+          Yes: { properties: { value: { type: 'string' } } },
+          No: { properties: {} },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      NotStarted: {
+        properties: {},
+      },
+      Complete: {
+        properties: {
+          exitLocation: { ref: 'exitLocation' },
+        },
+      },
+    },
+  });
