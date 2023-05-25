@@ -70,7 +70,6 @@ secret:
   name: ''
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
-    APP_ID: 'annex-vii'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

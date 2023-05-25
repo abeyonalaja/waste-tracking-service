@@ -4,14 +4,14 @@ import { AddressBackend } from './address.backend';
 import { Logger } from 'winston';
 
 export interface PluginOptions {
-  addressBackend: AddressBackend;
+  backend: AddressBackend;
   logger: Logger;
 }
 
 const plugin: Plugin<PluginOptions> = {
   name: 'addresses',
   version: '1.0.0',
-  register: async function (server, { addressBackend, logger }) {
+  register: async function (server, { backend, logger }) {
     server.route({
       method: 'GET',
       path: '/',
@@ -21,7 +21,7 @@ const plugin: Plugin<PluginOptions> = {
           return Boom.badRequest("Missing query parameter 'postcode'");
         }
         try {
-          return await addressBackend.listAddresses(postcode);
+          return await backend.listAddresses(postcode);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

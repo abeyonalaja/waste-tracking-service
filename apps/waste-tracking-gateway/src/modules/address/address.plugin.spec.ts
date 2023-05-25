@@ -26,7 +26,7 @@ beforeAll(async () => {
   await app.register({
     plugin: addressPlugin,
     options: {
-      addressBackend: mockBackend as AddressBackend,
+      backend: mockBackend as AddressBackend,
       logger: new winston.Logger(),
     },
     routes: {

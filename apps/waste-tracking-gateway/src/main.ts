@@ -1,18 +1,20 @@
 import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
+import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import * as winston from 'winston';
 import { addressPlugin } from './modules/address';
 import {
+  AddressBackend,
+  AddressServiceBackend,
+  AddressStub,
+} from './modules/address/address.backend';
+import {
   AnnexViiServiceBackend,
   InMemorySubmissionBackend,
+  SubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
-import {
-  AddressStub,
-  AddressServiceBackend,
-} from './modules/address/address.backend';
-import { DaprAddressClient } from '@wts/client/address';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -29,32 +31,34 @@ const app = server({
   },
 });
 
-const addressBackend =
-  process.env['NODE_ENV'] === 'development'
-    ? new AddressStub()
-    : new AddressServiceBackend(
-        new DaprAddressClient(
-          new DaprClient(),
-          process.env['ADDRESS_APP_ID'] || 'address'
-        ),
-        logger
-      );
-
-const backend =
-  process.env['NODE_ENV'] === 'development'
-    ? new InMemorySubmissionBackend()
-    : new AnnexViiServiceBackend(
-        new DaprAnnexViiClient(
-          new DaprClient(),
-          process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
-        ),
-        logger
-      );
+let backend: { submission: SubmissionBackend; address: AddressBackend };
+if (process.env['NODE_ENV'] === 'development') {
+  logger.warn('service is using mock-backends; not for production use');
+  backend = {
+    address: new AddressStub(),
+    submission: new InMemorySubmissionBackend(),
+  };
+} else {
+  const client = new DaprClient();
+  backend = {
+    address: new AddressServiceBackend(
+      new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
+      logger
+    ),
+    submission: new AnnexViiServiceBackend(
+      new DaprAnnexViiClient(
+        client,
+        process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+      ),
+      logger
+    ),
+  };
+}
 
 await app.register({
   plugin: submissionPlugin,
   options: {
-    backend,
+    backend: backend.submission,
     logger,
   },
   routes: {
@@ -65,7 +69,7 @@ await app.register({
 await app.register({
   plugin: addressPlugin,
   options: {
-    addressBackend,
+    backend: backend.address,
     logger,
   },
   routes: {

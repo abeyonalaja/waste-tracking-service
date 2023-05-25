@@ -13,8 +13,9 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 const provider = new NodeTracerProvider({
   resource: Resource.default().merge(
     new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]:
-        `${process.env['APP_ID']}-impl` || 'annex-vii-impl',
+      [SemanticResourceAttributes.SERVICE_NAME]: `${
+        process.env['APP_ID'] || 'annex-vii'
+      }-impl`,
     })
   ),
 });
