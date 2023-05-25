@@ -8,7 +8,7 @@ And(/^I navigate to Exporter details page with valid postcode$/) do
   ExporterAddressPage.new.enter_postcode 'ng23lp'
   ExporterAddressPage.new.find_address
   ExporterAddressPage.new.select_first_address
-  ExporterAddressPage.new.continue
+  ExporterAddressPage.new.save_and_continue
 end
 
 And(/^I complete Exporter details with valid postcode$/) do

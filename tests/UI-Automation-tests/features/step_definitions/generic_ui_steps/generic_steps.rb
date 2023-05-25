@@ -19,11 +19,11 @@ And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_nam
 end
 
 And(/^I click the button Save and continue$/) do
-  click_on Translations.value 'saveButton'
+  click_button Translations.value 'saveButton'
 end
 
 When(/^I click the Save and return$/) do
-  click_on Translations.value 'saveReturnButton'
+  click_link Translations.value 'saveReturnButton'
 end
 
 When(/^I click the "([^"]*)" link$/) do |option|
@@ -31,7 +31,7 @@ When(/^I click the "([^"]*)" link$/) do |option|
   click_link Translations.value(get_key)
 end
 
-Then(/^the "([^"]*)" page is displayed$/) do |page_name|
+Then(/^?(?:I|the)? ?(?:should see)? "([^"]*)" page is displayed$/) do |page_name|
   camel_case_page_name = page_name.split.map(&:capitalize).push('Page').join
   page_class = Object.const_get camel_case_page_name
   page_object = page_class.new

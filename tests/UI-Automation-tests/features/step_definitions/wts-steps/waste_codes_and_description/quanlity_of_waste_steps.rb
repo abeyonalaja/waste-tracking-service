@@ -85,7 +85,7 @@ And(/^I complete Waste codes and description task with "([^"]*)" has waste code$
   EwcCodeController.complete ' '
   NationalCodeController.complete
   DescribeTheWasteController.complete
-  QuantityOfWastePage.new.save_and_return_to_draft
+  QuantityOfWastePage.new.save_and_return
 end
 
 Then(/^What is the actual net weight of the small weight waste is displayed$/) do

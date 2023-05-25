@@ -20,6 +20,7 @@ gem 'allure-cucumber', '~> 2.18.0'
 gem 'logging', '~>2.3.0'
 gem 'axe-core-cucumber'
 gem 'axe-core-capybara'
+gem 'browserstack-local'
 
 
 

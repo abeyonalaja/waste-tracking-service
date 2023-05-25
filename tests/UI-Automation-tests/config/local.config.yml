@@ -1,0 +1,12 @@
+server: hub.browserstack.com
+user: 'spappula_6OcXAI'
+key: 'imSyUqSoKAcd6x2juGz4'
+
+common_caps:
+  build: browserstack-build-1
+  browserstack.debug: true
+  name: BStack local capybara
+
+browser_caps:
+- browser: chrome
+  browserstack.local: true

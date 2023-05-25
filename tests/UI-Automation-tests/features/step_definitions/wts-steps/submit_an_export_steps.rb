@@ -46,7 +46,7 @@ And(/^I complete Waste codes and description task$/) do
   EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
-  QuantityOfWastePage.new.save_and_return_to_draft
+  QuantityOfWastePage.new.save_and_return
 end
 
 And(/^I have (\d+) of 4 sections completed$/) do |completed|

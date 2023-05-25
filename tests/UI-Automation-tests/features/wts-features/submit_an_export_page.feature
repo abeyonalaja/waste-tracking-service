@@ -2,6 +2,7 @@ Feature: AS A Waste Producer/Broker
   I NEED to submit waste export
   SO THAT my waste can be processed
 
+  @t
   Scenario: Reference number should be displayed on Submit an export page
     Given I login to waste tracking portal
     And I navigate to the add reference page

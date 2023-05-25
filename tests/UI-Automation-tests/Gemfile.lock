@@ -32,6 +32,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    browserstack-local (1.4.1)
     builder (3.2.4)
     capybara (3.37.1)
       addressable
@@ -184,6 +185,7 @@ DEPENDENCIES
   allure-cucumber (~> 2.18.0)
   axe-core-capybara
   axe-core-cucumber
+  browserstack-local
   capybara (~> 3.37.0)
   capybara-screenshot (~> 1.0.25)
   cucumber (~> 8.0.0)
