@@ -8,4 +8,4 @@ common_caps:
   name: BStack single capybara
 
 browser_caps:
-- browser: chrome
+  - browser: chrome

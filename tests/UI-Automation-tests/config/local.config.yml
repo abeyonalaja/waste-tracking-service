@@ -8,5 +8,5 @@ common_caps:
   name: BStack local capybara
 
 browser_caps:
-- browser: chrome
-  browserstack.local: true
+  - browser: chrome
+    browserstack.local: true

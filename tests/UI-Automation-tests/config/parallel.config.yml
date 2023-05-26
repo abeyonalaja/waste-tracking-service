@@ -8,7 +8,7 @@ common_caps:
   name: BStack parallel capybara
 
 browser_caps:
-- browser: chrome
-- browser: firefox
-- browser: edge
-- browser: safari
+  - browser: chrome
+  - browser: firefox
+  - browser: edge
+  - browser: safari
