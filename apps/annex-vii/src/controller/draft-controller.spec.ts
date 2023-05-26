@@ -822,4 +822,57 @@ describe(DraftController, () => {
       expect(response.success).toBe(true);
     });
   });
+
+  describe('setDraftTransitCountries', () => {
+    it('accepts valid Transit Countries data', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: { status: 'NotStarted' },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.setDraftTransitCountries({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          values: ['N.Ireland', 'Wales'],
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: {
+            status: 'Complete',
+            values: ['N.Ireland', 'Wales'],
+          },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+
+      expect(response.success).toBe(true);
+    });
+  });
 });

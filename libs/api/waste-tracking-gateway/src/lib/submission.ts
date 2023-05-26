@@ -144,6 +144,13 @@ export type ExitLocation =
       exitLocation: { provided: 'Yes'; value: string } | { provided: 'No' };
     };
 
+export type TransitCountries =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: string[];
+    };
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
@@ -155,7 +162,7 @@ export type Submission = {
   carriers: Carriers;
   collectionDetail: NotStartedSection;
   ukExitLocation: ExitLocation;
-  transitCountries: NotStartedSection;
+  transitCountries: TransitCountries;
   recoveryFacilityDetail: RecoveryFacilityDetail;
 };
 
@@ -192,3 +199,6 @@ export type SetCarriersResponse = Carriers;
 export type PutExitLocationRequest = ExitLocation;
 export type PutExitLocationResponse = ExitLocation;
 export type GetExitLocationResponse = ExitLocation;
+export type PutTransitCountriesRequest = TransitCountries;
+export type PutTransitCountriesResponse = TransitCountries;
+export type GetTransitCountriesResponse = TransitCountries;

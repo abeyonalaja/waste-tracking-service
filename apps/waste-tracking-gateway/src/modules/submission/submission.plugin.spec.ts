@@ -14,6 +14,7 @@ import {
   CollectionDate,
   Carriers,
   ExitLocation,
+  TransitCountries,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -75,6 +76,10 @@ const mockBackend = {
   getExitLocation: jest.fn<(ref: SubmissionRef) => Promise<ExitLocation>>(),
   setExitLocation:
     jest.fn<(ref: SubmissionRef, value: ExitLocation) => Promise<void>>(),
+  getTransitCountries:
+    jest.fn<(ref: SubmissionRef) => Promise<TransitCountries>>(),
+  setTransitCountries:
+    jest.fn<(ref: SubmissionRef, value: TransitCountries) => Promise<void>>(),
 };
 
 const app = server({

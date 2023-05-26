@@ -11,6 +11,7 @@ import {
   SetDraftCarriersRequest,
   DeleteDraftCarriersRequest,
   SetDraftExitLocationByIdRequest,
+  SetDraftTransitCountriesRequest,
 } from './dto';
 import {
   getDraftByIdResponse,
@@ -23,6 +24,7 @@ import {
   setDraftCarriersRequest,
   deleteDraftCarriersRequest,
   setDraftExitLocationByIdRequest,
+  setDraftTransitCountriesRequest,
 } from './schema';
 
 const ajv = new Ajv();
@@ -380,6 +382,45 @@ describe('setDraftExitLocationByIdRequest', () => {
         exitLocation: {
           provided: 'No',
         },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftTransitCountriesRequest', () => {
+  const validate = ajv.compile<SetDraftTransitCountriesRequest>(
+    setDraftTransitCountriesRequest
+  );
+
+  it('is compatible with dto values', () => {
+    let value: SetDraftTransitCountriesRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'NotStarted',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+        values: ['N.Ireland', 'Wales'],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        values: ['N.Ireland', 'Wales', 'England'],
       },
     };
 

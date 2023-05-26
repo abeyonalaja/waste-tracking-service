@@ -9,6 +9,7 @@ import {
   validatePutCollectionDateRequest,
   validateSetCarriersRequest,
   validatePutExitLocationRequest,
+  validatePutTransitCountriesRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -645,6 +646,57 @@ describe('validatePutExitLocationRequest', () => {
         exitLocation: {
           provided: 'No',
         },
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutTransitCountriesRequest', () => {
+  const validate = validatePutTransitCountriesRequest;
+
+  it('Rejects an invalid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+        values: {},
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'Started',
+        values: [1, 2, 3],
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        status: 'NotStarted',
+        values: ['N.Ireland', 'Wales'],
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts a valid request', () => {
+    expect(
+      validate({
+        status: 'NotStarted',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Started',
+        values: [],
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Complete',
+        values: ['N.Ireland', 'Wales'],
       })
     ).toBe(true);
   });

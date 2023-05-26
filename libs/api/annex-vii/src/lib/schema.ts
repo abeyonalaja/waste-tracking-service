@@ -15,6 +15,7 @@ import {
   DeleteDraftCarriersRequest,
   GetDraftCarriersRequest,
   GetDraftExitLocationByIdRequest,
+  GetDraftTransitCountriesRequest,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -392,6 +393,25 @@ const draftExitLocation: SchemaObject = {
   },
 };
 
+const draftTransitCountries: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {
+        values: { elements: { type: 'string' } },
+      },
+    },
+    Complete: {
+      properties: {
+        values: { elements: { type: 'string' } },
+      },
+    },
+  },
+};
+
 const draftSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
@@ -404,7 +424,7 @@ const draftSubmission: SchemaObject = {
     carriers: draftCarriers,
     collectionDetail: notStartedSection,
     ukExitLocation: draftExitLocation,
-    transitCountries: notStartedSection,
+    transitCountries: draftTransitCountries,
     recoveryFacilityDetail: recoveryFacilityDetail,
   },
 };
@@ -779,6 +799,38 @@ export const setDraftExitLocationByIdRequest: SchemaObject = {
 };
 
 export const setDraftExitLocationByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftTransitCountriesRequest: JTDSchemaType<GetDraftTransitCountriesRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftTransitCountriesResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftTransitCountries,
+  },
+};
+
+export const setDraftTransitCountriesRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftTransitCountries,
+  },
+};
+
+export const setDraftTransitCountriesResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

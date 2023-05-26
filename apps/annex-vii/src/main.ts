@@ -410,4 +410,38 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getDraftTransitCountries.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftTransitCountriesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftTransitCountries(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftTransitCountries.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftTransitCountriesRequest;
+    if (!validate.setDraftTransitCountriesRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftTransitCountries(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

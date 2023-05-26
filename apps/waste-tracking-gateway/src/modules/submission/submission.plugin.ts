@@ -11,6 +11,7 @@ import {
   validateCreateCarriersRequest,
   validateSetCarriersRequest,
   validatePutExitLocationRequest,
+  validatePutTransitCountriesRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -534,6 +535,53 @@ const plugin: Plugin<PluginOptions> = {
         try {
           await backend.setExitLocation({ id: params.id, accountId }, request);
           return request as dto.PutExitLocationResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/transit-countries',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getTransitCountries({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetTransitCountriesResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/transit-countries',
+      handler: async function ({ params, payload }) {
+        if (!validatePutTransitCountriesRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutTransitCountriesRequest;
+        try {
+          await backend.setTransitCountries(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutTransitCountriesResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

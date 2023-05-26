@@ -12,6 +12,7 @@ import {
   ListDraftCarriersRequest,
   DeleteDraftCarriersRequest,
   GetDraftExitLocationByIdRequest,
+  GetDraftTransitCountriesRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -74,4 +75,9 @@ export const deleteDraftCarriersRequest =
 export const getDraftExitLocationByIdRequest =
   ajv.compileParser<GetDraftExitLocationByIdRequest>(
     schema.getDraftExitLocationByIdRequest
+  );
+
+export const getDraftTransitCountriesRequest =
+  ajv.compileParser<GetDraftTransitCountriesRequest>(
+    schema.getDraftTransitCountriesRequest
   );

@@ -21,6 +21,8 @@ import {
   DeleteDraftCarriersResponse,
   GetDraftExitLocationByIdResponse,
   SetDraftExitLocationByIdResponse,
+  GetDraftTransitCountriesResponse,
+  SetDraftTransitCountriesResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -38,6 +40,7 @@ export type CollectionDate = dto.CollectionDate;
 export type Carriers = dto.Carriers;
 export type CarrierData = dto.CarrierData;
 export type ExitLocation = dto.ExitLocation;
+export type TransitCountries = dto.TransitCountries;
 
 export type SubmissionRef = {
   id: string;
@@ -82,6 +85,11 @@ export interface SubmissionBackend {
   deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
   getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
   setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
+  getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
+  setTransitCountries(
+    ref: SubmissionRef,
+    value: TransitCountries
+  ): Promise<void>;
 }
 
 /**
@@ -474,6 +482,29 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.ukExitLocation = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getTransitCountries({ id }: SubmissionRef): Promise<TransitCountries> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.transitCountries);
+  }
+
+  setTransitCountries(
+    { id }: SubmissionRef,
+    value: TransitCountries
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.transitCountries = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -954,6 +985,53 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     let response: SetDraftExitLocationByIdResponse;
     try {
       response = await this.client.setDraftExitLocationById({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getTransitCountries({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<TransitCountries> {
+    let response: GetDraftTransitCountriesResponse;
+    try {
+      response = await this.client.getDraftTransitCountries({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setTransitCountries(
+    { id, accountId }: SubmissionRef,
+    value: TransitCountries
+  ): Promise<void> {
+    let response: SetDraftTransitCountriesResponse;
+    try {
+      response = await this.client.setDraftTransitCountries({
         id,
         accountId,
         value,

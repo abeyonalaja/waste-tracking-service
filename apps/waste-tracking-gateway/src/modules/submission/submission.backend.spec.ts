@@ -1,6 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { expect } from '@jest/globals';
-import { Carriers, InMemorySubmissionBackend } from './submission.backend';
+import {
+  Carriers,
+  InMemorySubmissionBackend,
+  TransitCountries,
+} from './submission.backend';
 import { add } from 'date-fns';
 import { ExitLocation } from '@wts/api/waste-tracking-gateway';
 
@@ -284,5 +288,18 @@ describe(InMemorySubmissionBackend, () => {
         }
       )
     ).rejects.toHaveProperty('isBoom', true);
+  });
+
+  it('lets us change a Transit Countries data', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    const transitCountryData = {
+      status: 'Complete',
+      values: ['N. Ireland', 'Wales'],
+    } as TransitCountries;
+    await subject.setTransitCountries({ id, accountId }, transitCountryData);
+    expect(await subject.getTransitCountries({ id, accountId })).toBe(
+      transitCountryData
+    );
   });
 });

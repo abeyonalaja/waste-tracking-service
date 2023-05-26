@@ -160,6 +160,13 @@ export type DraftExitLocation =
       exitLocation: { provided: 'Yes'; value: string } | { provided: 'No' };
     };
 
+export type DraftTransitCountries =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: string[];
+    };
+
 export type DraftSubmission = {
   id: string;
   reference: CustomerReference;
@@ -171,7 +178,7 @@ export type DraftSubmission = {
   carriers: DraftCarriers;
   collectionDetail: NotStartedSection;
   ukExitLocation: DraftExitLocation;
-  transitCountries: NotStartedSection;
+  transitCountries: DraftTransitCountries;
   recoveryFacilityDetail: DraftRecoveryFacilityDetail;
 };
 
@@ -349,5 +356,20 @@ export type SetDraftExitLocationByIdRequest = IdRequest &
 export type SetDraftExitLocationByIdResponse = Response<void>;
 export const setDraftExitLocationById: Method = {
   name: 'setDraftExitLocationById',
+  httpVerb: 'POST',
+};
+
+export type GetDraftTransitCountriesRequest = IdRequest & AccountIdRequest;
+export type GetDraftTransitCountriesResponse = Response<DraftTransitCountries>;
+export const getDraftTransitCountries: Method = {
+  name: 'getDraftTransitCountries',
+  httpVerb: 'POST',
+};
+
+export type SetDraftTransitCountriesRequest = IdRequest &
+  AccountIdRequest & { value: DraftTransitCountries };
+export type SetDraftTransitCountriesResponse = Response<void>;
+export const setDraftTransitCountries: Method = {
+  name: 'setDraftTransitCountries',
   httpVerb: 'POST',
 };

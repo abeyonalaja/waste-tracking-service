@@ -589,4 +589,42 @@ export default class DraftController {
       return fromBoom(Boom.internal());
     }
   };
+
+  setDraftTransitCountries: Handler<
+    api.SetDraftTransitCountriesRequest,
+    api.SetDraftTransitCountriesResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      await this.repository.saveDraft(
+        { ...draft, transitCountries: value },
+        accountId
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftTransitCountries: Handler<
+    api.GetDraftTransitCountriesRequest,
+    api.GetDraftTransitCountriesResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.transitCountries);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }
