@@ -1,0 +1,538 @@
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+  useReducer,
+} from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import * as GovUK from 'govuk-react';
+import '../i18n/config';
+import { useTranslation } from 'react-i18next';
+import {
+  CompleteFooter,
+  CompleteHeader,
+  ConditionalRadioWrap,
+  BreadcrumbWrap,
+  Loading,
+  SubmissionNotFound,
+  SaveReturnButton,
+  ButtonGroup,
+  SummaryList,
+} from '../components';
+import {
+  isNotEmpty,
+  validateTransitCountries,
+  validateTransitCountry,
+  validateAdditionalTransitCountry,
+} from '../utils/validators';
+import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
+import Autocomplete from 'accessible-autocomplete/react';
+import { countriesData } from '../utils/countriesData';
+
+const VIEWS = {
+  ADD_FORM: 1,
+  LIST: 2,
+  EDIT_FORM: 3,
+};
+
+type State = {
+  data: GetTransitCountriesResponse;
+  isLoading: boolean;
+  isError: boolean;
+  showView: number;
+  provided: string;
+};
+
+type Action = {
+  type:
+    | 'DATA_FETCH_INIT'
+    | 'DATA_FETCH_SUCCESS'
+    | 'DATA_FETCH_FAILURE'
+    | 'DATA_UPDATE'
+    | 'PROVIDED_UPDATE'
+    | 'SHOW_VIEW';
+  payload?: any;
+};
+
+const initialState: State = {
+  data: { status: 'Started', values: [] },
+  isLoading: true,
+  isError: false,
+  showView: VIEWS.LIST,
+  provided: null,
+};
+
+const wasteTransitReducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case 'DATA_FETCH_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'DATA_FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload,
+      };
+    case 'DATA_FETCH_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+    case 'DATA_UPDATE':
+      return {
+        ...state,
+        data: { ...state.data, ...action.payload },
+      };
+    case 'PROVIDED_UPDATE':
+      return {
+        ...state,
+        provided: action.payload,
+      };
+    case 'SHOW_VIEW':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        showView: action.payload,
+      };
+    default:
+      throw new Error();
+  }
+};
+
+const WasteTransitCountries = () => {
+  const { t } = useTranslation();
+  const router = useRouter();
+
+  const [wasteTransitPage, dispatchWasteTransitPage] = useReducer(
+    wasteTransitReducer,
+    initialState
+  );
+
+  const [id, setId] = useState(null);
+  const [additionalProvided, setAdditionalProvided] = useState(null);
+  const [additionalCountry, setAdditionalCountry] = useState(null);
+  const [errors, setErrors] = useState<{
+    hasCountries?: string;
+    country?: string;
+  }>({});
+
+  useEffect(() => {
+    if (router.isReady) {
+      setId(router.query.id);
+    }
+  }, [router.isReady, router.query.id]);
+
+  useEffect(() => {
+    dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
+    if (id !== null) {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchWasteTransitPage({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            dispatchWasteTransitPage({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: data,
+            });
+            if (data.values === undefined || data.values.length === 0) {
+              if (data.status !== 'NotStarted') {
+                dispatchWasteTransitPage({
+                  type: 'PROVIDED_UPDATE',
+                  payload: 'No',
+                });
+              }
+              dispatchWasteTransitPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.ADD_FORM,
+              });
+            }
+          }
+        });
+    }
+  }, [router.isReady, id]);
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      const hasCountries = wasteTransitPage.provided;
+      const country = wasteTransitPage.data.values;
+
+      const newErrors = {
+        hasCountries: validateTransitCountries(hasCountries),
+        country: validateTransitCountry(hasCountries, country),
+      };
+
+      if (isNotEmpty(newErrors)) {
+        setErrors(newErrors);
+      } else {
+        setErrors(null);
+        try {
+          fetch(
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(wasteTransitPage.data),
+            }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                if (wasteTransitPage.provided === 'No') {
+                  router.push({
+                    pathname: '/submit-an-export-tasklist',
+                    query: { id },
+                  });
+                } else {
+                  dispatchWasteTransitPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS.LIST,
+                  });
+                }
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      e.preventDefault();
+    },
+    [id, wasteTransitPage, router]
+  );
+
+  const handleSubmitAdditionalCountry = useCallback(
+    (e: FormEvent) => {
+      const newErrors = {
+        hasCountries: validateTransitCountries(additionalProvided),
+        country: validateAdditionalTransitCountry(
+          additionalProvided,
+          additionalCountry
+        ),
+      };
+      if (isNotEmpty(newErrors)) {
+        setErrors(newErrors);
+      } else {
+        setErrors(null);
+        if (additionalProvided === 'No') {
+          router.push({
+            pathname: '/submit-an-export-tasklist',
+            query: { id },
+          });
+        } else {
+          const countries = wasteTransitPage.data.values;
+          countries.push(additionalCountry);
+
+          dispatchWasteTransitPage({
+            type: 'DATA_UPDATE',
+            payload: { status: 'Complete', values: countries },
+          });
+
+          try {
+            fetch(
+              `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(wasteTransitPage.data),
+              }
+            )
+              .then((response) => {
+                if (response.ok) return response.json();
+              })
+              .then((data) => {
+                if (data !== undefined) {
+                  setAdditionalProvided(null);
+                  setAdditionalCountry(null);
+                }
+              });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      e.preventDefault();
+    },
+    [id, additionalProvided, additionalCountry]
+  );
+
+  const handleCountrySelect = (country) => {
+    dispatchWasteTransitPage({
+      type: 'DATA_UPDATE',
+      payload: { status: 'Complete', values: [country] },
+    });
+  };
+
+  const handleInputChange = (input) => {
+    dispatchWasteTransitPage({
+      type: 'PROVIDED_UPDATE',
+      payload: input.target.value,
+    });
+    dispatchWasteTransitPage({
+      type: 'DATA_UPDATE',
+      payload: { status: 'Complete', values: [] },
+    });
+  };
+
+  function suggest(query, populateResults) {
+    const results = countriesData['World'];
+    const filteredResults = results.filter(
+      (result) => result.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    );
+    populateResults(filteredResults);
+  }
+
+  const BreadCrumbs = () => {
+    return (
+      <BreadcrumbWrap>
+        <GovUK.BackLink
+          href="#"
+          onClick={() => {
+            router.push({
+              pathname: '/submit-an-export-tasklist',
+              query: { id },
+            });
+          }}
+        >
+          Back
+        </GovUK.BackLink>
+      </BreadcrumbWrap>
+    );
+  };
+
+  return (
+    <>
+      <Head>
+        <title>{t('exportJourney.wasteTransitCountries.title')}</title>
+      </Head>
+      <GovUK.Page
+        id="content"
+        header={<CompleteHeader />}
+        footer={<CompleteFooter />}
+        beforeChildren={<BreadCrumbs />}
+      >
+        <GovUK.GridRow>
+          <GovUK.GridCol setWidth="two-thirds">
+            {wasteTransitPage.isError && !wasteTransitPage.isLoading && (
+              <SubmissionNotFound />
+            )}
+            {wasteTransitPage.isLoading && <Loading />}
+            {!wasteTransitPage.isError && !wasteTransitPage.isLoading && (
+              <>
+                {wasteTransitPage.showView === VIEWS.LIST && (
+                  <>
+                    {errors && !!Object.keys(errors).length && (
+                      <GovUK.ErrorSummary
+                        heading={t('errorSummary.title')}
+                        errors={Object.keys(errors).map((key) => ({
+                          targetName: key,
+                          text: errors[key],
+                        }))}
+                      />
+                    )}
+                    <GovUK.Caption>
+                      {t('exportJourney.wasteTransitCountries.caption')}
+                    </GovUK.Caption>
+                    <GovUK.Heading size="L">
+                      {t('exportJourney.wasteTransitCountries.listTitle')}
+                    </GovUK.Heading>
+                    <SummaryList
+                      content={wasteTransitPage.data.values}
+                      prefixNumbers
+                    />
+                    <form onSubmit={handleSubmitAdditionalCountry}>
+                      <GovUK.Fieldset>
+                        <GovUK.Fieldset.Legend isPageHeading size="M">
+                          {t(
+                            'exportJourney.wasteTransitCountries.additionalCountryLegend'
+                          )}
+                        </GovUK.Fieldset.Legend>
+                        <GovUK.MultiChoice
+                          mb={6}
+                          hint={t(
+                            'exportJourney.wasteTransitCountries.additionalCountryHint'
+                          )}
+                          label=""
+                          meta={{
+                            error: errors?.hasCountries,
+                            touched: !!errors?.hasCountries,
+                          }}
+                        >
+                          <GovUK.Radio
+                            name="hasTransitCountries"
+                            id="hasTransitCountriesYes"
+                            checked={additionalProvided === 'Yes'}
+                            onChange={() => setAdditionalProvided('Yes')}
+                            value="Yes"
+                          >
+                            {t('radio.yes')}
+                          </GovUK.Radio>
+                          {additionalProvided === 'Yes' && (
+                            <ConditionalRadioWrap>
+                              <GovUK.FormGroup error={!!errors?.country}>
+                                <GovUK.Label htmlFor="country">
+                                  <GovUK.LabelText>
+                                    {t(
+                                      'exportJourney.wasteTransitCountries.firstCountryLabel'
+                                    )}
+                                  </GovUK.LabelText>
+                                </GovUK.Label>
+
+                                <GovUK.HintText>
+                                  {t(
+                                    'exportJourney.wasteTransitCountries.hint'
+                                  )}
+                                </GovUK.HintText>
+                                <GovUK.ErrorText>
+                                  {errors?.country}
+                                </GovUK.ErrorText>
+                                <Autocomplete
+                                  id="country"
+                                  source={suggest}
+                                  showAllValues={true}
+                                  onConfirm={(option) =>
+                                    setAdditionalCountry(option)
+                                  }
+                                  confirmOnBlur={false}
+                                />
+                              </GovUK.FormGroup>
+                            </ConditionalRadioWrap>
+                          )}
+                          <GovUK.Radio
+                            name="hasTransitCountries"
+                            id="hasTransitCountriesNo"
+                            checked={additionalProvided === 'No'}
+                            onChange={() => setAdditionalProvided('No')}
+                            value="No"
+                          >
+                            {t('radio.no')}
+                          </GovUK.Radio>
+                        </GovUK.MultiChoice>
+                      </GovUK.Fieldset>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                      </ButtonGroup>
+                    </form>
+                  </>
+                )}
+                {wasteTransitPage.showView === VIEWS.ADD_FORM && (
+                  <>
+                    {errors && !!Object.keys(errors).length && (
+                      <GovUK.ErrorSummary
+                        heading={t('errorSummary.title')}
+                        errors={Object.keys(errors).map((key) => ({
+                          targetName: key,
+                          text: errors[key],
+                        }))}
+                      />
+                    )}
+                    <GovUK.Caption>
+                      {t('exportJourney.wasteTransitCountries.caption')}
+                    </GovUK.Caption>
+                    <form onSubmit={handleSubmit}>
+                      <GovUK.Fieldset>
+                        <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                          {t('exportJourney.wasteTransitCountries.title')}
+                        </GovUK.Fieldset.Legend>
+                        <GovUK.MultiChoice
+                          mb={6}
+                          label=""
+                          meta={{
+                            error: errors?.hasCountries,
+                            touched: !!errors?.hasCountries,
+                          }}
+                        >
+                          <GovUK.Radio
+                            name="hasTransitCountries"
+                            id="hasTransitCountriesYes"
+                            checked={wasteTransitPage.provided === 'Yes'}
+                            onChange={(e) => handleInputChange(e)}
+                            value="Yes"
+                          >
+                            {t('radio.yes')}
+                          </GovUK.Radio>
+                          {wasteTransitPage.provided === 'Yes' && (
+                            <ConditionalRadioWrap>
+                              <GovUK.FormGroup error={!!errors?.country}>
+                                <GovUK.Label htmlFor="country">
+                                  <GovUK.LabelText>
+                                    {t(
+                                      'exportJourney.wasteTransitCountries.firstCountryLabel'
+                                    )}
+                                  </GovUK.LabelText>
+                                </GovUK.Label>
+
+                                <GovUK.HintText>
+                                  {t(
+                                    'exportJourney.wasteTransitCountries.hint'
+                                  )}
+                                </GovUK.HintText>
+                                <GovUK.ErrorText>
+                                  {errors?.country}
+                                </GovUK.ErrorText>
+                                <Autocomplete
+                                  id="country"
+                                  source={suggest}
+                                  showAllValues={true}
+                                  onConfirm={(option) =>
+                                    handleCountrySelect(option)
+                                  }
+                                  confirmOnBlur={false}
+                                  defaultValue={
+                                    wasteTransitPage.data.values?.length > 0
+                                      ? wasteTransitPage.data.values[0]
+                                      : ''
+                                  }
+                                />
+                              </GovUK.FormGroup>
+                            </ConditionalRadioWrap>
+                          )}
+                          <GovUK.Radio
+                            name="hasTransitCountries"
+                            id="hasTransitCountriesNo"
+                            checked={wasteTransitPage.provided === 'No'}
+                            onChange={(e) => handleInputChange(e)}
+                            value="No"
+                          >
+                            {t('radio.no')}
+                          </GovUK.Radio>
+                        </GovUK.MultiChoice>
+                      </GovUK.Fieldset>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                      </ButtonGroup>
+                    </form>
+                  </>
+                )}
+              </>
+            )}
+          </GovUK.GridCol>
+        </GovUK.GridRow>
+      </GovUK.Page>
+    </>
+  );
+};
+
+export default WasteTransitCountries;

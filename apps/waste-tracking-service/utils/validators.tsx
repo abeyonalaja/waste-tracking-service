@@ -263,3 +263,27 @@ export const validatePointOfExit: (
   if (!regex.test(pointOfExit))
     return 'The location must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };
+
+export const validateTransitCountries: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null)
+    return 'Select yes if there are any other countries the waste will travel through';
+};
+
+export const validateTransitCountry: (
+  hasCountry?: string,
+  country?: []
+) => string | undefined = (hasCountry, country) => {
+  if (hasCountry !== 'Yes') return;
+  if (country === undefined || country.length === 0)
+    return 'Select or enter country';
+};
+
+export const validateAdditionalTransitCountry: (
+  hasCountry?: string,
+  country?: []
+) => string | undefined = (hasCountry, country) => {
+  if (hasCountry !== 'Yes') return;
+  if (country === null) return 'Select or enter country';
+};

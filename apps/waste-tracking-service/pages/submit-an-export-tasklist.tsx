@@ -381,7 +381,10 @@ const Tasklist = () => {
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
                           <AppLink
-                            href=""
+                            href={{
+                              pathname: `/waste-transit-countries`,
+                              query: { id, dashboard: true },
+                            }}
                             id="countries-waste-will-travel-through"
                           >
                             {t(

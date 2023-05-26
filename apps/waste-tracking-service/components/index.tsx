@@ -12,6 +12,7 @@ import { RadiosDivider } from './RadiosDivider';
 import { SaveReturnButton } from './SaveReturnButton';
 import { SaveReturnLink } from './SaveReturnLink';
 import { SubmissionNotFound } from './SubmissionNotFound';
+import { SummaryList } from './SummaryList';
 import { TextareaCharCount } from './TextareaCharCount';
 
 export {
@@ -29,5 +30,6 @@ export {
   SaveReturnButton,
   SaveReturnLink,
   SubmissionNotFound,
+  SummaryList,
   TextareaCharCount,
 };
