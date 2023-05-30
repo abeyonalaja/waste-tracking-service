@@ -1,0 +1,48 @@
+trigger:
+  - main
+
+jobs:
+  - job: Build
+    displayName: Create artifacts
+
+    variables:
+      - name: serviceConnection
+        value: AZD-WTS-SND1
+      - name: branch
+        value: origin/main
+      - name: containerRegistryName
+        value: SNDWTSHUBCR3401
+
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - task: AzureCLI@2
+        displayName: ACR login
+        inputs:
+          azureSubscription: ${{ variables.serviceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: az acr login
+        env:
+          AZURE_DEFAULTS_ACR: $(containerRegistryName)
+
+      - task: Npm@1
+        displayName: Install packages
+        inputs:
+          command: ci
+
+      - bash: |
+          echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
+          affected=$(npx nx print-affected --type=app --select=projects)
+          export INPUT_PUSH=true
+          for project in ${affected//,/}
+          do
+            export INPUT_IMAGES="${REGISTRY}/wts/${project}"
+            npx nx container $project
+          done
+        displayName: Publish containers
+        env:
+          NX_BASE: $(branch)~1
+          NX_HEAD: $(branch)
+          REGISTRY: ${{ lower(variables.containerRegistryName) }}.azurecr.io
