@@ -5,7 +5,10 @@ import { DaprAddressClient } from '@wts/client/address';
 import { Logger } from 'winston';
 
 export interface AddressBackend {
-  listAddresses(request?: string): Promise<api.ListAddressesResponse>;
+  listAddresses(
+    postcode: string,
+    buildingNameOrNumber?: string
+  ): Promise<api.ListAddressesResponse>;
 }
 
 /**
@@ -42,10 +45,16 @@ export class AddressStub implements AddressBackend {
 export class AddressServiceBackend implements AddressBackend {
   constructor(private client: DaprAddressClient, private logger: Logger) {}
 
-  async listAddresses(postcode: string): Promise<api.ListAddressesResponse> {
+  async listAddresses(
+    postcode: string,
+    buildingNameOrNumber?: string
+  ): Promise<api.ListAddressesResponse> {
     let response: GetAddressByPostcodeResponse;
     try {
-      response = await this.client.getAddressByPostcode({ postcode });
+      response = await this.client.getAddressByPostcode({
+        postcode,
+        buildingNameOrNumber,
+      });
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();

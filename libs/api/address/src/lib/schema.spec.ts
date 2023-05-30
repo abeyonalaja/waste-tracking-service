@@ -16,8 +16,6 @@ describe('getAddressByPostcodeResponse', () => {
         {
           addressLine1:
             'ARMIRA CAPITAL LTD, 110, BISHOPSGATE, LONDON, EC2N 4AY',
-          addressLine2:
-            'ARMIRA CAPITAL LTD, 110, BISHOPSGATE, LONDON, EC2N 4AY',
           townCity: 'LONDON',
           postcode: 'EC2N 4AY',
           country: 'ENGLAND',

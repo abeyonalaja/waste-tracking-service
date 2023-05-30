@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import { Logger } from 'winston';
 import { Address } from '../model';
@@ -26,7 +27,24 @@ describe(AddressController, () => {
       const postcode = 'EC2N4AY';
       mockAddressClient.getAddressByPostcode.mockRejectedValue(Boom.teapot());
 
-      const response = await subject.getAddressByPostcode({ postcode });
+      let response = await subject.getAddressByPostcode({
+        postcode,
+        buildingNameOrNumber: undefined,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockAddressClient.getAddressByPostcode).toBeCalledWith(postcode);
+      expect(response.error.statusCode).toBe(418);
+
+      const buildingNameOrNumber = faker.datatype.string();
+      response = await subject.getAddressByPostcode({
+        postcode,
+        buildingNameOrNumber,
+      });
 
       expect(response.success).toBe(false);
       if (response.success) {
@@ -37,11 +55,29 @@ describe(AddressController, () => {
       expect(response.error.statusCode).toBe(418);
     });
 
-    it('successfully returns value from the secrets manager', async () => {
+    it('successfully returns value', async () => {
       const postcode = 'EC2N4AY';
       mockAddressClient.getAddressByPostcode.mockResolvedValue([]);
 
-      const response = await subject.getAddressByPostcode({ postcode });
+      let response = await subject.getAddressByPostcode({
+        postcode,
+        buildingNameOrNumber: undefined,
+      });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockAddressClient.getAddressByPostcode).toHaveBeenCalledWith(
+        postcode
+      );
+      expect(response.value).toEqual([]);
+
+      const buildingNameOrNumber = faker.datatype.string();
+      response = await subject.getAddressByPostcode({
+        postcode,
+        buildingNameOrNumber,
+      });
       expect(response.success).toBe(true);
       if (!response.success) {
         return;

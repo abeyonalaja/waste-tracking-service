@@ -17,11 +17,14 @@ const plugin: Plugin<PluginOptions> = {
       path: '/',
       handler: async function ({ query }) {
         const postcode = query['postcode'] as string | undefined;
-        if (postcode === undefined) {
+        if (!postcode) {
           return Boom.badRequest("Missing query parameter 'postcode'");
         }
+        const buildingNameOrNumber = query['buildingNameOrNumber'] as
+          | string
+          | undefined;
         try {
-          return await backend.listAddresses(postcode);
+          return await backend.listAddresses(postcode, buildingNameOrNumber);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

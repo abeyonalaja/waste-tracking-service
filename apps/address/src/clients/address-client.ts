@@ -41,9 +41,19 @@ export default class BoomiAddressClient implements AddressClient {
         return [];
       }
       return d.results.map((r) => {
+        const addressLine1Arr = [
+          r.Address.SubBuildingName,
+          r.Address.BuildingName,
+          r.Address.BuildingNumber,
+        ];
+        const addressLine1 = addressLine1Arr.flatMap((f) => f ?? []).join(', ');
+
+        const addressLine2Arr = [r.Address.Street, r.Address.Locality];
+        const addressLine2 = addressLine2Arr.flatMap((f) => f ?? []).join(', ');
+
         return {
-          addressLine1: r.Address.AddressLine,
-          addressLine2: r.Address.AddressLine,
+          addressLine1: addressLine1,
+          addressLine2: addressLine2,
           townCity: r.Address.Town,
           postcode: r.Address.Postcode,
           country: r.Address.Country,

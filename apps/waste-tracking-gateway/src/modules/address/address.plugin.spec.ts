@@ -14,7 +14,12 @@ jest.mock('winston', () => ({
 
 const mockBackend = {
   listAddresses:
-    jest.fn<(postcode?: string) => Promise<api.ListAddressesResponse>>(),
+    jest.fn<
+      (
+        postcode: string,
+        buildingNameOrNumber?: string
+      ) => Promise<api.ListAddressesResponse>
+    >(),
 };
 
 const app = server({

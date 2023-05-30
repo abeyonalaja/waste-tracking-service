@@ -13,7 +13,7 @@ image:
   repository: sndwtshubcr3401.azurecr.io/waste-tracking-gateway
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '20230517.1'
+  tag: '20230526.1'
 
 # Override the default name specified
 nameOverride: ''

@@ -14,7 +14,7 @@ type Address = {
   SubBuildingName?: string;
   BuildingNumber?: string;
   BuildingName?: string;
-  Street: string;
+  Street?: string;
   Locality?: string;
   Town: string;
   County: string;

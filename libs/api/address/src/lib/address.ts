@@ -7,7 +7,7 @@ type Method = Readonly<{
 
 export type Address = {
   addressLine1: string;
-  addressLine2: string;
+  addressLine2?: string;
   townCity: string;
   postcode: string;
   country: string;
@@ -15,6 +15,7 @@ export type Address = {
 
 export type GetAddressByPostcodeRequest = {
   postcode: string;
+  buildingNameOrNumber?: string;
 };
 
 export type GetAddressByPostcodeResponse = Response<Address[]>;

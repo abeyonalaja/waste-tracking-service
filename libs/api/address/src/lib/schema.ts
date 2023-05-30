@@ -14,15 +14,20 @@ export const getAddressByPostcodeRequest: JTDSchemaType<GetAddressByPostcodeRequ
     properties: {
       postcode: { type: 'string' },
     },
+    optionalProperties: {
+      buildingNameOrNumber: { type: 'string' },
+    },
   };
 
 const addressResponse: JTDSchemaType<Address> = {
   properties: {
     addressLine1: { type: 'string' },
-    addressLine2: { type: 'string' },
     townCity: { type: 'string' },
     postcode: { type: 'string' },
     country: { type: 'string' },
+  },
+  optionalProperties: {
+    addressLine2: { type: 'string' },
   },
 };
 
