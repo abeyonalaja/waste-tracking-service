@@ -10,10 +10,10 @@ replicaCount: 1
 
 # Profile of the image used to create the pod containers
 image:
-  repository: sndwtshubcr3401.azurecr.io/waste-tracking-service
+  repository: sndwtshubcr3401.azurecr.io/wts/waste-tracking-service
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '20230526.1'
+  tag: 'main'
 
 # Override the default name specified
 nameOverride: ''
