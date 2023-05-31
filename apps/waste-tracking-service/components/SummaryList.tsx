@@ -4,6 +4,7 @@ import { BORDER_COLOUR } from 'govuk-colours';
 
 interface Props {
   content: any;
+  id?: string;
   prefixNumbers?: boolean;
 }
 
@@ -40,9 +41,9 @@ const Title = styled('dt')`
     width: 30%;
   }
 `;
-export const SummaryList = ({ content, prefixNumbers }: Props) => {
+export const SummaryList = ({ content, id, prefixNumbers }: Props) => {
   return (
-    <DefinitionList>
+    <DefinitionList id={id}>
       {content.map((title, index) => {
         return (
           <Row key={index}>

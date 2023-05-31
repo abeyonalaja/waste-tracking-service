@@ -163,5 +163,13 @@
   "exportJourney.pointOfExit.caption": "Location waste leave the UK",
   "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK",
   "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
-  "exportJourney.pointOfExit.inputLabel": "Enter the location"
+  "exportJourney.pointOfExit.inputLabel": "Enter the location",
+  "exportJourney.wasteTransitCountries.caption": "Countries waste will travel through",
+  "exportJourney.wasteTransitCountries.title": "Are there any other countries the waste will travel through?",
+  "exportJourney.wasteTransitCountries.firstCountryLabel": "Enter the first country the waste will travel through",
+  "exportJourney.wasteTransitCountries.hint": "Do not include the exporting or importing country",
+  "exportJourney.wasteTransitCountries.listTitle": "Waste transit countries",
+  "exportJourney.wasteTransitCountries.additionalCountryLegend": "Do you need to add another country?",
+  "exportJourney.wasteTransitCountries.additionalCountryHint": "You must add countries in order of travel",
+  "exportJourney.wasteTransitCountries.additionalCountryLabel": "Select another country"
 }

@@ -165,8 +165,12 @@ const WasteTransitCountries = () => {
     }
   }, [router.isReady, id]);
 
+  const handleReturnSubmit = (e) => {
+    handleSubmit(e, true);
+  };
+
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: FormEvent, returnToDraft = false) => {
       const hasCountries = wasteTransitPage.provided;
       const country = wasteTransitPage.data.values;
 
@@ -195,7 +199,7 @@ const WasteTransitCountries = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                if (wasteTransitPage.provided === 'No') {
+                if (wasteTransitPage.provided === 'No' || returnToDraft) {
                   router.push({
                     pathname: '/submit-an-export-tasklist',
                     query: { id },
@@ -217,8 +221,12 @@ const WasteTransitCountries = () => {
     [id, wasteTransitPage, router]
   );
 
+  const handleReturnSubmitAdditionalCountry = (e) => {
+    handleSubmitAdditionalCountry(e, true);
+  };
+
   const handleSubmitAdditionalCountry = useCallback(
-    (e: FormEvent) => {
+    (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
         hasCountries: validateTransitCountries(additionalProvided),
         country: validateAdditionalTransitCountry(
@@ -262,6 +270,12 @@ const WasteTransitCountries = () => {
                 if (data !== undefined) {
                   setAdditionalProvided(null);
                   setAdditionalCountry(null);
+                  if (returnToDraft) {
+                    router.push({
+                      pathname: '/submit-an-export-tasklist',
+                      query: { id },
+                    });
+                  }
                 }
               });
           } catch (e) {
@@ -356,6 +370,7 @@ const WasteTransitCountries = () => {
                     </GovUK.Heading>
                     <SummaryList
                       content={wasteTransitPage.data.values}
+                      id="waste-transit-country-list"
                       prefixNumbers
                     />
                     <form onSubmit={handleSubmitAdditionalCountry}>
@@ -431,6 +446,9 @@ const WasteTransitCountries = () => {
                         <GovUK.Button id="saveButton">
                           {t('saveButton')}
                         </GovUK.Button>
+                        <SaveReturnButton
+                          onClick={handleReturnSubmitAdditionalCountry}
+                        />
                       </ButtonGroup>
                     </form>
                   </>
@@ -522,6 +540,7 @@ const WasteTransitCountries = () => {
                         <GovUK.Button id="saveButton">
                           {t('saveButton')}
                         </GovUK.Button>
+                        <SaveReturnButton onClick={handleReturnSubmit} />
                       </ButtonGroup>
                     </form>
                   </>

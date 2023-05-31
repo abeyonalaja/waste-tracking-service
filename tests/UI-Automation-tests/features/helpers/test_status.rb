@@ -4,6 +4,7 @@
 module TestStatus
 
   @test_status = {}
+  @countries_waste_will_travel = []
 
   def self.set_test_status(key, value)
     @test_status[key] = value
@@ -11,6 +12,7 @@ module TestStatus
 
   def self.reset_test_status
     @test_status = {}
+    @countries_waste_will_travel
   end
 
   def self.test_status(key = 'all')
@@ -18,5 +20,9 @@ module TestStatus
       @test_status
     end
     @test_status[key.to_sym]
+  end
+
+  def self.countries_waste_will_travel(country)
+    @countries_waste_will_travel.push(country)
   end
 end
