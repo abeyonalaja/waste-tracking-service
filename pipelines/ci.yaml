@@ -18,12 +18,20 @@ jobs:
         fetchDepth: 0
 
       - task: AzureCLI@2
+        name: acr
         displayName: ACR login
         inputs:
           azureSubscription: ${{ variables.serviceConnection }}
           scriptType: bash
           scriptLocation: inlineScript
-          inlineScript: az acr login
+          inlineScript: |
+            response=$(az acr login --expose-token)
+            echo "##vso[task.setvariable variable=loginServer;isoutput=true]$( \
+              echo $response | jq -r .loginServer \
+            )"
+            echo "##vso[task.setvariable variable=accessToken;isoutput=true;issecret=true]$( \
+              echo $response | jq -r .accessToken \
+            )"
         env:
           AZURE_DEFAULTS_ACR: $(containerRegistryName)
 
@@ -31,6 +39,17 @@ jobs:
         displayName: Install packages
         inputs:
           command: ci
+
+      - bash: |
+          echo $PASSWORD \
+            | docker login $LOGIN_SERVER \
+              --username $USERNAME \
+              --password-stdin
+        displayName: Docker login
+        env:
+          USERNAME: 00000000-0000-0000-0000-000000000000
+          PASSWORD: $(acr.accessToken)
+          LOGIN_SERVER: $(acr.loginServer)
 
       - bash: |
           echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
@@ -42,7 +61,39 @@ jobs:
             npx nx container $project
           done
         displayName: Publish containers
+        failOnStderr: true
         env:
           NX_BASE: $(branch)~1
           NX_HEAD: $(branch)
-          REGISTRY: ${{ lower(variables.containerRegistryName) }}.azurecr.io
+          REGISTRY: $(acr.loginServer)
+
+      - bash: |
+          echo $PASSWORD \
+            | helm registry login $LOGIN_SERVER \
+                --username $USERNAME \
+                --password-stdin
+        displayName: Helm registry login
+        env:
+          USERNAME: 00000000-0000-0000-0000-000000000000
+          PASSWORD: $(acr.accessToken)
+          LOGIN_SERVER: $(acr.loginServer)
+
+      - bash: |
+          affected=$(
+            git diff --name-only $(branch) $(branch)~1 \
+              | grep -Po "(?<=^cluster\/charts\/)[a-z-]+(?=\/)" \
+              | uniq
+          )
+          version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
+          for project in ${affected}
+          do
+            helm package ./cluster/charts/${project} \
+              --version ${version} \
+              --destination $(Build.StagingDirectory)
+            helm push \
+              $(Build.StagingDirectory)/${project}-${version}.tgz \
+              $HOST
+          done
+        displayName: Publish charts
+        env:
+          HOST: oci://$(acr.loginServer)/charts/wts
