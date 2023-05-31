@@ -2,6 +2,7 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import WasteCollectionDate from '../pages/waste-collection-date';
+import WasteTransitCountries from '../pages/waste-transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -19,10 +20,19 @@ global.fetch = jest.fn(() =>
 );
 
 describe('Waste Collection page', () => {
-  it('should display loading spinner on initial render', () => {
-    render(<WasteCollectionDate />);
-    const loadingSpinner = screen.getByText('Loading');
-    expect(loadingSpinner).toBeInTheDocument();
+  it('should display a loading message while data is being fetched', async () => {
+    global.fetch.mockImplementationOnce(
+      () =>
+        new Promise(() => {
+          return;
+        })
+    );
+
+    await act(async () => {
+      render(<WasteCollectionDate />);
+    });
+
+    expect(screen.getByText('Loading')).toBeTruthy();
   });
 
   it('displays a validation message when no option is selected', async () => {

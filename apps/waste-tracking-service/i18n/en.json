@@ -167,6 +167,8 @@
   "exportJourney.wasteTransitCountries.additionalCountryLegend": "Do you need to add another country?",
   "exportJourney.wasteTransitCountries.additionalCountryHint": "You must add countries in order of travel",
   "exportJourney.wasteTransitCountries.additionalCountryLabel": "Select another country",
+  "exportJourney.wasteTransitCountries.changeCountryTitle": "What would you like to change {{country}} to?",
+  "exportJourney.wasteTransitCountries.confirmRemoveTitle": "Are you sure you want to remove {{country}}?",
   "exportJourney.pointOfExit.caption": "Location waste leaves the UK",
   "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK?",
   "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",

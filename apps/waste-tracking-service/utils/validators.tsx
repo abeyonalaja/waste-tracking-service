@@ -280,10 +280,16 @@ export const validateTransitCountry: (
     return 'Select or enter country';
 };
 
-export const validateAdditionalTransitCountry: (
+export const validateSingleTransitCountry: (
   hasCountry?: string,
   country?: []
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
   if (country === null) return 'Select or enter country';
+};
+
+export const validateConfirmRemove: (value?: string) => string | undefined = (
+  value
+) => {
+  if (value === null) return 'Select yes if you want to remove this country';
 };

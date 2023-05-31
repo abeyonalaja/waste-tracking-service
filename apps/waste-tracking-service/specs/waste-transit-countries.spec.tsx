@@ -123,4 +123,32 @@ describe('Waste Transit Countries page', () => {
     const errorHeading = screen.getByText('There is a problem');
     expect(errorHeading).toBeTruthy();
   });
+
+  it('should show change view when change link is clicked', async () => {
+    await act(async () => {
+      render(<WasteTransitCountries />);
+    });
+
+    const changeLink = screen.getByText('Change');
+    fireEvent.click(changeLink);
+
+    const pageTitle = screen.getByText(
+      'What would you like to change England to?'
+    );
+    expect(pageTitle).toBeTruthy();
+  });
+
+  it('should show confirm view when remove link is clicked', async () => {
+    await act(async () => {
+      render(<WasteTransitCountries />);
+    });
+
+    const removeLink = screen.getByText('Remove');
+    fireEvent.click(removeLink);
+
+    const pageTitle = screen.getByText(
+      'Are you sure you want to remove England?'
+    );
+    expect(pageTitle).toBeTruthy();
+  });
 });
