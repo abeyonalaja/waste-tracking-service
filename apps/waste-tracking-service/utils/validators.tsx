@@ -145,6 +145,28 @@ export const validateCountry: (country?: string) => string = (country) => {
 export const validateAddress: (address?: string) => string = (address) => {
   if (address?.length === 0 || address === undefined) return 'Enter an address';
 };
+
+export const validateShippingContainerNumber: (
+  shippingContainerNumber?: string
+) => string = (shippingContainerNumber) => {
+  if (
+    shippingContainerNumber?.length === 0 ||
+    shippingContainerNumber === undefined
+  )
+    return 'Enter a shipping container number';
+};
+
+export const validateVehicleRegistration: (
+  vehicleRegistration?: string
+) => string = (vehicleRegistration) => {
+  if (vehicleRegistration?.length === 0 || vehicleRegistration === undefined)
+    return 'Enter a vehicle registration number';
+};
+export const validateIMO: (imo?: string) => string = (imo) => {
+  if (imo?.length === 0 || imo === undefined)
+    return 'Enter an international maritime organisation (IMO) number';
+};
+
 export const validateOrganisationName: (organisationName?: string) => string = (
   organisationName
 ) => {

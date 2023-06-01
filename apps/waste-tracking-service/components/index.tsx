@@ -14,6 +14,7 @@ import { SaveReturnLink } from './SaveReturnLink';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SummaryList } from './SummaryList';
 import { TextareaCharCount } from './TextareaCharCount';
+import { WasteCarrierHeading } from './WasteCarrierHeading';
 
 export {
   AppLink,
@@ -32,4 +33,5 @@ export {
   SubmissionNotFound,
   SummaryList,
   TextareaCharCount,
+  WasteCarrierHeading,
 };
