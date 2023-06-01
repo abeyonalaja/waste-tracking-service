@@ -377,6 +377,40 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
+  api.getDraftCollectionDetail.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftCollectionDetailRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftCollectionDetail(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftCollectionDetail.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftCollectionDetailRequest;
+    if (!validate.setDraftCollectionDetailRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftCollectionDetail(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
   api.getDraftExitLocationById.name,
   async ({ body }) => {
     if (body === undefined) {

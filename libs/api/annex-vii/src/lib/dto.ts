@@ -151,7 +151,27 @@ export type DraftCarriers =
       values: DraftCarrier[];
     };
 
-type NotStartedSection = { status: 'NotStarted' };
+type DraftCollectionDetailData = {
+  address: {
+    addressLine1: string;
+    addressLine2?: string;
+    townCity: string;
+    postcode: string;
+    country: string;
+  };
+  contactDetails: {
+    organisationName: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+};
+
+export type DraftCollectionDetail =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<DraftCollectionDetailData>)
+  | ({ status: 'Complete' } & DraftCollectionDetailData);
 
 export type DraftExitLocation =
   | { status: 'NotStarted' }
@@ -176,7 +196,7 @@ export type DraftSubmission = {
   importerDetail: DraftImporterDetail;
   collectionDate: DraftCollectionDate;
   carriers: DraftCarriers;
-  collectionDetail: NotStartedSection;
+  collectionDetail: DraftCollectionDetail;
   ukExitLocation: DraftExitLocation;
   transitCountries: DraftTransitCountries;
   recoveryFacilityDetail: DraftRecoveryFacilityDetail;
@@ -371,5 +391,20 @@ export type SetDraftTransitCountriesRequest = IdRequest &
 export type SetDraftTransitCountriesResponse = Response<void>;
 export const setDraftTransitCountries: Method = {
   name: 'setDraftTransitCountries',
+  httpVerb: 'POST',
+};
+
+export type GetDraftCollectionDetailRequest = IdRequest & AccountIdRequest;
+export type GetDraftCollectionDetailResponse = Response<DraftCollectionDetail>;
+export const getDraftCollectionDetail: Method = {
+  name: 'getDraftCollectionDetail',
+  httpVerb: 'POST',
+};
+
+export type SetDraftCollectionDetailRequest = IdRequest &
+  AccountIdRequest & { value: DraftCollectionDetail };
+export type SetDraftCollectionDetailResponse = Response<void>;
+export const setDraftCollectionDetail: Method = {
+  name: 'setDraftCollectionDetail',
   httpVerb: 'POST',
 };

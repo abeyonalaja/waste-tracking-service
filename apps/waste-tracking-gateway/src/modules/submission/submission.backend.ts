@@ -23,6 +23,8 @@ import {
   SetDraftExitLocationByIdResponse,
   GetDraftTransitCountriesResponse,
   SetDraftTransitCountriesResponse,
+  GetDraftCollectionDetailResponse,
+  SetDraftCollectionDetailResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -39,6 +41,7 @@ export type ImporterDetail = dto.ImporterDetail;
 export type CollectionDate = dto.CollectionDate;
 export type Carriers = dto.Carriers;
 export type CarrierData = dto.CarrierData;
+export type CollectionDetail = dto.CollectionDetail;
 export type ExitLocation = dto.ExitLocation;
 export type TransitCountries = dto.TransitCountries;
 
@@ -83,6 +86,11 @@ export interface SubmissionBackend {
     value: Carriers
   ): Promise<void>;
   deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
+  getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
+  setCollectionDetail(
+    ref: SubmissionRef,
+    value: CollectionDetail
+  ): Promise<void>;
   getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
   setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
   getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
@@ -462,6 +470,29 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       submission.carriers = { status: 'NotStarted' };
     }
 
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getCollectionDetail({ id }: SubmissionRef): Promise<CollectionDetail> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.collectionDetail);
+  }
+
+  setCollectionDetail(
+    { id }: SubmissionRef,
+    value: CollectionDetail
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.collectionDetail = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -899,7 +930,6 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     return response.value;
   }
 
-  // Do I need the full Carriers object here or I can get away with carrierId and CarrierData only?
   async setCarriers(
     { id, accountId }: SubmissionRef,
     carrierId: string,
@@ -941,6 +971,53 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
         id,
         accountId,
         carrierId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getCollectionDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CollectionDetail> {
+    let response: GetDraftCollectionDetailResponse;
+    try {
+      response = await this.client.getDraftCollectionDetail({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setCollectionDetail(
+    { id, accountId }: SubmissionRef,
+    value: CollectionDetail
+  ): Promise<void> {
+    let response: SetDraftCollectionDetailResponse;
+    try {
+      response = await this.client.setDraftCollectionDetail({
+        id,
+        accountId,
+        value,
       });
     } catch (err) {
       this.logger.error(err);

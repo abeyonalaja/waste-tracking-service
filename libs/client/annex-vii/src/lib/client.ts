@@ -72,6 +72,12 @@ import {
   SetDraftTransitCountriesResponse,
   getDraftTransitCountries,
   setDraftTransitCountries,
+  GetDraftCollectionDetailRequest,
+  GetDraftCollectionDetailResponse,
+  SetDraftCollectionDetailRequest,
+  SetDraftCollectionDetailResponse,
+  getDraftCollectionDetail,
+  setDraftCollectionDetail,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -289,6 +295,28 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as DeleteDraftCarriersResponse;
+  }
+
+  async getDraftCollectionDetail(
+    req: GetDraftCollectionDetailRequest
+  ): Promise<GetDraftCollectionDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftCollectionDetail.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftCollectionDetailResponse;
+  }
+
+  async setDraftCollectionDetail(
+    req: SetDraftCollectionDetailRequest
+  ): Promise<SetDraftCollectionDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftCollectionDetail.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftCollectionDetailResponse;
   }
 
   async getDraftExitLocationById(

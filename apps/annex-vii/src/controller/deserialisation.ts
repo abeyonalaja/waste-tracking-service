@@ -11,6 +11,7 @@ import {
   GetDraftCarriersRequest,
   ListDraftCarriersRequest,
   DeleteDraftCarriersRequest,
+  GetDraftCollectionDetailRequest,
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
   schema,
@@ -70,6 +71,11 @@ export const listDraftCarriersRequest =
 export const deleteDraftCarriersRequest =
   ajv.compileParser<DeleteDraftCarriersRequest>(
     schema.deleteDraftCarriersRequest
+  );
+
+export const getDraftCollectionDetailRequest =
+  ajv.compileParser<GetDraftCollectionDetailRequest>(
+    schema.getDraftCollectionDetailRequest
   );
 
 export const getDraftExitLocationByIdRequest =

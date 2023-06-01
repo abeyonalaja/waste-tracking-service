@@ -13,6 +13,7 @@ import {
   ImporterDetail,
   CollectionDate,
   Carriers,
+  CollectionDetail,
   ExitLocation,
   TransitCountries,
 } from './submission.backend';
@@ -73,6 +74,10 @@ const mockBackend = {
     >(),
   deleteCarriers:
     jest.fn<(ref: SubmissionRef, carrierId: string) => Promise<void>>(),
+  getCollectionDetail:
+    jest.fn<(ref: SubmissionRef) => Promise<CollectionDetail>>(),
+  setCollectionDetail:
+    jest.fn<(ref: SubmissionRef, value: CollectionDetail) => Promise<void>>(),
   getExitLocation: jest.fn<(ref: SubmissionRef) => Promise<ExitLocation>>(),
   setExitLocation:
     jest.fn<(ref: SubmissionRef, value: ExitLocation) => Promise<void>>(),
@@ -127,6 +132,8 @@ describe('SubmissionPlugin', () => {
     mockBackend.getCarriers.mockClear();
     mockBackend.setCarriers.mockClear();
     mockBackend.deleteCarriers.mockClear();
+    mockBackend.getCollectionDetail.mockClear();
+    mockBackend.setCollectionDetail.mockClear();
   });
 
   describe('POST /submissions', () => {

@@ -7,6 +7,7 @@ import {
   SetDraftCollectionDateByIdRequest,
   SetDraftCarriersRequest,
   CreateDraftCarriersRequest,
+  SetDraftCollectionDetailRequest,
   SetDraftExitLocationByIdRequest,
   SetDraftTransitCountriesRequest,
   schema,
@@ -51,6 +52,11 @@ export const createDraftCarriersRequest =
 export const setDraftCarriersRequest = ajv.compile<SetDraftCarriersRequest>(
   schema.setDraftCarriersRequest
 );
+
+export const setDraftCollectionDetailRequest =
+  ajv.compile<SetDraftCollectionDetailRequest>(
+    schema.setDraftCollectionDetailRequest
+  );
 
 export const setDraftExitLocationByIdRequest =
   ajv.compile<SetDraftExitLocationByIdRequest>(

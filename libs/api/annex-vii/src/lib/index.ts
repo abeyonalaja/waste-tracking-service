@@ -23,6 +23,8 @@ export {
   deleteDraftCarriers,
   setDraftExitLocationById,
   setDraftTransitCountries,
+  getDraftCollectionDetail,
+  setDraftCollectionDetail,
 } from './dto';
 
 export type {
@@ -78,6 +80,10 @@ export type {
   SetDraftExitLocationByIdResponse,
   SetDraftTransitCountriesRequest,
   SetDraftTransitCountriesResponse,
+  GetDraftCollectionDetailRequest,
+  GetDraftCollectionDetailResponse,
+  SetDraftCollectionDetailRequest,
+  SetDraftCollectionDetailResponse,
 } from './dto';
 
 export * as schema from './schema';

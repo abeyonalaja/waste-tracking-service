@@ -16,6 +16,7 @@ import {
   GetDraftCarriersRequest,
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
+  GetDraftCollectionDetailRequest,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -357,10 +358,49 @@ const draftCarriers: SchemaObject = {
   },
 };
 
-const notStartedSection: SchemaObject = {
-  properties: {
-    status: {
-      enum: ['NotStarted'],
+const draftCollectionDetailData = {
+  address: {
+    properties: {
+      addressLine1: { type: 'string' },
+      townCity: { type: 'string' },
+      postcode: { type: 'string' },
+      country: { type: 'string' },
+    },
+    optionalProperties: {
+      addressLine2: { type: 'string' },
+    },
+  },
+  contactDetails: {
+    properties: {
+      organisationName: { type: 'string' },
+      fullName: { type: 'string' },
+      emailAddress: { type: 'string' },
+      phoneNumber: { type: 'string' },
+    },
+    optionalProperties: {
+      faxNumber: { type: 'string' },
+    },
+  },
+};
+
+const draftCollectionDetail: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {},
+      optionalProperties: {
+        address: draftCollectionDetailData.address,
+        contactDetails: draftCollectionDetailData.contactDetails,
+      },
+    },
+    Complete: {
+      properties: {
+        address: draftCollectionDetailData.address,
+        contactDetails: draftCollectionDetailData.contactDetails,
+      },
     },
   },
 };
@@ -422,7 +462,7 @@ const draftSubmission: SchemaObject = {
     importerDetail: draftImporterDetail,
     collectionDate: draftCollectionDate,
     carriers: draftCarriers,
-    collectionDetail: notStartedSection,
+    collectionDetail: draftCollectionDetail,
     ukExitLocation: draftExitLocation,
     transitCountries: draftTransitCountries,
     recoveryFacilityDetail: recoveryFacilityDetail,
@@ -767,6 +807,38 @@ export const deleteDraftCarriersRequest: JTDSchemaType<DeleteDraftCarriersReques
   };
 
 export const deleteDraftCarriersResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftCollectionDetailRequest: JTDSchemaType<GetDraftCollectionDetailRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftCollectionDetailResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftCollectionDetail,
+  },
+};
+
+export const setDraftCollectionDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftCollectionDetail,
+  },
+};
+
+export const setDraftCollectionDetailResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

@@ -8,6 +8,7 @@ import {
   validatePutImporterDetailRequest,
   validatePutCollectionDateRequest,
   validateSetCarriersRequest,
+  validateSetCollectionDetailRequest,
   validatePutExitLocationRequest,
   validatePutTransitCountriesRequest,
 } from './submission.validation';
@@ -598,6 +599,102 @@ describe('validateSetCarriersRequest', () => {
     };
 
     expect(validateSetCarriersRequest(data)).toBe(false);
+  });
+});
+
+describe('validateSetCollectionDetailRequest', () => {
+  it('should return true for object with status: NotStarted', () => {
+    expect(validateSetCollectionDetailRequest({ status: 'NotStarted' })).toBe(
+      true
+    );
+  });
+
+  it('should return true for object without faxNumber', () => {
+    const data = {
+      status: 'Started',
+      contactDetails: {
+        organisationName: 'Acme Inc.',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(true);
+  });
+
+  it('should return false for a request with a missing property', () => {
+    const data = {
+      status: 'Complete',
+      address: {
+        addressLine1: '123 Main St',
+        addressLine2: '',
+        townCity: 'Anytown',
+        postcode: '12345',
+      },
+      contactDetails: {
+        organisationName: 'Acme Inc.',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+
+    expect(validateSetCollectionDetailRequest(data)).toBe(false);
+  });
+
+  it('should return true for a request with a missing addressLine2', () => {
+    const data = {
+      status: 'Complete',
+      address: {
+        addressLine1: '123 Main St',
+        townCity: 'Anytown',
+        postcode: '12345',
+        country: 'UK',
+      },
+      contactDetails: {
+        organisationName: 'Acme Inc.',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(true);
+  });
+
+  it('should return false for object with invalid address', () => {
+    const data = {
+      status: 'Started',
+      address: {
+        addressLine1: 123,
+        townCity: 'Anytown',
+        postcode: '12345',
+        country: 'UK',
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(false);
+  });
+
+  it('should return false for object with invalid contactDetails', () => {
+    const data = {
+      status: 'Started',
+      contactDetails: {
+        fullName: 'John Doe',
+        emailAddress: 123,
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(false);
+  });
+
+  it('should return false for object where status is not started', () => {
+    const data = {
+      status: 'NotStarted',
+      contactDetails: {
+        fullName: 'John Doe',
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(false);
   });
 });
 

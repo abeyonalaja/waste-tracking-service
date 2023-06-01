@@ -10,6 +10,7 @@ import {
   validatePutCollectionDateRequest,
   validateCreateCarriersRequest,
   validateSetCarriersRequest,
+  validateSetCollectionDetailRequest,
   validatePutExitLocationRequest,
   validatePutTransitCountriesRequest,
 } from './submission.validation';
@@ -491,6 +492,53 @@ const plugin: Plugin<PluginOptions> = {
               )) as undefined
             )
             .code(204);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/collection-detail',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getCollectionDetail({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetCollectionDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/collection-detail',
+      handler: async function ({ params, payload }) {
+        if (!validateSetCollectionDetailRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.SetCollectionDetailRequest;
+        try {
+          await backend.setCollectionDetail(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.SetCollectionDetailResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

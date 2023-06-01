@@ -64,8 +64,6 @@ export type RecoveryFacilityDetail =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' };
 
-type NotStartedSection = { status: 'NotStarted' };
-
 export type WasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
@@ -137,6 +135,29 @@ export type Carriers =
       status: 'Started' | 'Complete';
       values: Carrier[];
     };
+
+export type CollectionDetailData = {
+  address: {
+    addressLine1: string;
+    addressLine2?: string;
+    townCity: string;
+    postcode: string;
+    country: string;
+  };
+  contactDetails: {
+    organisationName: string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+};
+
+export type CollectionDetail =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<CollectionDetailData>)
+  | ({ status: 'Complete' } & CollectionDetailData);
+
 export type ExitLocation =
   | { status: 'NotStarted' }
   | {
@@ -160,7 +181,7 @@ export type Submission = {
   importerDetail: ImporterDetail;
   collectionDate: CollectionDate;
   carriers: Carriers;
-  collectionDetail: NotStartedSection;
+  collectionDetail: CollectionDetail;
   ukExitLocation: ExitLocation;
   transitCountries: TransitCountries;
   recoveryFacilityDetail: RecoveryFacilityDetail;
@@ -202,3 +223,7 @@ export type GetExitLocationResponse = ExitLocation;
 export type PutTransitCountriesRequest = TransitCountries;
 export type PutTransitCountriesResponse = TransitCountries;
 export type GetTransitCountriesResponse = TransitCountries;
+
+export type SetCollectionDetailRequest = CollectionDetail;
+export type SetCollectionDetailResponse = CollectionDetail;
+export type GetCollectionDetailResponse = CollectionDetail;

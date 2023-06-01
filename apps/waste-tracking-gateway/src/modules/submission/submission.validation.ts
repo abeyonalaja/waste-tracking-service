@@ -8,6 +8,7 @@ import {
   PutCollectionDateRequest,
   CreateCarriersRequest,
   SetCarriersRequest,
+  SetCollectionDetailRequest,
   PutExitLocationRequest,
   PutTransitCountriesRequest,
 } from '@wts/api/waste-tracking-gateway';
@@ -326,6 +327,53 @@ export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
     },
   },
 });
+
+export const validateSetCollectionDetailRequest =
+  ajv.compile<SetCollectionDetailRequest>({
+    definitions: {
+      address: {
+        properties: {
+          addressLine1: { type: 'string' },
+          townCity: { type: 'string' },
+          postcode: { type: 'string' },
+          country: { type: 'string' },
+        },
+        optionalProperties: {
+          addressLine2: { type: 'string' },
+        },
+      },
+      contactDetails: {
+        properties: {
+          organisationName: { type: 'string' },
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+        },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      NotStarted: {
+        properties: {},
+      },
+      Started: {
+        properties: {},
+        optionalProperties: {
+          address: { ref: 'address' },
+          contactDetails: { ref: 'contactDetails' },
+        },
+      },
+      Complete: {
+        properties: {
+          address: { ref: 'address' },
+          contactDetails: { ref: 'contactDetails' },
+        },
+      },
+    },
+  });
 
 export const validatePutExitLocationRequest =
   ajv.compile<PutExitLocationRequest>({
