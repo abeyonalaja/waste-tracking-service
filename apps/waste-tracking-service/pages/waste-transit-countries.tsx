@@ -364,6 +364,17 @@ const WasteTransitCountries = () => {
                 pathname: '/submit-an-export-tasklist',
                 query: { id },
               });
+            } else {
+              if (countries.length === 0) {
+                dispatchWasteTransitPage({
+                  type: 'PROVIDED_UPDATE',
+                  payload: null,
+                });
+                dispatchWasteTransitPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.ADD_FORM,
+                });
+              }
             }
           }
         });
