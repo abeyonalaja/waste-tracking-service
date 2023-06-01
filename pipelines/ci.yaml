@@ -2,7 +2,7 @@ trigger:
   - main
 
 jobs:
-  - job: Build
+  - job: build
     displayName: Create artifacts
 
     variables:
@@ -97,3 +97,30 @@ jobs:
         displayName: Publish charts
         env:
           HOST: oci://$(acr.loginServer)/charts/wts
+
+  - job: test
+    displayName: Acceptance tests
+
+    variables:
+      - name: wasteTrackingServiceRootUrl
+        value: 'http://52.151.120.75/'
+
+    steps:
+      - task: UseRubyVersion@0
+        inputs:
+          versionSpec: '>= 3.0'
+
+      - bash: |
+          gem install bundler
+          bundle install
+          bundle exec cucumber --profile ci
+        displayName: Run tests
+        env:
+          START_PAGE_URL: $(wasteTrackingServiceRootUrl)
+        workingDirectory: tests/waste-tracking-service
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: tests/waste-tracking-service/junit/*.xml
+        condition: always()
