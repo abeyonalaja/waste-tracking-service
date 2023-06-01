@@ -160,10 +160,6 @@
   "exportJourney.wasteCollectionDate.radioYesHint": "If the date might change, enter an estimate instead.",
   "exportJourney.wasteCollectionDate.radioNo": "No, I’ll enter an estimate date",
   "exportJourney.wasteCollectionDate.radioNoHint": "You must update this with actual details as soon as possible after submitting this export.",
-  "exportJourney.pointOfExit.caption": "Location waste leave the UK",
-  "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK",
-  "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
-  "exportJourney.pointOfExit.inputLabel": "Enter the location",
   "exportJourney.wasteTransitCountries.caption": "Countries waste will travel through",
   "exportJourney.wasteTransitCountries.title": "Are there any other countries the waste will travel through?",
   "exportJourney.wasteTransitCountries.firstCountryLabel": "Enter the first country the waste will travel through",
@@ -171,5 +167,11 @@
   "exportJourney.wasteTransitCountries.listTitle": "Waste transit countries",
   "exportJourney.wasteTransitCountries.additionalCountryLegend": "Do you need to add another country?",
   "exportJourney.wasteTransitCountries.additionalCountryHint": "You must add countries in order of travel",
-  "exportJourney.wasteTransitCountries.additionalCountryLabel": "Select another country"
+  "exportJourney.wasteTransitCountries.additionalCountryLabel": "Select another country",
+  "exportJourney.wasteTransitCountries.changeCountryTitle": "What would you like to change {{country}} to?",
+  "exportJourney.wasteTransitCountries.confirmRemoveTitle": "Are you sure you want to remove {{country}}?",
+  "exportJourney.pointOfExit.caption": "Location waste leaves the UK",
+  "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK?",
+  "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
+  "exportJourney.pointOfExit.inputLabel": "Enter the location"
 }

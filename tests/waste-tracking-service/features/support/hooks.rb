@@ -1,4 +1,5 @@
 Before do |scenario|
+  TestStatus.reset_test_status
   @feature_name = File.basename(scenario.location.file, '.feature').to_s
   Log.info("Started: #{scenario.name} - #{@feature_name} feature")
 end

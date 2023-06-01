@@ -3,7 +3,7 @@
 require_relative '../shared_components/general_helpers'
 require_relative '../shared_components/error_box'
 # this page is for Exporter details page details
-class LocationWasteLeavesTheUkPage < GenericPage
+class LocationWasteLeaveTheUkPage < GenericPage
   include GeneralHelpers
   include ErrorBox
 

@@ -20,5 +20,4 @@ class WasteCarrierTransportPage < GenericPage
     expect(self).to have_text SUB_TEXT
   end
 
-
 end
