@@ -10,7 +10,7 @@ class ChangeWasteTravelCountryPage < GenericPage
   include PageHelper
 
   CHANGE_WASTE_TRAVEL_COUNTRIES_OF_WASTE_TITLE = Translations.value 'exportJourney.wasteTransitCountries.changeCountryTitle'
-  CHANGE_WASTE_TRAVEL_COUNTRIES_OF_WASTE_HEADER = Translations.value 'exportJourney.wasteTransitCountries.additionalCountryLabel'
+  CHANGE_WASTE_TRAVEL_COUNTRIES_OF_WASTE_HEADER = Translations.value 'autocompleteHint'
   CHANGE_WASTE_TRAVEL_COUNTRIES_OF_WASTE_LABEL = Translations.value 'exportJourney.wasteTransitCountries.additionalCountryHint'
   CHANGE_WASTE_TRAVEL_COUNTRIES_OF_WASTE_CAPTION = Translations.value 'exportJourney.wasteTransitCountries.caption'
 

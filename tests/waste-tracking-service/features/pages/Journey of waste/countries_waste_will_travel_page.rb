@@ -11,7 +11,7 @@ class CountriesWasteWillTravelPage < GenericPage
 
   OTHER_COUNTRIES_OF_WASTE_TITLE = Translations.value 'exportJourney.wasteTransitCountries.title'
   OTHER_COUNTRIES_OF_WASTE_HEADER = Translations.value 'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel'
-  OTHER_COUNTRIES_OF_WASTE_LABEL = Translations.value 'exportJourney.wasteTransitCountries.firstCountryLabel'
+  OTHER_COUNTRIES_OF_WASTE_LABEL = Translations.value 'autocompleteHint'
   OTHER_COUNTRIES_OF_WASTE_HINT = Translations.value 'exportJourney.wasteTransitCountries.hint'
 
   def check_page_displayed
