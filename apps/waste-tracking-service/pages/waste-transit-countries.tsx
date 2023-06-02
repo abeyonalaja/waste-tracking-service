@@ -535,15 +535,13 @@ const WasteTransitCountries = () => {
                               >
                                 <GovUK.Label htmlFor="country">
                                   <GovUK.LabelText>
-                                    {t(
-                                      'exportJourney.wasteTransitCountries.firstCountryLabel'
-                                    )}
+                                    {t('autocompleteHint')}
                                   </GovUK.LabelText>
                                 </GovUK.Label>
 
                                 <GovUK.HintText>
                                   {t(
-                                    'exportJourney.wasteTransitCountries.hint'
+                                    'exportJourney.wasteTransitCountries.additionalCountryAutocompleteHint'
                                   )}
                                 </GovUK.HintText>
                                 <GovUK.ErrorText>
@@ -614,9 +612,7 @@ const WasteTransitCountries = () => {
                               >
                                 <GovUK.Label htmlFor="country">
                                   <GovUK.LabelText>
-                                    {t(
-                                      'exportJourney.wasteTransitCountries.firstCountryLabel'
-                                    )}
+                                    {t('autocompleteHint')}
                                   </GovUK.LabelText>
                                 </GovUK.Label>
 
@@ -669,7 +665,11 @@ const WasteTransitCountries = () => {
                   <>
                     <form onSubmit={handleEditSubmit}>
                       <GovUK.Fieldset>
-                        <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                        <GovUK.Fieldset.Legend
+                          isPageHeading
+                          size="LARGE"
+                          mb={6}
+                        >
                           {t(
                             'exportJourney.wasteTransitCountries.changeCountryTitle',
                             {
@@ -685,9 +685,7 @@ const WasteTransitCountries = () => {
                         >
                           <GovUK.Label htmlFor="country">
                             <GovUK.LabelText>
-                              {t(
-                                'exportJourney.wasteTransitCountries.additionalCountryLabel'
-                              )}
+                              {t('autocompleteHint')}
                             </GovUK.LabelText>
                           </GovUK.Label>
                           <GovUK.HintText>
