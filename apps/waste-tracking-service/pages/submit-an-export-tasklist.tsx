@@ -354,7 +354,13 @@ const Tasklist = () => {
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell setWidth="one-half">
-                          <AppLink href="" id="waste-collection-details">
+                          <AppLink
+                            href={{
+                              pathname: '/waste-collection',
+                              query: { id, dashboard: true },
+                            }}
+                            id="collection-details"
+                          >
                             {t(
                               'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
                             )}

@@ -2,7 +2,6 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import WasteCollectionDate from '../pages/waste-collection-date';
-import WasteTransitCountries from '../pages/waste-transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -19,7 +18,7 @@ global.fetch = jest.fn(() =>
   })
 );
 
-describe('Waste Collection page', () => {
+describe('Waste Collection Date page', () => {
   it('should display a loading message while data is being fetched', async () => {
     global.fetch.mockImplementationOnce(
       () =>
