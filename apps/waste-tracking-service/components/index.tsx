@@ -1,3 +1,4 @@
+import { Address } from './Address';
 import { AppLink } from './AppLink';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
@@ -17,6 +18,7 @@ import { TextareaCharCount } from './TextareaCharCount';
 import { WasteCarrierHeading } from './WasteCarrierHeading';
 
 export {
+  Address,
   AppLink,
   BreadcrumbWrap,
   ButtonGroup,

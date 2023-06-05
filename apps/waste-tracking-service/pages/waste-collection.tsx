@@ -11,6 +11,7 @@ import * as GovUK from 'govuk-react';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
+  Address,
   AppLink,
   CompleteFooter,
   CompleteHeader,
@@ -21,17 +22,23 @@ import {
   SubmissionNotFound,
   Loading,
 } from '../components';
-import { isNotEmpty, validatePostcode } from '../utils/validators';
+import {
+  isNotEmpty,
+  validatePostcode,
+  validateSelectAddress,
+} from '../utils/validators';
 import styled from 'styled-components';
 
 const VIEWS = {
   POSTCODE_SEARCH: 1,
   SEARCH_RESULTS: 2,
   MANUAL_ADDRESS: 3,
+  CONTACT_DETAILS: 4,
 };
 
 type State = {
   data: any;
+  addressData: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
@@ -46,8 +53,10 @@ type Action = {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
+    | 'ADDRESS_DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'DATA_UPDATE'
+    | 'ADDRESS_DATA_UPDATE'
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
@@ -55,7 +64,8 @@ type Action = {
 
 const initialState: State = {
   data: {},
-  isLoading: false,
+  addressData: {},
+  isLoading: true,
   isError: false,
   showView: VIEWS.POSTCODE_SEARCH,
   provided: null,
@@ -77,6 +87,13 @@ const addressReducer = (state: State, action: Action) => {
         isError: false,
         data: action.payload,
       };
+    case 'ADDRESS_DATA_FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        addressData: action.payload,
+      };
     case 'DATA_FETCH_FAILURE':
       return {
         ...state,
@@ -87,6 +104,11 @@ const addressReducer = (state: State, action: Action) => {
       return {
         ...state,
         data: { ...state.data, ...action.payload },
+      };
+    case 'ADDRESS_DATA_UPDATE':
+      return {
+        ...state,
+        addressData: { ...state.addressData, ...action.payload },
       };
     case 'ERRORS_UPDATE':
       return {
@@ -119,11 +141,44 @@ const WasteCollection = () => {
   );
   const [id, setId] = useState(null);
   const [postcode, setPostcode] = useState<string>('');
+  const [selectedAddress, setSelectedAddress] = useState<string>();
+
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
     }
   }, [router.isReady, router.query.id]);
+
+  useEffect(() => {
+    dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
+    if (id !== null) {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            dispatchAddressPage({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: data,
+            });
+            if (data.values === undefined || data.values.length === 0) {
+              if (data.address !== undefined) {
+                dispatchAddressPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.CONTACT_DETAILS,
+                });
+              }
+            }
+          }
+        });
+    }
+  }, [router.isReady, id]);
 
   const handlePostcodeSearch = useCallback(
     (e: FormEvent) => {
@@ -147,11 +202,14 @@ const WasteCollection = () => {
           )
             .then((response) => {
               if (response.ok) return response.json();
+              else {
+                dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
+              }
             })
             .then((data) => {
               if (data !== undefined) {
                 dispatchAddressPage({
-                  type: 'DATA_FETCH_SUCCESS',
+                  type: 'ADDRESS_DATA_FETCH_SUCCESS',
                   payload: data,
                 });
                 dispatchAddressPage({
@@ -168,6 +226,51 @@ const WasteCollection = () => {
       e.preventDefault();
     },
     [postcode]
+  );
+
+  const handleSubmitAddress = useCallback(
+    (e: FormEvent, returnToDraft = false) => {
+      const newErrors = {
+        selectedAddress: validateSelectAddress(selectedAddress),
+      };
+      if (isNotEmpty(newErrors)) {
+        dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: newErrors });
+      } else {
+        dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: null });
+        dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
+        const body = {
+          status: 'Started',
+          address: JSON.parse(selectedAddress),
+        };
+        try {
+          fetch(
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(body),
+            }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                dispatchAddressPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.CONTACT_DETAILS,
+                });
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      e.preventDefault();
+    },
+    [selectedAddress]
   );
 
   const BreadCrumbs = () => {
@@ -290,10 +393,114 @@ const WasteCollection = () => {
                   </>
                 )}
                 {addressPage.showView === VIEWS.SEARCH_RESULTS && (
-                  <>Search results page</>
+                  <>
+                    <GovUK.Heading size={'LARGE'}>
+                      {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
+                    </GovUK.Heading>
+                    <Paragraph>
+                      {postcode.toUpperCase()}
+                      <span> </span>
+                      <AppLink
+                        href="#"
+                        onClick={() => {
+                          dispatchAddressPage({
+                            type: 'SHOW_VIEW',
+                            payload: VIEWS.POSTCODE_SEARCH,
+                          });
+                        }}
+                      >
+                        Change{' '}
+                        <GovUK.VisuallyHidden>
+                          the postcode
+                        </GovUK.VisuallyHidden>
+                      </AppLink>
+                    </Paragraph>
+                    <form onSubmit={handleSubmitAddress}>
+                      <GovUK.FormGroup
+                        error={!!addressPage.errors?.selectedAddress}
+                      >
+                        <GovUK.Label htmlFor={'selectedAddress'}>
+                          <GovUK.LabelText>
+                            {t('postcode.selectLabel')}
+                          </GovUK.LabelText>
+                        </GovUK.Label>
+                        <GovUK.ErrorText>
+                          {addressPage.errors?.selectedAddress}
+                        </GovUK.ErrorText>
+                        <GovUK.Select
+                          label={''}
+                          input={{
+                            id: 'selectedAddress',
+                            name: 'selectedAddress',
+                            onChange: (e) => setSelectedAddress(e.target.value),
+                          }}
+                        >
+                          <option value="">
+                            {addressPage.addressData.length > 1
+                              ? t('postcode.addressesFound', {
+                                  n: addressPage.addressData.length,
+                                })
+                              : t('postcode.addressFound', {
+                                  n: addressPage.addressData.length,
+                                })}
+                          </option>
+                          {addressPage.addressData.map((address, key) => {
+                            return (
+                              <option
+                                key={`address${key}`}
+                                value={JSON.stringify(address)}
+                              >
+                                {Object.keys(address)
+                                  .map((line) => address[line])
+                                  .join(', ')}
+                              </option>
+                            );
+                          })}
+                        </GovUK.Select>
+                      </GovUK.FormGroup>
+                      <Paragraph>
+                        <AppLink
+                          href="#"
+                          onClick={() =>
+                            dispatchAddressPage({
+                              type: 'SHOW_VIEW',
+                              payload: VIEWS.MANUAL_ADDRESS,
+                            })
+                          }
+                        >
+                          {t('postcode.notFoundLink')}
+                        </AppLink>
+                      </Paragraph>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton />
+                      </ButtonGroup>
+                    </form>
+                  </>
                 )}
                 {addressPage.showView === VIEWS.MANUAL_ADDRESS && (
                   <>Manual address page</>
+                )}
+                {addressPage.showView === VIEWS.CONTACT_DETAILS && (
+                  <>
+                    <GovUK.Heading size="L">
+                      {t('exportJourney.wasteCollectionDetails.contactTitle')}
+                    </GovUK.Heading>
+                    <Address address={addressPage.data.address} />
+                    <AppLink
+                      href="#"
+                      onClick={() => {
+                        dispatchAddressPage({
+                          type: 'SHOW_VIEW',
+                          payload: VIEWS.POSTCODE_SEARCH,
+                        });
+                      }}
+                    >
+                      Change address
+                    </AppLink>
+                  </>
                 )}
               </>
             )}

@@ -10,6 +10,13 @@ jest.mock('next/router', () => ({
   }),
 }));
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
+
 describe('Waste Collection details page', () => {
   it('should render the page', async () => {
     await act(async () => {

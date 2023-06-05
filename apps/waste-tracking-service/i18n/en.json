@@ -197,6 +197,7 @@
   "exportJourney.wasteCollectionDetails.caption": "Waste collection details",
   "exportJourney.wasteCollectionDetails.postcodeTitle": "Where will the waste carrier collect the waste from?",
   "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector.",
+  "exportJourney.wasteCollectionDetails.contactTitle": "What are the contact details for the collection address?",
   "exportJourney.wasteTransitCountries.caption": "Countries waste will travel through",
   "exportJourney.wasteTransitCountries.title": "Are there any other countries the waste will travel through?",
   "exportJourney.wasteTransitCountries.hint": "This will be the first country the waste will travel through. Do not include the exporting or importing country.",
