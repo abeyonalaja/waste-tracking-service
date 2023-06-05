@@ -45,3 +45,7 @@ end
 And(/^I click Continue button$/) do
   click_on Translations.value 'continueButton'
 end
+
+And(/^I click Return to draft button$/) do
+  click_on Translations.value 'returnToDraft'
+end

@@ -53,6 +53,7 @@
   "saveButton": "Save and continue",
   "saveReturnButton": "Save and return",
   "saveReturnLink": "Save and return to draft",
+  "returnToDraft": "Return to draft",
   "continueButton": "Continue",
   "postcode.label": "Postcode",
   "postcode.findButton": "Find address",
@@ -173,5 +174,7 @@
   "exportJourney.pointOfExit.caption": "Location waste leaves the UK",
   "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK?",
   "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
-  "exportJourney.pointOfExit.inputLabel": "Enter the location"
+  "exportJourney.pointOfExit.inputLabel": "Enter the location",
+  "exportJourney.wasteCollectionDetails.postcodeTitle": "Where will the waste carrier collect the waste from?",
+  "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector."
 }
