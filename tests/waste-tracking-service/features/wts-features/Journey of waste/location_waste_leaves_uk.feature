@@ -37,7 +37,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
     And I enter location
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And I click the "Location waste leaves the UK" link
@@ -51,13 +51,13 @@ Feature:  AS A waste producer/broker exporting GLW waste
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
     And I enter location
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And I click the "Location waste leaves the UK" link
     Then I can see previously entered location details pre-populated
     And I choose "No" radio button
-    And I click the Save and return
+    And I click the Save and return to draft
     And I click the "Location waste leaves the UK" link
     Then I can see newly chosen option pre-populated
 

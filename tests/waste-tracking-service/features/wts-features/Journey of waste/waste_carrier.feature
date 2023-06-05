@@ -28,7 +28,7 @@ Feature: AS A waste producer/broker
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link
@@ -44,7 +44,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I should see "what are the waste carriers contact details" page is displayed
     And I complete the Whats is the waste carriers contact details page
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link

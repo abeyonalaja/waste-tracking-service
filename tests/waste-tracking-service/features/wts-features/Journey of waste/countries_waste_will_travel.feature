@@ -19,12 +19,12 @@ Feature: AS A waste producer/broker
     And I click the "Countries waste will travel through" link
     And I click the button Save and continue
     Then I remain on the countries waste will travel page with an "Select yes if there are any other countries the waste will travel through" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the countries waste will travel page with an "Select yes if there are any other countries the waste will travel through" error message displayed
     And I choose "Yes" radio button
     And I click the button Save and continue
     Then I remain on the countries waste will travel page with an "Select or enter country" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the countries waste will travel page with an "Select or enter country" error message displayed
     And I click "Back" link should display "Submit an export" page
 
@@ -37,7 +37,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     And I click the button Save and continue
     Then I remain on the Waste transit countries page with an "Select yes if there are any other countries the waste will travel through" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the Waste transit countries page with an "Select yes if there are any other countries the waste will travel through" error message displayed
 
   Scenario: User can select no on other countries the waste travel
@@ -111,7 +111,7 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then the "countries waste will travel" page is displayed
     When I choose "No" radio button
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the task "Countries waste will travel through" should be "COMPLETED"
     When I click the "Countries waste will travel through" link
     Then I should see No option is preselected on other country page
@@ -126,7 +126,7 @@ Feature: AS A waste producer/broker
     When I click the "Change" link
     And I click the button Save and continue
     Then I remain on the change waste travel country page with an "Select or enter country" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the change waste travel country page with an "Select or enter country" error message displayed
     And I click "Back" link should display "Waste transit countries" page
 
@@ -140,7 +140,7 @@ Feature: AS A waste producer/broker
     When I click the "Remove" link
     And I click the button Save and continue
     Then I remain on the remove waste travel country page with an "Select yes if you want to remove this country" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the remove waste travel country page with an "Select yes if you want to remove this country" error message displayed
 
 

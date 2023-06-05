@@ -61,7 +61,7 @@ Feature: AS A waste producer/broker
     And I click the "Collection date" link
     And I click the button Save and continue
     Then I remain on the collection date page with an "Select yes if you know when the waste will be collected" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the collection date page with an "Select yes if you know when the waste will be collected" error message displayed
 
 
@@ -72,7 +72,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes, I’ll enter the actual date" radio button
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a real date" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the collection date page with an "Enter a real date" error message displayed
 
   Scenario: User can't enter past date for collection date
@@ -83,7 +83,7 @@ Feature: AS A waste producer/broker
     When I enter past collection date
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a date in the future" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the collection date page with an "Enter a date in the future" error message displayed
 
   Scenario: User can't enter 3 days from the current date
@@ -94,7 +94,7 @@ Feature: AS A waste producer/broker
     When I enter collection date within 3 days
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a date at least 3 business days in the future" error message displayed
-    When I click the Save and return
+    When I click the Save and return to draft
     Then I remain on the collection date page with an "Enter a date at least 3 business days in the future" error message displayed
 
 

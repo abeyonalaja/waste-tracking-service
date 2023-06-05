@@ -22,7 +22,7 @@ Scenario: User navigates to enter exporter address manually page and completes i
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
     And I complete the Enter exporter address manual page
-    When I click the Save and return
+    When I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Exporter details" should be "IN PROGRESS"
     And I click the "Exporter details" link
@@ -70,7 +70,7 @@ Scenario: User navigates to enter exporter address manually page and completes i
     Given I login to waste tracking portal
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
-    And I click the Save and return
+    And I click the Save and return to draft
     Then I remain on the enter exporter address manual page with an "Enter a real postcode" error message displayed
     And I remain on the enter exporter address manual page with an "Enter a town or city" error message displayed
     And I remain on the enter exporter address manual page with an "Select a country" error message displayed

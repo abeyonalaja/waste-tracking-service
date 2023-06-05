@@ -15,7 +15,7 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     When I navigate to You have added EWC codes page with Not applicable waste code
-    And I click the Save and return
+    And I click the Save and return to draft
     Then Submit an export page is displayed
     And the task "Quantity of waste" should be "Not started"
     And the task "Laboratory details" should be "Not started"
@@ -26,7 +26,7 @@ Feature: AS A waste producer/broker
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
     And select a first option as waste code description
-    And I click the Save and return
+    And I click the Save and return to draft
     When I click the "Waste codes and description" link
     Then "Basel Annex IX" is still selected
     And waste code description is displayed
@@ -36,7 +36,7 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     When I click the "Waste codes and description" link
     When I choose "Not applicable" as a waste code
-    And I click the Save and return
+    And I click the Save and return to draft
     When I click the "Waste codes and description" link
     Then "Not applicable" is still selected
 
@@ -46,7 +46,7 @@ Feature: AS A waste producer/broker
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
     And select a first option as waste code description
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the task "Waste codes and description" should be "In progress"
     And the task "Recovery Facility or laboratory" should be "Not started"
 

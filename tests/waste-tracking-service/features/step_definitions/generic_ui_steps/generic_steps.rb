@@ -22,7 +22,7 @@ And(/^I click the button Save and continue$/) do
   click_button Translations.value 'saveButton'
 end
 
-When(/^I click the Save and return$/) do
+When(/^I click the Save and return to draft$/) do
   click_link Translations.value 'saveReturnButton'
 end
 

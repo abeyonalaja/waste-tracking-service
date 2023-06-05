@@ -32,7 +32,7 @@ SO THAT the importer can be tracked
     And I click the button Save and continue
     Then the "Importer contact details" page is displayed
     And I complete Importer contact details page
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Importer details" should be "COMPLETED"
 
@@ -42,7 +42,7 @@ SO THAT the importer can be tracked
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
-    And I click the Save and return
+    And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     And the task "Importer details" should be "IN PROGRESS"
 
@@ -52,7 +52,7 @@ SO THAT the importer can be tracked
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
-    And I click the Save and return
+    And I click the Save and return to draft
     And I click the "Importer details" link
     Then I verify that previously entered details are pre-populated
 
