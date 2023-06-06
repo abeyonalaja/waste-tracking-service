@@ -10,17 +10,16 @@ import {
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
+  WasteCarrierHeadingNoCaps,
 } from '../components';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import {
+  isNotEmpty,
   validateOrganisationName,
   validateCountry,
   validateAddress,
 } from '../utils/validators';
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 const SmallHeading = styled(GovUK.Caption)`
   margin-bottom: 0px;
@@ -40,6 +39,8 @@ const WasteCarrierDetails = () => {
   const [id, setId] = useState(undefined);
   const [carrierId, setCarrierId] = useState(undefined);
   const [data, setData] = useState<GetCarriersResponse>(null);
+  const [carrierCount, setCarrierCount] = useState(0);
+  const [carrierIndex, setCarrierIndex] = useState(0);
   const [country, setCountry] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [organisationName, setOrganisationName] = useState<string>('');
@@ -87,8 +88,10 @@ const WasteCarrierDetails = () => {
             }
 
             if (noOfCarriers > 1) {
-              // Need to go to waste carriers list page
-              console.log(data);
+              router.push({
+                pathname: '/waste-carrier-details',
+                query: { id, carrierId: data.values[noOfCarriers - 1].id },
+              });
             }
 
             setIsLoading(false);
@@ -97,9 +100,7 @@ const WasteCarrierDetails = () => {
         });
     }
     if (id !== undefined && carrierId !== undefined) {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierId}`
-      )
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -109,10 +110,18 @@ const WasteCarrierDetails = () => {
         })
         .then((data) => {
           if (data !== undefined) {
+            setCarrierCount(data.values.length);
+            setCarrierIndex(
+              data.values.findIndex((item) => item.id === carrierId)
+            );
             const targetData = data.values.find(
               (singleCarrier) => singleCarrier.id === carrierId
             );
-            setData(data);
+            const singleRecord = {
+              status: data.status,
+              values: [targetData],
+            };
+            setData(singleRecord);
             setOrganisationName(targetData.addressDetails?.organisationName);
             setAddress(targetData.addressDetails?.address);
             setCountry(targetData.addressDetails?.country);
@@ -152,8 +161,6 @@ const WasteCarrierDetails = () => {
     handleSubmit(e, true);
   };
 
-  const carrierNumber = '';
-
   const updateArray = (arr, id, updatedData) => {
     return arr.map((item) => {
       return item.id === id ? { ...item, ...updatedData } : item;
@@ -172,7 +179,6 @@ const WasteCarrierDetails = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
-
         let body;
         const newData = {
           addressDetails: {
@@ -187,7 +193,6 @@ const WasteCarrierDetails = () => {
             values: updateArray(data.values, carrierId, newData),
           };
         }
-
         try {
           fetch(
             `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierId}`,
@@ -217,10 +222,12 @@ const WasteCarrierDetails = () => {
           console.error(e);
         }
       }
+
       e.preventDefault();
     },
     [data, organisationName, country, address, carrierId, id, router]
   );
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -242,9 +249,7 @@ const WasteCarrierDetails = () => {
     <>
       <Head>
         <title>
-          {t('exportJourney.wasteCarrierDetails.firstPageQuestion', {
-            n: carrierNumber,
-          })}
+          {t('exportJourney.wasteCarrierDetails.firstPageQuestion')}
         </title>
       </Head>
       <GovUK.Page
@@ -264,9 +269,11 @@ const WasteCarrierDetails = () => {
                   {t('exportJourney.wasteCarrierDetails.title')}
                 </SmallHeading>
                 <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.wasteCarrierDetails.firstPageQuestion', {
-                    n: carrierNumber,
-                  })}
+                  <WasteCarrierHeadingNoCaps
+                    index={carrierIndex}
+                    noOfCarriers={carrierCount}
+                    pageType="firstPage"
+                  />
                 </GovUK.Heading>
                 <GovUK.Paragraph>
                   {t('exportJourney.wasteCarrierDetails.YouCanEditMessage')}

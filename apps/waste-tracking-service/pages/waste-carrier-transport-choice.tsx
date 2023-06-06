@@ -10,6 +10,7 @@ import {
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
+  WasteCarrierHeadingNoCaps,
 } from '../components';
 import styled from 'styled-components';
 
@@ -23,6 +24,8 @@ const WasteCarrierContactDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
+  const [carrierCount, setCarrierCount] = useState(0);
+  const [carrierIndex, setCarrierIndex] = useState(0);
   const [carrierId, setCarrierId] = useState(undefined);
   const [, setIsLoading] = useState<boolean>(true);
   const [, setIsError] = useState<boolean>(false);
@@ -100,6 +103,30 @@ const WasteCarrierContactDetails = () => {
     });
   };
 
+  if (id !== undefined && carrierId !== undefined) {
+    fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`)
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          setIsLoading(false);
+          setIsError(true);
+        }
+      })
+      .then((data) => {
+        if (data !== undefined) {
+          setCarrierCount(data.values.length);
+          setCarrierIndex(
+            data.values.findIndex(
+              (item: { id: unknown }) => item.id === carrierId
+            )
+          );
+
+          setIsLoading(false);
+          setIsError(false);
+        }
+      });
+  }
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -138,9 +165,11 @@ const WasteCarrierContactDetails = () => {
                 {t('exportJourney.wasteCarrierDetails.title')}
               </SmallHeading>
               <GovUK.Heading size={'LARGE'}>
-                {t('exportJourney.wasteCarrierTransport.pageQuestion', {
-                  n: carrierNumber,
-                })}
+                <WasteCarrierHeadingNoCaps
+                  index={carrierIndex}
+                  noOfCarriers={carrierCount}
+                  pageType="thirdPage"
+                />
               </GovUK.Heading>
               <form onSubmit={handleRedirect}>
                 <GovUK.FormGroup>

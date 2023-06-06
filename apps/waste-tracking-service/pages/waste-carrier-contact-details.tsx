@@ -10,6 +10,7 @@ import {
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
+  WasteCarrierHeadingNoCaps,
 } from '../components';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -40,6 +41,8 @@ const WasteCarrierContactDetails = () => {
   const [id, setId] = useState(null);
   const [carrierId, setCarrierId] = useState(undefined);
   const [data, setData] = useState<GetCarriersResponse>(null);
+  const [carrierCount, setCarrierCount] = useState(0);
+  const [carrierIndex, setCarrierIndex] = useState(0);
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -170,6 +173,29 @@ const WasteCarrierContactDetails = () => {
     },
     [fullName, email, phone, fax, data, carrierId, id, router]
   );
+
+  if (id !== undefined && carrierId !== undefined) {
+    fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`)
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          setIsLoading(false);
+          setIsError(true);
+        }
+      })
+      .then((data) => {
+        if (data !== undefined) {
+          setCarrierCount(data.values.length);
+          setCarrierIndex(
+            data.values.findIndex((item: { id: any }) => item.id === carrierId)
+          );
+
+          setIsLoading(false);
+          setIsError(false);
+        }
+      });
+  }
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -211,9 +237,11 @@ const WasteCarrierContactDetails = () => {
                   {t('exportJourney.wasteCarrierDetails.title')}
                 </SmallHeading>
                 <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.wasteCarrierDetails.secondPageQuestion', {
-                    n: carrierNumber,
-                  })}
+                  <WasteCarrierHeadingNoCaps
+                    index={carrierIndex}
+                    noOfCarriers={carrierCount}
+                    pageType="secondPage"
+                  />
                 </GovUK.Heading>
                 <GovUK.Paragraph>
                   {t('exportJourney.wasteCarrierDetails.YouCanEditMessage')}

@@ -13,7 +13,7 @@ export const WasteCarrierHeading = ({ index, noOfCarriers }) => {
     } else if (index === 2) {
       itemName = 'Third waste carrier';
     } else if (index === 3) {
-      itemName = 'Forth waste carrier';
+      itemName = 'Fourth waste carrier';
     } else if (index === 4) {
       itemName = 'Fifth waste carrier';
     }

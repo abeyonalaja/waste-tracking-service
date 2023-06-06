@@ -16,6 +16,7 @@ import { SubmissionNotFound } from './SubmissionNotFound';
 import { SummaryList } from './SummaryList';
 import { TextareaCharCount } from './TextareaCharCount';
 import { WasteCarrierHeading } from './WasteCarrierHeading';
+import { WasteCarrierHeadingNoCaps } from './WasteCarrierHeadingNoCaps';
 
 export {
   Address,
@@ -36,4 +37,5 @@ export {
   SummaryList,
   TextareaCharCount,
   WasteCarrierHeading,
+  WasteCarrierHeadingNoCaps,
 };

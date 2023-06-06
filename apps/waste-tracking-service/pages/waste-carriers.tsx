@@ -158,6 +158,31 @@ const WasteCarriers = () => {
     }
   }, [router.isReady, id]);
 
+  const createAnotherCarrierRecord = () => {
+    try {
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'Started' }),
+      })
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            router.push({
+              pathname: '/waste-carrier-details',
+              query: { id, carrierId: data.values[0].id },
+            });
+          }
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleLinkSubmit = (e) => {
     router.push({
       pathname: '/submit-an-export-tasklist',
@@ -172,15 +197,12 @@ const WasteCarriers = () => {
         query: { id: router.query.id },
       });
     } else if (selectedOption === 'yes') {
-      router.push({
-        pathname: '/waste-carrier-details',
-        query: { id: router.query.id },
-      });
+      createAnotherCarrierRecord();
     }
     e.preventDefault();
   };
-
-  //   let numberLeft = (5 - wasteCarriersPage.data.values.length).toString();
+  console.log(wasteCarriersPage.data.values);
+  const numberLeft = (5 - wasteCarriersPage.data.values?.length).toString();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -215,9 +237,6 @@ const WasteCarriers = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {/* {isError && !isLoading && <p>No valid record found</p>}
-            {isLoading && <p>Loading</p>}
-            {!isError && !isLoading && ( */}
             <>
               {' '}
               <SmallHeading>
@@ -272,18 +291,6 @@ const WasteCarriers = () => {
                         ''
                       )}
                     </ul>
-                    {/* <div>
-                      <GovUK.Link
-                        href={
-                          '/waste-carrier-details?id=' +
-                          router.query.id +
-                          '&carrierId=' +
-                          item.id
-                        }
-                      >
-                        Change
-                      </GovUK.Link>
-                    </div> */}
                   </div>
                   <div className="govuk-summary-card__content">
                     <dl className="govuk-summary-list">
@@ -305,38 +312,61 @@ const WasteCarriers = () => {
                   </div>
                 </div>
               ))}
-              <GovUK.Heading size={'MEDIUM'}>
-                {t('exportJourney.wasteCarrier.carriersPage.question')}
-              </GovUK.Heading>
-              <GovUK.Paragraph>
-                {t('exportJourney.wasteCarrier.carriersPage.hint')}
-              </GovUK.Paragraph>
-              <form onSubmit={handleRedirect}>
-                <GovUK.FormGroup>
-                  <GovUK.Radio
-                    name="group1"
-                    value="yes"
-                    checked={selectedOption === 'yes'}
-                    onChange={handleOptionChange}
-                  >
-                    {t('radio.yes')}
-                  </GovUK.Radio>
-                  <GovUK.Radio
-                    name="group1"
-                    value="no"
-                    checked={selectedOption === 'no'}
-                    onChange={handleOptionChange}
-                  >
-                    {t('radio.no')}
-                  </GovUK.Radio>
-                </GovUK.FormGroup>
-                <ButtonGroup>
-                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-                  <SaveReturnButton onClick={handleLinkSubmit} />
-                </ButtonGroup>
-              </form>
+              {wasteCarriersPage.data.values?.length === 5 ? (
+                <>
+                  <GovUK.Heading size={'SMALL'}>
+                    {t(
+                      'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'
+                    )}
+                  </GovUK.Heading>
+                  <form onSubmit={handleLinkSubmit}>
+                    <ButtonGroup>
+                      <GovUK.Button id="saveButton">
+                        {t('saveButton')}
+                      </GovUK.Button>
+                      <SaveReturnButton onClick={handleLinkSubmit} />
+                    </ButtonGroup>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <GovUK.Heading size={'MEDIUM'}>
+                    {t('exportJourney.wasteCarrier.carriersPage.question')}
+                  </GovUK.Heading>
+                  <GovUK.Paragraph>
+                    {t('exportJourney.wasteCarrier.carriersPage.hint', {
+                      n: numberLeft,
+                    })}
+                  </GovUK.Paragraph>
+                  <form onSubmit={handleRedirect}>
+                    <GovUK.FormGroup>
+                      <GovUK.Radio
+                        name="group1"
+                        value="yes"
+                        checked={selectedOption === 'yes'}
+                        onChange={handleOptionChange}
+                      >
+                        {t('radio.yes')}
+                      </GovUK.Radio>
+                      <GovUK.Radio
+                        name="group1"
+                        value="no"
+                        checked={selectedOption === 'no'}
+                        onChange={handleOptionChange}
+                      >
+                        {t('radio.no')}
+                      </GovUK.Radio>
+                    </GovUK.FormGroup>
+                    <ButtonGroup>
+                      <GovUK.Button id="saveButton">
+                        {t('saveButton')}
+                      </GovUK.Button>
+                      <SaveReturnButton onClick={handleLinkSubmit} />
+                    </ButtonGroup>
+                  </form>
+                </>
+              )}
             </>
-            {/* )} */}
           </GovUK.GridCol>
         </GovUK.GridRow>
       </GovUK.Page>
