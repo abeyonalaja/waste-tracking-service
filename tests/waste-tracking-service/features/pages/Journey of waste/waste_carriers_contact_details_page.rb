@@ -25,7 +25,7 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
 
   def check_page_displayed
     # expect(self).to have_css 'h1', text: TITLE, exact_text: true
-    expect(self).to have_css 'h1', text: 'What are the waste carrier\'s contact details', exact_text: true
+    expect(self).to have_css 'h1', text: "What are the waste carrier's contact details?", exact_text: true
   end
 
   def check_translation

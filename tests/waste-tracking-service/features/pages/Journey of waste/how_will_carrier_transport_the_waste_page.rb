@@ -6,6 +6,7 @@ require_relative '../shared_components/error_box'
 class HowWillTheWasteCarrierTransportTheWastePage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
 
   SHIPPING_CONTAINER_OPTION = Translations.value 'exportJourney.wasteCarrierTransport.optionOne'
   TRAILER_OPTION = Translations.value 'exportJourney.wasteCarrierTransport.optionTwo'

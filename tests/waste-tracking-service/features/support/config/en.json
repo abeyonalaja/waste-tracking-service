@@ -53,6 +53,7 @@
   "saveButton": "Save and continue",
   "saveReturnButton": "Save and return to draft",
   "saveReturnLink": "Save and return to draft",
+  "returnToDraft": "Return to draft",
   "continueButton": "Continue",
   "postcode.label": "Postcode",
   "postcode.findButton": "Find address",

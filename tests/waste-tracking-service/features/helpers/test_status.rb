@@ -5,6 +5,8 @@ module TestStatus
 
   @test_status = {}
   @countries_waste_will_travel = []
+  @waste_carrier_org_details = []
+  @waste_carrier_titles = []
 
   def self.set_test_status(key, value)
     @test_status[key] = value
@@ -12,13 +14,17 @@ module TestStatus
 
   def self.reset_test_status
     @test_status = {}
-    @countries_waste_will_travel=[]
+    @countries_waste_will_travel = []
+    @waste_carrier_org_details = []
+    @waste_carrier_titles = []
   end
 
   def self.test_status(key = 'all')
     if key.eql?('all')
       @test_status
       @test_status['countries_list'] = @countries_waste_will_travel
+      @test_status['waste_carrier_org_details'] = @waste_carrier_org_details
+      @test_status['waste_carrier_titles'] = @waste_carrier_titles
     end
     @test_status[key.to_sym]
   end
@@ -30,4 +36,21 @@ module TestStatus
   def self.countries_list
     @countries_waste_will_travel
   end
+
+  def self.waste_carrier_org_details(waste_carrier)
+    @waste_carrier_org_details.push(waste_carrier)
+  end
+
+  def self.waste_carrier_org_detail
+    @waste_carrier_org_details
+  end
+
+  def self.waste_carrier_titles(waste_carrier_titles)
+    @waste_carrier_titles.push(waste_carrier_titles)
+  end
+
+  def self.waste_carrier_title
+    @waste_carrier_titles
+  end
+
 end
