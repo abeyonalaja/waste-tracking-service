@@ -4,7 +4,7 @@ import styled from 'styled-components';
 interface Props {
   address: {
     addressLine1: string;
-    addressLine2: string;
+    addressLine2?: string;
     townCity: string;
     postcode: string;
     country: string;
@@ -34,14 +34,49 @@ const StyledAddress = styled('address')`
     &:last-child:after {
       content: '';
     }
+    &.houseNumber {
+      display: inline-block;
+      margin-right: 0.3em;
+      &:after {
+        content: '';
+      }
+    }
+    &.houseNumberFollower {
+      display: inline-block;
+    }
   }
 `;
+
+const startsWithNumber = (str) => {
+  return /^\d/.test(str);
+};
+
+const endsWithNumber = (str) => {
+  return /[0-9]+$/.test(str);
+};
+
+const isHouseNumber = (addessLine) => {
+  if (addessLine.length > 5) {
+    return false;
+  }
+  return startsWithNumber(addessLine) || endsWithNumber(addessLine);
+};
 
 export const Address = ({ address }: Props) => {
   return (
     <StyledAddress>
-      <span>{address.addressLine1}</span>
-      <span>{address.addressLine2}</span>
+      <span
+        className={isHouseNumber(address.addressLine1) ? 'houseNumber' : ''}
+      >
+        {address.addressLine1}
+      </span>
+      <span
+        className={
+          isHouseNumber(address.addressLine1) ? 'houseNumberFollower' : ''
+        }
+      >
+        {address.addressLine2}
+      </span>
       <span>{address.townCity}</span>
       <span>{address.postcode}</span>
       <span>{address.country}</span>

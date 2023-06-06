@@ -10,9 +10,11 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   Loading,
+  Paragraph,
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
+  Address,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -27,12 +29,6 @@ import {
 function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
-
-const Paragraph = styled.p`
-  margin-bottom: 20px;
-  line-height: 1.35;
-  font-size: 19px;
-`;
 
 const LinkP = styled.p`
   margin-bottom: 40px;
@@ -214,16 +210,9 @@ const ExporterDetails = () => {
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.exporterDetails.title')}
                 </GovUK.Heading>
-                <Paragraph>
-                  {data.status !== 'NotStarted'
-                    ? Object.keys(data?.exporterAddress).map((line) => (
-                        <span key={line} id={'output-' + line}>
-                          {data?.exporterAddress[line]}
-                          <br />
-                        </span>
-                      ))
-                    : ''}
-                </Paragraph>
+                {data.status !== 'NotStarted' && (
+                  <Address address={data.exporterAddress} />
+                )}
                 <LinkP>
                   <AppLink
                     href={{

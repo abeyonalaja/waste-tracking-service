@@ -105,15 +105,15 @@ export const validatePostcode: (postcode?: string) => string = (postcode) => {
 };
 
 export const validateEmail: (email?: string) => string = (email) => {
-  if (email?.length === 0) return 'Enter an email';
+  if (email?.length === 0) return 'Enter an email address';
   const regex = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
   if (!regex.test(email)) {
-    return 'Enter a real email';
+    return 'Enter a real email address';
   }
 };
 
 export const validatePhone: (phone?: string) => string = (phone) => {
-  if (phone?.length === 0) return 'Enter an phone mumber';
+  if (phone?.length === 0) return 'Enter a phone number';
   const regex = new RegExp(
     '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
   );
@@ -174,8 +174,7 @@ export const validateOrganisationName: (organisationName?: string) => string = (
     return 'Enter an organisation name';
 };
 export const validateFullName: (fullName?: string) => string = (fullName) => {
-  if (fullName?.length === 0 || fullName === undefined)
-    return 'Enter an full name';
+  if (fullName?.length === 0 || fullName === undefined) return 'Enter a name';
 };
 
 export const validateQuantityType: (
