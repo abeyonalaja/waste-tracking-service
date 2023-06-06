@@ -23,17 +23,6 @@ param subnet object = {
   id: null
 }
 
-@description('References to existing Private DNS Zones.')
-param privateDnsZones object = {
-  'privatelink.azurecr.io': { id: null }
-  'privatelink.monitor.azure.com': { id: null }
-  'privatelink.oms.opinsights.azure.com': { id: null }
-  'privatelink.ods.opinsights.azure.com': { id: null }
-  'privatelink.agentsvc.azure-automation.net': { id: null }
-  #disable-next-line no-hardcoded-env-urls
-  'privatelink.blob.core.windows.net': { id: null }
-}
-
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
@@ -83,113 +72,6 @@ resource containerRegistryEndpont 'Microsoft.Network/privateEndpoints@2022-07-01
   }
 
   tags: union(defaultTags, { Name: containerRegistryEndpointName })
-
-  resource dnsZoneGroup 'privateDnsZoneGroups' = {
-    name: containerRegistry.name
-
-    properties: {
-      privateDnsZoneConfigs: [
-        {
-          name: 'privatelink.azurecr.io'
-          properties: {
-            privateDnsZoneId: privateDnsZones['privatelink.azurecr.io'].id
-          }
-        }
-      ]
-    }
-  }
-}
-
-var monitorPrivateLinkScopeName = join(
-  [ env, svc, role, 'LS', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource monitorPrivateLinkScope 'microsoft.insights/privateLinkScopes@2021-07-01-preview' = {
-  name: monitorPrivateLinkScopeName
-  location: 'global'
-
-  properties: {
-    accessModeSettings: {
-      ingestionAccessMode: 'PrivateOnly'
-      queryAccessMode: 'Open'
-    }
-  }
-
-  tags: union(
-    defaultTags,
-    {
-      Name: monitorPrivateLinkScopeName
-      Location: 'global'
-    }
-  )
-}
-
-var amplsEndpointName = join(
-  [ env, svc, 'PLS', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource amplsEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
-  name: amplsEndpointName
-  location: primaryRegion
-
-  properties: {
-    subnet: {
-      id: subnet.id
-    }
-
-    privateLinkServiceConnections: [
-      {
-        name: monitorPrivateLinkScope.name
-        properties: {
-          privateLinkServiceId: monitorPrivateLinkScope.id
-          groupIds: [ 'azuremonitor' ]
-        }
-      }
-    ]
-  }
-
-  tags: union(defaultTags, { Name: amplsEndpointName })
-
-  resource dnsZoneGroup 'privateDnsZoneGroups' = {
-    name: monitorPrivateLinkScope.name
-
-    properties: {
-      privateDnsZoneConfigs: [
-        {
-          name: 'privatelink.monitor.azure.com'
-          properties: {
-            privateDnsZoneId: privateDnsZones['privatelink.monitor.azure.com'].id
-          }
-        }
-        {
-          name: 'privatelink.oms.opinsights.azure.com'
-          properties: {
-            privateDnsZoneId: privateDnsZones['privatelink.oms.opinsights.azure.com'].id
-          }
-        }
-        {
-          name: 'privatelink.ods.opinsights.azure.com'
-          properties: {
-            privateDnsZoneId: privateDnsZones['privatelink.ods.opinsights.azure.com'].id
-          }
-        }
-        {
-          name: 'privatelink.agentsvc.azure-automation.net'
-          properties: {
-            privateDnsZoneId: privateDnsZones['privatelink.agentsvc.azure-automation.net'].id
-          }
-        }
-        {
-          #disable-next-line no-hardcoded-env-urls
-          name: 'privatelink.blob.core.windows.net'
-          properties: {
-            #disable-next-line no-hardcoded-env-urls
-            privateDnsZoneId: privateDnsZones['privatelink.blob.core.windows.net'].id
-          }
-        }
-      ]
-    }
-  }
 }
 
 @description('Reference to created Azure Container Registry.')
@@ -198,7 +80,12 @@ output containerRegistry object = {
   id: containerRegistry.id
 }
 
-@description('Reference to created Azure Monitor Private Link Scope.')
-output monitorPrivateLinkScope object = {
-  name: monitorPrivateLinkScope.name
-}
+@description('''
+  FQDNs that are required in private DNS setup for Private Endpoint to work
+  correctly.
+''')
+output requiredPrivateDnsEntries object = toObject(
+  containerRegistryEndpont.properties.customDnsConfigs,
+  config => config.fqdn,
+  config => config.ipAddresses
+)

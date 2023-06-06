@@ -45,35 +45,6 @@ param addressSpace object = {
   }
 }
 
-@description('''
-  Reference to a Resource Group that contains all Private DNS Zones.
-  
-  This module assumes that this Resource Group contains at least the following
-  Private DNS Zones:
-   - privatelink.azurecr.io
-   - privatelink.monitor.azure.com
-   - privatelink.oms.opinsights.azure.com
-   - privatelink.ods.opinsights.azure.com
-   - privatelink.agentsvc.azure-automation.net
-   - privatelink.applicationinsights.azure.com
-   - privatelink.primaryRegion.azmk8s.io
-   - privatelink.vaultcore.azure.net
-   - privatelink.servicebus.windows.net
-   - privatelink.documents.azure.com
-   - privatelink.analytics.cosmos.azure.com
-''')
-param privateDnsResourceGroup object = {
-  name: null
-  subscriptionId: null
-}
-
-@description('Reference to existing Azure Monitor Private Link Scope.')
-param monitorPrivateLinkScope object = {
-  name: null
-  resourceGroupName: null
-  subscriptionId: null
-}
-
 @description('Reference to hub Virtual Network for peering.')
 param hubVirtualNetwork object = {
   id: null
@@ -83,15 +54,13 @@ param hubVirtualNetwork object = {
 }
 
 @description('Reference to hub Azure Container Registry.')
-param acr object = {
+param containerRegistry object = {
   name: null
   resourceGroupName: null
   subscriptionId: null
 }
 
-@description('''
-  Pre-created Cluster Admin AAD Group Object Id(s).
-''')
+@description('Pre-created Cluster Admin AAD Group Object Id(s).')
 param clusterAdminGroupObjectIds array = []
 
 @description('''
@@ -148,7 +117,7 @@ module identity './identity.bicep' = {
     svc: serviceCode
     envNum: environmentNumber
     primaryRegion: primaryRegion
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'IDENTITY' })
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
   }
 }
 
@@ -160,7 +129,6 @@ module aks './aks.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnets: network.outputs.subnets
-    privateDnsResourceGroup: privateDnsResourceGroup
     clusterAdminGroupObjectIds: clusterAdminGroupObjectIds
     identities: {
       aks: {
@@ -175,16 +143,6 @@ module aks './aks.bicep' = {
   }
 }
 
-module dns './dns.bicep' = {
-  name: 'env-dns'
-  params: {
-    env: environment
-    primaryRegion: primaryRegion
-    apexIpAddress: '${take(addressSpace.subnets.aks, lastIndexOf(addressSpace.subnets.aks, '.'))}.4'
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
 module cosmos './cosmos.bicep' = {
   name: 'env-cosmos'
 
@@ -194,7 +152,6 @@ module cosmos './cosmos.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
-    privateDnsResourceGroup: privateDnsResourceGroup
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
 
@@ -210,7 +167,6 @@ module serviceBus './service-bus.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
-    privateDnsResourceGroup: privateDnsResourceGroup
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
 
@@ -232,38 +188,16 @@ module hub_network './hub_network.bicep' = {
   }
 }
 
-module hub_dns './hub_dns.bicep' = {
-  name: 'env-hub-dns'
-  scope: resourceGroup(
-    privateDnsResourceGroup.subscriptionId, privateDnsResourceGroup.name
-  )
-
-  params: {
-    virtualNetwork: network.outputs.virtualNetwork
-    identities: {
-      aks: {
-        id: identity.outputs.identities.aks.id
-        principalId: identity.outputs.identities.aks.principalId
-      }
-    }
-  }
-}
-
 module hub_data 'hub_data.bicep' = {
   name: 'env-hub-data'
   scope: resourceGroup(
-    monitorPrivateLinkScope.subscriptionId,
-    monitorPrivateLinkScope.resourceGroupName
+    containerRegistry.subscriptionId,
+    containerRegistry.resourceGroupName
   )
 
   params: {
-    logAnalyticsWorkspace: monitor.outputs.logAnalyticsWorkspace
-    applicationInsights: monitor.outputs.applicationInsights
-    monitorPrivateLinkScope: {
-      name: monitorPrivateLinkScope.name
-    }
-    acr: {
-      name: acr.Name
+    containerRegistry: {
+      name: containerRegistry.name
     }
     identities: {
       kubelet: {
@@ -273,3 +207,13 @@ module hub_data 'hub_data.bicep' = {
     }
   }
 }
+
+@description('''
+  FQDNs that are required in private DNS setup for Private Endpoint to work
+  correctly.
+''')
+output requiredPrivateDnsEntries object = union(
+  aks.outputs.requiredPrivateDnsEntries,
+  cosmos.outputs.requiredPrivateDnsEntries,
+  serviceBus.outputs.requiredPrivateDnsEntries
+)

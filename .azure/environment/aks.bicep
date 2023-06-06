@@ -28,16 +28,6 @@ param subnets object = {
   }
 }
 
-@description('''
-  Reference to Resource Group that contains existing Private DNS Zone Group
-  resources; this module assumes that this resource group contains the zone
-  _privatelink.vaultcore.azure.net_.
-''')
-param privateDnsResourceGroup object = {
-  name: null
-  subscriptionId: null
-}
-
 @description('Reference to existing AAD Group for cluster Admin access.')
 param clusterAdminGroupObjectIds array = []
 
@@ -252,14 +242,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
   tags: union(defaultTags, { Name: keyVaultName })
 }
 
-resource privatelink_vaultcore_azure_net 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  scope: resourceGroup(
-    privateDnsResourceGroup.subscriptionId,
-    privateDnsResourceGroup.name
-  )
-  name: 'privatelink.vaultcore.azure.net'
-}
-
 var keyVaultPrivateEndpointName = join(
   [ env, svc, 'KKV', 'PE', envNum, padLeft(instance0, 3, '0') ], ''
 )
@@ -285,19 +267,14 @@ resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01'
   }
 
   tags: union(defaultTags, { Name: keyVaultPrivateEndpointName })
-
-  resource dnsZoneGroup 'privateDnsZoneGroups' = {
-    name: keyVault.name
-
-    properties: {
-      privateDnsZoneConfigs: [
-        {
-          name: 'privatelink.vaultcore.azure.net'
-          properties: {
-            privateDnsZoneId: privatelink_vaultcore_azure_net.id
-          }
-        }
-      ]
-    }
-  }
 }
+
+@description('''
+  FQDNs that are required in private DNS setup for Private Endpoint to work
+  correctly.
+''')
+output requiredPrivateDnsEntries object = toObject(
+  keyVaultPrivateEndpoint.properties.customDnsConfigs,
+  config => config.fqdn,
+  config => config.ipAddresses
+)

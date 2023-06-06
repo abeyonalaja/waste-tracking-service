@@ -20,17 +20,7 @@ param primaryRegion string = 'uksouth'
 
 @description('Reference to existing subnet for Private Endpoints.')
 param subnet object = {
-  id: null 
-}
-
-@description('''
-  Reference to Resource Group that contains existing Private DNS Zone Group
-  resources; this module assumes that this resource group contains the zone
-  _privatelink.documents.azure.com_.
-''')
-param privateDnsResourceGroup object = {
-  name: null 
-  subscriptionId: null 
+  id: null
 }
 
 @description('Tagging baseline applied to all resources.')
@@ -137,7 +127,7 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
       }
 
       tags: union(defaultTags, { Name: 'submissions' })
-    }    
+    }
 
   }
 
@@ -208,17 +198,9 @@ resource cosmosDBAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
       }
 
       tags: union(defaultTags, { Name: 'feedback' })
-    }  
+    }
 
   }
-}
-
-resource privatelink_documents_azure_com 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  scope: resourceGroup(
-    privateDnsResourceGroup.subscriptionId,
-    privateDnsResourceGroup.name
-  )
-  name: 'privatelink.documents.azure.com'
 }
 
 var cosmosDBPrivateEndpointNameSql = join(
@@ -246,21 +228,14 @@ resource cosmosDBPrivateEndpointSql 'Microsoft.Network/privateEndpoints@2022-07-
   }
 
   tags: union(defaultTags, { Name: cosmosDBPrivateEndpointNameSql })
-
-  resource dnsZoneGroup 'privateDnsZoneGroups' = {
-    name: cosmosDBAccount.name
-
-    properties: {
-      privateDnsZoneConfigs: [
-        {
-          name: 'privatelink.documents.azure.com'
-          properties: {
-            privateDnsZoneId: privatelink_documents_azure_com.id
-          }
-        }
-
-      ]
-    }
-  }
 }
 
+@description('''
+  FQDNs that are required in private DNS setup for Private Endpoint to work
+  correctly.
+''')
+output requiredPrivateDnsEntries object = toObject(
+  cosmosDBPrivateEndpointSql.properties.customDnsConfigs,
+  config => config.fqdn,
+  config => config.ipAddresses
+)

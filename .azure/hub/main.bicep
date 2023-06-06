@@ -74,14 +74,6 @@ module network './network.bicep' = {
   }
 }
 
-module dns './dns.bicep' = {
-  name: 'hub-dns'
-  params: {
-    virtualNetworks: [ network.outputs.virtualNetwork ]
-    defaultTags: union(tags.outputs.defaultTags, { Tier: 'NETWORK' })
-  }
-}
-
 module management './management.bicep' = {
   name: 'hub-management'
   params: {
@@ -102,7 +94,6 @@ module data './data.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
-    privateDnsZones: dns.outputs.privateZones
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
 }
@@ -116,15 +107,17 @@ output virtualNetwork object = union(
   }
 )
 
-@description('Resource Group for created Private DNS Zones.')
-output privateDnsResourceGroup object = {
-  name: resourceGroup().name
-  subscriptionId: subscription().subscriptionId
-}
+@description('Reference to created Container Registry.')
+output containerRegistry object = union(
+  data.outputs.containerRegistry,
+  {
+    subscriptionId: subscription().subscriptionId
+    resourceGroupName: resourceGroup().name
+  }
+)
 
-@description('Reference to created Azure Monitor Private Link Scope.')
-output monitorPrivateLinkScope object = {
-  name: data.outputs.monitorPrivateLinkScope.name
-  resourceGroupName: resourceGroup().name
-  subscriptionId: subscription().subscriptionId
-}
+@description('''
+  FQDNs that are required in private DNS setup for Private Endpoint to work
+  correctly.
+''')
+output requiredPrivateDnsEntries object = data.outputs.requiredPrivateDnsEntries
