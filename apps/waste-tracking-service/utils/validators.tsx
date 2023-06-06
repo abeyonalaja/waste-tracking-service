@@ -174,7 +174,8 @@ export const validateOrganisationName: (organisationName?: string) => string = (
     return 'Enter an organisation name';
 };
 export const validateFullName: (fullName?: string) => string = (fullName) => {
-  if (fullName?.length === 0 || fullName === undefined) return 'Enter a name';
+  if (fullName?.length === 0 || fullName === undefined)
+    return 'Enter a full name';
 };
 
 export const validateQuantityType: (
