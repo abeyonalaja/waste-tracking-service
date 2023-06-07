@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
+  instanceNo?: string;
   address: {
     addressLine1: string;
     addressLine2?: string;
@@ -62,16 +63,18 @@ const isHouseNumber = (addessLine) => {
   return startsWithNumber(addessLine) || endsWithNumber(addessLine);
 };
 
-export const Address = ({ address }: Props) => {
+export const Address = ({ instanceNo = '', address }: Props) => {
   return (
     <StyledAddress>
       <span
+        id={`address${instanceNo}-addressLine1`}
         className={isHouseNumber(address.addressLine1) ? 'houseNumber' : ''}
       >
         {address.addressLine1}
       </span>
       {address.addressLine2 && (
         <span
+          id={`address${instanceNo}-addressLine2`}
           className={
             isHouseNumber(address.addressLine1) ? 'houseNumberFollower' : ''
           }
@@ -79,9 +82,11 @@ export const Address = ({ address }: Props) => {
           {address.addressLine2}
         </span>
       )}
-      <span>{address.townCity}</span>
-      {address.postcode && <span>{address.postcode}</span>}
-      <span>{address.country}</span>
+      <span id={`address${instanceNo}-townCity`}>{address.townCity}</span>
+      {address.postcode && (
+        <span id={`address${instanceNo}-postcode`}>{address.postcode}</span>
+      )}
+      <span id={`address${instanceNo}-country`}>{address.country}</span>
     </StyledAddress>
   );
 };

@@ -13,7 +13,13 @@ jest.mock('next/router', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({ data: {} }),
+    json: () =>
+      Promise.resolve({
+        data: {
+          carriers: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+        },
+      }),
   })
 );
 

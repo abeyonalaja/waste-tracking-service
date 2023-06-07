@@ -13,6 +13,7 @@ import {
   SubmissionNotFound,
   ButtonGroup,
   SaveReturnButton,
+  SmallRadioList,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -22,6 +23,7 @@ import {
   validateCountrySelect,
   validateAddress,
 } from '../utils/validators';
+import { countriesData } from '../utils/countriesData';
 
 function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
@@ -185,7 +187,7 @@ const ExporterManual = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
-        <GovUK.GridRow>
+        <GovUK.GridRow id="page-exporter-manual-address">
           <GovUK.GridCol setWidth="two-thirds">
             {isError && !isLoading && <SubmissionNotFound />}
             {isLoading && <Loading />}
@@ -261,26 +263,18 @@ const ExporterManual = () => {
                     >
                       {t('exportJourney.exporterPostcode.postCodeLabel')}
                     </PostcodeInput>
-
-                    <GovUK.Select
-                      input={{
-                        name: 'country',
-                        value: country,
-                        id: 'country',
-                        onChange: (e) => setCountry(e.target.value),
-                      }}
-                      meta={{
-                        error: errors?.country,
-                        touched: !!errors?.country,
-                      }}
-                      label={t('exportJourney.exporterManual.countryLabel')}
-                    >
-                      <option>Select</option>
-                      <option value="England">England</option>
-                      <option value="Scotland">Scotland</option>
-                      <option value="Wales">Wales</option>
-                      <option value="Northern Ireland">Northern Ireland</option>
-                    </GovUK.Select>
+                    <SmallRadioList
+                      value={country}
+                      id="country"
+                      name="country"
+                      label={t('address.country')}
+                      hint={t(
+                        'exportJourney.wasteCollectionDetails.countryHint'
+                      )}
+                      errorMessage={errors?.country}
+                      options={countriesData.UK}
+                      onChange={(e) => setCountry(e.target.value)}
+                    />
                   </GovUK.FormGroup>
                   <ButtonGroup>
                     <GovUK.Button id="saveButton">

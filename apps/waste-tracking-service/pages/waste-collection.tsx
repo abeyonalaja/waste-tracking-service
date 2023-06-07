@@ -155,6 +155,8 @@ const WasteCollection = () => {
   );
   const [id, setId] = useState(null);
   const [returnToTask, setReturnToTask] = useState(false);
+  const [viewToReturnTo, setViewToReturnTo] = useState<number>();
+  const [noOfWasteCarriers, setNoOfWasteCarriers] = useState<number>(1);
   const [postcode, setPostcode] = useState<string>('');
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [addressDetails, setAddressDetails] = useState<{
@@ -181,9 +183,7 @@ const WasteCollection = () => {
   useEffect(() => {
     dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`
-      )
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -194,18 +194,19 @@ const WasteCollection = () => {
           if (data !== undefined) {
             dispatchAddressPage({
               type: 'DATA_FETCH_SUCCESS',
-              payload: data,
+              payload: data.collectionDetail,
             });
-            if (data.values === undefined || data.values.length === 0) {
-              if (data.address !== undefined) {
-                setReturnToTask(true);
-                setAddressDetails(data.address);
-                setContactDetails(data.contactDetails);
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS.CONTACT_DETAILS,
-                });
-              }
+            if (data.carriers?.values !== undefined) {
+              setNoOfWasteCarriers(data.carriers.values.length);
+            }
+            if (data.collectionDetail?.address !== undefined) {
+              setReturnToTask(true);
+              setAddressDetails(data.collectionDetail.address);
+              setContactDetails(data.collectionDetail.contactDetails);
+              dispatchAddressPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.CONTACT_DETAILS,
+              });
             }
           }
         });
@@ -244,11 +245,11 @@ const WasteCollection = () => {
                   type: 'ADDRESS_DATA_FETCH_SUCCESS',
                   payload: data,
                 });
+                setViewToReturnTo(VIEWS.POSTCODE_SEARCH);
                 dispatchAddressPage({
                   type: 'SHOW_VIEW',
                   payload: VIEWS.SEARCH_RESULTS,
                 });
-                console.log(data);
               }
             });
         } catch (e) {
@@ -308,6 +309,7 @@ const WasteCollection = () => {
                     query: { id },
                   });
                 } else {
+                  setViewToReturnTo(VIEWS.SEARCH_RESULTS);
                   dispatchAddressPage({
                     type: 'SHOW_VIEW',
                     payload: VIEWS.CONTACT_DETAILS,
@@ -424,6 +426,7 @@ const WasteCollection = () => {
                     query: { id },
                   });
                 } else {
+                  setViewToReturnTo(VIEWS.MANUAL_ADDRESS);
                   dispatchAddressPage({
                     type: 'SHOW_VIEW',
                     payload: VIEWS.CONTACT_DETAILS,
@@ -462,24 +465,25 @@ const WasteCollection = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            if (
-              addressPage.showView === VIEWS.SEARCH_RESULTS ||
-              addressPage.showView === VIEWS.MANUAL_ADDRESS
-            ) {
+            if (addressPage.showView === VIEWS.SEARCH_RESULTS) {
               dispatchAddressPage({
                 type: 'SHOW_VIEW',
-                payload:
-                  addressPage.data.status === 'Started'
-                    ? VIEWS.CONTACT_DETAILS
-                    : VIEWS.POSTCODE_SEARCH,
+                payload: VIEWS.POSTCODE_SEARCH,
+              });
+            } else if (addressPage.showView === VIEWS.MANUAL_ADDRESS) {
+              setViewToReturnTo(addressPage.showView);
+              dispatchAddressPage({
+                type: 'SHOW_VIEW',
+                payload: viewToReturnTo,
               });
             } else if (
               addressPage.showView === VIEWS.CONTACT_DETAILS &&
               !returnToTask
             ) {
+              setViewToReturnTo(addressPage.showView);
               dispatchAddressPage({
                 type: 'SHOW_VIEW',
-                payload: VIEWS.SEARCH_RESULTS,
+                payload: viewToReturnTo,
               });
             } else {
               router.push({
@@ -495,10 +499,30 @@ const WasteCollection = () => {
     );
   };
 
+  const getMultipleWord = (number) => {
+    switch (number) {
+      case 1:
+        return '';
+      case 2:
+        return 'second';
+      case 3:
+        return 'third';
+      case 4:
+        return 'fourth';
+      case 5:
+        return 'fifth';
+    }
+    return '';
+  };
+
   return (
     <>
       <Head>
-        <title>{t('exportJourney.wasteCollectionDetails.postcodeTitle')}</title>
+        <title>
+          {t('exportJourney.wasteCollectionDetails.postcodeTitle', {
+            n: getMultipleWord(noOfWasteCarriers),
+          })}
+        </title>
       </Head>
       <GovUK.Page
         id="content"
@@ -530,7 +554,9 @@ const WasteCollection = () => {
                 {addressPage.showView === VIEWS.POSTCODE_SEARCH && (
                   <div id="page-waste-collection-postcode-search">
                     <GovUK.Heading size={'LARGE'}>
-                      {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
+                      {t('exportJourney.wasteCollectionDetails.postcodeTitle', {
+                        n: getMultipleWord(noOfWasteCarriers),
+                      })}
                     </GovUK.Heading>
                     <form onSubmit={handlePostcodeSearch}>
                       <Paragraph>
@@ -574,12 +600,13 @@ const WasteCollection = () => {
                     <Paragraph>
                       <AppLink
                         href="#"
-                        onClick={() =>
+                        onClick={() => {
+                          setViewToReturnTo(VIEWS.POSTCODE_SEARCH);
                           dispatchAddressPage({
                             type: 'SHOW_VIEW',
                             payload: VIEWS.MANUAL_ADDRESS,
-                          })
-                        }
+                          });
+                        }}
                       >
                         {t('postcode.manualAddressLink')}
                       </AppLink>
@@ -589,7 +616,9 @@ const WasteCollection = () => {
                 {addressPage.showView === VIEWS.SEARCH_RESULTS && (
                   <div id="page-waste-collection-search-results">
                     <GovUK.Heading size={'LARGE'}>
-                      {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
+                      {t('exportJourney.wasteCollectionDetails.postcodeTitle', {
+                        n: getMultipleWord(noOfWasteCarriers),
+                      })}
                     </GovUK.Heading>
                     <Paragraph>
                       {postcode.toUpperCase()}
@@ -597,6 +626,7 @@ const WasteCollection = () => {
                       <AppLink
                         href="#"
                         onClick={() => {
+                          setViewToReturnTo(VIEWS.SEARCH_RESULTS);
                           dispatchAddressPage({
                             type: 'SHOW_VIEW',
                             payload: VIEWS.POSTCODE_SEARCH,
@@ -657,12 +687,13 @@ const WasteCollection = () => {
                       <Paragraph>
                         <AppLink
                           href="#"
-                          onClick={() =>
+                          onClick={() => {
+                            setViewToReturnTo(VIEWS.SEARCH_RESULTS);
                             dispatchAddressPage({
                               type: 'SHOW_VIEW',
                               payload: VIEWS.MANUAL_ADDRESS,
-                            })
-                          }
+                            });
+                          }}
                         >
                           {t('postcode.notFoundLink')}
                         </AppLink>
@@ -683,7 +714,9 @@ const WasteCollection = () => {
                 {addressPage.showView === VIEWS.MANUAL_ADDRESS && (
                   <div id="page-waste-collection-manual-address">
                     <GovUK.Heading size="L">
-                      {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
+                      {t('exportJourney.wasteCollectionDetails.postcodeTitle', {
+                        n: getMultipleWord(noOfWasteCarriers),
+                      })}
                     </GovUK.Heading>
                     <form onSubmit={handleManualAddressSubmit}>
                       <GovUK.InputField
@@ -776,10 +809,11 @@ const WasteCollection = () => {
                         onChange={onAddressDetailsChange}
                       />
                       <ButtonGroup>
-                        <GovUK.Button id="saveButton">
+                        <GovUK.Button id="manualAddressSaveButton">
                           {t('saveButton')}
                         </GovUK.Button>
                         <SaveReturnButton
+                          id="manualAddressSaveReturnButton"
                           onClick={(e) =>
                             handleLinkSubmit(e, handleManualAddressSubmit)
                           }
@@ -794,17 +828,18 @@ const WasteCollection = () => {
                       {t('exportJourney.wasteCollectionDetails.contactTitle')}
                     </GovUK.Heading>
                     <Address address={addressPage.data.address} />
-                    <Paragraph>
+                    <Paragraph mb={8}>
                       <AppLink
                         href="#"
                         onClick={() => {
+                          setViewToReturnTo(VIEWS.CONTACT_DETAILS);
                           dispatchAddressPage({
                             type: 'SHOW_VIEW',
                             payload: VIEWS.MANUAL_ADDRESS,
                           });
                         }}
                       >
-                        Change address
+                        {t('address.change')}
                       </AppLink>
                     </Paragraph>
                     <form noValidate={true} onSubmit={handleContactFormSubmit}>
@@ -914,10 +949,11 @@ const WasteCollection = () => {
                         </GovUK.FormGroup>
                       </GovUK.Fieldset>
                       <ButtonGroup>
-                        <GovUK.Button id="saveButton">
+                        <GovUK.Button id="contactDetailsSaveButton">
                           {t('saveButton')}
                         </GovUK.Button>
                         <SaveReturnButton
+                          id="contactDetailsSaveReturnButton"
                           onClick={(e) =>
                             handleLinkSubmit(e, handleContactFormSubmit)
                           }

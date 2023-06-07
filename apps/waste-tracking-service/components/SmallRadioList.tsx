@@ -58,6 +58,10 @@ const RadioFormGroup = styled.div<{ error?: boolean }>`
   padding-left: ${(props) => (props.error ? '10px' : '0')};
 `;
 
+const idify = (value) => {
+  return value.replace(/\W/g, '-').toLowerCase();
+};
+
 export const SmallRadioList = ({
   name,
   id,
@@ -85,6 +89,7 @@ export const SmallRadioList = ({
             onChange={onChange}
             value={option}
             checked={option === value}
+            id={`${id}-${idify(option)}`}
           >
             {option}
           </SmallRadio>

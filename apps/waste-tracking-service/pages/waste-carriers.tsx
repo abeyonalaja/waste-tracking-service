@@ -201,7 +201,6 @@ const WasteCarriers = () => {
     }
     e.preventDefault();
   };
-  console.log(wasteCarriersPage.data.values);
   const numberLeft = (5 - wasteCarriersPage.data.values?.length).toString();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);

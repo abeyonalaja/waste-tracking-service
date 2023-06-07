@@ -183,7 +183,7 @@ const ExporterPostcode = () => {
             </GovUK.Heading>
 
             {addresses && (
-              <>
+              <div id="page-exporter-postcode-search-results">
                 <Paragraph>
                   {postcode.toUpperCase()}
                   <span> </span>
@@ -246,11 +246,11 @@ const ExporterPostcode = () => {
                     <SaveReturnButton onClick={handleLinkSubmit} />
                   </ButtonGroup>
                 </form>
-              </>
+              </div>
             )}
 
             {!addresses && (
-              <>
+              <div id="page-exporter-postcode-search">
                 <form onSubmit={handleSubmit}>
                   <GovUK.HintText>
                     {t('exportJourney.exporterPostcode.hint')}
@@ -296,7 +296,7 @@ const ExporterPostcode = () => {
                     {t('postcode.manualAddressLink')}
                   </AppLink>
                 </Paragraph>
-              </>
+              </div>
             )}
           </GovUK.GridCol>
         </GovUK.GridRow>

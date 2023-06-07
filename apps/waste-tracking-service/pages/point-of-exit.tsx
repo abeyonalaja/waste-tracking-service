@@ -101,7 +101,6 @@ const PointOfExit = () => {
   }, [router.isReady, id]);
 
   const handleInputChange = (input) => {
-    console.log(pointOfExitPage.data.location);
     let payload;
     switch (input.target.name) {
       case 'pointOfExit':

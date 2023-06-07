@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 interface Props {
   href: string | object;
+  isBold?: boolean;
   id?: string;
   noVisitedState?: boolean;
   onClick?: (e: FormEvent) => void;
@@ -11,14 +12,14 @@ interface Props {
   testId?: string;
 }
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(Link)<{ isbold?: boolean }>`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-decoration: underline;
   text-decoration-thickness: max(1px, 0.0625rem);
   text-underline-offset: 0.1em;
   color: #1d70b8;
-  font-weight: 400;
+  font-weight: ${(props) => (props.isbold ? '700' : '400')};
   font-size: 16px;
   line-height: 1.25;
   @media (min-width: 40.0625em) {
@@ -41,9 +42,22 @@ const StyledLink = styled(Link)`
   }
 `;
 
-export const AppLink = ({ href, id, children, onClick, testId }: Props) => {
+export const AppLink = ({
+  href,
+  isBold,
+  id,
+  children,
+  onClick,
+  testId,
+}: Props) => {
   return (
-    <StyledLink href={href} id={id} onClick={onClick} data-testid={testId}>
+    <StyledLink
+      href={href}
+      id={id}
+      onClick={onClick}
+      data-testid={testId}
+      isbold={isBold}
+    >
       {children}
     </StyledLink>
   );

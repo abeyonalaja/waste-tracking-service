@@ -30,10 +30,6 @@ function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
 
-const LinkP = styled.p`
-  margin-bottom: 40px;
-`;
-
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
   margin-bottom: 20px;
@@ -192,7 +188,7 @@ const ExporterDetails = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
-        <GovUK.GridRow>
+        <GovUK.GridRow id="page-exporter-contact-details">
           <GovUK.GridCol setWidth="two-thirds">
             {isError && !isLoading && <SubmissionNotFound />}
             {isLoading && <Loading />}
@@ -213,16 +209,16 @@ const ExporterDetails = () => {
                 {data.status !== 'NotStarted' && (
                   <Address address={data.exporterAddress} />
                 )}
-                <LinkP>
+                <Paragraph mb={8}>
                   <AppLink
                     href={{
                       pathname: '/exporter-details-manual',
                       query: { id },
                     }}
                   >
-                    Change address
+                    {t('address.change')}
                   </AppLink>
-                </LinkP>
+                </Paragraph>
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
