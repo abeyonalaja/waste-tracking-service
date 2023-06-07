@@ -13,6 +13,7 @@ class WasteCollectionDetailsPage < GenericPage
   WASTE_COLLECTION_DETAILS_POSTCODE_LABEL = Translations.value 'postcode.label'
 
   COUNTRIES_LIST = '#waste-transit-country-list > div > dt'
+  POSTCODE_FIELD_ID = 'postcode'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: WASTE_COLLECTION_DETAILS_TITLE, exact_text: true
@@ -23,5 +24,27 @@ class WasteCollectionDetailsPage < GenericPage
     expect(self).to have_text WASTE_COLLECTION_DETAILS_POSTCODE_LABEL
   end
 
+  def select_first_address
+    first('selectedAddress', minimum: 1)
+    find(:css, '#selectedAddress>option:nth-child(2)').select_option
+    TestStatus.set_test_status(:exporter_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
+    Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
+  end
 
+  def has_address?(address)
+    actual_address == address.gsub(/, /, ',')
+  end
+
+  def has_postcode?(postcode)
+    find(POSTCODE_FIELD_ID).value == postcode
+  end
+
+  def actual_address
+    address_line_1 = find('output-addressLine1').text
+    address_line_2 = find('output-addressLine2').text
+    town = find('output-townCity').text
+    postcode = find('output-postcode').text
+    country = find('output-country').text
+    "#{address_line_1},#{address_line_2},#{town},#{postcode},#{country}"
+  end
 end

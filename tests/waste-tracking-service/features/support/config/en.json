@@ -208,5 +208,6 @@
   "exportJourney.wasteCarrier.carriersPage.hint": "You can add up to 4 more",
   "exportJourney.wasteCarrier.carriersPage.noMoreCarriers": "You have added the maximum number of waste carriers.",
   "exportJourney.wasteCollectionDetails.postcodeTitle": "Where will the waste carrier collect the waste from?",
-  "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector."
+  "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector.",
+  "exportJourney.wasteCollectionDetails.contactTitle": "What are the contact details for the collection address?"
 }
