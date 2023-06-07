@@ -21,18 +21,23 @@ import {
   SaveReturnButton,
   SubmissionNotFound,
   Loading,
+  SmallRadioList,
 } from '../components';
 import {
   isNotEmpty,
+  validateAddress,
+  validateCountrySelect,
   validateEmail,
   validateFullName,
   validateOrganisationName,
   validatePhone,
   validatePostcode,
   validateSelectAddress,
+  validateTownCity,
 } from '../utils/validators';
 import styled from 'styled-components';
 import { GetCollectionDetailResponse } from '@wts/api/waste-tracking-gateway';
+import { countriesData } from '../utils/countriesData';
 
 const VIEWS = {
   POSTCODE_SEARCH: 1,
@@ -152,7 +157,13 @@ const WasteCollection = () => {
   const [returnToTask, setReturnToTask] = useState(false);
   const [postcode, setPostcode] = useState<string>('');
   const [selectedAddress, setSelectedAddress] = useState<string>();
-  const [addressDetails, setAddressDetails] = useState<object>(null);
+  const [addressDetails, setAddressDetails] = useState<{
+    addressLine1: string;
+    addressLine2: string;
+    townCity: string;
+    postcode: string;
+    country: string;
+  }>(null);
   const [contactDetails, setContactDetails] = useState<{
     organisationName: string;
     fullName: string;
@@ -188,6 +199,7 @@ const WasteCollection = () => {
             if (data.values === undefined || data.values.length === 0) {
               if (data.address !== undefined) {
                 setReturnToTask(true);
+                setAddressDetails(data.address);
                 setContactDetails(data.contactDetails);
                 dispatchAddressPage({
                   type: 'SHOW_VIEW',
@@ -365,6 +377,69 @@ const WasteCollection = () => {
     [contactDetails]
   );
 
+  const handleManualAddressSubmit = useCallback(
+    (e: FormEvent, returnToDraft = false) => {
+      const newErrors = {
+        addressLine1: validateAddress(addressDetails?.addressLine1),
+        townCity: validateTownCity(addressDetails?.townCity),
+        postcode: validatePostcode(addressDetails?.postcode),
+        country: validateCountrySelect(addressDetails?.country),
+      };
+      if (isNotEmpty(newErrors)) {
+        dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: newErrors });
+      } else {
+        dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: null });
+        dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
+        const body = {
+          ...addressPage.data,
+          status:
+            addressPage.data.status === 'NotStarted'
+              ? 'Started'
+              : addressPage.data.status,
+          address: addressDetails,
+        };
+        try {
+          fetch(
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(body),
+            }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                dispatchAddressPage({
+                  type: 'DATA_UPDATE',
+                  payload: data,
+                });
+                if (returnToDraft) {
+                  router.push({
+                    pathname: '/submit-an-export-tasklist',
+                    query: { id },
+                  });
+                } else {
+                  dispatchAddressPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS.CONTACT_DETAILS,
+                  });
+                }
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      e.preventDefault();
+    },
+    [addressDetails]
+  );
+
   const onContactDetailsChange = (e) => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
@@ -393,7 +468,10 @@ const WasteCollection = () => {
             ) {
               dispatchAddressPage({
                 type: 'SHOW_VIEW',
-                payload: VIEWS.POSTCODE_SEARCH,
+                payload:
+                  addressPage.data.status === 'Started'
+                    ? VIEWS.CONTACT_DETAILS
+                    : VIEWS.POSTCODE_SEARCH,
               });
             } else if (
               addressPage.showView === VIEWS.CONTACT_DETAILS &&
@@ -450,7 +528,7 @@ const WasteCollection = () => {
                   {t('exportJourney.wasteCollectionDetails.caption')}
                 </GovUK.Caption>
                 {addressPage.showView === VIEWS.POSTCODE_SEARCH && (
-                  <>
+                  <div id="page-waste-collection-postcode-search">
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
                     </GovUK.Heading>
@@ -506,10 +584,10 @@ const WasteCollection = () => {
                         {t('postcode.manualAddressLink')}
                       </AppLink>
                     </Paragraph>
-                  </>
+                  </div>
                 )}
                 {addressPage.showView === VIEWS.SEARCH_RESULTS && (
-                  <>
+                  <div id="page-waste-collection-search-results">
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
                     </GovUK.Heading>
@@ -600,13 +678,118 @@ const WasteCollection = () => {
                         />
                       </ButtonGroup>
                     </form>
-                  </>
+                  </div>
                 )}
                 {addressPage.showView === VIEWS.MANUAL_ADDRESS && (
-                  <>Manual address page</>
+                  <div id="page-waste-collection-manual-address">
+                    <GovUK.Heading size="L">
+                      {t('exportJourney.wasteCollectionDetails.postcodeTitle')}
+                    </GovUK.Heading>
+                    <form onSubmit={handleManualAddressSubmit}>
+                      <GovUK.InputField
+                        mb={6}
+                        hint={t('address.addressLine.hint')}
+                        input={{
+                          name: 'addressLine1',
+                          id: 'addressLine1',
+                          value: addressDetails?.addressLine1,
+                          maxLength: 250,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: addressPage.errors?.addressLine1,
+                          touched: !!addressPage.errors?.addressLine1,
+                        }}
+                      >
+                        {' '}
+                        {t('address.addressLine1')}
+                      </GovUK.InputField>
+                      <GovUK.InputField
+                        mb={6}
+                        hint={t('address.addressLine.hint')}
+                        input={{
+                          name: 'addressLine2',
+                          id: 'addressLine2',
+                          value: addressDetails?.addressLine2,
+                          maxLength: 250,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: addressPage.errors?.addressLine2,
+                          touched: !!addressPage.errors?.addressLine2,
+                        }}
+                      >
+                        {' '}
+                        {t('address.addressLine2')}
+                      </GovUK.InputField>
+                      <GovUK.InputField
+                        mb={6}
+                        input={{
+                          name: 'townCity',
+                          id: 'townCity',
+                          value: addressDetails?.townCity,
+                          maxLength: 250,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: addressPage.errors?.townCity,
+                          touched: !!addressPage.errors?.townCity,
+                        }}
+                      >
+                        {' '}
+                        {t('address.townCity')}
+                      </GovUK.InputField>
+                      <GovUK.FormGroup>
+                        <GovUK.Label
+                          htmlFor={'postcode'}
+                          error={!!addressPage.errors?.postcode}
+                        >
+                          <GovUK.LabelText>
+                            {t('address.postcode')}
+                          </GovUK.LabelText>
+                          {addressPage.errors?.postcode && (
+                            <GovUK.ErrorText>
+                              {addressPage.errors?.postcode}
+                            </GovUK.ErrorText>
+                          )}
+                          <PostcodeInput
+                            name="postcode"
+                            id="postcode"
+                            value={addressDetails?.postcode}
+                            maxLength={50}
+                            autoComplete="postal-code"
+                            error={!!addressPage.errors?.postcode}
+                            onChange={onAddressDetailsChange}
+                          />
+                        </GovUK.Label>
+                      </GovUK.FormGroup>
+                      <SmallRadioList
+                        value={addressDetails?.country}
+                        id="country"
+                        name="country"
+                        label={t('address.country')}
+                        hint={t(
+                          'exportJourney.wasteCollectionDetails.countryHint'
+                        )}
+                        errorMessage={addressPage.errors?.country}
+                        options={countriesData.UK}
+                        onChange={onAddressDetailsChange}
+                      />
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton
+                          onClick={(e) =>
+                            handleLinkSubmit(e, handleManualAddressSubmit)
+                          }
+                        />
+                      </ButtonGroup>
+                    </form>
+                  </div>
                 )}
                 {addressPage.showView === VIEWS.CONTACT_DETAILS && (
-                  <>
+                  <div id="page-waste-collection-contact-details">
                     <GovUK.Heading size="L">
                       {t('exportJourney.wasteCollectionDetails.contactTitle')}
                     </GovUK.Heading>
@@ -741,7 +924,7 @@ const WasteCollection = () => {
                         />
                       </ButtonGroup>
                     </form>
-                  </>
+                  </div>
                 )}
               </>
             )}

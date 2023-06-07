@@ -70,15 +70,17 @@ export const Address = ({ address }: Props) => {
       >
         {address.addressLine1}
       </span>
-      <span
-        className={
-          isHouseNumber(address.addressLine1) ? 'houseNumberFollower' : ''
-        }
-      >
-        {address.addressLine2}
-      </span>
+      {address.addressLine2 && (
+        <span
+          className={
+            isHouseNumber(address.addressLine1) ? 'houseNumberFollower' : ''
+          }
+        >
+          {address.addressLine2}
+        </span>
+      )}
       <span>{address.townCity}</span>
-      <span>{address.postcode}</span>
+      {address.postcode && <span>{address.postcode}</span>}
       <span>{address.country}</span>
     </StyledAddress>
   );

@@ -12,6 +12,7 @@ import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
 import { SaveReturnButton } from './SaveReturnButton';
 import { SaveReturnLink } from './SaveReturnLink';
+import { SmallRadioList } from './SmallRadioList';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SummaryList } from './SummaryList';
 import { TextareaCharCount } from './TextareaCharCount';
@@ -33,6 +34,7 @@ export {
   RadiosDivider,
   SaveReturnButton,
   SaveReturnLink,
+  SmallRadioList,
   SubmissionNotFound,
   SummaryList,
   TextareaCharCount,
