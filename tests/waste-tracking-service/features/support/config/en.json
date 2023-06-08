@@ -209,5 +209,7 @@
   "exportJourney.wasteCarrier.carriersPage.noMoreCarriers": "You have added the maximum number of waste carriers.",
   "exportJourney.wasteCollectionDetails.postcodeTitle": "Where will the waste carrier collect the waste from?",
   "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector.",
-  "exportJourney.wasteCollectionDetails.contactTitle": "What are the contact details for the collection address?"
+  "exportJourney.wasteCollectionDetails.contactTitle": "What are the contact details for the collection address?",
+  "address.addressLine.hint": "Use a comma to separate multiple lines",
+  "exportJourney.wasteCollectionDetails.countryHint": "We'll use this as the exporting country"
 }

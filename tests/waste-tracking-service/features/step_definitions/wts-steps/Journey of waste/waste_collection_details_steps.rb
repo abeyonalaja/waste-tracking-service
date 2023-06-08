@@ -8,7 +8,7 @@ And(/^I chose first option from the dropdown list$/) do
 end
 
 Then(/^I should see selected address displayed with Change address link on the page$/) do
-  # expect(WasteCollectionDetailsPage.new).to have_address TestStatus.test_status(:exporter_address)
+  expect(WasteCollectionDetailsPage.new).to have_address TestStatus.test_status(:exporter_address)
   expect(page).to have_link('Change address')
 end
 

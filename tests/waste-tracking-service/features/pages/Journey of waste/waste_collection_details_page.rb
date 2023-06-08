@@ -40,11 +40,11 @@ class WasteCollectionDetailsPage < GenericPage
   end
 
   def actual_address
-    address_line_1 = find('output-addressLine1').text
-    address_line_2 = find('output-addressLine2').text
-    town = find('output-townCity').text
-    postcode = find('output-postcode').text
-    country = find('output-country').text
+    address_line_1 = find('address-addressLine1').text
+    address_line_2 = find('address-addressLine2').text
+    town = find('address-townCity').text
+    postcode = find('address-postcode').text
+    country = find('address-country').text
     "#{address_line_1},#{address_line_2},#{town},#{postcode},#{country}"
   end
 end

@@ -27,7 +27,7 @@ end
 And(/^I enter valid input for all the fields on the manual address entry page$/) do
   EnterExporterAddressManualPage.new.enter_address1(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
   EnterExporterAddressManualPage.new.enter_town(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
-  EnterExporterAddressManualPage.new.enter_postcode('n1p3bp')
+  EnterExporterAddressManualPage.new.enter_postcode('SE5 9NB')
   EnterExporterAddressManualPage.new.select_first_country_option
 end
 
