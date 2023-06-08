@@ -57,7 +57,7 @@ param kubernetesVersion string = '1.24.10'
 param aksVmSize string = 'Standard_DS2_v2'
 
 @description('AKS outbound traffic type.')
-param aksOutboundType string = 'loadBalancer'
+param aksOutboundType string = 'userDefinedRouting'
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
@@ -73,29 +73,13 @@ var aksName = join(
   ''
 )
 
-var loadBalancerPublicIpName = join(
-  [ env, svc, 'ALB', 'IP', envNum, padLeft(instance0, 3, '0') ], ''
-)
-
-resource loadBalancerPublicIp 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
-  name: loadBalancerPublicIpName
-  location: primaryRegion
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
-  tags: union(defaultTags, { Name: loadBalancerPublicIpName })
-}
-
 resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
   name: aksName
   location: primaryRegion
   tags: union(defaultTags, { Name: aksName })
   sku: {
     name: 'Basic'
-    tier: 'Free'
+    tier: 'Standard'
   }
   identity: {
     type: 'UserAssigned'
@@ -160,7 +144,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
       }
     ]
     apiServerAccessProfile: {
-      enablePrivateCluster: false
+      enablePrivateCluster: true
+      privateDNSZone: 'none'
     }
     autoScalerProfile: {
       'balance-similar-node-groups': 'false'
@@ -278,3 +263,13 @@ output requiredPrivateDnsEntries object = toObject(
   config => config.fqdn,
   config => config.ipAddresses
 )
+
+@description('References to created application resources.')
+output applicationResources object = {
+  aks: {
+    issuer: aks.properties.oidcIssuerProfile.issuerURL
+  }
+  keyVault: {
+    name: keyVault.name
+  }
+}

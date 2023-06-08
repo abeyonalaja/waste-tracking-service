@@ -173,6 +173,27 @@ module serviceBus './service-bus.bicep' = {
   dependsOn: [ cosmos ]
 }
 
+module app_identity './app_identity.bicep' = {
+  name: 'env-app-identity'
+  params: {
+    env: environment
+    svc: serviceCode
+    envNum: environmentNumber
+    primaryRegion: primaryRegion
+    
+    applicationResources: {
+      aks: {
+        issuer: aks.outputs.applicationResources.aks.issuer
+      }
+      keyVault: {
+        name: aks.outputs.applicationResources.keyVault.name
+      }
+    }
+    
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
+  }
+}
+
 module hub_network './hub_network.bicep' = {
   name: 'env-hub-network'
   scope: resourceGroup(
