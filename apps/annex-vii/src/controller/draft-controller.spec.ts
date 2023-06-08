@@ -391,6 +391,179 @@ describe(DraftController, () => {
         accountId
       );
     });
+
+    it('resets all carriers transport details section if input switches to small-waste', async () => {
+      const id = faker.datatype.uuid();
+      const carrierId1 = faker.datatype.uuid();
+      const carrierId2 = faker.datatype.uuid();
+      const carrierId3 = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: {
+          status: 'Complete',
+          wasteCode: {
+            type: 'AnnexIIIA',
+            value: 'A',
+          },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Complete',
+          values: [
+            {
+              transportDetails: {
+                shippingContainerNumber: '',
+                vehicleRegistration: '',
+                type: 'ShippingContainer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId1,
+            },
+            {
+              transportDetails: {
+                vehicleRegistration: '',
+                trailerNumber: '',
+                type: 'Trailer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId2,
+            },
+            {
+              transportDetails: {
+                imo: '',
+                type: 'BulkVessel',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId3,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          wasteCode: { type: 'NotApplicable' },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: { type: 'NotApplicable' },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: {
+            status: 'Started',
+            values: [
+              {
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  organisationName: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: carrierId1,
+              },
+              {
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  organisationName: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: carrierId2,
+              },
+              {
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  organisationName: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: carrierId3,
+              },
+            ],
+          },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+        },
+        accountId
+      );
+    });
   });
 
   describe('setDraftCollectionDateById', () => {

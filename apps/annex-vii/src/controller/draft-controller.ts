@@ -144,6 +144,8 @@ export default class DraftController {
         wasteQuantity = { status: 'NotStarted' };
       }
 
+      let carriers: DraftSubmission['carriers'] = draft.carriers;
+
       if (
         draft.wasteDescription.status !== 'NotStarted' &&
         draft.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
@@ -151,6 +153,22 @@ export default class DraftController {
         value.wasteCode?.type === 'NotApplicable'
       ) {
         wasteQuantity = { status: 'NotStarted' };
+
+        if (draft.carriers.status !== 'NotStarted') {
+          const updatedCarriers: api.DraftCarrier[] = [];
+          for (const c of draft.carriers.values) {
+            const carrier: api.DraftCarrier = {
+              id: c.id,
+              addressDetails: c.addressDetails,
+              contactDetails: c.contactDetails,
+            };
+            updatedCarriers.push(carrier);
+          }
+          carriers = {
+            status: 'Started',
+            values: updatedCarriers,
+          };
+        }
       }
 
       if (
@@ -174,6 +192,7 @@ export default class DraftController {
           ...draft,
           wasteDescription: value,
           wasteQuantity,
+          carriers,
           recoveryFacilityDetail,
         },
         accountId

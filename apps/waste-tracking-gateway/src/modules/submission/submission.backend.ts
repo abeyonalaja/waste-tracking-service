@@ -192,22 +192,62 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.wasteDescription = value;
+    let wasteQuantity: Submission['wasteQuantity'] = submission.wasteQuantity;
 
     if (
-      (value.status === 'Started' || value.status === 'Complete') &&
-      submission.wasteQuantity.status === 'CannotStart'
+      wasteQuantity.status === 'CannotStart' &&
+      (value.status === 'Started' || value.status === 'Complete')
     ) {
-      submission.wasteQuantity = { status: 'NotStarted' };
+      wasteQuantity = { status: 'NotStarted' };
+    }
+
+    let carriers: Submission['carriers'] = submission.carriers;
+
+    if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      submission.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
+      value.status !== 'NotStarted' &&
+      value.wasteCode?.type === 'NotApplicable'
+    ) {
+      wasteQuantity = { status: 'NotStarted' };
+
+      if (submission.carriers.status !== 'NotStarted') {
+        const updatedCarriers: dto.Carrier[] = [];
+        for (const c of submission.carriers.values) {
+          const carrier: dto.Carrier = {
+            id: c.id,
+            addressDetails: c.addressDetails,
+            contactDetails: c.contactDetails,
+          };
+          updatedCarriers.push(carrier);
+        }
+        carriers = {
+          status: 'Started',
+          values: updatedCarriers,
+        };
+      }
     }
 
     if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      submission.wasteDescription.wasteCode?.type === 'NotApplicable' &&
+      value.status !== 'NotStarted' &&
+      value.wasteCode?.type !== 'NotApplicable'
+    ) {
+      wasteQuantity = { status: 'NotStarted' };
+    }
+
+    const recoveryFacilityDetail: Submission['recoveryFacilityDetail'] =
       submission.recoveryFacilityDetail.status === 'CannotStart' &&
       value.status !== 'NotStarted' &&
       value.wasteCode !== undefined
-    ) {
-      submission.recoveryFacilityDetail = { status: 'NotStarted' };
-    }
+        ? { status: 'NotStarted' }
+        : submission.recoveryFacilityDetail;
+
+    submission.wasteDescription = value;
+    submission.wasteQuantity = wasteQuantity;
+    submission.carriers = carriers;
+    submission.recoveryFacilityDetail = recoveryFacilityDetail;
 
     this.submissions.set(id, submission);
     return Promise.resolve();
