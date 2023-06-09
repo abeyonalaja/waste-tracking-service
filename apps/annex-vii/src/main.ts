@@ -478,4 +478,93 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.listDraftRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.listDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.listDraftRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createDraftRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.CreateDraftRecoveryFacilityDetailsRequest;
+    if (!validate.createDraftRecoveryFacilityDetailsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.createDraftRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.SetDraftRecoveryFacilityDetailsRequest;
+    if (!validate.setDraftRecoveryFacilityDetailsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.deleteDraftRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.deleteDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.deleteDraftRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

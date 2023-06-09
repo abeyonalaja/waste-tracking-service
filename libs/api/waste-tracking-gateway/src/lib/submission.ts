@@ -60,10 +60,6 @@ export type WasteDescription =
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
   | ({ status: 'Complete' } & WasteDescriptionData);
 
-export type RecoveryFacilityDetail =
-  | { status: 'CannotStart' }
-  | { status: 'NotStarted' };
-
 export type WasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
@@ -176,6 +172,42 @@ export type TransitCountries =
       values: string[];
     };
 
+export type RecoveryFacilityData = {
+  addressDetails?: {
+    name: string;
+    address: string;
+    country: string;
+  };
+  contactDetails?: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+  recoveryFacilityType?:
+    | {
+        type: 'Laboratory';
+        disposalCode: string;
+      }
+    | {
+        type: 'InterimSite';
+        recoveryCode: string;
+      }
+    | {
+        type: 'RecoveryFacility';
+        recoveryCode: string;
+      };
+};
+
+export type RecoveryFacility = { id: string } & RecoveryFacilityData;
+
+export type RecoveryFacilityDetail =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: RecoveryFacility[];
+    };
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
@@ -231,3 +263,12 @@ export type GetTransitCountriesResponse = TransitCountries;
 export type SetCollectionDetailRequest = CollectionDetail;
 export type SetCollectionDetailResponse = CollectionDetail;
 export type GetCollectionDetailResponse = CollectionDetail;
+export type ListRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
+export type CreateRecoveryFacilityDetailRequest = Omit<
+  RecoveryFacilityDetail,
+  'values'
+>;
+export type CreateRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
+export type GetRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
+export type SetRecoveryFacilityDetailRequest = RecoveryFacilityDetail;
+export type SetRecoveryFacilityDetailResponse = RecoveryFacilityDetail;

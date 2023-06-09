@@ -25,6 +25,11 @@ export {
   setDraftTransitCountries,
   getDraftCollectionDetail,
   setDraftCollectionDetail,
+  listDraftRecoveryFacilityDetails,
+  createDraftRecoveryFacilityDetails,
+  getDraftRecoveryFacilityDetails,
+  setDraftRecoveryFacilityDetails,
+  deleteDraftRecoveryFacilityDetails,
 } from './dto';
 
 export type {
@@ -84,6 +89,17 @@ export type {
   GetDraftCollectionDetailResponse,
   SetDraftCollectionDetailRequest,
   SetDraftCollectionDetailResponse,
+  DraftRecoveryFacilityDetail,
+  ListDraftRecoveryFacilityDetailsRequest,
+  ListDraftRecoveryFacilityDetailsResponse,
+  CreateDraftRecoveryFacilityDetailsRequest,
+  CreateDraftRecoveryFacilityDetailsResponse,
+  GetDraftRecoveryFacilityDetailsRequest,
+  GetDraftRecoveryFacilityDetailsResponse,
+  SetDraftRecoveryFacilityDetailsRequest,
+  SetDraftRecoveryFacilityDetailsResponse,
+  DeleteDraftRecoveryFacilityDetailsRequest,
+  DeleteDraftRecoveryFacilityDetailsResponse,
 } from './dto';
 
 export * as schema from './schema';

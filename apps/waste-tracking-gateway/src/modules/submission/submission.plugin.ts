@@ -13,6 +13,8 @@ import {
   validateSetCollectionDetailRequest,
   validatePutExitLocationRequest,
   validatePutTransitCountriesRequest,
+  validateSetRecoveryFacilityDetailRequest,
+  validateCreateRecoveryFacilityDetailRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -630,6 +632,147 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutTransitCountriesResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/recovery-facility',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.listRecoveryFacilityDetail({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.ListRecoveryFacilityDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/{id}/recovery-facility',
+      handler: async function ({ params, payload }, h) {
+        if (!validateCreateRecoveryFacilityDetailRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.CreateRecoveryFacilityDetailRequest;
+        try {
+          return h
+            .response(
+              (await backend.createRecoveryFacilityDetail(
+                {
+                  id: params.id,
+                  accountId,
+                },
+                request
+              )) as dto.CreateRecoveryFacilityDetailRequest
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/recovery-facility/{rfdId}',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getRecoveryFacilityDetail(
+            {
+              id: params.id,
+              accountId,
+            },
+            params.rfdId
+          );
+          return value as dto.GetRecoveryFacilityDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/recovery-facility/{rfdId}',
+      handler: async function ({ params, payload }) {
+        if (!validateSetRecoveryFacilityDetailRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.SetRecoveryFacilityDetailRequest;
+        if (request.status === 'Started' || request.status === 'Complete') {
+          for (const c of request.values) {
+            if (c.id !== params.rfdId) {
+              return Boom.badRequest();
+            }
+          }
+        }
+        try {
+          await backend.setRecoveryFacilityDetail(
+            {
+              id: params.id,
+              accountId,
+            },
+            params.rfdId,
+            request
+          );
+          return request as dto.SetRecoveryFacilityDetailRequest;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'DELETE',
+      path: '/{id}/recovery-facility/{rfdId}',
+      handler: async function ({ params }, h) {
+        try {
+          return h
+            .response(
+              (await backend.deleteRecoveryFacilityDetail(
+                {
+                  id: params.id,
+                  accountId,
+                },
+                params.rfdId
+              )) as undefined
+            )
+            .code(204);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

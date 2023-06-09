@@ -10,6 +10,8 @@ import {
   SetDraftCollectionDetailRequest,
   SetDraftExitLocationByIdRequest,
   SetDraftTransitCountriesRequest,
+  SetDraftRecoveryFacilityDetailsRequest,
+  CreateDraftRecoveryFacilityDetailsRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -66,4 +68,14 @@ export const setDraftExitLocationByIdRequest =
 export const setDraftTransitCountriesRequest =
   ajv.compile<SetDraftTransitCountriesRequest>(
     schema.setDraftTransitCountriesRequest
+  );
+
+export const createDraftRecoveryFacilityDetailsRequest =
+  ajv.compile<CreateDraftRecoveryFacilityDetailsRequest>(
+    schema.createDraftRecoveryFacilityDetailsRequest
+  );
+
+export const setDraftRecoveryFacilityDetailsRequest =
+  ajv.compile<SetDraftRecoveryFacilityDetailsRequest>(
+    schema.setDraftRecoveryFacilityDetailsRequest
   );

@@ -44,6 +44,16 @@ import {
   DeleteDraftCarriersResponse,
   SetDraftExitLocationByIdRequest,
   SetDraftExitLocationByIdResponse,
+  ListDraftRecoveryFacilityDetailsRequest,
+  ListDraftRecoveryFacilityDetailsResponse,
+  CreateDraftRecoveryFacilityDetailsRequest,
+  CreateDraftRecoveryFacilityDetailsResponse,
+  GetDraftRecoveryFacilityDetailsRequest,
+  GetDraftRecoveryFacilityDetailsResponse,
+  SetDraftRecoveryFacilityDetailsRequest,
+  SetDraftRecoveryFacilityDetailsResponse,
+  DeleteDraftRecoveryFacilityDetailsRequest,
+  DeleteDraftRecoveryFacilityDetailsResponse,
   createDraft,
   getDraftById,
   getDraftCustomerReferenceById,
@@ -78,6 +88,11 @@ import {
   SetDraftCollectionDetailResponse,
   getDraftCollectionDetail,
   setDraftCollectionDetail,
+  listDraftRecoveryFacilityDetails,
+  createDraftRecoveryFacilityDetails,
+  getDraftRecoveryFacilityDetails,
+  setDraftRecoveryFacilityDetails,
+  deleteDraftRecoveryFacilityDetails,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -361,5 +376,60 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as SetDraftTransitCountriesResponse;
+  }
+
+  async listDraftRecoveryFacilityDetails(
+    req: ListDraftRecoveryFacilityDetailsRequest
+  ): Promise<ListDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      listDraftRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as ListDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async createDraftRecoveryFacilityDetails(
+    req: CreateDraftRecoveryFacilityDetailsRequest
+  ): Promise<CreateDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createDraftRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as CreateDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async getDraftRecoveryFacilityDetails(
+    req: GetDraftRecoveryFacilityDetailsRequest
+  ): Promise<GetDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async setDraftRecoveryFacilityDetails(
+    req: SetDraftRecoveryFacilityDetailsRequest
+  ): Promise<SetDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async deleteDraftRecoveryFacilityDetails(
+    req: DeleteDraftRecoveryFacilityDetailsRequest
+  ): Promise<DeleteDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteDraftRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteDraftRecoveryFacilityDetailsResponse;
   }
 }

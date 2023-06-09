@@ -25,6 +25,11 @@ import {
   SetDraftTransitCountriesResponse,
   GetDraftCollectionDetailResponse,
   SetDraftCollectionDetailResponse,
+  ListDraftRecoveryFacilityDetailsResponse,
+  CreateDraftRecoveryFacilityDetailsResponse,
+  GetDraftRecoveryFacilityDetailsResponse,
+  SetDraftRecoveryFacilityDetailsResponse,
+  DeleteDraftRecoveryFacilityDetailsResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -44,6 +49,8 @@ export type CarrierData = dto.CarrierData;
 export type CollectionDetail = dto.CollectionDetail;
 export type ExitLocation = dto.ExitLocation;
 export type TransitCountries = dto.TransitCountries;
+export type RecoveryFacilityDetail = dto.RecoveryFacilityDetail;
+export type RecoveryFacilityData = dto.RecoveryFacilityData;
 
 export type SubmissionRef = {
   id: string;
@@ -98,6 +105,23 @@ export interface SubmissionBackend {
     ref: SubmissionRef,
     value: TransitCountries
   ): Promise<void>;
+  listRecoveryFacilityDetail(
+    ref: SubmissionRef
+  ): Promise<RecoveryFacilityDetail>;
+  createRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    value: Omit<RecoveryFacilityDetail, 'values'>
+  ): Promise<RecoveryFacilityDetail>;
+  getRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    id: string
+  ): Promise<RecoveryFacilityDetail>;
+  setRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    id: string,
+    value: RecoveryFacilityDetail
+  ): Promise<void>;
+  deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
 }
 
 /**
@@ -619,6 +643,183 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.transitCountries = value;
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  listRecoveryFacilityDetail({
+    id,
+  }: SubmissionRef): Promise<RecoveryFacilityDetail> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.recoveryFacilityDetail);
+  }
+
+  createRecoveryFacilityDetail(
+    { id }: SubmissionRef,
+    value: Omit<RecoveryFacilityDetail, 'values'>
+  ): Promise<RecoveryFacilityDetail> {
+    if (value.status !== 'Started') {
+      return Promise.reject(
+        Boom.badRequest(
+          `"Status cannot be ${value.status} on recovery facility detail creation"`
+        )
+      );
+    }
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const newRecoveryFacilities = { id: uuidv4() };
+    if (
+      submission.recoveryFacilityDetail.status !== 'Started' &&
+      submission.recoveryFacilityDetail.status !== 'Complete'
+    ) {
+      submission.recoveryFacilityDetail = {
+        status: value.status,
+        values: [newRecoveryFacilities],
+      };
+
+      this.submissions.set(id, submission);
+      return Promise.resolve(submission.recoveryFacilityDetail);
+    }
+
+    if (submission.recoveryFacilityDetail.values.length === 3) {
+      return Promise.reject(
+        Boom.badRequest(
+          'Cannot add more than 3 facilities(1 InterimSite and 2 RecoveryFacilities)'
+        )
+      );
+    }
+
+    const facilities: dto.RecoveryFacility[] = [];
+    for (const rf of submission.recoveryFacilityDetail.values) {
+      facilities.push(rf);
+    }
+    facilities.push(newRecoveryFacilities);
+    submission.recoveryFacilityDetail = {
+      status: value.status,
+      values: facilities,
+    };
+
+    this.submissions.set(id, submission);
+
+    return Promise.resolve({
+      status: value.status,
+      values: [newRecoveryFacilities],
+    });
+  }
+
+  getRecoveryFacilityDetail(
+    { id }: SubmissionRef,
+    rfdId: string
+  ): Promise<RecoveryFacilityDetail> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (
+      submission.recoveryFacilityDetail.status !== 'Started' &&
+      submission.recoveryFacilityDetail.status !== 'Complete'
+    ) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const recoveryFacility = submission.recoveryFacilityDetail.values.find(
+      (rf) => {
+        return rf.id === rfdId;
+      }
+    );
+
+    if (recoveryFacility === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const value: dto.RecoveryFacilityDetail = {
+      status: submission.recoveryFacilityDetail.status,
+      values: [recoveryFacility],
+    };
+    return Promise.resolve(value);
+  }
+
+  setRecoveryFacilityDetail(
+    { id }: SubmissionRef,
+    rfdId: string,
+    value: RecoveryFacilityDetail
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (
+      submission.recoveryFacilityDetail.status !== 'Started' &&
+      submission.recoveryFacilityDetail.status !== 'Complete'
+    ) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (value.status !== 'Started' && value.status !== 'Complete') {
+      submission.recoveryFacilityDetail = value;
+      this.submissions.set(id, submission);
+      return Promise.resolve();
+    }
+    const recoveryFacility = value.values.find((rf) => {
+      return rf.id === rfdId;
+    });
+
+    if (recoveryFacility === undefined) {
+      return Promise.reject(Boom.badRequest());
+    }
+    const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
+      return rf.id === rfdId;
+    });
+    if (index === -1) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.recoveryFacilityDetail.status = value.status;
+    submission.recoveryFacilityDetail.values[index] =
+      recoveryFacility as dto.RecoveryFacility;
+
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  deleteRecoveryFacilityDetail(
+    { id }: SubmissionRef,
+    rfdId: string
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (
+      submission.recoveryFacilityDetail.status !== 'Started' &&
+      submission.recoveryFacilityDetail.status !== 'Complete'
+    ) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
+      return rf.id === rfdId;
+    });
+
+    if (index === -1) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    submission.recoveryFacilityDetail.values.splice(index, 1);
+    if (submission.recoveryFacilityDetail.values.length === 0) {
+      submission.recoveryFacilityDetail = { status: 'NotStarted' };
+    }
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -1195,6 +1396,134 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
         id,
         accountId,
         value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async listRecoveryFacilityDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<RecoveryFacilityDetail> {
+    let response: ListDraftRecoveryFacilityDetailsResponse;
+    try {
+      response = await this.client.listDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async createRecoveryFacilityDetail(
+    { id, accountId }: SubmissionRef,
+    value: Omit<RecoveryFacilityDetail, 'values'>
+  ): Promise<RecoveryFacilityDetail> {
+    let response: CreateDraftRecoveryFacilityDetailsResponse;
+    try {
+      response = await this.client.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async getRecoveryFacilityDetail(
+    { id, accountId }: SubmissionRef,
+    rfdId: string
+  ): Promise<RecoveryFacilityDetail> {
+    let response: GetDraftRecoveryFacilityDetailsResponse;
+    try {
+      response = await this.client.getDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setRecoveryFacilityDetail(
+    { id, accountId }: SubmissionRef,
+    rfdId: string,
+    value: RecoveryFacilityDetail
+  ): Promise<void> {
+    if (value.status === 'Started' || value.status === 'Complete') {
+      for (const c of value.values) {
+        c.id = rfdId;
+      }
+    }
+
+    let response: SetDraftRecoveryFacilityDetailsResponse;
+    try {
+      response = await this.client.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async deleteRecoveryFacilityDetail(
+    { id, accountId }: SubmissionRef,
+    rfdId: string
+  ): Promise<void> {
+    let response: DeleteDraftRecoveryFacilityDetailsResponse;
+    try {
+      response = await this.client.deleteDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
       });
     } catch (err) {
       this.logger.error(err);

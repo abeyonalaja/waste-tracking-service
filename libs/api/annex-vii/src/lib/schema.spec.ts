@@ -10,6 +10,10 @@ import {
   CreateDraftCarriersRequest,
   SetDraftCarriersRequest,
   DeleteDraftCarriersRequest,
+  ListDraftRecoveryFacilityDetailsResponse,
+  CreateDraftRecoveryFacilityDetailsRequest,
+  SetDraftRecoveryFacilityDetailsRequest,
+  DeleteDraftRecoveryFacilityDetailsRequest,
   SetDraftExitLocationByIdRequest,
   SetDraftTransitCountriesRequest,
 } from './dto';
@@ -23,6 +27,10 @@ import {
   createDraftCarriersRequest,
   setDraftCarriersRequest,
   deleteDraftCarriersRequest,
+  listDraftRecoveryFacilityDetailsResponse,
+  createDraftRecoveryFacilityDetailsRequest,
+  setDraftRecoveryFacilityDetailsRequest,
+  deleteDraftRecoveryFacilityDetailsRequest,
   setDraftExitLocationByIdRequest,
   setDraftTransitCountriesRequest,
 } from './schema';
@@ -429,6 +437,166 @@ describe('setDraftTransitCountriesRequest', () => {
         status: 'Complete',
         values: ['N.Ireland', 'Wales', 'England'],
       },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('listDraftRecoveryFacilityDetailsResponse', () => {
+  const validate = ajv.compile<ListDraftRecoveryFacilityDetailsResponse>(
+    listDraftRecoveryFacilityDetailsResponse
+  );
+
+  it('is compatible with success value', () => {
+    const value: ListDraftRecoveryFacilityDetailsResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: faker.datatype.string(),
+            },
+            addressDetails: {
+              name: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error value', () => {
+    validate({
+      success: false,
+      error: {
+        statusCode: 400,
+        name: 'BadRequest',
+        message: 'Bad request',
+      },
+    });
+  });
+});
+
+describe('createDraftRecoveryFacilityDetailsRequest', () => {
+  const validate = ajv.compile<CreateDraftRecoveryFacilityDetailsRequest>(
+    createDraftRecoveryFacilityDetailsRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: CreateDraftRecoveryFacilityDetailsRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftRecoveryFacilityDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftRecoveryFacilityDetailsRequest>(
+    setDraftRecoveryFacilityDetailsRequest
+  );
+
+  it('is compatible with dto values', () => {
+    let value: SetDraftRecoveryFacilityDetailsRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      rfdId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            recoveryFacilityType: {
+              type: 'InterimSite',
+              recoveryCode: faker.datatype.string(),
+            },
+            addressDetails: {
+              name: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      rfdId: faker.datatype.uuid(),
+      value: {
+        status: 'NotStarted',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      rfdId: faker.datatype.uuid(),
+      value: {
+        status: 'Started',
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: faker.datatype.string(),
+            },
+            addressDetails: {
+              name: faker.datatype.string(),
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+            },
+            contactDetails: {
+              fullName: faker.datatype.string(),
+              emailAddress: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('deleteDraftRecoveryFacilityDetailsRequest', () => {
+  const validate = ajv.compile<DeleteDraftRecoveryFacilityDetailsRequest>(
+    deleteDraftRecoveryFacilityDetailsRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: DeleteDraftRecoveryFacilityDetailsRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      rfdId: faker.datatype.uuid(),
     };
 
     expect(validate(value)).toBe(true);

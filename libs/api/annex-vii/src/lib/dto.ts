@@ -8,6 +8,7 @@ type Method = Readonly<{
 type AccountIdRequest = { accountId: string };
 type IdRequest = { id: string };
 type CarrierIdRequest = { carrierId: string };
+type RfdIdRequest = { rfdId: string };
 
 type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
@@ -109,10 +110,6 @@ export type DraftImporterDetail =
   | ({ status: 'Started' } & Partial<DraftImporterDetailData>)
   | ({ status: 'Complete' } & DraftImporterDetailData);
 
-type DraftRecoveryFacilityDetail =
-  | { status: 'CannotStart' }
-  | { status: 'NotStarted' };
-
 export type DraftCarrierData = {
   addressDetails?: {
     organisationName: string;
@@ -189,6 +186,42 @@ export type DraftTransitCountries =
   | {
       status: 'Started' | 'Complete';
       values: string[];
+    };
+
+export type DraftRecoveryFacilityData = {
+  addressDetails?: {
+    name: string;
+    address: string;
+    country: string;
+  };
+  contactDetails?: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber?: string;
+  };
+  recoveryFacilityType?:
+    | {
+        type: 'Laboratory';
+        disposalCode: string;
+      }
+    | {
+        type: 'InterimSite';
+        recoveryCode: string;
+      }
+    | {
+        type: 'RecoveryFacility';
+        recoveryCode: string;
+      };
+};
+
+export type DraftRecoveryFacility = { id: string } & DraftRecoveryFacilityData;
+
+export type DraftRecoveryFacilityDetail =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Started' | 'Complete';
+      values: DraftRecoveryFacility[];
     };
 
 export type DraftSubmission = {
@@ -410,5 +443,51 @@ export type SetDraftCollectionDetailRequest = IdRequest &
 export type SetDraftCollectionDetailResponse = Response<void>;
 export const setDraftCollectionDetail: Method = {
   name: 'setDraftCollectionDetail',
+  httpVerb: 'POST',
+};
+
+export type ListDraftRecoveryFacilityDetailsRequest = IdRequest &
+  AccountIdRequest;
+export type ListDraftRecoveryFacilityDetailsResponse =
+  Response<DraftRecoveryFacilityDetail>;
+export const listDraftRecoveryFacilityDetails: Method = {
+  name: 'listDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type CreateDraftRecoveryFacilityDetailsRequest = IdRequest &
+  AccountIdRequest & { value: Omit<DraftRecoveryFacilityDetail, 'values'> };
+export type CreateDraftRecoveryFacilityDetailsResponse =
+  Response<DraftRecoveryFacilityDetail>;
+export const createDraftRecoveryFacilityDetails: Method = {
+  name: 'createDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type GetDraftRecoveryFacilityDetailsRequest = IdRequest &
+  AccountIdRequest &
+  RfdIdRequest;
+export type GetDraftRecoveryFacilityDetailsResponse =
+  Response<DraftRecoveryFacilityDetail>;
+export const getDraftRecoveryFacilityDetails: Method = {
+  name: 'getDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type SetDraftRecoveryFacilityDetailsRequest = IdRequest &
+  AccountIdRequest &
+  RfdIdRequest & { value: DraftRecoveryFacilityDetail };
+export type SetDraftRecoveryFacilityDetailsResponse = Response<void>;
+export const setDraftRecoveryFacilityDetails: Method = {
+  name: 'setDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type DeleteDraftRecoveryFacilityDetailsRequest = IdRequest &
+  AccountIdRequest &
+  RfdIdRequest;
+export type DeleteDraftRecoveryFacilityDetailsResponse = Response<void>;
+export const deleteDraftRecoveryFacilityDetails: Method = {
+  name: 'deleteDraftRecoveryFacilityDetails',
   httpVerb: 'POST',
 };

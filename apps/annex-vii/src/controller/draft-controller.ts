@@ -727,4 +727,208 @@ export default class DraftController {
       return fromBoom(Boom.internal());
     }
   };
+
+  listDraftRecoveryFacilityDetails: Handler<
+    api.ListDraftRecoveryFacilityDetailsRequest,
+    api.ListDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.recoveryFacilityDetail);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  createDraftRecoveryFacilityDetails: Handler<
+    api.CreateDraftRecoveryFacilityDetailsRequest,
+    api.CreateDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      if (value.status !== 'Started') {
+        return fromBoom(
+          Boom.badRequest(
+            `"Status cannot be ${value.status} on recovery facility detail creation"`
+          )
+        );
+      }
+
+      const draft = await this.repository.getDraft(id, accountId);
+
+      const rfdId = { id: uuidv4() };
+      if (
+        draft.recoveryFacilityDetail.status !== 'Started' &&
+        draft.recoveryFacilityDetail.status !== 'Complete'
+      ) {
+        draft.recoveryFacilityDetail = {
+          status: value.status,
+          values: [rfdId],
+        };
+
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return success(draft.recoveryFacilityDetail);
+      }
+
+      if (draft.recoveryFacilityDetail.values.length === 3) {
+        return fromBoom(
+          Boom.badRequest(
+            'Cannot add more than 3 recovery facilities (Maximum: 1 InterimSite & 2 Recovery Facilities )'
+          )
+        );
+      }
+
+      const recoveryFacility = [];
+      for (const rfd of draft.recoveryFacilityDetail.values) {
+        recoveryFacility.push(rfd);
+      }
+      recoveryFacility.push(rfdId);
+      draft.recoveryFacilityDetail = {
+        status: value.status,
+        values: recoveryFacility,
+      };
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success({
+        status: value.status,
+        values: [rfdId],
+      });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftRecoveryFacilityDetails: Handler<
+    api.GetDraftRecoveryFacilityDetailsRequest,
+    api.GetDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId, rfdId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (
+        draft.recoveryFacilityDetail.status !== 'Started' &&
+        draft.recoveryFacilityDetail.status !== 'Complete'
+      ) {
+        return fromBoom(Boom.notFound());
+      }
+
+      const recoveryFacilityDetail = draft.recoveryFacilityDetail.values.find(
+        (c) => {
+          return c.id === rfdId;
+        }
+      );
+
+      if (recoveryFacilityDetail === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      const value: api.DraftRecoveryFacilityDetail = {
+        status: draft.recoveryFacilityDetail.status,
+        values: [recoveryFacilityDetail],
+      };
+
+      return success(value);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftRecoveryFacilityDetails: Handler<
+    api.SetDraftRecoveryFacilityDetailsRequest,
+    api.SetDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId, rfdId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (
+        draft.recoveryFacilityDetail.status !== 'Started' &&
+        draft.recoveryFacilityDetail.status !== 'Complete'
+      ) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (value.status !== 'Started' && value.status !== 'Complete') {
+        draft.recoveryFacilityDetail = value;
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return success(undefined);
+      }
+
+      const recoveryFacility = value.values.find((c) => {
+        return c.id === rfdId;
+      });
+      if (recoveryFacility === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      const index = draft.recoveryFacilityDetail.values.findIndex((c) => {
+        return c.id === rfdId;
+      });
+      if (index === -1) {
+        return fromBoom(Boom.notFound());
+      }
+
+      draft.recoveryFacilityDetail.status = value.status;
+      draft.recoveryFacilityDetail.values[index] = recoveryFacility;
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  deleteDraftRecoveryFacilityDetails: Handler<
+    api.DeleteDraftRecoveryFacilityDetailsRequest,
+    api.DeleteDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId, rfdId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      if (
+        draft.recoveryFacilityDetail.status !== 'Started' &&
+        draft.recoveryFacilityDetail.status !== 'Complete'
+      ) {
+        return fromBoom(Boom.notFound());
+      }
+
+      const index = draft.recoveryFacilityDetail.values.findIndex((c) => {
+        return c.id === rfdId;
+      });
+
+      if (index === -1) {
+        return fromBoom(Boom.notFound());
+      }
+
+      draft.recoveryFacilityDetail.values.splice(index, 1);
+      if (draft.recoveryFacilityDetail.values.length === 0) {
+        draft.recoveryFacilityDetail = { status: 'NotStarted' };
+      }
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

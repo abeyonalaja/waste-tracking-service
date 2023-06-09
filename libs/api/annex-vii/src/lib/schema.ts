@@ -14,6 +14,10 @@ import {
   CreateDraftCarriersRequest,
   DeleteDraftCarriersRequest,
   GetDraftCarriersRequest,
+  ListDraftRecoveryFacilityDetailsRequest,
+  CreateDraftRecoveryFacilityDetailsRequest,
+  DeleteDraftRecoveryFacilityDetailsRequest,
+  GetDraftRecoveryFacilityDetailsRequest,
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
   GetDraftCollectionDetailRequest,
@@ -409,10 +413,114 @@ const draftCollectionDetail: SchemaObject = {
   },
 };
 
-const recoveryFacilityDetail: SchemaObject = {
-  properties: {
-    status: {
-      enum: ['CannotStart', 'NotStarted'],
+const draftRecoveryFacilityDetails: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    CannotStart: {
+      properties: {},
+    },
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { type: 'string' },
+            },
+            optionalProperties: {
+              recoveryFacilityType: {
+                discriminator: 'type',
+                mapping: {
+                  Laboratory: {
+                    properties: {
+                      disposalCode: { type: 'string' },
+                    },
+                  },
+                  InterimSite: {
+                    properties: {
+                      recoveryCode: { type: 'string' },
+                    },
+                  },
+                  RecoveryFacility: {
+                    properties: {
+                      recoveryCode: { type: 'string' },
+                    },
+                  },
+                },
+              },
+              addressDetails: {
+                properties: {
+                  name: { type: 'string' },
+                  address: { type: 'string' },
+                  country: { type: 'string' },
+                },
+              },
+              contactDetails: {
+                properties: {
+                  fullName: { type: 'string' },
+                  emailAddress: { type: 'string' },
+                  phoneNumber: { type: 'string' },
+                },
+                optionalProperties: {
+                  faxNumber: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    Complete: {
+      properties: {
+        values: {
+          elements: {
+            properties: {
+              id: { type: 'string' },
+            },
+            optionalProperties: {
+              recoveryFacilityType: {
+                discriminator: 'type',
+                mapping: {
+                  Laboratory: {
+                    properties: {
+                      disposalCode: { type: 'string' },
+                    },
+                  },
+                  InterimSite: {
+                    properties: {
+                      recoveryCode: { type: 'string' },
+                    },
+                  },
+                  RecoveryFacility: {
+                    properties: {
+                      recoveryCode: { type: 'string' },
+                    },
+                  },
+                },
+              },
+              addressDetails: {
+                properties: {
+                  name: { type: 'string' },
+                  address: { type: 'string' },
+                  country: { type: 'string' },
+                },
+              },
+              contactDetails: {
+                properties: {
+                  fullName: { type: 'string' },
+                  emailAddress: { type: 'string' },
+                  phoneNumber: { type: 'string' },
+                },
+                optionalProperties: {
+                  faxNumber: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 };
@@ -469,7 +577,7 @@ const draftSubmission: SchemaObject = {
     collectionDetail: draftCollectionDetail,
     ukExitLocation: draftExitLocation,
     transitCountries: draftTransitCountries,
-    recoveryFacilityDetail: recoveryFacilityDetail,
+    recoveryFacilityDetail: draftRecoveryFacilityDetails,
   },
 };
 
@@ -907,6 +1015,96 @@ export const setDraftTransitCountriesRequest: SchemaObject = {
 };
 
 export const setDraftTransitCountriesResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const listDraftRecoveryFacilityDetailsRequest: JTDSchemaType<ListDraftRecoveryFacilityDetailsRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const listDraftRecoveryFacilityDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftRecoveryFacilityDetails,
+  },
+};
+
+export const createDraftRecoveryFacilityDetailsRequest: JTDSchemaType<CreateDraftRecoveryFacilityDetailsRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+      value: {
+        properties: {
+          status: {
+            enum: ['CannotStart', 'NotStarted', 'Started', 'Complete'],
+          },
+        },
+      },
+    },
+  };
+
+export const createDraftRecoveryFacilityDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftRecoveryFacilityDetails,
+  },
+};
+
+export const getDraftRecoveryFacilityDetailsRequest: JTDSchemaType<GetDraftRecoveryFacilityDetailsRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+      rfdId: { type: 'string' },
+    },
+  };
+
+export const getDraftRecoveryFacilityDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftRecoveryFacilityDetails,
+  },
+};
+
+export const setDraftRecoveryFacilityDetailsRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    rfdId: { type: 'string' },
+    value: draftRecoveryFacilityDetails,
+  },
+};
+
+export const setDraftRecoveryFacilityDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const deleteDraftRecoveryFacilityDetailsRequest: JTDSchemaType<DeleteDraftRecoveryFacilityDetailsRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+      rfdId: { type: 'string' },
+    },
+  };
+
+export const deleteDraftRecoveryFacilityDetailsResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

@@ -16,6 +16,7 @@ import {
   CollectionDetail,
   ExitLocation,
   TransitCountries,
+  RecoveryFacilityDetail,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -85,6 +86,29 @@ const mockBackend = {
     jest.fn<(ref: SubmissionRef) => Promise<TransitCountries>>(),
   setTransitCountries:
     jest.fn<(ref: SubmissionRef, value: TransitCountries) => Promise<void>>(),
+  listRecoveryFacilityDetail:
+    jest.fn<(ref: SubmissionRef) => Promise<RecoveryFacilityDetail>>(),
+  createRecoveryFacilityDetail:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        value: Omit<RecoveryFacilityDetail, 'values'>
+      ) => Promise<RecoveryFacilityDetail>
+    >(),
+  getRecoveryFacilityDetail:
+    jest.fn<
+      (ref: SubmissionRef, rfdId: string) => Promise<RecoveryFacilityDetail>
+    >(),
+  setRecoveryFacilityDetail:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        rfdId: string,
+        value: RecoveryFacilityDetail
+      ) => Promise<void>
+    >(),
+  deleteRecoveryFacilityDetail:
+    jest.fn<(ref: SubmissionRef, rfdId: string) => Promise<void>>(),
 };
 
 const app = server({
@@ -134,6 +158,11 @@ describe('SubmissionPlugin', () => {
     mockBackend.deleteCarriers.mockClear();
     mockBackend.getCollectionDetail.mockClear();
     mockBackend.setCollectionDetail.mockClear();
+    mockBackend.listRecoveryFacilityDetail.mockClear();
+    mockBackend.createRecoveryFacilityDetail.mockClear();
+    mockBackend.getRecoveryFacilityDetail.mockClear();
+    mockBackend.setRecoveryFacilityDetail.mockClear();
+    mockBackend.deleteRecoveryFacilityDetail.mockClear();
   });
 
   describe('POST /submissions', () => {
@@ -245,6 +274,45 @@ describe('SubmissionPlugin', () => {
       };
 
       mockBackend.getCarriers.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /submissions/{id}/recovery-facility/{rfdId}', () => {
+    it("Responds 404 if recovery facility doesn't exist", async () => {
+      const options = {
+        method: 'GET',
+        url: `/submissions/${faker.datatype.uuid()}/recovery-facility/${faker.datatype.uuid()}`,
+      };
+
+      mockBackend.getRecoveryFacilityDetail.mockRejectedValue(Boom.notFound());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('PUT /submissions/{id}/recovery-facility/{rfdId}', () => {
+    it("Responds 400 if recovery facility id doesn't match with id from payload", async () => {
+      const id = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
+      mockBackend.setRecoveryFacilityDetail.mockResolvedValue();
+      const options = {
+        method: 'PUT',
+        url: `/submissions/${id}/recovery-facility/${rfdId}`,
+        payload: JSON.stringify({
+          status: 'Started',
+          values: [
+            {
+              id: faker.datatype.uuid(),
+            },
+          ],
+        }),
+      };
+
+      mockBackend.getRecoveryFacilityDetail.mockRejectedValue(
+        Boom.badRequest()
+      );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

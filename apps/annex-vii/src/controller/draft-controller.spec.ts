@@ -1108,4 +1108,226 @@ describe(DraftController, () => {
       expect(response.success).toBe(true);
     });
   });
+
+  describe('createDraftRecoveryFacilities', () => {
+    it('successfully creates up to 3 recovery facilities', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      let response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(response.success).toBe(false);
+    });
+  });
+
+  describe('setDraftRecoveryFacilities', () => {
+    it('accepts a valid recovery facility detail', async () => {
+      const id = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: {
+          status: 'Started',
+          values: [
+            {
+              id: rfdId,
+            },
+          ],
+        },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value: {
+          status: 'Complete',
+          values: [
+            {
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+              id: rfdId,
+            },
+          ],
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: {
+            status: 'Complete',
+            values: [
+              {
+                recoveryFacilityType: {
+                  type: 'Laboratory',
+                  disposalCode: 'D1',
+                },
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  name: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: rfdId,
+              },
+            ],
+          },
+        },
+        accountId
+      );
+
+      expect(response.success).toBe(true);
+    });
+  });
+
+  describe('deleteDraftRecoveryFacilities', () => {
+    it('accepts a valid recovery facility reference', async () => {
+      const id = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: rfdId,
+            },
+          ],
+        },
+      });
+
+      const accountId = faker.datatype.uuid();
+      const response = await subject.deleteDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId: rfdId,
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+
+      expect(response.success).toBe(true);
+    });
+  });
 });

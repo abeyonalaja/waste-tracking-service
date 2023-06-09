@@ -11,6 +11,8 @@ import {
   SetCollectionDetailRequest,
   PutExitLocationRequest,
   PutTransitCountriesRequest,
+  CreateRecoveryFacilityDetailRequest,
+  SetRecoveryFacilityDetailRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -419,6 +421,124 @@ export const validatePutTransitCountriesRequest =
       Complete: {
         properties: {
           values: { elements: { type: 'string' } },
+        },
+      },
+    },
+  });
+
+export const validateCreateRecoveryFacilityDetailRequest =
+  ajv.compile<CreateRecoveryFacilityDetailRequest>({
+    properties: { status: { type: 'string' } },
+  });
+
+export const validateSetRecoveryFacilityDetailRequest =
+  ajv.compile<SetRecoveryFacilityDetailRequest>({
+    discriminator: 'status',
+    mapping: {
+      CannotStart: {
+        properties: {},
+      },
+      NotStarted: {
+        properties: {},
+      },
+      Started: {
+        properties: {
+          values: {
+            elements: {
+              properties: {
+                id: { type: 'string' },
+              },
+              optionalProperties: {
+                addressDetails: {
+                  properties: {
+                    name: { type: 'string' },
+                    address: { type: 'string' },
+                    country: { type: 'string' },
+                  },
+                },
+                contactDetails: {
+                  properties: {
+                    fullName: { type: 'string' },
+                    emailAddress: { type: 'string' },
+                    phoneNumber: { type: 'string' },
+                  },
+                  optionalProperties: {
+                    faxNumber: { type: 'string' },
+                  },
+                },
+                recoveryFacilityType: {
+                  discriminator: 'type',
+                  mapping: {
+                    Laboratory: {
+                      properties: {
+                        disposalCode: { type: 'string' },
+                      },
+                    },
+                    InterimSite: {
+                      properties: {
+                        recoveryCode: { type: 'string' },
+                      },
+                    },
+                    RecoveryFacility: {
+                      properties: {
+                        recoveryCode: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      Complete: {
+        properties: {
+          values: {
+            elements: {
+              properties: {
+                id: { type: 'string' },
+              },
+              optionalProperties: {
+                addressDetails: {
+                  properties: {
+                    name: { type: 'string' },
+                    address: { type: 'string' },
+                    country: { type: 'string' },
+                  },
+                },
+                contactDetails: {
+                  properties: {
+                    fullName: { type: 'string' },
+                    emailAddress: { type: 'string' },
+                    phoneNumber: { type: 'string' },
+                  },
+                  optionalProperties: {
+                    faxNumber: { type: 'string' },
+                  },
+                },
+                recoveryFacilityType: {
+                  discriminator: 'type',
+                  mapping: {
+                    Laboratory: {
+                      properties: {
+                        disposalCode: { type: 'string' },
+                      },
+                    },
+                    InterimSite: {
+                      properties: {
+                        recoveryCode: { type: 'string' },
+                      },
+                    },
+                    RecoveryFacility: {
+                      properties: {
+                        recoveryCode: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },

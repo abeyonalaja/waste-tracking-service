@@ -11,6 +11,7 @@ import {
   validateSetCollectionDetailRequest,
   validatePutExitLocationRequest,
   validatePutTransitCountriesRequest,
+  validateSetRecoveryFacilityDetailRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -802,5 +803,141 @@ describe('validatePutTransitCountriesRequest', () => {
         values: ['N.Ireland', 'Wales'],
       })
     ).toBe(true);
+  });
+});
+
+describe('validateSetRecoveryFacilityDetailRequest', () => {
+  it('should return true for a request with a valid Laboratory and code type = disposalCode', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: faker.datatype.string(),
+          },
+          addressDetails: {
+            name: faker.datatype.string(),
+            address: faker.datatype.string(),
+            country: faker.datatype.string(),
+          },
+          contactDetails: {
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+            faxNumber: faker.datatype.string(),
+          },
+        },
+      ],
+    };
+    expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(true);
+  });
+
+  it('should return true for a request with a valid InterimSite and code type = recoveryCode', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          recoveryFacilityType: {
+            type: 'InterimSite',
+            recoveryCode: faker.datatype.string(),
+          },
+          addressDetails: {
+            name: faker.datatype.string(),
+            address: faker.datatype.string(),
+            country: faker.datatype.string(),
+          },
+          contactDetails: {
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+            faxNumber: faker.datatype.string(),
+          },
+        },
+      ],
+    };
+    expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(true);
+  });
+
+  it('should return false for a request with an invalid Laboratory and code type = recoveryCode', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            recoveryCode: faker.datatype.string(),
+          },
+          addressDetails: {
+            name: faker.datatype.string(),
+            address: faker.datatype.string(),
+            country: faker.datatype.string(),
+          },
+          contactDetails: {
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+            faxNumber: faker.datatype.string(),
+          },
+        },
+      ],
+    };
+    expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(false);
+  });
+
+  it('should return false for a request with a missing mandatopry property', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          recoveryFacilityType: {
+            type: 'InterimSite',
+            recoveryCode: faker.datatype.string(),
+          },
+          addressDetails: {
+            name: faker.datatype.string(),
+            country: faker.datatype.string(),
+          },
+          contactDetails: {
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+            faxNumber: faker.datatype.string(),
+          },
+        },
+      ],
+    };
+    expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(false);
+  });
+
+  it('should return false for object with invalid addressDetails', () => {
+    const data = {
+      status: 'Started',
+      values: [
+        {
+          id: faker.datatype.uuid(),
+          recoveryFacilityType: {
+            type: 'InterimSite',
+            recoveryCode: faker.datatype.string(),
+          },
+          addressDetails: {
+            name: faker.datatype.string(),
+            address: faker.datatype.bigInt(),
+            country: faker.datatype.string(),
+          },
+          contactDetails: {
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+            faxNumber: faker.datatype.string(),
+          },
+        },
+      ],
+    };
+    expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(false);
   });
 });

@@ -14,6 +14,9 @@ import {
   GetDraftCollectionDetailRequest,
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
+  GetDraftRecoveryFacilityDetailsRequest,
+  ListDraftRecoveryFacilityDetailsRequest,
+  DeleteDraftRecoveryFacilityDetailsRequest,
   schema,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
@@ -86,4 +89,19 @@ export const getDraftExitLocationByIdRequest =
 export const getDraftTransitCountriesRequest =
   ajv.compileParser<GetDraftTransitCountriesRequest>(
     schema.getDraftTransitCountriesRequest
+  );
+
+export const getDraftRecoveryFacilityDetailsRequest =
+  ajv.compileParser<GetDraftRecoveryFacilityDetailsRequest>(
+    schema.getDraftRecoveryFacilityDetailsRequest
+  );
+
+export const listDraftRecoveryFacilityDetailsRequest =
+  ajv.compileParser<ListDraftRecoveryFacilityDetailsRequest>(
+    schema.listDraftRecoveryFacilityDetailsRequest
+  );
+
+export const deleteDraftRecoveryFacilityDetailsRequest =
+  ajv.compileParser<DeleteDraftRecoveryFacilityDetailsRequest>(
+    schema.deleteDraftRecoveryFacilityDetailsRequest
   );

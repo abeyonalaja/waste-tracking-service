@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { expect } from '@jest/globals';
 import {
   Carriers,
+  RecoveryFacilityDetail,
   InMemorySubmissionBackend,
   TransitCountries,
 } from './submission.backend';
@@ -304,5 +305,49 @@ describe(InMemorySubmissionBackend, () => {
     expect(await subject.getTransitCountries({ id, accountId })).toBe(
       transitCountryData
     );
+  });
+
+  it('lets us change a Recovery Facility Detail', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+    const status: Omit<RecoveryFacilityDetail, 'values'> = {
+      status: 'Started',
+    };
+    const recoveryFacilities = await subject.createRecoveryFacilityDetail(
+      { id, accountId },
+      status
+    );
+
+    if (recoveryFacilities.status !== 'Started') {
+      expect(false);
+    } else {
+      const rfdId = recoveryFacilities.values[0].id;
+      const value: RecoveryFacilityDetail = {
+        status: status.status,
+        values: [
+          {
+            id: recoveryFacilities.values[0].id,
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D01',
+            },
+            addressDetails: {
+              name: 'Fireflies',
+              address: '15 Firefly Ave',
+              country: 'Boston',
+            },
+            contactDetails: {
+              fullName: 'Joel Miller',
+              emailAddress: 'jm@tlou.com',
+              phoneNumber: '0123456789',
+            },
+          },
+        ],
+      };
+
+      await subject.setRecoveryFacilityDetail({ id, accountId }, rfdId, value);
+      expect(
+        await subject.getRecoveryFacilityDetail({ id, accountId }, rfdId)
+      ).toEqual(value);
+    }
   });
 });
