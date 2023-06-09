@@ -119,6 +119,7 @@ const WasteCarrierDetails = () => {
             );
             const singleRecord = {
               status: data.status,
+              transport: data.transport,
               values: [targetData],
             };
             setData(singleRecord);

@@ -435,6 +435,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return true for a request with a complete carrier detail and transport type shipping container', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           id: faker.datatype.uuid(),
@@ -463,6 +464,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return true for a request with a complete carrier detail and transport type trailer', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           id: faker.datatype.uuid(),
@@ -491,6 +493,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return true for a request with a complete carrier detail and transport type bulk vessel', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           id: faker.datatype.uuid(),
@@ -519,6 +522,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return false for a request with a invalid transportDetails', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           id: faker.datatype.uuid(),
@@ -547,6 +551,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return false for a request with a missing id property', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           addressDetails: {
@@ -575,6 +580,7 @@ describe('validateSetCarriersRequest', () => {
   it('should return false for object with invalid addressDetails', () => {
     const data = {
       status: 'Started',
+      transport: true,
       values: [
         {
           id: faker.datatype.uuid(),

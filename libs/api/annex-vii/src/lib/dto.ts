@@ -145,9 +145,13 @@ export type DraftCarrierData = {
 export type DraftCarrier = { id: string } & DraftCarrierData;
 
 export type DraftCarriers =
-  | { status: 'NotStarted' }
+  | {
+      status: 'NotStarted';
+      transport: boolean;
+    }
   | {
       status: 'Started' | 'Complete';
+      transport: boolean;
       values: DraftCarrier[];
     };
 
@@ -330,7 +334,7 @@ export const listDraftCarriers: Method = {
 };
 
 export type CreateDraftCarriersRequest = IdRequest &
-  AccountIdRequest & { value: Omit<DraftCarriers, 'values'> };
+  AccountIdRequest & { value: Omit<DraftCarriers, 'transport' | 'values'> };
 export type CreateDraftCarriersResponse = Response<DraftCarriers>;
 export const createDraftCarriers: Method = {
   name: 'createDraftCarriers',

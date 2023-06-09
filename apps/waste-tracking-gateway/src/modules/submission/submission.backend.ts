@@ -77,7 +77,7 @@ export interface SubmissionBackend {
   listCarriers(ref: SubmissionRef): Promise<Carriers>;
   createCarriers(
     ref: SubmissionRef,
-    value: Omit<Carriers, 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers>;
   getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
   setCarriers(
@@ -125,7 +125,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       exporterDetail: { status: 'NotStarted' },
       importerDetail: { status: 'NotStarted' },
       collectionDate: { status: 'NotStarted' },
-      carriers: { status: 'NotStarted' },
+      carriers: {
+        status: 'NotStarted',
+        transport: true,
+      },
       collectionDetail: { status: 'NotStarted' },
       ukExitLocation: { status: 'NotStarted' },
       transitCountries: { status: 'NotStarted' },
@@ -204,6 +207,14 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     let carriers: Submission['carriers'] = submission.carriers;
 
     if (
+      submission.wasteDescription.status === 'NotStarted' &&
+      value.status !== 'NotStarted' &&
+      value.wasteCode?.type === 'NotApplicable'
+    ) {
+      carriers.transport = false;
+    }
+
+    if (
       submission.wasteDescription.status !== 'NotStarted' &&
       submission.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
       value.status !== 'NotStarted' &&
@@ -223,9 +234,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         }
         carriers = {
           status: 'Started',
+          transport: false,
           values: updatedCarriers,
         };
       }
+
+      carriers.transport = false;
     }
 
     if (
@@ -235,6 +249,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       value.wasteCode?.type !== 'NotApplicable'
     ) {
       wasteQuantity = { status: 'NotStarted' };
+
+      if (submission.carriers.status !== 'NotStarted') {
+        carriers = {
+          status: 'Started',
+          transport: true,
+          values: submission.carriers.values,
+        };
+      }
+
+      carriers.transport = true;
     }
 
     const recoveryFacilityDetail: Submission['recoveryFacilityDetail'] =
@@ -373,7 +397,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   createCarriers(
     { id }: SubmissionRef,
-    value: Omit<Carriers, 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
     if (value.status !== 'Started') {
       return Promise.reject(
@@ -388,10 +412,17 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
+    const transport: Carriers['transport'] =
+      submission.wasteDescription.status !== 'NotStarted' &&
+      submission.wasteDescription.wasteCode?.type === 'NotApplicable'
+        ? false
+        : true;
+
     const carrier = { id: uuidv4() };
     if (submission.carriers.status === 'NotStarted') {
       submission.carriers = {
         status: value.status,
+        transport: transport,
         values: [carrier],
       };
 
@@ -410,12 +441,14 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     carriers.push(carrier);
     submission.carriers = {
       status: value.status,
+      transport: transport,
       values: carriers,
     };
 
     this.submissions.set(id, submission);
     return Promise.resolve({
       status: value.status,
+      transport: transport,
       values: [carrier],
     });
   }
@@ -440,6 +473,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     const value: dto.Carriers = {
       status: submission.carriers.status,
+      transport: submission.carriers.transport,
       values: [carrier],
     };
 
@@ -507,7 +541,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.carriers.values.splice(index, 1);
     if (submission.carriers.values.length === 0) {
-      submission.carriers = { status: 'NotStarted' };
+      const transport: Carriers['transport'] =
+        submission.wasteDescription.status !== 'NotStarted' &&
+        submission.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
+      submission.carriers = {
+        status: 'NotStarted',
+        transport: transport,
+      };
     }
 
     this.submissions.set(id, submission);
@@ -922,7 +965,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
 
   async createCarriers(
     { id, accountId }: SubmissionRef,
-    value: Omit<Carriers, 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
     let response: CreateDraftCarriersResponse;
     try {

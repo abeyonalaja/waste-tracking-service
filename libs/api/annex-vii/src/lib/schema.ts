@@ -241,10 +241,13 @@ const draftCarriers: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
-      properties: {},
+      properties: {
+        transport: { type: 'boolean' },
+      },
     },
     Started: {
       properties: {
+        transport: { type: 'boolean' },
         values: {
           elements: {
             properties: {
@@ -301,6 +304,7 @@ const draftCarriers: SchemaObject = {
     },
     Complete: {
       properties: {
+        transport: { type: 'boolean' },
         values: {
           elements: {
             properties: {

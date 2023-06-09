@@ -88,7 +88,10 @@ describe('getDraftByIdResponse', () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: false,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -207,6 +210,7 @@ describe('listDraftCarriersResponse', () => {
       success: true,
       value: {
         status: 'Complete',
+        transport: true,
         values: [
           {
             id: faker.datatype.uuid(),
@@ -275,6 +279,7 @@ describe('setDraftCarrierRequest', () => {
       carrierId: carrierId,
       value: {
         status: 'Started',
+        transport: true,
         values: [
           {
             id: carrierId,
@@ -305,6 +310,7 @@ describe('setDraftCarrierRequest', () => {
       carrierId: carrierId,
       value: {
         status: 'NotStarted',
+        transport: true,
       },
     };
 
@@ -316,6 +322,7 @@ describe('setDraftCarrierRequest', () => {
       carrierId: carrierId,
       value: {
         status: 'Started',
+        transport: false,
         values: [
           {
             id: carrierId,

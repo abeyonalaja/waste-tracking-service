@@ -54,7 +54,10 @@ export default class DraftController {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -147,6 +150,14 @@ export default class DraftController {
       let carriers: DraftSubmission['carriers'] = draft.carriers;
 
       if (
+        draft.wasteDescription.status === 'NotStarted' &&
+        value.status !== 'NotStarted' &&
+        value.wasteCode?.type === 'NotApplicable'
+      ) {
+        carriers.transport = false;
+      }
+
+      if (
         draft.wasteDescription.status !== 'NotStarted' &&
         draft.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
         value.status !== 'NotStarted' &&
@@ -166,9 +177,12 @@ export default class DraftController {
           }
           carriers = {
             status: 'Started',
+            transport: false,
             values: updatedCarriers,
           };
         }
+
+        carriers.transport = false;
       }
 
       if (
@@ -178,6 +192,16 @@ export default class DraftController {
         value.wasteCode?.type !== 'NotApplicable'
       ) {
         wasteQuantity = { status: 'NotStarted' };
+
+        if (draft.carriers.status !== 'NotStarted') {
+          carriers = {
+            status: 'Started',
+            transport: true,
+            values: draft.carriers.values,
+          };
+        }
+
+        carriers.transport = true;
       }
 
       const recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
@@ -417,10 +441,17 @@ export default class DraftController {
 
       const draft = await this.repository.getDraft(id, accountId);
 
+      const transport: api.DraftCarriers['transport'] =
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
       const carrier = { id: uuidv4() };
       if (draft.carriers.status === 'NotStarted') {
         draft.carriers = {
           status: value.status,
+          transport: transport,
           values: [carrier],
         };
 
@@ -439,12 +470,14 @@ export default class DraftController {
       carriers.push(carrier);
       draft.carriers = {
         status: value.status,
+        transport: transport,
         values: carriers,
       };
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success({
         status: value.status,
+        transport: transport,
         values: [carrier],
       });
     } catch (err) {
@@ -477,6 +510,7 @@ export default class DraftController {
 
       const value: api.DraftCarriers = {
         status: draft.carriers.status,
+        transport: draft.carriers.transport,
         values: [carrier],
       };
 
@@ -556,7 +590,16 @@ export default class DraftController {
 
       draft.carriers.values.splice(index, 1);
       if (draft.carriers.values.length === 0) {
-        draft.carriers = { status: 'NotStarted' };
+        const transport: api.DraftCarriers['transport'] =
+          draft.wasteDescription.status !== 'NotStarted' &&
+          draft.wasteDescription.wasteCode?.type === 'NotApplicable'
+            ? false
+            : true;
+
+        draft.carriers = {
+          status: 'NotStarted',
+          transport: transport,
+        };
       }
 
       await this.repository.saveDraft({ ...draft }, accountId);

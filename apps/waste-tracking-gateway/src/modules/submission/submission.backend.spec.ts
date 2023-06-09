@@ -147,7 +147,9 @@ describe(InMemorySubmissionBackend, () => {
 
   it('lets us change a carrier detail', async () => {
     const { id } = await subject.createSubmission(accountId, null);
-    const status: Omit<Carriers, 'values'> = { status: 'Started' };
+    const status: Omit<Carriers, 'transport' | 'values'> = {
+      status: 'Started',
+    };
     const carriers = await subject.createCarriers({ id, accountId }, status);
 
     if (carriers.status !== 'Started') {
@@ -156,6 +158,7 @@ describe(InMemorySubmissionBackend, () => {
       const carrierId = carriers.values[0].id;
       const value: Carriers = {
         status: status.status,
+        transport: true,
         values: [
           {
             id: carriers.values[0].id,

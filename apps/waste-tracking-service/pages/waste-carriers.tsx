@@ -51,6 +51,7 @@ const initialState: State = {
   isError: false,
   data: {
     status: 'NotStarted',
+    transport: true,
   },
   isReadyToUpdate: false,
   showView: 0,

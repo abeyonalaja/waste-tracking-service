@@ -134,10 +134,18 @@ const WasteCarrierContactDetails = () => {
         };
 
         if (data.status === 'Started' || data.status === 'Complete') {
-          body = {
-            ...data,
-            values: updateArray(data.values, carrierId, newData),
-          };
+          if (data.transport === true) {
+            body = {
+              ...data,
+              values: updateArray(data.values, carrierId, newData),
+            };
+          } else {
+            body = {
+              ...data,
+              status: 'Complete',
+              values: updateArray(data.values, carrierId, newData),
+            };
+          }
         }
 
         try {
@@ -156,13 +164,23 @@ const WasteCarrierContactDetails = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                const path = returnToDraft
-                  ? '/submit-an-export-tasklist'
-                  : '/waste-carrier-transport-choice';
-                router.push({
-                  pathname: path,
-                  query: { id, carrierId: data.values[0].id },
-                });
+                if (data.transport === true) {
+                  const path = returnToDraft
+                    ? '/submit-an-export-tasklist'
+                    : '/waste-carrier-transport-choice';
+                  router.push({
+                    pathname: path,
+                    query: { id, carrierId: data.values[0].id },
+                  });
+                } else {
+                  const path = returnToDraft
+                    ? '/submit-an-export-tasklist'
+                    : '/waste-carriers';
+                  router.push({
+                    pathname: path,
+                    query: { id },
+                  });
+                }
               }
             });
         } catch (e) {
@@ -187,7 +205,9 @@ const WasteCarrierContactDetails = () => {
         if (data !== undefined) {
           setCarrierCount(data.values.length);
           setCarrierIndex(
-            data.values.findIndex((item: { id: any }) => item.id === carrierId)
+            data.values.findIndex(
+              (item: { id: unknown }) => item.id === carrierId
+            )
           );
 
           setIsLoading(false);

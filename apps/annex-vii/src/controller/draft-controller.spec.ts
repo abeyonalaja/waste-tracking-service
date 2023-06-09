@@ -91,7 +91,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -155,7 +158,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -190,7 +196,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: false,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -210,7 +219,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -239,7 +251,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -275,7 +290,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -310,7 +328,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: false,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -341,7 +362,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: false,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -382,7 +406,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -416,6 +443,7 @@ describe(DraftController, () => {
         collectionDate: { status: 'NotStarted' },
         carriers: {
           status: 'Complete',
+          transport: true,
           values: [
             {
               transportDetails: {
@@ -511,6 +539,7 @@ describe(DraftController, () => {
           collectionDate: { status: 'NotStarted' },
           carriers: {
             status: 'Started',
+            transport: false,
             values: [
               {
                 addressDetails: {
@@ -583,7 +612,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: false,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -629,7 +661,10 @@ describe(DraftController, () => {
               day: date.getDate().toString().padStart(2, '0'),
             },
           },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: false,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
@@ -678,7 +713,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -755,6 +793,7 @@ describe(DraftController, () => {
         collectionDate: { status: 'NotStarted' },
         carriers: {
           status: 'Started',
+          transport: true,
           values: [
             {
               id: carrierId,
@@ -774,6 +813,7 @@ describe(DraftController, () => {
         carrierId,
         value: {
           status: 'Complete',
+          transport: true,
           values: [
             {
               transportDetails: {
@@ -808,6 +848,7 @@ describe(DraftController, () => {
           collectionDate: { status: 'NotStarted' },
           carriers: {
             status: 'Complete',
+            transport: true,
             values: [
               {
                 transportDetails: {
@@ -855,6 +896,7 @@ describe(DraftController, () => {
         collectionDate: { status: 'NotStarted' },
         carriers: {
           status: 'Complete',
+          transport: true,
           values: [
             {
               transportDetails: {
@@ -906,7 +948,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -933,7 +978,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: setExitLocationRequest,
           transitCountries: { status: 'NotStarted' },
@@ -955,7 +1003,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -983,7 +1034,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: setExitLocationRequest,
           transitCountries: { status: 'NotStarted' },
@@ -1007,7 +1061,10 @@ describe(DraftController, () => {
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
-        carriers: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
@@ -1033,7 +1090,10 @@ describe(DraftController, () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: {

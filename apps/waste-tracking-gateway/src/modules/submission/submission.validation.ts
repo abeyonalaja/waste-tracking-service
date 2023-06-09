@@ -243,6 +243,7 @@ export const validateCreateCarriersRequest = ajv.compile<CreateCarriersRequest>(
 
 export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
   definitions: {
+    transport: { type: 'boolean' },
     id: { type: 'string' },
     addressDetails: {
       properties: {
@@ -291,10 +292,13 @@ export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
   discriminator: 'status',
   mapping: {
     NotStarted: {
-      properties: {},
+      properties: {
+        transport: { ref: 'transport' },
+      },
     },
     Started: {
       properties: {
+        transport: { ref: 'transport' },
         values: {
           elements: {
             properties: {
@@ -311,6 +315,7 @@ export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({
     },
     Complete: {
       properties: {
+        transport: { ref: 'transport' },
         values: {
           elements: {
             properties: {

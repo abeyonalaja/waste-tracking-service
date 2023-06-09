@@ -130,9 +130,13 @@ export type CarrierData = {
 export type Carrier = { id: string } & CarrierData;
 
 export type Carriers =
-  | { status: 'NotStarted' }
+  | {
+      status: 'NotStarted';
+      transport: boolean;
+    }
   | {
       status: 'Started' | 'Complete';
+      transport: boolean;
       values: Carrier[];
     };
 
@@ -212,7 +216,7 @@ export type PutCollectionDateResponse = CollectionDate;
 export type GetCollectionDateResponse = CollectionDate;
 
 export type ListCarriersResponse = Carriers;
-export type CreateCarriersRequest = Omit<Carriers, 'values'>;
+export type CreateCarriersRequest = Omit<Carriers, 'transport' | 'values'>;
 export type CreateCarriersResponse = Carriers;
 export type GetCarriersResponse = Carriers;
 export type SetCarriersRequest = Carriers;
