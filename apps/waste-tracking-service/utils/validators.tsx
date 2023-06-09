@@ -315,3 +315,9 @@ export const validateConfirmRemove: (value?: string) => string | undefined = (
 ) => {
   if (value === null) return 'Select yes if you want to remove this country';
 };
+
+export const validateConfirmRemoveCarrier: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null) return 'Select yes if you want to remove this carrier';
+};

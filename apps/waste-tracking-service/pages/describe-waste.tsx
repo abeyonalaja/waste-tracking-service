@@ -156,7 +156,10 @@ const DescribeWaste = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(describeWastePage.data),
+              body: JSON.stringify({
+                ...describeWastePage.data,
+                status: 'Complete',
+              }),
             }
           )
             .then((response) => {
@@ -182,6 +185,8 @@ const DescribeWaste = () => {
     },
     [id, describeWastePage.data, router]
   );
+
+  console.log(describeWastePage.data);
 
   const BreadCrumbs = () => {
     return (

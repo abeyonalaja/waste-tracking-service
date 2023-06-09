@@ -496,6 +496,7 @@
   }
 }
 .govuk-summary-card__content .govuk-summary-list {
+  margin-top: 0;
   margin-bottom: 0;
 }
 .govuk-summary-card__content .govuk-summary-list__row:last-of-type {
