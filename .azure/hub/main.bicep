@@ -98,26 +98,20 @@ module data './data.bicep' = {
   }
 }
 
-@description('Reference to created Virtual Network.')
-output virtualNetwork object = union(
-  network.outputs.virtualNetwork,
-  {
-    subscriptionId: subscription().subscriptionId
-    resourceGroupName: resourceGroup().name
-  }
-)
-
-@description('Reference to created Container Registry.')
-output containerRegistry object = union(
-  data.outputs.containerRegistry,
-  {
-    subscriptionId: subscription().subscriptionId
-    resourceGroupName: resourceGroup().name
-  }
-)
+// VNet Output
+output virtualNetworkName string = network.outputs.virtualNetwork.name
+output virtualNetworkId string = network.outputs.virtualNetwork.id
+output virtualNetworkSubscriptionId string = subscription().subscriptionId
+output virtualNetworkResourceGroupName string = resourceGroup().name
 
 @description('''
   FQDNs that are required in private DNS setup for Private Endpoint to work
   correctly.
 ''')
 output requiredPrivateDnsEntries object = data.outputs.requiredPrivateDnsEntries
+
+// ACR Output
+output acrName string = data.outputs.containerRegistry.name
+output acrResourceGroupName string = resourceGroup().name
+output acrSubscriptionId string = subscription().subscriptionId
+

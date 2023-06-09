@@ -1,0 +1,72 @@
+parameters:
+  - name: spokeEnvironment
+    type: string
+    default: ''
+
+#  DEPLOYING INFRASTRUCTURE
+steps:
+  # Actual Deployment of the Resources - Spoke
+  - task: AzureResourceManagerTemplateDeployment@3
+    name: ${{ format('ARMTemplateDeployment_{0}', parameters.spokeEnvironment) }}
+    displayName: 'Bicep Deployment Task - ${{ parameters.spokeEnvironment }}'
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: ${{ format('$(serviceConnection{0})', parameters.spokeEnvironment) }}
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: ${{ format('$(resourceGroupTesting{0})', parameters.spokeEnvironment) }} #after testing, the RGs from the specific ADO Library VGs to be used instead
+      location: 'uksouth'
+      templateLocation: 'Linked artifact'
+      csmFile: '$(Build.SourcesDirectory)/$(bicepFilePath${{ parameters.spokeEnvironment }})'
+      overrideParameters: -environment "$(environment${{ parameters.spokeEnvironment }})" -privateDnsResourceGroup {"name":"$(privateDnsResourceGroupName)","subscriptionId":"$(privateDnsSubscriptionId)"} -hubVirtualNetwork {"id":"$(virtualNetworkId)","name":"$(virtualNetworkName)","resourceGroupName":"$(virtualNetworkResourceGroupName)","subscriptionId":"$(virtualNetworkSubscriptionId)"} -monitorPrivateLinkScope {"name":"$(monitorPrivateLinkScopeName)","resourceGroupName":"$(monitorPrivateLinkScopeResourceGroupName)","subscriptionId":"$(monitorPrivateLinkScopeSubscriptionId)"} -addressSpace {"virtualNetwork":"$(virtualNetworkAddressSpace${{ parameters.spokeEnvironment }})","subnets":{"aks":"$(subnetAddressSpaceAks${{ parameters.spokeEnvironment }})","data":"$(subnetAddressSpaceData${{ parameters.spokeEnvironment }})"}} -acr {"name":"$(acrName)","resourceGroupName":"$(acrResourceGroupName)","subscriptionId":"$(acrSubscriptionId)"}
+      deploymentMode: Incremental
+      deploymentOutputs: ${{ format('armOutputs{0}', parameters.spokeEnvironment) }}
+
+  - task: AzureCLI@2
+    name: ${{ format('armOutputVariablesSet{0}', parameters.spokeEnvironment) }}
+    displayName: 'Save the ARM deploymentOutputs in Output Variable Group - ${{ parameters.spokeEnvironment }}'
+    condition: ne(variables.armOutputs${{ parameters.spokeEnvironment }}, '')
+    env:
+      ARM_OUTPUTS: $(armOutputs${{ parameters.spokeEnvironment }})
+    inputs:
+      azureSubscription: ${{ format('$(subscriptionName{0})', parameters.spokeEnvironment) }}
+      scriptType: pscore
+      scriptLocation: inlineScript
+      powerShellErrorActionPreference: stop
+      addSpnToEnvironment: true
+      workingDirectory: '$(Pipeline.Workspace)'
+      inlineScript: |
+        # You need to set the AZURE_DEVOPS_EXT_PAT to $(System.AccessToken) as to get auto login to Azure DevOps without needing to use "az devops login --organization $organization"
+        # System.Accesstoken is a PAT token generated for the service identity "Project Collection Build Service (account)” that needs Administrative access level on the VariableGroup Library as to add variables there
+        $env:AZURE_DEVOPS_EXT_PAT = '$(System.AccessToken)'
+
+        #General Variables
+        $project = "${{ variables.devOpsProject }}"
+        $groupid = '$(variableGroupIdOutput${{ parameters.spokeEnvironment }})'
+        $organization = "${{ variables.devOpsOrganizationURL }}"
+
+        #Creating an array from all the variables names already in the Variable Group
+        $array_values = az pipelines variable-group variable list --organization $organization  --project $project --group-id $groupid | ConvertFrom-Json
+        Write-Host "array_values: $array_values"
+        $vg_variables = @()
+        foreach ($key in $array_values.psobject.properties.name) {
+          $vg_variables += $key
+        }
+        Write-Host "vg_variables: $vg_variables"
+
+        $outputsObject = $env:ARM_OUTPUTS | convertfrom-json
+        Write-Host "outputsObject = $outputsObject"
+        $outputsObject.PSObject.Properties | ForEach-Object {
+          $keyname = $_.Name
+          $value = $_.Value.value
+          Write-Host "keyname = $keyname"
+          Write-Host "value = $value"
+
+          if ($vg_variables -contains $keyname) {
+              Write-Host "vg_variables contains $keyname >> the variale will ONLY be updated"
+              az pipelines variable-group variable update --organization $organization  --project $project --group-id $groupid --name $keyname --value $value
+          }
+          else {
+              Write-Host "vg_variables does NOT contain $keyname >> variable will be created"
+              az pipelines variable-group variable create --organization $organization  --project $project --group-id $groupid --name $keyname --value $value
+          }
+        }
