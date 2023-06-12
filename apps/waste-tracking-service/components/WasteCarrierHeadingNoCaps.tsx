@@ -75,5 +75,5 @@ export const WasteCarrierHeadingNoCaps = ({
     }
   }
 
-  return <span>{itemName}</span>;
+  return <>{itemName}</>;
 };
