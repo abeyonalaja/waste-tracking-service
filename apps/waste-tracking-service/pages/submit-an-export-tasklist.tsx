@@ -433,18 +433,26 @@ const Tasklist = () => {
                           {(tasklistPage.data?.wasteDescription.status ===
                             'Started' ||
                             tasklistPage.data?.wasteDescription.status ===
-                              'Complete') && (
-                            <AppLink href="">
-                              {tasklistPage.data?.wasteDescription?.wasteCode
-                                .type === 'NotApplicable'
-                                ? t(
-                                    'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
-                                  )
-                                : t(
-                                    'exportJourney.submitAnExport.SectionFour.recoveryDetails'
-                                  )}
-                            </AppLink>
-                          )}
+                              'Complete') &&
+                            (tasklistPage.data?.wasteDescription?.wasteCode
+                              .type === 'NotApplicable' ? (
+                              <AppLink href="#">
+                                {t(
+                                  'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
+                                )}
+                              </AppLink>
+                            ) : (
+                              <AppLink
+                                href={{
+                                  pathname: `/interim-site-details`,
+                                  query: { id, dashboard: true },
+                                }}
+                              >
+                                {t(
+                                  'exportJourney.submitAnExport.SectionFour.recoveryDetails'
+                                )}
+                              </AppLink>
+                            ))}
                         </Table.Cell>
                         <TableCellRight setWidth="one-third">
                           <DocumentStatus

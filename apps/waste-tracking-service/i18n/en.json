@@ -63,6 +63,7 @@
   "weight.tonnes": "tonnes",
   "weight.kg": "kg",
   "volume.m3": "m3",
+  "address": "Address",
   "address.addressLine1": "Address line 1",
   "address.addressLine2": "Address line 2 (optional)",
   "address.addressLine.hint": "Use a comma to separate multiple lines",
@@ -70,6 +71,11 @@
   "address.postcode": "Postcode (optional)",
   "address.country": "Country",
   "address.change": "Change address",
+  "contact.nameHint": "Full name",
+  "contact.emailAddress": "Email address",
+  "contact.phoneNumber": "Phone number",
+  "contact.faxNumber": "Fax number (optional)",
+  "contact.numberHint": "For international number include the country code",
   "errorSummary.title": "There is a problem",
   "exportJourney.submitAnExport.title": "Submit an export",
   "exportJourney.submitAnExport.breadcrumb": "Submit an export",
@@ -234,5 +240,11 @@
   "exportJourney.pointOfExit.caption": "Location waste leaves the UK",
   "exportJourney.pointOfExit.title": "Do you know the location where the waste will leave the UK?",
   "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
-  "exportJourney.pointOfExit.inputLabel": "Enter the location"
+  "exportJourney.pointOfExit.inputLabel": "Enter the location",
+  "exportJourney.recoveryFacilities.caption": "Recovery facility details",
+  "exportJourney.recoveryFacilities.addressTitle": "What is the recovery facility's address?",
+  "exportJourney.recoveryFacilities.name": "Facility name",
+  "exportJourney.recoveryFacilities.contactTitle": "What are the recovery facility’s contact details?",
+  "exportJourney.recoveryFacilities.contactPerson": "Facility contact person",
+  "exportJourney.recoveryFacilities.codeTitle": "What is the recovery code for the recovery facility?"
 }

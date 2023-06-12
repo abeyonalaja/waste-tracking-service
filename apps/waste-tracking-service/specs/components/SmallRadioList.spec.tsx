@@ -11,6 +11,7 @@ describe('Small Radio List component', () => {
         name="radioGroup"
         label="Choose an option"
         options={options}
+        onChange={jest.fn()}
       />
     );
 
@@ -47,6 +48,7 @@ describe('Small Radio List component', () => {
         label="Choose an option"
         options={options}
         errorMessage={errorMessage}
+        onChange={jest.fn()}
       />
     );
     expect(getByText(errorMessage)).toBeTruthy();

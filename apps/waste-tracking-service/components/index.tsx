@@ -14,6 +14,7 @@ import { SaveReturnButton } from './SaveReturnButton';
 import { SaveReturnLink } from './SaveReturnLink';
 import { SmallRadioList } from './SmallRadioList';
 import { SubmissionNotFound } from './SubmissionNotFound';
+import { SummaryCard } from './SummaryCard';
 import { SummaryList } from './SummaryList';
 import { TextareaCharCount } from './TextareaCharCount';
 import { WasteCarrierHeading } from './WasteCarrierHeading';
@@ -36,6 +37,7 @@ export {
   SaveReturnLink,
   SmallRadioList,
   SubmissionNotFound,
+  SummaryCard,
   SummaryList,
   TextareaCharCount,
   WasteCarrierHeading,

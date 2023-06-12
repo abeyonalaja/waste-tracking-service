@@ -14,13 +14,11 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import {
+  isNotEmpty,
   validateOrganisationName,
   validateCountry,
   validateAddress,
 } from '../utils/validators';
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 const SmallHeading = styled(GovUK.Caption)`
   margin-bottom: 0px;

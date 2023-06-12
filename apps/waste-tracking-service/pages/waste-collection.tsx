@@ -299,9 +299,14 @@ const WasteCollection = () => {
             })
             .then((data) => {
               if (data !== undefined) {
+                setAddressDetails(data.address);
                 dispatchAddressPage({
                   type: 'DATA_UPDATE',
                   payload: data,
+                });
+                dispatchAddressPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.CONTACT_DETAILS,
                 });
                 if (returnToDraft) {
                   router.push({

@@ -316,6 +316,17 @@ export const validateConfirmRemove: (value?: string) => string | undefined = (
   if (value === null) return 'Select yes if you want to remove this country';
 };
 
+export const validateRecoveryFacilityName: (facility?: string) => string = (
+  facility
+) => {
+  if (facility?.length === 0 || facility === undefined)
+    return 'Enter the recovery facility name';
+};
+
+export const validateRecoveryCode: (code?: string) => string = (code) => {
+  if (code?.length === 0 || code === undefined) return 'Enter a recovery code';
+};
+
 export const validateConfirmRemoveCarrier: (
   value?: string
 ) => string | undefined = (value) => {
