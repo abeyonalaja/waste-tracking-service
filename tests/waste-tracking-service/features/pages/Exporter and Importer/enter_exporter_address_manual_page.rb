@@ -10,9 +10,10 @@ class EnterExporterAddressManualPage < GenericPage
   ADDRESS1 = 'address'
   TOWN = 'townCity'
   POSTCODE = 'postcode'
-  COUNTRY = 'country'
+  COUNTRY = 'country-england'
 
   TITLE = Translations.value 'exportJourney.exporterPostcode.title'
+
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
@@ -29,9 +30,9 @@ class EnterExporterAddressManualPage < GenericPage
     fill_in POSTCODE, with: postcode, visible: false
   end
 
+  #Always pick England
   def select_first_country_option
-    first(COUNTRY, minimum: 1).click
-    find(:css, '#country>option:nth-child(2)', minimum: 1).select_option
+    find(COUNTRY, visible: false).click
   end
 
   def has_reference_address?(address1)

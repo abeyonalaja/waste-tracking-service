@@ -8,6 +8,11 @@ class WhoIsTheWasteCarrierPage < GenericPage
   include ErrorBox
 
   TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion'
+  FIRST_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion1'
+  SECOND_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion2'
+  THIRD_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion3'
+  FOURTH_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion4'
+  FIFTH_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion5'
   SUB_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.title'
   COPY_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.YouCanEditMessage'
   ORGANISATION_NAME = Translations.value 'exportJourney.wasteCarrierDetails.organisationName'
@@ -17,9 +22,13 @@ class WhoIsTheWasteCarrierPage < GenericPage
   ORGANISATION_NAME_FIELD_ID = 'organisationName'
   ADDRESS_FIELD_ID = 'address'
   COUNTRY_FIELD_ID = 'country'
+
   def check_page_displayed
-    # expect(self).to have_css 'h1', text: TITLE, exact_text: true
-    expect(self).to have_css 'h1', text: 'Who is the waste carrier?', exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+  end
+
+  def check_second_waste_page_displayed
+    expect(self).to have_css 'h1', text: SECOND_TITLE, exact_text: true
   end
 
   def check_translation

@@ -49,3 +49,8 @@ end
 And(/^I click Return to draft button$/) do
   click_on Translations.value 'returnToDraft'
 end
+
+And(/^I click the last "([^"]*)" link$/) do |option|
+  get_key = Translations.key(option)
+  all(text: Translations.value(get_key)).last.click
+end

@@ -33,7 +33,7 @@ Feature: AS A waste producer/broker
     And the task "Waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
-    And I see already entered details pre-populated
+    And I see previously entered waste carrier details pre-populated
 
   Scenario: User navigates to What are the waste carriers contact details page and click Save an return
     Given I login to waste tracking portal
@@ -49,9 +49,9 @@ Feature: AS A waste producer/broker
     And the task "waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
-    And I see already entered details pre-populated
+    And I see previously entered waste carrier details pre-populated
     And I click the button Save and continue
-    Then I see Waste carrier details entered previously pre-populated
+    Then I see previously entered Waste carrier contact details pre-populated
 
   Scenario: User completes What are the waste carriers contact details page and click Save and continue
     Given I login to waste tracking portal
@@ -84,7 +84,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I should see "what are the waste carriers contact details" page is displayed
     And I click the button Save and continue
-    Then I remain on the what are the waste carriers contact details page with an "Enter an full name" error message displayed
-    And I remain on the what are the waste carriers contact details page with an "Enter a real email" error message displayed
+    Then I remain on the what are the waste carriers contact details page with an "Enter a full name" error message displayed
+    And I remain on the what are the waste carriers contact details page with an "Enter a real email address" error message displayed
     And I remain on the what are the waste carriers contact details page with an "Enter a real phone number" error message displayed
 

@@ -9,13 +9,13 @@ Feature: AS A waste producer
     Then I should selected address is displayed with Change address link on the page
     When I click the button Save and continue
     Then I remain on the exporter details page with an "Enter an organisation name" error message displayed
-    And I remain on the exporter details page with an "Enter an full name" error message displayed
-    And I remain on the exporter details page with an "Enter a real email" error message displayed
+    And I remain on the exporter details page with an "Enter a full name" error message displayed
+    And I remain on the exporter details page with an "Enter a real email address" error message displayed
     And I remain on the exporter details page with an "Enter a real phone number" error message displayed
     When I click the Save and return to draft
     Then I remain on the exporter details page with an "Enter an organisation name" error message displayed
-    And I remain on the exporter details page with an "Enter an full name" error message displayed
-    And I remain on the exporter details page with an "Enter a real email" error message displayed
+    And I remain on the exporter details page with an "Enter a full name" error message displayed
+    And I remain on the exporter details page with an "Enter a real email address" error message displayed
     And I remain on the exporter details page with an "Enter a real phone number" error message displayed
     Then I click "Back" link should display "exporter address" page
 

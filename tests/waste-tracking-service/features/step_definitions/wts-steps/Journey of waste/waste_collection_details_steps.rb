@@ -23,7 +23,7 @@ And(/^I complete the Contact details collection page$/) do
   ContactDetailsCollectionAddressPage.new.enter_phone_number '+441234567891'
 end
 
-And(/^I should see previously entered details pre\-populated$/) do
+And(/^I should see previously entered waste collection details pre-populated$/) do
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_organisation_name TestStatus.test_status(:organisation_name)
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_full_name TestStatus.test_status(:full_name)
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_email TestStatus.test_status(:email)

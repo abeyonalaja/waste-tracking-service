@@ -7,7 +7,7 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
-#    And the task "Waste codes and description" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
     When the quality of waste page is displayed
     Then I should see quantity of waste correctly translated
@@ -170,7 +170,7 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
-#    And the task "Waste codes and description" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
     Then the quality of small waste page is displayed
     And I should see quantity of small waste correctly translated

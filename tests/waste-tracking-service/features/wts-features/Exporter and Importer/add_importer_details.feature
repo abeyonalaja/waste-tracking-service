@@ -76,8 +76,8 @@ SO THAT the importer can be tracked
     And I click the button Save and continue
     Then the "Importer contact details" page is displayed
     And I click the button Save and continue
-    Then I remain on the Importer contact details page with an "Enter an full name" error message displayed
-    And I remain on the Importer contact details page with an "Enter a real email" error message displayed
+    Then I remain on the Importer contact details page with an "Enter a full name" error message displayed
+    And I remain on the Importer contact details page with an "Enter a real email address" error message displayed
     And I remain on the Importer contact details page with an "Enter a real phone number" error message displayed
 
   Scenario: User can see previously saved details Importer contact details page

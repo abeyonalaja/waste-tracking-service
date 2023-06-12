@@ -442,7 +442,7 @@ const WasteCarriers = () => {
               {wasteCarriersPage.showView === VIEWS.CONFIRM ? (
                 <form onSubmit={handleConfirmSubmit}>
                   <GovUK.Fieldset>
-                    <GovUK.Fieldset.Legend size="LARGE">
+                    <GovUK.Fieldset.Legend size="LARGE" isPageHeading>
                       {t(
                         'exportJourney.wasteCarrier.carriersPage.removeQuestion'
                       )}
