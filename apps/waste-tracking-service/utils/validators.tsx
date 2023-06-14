@@ -310,10 +310,17 @@ export const validateSingleTransitCountry: (
   if (country === null) return 'Select or enter country';
 };
 
-export const validateConfirmRemove: (value?: string) => string | undefined = (
-  value
-) => {
-  if (value === null) return 'Select yes if you want to remove this country';
+export const validateConfirmRemove: (
+  value?: string,
+  label?: string
+) => string | undefined = (value, label) => {
+  if (value === null) return `Select yes if you want to remove this ${label}`;
+};
+
+export const validateConfirmRemoveCarrier: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null) return 'Select yes if you want to remove this carrier';
 };
 
 export const validateRecoveryFacilityName: (facility?: string) => string = (
@@ -325,12 +332,6 @@ export const validateRecoveryFacilityName: (facility?: string) => string = (
 
 export const validateRecoveryCode: (code?: string) => string = (code) => {
   if (code?.length === 0 || code === undefined) return 'Enter a recovery code';
-};
-
-export const validateConfirmRemoveCarrier: (
-  value?: string
-) => string | undefined = (value) => {
-  if (value === null) return 'Select yes if you want to remove this carrier';
 };
 
 export const validateAddAnotherFacility: (

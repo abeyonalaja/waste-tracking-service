@@ -257,5 +257,6 @@
   "exportJourney.recoveryFacilities.maxReached": "You have added the maximum number of recovery facilities.",
   "exportJourney.recoveryFacilities.addLegend": "Do you need to add another recovery facility?",
   "exportJourney.recoveryFacilities.addHint": "You can add one more facility.",
-  "exportJourney.recoveryFacilities.recoveryCode": "Recovery code"
+  "exportJourney.recoveryFacilities.recoveryCode": "Recovery code",
+  "exportJourney.recoveryFacilities.confirmRemoveTitle": "Are you sure you want to remove {{name}}?"
 }

@@ -12,6 +12,7 @@ type SummaryCardAction = {
 interface Props {
   title: string;
   children: ReactNode;
+  id?: string;
   actions?: Array<SummaryCardAction>;
 }
 
@@ -86,11 +87,11 @@ const ActionsListItem = styled.li`
     }
   }
 `;
-export const SummaryCard = ({ title, children, actions }: Props) => {
+export const SummaryCard = ({ title, children, id, actions }: Props) => {
   return (
-    <SumCard>
-      <SumCardTitleWrap>
-        <SumCardTitle>{title}</SumCardTitle>
+    <SumCard id={id}>
+      <SumCardTitleWrap id={`${id}-header`}>
+        <SumCardTitle id={`${id}-title`}>{title}</SumCardTitle>
         {actions && (
           <ActionsList>
             {actions.map((action, index) => {
@@ -107,7 +108,7 @@ export const SummaryCard = ({ title, children, actions }: Props) => {
           </ActionsList>
         )}
       </SumCardTitleWrap>
-      <SumCardContent>{children}</SumCardContent>
+      <SumCardContent id={`${id}-content`}>{children}</SumCardContent>
     </SumCard>
   );
 };

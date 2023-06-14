@@ -31,6 +31,7 @@ import {
   validatePhone,
   validateRecoveryCode,
   validateAddAnotherFacility,
+  validateConfirmRemove,
 } from '../utils/validators';
 
 import styled from 'styled-components';
@@ -43,6 +44,7 @@ const VIEWS = {
   CONTACT_DETAILS: 2,
   RECOVERY_CODE: 3,
   LIST: 4,
+  CONFIRM_DELETE: 5,
 };
 
 type State = {
@@ -60,6 +62,8 @@ type Action = {
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'DATA_UPDATE'
+    | 'DATA_DELETE_INIT'
+    | 'DATA_DELETE_SUCCESS'
     | 'FACILITY_DATA_UPDATE'
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
@@ -100,6 +104,18 @@ const recoveryReducer = (state: State, action: Action) => {
       return {
         ...state,
         data: { ...state.data, ...action.payload },
+      };
+    case 'DATA_DELETE_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'DATA_DELETE_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
       };
     case 'FACILITY_DATA_UPDATE':
       return {
@@ -144,6 +160,7 @@ const RecoveryFacilityDetails = () => {
   const [additionalFacility, setAdditionalFacility] = useState<string>(null);
   const [isSecond, setIsSecond] = useState<boolean>(false);
   const [startPage, setStartPage] = useState<number>(1);
+  const [confirmRemove, setConfirmRemove] = useState(null);
   const [addressDetails, setAddressDetails] = useState<{
     name: string;
     address: string;
@@ -206,25 +223,13 @@ const RecoveryFacilityDetails = () => {
                   type: 'FACILITY_DATA_UPDATE',
                   payload: data.values.at(-1),
                 });
-
                 setIsSecond(data.values.length === 2);
-
                 setAddressDetails(data.values.at(-1)?.addressDetails);
                 setContactDetails(data.values.at(-1)?.contactDetails);
                 setRecoveryFacilityType(
                   data.values.at(-1)?.recoveryFacilityDetail
                 );
-
-                if (data.values.at(-1)?.addressDetails === undefined) {
-                  setStartPage(VIEWS.ADDRESS_DETAILS);
-                } else if (data.values.at(-1)?.contactDetails === undefined) {
-                  setStartPage(VIEWS.CONTACT_DETAILS);
-                } else if (
-                  data.values.at(-1)?.recoveryFacilityType === undefined
-                ) {
-                  setStartPage(VIEWS.RECOVERY_CODE);
-                }
-
+                setStartPage(VIEWS.ADDRESS_DETAILS);
                 dispatchRecoveryPage({
                   type: 'SHOW_VIEW',
                   payload: startPage,
@@ -386,18 +391,13 @@ const RecoveryFacilityDetails = () => {
 
                 dispatchRecoveryPage({
                   type: 'FACILITY_DATA_UPDATE',
-                  payload: form === 'code' ? null : data.values[0],
+                  payload: data.values[0],
                 });
 
                 dispatchRecoveryPage({
                   type: 'DATA_FETCH_SUCCESS',
                   payload: updatedData,
                 });
-                if (form === 'code') {
-                  setAddressDetails(null);
-                  setContactDetails(null);
-                  setRecoveryFacilityType(null);
-                }
 
                 if (returnToDraft) {
                   router.push({
@@ -467,6 +467,9 @@ const RecoveryFacilityDetails = () => {
         });
       } else {
         setIsSecond(true);
+        setAddressDetails(null);
+        setContactDetails(null);
+        setRecoveryFacilityType(null);
         createRecoveryFacility();
       }
     }
@@ -495,8 +498,86 @@ const RecoveryFacilityDetails = () => {
   };
 
   const handleRemoveLink = (facilityId) => {
-    const doNothing = true;
+    const getRecord = recoveryPage.data.values.filter(
+      (record) => record.id === facilityId
+    );
+    dispatchRecoveryPage({
+      type: 'FACILITY_DATA_UPDATE',
+      payload: getRecord[0],
+    });
+
+    dispatchRecoveryPage({
+      type: 'SHOW_VIEW',
+      payload: VIEWS.CONFIRM_DELETE,
+    });
   };
+
+  const handleReturnConfirmRemove = (e) => {
+    handleConfirmRemove(e, true);
+  };
+
+  const handleConfirmRemove = useCallback(
+    (e: FormEvent, returnToDraft = false) => {
+      const newErrors = {
+        confirmRemove: validateConfirmRemove(
+          confirmRemove,
+          'recovery facility'
+        ),
+      };
+      if (isNotEmpty(newErrors)) {
+        dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
+      } else {
+        dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
+        const callBack = () => {
+          dispatchRecoveryPage({
+            type: 'SHOW_VIEW',
+            payload: VIEWS.LIST,
+          });
+        };
+        if (confirmRemove === 'No' && !returnToDraft) {
+          callBack();
+        } else if (confirmRemove === 'No' && returnToDraft) {
+          router.push({
+            pathname: '/submit-an-export-tasklist',
+            query: { id },
+          });
+        } else {
+          dispatchRecoveryPage({ type: 'DATA_DELETE_INIT' });
+          try {
+            fetch(
+              `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${recoveryPage.facilityData.id}`,
+              {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            ).then(() => {
+              const updatedValues = recoveryPage.data.values.filter(
+                (facility) => facility.id !== recoveryPage.facilityData.id
+              );
+              dispatchRecoveryPage({
+                type: 'DATA_UPDATE',
+                payload: { values: updatedValues },
+              });
+              dispatchRecoveryPage({
+                type: 'DATA_DELETE_SUCCESS',
+              });
+              dispatchRecoveryPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.LIST,
+              });
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        setConfirmRemove(null);
+      }
+      e.preventDefault();
+    },
+    [confirmRemove]
+  );
 
   const BreadCrumbs = () => {
     return (
@@ -504,10 +585,7 @@ const RecoveryFacilityDetails = () => {
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            if (
-              startPage === recoveryPage.showView ||
-              recoveryPage.showView === 1
-            ) {
+            if (startPage === recoveryPage.showView) {
               router.push({
                 pathname: '/submit-an-export-tasklist',
                 query: { id },
@@ -515,7 +593,10 @@ const RecoveryFacilityDetails = () => {
             } else {
               dispatchRecoveryPage({
                 type: 'SHOW_VIEW',
-                payload: recoveryPage.showView - 1,
+                payload:
+                  recoveryPage.showView === 1
+                    ? startPage
+                    : recoveryPage.showView - 1,
               });
             }
           }}
@@ -806,7 +887,8 @@ const RecoveryFacilityDetails = () => {
                     </GovUK.Heading>
                     {recoveryPage.data.values.map((facility, index) => (
                       <SummaryCard
-                        key={facility.id}
+                        key={`facility-list-item-${index + 1}`}
+                        id={`facility-list-item-${index + 1}`}
                         title={
                           facilityCount === 1
                             ? t('exportJourney.recoveryFacilities.cardTitle')
@@ -841,7 +923,7 @@ const RecoveryFacilityDetails = () => {
                                 </GovUK.VisuallyHidden>
                               </>
                             ),
-                            action: handleRemoveLink,
+                            action: () => handleRemoveLink(facility.id),
                             hidden: facilityCount === 1,
                           },
                         ]}
@@ -947,6 +1029,56 @@ const RecoveryFacilityDetails = () => {
                         </ButtonGroup>
                       </>
                     )}
+                  </div>
+                )}
+                {recoveryPage.showView === VIEWS.CONFIRM_DELETE && (
+                  <div id="page-recovery-facilities-confirmation">
+                    <form onSubmit={handleConfirmRemove}>
+                      <GovUK.Fieldset>
+                        <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                          {t(
+                            'exportJourney.recoveryFacilities.confirmRemoveTitle',
+                            {
+                              name: recoveryPage.facilityData.addressDetails
+                                .name,
+                            }
+                          )}
+                        </GovUK.Fieldset.Legend>
+                        <GovUK.MultiChoice
+                          mb={6}
+                          label=""
+                          meta={{
+                            error: recoveryPage.errors?.confirmRemove,
+                            touched: !!recoveryPage.errors?.confirmRemove,
+                          }}
+                        >
+                          <GovUK.Radio
+                            name="removeTransitCountries"
+                            id="removeTransitCountriesYes"
+                            checked={confirmRemove === 'Yes'}
+                            onChange={(e) => setConfirmRemove(e.target.value)}
+                            value="Yes"
+                          >
+                            {t('radio.yes')}
+                          </GovUK.Radio>
+                          <GovUK.Radio
+                            name="removeTransitCountries"
+                            id="removeTransitCountriesNo"
+                            checked={confirmRemove === 'No'}
+                            onChange={(e) => setConfirmRemove(e.target.value)}
+                            value="No"
+                          >
+                            {t('radio.no')}
+                          </GovUK.Radio>
+                        </GovUK.MultiChoice>
+                      </GovUK.Fieldset>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton onClick={handleReturnConfirmRemove} />
+                      </ButtonGroup>
+                    </form>
                   </div>
                 )}
               </>

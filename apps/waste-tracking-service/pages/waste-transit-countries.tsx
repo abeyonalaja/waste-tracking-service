@@ -273,7 +273,7 @@ const WasteTransitCountries = () => {
   const handleConfirmRemove = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
-        confirmRemove: validateConfirmRemove(confirmRemove),
+        confirmRemove: validateConfirmRemove(confirmRemove, 'country'),
       };
       if (isNotEmpty(newErrors)) {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -297,6 +297,7 @@ const WasteTransitCountries = () => {
           countries.splice(countryToChangeRemove, 1);
           updateCountryData(countries, returnToDraft, callBack);
         }
+        setConfirmRemove(null);
       }
       e.preventDefault();
     },
