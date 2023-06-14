@@ -223,5 +223,11 @@
   "exportJourney.wasteCollectionDetails.intro": "This could be from the waste generator, original producer, new producer or collector.",
   "exportJourney.wasteCollectionDetails.contactTitle": "What are the contact details for the collection address?",
   "address.addressLine.hint": "Use a comma to separate multiple lines",
-  "exportJourney.wasteCollectionDetails.countryHint": "We'll use this as the exporting country"
+  "exportJourney.wasteCollectionDetails.countryHint": "We'll use this as the exporting country",
+  "exportJourney.recoveryFacilities.caption": "Recovery facility details",
+  "exportJourney.recoveryFacilities.addressTitle": "What is the recovery facility's address?",
+  "exportJourney.recoveryFacilities.name": "Facility name",
+  "exportJourney.recoveryFacilities.contactTitle": "What are the recovery facility’s contact details?",
+  "exportJourney.recoveryFacilities.contactPerson": "Facility contact person",
+  "exportJourney.recoveryFacilities.codeTitle": "What is the recovery code for the recovery facility?"
 }

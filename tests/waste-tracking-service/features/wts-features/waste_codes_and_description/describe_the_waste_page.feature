@@ -20,11 +20,10 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then I remain on the Describe the waste page with an "Enter a description" error message displayed
 
-  #commented the code until EWC page is completed
-#  Scenario:Waste code and description status update
-#    Given I login to waste tracking portal
-#    And I navigate on the Describe the waste
-#    When I add a description of the waste up to 100 characters
-#    And I click the Save and return
-#    Then the task "Waste codes and description" should be "COMPLETED"
+  Scenario:Waste code and description status update
+    Given I login to waste tracking portal
+    And I navigate on the Describe the waste
+    When I add a description of the waste up to 100 characters
+    And I click the Save and return to draft
+    Then the task "Waste codes and description" should be "COMPLETED"
 

@@ -19,7 +19,7 @@ import {
   SubmissionNotFound,
   Loading,
   SummaryCard,
-  Paragraph,
+  SummaryList,
 } from '../components';
 import {
   isNotEmpty,
@@ -30,6 +30,7 @@ import {
   validateFullName,
   validatePhone,
   validateRecoveryCode,
+  validateAddAnotherFacility,
 } from '../utils/validators';
 
 import styled from 'styled-components';
@@ -114,8 +115,6 @@ const recoveryReducer = (state: State, action: Action) => {
       return {
         ...state,
         errors: null,
-        isLoading: false,
-        isError: false,
         showView: action.payload,
       };
     default:
@@ -140,8 +139,11 @@ const RecoveryFacilityDetails = () => {
     recoveryReducer,
     initialState
   );
-  const [id, setId] = useState(null);
-  const [startPage, setStartPage] = useState(1);
+  const [id, setId] = useState<string | string[]>(null);
+  const [facilityCount, setFacilityCount] = useState<number>(0);
+  const [additionalFacility, setAdditionalFacility] = useState<string>(null);
+  const [isSecond, setIsSecond] = useState<boolean>(false);
+  const [startPage, setStartPage] = useState<number>(1);
   const [addressDetails, setAddressDetails] = useState<{
     name: string;
     address: string;
@@ -165,6 +167,12 @@ const RecoveryFacilityDetails = () => {
       setId(router.query.id);
     }
   }, [router.isReady, router.query.id]);
+
+  useEffect(() => {
+    if (recoveryPage.data?.values !== undefined) {
+      setFacilityCount(recoveryPage.data.values.length);
+    }
+  }, [recoveryPage.data]);
 
   useEffect(() => {
     dispatchRecoveryPage({ type: 'DATA_FETCH_INIT' });
@@ -198,6 +206,9 @@ const RecoveryFacilityDetails = () => {
                   type: 'FACILITY_DATA_UPDATE',
                   payload: data.values.at(-1),
                 });
+
+                setIsSecond(data.values.length === 2);
+
                 setAddressDetails(data.values.at(-1)?.addressDetails);
                 setContactDetails(data.values.at(-1)?.contactDetails);
                 setRecoveryFacilityType(
@@ -243,9 +254,24 @@ const RecoveryFacilityDetails = () => {
         .then((data) => {
           if (data !== undefined) {
             const [facility] = data.values;
+
             dispatchRecoveryPage({
               type: 'FACILITY_DATA_UPDATE',
               payload: { id: facility.id },
+            });
+
+            if (recoveryPage.data?.values !== undefined) {
+              recoveryPage.data.values.push({ id: facility.id });
+            } else {
+              dispatchRecoveryPage({
+                type: 'DATA_UPDATE',
+                payload: data,
+              });
+            }
+
+            dispatchRecoveryPage({
+              type: 'SHOW_VIEW',
+              payload: VIEWS.ADDRESS_DETAILS,
             });
           }
         });
@@ -272,7 +298,10 @@ const RecoveryFacilityDetails = () => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status: 'Started',
+            status:
+              recoveryPage.data.status === 'NotStarted'
+                ? 'Started'
+                : recoveryPage.data.status,
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -289,11 +318,13 @@ const RecoveryFacilityDetails = () => {
             phoneNumber: validatePhone(contactDetails?.phoneNumber),
           };
           body = {
-            status: 'Started',
+            status:
+              recoveryPage.data.status === 'NotStarted'
+                ? 'Started'
+                : recoveryPage.data.status,
             values: [
               {
                 ...recoveryPage.facilityData,
-                addressDetails,
                 contactDetails,
               },
             ],
@@ -311,8 +342,6 @@ const RecoveryFacilityDetails = () => {
             values: [
               {
                 ...recoveryPage.facilityData,
-                addressDetails,
-                contactDetails,
                 recoveryFacilityType,
               },
             ],
@@ -342,10 +371,34 @@ const RecoveryFacilityDetails = () => {
             })
             .then((data) => {
               if (data !== undefined) {
+                const currentData = recoveryPage.data;
+                let updatedData;
+                if (currentData.values !== undefined) {
+                  updatedData = {
+                    ...currentData,
+                    values: currentData.values.map((obj) => {
+                      return data.values.find((o) => o.id === obj.id) || obj;
+                    }),
+                  };
+                } else {
+                  updatedData = data;
+                }
+
                 dispatchRecoveryPage({
-                  type: 'DATA_UPDATE',
-                  payload: data,
+                  type: 'FACILITY_DATA_UPDATE',
+                  payload: form === 'code' ? null : data.values[0],
                 });
+
+                dispatchRecoveryPage({
+                  type: 'DATA_FETCH_SUCCESS',
+                  payload: updatedData,
+                });
+                if (form === 'code') {
+                  setAddressDetails(null);
+                  setContactDetails(null);
+                  setRecoveryFacilityType(null);
+                }
+
                 if (returnToDraft) {
                   router.push({
                     pathname: '/submit-an-export-tasklist',
@@ -363,9 +416,15 @@ const RecoveryFacilityDetails = () => {
           console.error(e);
         }
       }
+
       e.preventDefault();
     },
-    [addressDetails, contactDetails, recoveryFacilityType]
+    [
+      addressDetails,
+      contactDetails,
+      recoveryFacilityType,
+      recoveryPage.facilityData,
+    ]
   );
 
   const onAddressDetailsChange = (e) => {
@@ -392,13 +451,63 @@ const RecoveryFacilityDetails = () => {
     populateResults(filteredResults);
   };
 
+  const handleSubmitAdditionalFacility = (e) => {
+    const newErrors = {
+      additionalFacility: validateAddAnotherFacility(additionalFacility),
+    };
+    if (isNotEmpty(newErrors)) {
+      dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
+    } else {
+      dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
+
+      if (additionalFacility === 'No') {
+        router.push({
+          pathname: '/submit-an-export-tasklist',
+          query: { id },
+        });
+      } else {
+        setIsSecond(true);
+        createRecoveryFacility();
+      }
+    }
+    e.preventDefault();
+  };
+
+  const handleChangeLink = (facilityId) => {
+    const getRecord = recoveryPage.data.values.filter(
+      (record) => record.id === facilityId
+    );
+    dispatchRecoveryPage({
+      type: 'FACILITY_DATA_UPDATE',
+      payload: getRecord[0],
+    });
+    const index = recoveryPage.data.values.findIndex(
+      (record) => record.id === facilityId
+    );
+    setIsSecond(index === 1);
+    setAddressDetails(getRecord[0].addressDetails);
+    setContactDetails(getRecord[0].contactDetails);
+    setRecoveryFacilityType(getRecord[0].recoveryFacilityType);
+    dispatchRecoveryPage({
+      type: 'SHOW_VIEW',
+      payload: VIEWS.ADDRESS_DETAILS,
+    });
+  };
+
+  const handleRemoveLink = (facilityId) => {
+    const doNothing = true;
+  };
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.BackLink
           href="#"
           onClick={() => {
-            if (startPage === recoveryPage.showView) {
+            if (
+              startPage === recoveryPage.showView ||
+              recoveryPage.showView === 1
+            ) {
               router.push({
                 pathname: '/submit-an-export-tasklist',
                 query: { id },
@@ -420,7 +529,11 @@ const RecoveryFacilityDetails = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.recoveryFacilities.addressTitle')}</title>
+        <title>
+          {t('exportJourney.recoveryFacilities.addressTitle', {
+            n: isSecond ? 'second' : '',
+          })}
+        </title>
       </Head>
       <GovUK.Page
         id="content"
@@ -452,7 +565,9 @@ const RecoveryFacilityDetails = () => {
                 {recoveryPage.showView === VIEWS.ADDRESS_DETAILS && (
                   <div id="page-recovery-facilities-address-details">
                     <GovUK.Heading size={'LARGE'}>
-                      {t('exportJourney.recoveryFacilities.addressTitle')}
+                      {t('exportJourney.recoveryFacilities.addressTitle', {
+                        n: isSecond ? 'second' : '',
+                      })}
                     </GovUK.Heading>
                     <form onSubmit={(e) => handleSubmit(e, 'address')}>
                       <AddressField
@@ -519,7 +634,9 @@ const RecoveryFacilityDetails = () => {
                 {recoveryPage.showView === VIEWS.CONTACT_DETAILS && (
                   <div id="page-recovery-facilities-contact-details">
                     <GovUK.Heading size={'LARGE'}>
-                      {t('exportJourney.recoveryFacilities.contactTitle')}
+                      {t('exportJourney.recoveryFacilities.contactTitle', {
+                        n: isSecond ? 'second' : '',
+                      })}
                     </GovUK.Heading>
                     <form
                       onSubmit={(e) => handleSubmit(e, 'contact')}
@@ -573,6 +690,9 @@ const RecoveryFacilityDetails = () => {
                               {recoveryPage.errors?.phoneNumber}
                             </GovUK.ErrorText>
                           )}
+                          <GovUK.HintText>
+                            {t('contact.numberHint')}
+                          </GovUK.HintText>
                           <TelephoneInput
                             name="phoneNumber"
                             id="phoneNumber"
@@ -598,6 +718,9 @@ const RecoveryFacilityDetails = () => {
                               {recoveryPage.errors?.faxNumber}
                             </GovUK.ErrorText>
                           )}
+                          <GovUK.HintText>
+                            {t('contact.numberHint')}
+                          </GovUK.HintText>
                           <TelephoneInput
                             name="faxNumber"
                             id="faxNumber"
@@ -625,7 +748,9 @@ const RecoveryFacilityDetails = () => {
                 {recoveryPage.showView === VIEWS.RECOVERY_CODE && (
                   <div id="page-recovery-facilities-recovery-details">
                     <GovUK.Heading size={'LARGE'}>
-                      {t('exportJourney.recoveryFacilities.codeTitle')}
+                      {t('exportJourney.recoveryFacilities.codeTitle', {
+                        n: isSecond ? 'second' : '',
+                      })}
                     </GovUK.Heading>
                     <form
                       onSubmit={(e) => handleSubmit(e, 'code')}
@@ -648,7 +773,7 @@ const RecoveryFacilityDetails = () => {
                           showAllValues={true}
                           onConfirm={(option) =>
                             setRecoveryFacilityType({
-                              type: 'InterimSite',
+                              type: 'RecoveryFacility',
                               recoveryCode: option,
                             })
                           }
@@ -672,33 +797,156 @@ const RecoveryFacilityDetails = () => {
                 )}
                 {recoveryPage.showView === VIEWS.LIST && (
                   <div id="page-recovery-facilities">
-                    <GovUK.Heading size={'LARGE'}>List page</GovUK.Heading>
-                    {recoveryPage.data.values.map((facility) => (
+                    <GovUK.Heading size={'LARGE'}>
+                      {facilityCount > 1
+                        ? t(
+                            'exportJourney.recoveryFacilities.listTitleMultiple'
+                          )
+                        : t('exportJourney.recoveryFacilities.listTitleSingle')}
+                    </GovUK.Heading>
+                    {recoveryPage.data.values.map((facility, index) => (
                       <SummaryCard
                         key={facility.id}
-                        title={facility.addressDetails.name}
+                        title={
+                          facilityCount === 1
+                            ? t('exportJourney.recoveryFacilities.cardTitle')
+                            : index === 0
+                            ? t(
+                                'exportJourney.recoveryFacilities.firstCardTitle'
+                              )
+                            : t(
+                                'exportJourney.recoveryFacilities.secondCardTitle'
+                              )
+                        }
+                        actions={[
+                          {
+                            label: (
+                              <>
+                                {t('actions.change')}
+                                <GovUK.VisuallyHidden>
+                                  {' '}
+                                  {facility.addressDetails.name}
+                                </GovUK.VisuallyHidden>
+                              </>
+                            ),
+                            action: () => handleChangeLink(facility.id),
+                          },
+                          {
+                            label: (
+                              <>
+                                {t('actions.remove')}
+                                <GovUK.VisuallyHidden>
+                                  {' '}
+                                  {facility.addressDetails.name}
+                                </GovUK.VisuallyHidden>
+                              </>
+                            ),
+                            action: handleRemoveLink,
+                            hidden: facilityCount === 1,
+                          },
+                        ]}
                       >
-                        <Paragraph>
-                          {facility.addressDetails.name}
-                          <br />
-                          {facility.addressDetails.address}
-                          <br />
-                          {facility.addressDetails.country}
-                        </Paragraph>
-                        <Paragraph>
-                          {facility.contactDetails.fullName}
-                          <br />
-                          {facility.contactDetails.emailAddress}
-                          <br />
-                          {facility.contactDetails.phoneNumber}
-                          <br />
-                          {facility.contactDetails.faxNumber}
-                        </Paragraph>
-                        <Paragraph>
-                          {facility.recoveryFacilityType.recoveryCode}
-                        </Paragraph>
+                        <SummaryList
+                          content={[
+                            {
+                              title: t('exportJourney.recoveryFacilities.name'),
+                              definition: facility.addressDetails.name,
+                            },
+                            {
+                              title: t('address.country'),
+                              definition: facility.addressDetails.country,
+                            },
+                            {
+                              title: t(
+                                'exportJourney.recoveryFacilities.recoveryCode'
+                              ),
+                              definition:
+                                facility.recoveryFacilityType?.recoveryCode,
+                            },
+                          ]}
+                        />
                       </SummaryCard>
                     ))}
+                    {facilityCount === 1 && (
+                      <form onSubmit={handleSubmitAdditionalFacility}>
+                        <GovUK.Fieldset>
+                          <GovUK.Fieldset.Legend size="M">
+                            {t('exportJourney.recoveryFacilities.addLegend')}
+                          </GovUK.Fieldset.Legend>
+                          <GovUK.MultiChoice
+                            mb={6}
+                            hint={t('exportJourney.recoveryFacilities.addHint')}
+                            label=""
+                            meta={{
+                              error: recoveryPage.errors?.additionalFacility,
+                              touched:
+                                !!recoveryPage.errors?.additionalFacility,
+                            }}
+                          >
+                            <GovUK.Radio
+                              name="additionalFacility"
+                              id="additionalFacilityYes"
+                              checked={additionalFacility === 'Yes'}
+                              onChange={() => setAdditionalFacility('Yes')}
+                              value="Yes"
+                            >
+                              {t('radio.yes')}
+                            </GovUK.Radio>
+
+                            <GovUK.Radio
+                              name="additionalFacility"
+                              id="additionalFacilityNo"
+                              checked={additionalFacility === 'No'}
+                              onChange={() => setAdditionalFacility('No')}
+                              value="No"
+                            >
+                              {t('radio.no')}
+                            </GovUK.Radio>
+                          </GovUK.MultiChoice>
+                        </GovUK.Fieldset>
+                        <ButtonGroup>
+                          <GovUK.Button id="saveButton">
+                            {t('saveButton')}
+                          </GovUK.Button>
+                          <SaveReturnButton
+                            onClick={() => {
+                              router.push({
+                                pathname: '/submit-an-export-tasklist',
+                                query: { id },
+                              });
+                            }}
+                          />
+                        </ButtonGroup>
+                      </form>
+                    )}
+                    {facilityCount > 1 && (
+                      <>
+                        <GovUK.Heading as="p" size={'MEDIUM'}>
+                          {t('exportJourney.recoveryFacilities.maxReached')}
+                        </GovUK.Heading>
+                        <ButtonGroup>
+                          <GovUK.Button
+                            id="saveButton"
+                            onClick={() => {
+                              router.push({
+                                pathname: '/submit-an-export-tasklist',
+                                query: { id },
+                              });
+                            }}
+                          >
+                            {t('saveButton')}
+                          </GovUK.Button>
+                          <SaveReturnButton
+                            onClick={() => {
+                              router.push({
+                                pathname: '/submit-an-export-tasklist',
+                                query: { id },
+                              });
+                            }}
+                          />
+                        </ButtonGroup>
+                      </>
+                    )}
                   </div>
                 )}
               </>

@@ -1,10 +1,18 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { BORDER_COLOUR, GREY_3 } from 'govuk-colours';
+import { AppLink } from './index';
+
+type SummaryCardAction = {
+  label: string | ReactNode;
+  action: (action) => void;
+  hidden?: boolean;
+};
 
 interface Props {
   title: string;
   children: ReactNode;
+  actions?: Array<SummaryCardAction>;
 }
 
 const SumCard = styled.div`
@@ -13,6 +21,7 @@ const SumCard = styled.div`
   @media (min-width: 40.0625em) {
   }
 `;
+
 const SumCardTitleWrap = styled.div`
   padding: 15px;
   background: ${GREY_3};
@@ -44,11 +53,59 @@ const SumCardContent = styled.div`
   }
 `;
 
-export const SummaryCard = ({ title, children }: Props) => {
+const ActionsList = styled.ul`
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.25;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+  @media (min-width: 40.0625em) {
+    justify-content: right;
+    text-align: right;
+  }
+`;
+
+const ActionsListItem = styled.li`
+  display: inline;
+  margin: 0 10px 0 0;
+  padding-right: 10px;
+  border-right: 1px solid ${BORDER_COLOUR};
+  @media (min-width: 40.0625em) {
+    margin-right: 0;
+  }
+  &:last-child {
+    margin: 0;
+    padding-right: 0;
+    border-right: none;
+    @media (min-width: 40.0625em) {
+      padding-left: 10px;
+    }
+  }
+`;
+export const SummaryCard = ({ title, children, actions }: Props) => {
   return (
     <SumCard>
       <SumCardTitleWrap>
         <SumCardTitle>{title}</SumCardTitle>
+        {actions && (
+          <ActionsList>
+            {actions.map((action, index) => {
+              return (
+                !action.hidden && (
+                  <ActionsListItem key={index}>
+                    <AppLink href="#" isBold={true} onClick={action.action}>
+                      {action.label}
+                    </AppLink>
+                  </ActionsListItem>
+                )
+              );
+            })}
+          </ActionsList>
+        )}
       </SumCardTitleWrap>
       <SumCardContent>{children}</SumCardContent>
     </SumCard>

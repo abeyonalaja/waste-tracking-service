@@ -18,7 +18,7 @@ class SubmitAnExportPage < GenericPage
   # rubocop:disable Naming/PredicateName
 
   def has_completed_badge_for_task?(task_name, status)
-    task_name = 'recovery-facility-or-laboratory' if task_name == 'Laboratory details'
+    task_name = 'recovery-facility-or-laboratory' if ['Laboratory details', 'Recovery facility'].include?(task_name)
     task_name += '-status'
 
     find(task_name.downcase.gsub(' ', '-')).text == task_status(status)
@@ -31,6 +31,10 @@ class SubmitAnExportPage < GenericPage
 
   def exporter_details
     click_on 'Exporter details'
+  end
+
+  def recovery_facility
+    click_link Translations.value 'exportJourney.submitAnExport.SectionFour.recoveryDetails'
   end
 
   private

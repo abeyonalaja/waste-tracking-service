@@ -1,26 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
-import { AppLink } from './AppLink';
 
-type SummaryListAction = {
-  label: string;
-  action: (action) => void;
+type SummaryListItem = {
+  title: string;
+  definition: string;
 };
 
 interface Props {
-  content: any;
-  actions?: Array<SummaryListAction>;
+  content: Array<SummaryListItem>;
   id?: string;
-  prefixNumbers?: boolean;
 }
 
 const DefinitionList = styled('dl')`
-  margin-bottom: 20px;
+  margin: 0;
   font-size: 16px;
   line-height: 1.25;
   @media (min-width: 40.0625em) {
-    margin-bottom: 30px;
     display: table;
     width: 100%;
     table-layout: fixed;
@@ -36,6 +32,9 @@ const Row = styled('div')`
   @media (min-width: 40.0625em) {
     display: table-row;
   }
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const Title = styled('dt')`
@@ -47,51 +46,32 @@ const Title = styled('dt')`
     padding-right: 20px;
     padding-bottom: 10px;
     margin-bottom: 5px;
-    width: 50%;
+    width: 30%;
   }
 `;
 
-const Actions = styled('dd')`
-  margin: 10px 0 15px;
+const Definition = styled('dd')`
+  margin: 0 0 15px;
+  font-weight: 400;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   @media (min-width: 40.0625em) {
-    width: 50%;
     display: table-cell;
     padding-top: 10px;
+    padding-right: 0;
     padding-bottom: 10px;
-    margin-bottom: 5px;
-    text-align: right;
-  }
-  a {
-    margin-right: 10px;
-    @media (min-width: 40.0625em) {
-      margin: 0 0 0 15px;
-    }
+    margin: 0;
   }
 `;
 
-export const SummaryList = ({ content, actions, id, prefixNumbers }: Props) => {
+export const SummaryList = ({ content, id }: Props) => {
   return (
     <DefinitionList id={id}>
-      {content.map((title, index) => {
+      {content.map((listItem, index) => {
         return (
           <Row key={index}>
-            <Title>
-              {prefixNumbers ? `${index + 1}. ` : ''}
-              {title}
-            </Title>
-            {actions?.length > 0 && (
-              <Actions>
-                {actions.map((action) => (
-                  <AppLink
-                    key={`action-${index}-${action.label.toLowerCase()}`}
-                    href="#"
-                    onClick={() => action.action(index)}
-                  >
-                    {action.label}
-                  </AppLink>
-                ))}
-              </Actions>
-            )}
+            <Title>{listItem.title}</Title>
+            <Definition>{listItem.definition}</Definition>
           </Row>
         );
       })}

@@ -19,7 +19,7 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
-  SummaryList,
+  SummaryListWithActions,
 } from '../components';
 import {
   isNotEmpty,
@@ -492,7 +492,7 @@ const WasteTransitCountries = () => {
                     <GovUK.Heading size="L">
                       {t('exportJourney.wasteTransitCountries.listTitle')}
                     </GovUK.Heading>
-                    <SummaryList
+                    <SummaryListWithActions
                       content={wasteTransitPage.data.values}
                       id="waste-transit-country-list"
                       prefixNumbers
@@ -503,7 +503,7 @@ const WasteTransitCountries = () => {
                     />
                     <form onSubmit={handleSubmitAdditionalCountry}>
                       <GovUK.Fieldset>
-                        <GovUK.Fieldset.Legend isPageHeading size="M">
+                        <GovUK.Fieldset.Legend size="M">
                           {t(
                             'exportJourney.wasteTransitCountries.additionalCountryLegend'
                           )}

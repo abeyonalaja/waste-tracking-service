@@ -332,3 +332,9 @@ export const validateConfirmRemoveCarrier: (
 ) => string | undefined = (value) => {
   if (value === null) return 'Select yes if you want to remove this carrier';
 };
+
+export const validateAddAnotherFacility: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null) return 'Select yes if you want to add another facility';
+};
