@@ -16,7 +16,8 @@ class RecoveryCodePage < GenericPage
   CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_css 'h1', text: 'What is the recovery code for the recovery facility?', exact_text: true
+    # expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
 
   def check_page_translation
@@ -27,7 +28,7 @@ class RecoveryCodePage < GenericPage
   def select_first_option
     first('recoveryCode', minimum: 1).click
     first('recoveryCode__option--0', minimum: 1).select_option
-    TestStatus.set_test_status(:recovery_facility_code, find('recoveryCode').value)
+    TestStatus.set_test_status(:first_recovery_facility_code, find('recoveryCode').value)
   end
 
 

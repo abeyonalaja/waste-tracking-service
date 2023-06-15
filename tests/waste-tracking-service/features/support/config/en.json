@@ -229,5 +229,13 @@
   "exportJourney.recoveryFacilities.name": "Facility name",
   "exportJourney.recoveryFacilities.contactTitle": "What are the recovery facility’s contact details?",
   "exportJourney.recoveryFacilities.contactPerson": "Facility contact person",
-  "exportJourney.recoveryFacilities.codeTitle": "What is the recovery code for the recovery facility?"
+  "exportJourney.recoveryFacilities.listTitleMultiple": "Your chosen facilities",
+  "exportJourney.recoveryFacilities.cardTitle": "Recovery facility",
+  "exportJourney.recoveryFacilities.firstCardTitle": "First recovery facility",
+  "exportJourney.recoveryFacilities.secondCardTitle": "Second recovery facility",
+  "exportJourney.recoveryFacilities.maxReached": "You have added the maximum number of recovery facilities.",
+  "exportJourney.recoveryFacilities.addLegend": "Do you need to add another recovery facility?",
+  "exportJourney.recoveryFacilities.addHint": "You can add one more facility.",
+  "exportJourney.recoveryFacilities.recoveryCode": "Recovery code",
+  "exportJourney.recoveryFacilities.listTitleSingle": "Your chosen facility"
 }

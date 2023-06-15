@@ -28,4 +28,8 @@ class RecoveryFacilityContactDetailsPage < GenericPage
     expect(page).to have_text CAPTION
   end
 
+  def has_recovery_code?(recovery_code)
+    find('recoveryCode').value == recovery_code
+  end
+
 end

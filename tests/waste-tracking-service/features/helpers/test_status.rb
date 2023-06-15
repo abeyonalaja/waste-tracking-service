@@ -21,10 +21,10 @@ module TestStatus
 
   def self.test_status(key = 'all')
     if key.eql?('all')
-      @test_status
       @test_status['countries_list'] = @countries_waste_will_travel
       @test_status['waste_carrier_org_details'] = @waste_carrier_org_details
       @test_status['waste_carrier_titles'] = @waste_carrier_titles
+      @test_status
     end
     @test_status[key.to_sym]
   end
@@ -51,6 +51,14 @@ module TestStatus
 
   def self.waste_carrier_title
     @waste_carrier_titles
+  end
+
+  def self.recovery_facilities(facility)
+    @recovery_facilities.push(facility)
+  end
+
+  def self.recovery_facility
+    @recovery_facilities
   end
 
 end
