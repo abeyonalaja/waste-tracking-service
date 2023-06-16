@@ -22,7 +22,7 @@ import {
 } from '../utils/validators';
 
 const SmallHeading = styled(GovUK.Caption)`
-  margin-bottom: 0px;
+  margin-bottom: 0;
 `;
 
 const AddressInput = styled(GovUK.InputField)`

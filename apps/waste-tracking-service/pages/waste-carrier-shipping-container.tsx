@@ -13,13 +13,13 @@ import {
 } from '../components';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
-import { validateShippingContainerNumber } from '../utils/validators';
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
+import {
+  isNotEmpty,
+  validateShippingContainerNumber,
+} from '../utils/validators';
 
 const SmallHeading = styled(GovUK.Caption)`
-  margin-bottom: 0px;
+  margin-bottom: 0;
 `;
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;

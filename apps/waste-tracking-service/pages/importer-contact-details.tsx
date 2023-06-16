@@ -14,17 +14,12 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import {
+  isNotEmpty,
   validateFullName,
   validateEmail,
   validatePhone,
 } from '../utils/validators';
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
-const SmallHeading = styled(GovUK.Caption)`
-  margin-bottom: 0px;
-`;
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
   margin-bottom: 20px;
@@ -174,9 +169,9 @@ const ImporterContactDetails = () => {
             {!isError && !isLoading && (
               <>
                 {' '}
-                <SmallHeading>
+                <GovUK.Caption>
                   {t('exportJourney.importerDetails.title')}
-                </SmallHeading>
+                </GovUK.Caption>
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.importerDetails.secondPageQuestion')}
                 </GovUK.Heading>

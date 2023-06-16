@@ -20,17 +20,10 @@ import {
   validateAddress,
 } from '../utils/validators';
 
-const SmallHeading = styled(GovUK.Caption)`
-  margin-bottom: 0px;
-`;
-
 const AddressInput = styled(GovUK.InputField)`
-  max-width: 59ex;
-  margin-bottom: 20px;
-`;
-const AddressTextArea = styled(GovUK.TextArea)`
-  max-width: 75x;
-  margin-bottom: 20px;
+  @media (min-width: 641px) {
+    width: 75%;
+  }
 `;
 
 const ImporterDetails = () => {
@@ -170,9 +163,9 @@ const ImporterDetails = () => {
             {!isError && !isLoading && (
               <>
                 {' '}
-                <SmallHeading>
+                <GovUK.Caption>
                   {t('exportJourney.importerDetails.title')}
-                </SmallHeading>
+                </GovUK.Caption>
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.importerDetails.firstPageQuestion')}
                 </GovUK.Heading>
@@ -188,6 +181,7 @@ const ImporterDetails = () => {
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
+                      mb={6}
                       input={{
                         name: 'organisationName',
                         id: 'organisationName',
@@ -202,7 +196,8 @@ const ImporterDetails = () => {
                     >
                       {t('exportJourney.importerDetails.organisationName')}
                     </AddressInput>
-                    <AddressTextArea
+                    <GovUK.TextArea
+                      mb={6}
                       input={{
                         name: 'address',
                         id: 'address',
@@ -216,8 +211,9 @@ const ImporterDetails = () => {
                       }}
                     >
                       {t('exportJourney.importerDetails.address')}
-                    </AddressTextArea>
+                    </GovUK.TextArea>
                     <AddressInput
+                      mb={6}
                       input={{
                         name: 'country',
                         id: 'country',

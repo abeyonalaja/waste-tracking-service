@@ -20,13 +20,9 @@ import {
   ButtonGroup,
   SaveReturnButton,
 } from '../../components';
-import { validateEwcCodes } from '../../utils/validators';
+import { isNotEmpty, validateEwcCodes } from '../../utils/validators';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 type State = {
   data: { status: 'Started' } & GetWasteDescriptionResponse;

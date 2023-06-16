@@ -10,12 +10,12 @@ import {
   BreadcrumbWrap,
   ConditionalRadioWrap,
 } from '../components';
-import { validateOwnReference, validateReference } from '../utils/validators';
+import {
+  isNotEmpty,
+  validateOwnReference,
+  validateReference,
+} from '../utils/validators';
 import { useSubmissionContext } from '../contexts';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 export function AddYourOwnExportReference() {
   const { t } = useTranslation();

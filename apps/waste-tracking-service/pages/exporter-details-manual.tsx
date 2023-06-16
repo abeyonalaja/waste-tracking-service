@@ -8,7 +8,6 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  SaveReturnLink,
   Loading,
   SubmissionNotFound,
   ButtonGroup,
@@ -18,16 +17,13 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import {
+  isNotEmpty,
   validatePostcode,
   validateTownCity,
   validateCountrySelect,
   validateAddress,
 } from '../utils/validators';
 import { countriesData } from '../utils/countriesData';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;

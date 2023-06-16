@@ -186,8 +186,6 @@ const DescribeWaste = () => {
     [id, describeWastePage.data, router]
   );
 
-  console.log(describeWastePage.data);
-
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>

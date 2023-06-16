@@ -506,8 +506,6 @@ const WasteCollection = () => {
 
   const getMultipleWord = (number) => {
     switch (number) {
-      case 1:
-        return '';
       case 2:
         return 'second';
       case 3:

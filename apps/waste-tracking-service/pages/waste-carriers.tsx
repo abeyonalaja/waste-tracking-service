@@ -18,7 +18,7 @@ import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 
 const SmallHeading = styled(GovUK.Caption)`
-  margin-bottom: 0px;
+  margin-bottom: 0;
 `;
 
 type State = {

@@ -16,16 +16,13 @@ import {
   SaveReturnButton,
 } from '../components';
 import {
+  isNotEmpty,
   validateWasteCode,
   validateWasteCodeCategory,
 } from '../utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
 import { wasteCodeData } from '../utils/wasteCodesData';
 import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 const WasteCode = () => {
   const { t } = useTranslation();

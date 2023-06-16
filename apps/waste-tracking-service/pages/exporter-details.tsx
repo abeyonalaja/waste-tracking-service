@@ -20,15 +20,12 @@ import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 
 import {
+  isNotEmpty,
   validateOrganisationName,
   validateFullName,
   validateEmail,
   validatePhone,
 } from '../utils/validators';
-
-function isNotEmpty(obj) {
-  return Object.keys(obj).some((key) => obj[key]?.length > 0);
-}
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
