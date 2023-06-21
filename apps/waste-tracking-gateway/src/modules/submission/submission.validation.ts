@@ -133,11 +133,11 @@ export const validatePutExporterDetailRequest =
         properties: {
           addressLine1: { type: 'string' },
           townCity: { type: 'string' },
-          postcode: { type: 'string' },
           country: { type: 'string' },
         },
         optionalProperties: {
           addressLine2: { type: 'string' },
+          postcode: { type: 'string' },
         },
       },
       exporterContactDetails: {

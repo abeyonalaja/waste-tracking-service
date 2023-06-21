@@ -7,7 +7,7 @@ interface Props {
     addressLine1: string;
     addressLine2?: string;
     townCity: string;
-    postcode: string;
+    postcode?: string;
     country: string;
   };
 }

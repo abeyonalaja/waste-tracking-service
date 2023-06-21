@@ -18,7 +18,6 @@ import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import {
   isNotEmpty,
-  validatePostcode,
   validateTownCity,
   validateCountrySelect,
   validateAddress,
@@ -103,7 +102,6 @@ const ExporterManual = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
-        postcode: validatePostcode(postcode),
         townCity: validateTownCity(townCity),
         country: validateCountrySelect(country),
         address: validateAddress(address),
@@ -154,7 +152,7 @@ const ExporterManual = () => {
       }
       e.preventDefault();
     },
-    [postcode, townCity, country, address, address2]
+    [townCity, country, address, data, address2, postcode, id, router]
   );
 
   const BreadCrumbs = () => {
@@ -204,6 +202,9 @@ const ExporterManual = () => {
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
+                      hint={t(
+                        'exportJourney.exporterManual.addressOneLabel.hint'
+                      )}
                       input={{
                         name: 'address',
                         id: 'address',
@@ -219,6 +220,9 @@ const ExporterManual = () => {
                       {t('exportJourney.exporterManual.addressOneLabel')}
                     </AddressInput>
                     <AddressInput
+                      hint={t(
+                        'exportJourney.exporterManual.addressTwoLabel.hint'
+                      )}
                       input={{
                         name: 'address2',
                         id: 'address2',
@@ -252,12 +256,8 @@ const ExporterManual = () => {
                         maxLength: 8,
                         onChange: (e) => setPostcode(e.target.value),
                       }}
-                      meta={{
-                        error: errors?.postcode,
-                        touched: !!errors?.postcode,
-                      }}
                     >
-                      {t('exportJourney.exporterPostcode.postCodeLabel')}
+                      {t('exportJourney.exporterManual.postCodeLabel')}
                     </PostcodeInput>
                     <SmallRadioList
                       value={country}

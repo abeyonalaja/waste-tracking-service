@@ -244,13 +244,12 @@ describe('validatePutExporterDetailRequest', () => {
     expect(validatePutExporterDetailRequest(data)).toBe(false);
   });
 
-  it('should return true for a request with a missing addressLine2', () => {
+  it('should return true for a request with a missing addressLine2 and postcode', () => {
     const data = {
       status: 'Complete',
       exporterAddress: {
         addressLine1: '123 Main St',
         townCity: 'Anytown',
-        postcode: '12345',
         country: 'UK',
       },
       exporterContactDetails: {
