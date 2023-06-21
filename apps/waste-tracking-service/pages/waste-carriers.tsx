@@ -245,7 +245,7 @@ const WasteCarriers = () => {
   const handleRedirect = (e) => {
     if (selectedOption === 'no') {
       router.push({
-        pathname: '/submit-an-export-tasklist',
+        pathname: '/waste-collection',
         query: { id: router.query.id },
       });
     } else if (selectedOption === 'yes') {

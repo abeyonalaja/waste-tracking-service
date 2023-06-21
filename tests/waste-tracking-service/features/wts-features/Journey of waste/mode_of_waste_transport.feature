@@ -31,7 +31,10 @@ Feature: AS A waste producer/broker
     And I should see Shipping container page translated
     And I enter shipping container number
     And I click the button Save and continue
-    #Then I should see "Your added carriers" page is displayed
+    Then Then the "Multi waste carriers" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then Then the "Waste collection details" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Trailer option
@@ -49,7 +52,10 @@ Feature: AS A waste producer/broker
     And I should see Trailer page translated
     And I enter vehicle registration number
     And I click the button Save and continue
-    #Then I should see "Your added carriers" page is displayed
+    Then Then the "Multi waste carriers" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then Then the "Waste collection details" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Bulk vessel option
@@ -67,7 +73,10 @@ Feature: AS A waste producer/broker
     And I should see Bulk vessel page translated
     And I enter IMO number
     And I click the button Save and continue
-    #Then I should see "Your added carriers" page is displayed
+    Then Then the "Multi waste carriers" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then Then the "Waste collection details" page is displayed
 
   Scenario: User can't continue without entering Shipping container details
     Given I login to waste tracking portal
@@ -113,3 +122,15 @@ Feature: AS A waste producer/broker
     Then the "Bulk vessel details" page is displayed
     And I click the button Save and continue
     Then I remain on the Bulk vessel details page with an "Enter an international maritime organisation (IMO) number" error message displayed
+
+  Scenario: User can't continue without choosing an mode of transport option
+    Given I login to waste tracking portal
+    When I navigate to the submit an export with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I click Continue button
+    Then I remain on the how will the waste carrier transport the waste page with an "Select a method of transport" error message displayed

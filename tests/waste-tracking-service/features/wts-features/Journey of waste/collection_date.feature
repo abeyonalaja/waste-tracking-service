@@ -21,6 +21,9 @@ Feature: AS A waste producer/broker
     And I choose "No, I’ll enter an estimate date" radio button
     And I enter valid Estimate collection date
     And I click the button Save and continue
+    Then the "who is the waste carrier" page is displayed
+    And I complete the Who is the waste carrier page
+    And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
     Then I should see Collection date option "No, I’ll enter an estimate date" is selected
@@ -33,6 +36,9 @@ Feature: AS A waste producer/broker
     And I choose "Yes, I’ll enter the actual date" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
+    Then the "who is the waste carrier" page is displayed
+    And I complete the Who is the waste carrier page
+    And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
     Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
@@ -45,11 +51,17 @@ Feature: AS A waste producer/broker
     And I choose "No, I’ll enter an estimate date" radio button
     And I enter valid Estimate collection date
     And I click the button Save and continue
+    Then the "who is the waste carrier" page is displayed
+    And I complete the Who is the waste carrier page
+    And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
+    Then the "who is the waste carrier" page is displayed
+    And I complete the Who is the waste carrier page
+    And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
     Then I should see Collection date option "Yes, I’ll enter the actual date" is selected

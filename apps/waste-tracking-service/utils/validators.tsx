@@ -339,3 +339,9 @@ export const validateAddAnotherFacility: (
 ) => string | undefined = (value) => {
   if (value === null) return 'Select yes if you want to add another facility';
 };
+
+export const validateTransport: (value?: string) => string | undefined = (
+  value
+) => {
+  if (value === undefined) return 'Select a method of transport';
+};

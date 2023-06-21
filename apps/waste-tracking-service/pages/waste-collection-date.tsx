@@ -131,7 +131,7 @@ const WasteCollectionDate = () => {
               if (data !== undefined) {
                 const path = returnToDraft
                   ? '/submit-an-export-tasklist'
-                  : '/submit-an-export-tasklist';
+                  : '/waste-carrier-details';
                 router.push({
                   pathname: path,
                   query: { id },
