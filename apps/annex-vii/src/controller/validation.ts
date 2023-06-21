@@ -13,6 +13,8 @@ import {
   SetDraftRecoveryFacilityDetailsRequest,
   CreateDraftRecoveryFacilityDetailsRequest,
   schema,
+  SetDraftSubmissionConfirmationByIdRequest,
+  SetDraftSubmissionDeclarationByIdRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -78,4 +80,14 @@ export const createDraftRecoveryFacilityDetailsRequest =
 export const setDraftRecoveryFacilityDetailsRequest =
   ajv.compile<SetDraftRecoveryFacilityDetailsRequest>(
     schema.setDraftRecoveryFacilityDetailsRequest
+  );
+
+export const setDraftSubmissionConfirmationByIdRequest =
+  ajv.compile<SetDraftSubmissionConfirmationByIdRequest>(
+    schema.setDraftSubmissionConfirmationByIdRequest
+  );
+
+export const setDraftSubmissionDeclarationByIdRequest =
+  ajv.compile<SetDraftSubmissionDeclarationByIdRequest>(
+    schema.setDraftSubmissionDeclarationByIdRequest
   );

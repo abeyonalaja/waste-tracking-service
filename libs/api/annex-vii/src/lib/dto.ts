@@ -224,6 +224,20 @@ export type DraftRecoveryFacilityDetail =
       values: DraftRecoveryFacility[];
     };
 
+export type DraftSubmissionConfirmation =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Complete';
+      confirmation: boolean;
+    };
+
+export type DraftSubmissionDeclaration =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Complete';
+      declaration: boolean;
+    };
+
 export type DraftSubmission = {
   id: string;
   reference: CustomerReference;
@@ -237,6 +251,8 @@ export type DraftSubmission = {
   ukExitLocation: DraftExitLocation;
   transitCountries: DraftTransitCountries;
   recoveryFacilityDetail: DraftRecoveryFacilityDetail;
+  submissionConfirmation: DraftSubmissionConfirmation;
+  submissionDeclaration: DraftSubmissionDeclaration;
 };
 
 export type DraftSubmissionSummary = Readonly<{
@@ -252,6 +268,8 @@ export type DraftSubmissionSummary = Readonly<{
   ukExitLocation: DraftSectionSummary;
   transitCountries: DraftSectionSummary;
   recoveryFacilityDetail: DraftSectionSummary;
+  submissionConfirmation: DraftSectionSummary;
+  submissionDeclaration: DraftSectionSummary;
 }>;
 
 export type GetDraftsRequest = AccountIdRequest;
@@ -489,5 +507,39 @@ export type DeleteDraftRecoveryFacilityDetailsRequest = IdRequest &
 export type DeleteDraftRecoveryFacilityDetailsResponse = Response<void>;
 export const deleteDraftRecoveryFacilityDetails: Method = {
   name: 'deleteDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type GetDraftSubmissionConfirmationByIdRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftSubmissionConfirmationByIdResponse =
+  Response<DraftSubmissionConfirmation>;
+export const getDraftSubmissionConfirmationById: Method = {
+  name: 'getDraftSubmissionConfirmationById',
+  httpVerb: 'POST',
+};
+
+export type SetDraftSubmissionConfirmationByIdRequest = IdRequest &
+  AccountIdRequest & { value: DraftSubmissionConfirmation };
+export type SetDraftSubmissionConfirmationByIdResponse = Response<void>;
+export const setDraftSubmissionConfirmationById: Method = {
+  name: 'setDraftSubmissionConfirmationById',
+  httpVerb: 'POST',
+};
+
+export type GetDraftSubmissionDeclarationByIdRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftSubmissionDeclarationByIdResponse =
+  Response<DraftSubmissionDeclaration>;
+export const getDraftSubmissionDeclarationById: Method = {
+  name: 'getDraftSubmissionDeclarationById',
+  httpVerb: 'POST',
+};
+
+export type SetDraftSubmissionDeclarationByIdRequest = IdRequest &
+  AccountIdRequest & { value: DraftSubmissionDeclaration };
+export type SetDraftSubmissionDeclarationByIdResponse = Response<void>;
+export const setDraftSubmissionDeclarationById: Method = {
+  name: 'setDraftSubmissionDeclarationById',
   httpVerb: 'POST',
 };

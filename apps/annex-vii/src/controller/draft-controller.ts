@@ -6,6 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { DraftRepository } from '../data';
 import { DraftSubmission } from '../model';
+import {
+  CollectionDate,
+  SubmissionConfirmation,
+  SubmissionDeclaration,
+} from '@wts/api/waste-tracking-gateway';
 
 export type Handler<Request, Response> = (
   request: Request
@@ -13,6 +18,56 @@ export type Handler<Request, Response> = (
 
 export default class DraftController {
   constructor(private repository: DraftRepository, private logger: Logger) {}
+
+  isCollectionDateValid(date: CollectionDate) {
+    if (date.status !== 'NotStarted') {
+      const { day: dayStr, month: monthStr, year: yearStr } = date.value;
+
+      const [day, month, year] = [
+        parseInt(dayStr),
+        parseInt(monthStr) - 1,
+        parseInt(yearStr),
+      ];
+
+      if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+        return false;
+      }
+
+      if (
+        differenceInBusinessDays(new Date(year, month, day), new Date()) < 3
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  submissionConfirmationUpdate(
+    submission: DraftSubmission
+  ): SubmissionConfirmation {
+    const { id, reference, submissionConfirmation, ...filteredValues } =
+      submission;
+
+    if (
+      Object.values(filteredValues).every(
+        (value) => value.status === 'Complete'
+      )
+    ) {
+      return { status: 'NotStarted' };
+    } else {
+      return { status: 'CannotStart' };
+    }
+  }
+
+  submissionDeclarationUpdate(
+    submission: DraftSubmission
+  ): SubmissionDeclaration {
+    if (submission.submissionConfirmation.status === 'Complete') {
+      return { status: 'NotStarted' };
+    } else {
+      return { status: 'CannotStart' };
+    }
+  }
 
   getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async ({
     accountId,
@@ -62,6 +117,8 @@ export default class DraftController {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'CannotStart' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         };
 
         await this.repository.saveDraft(value, accountId);
@@ -99,10 +156,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, reference: value },
-        accountId
-      );
+      draft.reference = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -211,17 +270,20 @@ export default class DraftController {
           ? { status: 'NotStarted' }
           : draft.recoveryFacilityDetail;
 
+      draft.wasteDescription = value;
+      draft.wasteQuantity = wasteQuantity;
+      draft.carriers = carriers;
+      draft.recoveryFacilityDetail = recoveryFacilityDetail;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
       await this.repository.saveDraft(
         {
           ...draft,
-          wasteDescription: value,
-          wasteQuantity,
-          carriers,
-          recoveryFacilityDetail,
         },
         accountId
       );
-
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -256,10 +318,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, wasteQuantity: value },
-        accountId
-      );
+      draft.wasteQuantity = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -294,10 +358,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, exporterDetail: value },
-        accountId
-      );
+      draft.exporterDetail = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -332,10 +398,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, importerDetail: value },
-        accountId
-      );
+      draft.importerDetail = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -369,35 +437,20 @@ export default class DraftController {
     api.SetDraftCollectionDateByIdResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status !== 'NotStarted') {
-        const { day: dayStr, month: monthStr, year: yearStr } = value.value;
-
-        const [day, month, year] = [
-          parseInt(dayStr),
-          parseInt(monthStr) - 1,
-          parseInt(yearStr),
-        ];
-
-        if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-          return fromBoom(Boom.badRequest('Invalid date'));
-        }
-
-        if (
-          differenceInBusinessDays(new Date(year, month, day), new Date()) < 3
-        ) {
-          return fromBoom(
-            Boom.badRequest(
-              'Date should be at least three business days in the future'
-            )
-          );
-        }
-      }
+      if (!this.isCollectionDateValid(value))
+        return fromBoom(
+          Boom.badRequest(
+            'Date should be at least three business days in the future'
+          )
+        );
 
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, collectionDate: value },
-        accountId
-      );
+      draft.collectionDate = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -455,6 +508,9 @@ export default class DraftController {
           values: [carrier],
         };
 
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(draft.carriers);
       }
@@ -473,6 +529,9 @@ export default class DraftController {
         transport: transport,
         values: carriers,
       };
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success({
@@ -537,6 +596,10 @@ export default class DraftController {
 
       if (value.status === 'NotStarted') {
         draft.carriers = value;
+
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(undefined);
       }
@@ -557,6 +620,9 @@ export default class DraftController {
 
       draft.carriers.status = value.status;
       draft.carriers.values[index] = carrier as api.DraftCarrier;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -602,6 +668,9 @@ export default class DraftController {
         };
       }
 
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
@@ -637,10 +706,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, collectionDetail: value },
-        accountId
-      );
+      draft.collectionDetail = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -658,10 +729,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, ukExitLocation: value },
-        accountId
-      );
+      draft.ukExitLocation = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -696,10 +769,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      await this.repository.saveDraft(
-        { ...draft, transitCountries: value },
-        accountId
-      );
+      draft.transitCountries = value;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -770,6 +845,9 @@ export default class DraftController {
           values: [rfdId],
         };
 
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(draft.recoveryFacilityDetail);
       }
@@ -791,6 +869,9 @@ export default class DraftController {
         status: value.status,
         values: recoveryFacility,
       };
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success({
@@ -861,6 +942,10 @@ export default class DraftController {
 
       if (value.status !== 'Started' && value.status !== 'Complete') {
         draft.recoveryFacilityDetail = value;
+
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(undefined);
       }
@@ -881,6 +966,9 @@ export default class DraftController {
 
       draft.recoveryFacilityDetail.status = value.status;
       draft.recoveryFacilityDetail.values[index] = recoveryFacility;
+
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -920,8 +1008,112 @@ export default class DraftController {
         draft.recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
+      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftSubmissionConfirmationById: Handler<
+    api.SetDraftSubmissionConfirmationByIdRequest,
+    api.SetDraftSubmissionConfirmationByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+
+      if (draft.submissionConfirmation.status === 'CannotStart') {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (!this.isCollectionDateValid(draft.collectionDate)) {
+        draft.collectionDate = { status: 'NotStarted' };
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return fromBoom(Boom.badRequest());
+      }
+      draft.submissionConfirmation = value;
+      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftSubmissionConfirmationById: Handler<
+    api.GetDraftSubmissionConfirmationByIdRequest,
+    api.GetDraftSubmissionConfirmationByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.submissionConfirmation);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftSubmissionDeclarationById: Handler<
+    api.SetDraftSubmissionDeclarationByIdRequest,
+    api.SetDraftSubmissionDeclarationByIdResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+
+      if (draft.submissionDeclaration.status === 'CannotStart') {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (!this.isCollectionDateValid(draft.collectionDate)) {
+        draft.collectionDate = { status: 'NotStarted' };
+
+        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+
+        await this.repository.saveDraft({ ...draft }, accountId);
+        return fromBoom(Boom.badRequest());
+      }
+
+      await this.repository.saveDraft(
+        { ...draft, submissionDeclaration: value },
+        accountId
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftSubmissionDeclarationById: Handler<
+    api.GetDraftSubmissionDeclarationByIdRequest,
+    api.GetDraftSubmissionDeclarationByIdResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      return success(draft.submissionDeclaration);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

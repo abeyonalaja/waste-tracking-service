@@ -15,6 +15,8 @@ import {
   validatePutTransitCountriesRequest,
   validateSetRecoveryFacilityDetailRequest,
   validateCreateRecoveryFacilityDetailRequest,
+  validatePutSubmissionConfirmationRequest,
+  validatePutSubmissionDeclarationRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -773,6 +775,100 @@ const plugin: Plugin<PluginOptions> = {
               )) as undefined
             )
             .code(204);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/submission-confirmation',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getSubmissionConfirmation({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetSubmissionConfirmationResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/submission-confirmation',
+      handler: async function ({ params, payload }) {
+        if (!validatePutSubmissionConfirmationRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutSubmissionConfirmationRequest;
+        try {
+          await backend.setSubmissionConfirmation(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutSubmissionConfirmationResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/submission-declaration',
+      handler: async function ({ params }) {
+        try {
+          const value = await backend.getSubmissionDeclaration({
+            id: params.id,
+            accountId,
+          });
+          return value as dto.GetSubmissionDeclarationResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/submission-declaration',
+      handler: async function ({ params, payload }) {
+        if (!validatePutSubmissionDeclarationRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutSubmissionDeclarationRequest;
+        try {
+          await backend.setSubmissionDeclaration(
+            { id: params.id, accountId },
+            request
+          );
+          return request as dto.PutSubmissionDeclarationResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

@@ -17,6 +17,8 @@ import {
   ExitLocation,
   TransitCountries,
   RecoveryFacilityDetail,
+  SubmissionConfirmation,
+  SubmissionDeclaration,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -109,6 +111,18 @@ const mockBackend = {
     >(),
   deleteRecoveryFacilityDetail:
     jest.fn<(ref: SubmissionRef, rfdId: string) => Promise<void>>(),
+  getSubmissionConfirmation:
+    jest.fn<(ref: SubmissionRef) => Promise<SubmissionConfirmation>>(),
+  setSubmissionConfirmation:
+    jest.fn<
+      (ref: SubmissionRef, value: SubmissionConfirmation) => Promise<void>
+    >(),
+  getSubmissionDeclaration:
+    jest.fn<(ref: SubmissionRef) => Promise<SubmissionDeclaration>>(),
+  setSubmissionDeclaration:
+    jest.fn<
+      (ref: SubmissionRef, value: SubmissionDeclaration) => Promise<void>
+    >(),
 };
 
 const app = server({
@@ -313,6 +327,46 @@ describe('SubmissionPlugin', () => {
       mockBackend.getRecoveryFacilityDetail.mockRejectedValue(
         Boom.badRequest()
       );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /submissions/{id}/submission-confirmation', () => {
+    it('Responds 400 if invalid request is received from payload', async () => {
+      const id = faker.datatype.uuid();
+      mockBackend.setSubmissionConfirmation.mockResolvedValue();
+      const options = {
+        method: 'PUT',
+        url: `/submissions/${id}/submission-confirmation`,
+        payload: JSON.stringify({
+          status: 'NotStarted',
+          confirmation: true,
+        }),
+      };
+
+      mockBackend.getSubmissionConfirmation.mockRejectedValue(
+        Boom.badRequest()
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /submissions/{id}/submission-declaration', () => {
+    it('Responds 400 if invalid request is received from payload', async () => {
+      const id = faker.datatype.uuid();
+      mockBackend.setSubmissionDeclaration.mockResolvedValue();
+      const options = {
+        method: 'PUT',
+        url: `/submissions/${id}/submission-declaration`,
+        payload: JSON.stringify({
+          status: 'NotStarted',
+          declaration: true,
+        }),
+      };
+
+      mockBackend.getSubmissionDeclaration.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

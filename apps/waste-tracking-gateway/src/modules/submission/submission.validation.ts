@@ -13,6 +13,8 @@ import {
   PutTransitCountriesRequest,
   CreateRecoveryFacilityDetailRequest,
   SetRecoveryFacilityDetailRequest,
+  PutSubmissionConfirmationRequest,
+  PutSubmissionDeclarationRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -539,6 +541,56 @@ export const validateSetRecoveryFacilityDetailRequest =
               },
             },
           },
+        },
+      },
+    },
+  });
+
+export const validatePutSubmissionConfirmationRequest =
+  ajv.compile<PutSubmissionConfirmationRequest>({
+    definitions: {
+      submissionConfirmation: {
+        properties: {
+          confirmation: { type: 'boolean' },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      CannotStart: {
+        properties: {},
+      },
+      NotStarted: {
+        properties: {},
+      },
+      Complete: {
+        properties: {
+          confirmation: { type: 'boolean' },
+        },
+      },
+    },
+  });
+
+export const validatePutSubmissionDeclarationRequest =
+  ajv.compile<PutSubmissionDeclarationRequest>({
+    definitions: {
+      submissionDeclaration: {
+        properties: {
+          declation: { type: 'boolean' },
+        },
+      },
+    },
+    discriminator: 'status',
+    mapping: {
+      CannotStart: {
+        properties: {},
+      },
+      NotStarted: {
+        properties: {},
+      },
+      Complete: {
+        properties: {
+          declaration: { type: 'boolean' },
         },
       },
     },

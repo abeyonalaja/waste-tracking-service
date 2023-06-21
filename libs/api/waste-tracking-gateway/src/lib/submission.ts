@@ -208,6 +208,20 @@ export type RecoveryFacilityDetail =
       values: RecoveryFacility[];
     };
 
+export type SubmissionConfirmation =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Complete';
+      confirmation: boolean;
+    };
+
+export type SubmissionDeclaration =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Complete';
+      declaration: boolean;
+    };
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
@@ -221,6 +235,8 @@ export type Submission = {
   ukExitLocation: ExitLocation;
   transitCountries: TransitCountries;
   recoveryFacilityDetail: RecoveryFacilityDetail;
+  submissionConfirmation: SubmissionConfirmation;
+  submissionDeclaration: SubmissionDeclaration;
 };
 
 export type GetSubmissionResponse = Submission;
@@ -272,3 +288,9 @@ export type CreateRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
 export type GetRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
 export type SetRecoveryFacilityDetailRequest = RecoveryFacilityDetail;
 export type SetRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
+export type PutSubmissionConfirmationRequest = SubmissionConfirmation;
+export type PutSubmissionConfirmationResponse = SubmissionConfirmation;
+export type GetSubmissionConfirmationResponse = SubmissionConfirmation;
+export type PutSubmissionDeclarationRequest = SubmissionDeclaration;
+export type PutSubmissionDeclarationResponse = SubmissionDeclaration;
+export type GetSubmissionDeclarationResponse = SubmissionDeclaration;

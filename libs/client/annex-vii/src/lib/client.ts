@@ -54,6 +54,14 @@ import {
   SetDraftRecoveryFacilityDetailsResponse,
   DeleteDraftRecoveryFacilityDetailsRequest,
   DeleteDraftRecoveryFacilityDetailsResponse,
+  GetDraftSubmissionConfirmationByIdRequest,
+  GetDraftSubmissionConfirmationByIdResponse,
+  SetDraftSubmissionConfirmationByIdRequest,
+  SetDraftSubmissionConfirmationByIdResponse,
+  GetDraftSubmissionDeclarationByIdRequest,
+  GetDraftSubmissionDeclarationByIdResponse,
+  SetDraftSubmissionDeclarationByIdRequest,
+  SetDraftSubmissionDeclarationByIdResponse,
   createDraft,
   getDraftById,
   getDraftCustomerReferenceById,
@@ -93,6 +101,10 @@ import {
   getDraftRecoveryFacilityDetails,
   setDraftRecoveryFacilityDetails,
   deleteDraftRecoveryFacilityDetails,
+  getDraftSubmissionConfirmationById,
+  setDraftSubmissionConfirmationById,
+  getDraftSubmissionDeclarationById,
+  setDraftSubmissionDeclarationById,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -431,5 +443,49 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as DeleteDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async getDraftSubmissionConfirmationById(
+    req: GetDraftSubmissionConfirmationByIdRequest
+  ): Promise<GetDraftSubmissionConfirmationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftSubmissionConfirmationById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftSubmissionConfirmationByIdResponse;
+  }
+
+  async setDraftSubmissionConfirmationById(
+    req: SetDraftSubmissionConfirmationByIdRequest
+  ): Promise<SetDraftSubmissionConfirmationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftSubmissionConfirmationById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftSubmissionConfirmationByIdResponse;
+  }
+
+  async getDraftSubmissionDeclarationById(
+    req: GetDraftSubmissionDeclarationByIdRequest
+  ): Promise<GetDraftSubmissionDeclarationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getDraftSubmissionDeclarationById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftSubmissionDeclarationByIdResponse;
+  }
+
+  async setDraftSubmissionDeclarationById(
+    req: SetDraftSubmissionDeclarationByIdRequest
+  ): Promise<SetDraftSubmissionDeclarationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setDraftSubmissionDeclarationById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftSubmissionDeclarationByIdResponse;
   }
 }

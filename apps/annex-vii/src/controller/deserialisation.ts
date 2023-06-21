@@ -18,6 +18,8 @@ import {
   ListDraftRecoveryFacilityDetailsRequest,
   DeleteDraftRecoveryFacilityDetailsRequest,
   schema,
+  GetDraftSubmissionConfirmationByIdRequest,
+  GetDraftSubmissionDeclarationByIdRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -104,4 +106,14 @@ export const listDraftRecoveryFacilityDetailsRequest =
 export const deleteDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<DeleteDraftRecoveryFacilityDetailsRequest>(
     schema.deleteDraftRecoveryFacilityDetailsRequest
+  );
+
+export const getDraftSubmissionConfirmationByIdRequest =
+  ajv.compileParser<GetDraftSubmissionConfirmationByIdRequest>(
+    schema.getDraftSubmissionConfirmationByIdByIdRequest
+  );
+
+export const getDraftSubmissionDeclarationByIdRequest =
+  ajv.compileParser<GetDraftSubmissionDeclarationByIdRequest>(
+    schema.getDraftSubmissionDeclarationByIdByIdRequest
   );

@@ -30,6 +30,10 @@ import {
   GetDraftRecoveryFacilityDetailsResponse,
   SetDraftRecoveryFacilityDetailsResponse,
   DeleteDraftRecoveryFacilityDetailsResponse,
+  GetDraftSubmissionConfirmationByIdResponse,
+  SetDraftSubmissionConfirmationByIdResponse,
+  GetDraftSubmissionDeclarationByIdResponse,
+  SetDraftSubmissionDeclarationByIdResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -51,6 +55,59 @@ export type ExitLocation = dto.ExitLocation;
 export type TransitCountries = dto.TransitCountries;
 export type RecoveryFacilityDetail = dto.RecoveryFacilityDetail;
 export type RecoveryFacilityData = dto.RecoveryFacilityData;
+export type SubmissionConfirmation = dto.SubmissionConfirmation;
+export type SubmissionDeclaration = dto.SubmissionDeclaration;
+
+function submissionConfirmationUpdate(
+  submission: Submission
+): SubmissionConfirmation {
+  const {
+    id,
+    reference,
+    submissionConfirmation,
+    submissionDeclaration,
+    ...filteredValues
+  } = submission;
+
+  if (
+    Object.values(filteredValues).every((value) => value.status === 'Complete')
+  ) {
+    return { status: 'NotStarted' };
+  } else {
+    return { status: 'CannotStart' };
+  }
+}
+
+function submissionDeclarationUpdate(
+  submission: Submission
+): SubmissionDeclaration {
+  if (submission.submissionConfirmation.status === 'Complete') {
+    return { status: 'NotStarted' };
+  } else {
+    return { status: 'CannotStart' };
+  }
+}
+
+function isCollectionDateValid(date: CollectionDate) {
+  if (date.status !== 'NotStarted') {
+    const { day: dayStr, month: monthStr, year: yearStr } = date.value;
+
+    const [day, month, year] = [
+      parseInt(dayStr),
+      parseInt(monthStr) - 1,
+      parseInt(yearStr),
+    ];
+
+    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+      return false;
+    }
+
+    if (differenceInBusinessDays(new Date(year, month, day), new Date()) < 3) {
+      return false;
+    }
+  }
+  return true;
+}
 
 export type SubmissionRef = {
   id: string;
@@ -122,6 +179,18 @@ export interface SubmissionBackend {
     value: RecoveryFacilityDetail
   ): Promise<void>;
   deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
+  getSubmissionConfirmation(
+    ref: SubmissionRef
+  ): Promise<SubmissionConfirmation>;
+  setSubmissionConfirmation(
+    ref: SubmissionRef,
+    value: SubmissionConfirmation
+  ): Promise<void>;
+  getSubmissionDeclaration(ref: SubmissionRef): Promise<SubmissionDeclaration>;
+  setSubmissionDeclaration(
+    ref: SubmissionRef,
+    value: SubmissionDeclaration
+  ): Promise<void>;
 }
 
 /**
@@ -157,6 +226,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       ukExitLocation: { status: 'NotStarted' },
       transitCountries: { status: 'NotStarted' },
       recoveryFacilityDetail: { status: 'CannotStart' },
+      submissionConfirmation: { status: 'CannotStart' },
+      submissionDeclaration: { status: 'CannotStart' },
     };
 
     this.submissions.set(id, value);
@@ -197,6 +268,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.reference = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -297,6 +373,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.carriers = carriers;
     submission.recoveryFacilityDetail = recoveryFacilityDetail;
 
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -317,6 +397,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.wasteQuantity = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -340,6 +425,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.exporterDetail = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -363,6 +453,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.importerDetail = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -385,27 +480,14 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    if (value.status !== 'NotStarted') {
-      const { day: dayStr, month: monthStr, year: yearStr } = value.value;
-
-      const [day, month, year] = [
-        parseInt(dayStr),
-        parseInt(monthStr) - 1,
-        parseInt(yearStr),
-      ];
-
-      if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-        return Promise.reject(Boom.badRequest());
-      }
-
-      if (
-        differenceInBusinessDays(new Date(year, month, day), new Date()) < 3
-      ) {
-        return Promise.reject(Boom.badRequest());
-      }
-    }
+    if (!isCollectionDateValid(value)) return Promise.reject(Boom.badRequest());
 
     submission.collectionDate = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -450,6 +532,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         values: [carrier],
       };
 
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+      submission.submissionDeclaration =
+        submissionDeclarationUpdate(submission);
+
       this.submissions.set(id, submission);
       return Promise.resolve(submission.carriers);
     }
@@ -468,6 +555,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       transport: transport,
       values: carriers,
     };
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve({
@@ -520,6 +611,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     if (value.status === 'NotStarted') {
       submission.carriers = value;
+
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+      submission.submissionDeclaration =
+        submissionDeclarationUpdate(submission);
+
       this.submissions.set(id, submission);
       return Promise.resolve();
     }
@@ -540,6 +637,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.carriers.status = value.status;
     submission.carriers.values[index] = carrier as dto.Carrier;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -577,6 +678,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       };
     }
 
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -600,6 +705,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.collectionDetail = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -620,6 +730,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.ukExitLocation = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -643,6 +758,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     submission.transitCountries = value;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -684,6 +804,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         values: [newRecoveryFacilities],
       };
 
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+      submission.submissionDeclaration =
+        submissionDeclarationUpdate(submission);
+
       this.submissions.set(id, submission);
       return Promise.resolve(submission.recoveryFacilityDetail);
     }
@@ -706,8 +831,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       values: facilities,
     };
 
-    this.submissions.set(id, submission);
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
 
+    this.submissions.set(id, submission);
     return Promise.resolve({
       status: value.status,
       values: [newRecoveryFacilities],
@@ -766,6 +894,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     if (value.status !== 'Started' && value.status !== 'Complete') {
       submission.recoveryFacilityDetail = value;
+
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+      submission.submissionDeclaration =
+        submissionDeclarationUpdate(submission);
+
       this.submissions.set(id, submission);
       return Promise.resolve();
     }
@@ -786,6 +920,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.recoveryFacilityDetail.status = value.status;
     submission.recoveryFacilityDetail.values[index] =
       recoveryFacility as dto.RecoveryFacility;
+
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -820,6 +958,89 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       submission.recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
+    submission.submissionConfirmation =
+      submissionConfirmationUpdate(submission);
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getSubmissionConfirmation({
+    id,
+  }: SubmissionRef): Promise<SubmissionConfirmation> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.submissionConfirmation);
+  }
+
+  setSubmissionConfirmation(
+    { id }: SubmissionRef,
+    value: SubmissionConfirmation
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (submission.submissionConfirmation.status === 'CannotStart') {
+      return Promise.reject(Boom.badRequest());
+    }
+    if (!isCollectionDateValid(submission.collectionDate)) {
+      submission.collectionDate = { status: 'NotStarted' };
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+
+      this.submissions.set(id, submission);
+      return Promise.reject(Boom.badRequest('Invalid collection date'));
+    }
+
+    submission.submissionConfirmation = value;
+    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+
+    this.submissions.set(id, submission);
+    return Promise.resolve();
+  }
+
+  getSubmissionDeclaration({
+    id,
+  }: SubmissionRef): Promise<SubmissionDeclaration> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(submission.submissionDeclaration);
+  }
+
+  setSubmissionDeclaration(
+    { id }: SubmissionRef,
+    value: SubmissionDeclaration
+  ): Promise<void> {
+    const submission = this.submissions.get(id);
+    if (submission === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    if (submission.submissionDeclaration.status === 'CannotStart') {
+      return Promise.reject(Boom.badRequest());
+    }
+    if (!isCollectionDateValid(submission.collectionDate)) {
+      submission.collectionDate = { status: 'NotStarted' };
+
+      submission.submissionConfirmation =
+        submissionConfirmationUpdate(submission);
+      submission.submissionDeclaration =
+        submissionDeclarationUpdate(submission);
+
+      this.submissions.set(id, submission);
+      return Promise.reject(Boom.badRequest('Invalid collection date'));
+    }
+
+    submission.submissionDeclaration = value;
     this.submissions.set(id, submission);
     return Promise.resolve();
   }
@@ -1524,6 +1745,100 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
         id,
         accountId,
         rfdId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getSubmissionConfirmation({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<SubmissionConfirmation> {
+    let response: GetDraftSubmissionConfirmationByIdResponse;
+    try {
+      response = await this.client.getDraftSubmissionConfirmationById({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setSubmissionConfirmation(
+    { id, accountId }: SubmissionRef,
+    value: SubmissionConfirmation
+  ): Promise<void> {
+    let response: SetDraftSubmissionConfirmationByIdResponse;
+    try {
+      response = await this.client.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getSubmissionDeclaration({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<SubmissionDeclaration> {
+    let response: GetDraftSubmissionDeclarationByIdResponse;
+    try {
+      response = await this.client.getDraftSubmissionDeclarationById({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async setSubmissionDeclaration(
+    { id, accountId }: SubmissionRef,
+    value: SubmissionDeclaration
+  ): Promise<void> {
+    let response: SetDraftSubmissionDeclarationByIdResponse;
+    try {
+      response = await this.client.setDraftSubmissionDeclarationById({
+        id,
+        accountId,
+        value,
       });
     } catch (err) {
       this.logger.error(err);

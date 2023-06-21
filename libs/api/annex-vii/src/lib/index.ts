@@ -30,6 +30,10 @@ export {
   getDraftRecoveryFacilityDetails,
   setDraftRecoveryFacilityDetails,
   deleteDraftRecoveryFacilityDetails,
+  getDraftSubmissionConfirmationById,
+  setDraftSubmissionConfirmationById,
+  getDraftSubmissionDeclarationById,
+  setDraftSubmissionDeclarationById,
 } from './dto';
 
 export type {
@@ -100,6 +104,14 @@ export type {
   SetDraftRecoveryFacilityDetailsResponse,
   DeleteDraftRecoveryFacilityDetailsRequest,
   DeleteDraftRecoveryFacilityDetailsResponse,
+  GetDraftSubmissionConfirmationByIdRequest,
+  GetDraftSubmissionConfirmationByIdResponse,
+  SetDraftSubmissionConfirmationByIdRequest,
+  SetDraftSubmissionConfirmationByIdResponse,
+  GetDraftSubmissionDeclarationByIdRequest,
+  GetDraftSubmissionDeclarationByIdResponse,
+  SetDraftSubmissionDeclarationByIdRequest,
+  SetDraftSubmissionDeclarationByIdResponse,
 } from './dto';
 
 export * as schema from './schema';

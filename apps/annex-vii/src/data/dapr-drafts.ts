@@ -39,6 +39,8 @@ export default class DaprDraftRepository implements DraftRepository {
         ukExitLocation: { status: s.ukExitLocation.status },
         transitCountries: { status: s.transitCountries.status },
         recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
+        submissionConfirmation: { status: s.submissionConfirmation.status },
+        submissionDeclaration: { status: s.submissionDeclaration.status },
       };
     });
   }
@@ -80,6 +82,8 @@ export default class DaprDraftRepository implements DraftRepository {
       ukExitLocation: data.ukExitLocation,
       transitCountries: data.transitCountries,
       recoveryFacilityDetail: data.recoveryFacilityDetail,
+      submissionConfirmation: data.submissionConfirmation,
+      submissionDeclaration: data.submissionDeclaration,
     };
   }
 

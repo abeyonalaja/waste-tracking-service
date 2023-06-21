@@ -12,6 +12,8 @@ import {
   validatePutExitLocationRequest,
   validatePutTransitCountriesRequest,
   validateSetRecoveryFacilityDetailRequest,
+  validatePutSubmissionConfirmationRequest,
+  validatePutSubmissionDeclarationRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -938,5 +940,67 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       ],
     };
     expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(false);
+  });
+});
+
+describe('validatePutSubmissionConfirmationRequest', () => {
+  const validate = validatePutSubmissionConfirmationRequest;
+
+  it('Rejects an invalid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts a valid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'NotStarted',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Complete',
+        confirmation: true,
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutSubmissionDeclarationRequest', () => {
+  const validate = validatePutSubmissionDeclarationRequest;
+
+  it('Rejects an invalid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'Complete',
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts a valid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        status: 'NotStarted',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        status: 'Complete',
+        declaration: true,
+      })
+    ).toBe(true);
   });
 });

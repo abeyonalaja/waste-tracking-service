@@ -567,4 +567,76 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getDraftSubmissionConfirmationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftSubmissionConfirmationByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftSubmissionConfirmationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftSubmissionConfirmationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.SetDraftSubmissionConfirmationByIdRequest;
+    if (!validate.setDraftSubmissionConfirmationByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftSubmissionConfirmationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDraftSubmissionDeclarationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftSubmissionDeclarationByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getDraftSubmissionDeclarationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setDraftSubmissionDeclarationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.SetDraftSubmissionDeclarationByIdRequest;
+    if (!validate.setDraftSubmissionDeclarationByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.setDraftSubmissionDeclarationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

@@ -21,6 +21,8 @@ import {
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
   GetDraftCollectionDetailRequest,
+  GetDraftSubmissionConfirmationByIdRequest,
+  GetDraftSubmissionDeclarationByIdRequest,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -564,6 +566,40 @@ const draftTransitCountries: SchemaObject = {
   },
 };
 
+const draftSubmissionConfirmation: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    CannotStart: {
+      properties: {},
+    },
+    NotStarted: {
+      properties: {},
+    },
+    Complete: {
+      properties: {
+        confirmation: { type: 'boolean' },
+      },
+    },
+  },
+};
+
+const draftSubmissionDeclaration: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    CannotStart: {
+      properties: {},
+    },
+    NotStarted: {
+      properties: {},
+    },
+    Complete: {
+      properties: {
+        declaration: { type: 'boolean' },
+      },
+    },
+  },
+};
+
 const draftSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
@@ -578,6 +614,8 @@ const draftSubmission: SchemaObject = {
     ukExitLocation: draftExitLocation,
     transitCountries: draftTransitCountries,
     recoveryFacilityDetail: draftRecoveryFacilityDetails,
+    submissionConfirmation: draftSubmissionConfirmation,
+    submissionDeclaration: draftSubmissionDeclaration,
   },
 };
 
@@ -604,6 +642,8 @@ export const getDraftsResponse: SchemaObject = {
           ukExitLocation: { ref: 'sectionSummary' },
           transitCountries: { ref: 'sectionSummary' },
           recoveryFacilityDetail: { ref: 'sectionSummary' },
+          submissionConfirmation: { ref: 'sectionSummary' },
+          submissionDeclaration: { ref: 'sectionSummary' },
         },
       },
     },
@@ -1105,6 +1145,70 @@ export const deleteDraftRecoveryFacilityDetailsRequest: JTDSchemaType<DeleteDraf
   };
 
 export const deleteDraftRecoveryFacilityDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftSubmissionConfirmationByIdByIdRequest: JTDSchemaType<GetDraftSubmissionConfirmationByIdRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftSubmissionConfirmationByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftSubmissionConfirmation,
+  },
+};
+
+export const setDraftSubmissionConfirmationByIdRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftSubmissionConfirmation,
+  },
+};
+
+export const setDraftSubmissionConfirmationByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const getDraftSubmissionDeclarationByIdByIdRequest: JTDSchemaType<GetDraftSubmissionDeclarationByIdRequest> =
+  {
+    properties: {
+      id: { type: 'string' },
+      accountId: { type: 'string' },
+    },
+  };
+
+export const getDraftSubmissionDeclarationByIdResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftSubmissionDeclaration,
+  },
+};
+
+export const setDraftSubmissionDeclarationByIdRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: draftSubmissionDeclaration,
+  },
+};
+
+export const setDraftSubmissionDeclarationByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

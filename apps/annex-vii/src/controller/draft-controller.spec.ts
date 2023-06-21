@@ -5,7 +5,10 @@ import { add } from 'date-fns';
 import winston from 'winston';
 import { DraftSubmission, DraftSubmissionSummary } from '../model';
 import DraftController from './draft-controller';
-import { ExitLocation } from '@wts/api/waste-tracking-gateway';
+import {
+  ExitLocation,
+  SubmissionConfirmation,
+} from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -99,6 +102,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       };
 
       mockRepository.getDraft.mockResolvedValue(value);
@@ -166,6 +171,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -204,6 +211,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -227,6 +236,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -259,6 +270,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -298,6 +311,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -336,6 +351,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -370,6 +387,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -414,6 +433,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -507,6 +528,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -589,6 +612,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -620,6 +645,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -669,6 +696,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -721,6 +750,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -804,6 +835,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -874,6 +907,8 @@ describe(DraftController, () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -922,6 +957,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -956,6 +993,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const setExitLocationRequest = {
@@ -986,6 +1025,8 @@ describe(DraftController, () => {
           ukExitLocation: setExitLocationRequest,
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -1011,6 +1052,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const setExitLocationRequest = {
@@ -1042,6 +1085,8 @@ describe(DraftController, () => {
           ukExitLocation: setExitLocationRequest,
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -1069,6 +1114,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1101,6 +1148,8 @@ describe(DraftController, () => {
             values: ['N.Ireland', 'Wales'],
           },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -1128,6 +1177,8 @@ describe(DraftController, () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1195,6 +1246,8 @@ describe(DraftController, () => {
             },
           ],
         },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1266,6 +1319,8 @@ describe(DraftController, () => {
               },
             ],
           },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
         accountId
       );
@@ -1316,6 +1371,8 @@ describe(DraftController, () => {
             },
           ],
         },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1328,6 +1385,551 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalled();
 
       expect(response.success).toBe(true);
+    });
+  });
+
+  describe('setDraftSubmissionConfirmation', () => {
+    const id = faker.datatype.uuid();
+    const accountId = faker.datatype.uuid();
+    let date = add(new Date(), { weeks: 2 });
+
+    const mockValidSubmission = {
+      id: id,
+      reference: 'abc',
+      wasteDescription: {
+        wasteCode: {
+          type: faker.datatype.string(),
+          value: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        status: 'Complete',
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        status: 'Complete',
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        status: 'Complete',
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as DraftSubmission;
+
+    const mockInvalidDateSubmission = { ...mockValidSubmission };
+    date = add(new Date(), { days: 1 });
+
+    mockInvalidDateSubmission.collectionDate = {
+      status: 'Complete',
+      value: {
+        type: 'ActualDate',
+        year: date.getFullYear().toString(),
+        month: (date.getMonth() + 1).toString().padStart(2, '0'),
+        day: date.getDate().toString().padStart(2, '0'),
+      },
+    };
+
+    it('accepts a valid set submission confirmation request', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockValidSubmission);
+
+      const response = await subject.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          confirmation: true,
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+    });
+
+    it('rejects an invalid set submission confirmation request', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockValidSubmission);
+
+      subject.setDraftExporterDetailById({
+        id,
+        accountId,
+        value: {
+          exporterAddress: {
+            country: faker.datatype.string(),
+            postcode: faker.datatype.string(),
+            townCity: faker.datatype.string(),
+            addressLine1: faker.datatype.string(),
+            addressLine2: faker.datatype.string(),
+          },
+          status: 'Started',
+          exporterContactDetails: {
+            organisationName: faker.datatype.string(),
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+          },
+        },
+      });
+
+      const response = await subject.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          confirmation: true,
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(false);
+    });
+
+    it('rejects an invalid set submission confirmation request', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockValidSubmission);
+
+      const response = await subject.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value: {
+          status: 'CannotStart',
+        },
+      });
+
+      expect(response.success).toBe(false);
+    });
+
+    it('If the status of any of the submission entries is not "Complete," the submission confirmation will be reset to "CannotStart"', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockValidSubmission);
+
+      subject.setDraftExporterDetailById({
+        id,
+        accountId,
+        value: {
+          exporterAddress: {
+            country: faker.datatype.string(),
+            postcode: faker.datatype.string(),
+            townCity: faker.datatype.string(),
+            addressLine1: faker.datatype.string(),
+            addressLine2: faker.datatype.string(),
+          },
+          status: 'Started',
+          exporterContactDetails: {
+            organisationName: faker.datatype.string(),
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+          },
+        },
+      });
+
+      const response = await subject.getDraftSubmissionConfirmationById({
+        id,
+        accountId,
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'CannotStart',
+        },
+      });
+    });
+
+    it('Reset collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockInvalidDateSubmission);
+      const response = await subject.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          confirmation: true,
+        } as SubmissionConfirmation,
+      });
+
+      expect(response.success).toBe(false);
+      const { collectionDate } = await mockRepository.getDraft(id, accountId);
+
+      expect(collectionDate).toEqual({
+        status: 'NotStarted',
+      });
+    });
+  });
+
+  describe('setDraftSubmissionDeclaration', () => {
+    const id = faker.datatype.uuid();
+    const accountId = faker.datatype.uuid();
+    let date = add(new Date(), { weeks: 2 });
+
+    const mockSubmission = {
+      id: id,
+      reference: 'abc',
+      wasteDescription: {
+        wasteCode: {
+          type: faker.datatype.string(),
+          value: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        status: 'Complete',
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        status: 'Complete',
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        status: 'Complete',
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as DraftSubmission;
+
+    const mockInvalidDateSubmission = { ...mockSubmission };
+    date = add(new Date(), { days: 1 });
+
+    mockInvalidDateSubmission.collectionDate = {
+      status: 'Complete',
+      value: {
+        type: 'ActualDate',
+        year: date.getFullYear().toString(),
+        month: (date.getMonth() + 1).toString().padStart(2, '0'),
+        day: date.getDate().toString().padStart(2, '0'),
+      },
+    };
+
+    it('accepts a valid set submission declaration request', async () => {
+      mockSubmission.submissionConfirmation = {
+        status: 'Complete',
+        confirmation: true,
+      };
+      mockSubmission.submissionDeclaration = { status: 'NotStarted' };
+      mockRepository.getDraft.mockResolvedValue(mockSubmission);
+
+      const response = await subject.setDraftSubmissionDeclarationById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          declaration: true,
+        },
+      });
+      console.log(await subject.getDraftById({ id, accountId }));
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+    });
+
+    it('rejects an invalid set submission declaration request', async () => {
+      mockSubmission.submissionConfirmation = { status: 'CannotStart' };
+      mockSubmission.submissionDeclaration = { status: 'CannotStart' };
+      mockRepository.getDraft.mockResolvedValue(mockSubmission);
+
+      expect(
+        subject.getDraftSubmissionConfirmationById({ id, accountId })
+      ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
+      expect(
+        subject.getDraftSubmissionDeclarationById({ id, accountId })
+      ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
+
+      const response = await subject.setDraftSubmissionDeclarationById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          declaration: true,
+        },
+      });
+
+      expect(response.success).toBe(false);
+    });
+
+    it('rejects an invalid set submission declaration request', async () => {
+      mockRepository.getDraft.mockResolvedValue(mockSubmission);
+
+      const response = await subject.setDraftSubmissionConfirmationById({
+        id,
+        accountId,
+        value: {
+          status: 'CannotStart',
+        },
+      });
+
+      expect(response.success).toBe(false);
+    });
+
+    it('If the status of any of the submission entries is not "Complete," the submission declaration will be reset to "CannotStart"', async () => {
+      mockSubmission.submissionConfirmation = {
+        status: 'Complete',
+        confirmation: true,
+      };
+      mockSubmission.submissionDeclaration = {
+        status: 'Complete',
+        declaration: true,
+      };
+      mockRepository.getDraft.mockResolvedValue(mockSubmission);
+
+      subject.setDraftExporterDetailById({
+        id,
+        accountId,
+        value: {
+          exporterAddress: {
+            country: faker.datatype.string(),
+            postcode: faker.datatype.string(),
+            townCity: faker.datatype.string(),
+            addressLine1: faker.datatype.string(),
+            addressLine2: faker.datatype.string(),
+          },
+          status: 'Started',
+          exporterContactDetails: {
+            organisationName: faker.datatype.string(),
+            fullName: faker.datatype.string(),
+            emailAddress: faker.datatype.string(),
+            phoneNumber: faker.datatype.string(),
+          },
+        },
+      });
+
+      expect(
+        subject.getDraftSubmissionConfirmationById({ id, accountId })
+      ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
+      expect(
+        subject.getDraftSubmissionConfirmationById({ id, accountId })
+      ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
     });
   });
 });

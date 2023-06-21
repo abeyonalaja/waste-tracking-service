@@ -16,6 +16,8 @@ import {
   DeleteDraftRecoveryFacilityDetailsRequest,
   SetDraftExitLocationByIdRequest,
   SetDraftTransitCountriesRequest,
+  SetDraftSubmissionConfirmationByIdRequest,
+  SetDraftSubmissionDeclarationByIdRequest,
 } from './dto';
 import {
   getDraftByIdResponse,
@@ -33,6 +35,8 @@ import {
   deleteDraftRecoveryFacilityDetailsRequest,
   setDraftExitLocationByIdRequest,
   setDraftTransitCountriesRequest,
+  setDraftSubmissionConfirmationByIdRequest,
+  setDraftSubmissionDeclarationByIdRequest,
 } from './schema';
 
 const ajv = new Ajv();
@@ -57,6 +61,8 @@ describe('getDraftsResponse', () => {
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
         },
       ],
     };
@@ -104,6 +110,8 @@ describe('getDraftByIdResponse', () => {
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
         recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
       },
     };
 
@@ -597,6 +605,92 @@ describe('deleteDraftRecoveryFacilityDetailsRequest', () => {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       rfdId: faker.datatype.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftSubmissionConfirmationByIdRequest', () => {
+  const validate = ajv.compile<SetDraftSubmissionConfirmationByIdRequest>(
+    setDraftSubmissionConfirmationByIdRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionConfirmationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'CannotStart',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionConfirmationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'NotStarted',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionConfirmationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        confirmation: faker.datatype.boolean(),
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftSubmissionDeclarationByIdRequest', () => {
+  const validate = ajv.compile<SetDraftSubmissionDeclarationByIdRequest>(
+    setDraftSubmissionDeclarationByIdRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionDeclarationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'CannotStart',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionDeclarationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'NotStarted',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with dto values', () => {
+    const value: SetDraftSubmissionDeclarationByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: {
+        status: 'Complete',
+        declaration: faker.datatype.boolean(),
+      },
     };
 
     expect(validate(value)).toBe(true);
