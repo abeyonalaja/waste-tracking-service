@@ -121,8 +121,12 @@ const WasteExitLocation = () => {
     });
   };
 
+  const handleLinkSubmit = (e) => {
+    handleSubmit(e, true);
+  };
+
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: FormEvent, returnToDraft = false) => {
       const pointOfExit = pointOfExitPage.data?.value;
       const knowsPointOfExit = pointOfExitPage.data?.provided;
 
@@ -155,8 +159,11 @@ const WasteExitLocation = () => {
             })
             .then((data) => {
               if (data !== undefined) {
+                const path = returnToDraft
+                  ? '/submit-an-export-tasklist'
+                  : '/waste-transit-countries';
                 router.push({
-                  pathname: '/submit-an-export-tasklist',
+                  pathname: path,
                   query: { id },
                 });
               }
@@ -217,7 +224,7 @@ const WasteExitLocation = () => {
                     }))}
                   />
                 )}
-                <GovUK.Caption>
+                <GovUK.Caption size="L">
                   {t('exportJourney.pointOfExit.caption')}
                 </GovUK.Caption>
                 <form onSubmit={handleSubmit}>
@@ -282,7 +289,7 @@ const WasteExitLocation = () => {
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}
                     </GovUK.Button>
-                    <SaveReturnButton onClick={handleSubmit} />
+                    <SaveReturnButton onClick={handleLinkSubmit} />
                   </ButtonGroup>
                 </form>
               </>

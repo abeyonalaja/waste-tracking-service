@@ -442,7 +442,9 @@ const WasteTransitCountries = () => {
               });
             } else {
               router.push({
-                pathname: '/submit-an-export-tasklist',
+                pathname: router.query.dashboard
+                  ? '/submit-an-export-tasklist'
+                  : '/waste-exit-location',
                 query: { id },
               });
             }
@@ -485,7 +487,7 @@ const WasteTransitCountries = () => {
                       )}
                     />
                   )}
-                <GovUK.Caption>
+                <GovUK.Caption size="L">
                   {t('exportJourney.wasteTransitCountries.caption')}
                 </GovUK.Caption>
                 {wasteTransitPage.showView === VIEWS.LIST && (
