@@ -12,6 +12,7 @@ import {
   DocumentStatus,
   Paragraph,
   SubmissionNotFound,
+  SaveReturnButton,
   Loading,
 } from '../components';
 import styled from 'styled-components';
@@ -185,11 +186,16 @@ const Tasklist = () => {
         'transitCountries',
       ]);
       const sectionFourStatus = isSectionComplete(['recoveryFacilityDetail']);
+      const sectionFiveStatus = isSectionComplete([
+        'submissionConfirmation',
+        'submissionDeclaration',
+      ]);
       const statusCount = [
         sectionOneStatus,
         sectionTwoStatus,
         sectionThreeStatus,
         sectionFourStatus,
+        sectionFiveStatus,
       ].filter(Boolean).length;
       setSectionStatus(statusCount);
     }
@@ -254,13 +260,13 @@ const Tasklist = () => {
                 </GovUK.Heading>
 
                 <GovUK.Heading as="h2" size="SMALL">
-                  {sectionStatus < 4
+                  {sectionStatus < 5
                     ? t('exportJourney.submitAnExport.submissionIncomplete')
                     : t('exportJourney.submitAnExport.submissionComplete')}
                 </GovUK.Heading>
 
                 <Paragraph>
-                  {`You have completed ${sectionStatus} of 4 sections.`}
+                  {`You have completed ${sectionStatus} of 5 sections.`}
                 </Paragraph>
               </GovUK.GridCol>
             </GovUK.GridRow>
@@ -537,18 +543,83 @@ const Tasklist = () => {
                   </TaskListItem>
                 </TaskListItems>
               </li>
+
+              <li>
+                <TaskListSectionHeading size="M">
+                  {t('exportJourney.submitAnExport.SectionFive.heading')}
+                </TaskListSectionHeading>
+                <TaskListItems>
+                  <TaskListItem>
+                    <TaskName>
+                      {tasklistPage.data?.submissionConfirmation.status !==
+                      'CannotStart' ? (
+                        <AppLink
+                          href={{
+                            pathname: `/check-your-report`,
+                            query: { id, dashboard: true },
+                          }}
+                        >
+                          {t(
+                            'exportJourney.submitAnExport.SectionFive.checkYourReport'
+                          )}
+                        </AppLink>
+                      ) : (
+                        t(
+                          'exportJourney.submitAnExport.SectionFive.checkYourReport'
+                        )
+                      )}
+                    </TaskName>
+                    <TaskStatus>
+                      <DocumentStatus
+                        id="submission-confirmation-status"
+                        status={
+                          tasklistPage.data?.submissionConfirmation.status
+                        }
+                      />
+                    </TaskStatus>
+                  </TaskListItem>
+
+                  <TaskListItem>
+                    <TaskName>
+                      {tasklistPage.data?.submissionDeclaration.status !==
+                      'CannotStart' ? (
+                        <AppLink
+                          href={{
+                            pathname: `/sign-declaration`,
+                            query: { id, dashboard: true },
+                          }}
+                        >
+                          {t(
+                            'exportJourney.submitAnExport.SectionFive.signDeclaration'
+                          )}
+                        </AppLink>
+                      ) : (
+                        t(
+                          'exportJourney.submitAnExport.SectionFive.signDeclaration'
+                        )
+                      )}
+                    </TaskName>
+                    <TaskStatus>
+                      <DocumentStatus
+                        id="submission-declaration-status"
+                        status={tasklistPage.data?.submissionDeclaration.status}
+                      />
+                    </TaskStatus>
+                  </TaskListItem>
+                </TaskListItems>
+              </li>
             </TaskListOL>
-            <Lower>
-              <GovUK.H2 size="MEDIUM">
-                {t('exportJourney.submitAnExport.finalCheck.title')}
-              </GovUK.H2>
-              <Paragraph>
-                {t('exportJourney.submitAnExport.finalCheck.description')}
-              </Paragraph>
-              <AppLink href="/dashboard">
-                {t('exportJourney.submitAnExport.returnLink')}
-              </AppLink>
-            </Lower>
+
+            <SaveReturnButton
+              onClick={() =>
+                router.push({
+                  pathname: '/dashboard',
+                  query: { id },
+                })
+              }
+            >
+              {t('exportJourney.submitAnExport.returnLink')}
+            </SaveReturnButton>
           </>
         )}
       </GovUK.Page>
