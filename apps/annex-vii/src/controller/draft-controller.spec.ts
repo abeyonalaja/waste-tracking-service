@@ -5,10 +5,6 @@ import { add } from 'date-fns';
 import winston from 'winston';
 import { DraftSubmission, DraftSubmissionSummary } from '../model';
 import DraftController from './draft-controller';
-import {
-  ExitLocation,
-  SubmissionConfirmation,
-} from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -1000,7 +996,7 @@ describe(DraftController, () => {
       const setExitLocationRequest = {
         status: 'Complete',
         exitLocation: { provided: 'Yes', value: faker.datatype.string() },
-      } as ExitLocation;
+      } as DraftSubmission['ukExitLocation'];
       const accountId = faker.datatype.uuid();
       const response = await subject.setDraftExitLocationById({
         id,
@@ -1059,7 +1055,7 @@ describe(DraftController, () => {
       const setExitLocationRequest = {
         status: 'Complete',
         exitLocation: { provided: 'No' },
-      } as ExitLocation;
+      } as DraftSubmission['ukExitLocation'];
 
       const accountId = faker.datatype.uuid();
       const response = await subject.setDraftExitLocationById({
@@ -1661,7 +1657,7 @@ describe(DraftController, () => {
         value: {
           status: 'Complete',
           confirmation: true,
-        } as SubmissionConfirmation,
+        } as DraftSubmission['submissionConfirmation'],
       });
 
       expect(response.success).toBe(false);

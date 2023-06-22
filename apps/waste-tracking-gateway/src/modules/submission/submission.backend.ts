@@ -58,7 +58,7 @@ export type RecoveryFacilityData = dto.RecoveryFacilityData;
 export type SubmissionConfirmation = dto.SubmissionConfirmation;
 export type SubmissionDeclaration = dto.SubmissionDeclaration;
 
-function submissionConfirmationUpdate(
+function setSubmissionConfirmation(
   submission: Submission
 ): SubmissionConfirmation {
   const {
@@ -78,7 +78,7 @@ function submissionConfirmationUpdate(
   }
 }
 
-function submissionDeclarationUpdate(
+function setSubmissionDeclaration(
   submission: Submission
 ): SubmissionDeclaration {
   if (submission.submissionConfirmation.status === 'Complete') {
@@ -269,9 +269,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.reference = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -373,9 +372,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.carriers = carriers;
     submission.recoveryFacilityDetail = recoveryFacilityDetail;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -398,9 +396,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.wasteQuantity = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -426,9 +423,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.exporterDetail = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -454,9 +450,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.importerDetail = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -484,9 +479,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.collectionDate = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -532,10 +526,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         values: [carrier],
       };
 
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
-      submission.submissionDeclaration =
-        submissionDeclarationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
       this.submissions.set(id, submission);
       return Promise.resolve(submission.carriers);
@@ -556,9 +548,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       values: carriers,
     };
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve({
@@ -612,10 +603,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (value.status === 'NotStarted') {
       submission.carriers = value;
 
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
-      submission.submissionDeclaration =
-        submissionDeclarationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
       this.submissions.set(id, submission);
       return Promise.resolve();
@@ -638,9 +627,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.carriers.status = value.status;
     submission.carriers.values[index] = carrier as dto.Carrier;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -678,9 +666,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       };
     }
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -706,9 +693,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.collectionDetail = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -731,9 +717,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.ukExitLocation = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -759,9 +744,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     submission.transitCountries = value;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -804,10 +788,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         values: [newRecoveryFacilities],
       };
 
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
-      submission.submissionDeclaration =
-        submissionDeclarationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
       this.submissions.set(id, submission);
       return Promise.resolve(submission.recoveryFacilityDetail);
@@ -831,9 +813,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       values: facilities,
     };
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve({
@@ -895,10 +876,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (value.status !== 'Started' && value.status !== 'Complete') {
       submission.recoveryFacilityDetail = value;
 
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
-      submission.submissionDeclaration =
-        submissionDeclarationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
       this.submissions.set(id, submission);
       return Promise.resolve();
@@ -921,9 +900,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     submission.recoveryFacilityDetail.values[index] =
       recoveryFacility as dto.RecoveryFacility;
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -958,9 +936,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       submission.recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
-    submission.submissionConfirmation =
-      submissionConfirmationUpdate(submission);
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -991,15 +968,14 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
     if (!isCollectionDateValid(submission.collectionDate)) {
       submission.collectionDate = { status: 'NotStarted' };
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
 
       this.submissions.set(id, submission);
       return Promise.reject(Boom.badRequest('Invalid collection date'));
     }
 
     submission.submissionConfirmation = value;
-    submission.submissionDeclaration = submissionDeclarationUpdate(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -1031,10 +1007,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (!isCollectionDateValid(submission.collectionDate)) {
       submission.collectionDate = { status: 'NotStarted' };
 
-      submission.submissionConfirmation =
-        submissionConfirmationUpdate(submission);
-      submission.submissionDeclaration =
-        submissionDeclarationUpdate(submission);
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
       this.submissions.set(id, submission);
       return Promise.reject(Boom.badRequest('Invalid collection date'));

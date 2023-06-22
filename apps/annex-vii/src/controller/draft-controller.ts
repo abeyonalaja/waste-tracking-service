@@ -6,11 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { DraftRepository } from '../data';
 import { DraftSubmission } from '../model';
-import {
-  CollectionDate,
-  SubmissionConfirmation,
-  SubmissionDeclaration,
-} from '@wts/api/waste-tracking-gateway';
 
 export type Handler<Request, Response> = (
   request: Request
@@ -19,7 +14,7 @@ export type Handler<Request, Response> = (
 export default class DraftController {
   constructor(private repository: DraftRepository, private logger: Logger) {}
 
-  isCollectionDateValid(date: CollectionDate) {
+  isCollectionDateValid(date: DraftSubmission['collectionDate']) {
     if (date.status !== 'NotStarted') {
       const { day: dayStr, month: monthStr, year: yearStr } = date.value;
 
@@ -42,11 +37,16 @@ export default class DraftController {
     return true;
   }
 
-  submissionConfirmationUpdate(
+  setSubmissionConfirmation(
     submission: DraftSubmission
-  ): SubmissionConfirmation {
-    const { id, reference, submissionConfirmation, ...filteredValues } =
-      submission;
+  ): DraftSubmission['submissionConfirmation'] {
+    const {
+      id,
+      reference,
+      submissionConfirmation,
+      submissionDeclaration,
+      ...filteredValues
+    } = submission;
 
     if (
       Object.values(filteredValues).every(
@@ -59,9 +59,9 @@ export default class DraftController {
     }
   }
 
-  submissionDeclarationUpdate(
+  setSubmissionDeclaration(
     submission: DraftSubmission
-  ): SubmissionDeclaration {
+  ): DraftSubmission['submissionDeclaration'] {
     if (submission.submissionConfirmation.status === 'Complete') {
       return { status: 'NotStarted' };
     } else {
@@ -158,8 +158,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.reference = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -275,8 +275,8 @@ export default class DraftController {
       draft.carriers = carriers;
       draft.recoveryFacilityDetail = recoveryFacilityDetail;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft(
         {
@@ -320,8 +320,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.wasteQuantity = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -360,8 +360,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.exporterDetail = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -400,8 +400,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.importerDetail = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -447,8 +447,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.collectionDate = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -508,8 +508,8 @@ export default class DraftController {
           values: [carrier],
         };
 
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+        draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(draft.carriers);
@@ -530,8 +530,8 @@ export default class DraftController {
         values: carriers,
       };
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success({
@@ -597,8 +597,8 @@ export default class DraftController {
       if (value.status === 'NotStarted') {
         draft.carriers = value;
 
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+        draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(undefined);
@@ -621,8 +621,8 @@ export default class DraftController {
       draft.carriers.status = value.status;
       draft.carriers.values[index] = carrier as api.DraftCarrier;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -668,8 +668,8 @@ export default class DraftController {
         };
       }
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -708,8 +708,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.collectionDetail = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -731,8 +731,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.ukExitLocation = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -771,8 +771,8 @@ export default class DraftController {
       const draft = await this.repository.getDraft(id, accountId);
       draft.transitCountries = value;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -845,8 +845,8 @@ export default class DraftController {
           values: [rfdId],
         };
 
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+        draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(draft.recoveryFacilityDetail);
@@ -870,8 +870,8 @@ export default class DraftController {
         values: recoveryFacility,
       };
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success({
@@ -943,8 +943,8 @@ export default class DraftController {
       if (value.status !== 'Started' && value.status !== 'Complete') {
         draft.recoveryFacilityDetail = value;
 
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+        draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(undefined);
@@ -967,8 +967,8 @@ export default class DraftController {
       draft.recoveryFacilityDetail.status = value.status;
       draft.recoveryFacilityDetail.values[index] = recoveryFacility;
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -1008,8 +1008,8 @@ export default class DraftController {
         draft.recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
-      draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
@@ -1036,12 +1036,12 @@ export default class DraftController {
 
       if (!this.isCollectionDateValid(draft.collectionDate)) {
         draft.collectionDate = { status: 'NotStarted' };
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
         await this.repository.saveDraft({ ...draft }, accountId);
         return fromBoom(Boom.badRequest());
       }
       draft.submissionConfirmation = value;
-      draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
       await this.repository.saveDraft({ ...draft }, accountId);
       return success(undefined);
     } catch (err) {
@@ -1085,8 +1085,8 @@ export default class DraftController {
       if (!this.isCollectionDateValid(draft.collectionDate)) {
         draft.collectionDate = { status: 'NotStarted' };
 
-        draft.submissionConfirmation = this.submissionConfirmationUpdate(draft);
-        draft.submissionDeclaration = this.submissionDeclarationUpdate(draft);
+        draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
+        draft.submissionDeclaration = this.setSubmissionDeclaration(draft);
 
         await this.repository.saveDraft({ ...draft }, accountId);
         return fromBoom(Boom.badRequest());
