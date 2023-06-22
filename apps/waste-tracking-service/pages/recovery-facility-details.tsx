@@ -156,6 +156,7 @@ const RecoveryFacilityDetails = () => {
     initialState
   );
   const [id, setId] = useState<string | string[]>(null);
+  const [emptyRecordId, setEmptyRecordId] = useState<string | string[]>(null);
   const [facilityCount, setFacilityCount] = useState<number>(0);
   const [additionalFacility, setAdditionalFacility] = useState<string>(null);
   const [isSecond, setIsSecond] = useState<boolean>(false);
@@ -177,7 +178,7 @@ const RecoveryFacilityDetails = () => {
   const [recoveryFacilityType, setRecoveryFacilityType] = useState<{
     type: string;
     recoveryCode: string;
-  }>();
+  }>({ type: 'RecoveryFacility', recoveryCode: '' });
 
   useEffect(() => {
     if (router.isReady) {
@@ -209,6 +210,26 @@ const RecoveryFacilityDetails = () => {
               type: 'DATA_FETCH_SUCCESS',
               payload: data,
             });
+
+            const emptyRecords = data.values.filter(
+              (site) =>
+                site.addressDetails === undefined &&
+                site.recoveryFacilityType === undefined
+            );
+            if (emptyRecords.length > 0) {
+              setEmptyRecordId(emptyRecords[0].id);
+            }
+
+            dispatchRecoveryPage({
+              type: 'DATA_UPDATE',
+              payload: {
+                values: data.values?.filter(
+                  (site) =>
+                    site.recoveryFacilityType?.type === 'RecoveryFacility'
+                ),
+              },
+            });
+
             if (data.status === 'Complete') {
               setStartPage(VIEWS.LIST);
               dispatchRecoveryPage({
@@ -216,18 +237,22 @@ const RecoveryFacilityDetails = () => {
                 payload: VIEWS.LIST,
               });
             } else {
-              if (data.values === undefined || data.values.length === 0) {
+              const filteredValues = data.values?.filter(
+                (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
+              );
+
+              if (filteredValues === undefined || filteredValues.length === 0) {
                 createRecoveryFacility();
               } else {
                 dispatchRecoveryPage({
                   type: 'FACILITY_DATA_UPDATE',
-                  payload: data.values.at(-1),
+                  payload: filteredValues.at(-1),
                 });
-                setIsSecond(data.values.length === 2);
-                setAddressDetails(data.values.at(-1)?.addressDetails);
-                setContactDetails(data.values.at(-1)?.contactDetails);
+                setIsSecond(filteredValues.length === 2);
+                setAddressDetails(filteredValues.at(-1)?.addressDetails);
+                setContactDetails(filteredValues.at(-1)?.contactDetails);
                 setRecoveryFacilityType(
-                  data.values.at(-1)?.recoveryFacilityDetail
+                  filteredValues.at(-1)?.recoveryFacilityType
                 );
                 setStartPage(VIEWS.ADDRESS_DETAILS);
                 dispatchRecoveryPage({
@@ -242,46 +267,59 @@ const RecoveryFacilityDetails = () => {
   }, [router.isReady, id, startPage]);
 
   const createRecoveryFacility = () => {
-    try {
-      fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status: 'Started' }),
-        }
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            const [facility] = data.values;
+    if (emptyRecordId !== null) {
+      dispatchRecoveryPage({
+        type: 'FACILITY_DATA_UPDATE',
+        payload: { id: emptyRecordId },
+      });
+      dispatchRecoveryPage({
+        type: 'SHOW_VIEW',
+        payload: VIEWS.ADDRESS_DETAILS,
+      });
+    } else {
+      try {
+        fetch(
+          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'Started' }),
+          }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              const [facility] = data.values;
 
-            dispatchRecoveryPage({
-              type: 'FACILITY_DATA_UPDATE',
-              payload: { id: facility.id },
-            });
-
-            if (recoveryPage.data?.values !== undefined) {
-              recoveryPage.data.values.push({ id: facility.id });
-            } else {
               dispatchRecoveryPage({
-                type: 'DATA_UPDATE',
-                payload: data,
+                type: 'FACILITY_DATA_UPDATE',
+                payload: { id: facility.id },
+              });
+
+              data.status = 'Started';
+
+              if (recoveryPage.data?.values !== undefined) {
+                recoveryPage.data.values.push({ id: facility.id });
+              } else {
+                dispatchRecoveryPage({
+                  type: 'DATA_UPDATE',
+                  payload: data,
+                });
+              }
+
+              dispatchRecoveryPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.ADDRESS_DETAILS,
               });
             }
-
-            dispatchRecoveryPage({
-              type: 'SHOW_VIEW',
-              payload: VIEWS.ADDRESS_DETAILS,
-            });
-          }
-        });
-    } catch (e) {
-      console.error(e);
+          });
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -311,6 +349,10 @@ const RecoveryFacilityDetails = () => {
               {
                 ...recoveryPage.facilityData,
                 addressDetails,
+                recoveryFacilityType: {
+                  ...recoveryPage.facilityData.recoveryFacilityType,
+                  ...recoveryFacilityType,
+                },
               },
             ],
           };
@@ -399,6 +441,8 @@ const RecoveryFacilityDetails = () => {
                   payload: updatedData,
                 });
 
+                setAdditionalFacility(null);
+
                 if (returnToDraft) {
                   router.push({
                     pathname: '/submit-an-export-tasklist',
@@ -459,7 +503,6 @@ const RecoveryFacilityDetails = () => {
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
     } else {
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
-
       if (additionalFacility === 'No') {
         router.push({
           pathname: '/submit-an-export-tasklist',
@@ -469,7 +512,7 @@ const RecoveryFacilityDetails = () => {
         setIsSecond(true);
         setAddressDetails(null);
         setContactDetails(null);
-        setRecoveryFacilityType(null);
+        setRecoveryFacilityType({ type: 'RecoveryFacility', recoveryCode: '' });
         createRecoveryFacility();
       }
     }

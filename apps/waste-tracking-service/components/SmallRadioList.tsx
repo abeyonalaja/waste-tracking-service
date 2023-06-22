@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, ReactElement } from 'react';
 import { GREY_2, ERROR_COLOUR } from 'govuk-colours';
 import { Fieldset, HintText, ErrorText, Radio } from 'govuk-react';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 interface Props {
   id?: string;
   name: string;
-  label: string;
+  label: ReactElement | string;
   hint?: string;
   value?: string | number;
   options: Array<string>;

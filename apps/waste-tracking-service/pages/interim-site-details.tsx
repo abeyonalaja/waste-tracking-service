@@ -1,4 +1,10 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -10,15 +16,22 @@ import {
   BreadcrumbWrap,
   SubmissionNotFound,
   Loading,
-  AppLink,
+  ButtonGroup,
+  SaveReturnButton,
+  SmallRadioList,
 } from '../components';
+import styled from 'styled-components';
+import { recoveryData } from '../utils/recoveryData';
 
 const VIEWS = {
-  QUESTION: 1,
+  ADDRESS_DETAILS: 1,
+  CONTACT_DETAILS: 2,
+  RECOVERY_CODE: 3,
 };
 
 type State = {
   data: any;
+  facilityData: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
@@ -31,6 +44,7 @@ type Action = {
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'DATA_UPDATE'
+    | 'FACILITY_DATA_UPDATE'
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
@@ -38,9 +52,10 @@ type Action = {
 
 const initialState: State = {
   data: null,
+  facilityData: null,
   isLoading: true,
   isError: false,
-  showView: VIEWS.QUESTION,
+  showView: VIEWS.ADDRESS_DETAILS,
   errors: null,
 };
 
@@ -70,6 +85,11 @@ const interimReducer = (state: State, action: Action) => {
         ...state,
         data: { ...state.data, ...action.payload },
       };
+    case 'FACILITY_DATA_UPDATE':
+      return {
+        ...state,
+        facilityData: action.payload,
+      };
     case 'ERRORS_UPDATE':
       return {
         ...state,
@@ -88,6 +108,16 @@ const interimReducer = (state: State, action: Action) => {
   }
 };
 
+const AddressField = styled(GovUK.InputField)`
+  @media (min-width: 641px) {
+    width: 75%;
+  }
+`;
+
+const TelephoneInput = styled(GovUK.Input)`
+  max-width: 20.5em;
+`;
+
 const InterimSiteDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -97,6 +127,32 @@ const InterimSiteDetails = () => {
   );
   const [id, setId] = useState(null);
   const [startPage, setStartPage] = useState(1);
+  const [addressDetails, setAddressDetails] = useState<{
+    name: string;
+    address: string;
+    country: string;
+  }>({
+    name: '',
+    address: '',
+    country: '',
+  });
+
+  const [contactDetails, setContactDetails] = useState<{
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    faxNumber: string;
+  }>({
+    fullName: '',
+    emailAddress: '',
+    phoneNumber: '',
+    faxNumber: '',
+  });
+
+  const [recoveryFacilityType, setRecoveryFacilityType] = useState<{
+    type: string;
+    recoveryCode: string;
+  }>({ type: 'InterimSite', recoveryCode: '' });
 
   useEffect(() => {
     if (router.isReady) {
@@ -118,15 +174,218 @@ const InterimSiteDetails = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setStartPage(VIEWS.QUESTION);
             dispatchInterimPage({
               type: 'DATA_FETCH_SUCCESS',
               payload: data,
             });
+            if (data.values !== undefined) {
+              const interimSite = data.values.filter(
+                (site) => site.recoveryFacilityType?.type === 'InterimSite'
+              );
+              const emptyRecords = data.values.filter(
+                (site) => site.addressDetails === undefined
+              );
+              if (interimSite.length > 0) {
+                const [site] = interimSite;
+                dispatchInterimPage({
+                  type: 'FACILITY_DATA_UPDATE',
+                  payload: site,
+                });
+                setAddressDetails(site.addressDetails);
+                setContactDetails(site.contactDetails);
+                setRecoveryFacilityType(site.recoveryFacilityType);
+              } else if (emptyRecords.length > 0) {
+                const [emptyInterimSite] = emptyRecords;
+                dispatchInterimPage({
+                  type: 'FACILITY_DATA_UPDATE',
+                  payload: emptyInterimSite,
+                });
+                setStartPage(VIEWS.ADDRESS_DETAILS);
+              }
+            } else {
+              createInterimSite();
+            }
           }
         });
     }
   }, [router.isReady, id, startPage]);
+
+  const handleLinkSubmit = (e, form, formSubmit) => {
+    formSubmit(e, form, true);
+  };
+
+  const handleSubmit = useCallback(
+    (e: FormEvent, form, returnToDraft = false) => {
+      let nextView;
+      let body;
+      switch (form) {
+        case 'address':
+          nextView = VIEWS.CONTACT_DETAILS;
+          body = {
+            status:
+              interimPage.data.status === 'NotStarted'
+                ? 'Started'
+                : interimPage.data.status,
+            values: [
+              {
+                ...interimPage.facilityData,
+                addressDetails,
+                recoveryFacilityType: {
+                  ...interimPage.facilityData.recoveryFacilityType,
+                  ...recoveryFacilityType,
+                },
+              },
+            ],
+          };
+          break;
+        case 'contact':
+          nextView = VIEWS.RECOVERY_CODE;
+          body = {
+            status:
+              interimPage.data.status === 'NotStarted'
+                ? 'Started'
+                : interimPage.data.status,
+            values: [
+              {
+                ...interimPage.facilityData,
+                contactDetails,
+              },
+            ],
+          };
+          break;
+        case 'code':
+          body = {
+            status:
+              interimPage.data.status === 'NotStarted'
+                ? 'Started'
+                : interimPage.data.status,
+            values: [
+              {
+                ...interimPage.facilityData,
+                recoveryFacilityType,
+              },
+            ],
+          };
+          break;
+      }
+
+      try {
+        fetch(
+          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              const currentData = interimPage.data;
+              let updatedData;
+              if (currentData.values !== undefined) {
+                updatedData = {
+                  ...currentData,
+                  values: currentData.values.map((obj) => {
+                    return data.values.find((o) => o.id === obj.id) || obj;
+                  }),
+                };
+              } else {
+                updatedData = data;
+              }
+
+              dispatchInterimPage({
+                type: 'FACILITY_DATA_UPDATE',
+                payload: data.values[0],
+              });
+
+              dispatchInterimPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: updatedData,
+              });
+
+              if (returnToDraft) {
+                router.push({
+                  pathname: '/submit-an-export-tasklist',
+                  query: { id },
+                });
+              } else if (form === 'code') {
+                router.push({
+                  pathname: '/recovery-facility-details',
+                  query: { id },
+                });
+              } else {
+                dispatchInterimPage({
+                  type: 'SHOW_VIEW',
+                  payload: nextView,
+                });
+              }
+            }
+          });
+      } catch (e) {
+        console.error(e);
+      }
+      e.preventDefault();
+    },
+    [interimPage.data, addressDetails, contactDetails, recoveryFacilityType]
+  );
+
+  const onAddressDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      [name]: value,
+    }));
+  };
+
+  const onContactDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setContactDetails((contactDetails) => ({
+      ...contactDetails,
+      [name]: value,
+    }));
+  };
+
+  const createInterimSite = () => {
+    try {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'Started' }),
+        }
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            const [interimSite] = data.values;
+            dispatchInterimPage({
+              type: 'FACILITY_DATA_UPDATE',
+              payload: interimSite,
+            });
+            dispatchInterimPage({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: { status: 'Started', value: data.values[0] },
+            });
+            dispatchInterimPage({
+              type: 'SHOW_VIEW',
+              payload: VIEWS.ADDRESS_DETAILS,
+            });
+          }
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const BreadCrumbs = () => {
     return (
@@ -156,7 +415,7 @@ const InterimSiteDetails = () => {
   return (
     <>
       <Head>
-        <title>TITLE</title>
+        <title>{t('exportJourney.interimSite.addressTitle')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -182,19 +441,227 @@ const InterimSiteDetails = () => {
                       }))}
                     />
                   )}
-                <GovUK.Caption>Interim site</GovUK.Caption>
-                {interimPage.showView === VIEWS.QUESTION && (
-                  <div id="page-interim-site-question">
-                    <GovUK.Heading size={'LARGE'}>Temporary page</GovUK.Heading>
-
-                    <AppLink
-                      href={{
-                        pathname: `/recovery-facility-details`,
-                        query: { id, dashboard: true },
-                      }}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.recoveryFacilities.caption')}
+                </GovUK.Caption>
+                {interimPage.showView === VIEWS.ADDRESS_DETAILS && (
+                  <div id="page-interim-site-address-details">
+                    <GovUK.Heading size={'LARGE'}>
+                      {t('exportJourney.interimSite.addressTitle')}
+                    </GovUK.Heading>
+                    <form onSubmit={(e) => handleSubmit(e, 'address')}>
+                      <AddressField
+                        mb={6}
+                        input={{
+                          name: 'name',
+                          id: 'name',
+                          value: addressDetails?.name,
+                          maxLength: 250,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: interimPage.errors?.name,
+                          touched: !!interimPage.errors?.name,
+                        }}
+                      >
+                        {t('exportJourney.recoveryFacilities.name')}
+                      </AddressField>
+                      <GovUK.TextArea
+                        mb={6}
+                        input={{
+                          name: 'address',
+                          id: 'address',
+                          value: addressDetails?.address,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: interimPage.errors?.address,
+                          touched: !!interimPage.errors?.address,
+                        }}
+                      >
+                        {t('address')}
+                      </GovUK.TextArea>
+                      <AddressField
+                        mb={6}
+                        input={{
+                          name: 'country',
+                          id: 'country',
+                          value: addressDetails?.country,
+                          maxLength: 250,
+                          onChange: onAddressDetailsChange,
+                        }}
+                        meta={{
+                          error: interimPage.errors?.country,
+                          touched: !!interimPage.errors?.country,
+                        }}
+                      >
+                        {t('address.country')}
+                      </AddressField>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButtonAddress">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton
+                          id="saveReturnButtonAddress"
+                          onClick={(e) =>
+                            handleLinkSubmit(e, 'address', handleSubmit)
+                          }
+                        />
+                      </ButtonGroup>
+                    </form>
+                  </div>
+                )}
+                {interimPage.showView === VIEWS.CONTACT_DETAILS && (
+                  <div id="page-interim-site-contact-details">
+                    <GovUK.Heading size={'LARGE'}>
+                      {t('exportJourney.interimSite.contactTitle')}
+                    </GovUK.Heading>
+                    <form
+                      onSubmit={(e) => handleSubmit(e, 'contact')}
+                      noValidate={true}
                     >
-                      Recovery facilities page
-                    </AppLink>
+                      <GovUK.InputField
+                        mb={6}
+                        hint={t('contact.nameHint')}
+                        input={{
+                          name: 'fullName',
+                          id: 'fullName',
+                          value: contactDetails?.fullName,
+                          maxLength: 250,
+                          onChange: onContactDetailsChange,
+                        }}
+                        meta={{
+                          error: interimPage.errors?.fullName,
+                          touched: !!interimPage.errors?.fullName,
+                        }}
+                      >
+                        {t('exportJourney.interimSite.contactPerson')}
+                      </GovUK.InputField>
+                      <GovUK.InputField
+                        mb={6}
+                        input={{
+                          name: 'emailAddress',
+                          id: 'emailAddress',
+                          type: 'email',
+                          value: contactDetails?.emailAddress,
+                          maxLength: 250,
+                          onChange: onContactDetailsChange,
+                        }}
+                        meta={{
+                          error: interimPage.errors?.emailAddress,
+                          touched: !!interimPage.errors?.emailAddress,
+                        }}
+                      >
+                        {t('contact.emailAddress')}
+                      </GovUK.InputField>
+                      <GovUK.FormGroup>
+                        <GovUK.Label
+                          htmlFor={'phoneNumber'}
+                          error={!!interimPage.errors?.phoneNumber}
+                        >
+                          <GovUK.LabelText>
+                            {t('contact.phoneNumber')}
+                          </GovUK.LabelText>
+
+                          {interimPage.errors?.phoneNumber && (
+                            <GovUK.ErrorText>
+                              {interimPage.errors?.phoneNumber}
+                            </GovUK.ErrorText>
+                          )}
+                          <GovUK.HintText>
+                            {t('contact.numberHint')}
+                          </GovUK.HintText>
+                          <TelephoneInput
+                            name="phoneNumber"
+                            id="phoneNumber"
+                            value={contactDetails?.phoneNumber}
+                            maxLength={50}
+                            type="tel"
+                            error={interimPage.errors?.phoneNumber}
+                            onChange={onContactDetailsChange}
+                          />
+                        </GovUK.Label>
+                      </GovUK.FormGroup>
+                      <GovUK.FormGroup>
+                        <GovUK.Label
+                          htmlFor={'faxNumber'}
+                          error={!!interimPage.errors?.faxNumber}
+                        >
+                          <GovUK.LabelText>
+                            {t('contact.faxNumber')}
+                          </GovUK.LabelText>
+
+                          {interimPage.errors?.fax && (
+                            <GovUK.ErrorText>
+                              {interimPage.errors?.faxNumber}
+                            </GovUK.ErrorText>
+                          )}
+                          <GovUK.HintText>
+                            {t('contact.numberHint')}
+                          </GovUK.HintText>
+                          <TelephoneInput
+                            name="faxNumber"
+                            id="faxNumber"
+                            value={contactDetails?.faxNumber}
+                            maxLength={50}
+                            type="tel"
+                            onChange={onContactDetailsChange}
+                          />
+                        </GovUK.Label>
+                      </GovUK.FormGroup>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButtonContact">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton
+                          id="saveReturnButtonContact"
+                          onClick={(e) =>
+                            handleLinkSubmit(e, 'contact', handleSubmit)
+                          }
+                        />
+                      </ButtonGroup>
+                    </form>
+                  </div>
+                )}
+                {interimPage.showView === VIEWS.RECOVERY_CODE && (
+                  <div id="page-interim-site-recovery-details">
+                    <GovUK.Heading size={'LARGE'}>
+                      {t('exportJourney.interimSite.codeTitle')}
+                    </GovUK.Heading>
+                    <form
+                      onSubmit={(e) => handleSubmit(e, 'code')}
+                      noValidate={true}
+                    >
+                      <SmallRadioList
+                        id="recoveryCode"
+                        name="recoveryCode"
+                        value={recoveryFacilityType.recoveryCode}
+                        label={
+                          <GovUK.VisuallyHidden>
+                            {t('exportJourney.interimSite.codeTitle')}
+                          </GovUK.VisuallyHidden>
+                        }
+                        errorMessage={interimPage.errors?.recoveryCode}
+                        options={recoveryData.interimRecoveryCodes}
+                        onChange={(e) =>
+                          setRecoveryFacilityType({
+                            type: 'InterimSite',
+                            recoveryCode: e.target.value,
+                          })
+                        }
+                      />
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButtonCode">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton
+                          id="saveReturnButtonCode"
+                          onClick={(e) =>
+                            handleLinkSubmit(e, 'code', handleSubmit)
+                          }
+                        />
+                      </ButtonGroup>
+                    </form>
                   </div>
                 )}
               </>

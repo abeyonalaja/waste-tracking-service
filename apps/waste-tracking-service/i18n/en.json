@@ -263,5 +263,9 @@
   "exportJourney.recoveryFacilities.addLegend": "Do you need to add another recovery facility?",
   "exportJourney.recoveryFacilities.addHint": "You can add one more facility.",
   "exportJourney.recoveryFacilities.recoveryCode": "Recovery code",
-  "exportJourney.recoveryFacilities.confirmRemoveTitle": "Are you sure you want to remove {{name}}?"
+  "exportJourney.recoveryFacilities.confirmRemoveTitle": "Are you sure you want to remove {{name}}?",
+  "exportJourney.interimSite.addressTitle": "What is the interim site’s address?",
+  "exportJourney.interimSite.contactTitle": "What are the interim site’s contact details?",
+  "exportJourney.interimSite.contactPerson": "Interim site contact person",
+  "exportJourney.interimSite.codeTitle": "What is the recovery code?"
 }
