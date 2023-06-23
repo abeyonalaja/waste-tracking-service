@@ -206,6 +206,13 @@ export default class DraftController {
         wasteQuantity = { status: 'NotStarted' };
       }
 
+      let recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
+        draft.recoveryFacilityDetail.status === 'CannotStart' &&
+        value.status !== 'NotStarted' &&
+        value.wasteCode !== undefined
+          ? { status: 'NotStarted' }
+          : draft.recoveryFacilityDetail;
+
       let carriers: DraftSubmission['carriers'] = draft.carriers;
 
       if (
@@ -242,6 +249,8 @@ export default class DraftController {
         }
 
         carriers.transport = false;
+
+        recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
       if (
@@ -261,14 +270,9 @@ export default class DraftController {
         }
 
         carriers.transport = true;
-      }
 
-      const recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
-        draft.recoveryFacilityDetail.status === 'CannotStart' &&
-        value.status !== 'NotStarted' &&
-        value.wasteCode !== undefined
-          ? { status: 'NotStarted' }
-          : draft.recoveryFacilityDetail;
+        recoveryFacilityDetail = { status: 'NotStarted' };
+      }
 
       draft.wasteDescription = value;
       draft.wasteQuantity = wasteQuantity;

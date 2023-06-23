@@ -303,6 +303,13 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       wasteQuantity = { status: 'NotStarted' };
     }
 
+    let recoveryFacilityDetail: Submission['recoveryFacilityDetail'] =
+      submission.recoveryFacilityDetail.status === 'CannotStart' &&
+      value.status !== 'NotStarted' &&
+      value.wasteCode !== undefined
+        ? { status: 'NotStarted' }
+        : submission.recoveryFacilityDetail;
+
     let carriers: Submission['carriers'] = submission.carriers;
 
     if (
@@ -339,6 +346,8 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       }
 
       carriers.transport = false;
+
+      recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
     if (
@@ -358,14 +367,9 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       }
 
       carriers.transport = true;
-    }
 
-    const recoveryFacilityDetail: Submission['recoveryFacilityDetail'] =
-      submission.recoveryFacilityDetail.status === 'CannotStart' &&
-      value.status !== 'NotStarted' &&
-      value.wasteCode !== undefined
-        ? { status: 'NotStarted' }
-        : submission.recoveryFacilityDetail;
+      recoveryFacilityDetail = { status: 'NotStarted' };
+    }
 
     submission.wasteDescription = value;
     submission.wasteQuantity = wasteQuantity;

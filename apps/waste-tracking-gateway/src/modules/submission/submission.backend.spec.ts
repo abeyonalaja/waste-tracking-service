@@ -771,4 +771,78 @@ describe(InMemorySubmissionBackend, () => {
       subject.getSubmissionDeclaration({ id, accountId })
     ).resolves.toEqual({ status: 'Complete', declaration: true });
   });
+
+  it('Reset recovery facility when waste description is changed from Non-Laboratory to Laborarory', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      }
+    );
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+
+    const status: Omit<RecoveryFacilityDetail, 'values'> = {
+      status: 'Started',
+    };
+
+    const recoveryFacilities = await subject.createRecoveryFacilityDetail(
+      { id, accountId },
+      status
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('Started');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'NotApplicable' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
+  it('Reset recovery facility when waste description is changed from Laboratory to Non-Laborarory', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'NotApplicable' },
+      }
+    );
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+
+    const status: Omit<RecoveryFacilityDetail, 'values'> = {
+      status: 'Started',
+    };
+
+    const recoveryFacilities = await subject.createRecoveryFacilityDetail(
+      { id, accountId },
+      status
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('Started');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
 });
