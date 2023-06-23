@@ -21,6 +21,18 @@ import {
   SmallRadioList,
 } from '../components';
 import styled from 'styled-components';
+
+import {
+  isNotEmpty,
+  validateAddress,
+  validateCountry,
+  validateEmail,
+  validateFullName,
+  validatePhone,
+  validateRecoveryCode,
+  validateFieldNotEmpty,
+} from '../utils/validators';
+
 import { recoveryData } from '../utils/recoveryData';
 
 const VIEWS = {
@@ -217,10 +229,23 @@ const InterimSiteDetails = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, form, returnToDraft = false) => {
       let nextView;
+
+      let newErrors;
+
       let body;
       switch (form) {
         case 'address':
           nextView = VIEWS.CONTACT_DETAILS;
+
+          newErrors = {
+            name: validateFieldNotEmpty(
+              addressDetails?.name,
+              'the interim site details'
+            ),
+            address: validateAddress(addressDetails?.address),
+            country: validateCountry(addressDetails?.country),
+          };
+
           body = {
             status:
               interimPage.data.status === 'NotStarted'
@@ -240,6 +265,13 @@ const InterimSiteDetails = () => {
           break;
         case 'contact':
           nextView = VIEWS.RECOVERY_CODE;
+
+          newErrors = {
+            fullName: validateFullName(contactDetails?.fullName),
+            emailAddress: validateEmail(contactDetails?.emailAddress),
+            phoneNumber: validatePhone(contactDetails?.phoneNumber),
+          };
+
           body = {
             status:
               interimPage.data.status === 'NotStarted'
@@ -254,6 +286,12 @@ const InterimSiteDetails = () => {
           };
           break;
         case 'code':
+          newErrors = {
+            recoveryCode: validateRecoveryCode(
+              recoveryFacilityType?.recoveryCode
+            ),
+          };
+
           body = {
             status:
               interimPage.data.status === 'NotStarted'
@@ -269,65 +307,71 @@ const InterimSiteDetails = () => {
           break;
       }
 
-      try {
-        fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-          }
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              const currentData = interimPage.data;
-              let updatedData;
-              if (currentData.values !== undefined) {
-                updatedData = {
-                  ...currentData,
-                  values: currentData.values.map((obj) => {
-                    return data.values.find((o) => o.id === obj.id) || obj;
-                  }),
-                };
-              } else {
-                updatedData = data;
-              }
-
-              dispatchInterimPage({
-                type: 'FACILITY_DATA_UPDATE',
-                payload: data.values[0],
-              });
-
-              dispatchInterimPage({
-                type: 'DATA_FETCH_SUCCESS',
-                payload: updatedData,
-              });
-
-              if (returnToDraft) {
-                router.push({
-                  pathname: '/submit-an-export-tasklist',
-                  query: { id },
-                });
-              } else if (form === 'code') {
-                router.push({
-                  pathname: '/recovery-facility-details',
-                  query: { id },
-                });
-              } else {
-                dispatchInterimPage({
-                  type: 'SHOW_VIEW',
-                  payload: nextView,
-                });
-              }
+      if (isNotEmpty(newErrors)) {
+        dispatchInterimPage({ type: 'ERRORS_UPDATE', payload: newErrors });
+      } else {
+        dispatchInterimPage({ type: 'ERRORS_UPDATE', payload: null });
+        dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
+        try {
+          fetch(
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(body),
             }
-          });
-      } catch (e) {
-        console.error(e);
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                const currentData = interimPage.data;
+                let updatedData;
+                if (currentData.values !== undefined) {
+                  updatedData = {
+                    ...currentData,
+                    values: currentData.values.map((obj) => {
+                      return data.values.find((o) => o.id === obj.id) || obj;
+                    }),
+                  };
+                } else {
+                  updatedData = data;
+                }
+
+                dispatchInterimPage({
+                  type: 'FACILITY_DATA_UPDATE',
+                  payload: data.values[0],
+                });
+
+                dispatchInterimPage({
+                  type: 'DATA_FETCH_SUCCESS',
+                  payload: updatedData,
+                });
+
+                if (returnToDraft) {
+                  router.push({
+                    pathname: '/submit-an-export-tasklist',
+                    query: { id },
+                  });
+                } else if (form === 'code') {
+                  router.push({
+                    pathname: '/recovery-facility-details',
+                    query: { id },
+                  });
+                } else {
+                  dispatchInterimPage({
+                    type: 'SHOW_VIEW',
+                    payload: nextView,
+                  });
+                }
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
       }
       e.preventDefault();
     },
@@ -464,7 +508,7 @@ const InterimSiteDetails = () => {
                           touched: !!interimPage.errors?.name,
                         }}
                       >
-                        {t('exportJourney.recoveryFacilities.name')}
+                        {t('exportJourney.interimSite.name')}
                       </AddressField>
                       <GovUK.TextArea
                         mb={6}

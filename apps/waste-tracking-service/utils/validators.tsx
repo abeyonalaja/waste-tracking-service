@@ -340,6 +340,13 @@ export const validateAddAnotherFacility: (
   if (value === null) return 'Select yes if you want to add another facility';
 };
 
+export const validateFieldNotEmpty: (
+  value?: string,
+  label?: string
+) => string | undefined = (value, label) => {
+  if (value?.length === 0 || value === undefined) return `Enter ${label}`;
+};
+
 export const validateTransport: (value?: string) => string | undefined = (
   value
 ) => {

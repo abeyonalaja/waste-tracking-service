@@ -265,6 +265,7 @@
   "exportJourney.recoveryFacilities.recoveryCode": "Recovery code",
   "exportJourney.recoveryFacilities.confirmRemoveTitle": "Are you sure you want to remove {{name}}?",
   "exportJourney.interimSite.addressTitle": "What is the interim site’s address?",
+  "exportJourney.interimSite.name": "Interim site name",
   "exportJourney.interimSite.contactTitle": "What are the interim site’s contact details?",
   "exportJourney.interimSite.contactPerson": "Interim site contact person",
   "exportJourney.interimSite.codeTitle": "What is the recovery code?"
