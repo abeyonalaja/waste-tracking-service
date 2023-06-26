@@ -144,3 +144,7 @@ end
 And(/^I should see quantity of small waste correctly translated$/) do
   QuantityOfSmallWastePage.new.check_page_translated
 end
+
+And(/^I complete Quantity of waste sub\-section$/) do
+  QuantityOfWasteController.complete
+end

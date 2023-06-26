@@ -44,5 +44,4 @@ class CountriesWasteWillTravelPage < GenericPage
       'No' => 'hasTransitCountriesNo'
     }
   end
-
 end

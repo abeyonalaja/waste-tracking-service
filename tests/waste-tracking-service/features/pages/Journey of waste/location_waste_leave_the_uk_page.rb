@@ -6,6 +6,7 @@ require_relative '../shared_components/error_box'
 class LocationWasteLeavesTheUkPage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
 
   TITLE = Translations.value 'exportJourney.pointOfExit.title'
   SUB_TEXT = Translations.value 'exportJourney.pointOfExit.caption'

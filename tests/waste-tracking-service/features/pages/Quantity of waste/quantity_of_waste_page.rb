@@ -6,6 +6,7 @@ require_relative '../shared_components/error_box'
 class QuantityOfWastePage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
 
   TITLE = Translations.value 'exportJourney.quantity.bulk.title'
   HELP_TEXT = Translations.value 'exportJourney.quantity.intro'

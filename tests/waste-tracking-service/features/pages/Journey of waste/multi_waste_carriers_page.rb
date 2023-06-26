@@ -6,6 +6,7 @@ require_relative '../shared_components/error_box'
 class MultiWasteCarriersPage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
 
   MULTI_WASTE_TITLE = 'h2 > div'
 

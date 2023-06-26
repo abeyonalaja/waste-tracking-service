@@ -49,3 +49,7 @@ end
 Then(/^I should see No option is preselected on other country page$/) do
   expect(CountriesWasteWillTravelPage.new.option_checked?('No')).to eq(true)
 end
+
+And(/^I complete the Journey of a waste section$/) do
+  JourneyOfAWasteController.complete
+end

@@ -571,7 +571,7 @@ const Tasklist = () => {
                     </TaskName>
                     <TaskStatus>
                       <DocumentStatus
-                        id="submission-confirmation-status"
+                        id="check-your-report-status"
                         status={
                           tasklistPage.data?.submissionConfirmation.status
                         }
@@ -601,7 +601,7 @@ const Tasklist = () => {
                     </TaskName>
                     <TaskStatus>
                       <DocumentStatus
-                        id="submission-declaration-status"
+                        id="sign-declaration-status"
                         status={tasklistPage.data?.submissionDeclaration.status}
                       />
                     </TaskStatus>

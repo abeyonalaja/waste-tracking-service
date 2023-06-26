@@ -6,6 +6,8 @@ require_relative '../shared_components/error_box'
 class CollectionDatePage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
+
 
   TITLE = Translations.value 'exportJourney.wasteCollectionDate.title'
   SUB_TEXT = Translations.value 'exportJourney.wasteCollectionDate.intro'

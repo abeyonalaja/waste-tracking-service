@@ -237,5 +237,16 @@
   "exportJourney.recoveryFacilities.addLegend": "Do you need to add another recovery facility?",
   "exportJourney.recoveryFacilities.addHint": "You can add one more facility.",
   "exportJourney.recoveryFacilities.recoveryCode": "Recovery code",
-  "exportJourney.recoveryFacilities.listTitleSingle": "Your chosen facility"
+  "exportJourney.recoveryFacilities.listTitleSingle": "Your chosen facility",
+  "exportJourney.interimSite.addressTitle": "What is the interim site’s address?",
+  "exportJourney.interimSite.contactTitle": "What are the interim site’s contact details?",
+  "exportJourney.interimSite.contactPerson": "Interim site contact person",
+  "exportJourney.interimSite.codeTitle": "What is the recovery code?",
+  "contact.nameHint": "Full name",
+  "contact.emailAddress": "Email address",
+  "contact.phoneNumber": "Phone number",
+  "contact.faxNumber": "Fax number (optional)",
+  "contact.numberHint": "For international numbers include the country code",
+  "address": "Address",
+  "address.country": "Country"
 }

@@ -12,8 +12,8 @@ Feature: AS A Waste Producer/Broker
   Scenario: Verify Submit an export page default task status
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference
-    Then I have submission incomplete 0 of 4 sections
-    And I see these four sections
+    Then I have submission incomplete 0 of 5 sections
+    And I see these five sections
     And the task "Waste codes and description" should be "NOT STARTED"
     And the task "Quantity of waste" should be "CANNOT START YET"
     And the task "Exporter details" should be "NOT STARTED"
@@ -23,6 +23,8 @@ Feature: AS A Waste Producer/Broker
     And the task "Location waste leaves the UK" should be "NOT STARTED"
     And the task "Countries waste will travel through" should be "NOT STARTED"
     And the task "Recovery facility or laboratory" should be "CANNOT START YET"
+    And the task "Check your report" should be "CANNOT START YET"
+    And the task "Sign declaration" should be "CANNOT START YET"
 
   Scenario: Submit an export page Breadcrumb navigation
     Given I login to waste tracking portal

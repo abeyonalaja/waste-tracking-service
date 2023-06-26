@@ -121,3 +121,7 @@ end
 Then(/^the chosen facility page is displayed$/) do
   expect(self).to have_css 'h1', text: 'Your chosen facility', exact_text: true
 end
+
+And(/^I complete Treatment of waste section$/) do
+  RecoveryFacilityController.complete
+end

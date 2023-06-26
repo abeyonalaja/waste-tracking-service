@@ -12,16 +12,17 @@ When(/^I navigate to the submit an export with reference$/) do
   AddReferenceNumberController.complete
 end
 
-Then(/^I have submission incomplete 0 of 4 sections$/) do
-  expect(page).to have_text('You have completed 0 of 4 sections.')
+Then(/^I have submission incomplete 0 of 5 sections$/) do
+  expect(page).to have_text('You have completed 0 of 5 sections.')
   expect(page).to have_text("You'll be able to check and submit this export once you've completed all the sections.")
 end
 
-And(/^I see these four sections$/) do
+And(/^I see these five sections$/) do
   expect(page).to have_css 'h2', text: 'About the waste', exact_text: true
   expect(page).to have_css 'h2', text: 'Exporter and importer', exact_text: true
   expect(page).to have_css 'h2', text: 'Journey of waste', exact_text: true
   expect(page).to have_css 'h2', text: 'Treatment of waste', exact_text: true
+  expect(page).to have_css 'h2', text: 'Final checks', exact_text: true
 end
 
 And(/^the task "([^"]*)" should be "([^"]*)"$/) do |task_name, task_status|

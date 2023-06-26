@@ -19,6 +19,10 @@ class WasteCollectionDetailsPage < GenericPage
     expect(self).to have_css 'h1', text: WASTE_COLLECTION_DETAILS_TITLE, exact_text: true
   end
 
+  def enter_postcode(postcode)
+    fill_in POSTCODE_FIELD_ID, with: postcode, visible: false
+  end
+
   def check_translation
     expect(self).to have_text WASTE_COLLECTION_DETAILS_INTRO
     expect(self).to have_text WASTE_COLLECTION_DETAILS_POSTCODE_LABEL

@@ -9,6 +9,7 @@ class ChosenFacilitiesPage < GenericPage
   include ErrorBox
   include CommonComponents
   include GeneralHelpers
+  include PageHelper
 
   YOUR_CHOSEN = 'h2'
 
