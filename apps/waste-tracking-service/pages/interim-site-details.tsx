@@ -18,7 +18,7 @@ import {
   Loading,
   ButtonGroup,
   SaveReturnButton,
-  SmallRadioList,
+  RadioList,
 } from '../components';
 import styled from 'styled-components';
 
@@ -197,6 +197,7 @@ const InterimSiteDetails = () => {
               const emptyRecords = data.values.filter(
                 (site) => site.addressDetails === undefined
               );
+
               if (interimSite.length > 0) {
                 const [site] = interimSite;
                 dispatchInterimPage({
@@ -213,6 +214,8 @@ const InterimSiteDetails = () => {
                   payload: emptyInterimSite,
                 });
                 setStartPage(VIEWS.ADDRESS_DETAILS);
+              } else {
+                createInterimSite();
               }
             } else {
               createInterimSite();
@@ -229,14 +232,11 @@ const InterimSiteDetails = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, form, returnToDraft = false) => {
       let nextView;
-
       let newErrors;
-
       let body;
       switch (form) {
         case 'address':
           nextView = VIEWS.CONTACT_DETAILS;
-
           newErrors = {
             name: validateFieldNotEmpty(
               addressDetails?.name,
@@ -245,7 +245,6 @@ const InterimSiteDetails = () => {
             address: validateAddress(addressDetails?.address),
             country: validateCountry(addressDetails?.country),
           };
-
           body = {
             status:
               interimPage.data.status === 'NotStarted'
@@ -439,7 +438,7 @@ const InterimSiteDetails = () => {
           onClick={() => {
             if (startPage === interimPage.showView) {
               router.push({
-                pathname: '/submit-an-export-tasklist',
+                pathname: '/interim-site',
                 query: { id },
               });
             } else {
@@ -676,9 +675,10 @@ const InterimSiteDetails = () => {
                       onSubmit={(e) => handleSubmit(e, 'code')}
                       noValidate={true}
                     >
-                      <SmallRadioList
+                      <RadioList
                         id="recoveryCode"
                         name="recoveryCode"
+                        size="L"
                         value={recoveryFacilityType.recoveryCode}
                         label={
                           <GovUK.VisuallyHidden>

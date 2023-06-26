@@ -10,9 +10,9 @@ import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
 import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
+import { RadioList } from './RadioList';
 import { SaveReturnButton } from './SaveReturnButton';
 import { SaveReturnLink } from './SaveReturnLink';
-import { SmallRadioList } from './SmallRadioList';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SummaryCard } from './SummaryCard';
 import { SummaryList } from './SummaryList';
@@ -34,9 +34,9 @@ export {
   Loading,
   Paragraph,
   RadiosDivider,
+  RadioList,
   SaveReturnButton,
   SaveReturnLink,
-  SmallRadioList,
   SubmissionNotFound,
   SummaryCard,
   SummaryList,

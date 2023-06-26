@@ -188,7 +188,10 @@ const RecoveryFacilityDetails = () => {
 
   useEffect(() => {
     if (recoveryPage.data?.values !== undefined) {
-      setFacilityCount(recoveryPage.data.values.length);
+      const countRecoveryFacilities = recoveryPage.data?.values?.filter(
+        (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
+      );
+      setFacilityCount(countRecoveryFacilities.length);
     }
   }, [recoveryPage.data]);
 
@@ -210,26 +213,6 @@ const RecoveryFacilityDetails = () => {
               type: 'DATA_FETCH_SUCCESS',
               payload: data,
             });
-
-            const emptyRecords = data.values.filter(
-              (site) =>
-                site.addressDetails === undefined &&
-                site.recoveryFacilityType === undefined
-            );
-            if (emptyRecords.length > 0) {
-              setEmptyRecordId(emptyRecords[0].id);
-            }
-
-            dispatchRecoveryPage({
-              type: 'DATA_UPDATE',
-              payload: {
-                values: data.values?.filter(
-                  (site) =>
-                    site.recoveryFacilityType?.type === 'RecoveryFacility'
-                ),
-              },
-            });
-
             if (data.status === 'Complete') {
               setStartPage(VIEWS.LIST);
               dispatchRecoveryPage({
@@ -240,20 +223,35 @@ const RecoveryFacilityDetails = () => {
               const filteredValues = data.values?.filter(
                 (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
               );
-
-              if (filteredValues === undefined || filteredValues.length === 0) {
+              const emptyRecords = data.values.filter(
+                (site) =>
+                  site.addressDetails === undefined &&
+                  site.recoveryFacilityType === undefined
+              );
+              if (
+                (filteredValues === undefined || filteredValues.length === 0) &&
+                emptyRecords === undefined
+              ) {
                 createRecoveryFacility();
               } else {
+                let record;
+                if (filteredValues.length > 0) {
+                  record = filteredValues.at(-1);
+                } else {
+                  record = emptyRecords.at(-1);
+                  record.recoveryFacilityType = {
+                    type: 'RecoveryFacility',
+                    recoveryCode: '',
+                  };
+                }
                 dispatchRecoveryPage({
                   type: 'FACILITY_DATA_UPDATE',
-                  payload: filteredValues.at(-1),
+                  payload: record,
                 });
                 setIsSecond(filteredValues.length === 2);
-                setAddressDetails(filteredValues.at(-1)?.addressDetails);
-                setContactDetails(filteredValues.at(-1)?.contactDetails);
-                setRecoveryFacilityType(
-                  filteredValues.at(-1)?.recoveryFacilityType
-                );
+                setAddressDetails(record?.addressDetails);
+                setContactDetails(record?.contactDetails);
+                setRecoveryFacilityType(record?.recoveryFacilityType);
                 setStartPage(VIEWS.ADDRESS_DETAILS);
                 dispatchRecoveryPage({
                   type: 'SHOW_VIEW',
@@ -267,59 +265,48 @@ const RecoveryFacilityDetails = () => {
   }, [router.isReady, id, startPage]);
 
   const createRecoveryFacility = () => {
-    if (emptyRecordId !== null) {
-      dispatchRecoveryPage({
-        type: 'FACILITY_DATA_UPDATE',
-        payload: { id: emptyRecordId },
-      });
-      dispatchRecoveryPage({
-        type: 'SHOW_VIEW',
-        payload: VIEWS.ADDRESS_DETAILS,
-      });
-    } else {
-      try {
-        fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: 'Started' }),
-          }
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              const [facility] = data.values;
+    try {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'Started' }),
+        }
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            const [facility] = data.values;
 
+            dispatchRecoveryPage({
+              type: 'FACILITY_DATA_UPDATE',
+              payload: { id: facility.id },
+            });
+
+            data.status = 'Started';
+
+            if (recoveryPage.data?.values !== undefined) {
+              recoveryPage.data.values.push({ id: facility.id });
+            } else {
               dispatchRecoveryPage({
-                type: 'FACILITY_DATA_UPDATE',
-                payload: { id: facility.id },
-              });
-
-              data.status = 'Started';
-
-              if (recoveryPage.data?.values !== undefined) {
-                recoveryPage.data.values.push({ id: facility.id });
-              } else {
-                dispatchRecoveryPage({
-                  type: 'DATA_UPDATE',
-                  payload: data,
-                });
-              }
-
-              dispatchRecoveryPage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.ADDRESS_DETAILS,
+                type: 'DATA_UPDATE',
+                payload: data,
               });
             }
-          });
-      } catch (e) {
-        console.error(e);
-      }
+
+            dispatchRecoveryPage({
+              type: 'SHOW_VIEW',
+              payload: VIEWS.ADDRESS_DETAILS,
+            });
+          }
+        });
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -341,10 +328,7 @@ const RecoveryFacilityDetails = () => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status:
-              recoveryPage.data.status === 'NotStarted'
-                ? 'Started'
-                : recoveryPage.data.status,
+            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -365,10 +349,7 @@ const RecoveryFacilityDetails = () => {
             phoneNumber: validatePhone(contactDetails?.phoneNumber),
           };
           body = {
-            status:
-              recoveryPage.data.status === 'NotStarted'
-                ? 'Started'
-                : recoveryPage.data.status,
+            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -502,6 +483,11 @@ const RecoveryFacilityDetails = () => {
     if (isNotEmpty(newErrors)) {
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
     } else {
+      const emptyRecords = recoveryPage.data.values.filter(
+        (site) =>
+          site.addressDetails === undefined &&
+          site.recoveryFacilityType === undefined
+      );
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalFacility === 'No') {
         router.push({
@@ -513,7 +499,23 @@ const RecoveryFacilityDetails = () => {
         setAddressDetails(null);
         setContactDetails(null);
         setRecoveryFacilityType({ type: 'RecoveryFacility', recoveryCode: '' });
-        createRecoveryFacility();
+        if (emptyRecords.length === 0) {
+          createRecoveryFacility();
+        } else {
+          emptyRecords.at(-1).id = 'Bigbogrockers';
+          emptyRecords.at(-1).recoveryFacilityType = {
+            type: 'RecoveryFacility',
+            recoveryCode: '',
+          };
+          dispatchRecoveryPage({
+            type: 'FACILITY_DATA_UPDATE',
+            payload: emptyRecords.at(-1),
+          });
+          dispatchRecoveryPage({
+            type: 'SHOW_VIEW',
+            payload: VIEWS.ADDRESS_DETAILS,
+          });
+        }
       }
     }
     e.preventDefault();
@@ -928,70 +930,80 @@ const RecoveryFacilityDetails = () => {
                           )
                         : t('exportJourney.recoveryFacilities.listTitleSingle')}
                     </GovUK.Heading>
-                    {recoveryPage.data.values.map((facility, index) => (
-                      <SummaryCard
-                        key={`facility-list-item-${index + 1}`}
-                        id={`facility-list-item-${index + 1}`}
-                        title={
-                          facilityCount === 1
-                            ? t('exportJourney.recoveryFacilities.cardTitle')
-                            : index === 0
-                            ? t(
-                                'exportJourney.recoveryFacilities.firstCardTitle'
-                              )
-                            : t(
-                                'exportJourney.recoveryFacilities.secondCardTitle'
-                              )
-                        }
-                        actions={[
-                          {
-                            label: (
-                              <>
-                                {t('actions.change')}
-                                <GovUK.VisuallyHidden>
-                                  {' '}
-                                  {facility.addressDetails.name}
-                                </GovUK.VisuallyHidden>
-                              </>
-                            ),
-                            action: () => handleChangeLink(facility.id),
-                          },
-                          {
-                            label: (
-                              <>
-                                {t('actions.remove')}
-                                <GovUK.VisuallyHidden>
-                                  {' '}
-                                  {facility.addressDetails.name}
-                                </GovUK.VisuallyHidden>
-                              </>
-                            ),
-                            action: () => handleRemoveLink(facility.id),
-                            hidden: facilityCount === 1,
-                          },
-                        ]}
-                      >
-                        <SummaryList
-                          content={[
-                            {
-                              title: t('exportJourney.recoveryFacilities.name'),
-                              definition: facility.addressDetails.name,
-                            },
-                            {
-                              title: t('address.country'),
-                              definition: facility.addressDetails.country,
-                            },
-                            {
-                              title: t(
-                                'exportJourney.recoveryFacilities.recoveryCode'
-                              ),
-                              definition:
-                                facility.recoveryFacilityType?.recoveryCode,
-                            },
-                          ]}
-                        />
-                      </SummaryCard>
-                    ))}
+                    {recoveryPage.data.values.map((facility, index) => {
+                      return (
+                        facility.recoveryFacilityType?.type ===
+                          'RecoveryFacility' &&
+                        facility.addressDetails !== undefined && (
+                          <SummaryCard
+                            key={`facility-list-item-${index + 1}`}
+                            id={`facility-list-item-${index + 1}`}
+                            title={
+                              facilityCount === 1
+                                ? t(
+                                    'exportJourney.recoveryFacilities.cardTitle'
+                                  )
+                                : index === 0
+                                ? t(
+                                    'exportJourney.recoveryFacilities.firstCardTitle'
+                                  )
+                                : t(
+                                    'exportJourney.recoveryFacilities.secondCardTitle'
+                                  )
+                            }
+                            actions={[
+                              {
+                                label: (
+                                  <>
+                                    {t('actions.change')}
+                                    <GovUK.VisuallyHidden>
+                                      {' '}
+                                      {facility.addressDetails.name}
+                                    </GovUK.VisuallyHidden>
+                                  </>
+                                ),
+                                action: () => handleChangeLink(facility.id),
+                              },
+                              {
+                                label: (
+                                  <>
+                                    {t('actions.remove')}
+                                    <GovUK.VisuallyHidden>
+                                      {' '}
+                                      {facility.addressDetails.name}
+                                    </GovUK.VisuallyHidden>
+                                  </>
+                                ),
+                                action: () => handleRemoveLink(facility.id),
+                                hidden: facilityCount === 1,
+                              },
+                            ]}
+                          >
+                            <SummaryList
+                              content={[
+                                {
+                                  title: t(
+                                    'exportJourney.recoveryFacilities.name'
+                                  ),
+                                  definition: facility.addressDetails.name,
+                                },
+                                {
+                                  title: t('address.country'),
+                                  definition: facility.addressDetails.country,
+                                },
+                                {
+                                  title: t(
+                                    'exportJourney.recoveryFacilities.recoveryCode'
+                                  ),
+                                  definition:
+                                    facility.recoveryFacilityType?.recoveryCode,
+                                },
+                              ]}
+                            />
+                          </SummaryCard>
+                        )
+                      );
+                    })}
                     {facilityCount === 1 && (
                       <form onSubmit={handleSubmitAdditionalFacility}>
                         <GovUK.Fieldset>

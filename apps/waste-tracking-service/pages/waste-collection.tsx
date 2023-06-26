@@ -21,7 +21,7 @@ import {
   SaveReturnButton,
   SubmissionNotFound,
   Loading,
-  SmallRadioList,
+  RadioList,
 } from '../components';
 import {
   isNotEmpty,
@@ -799,7 +799,7 @@ const WasteCollection = () => {
                           />
                         </GovUK.Label>
                       </GovUK.FormGroup>
-                      <SmallRadioList
+                      <RadioList
                         value={addressDetails?.country}
                         id="country"
                         name="country"

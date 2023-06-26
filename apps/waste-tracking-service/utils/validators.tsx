@@ -317,6 +317,13 @@ export const validateConfirmRemove: (
   if (value === null) return `Select yes if you want to remove this ${label}`;
 };
 
+export const validateSelection: (
+  value?: string,
+  label?: string
+) => string | undefined = (value, label) => {
+  if (value === null) return `Select yes ${label}`;
+};
+
 export const validateConfirmRemoveCarrier: (
   value?: string
 ) => string | undefined = (value) => {

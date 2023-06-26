@@ -522,7 +522,7 @@ const Tasklist = () => {
                         ) : (
                           <AppLink
                             href={{
-                              pathname: `/interim-site-details`,
+                              pathname: `/interim-site`,
                               query: { id, dashboard: true },
                             }}
                           >

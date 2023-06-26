@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { SmallRadioList } from '../../components/';
+import { RadioList } from '../../components/';
 
 describe('Small Radio List component', () => {
   const options = ['Option 1', 'Option 2', 'Option 3'];
 
   test('renders the radio buttons', () => {
     const { getByText } = render(
-      <SmallRadioList
+      <RadioList
         name="radioGroup"
         label="Choose an option"
         options={options}
@@ -26,7 +26,7 @@ describe('Small Radio List component', () => {
     const handleChange = jest.fn();
 
     const { getByLabelText } = render(
-      <SmallRadioList
+      <RadioList
         name="radioGroup"
         label="Choose an option"
         options={options}
@@ -43,7 +43,7 @@ describe('Small Radio List component', () => {
   test('displays error message if errorMessage prop is provided', () => {
     const errorMessage = 'This field is required';
     const { getByText } = render(
-      <SmallRadioList
+      <RadioList
         name="radioGroup"
         label="Choose an option"
         options={options}

@@ -12,7 +12,7 @@ import {
   SubmissionNotFound,
   ButtonGroup,
   SaveReturnButton,
-  SmallRadioList,
+  RadioList,
 } from '../components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -259,7 +259,7 @@ const ExporterManual = () => {
                     >
                       {t('exportJourney.exporterManual.postCodeLabel')}
                     </PostcodeInput>
-                    <SmallRadioList
+                    <RadioList
                       value={country}
                       id="country"
                       name="country"

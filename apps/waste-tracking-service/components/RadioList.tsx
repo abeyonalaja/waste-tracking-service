@@ -7,6 +7,7 @@ interface Props {
   id?: string;
   name: string;
   label: ReactElement | string;
+  size?: string;
   hint?: string;
   value?: string | number;
   options: Array<string>;
@@ -62,10 +63,11 @@ const idify = (value) => {
   return value.replace(/\W/g, '-').toLowerCase();
 };
 
-export const SmallRadioList = ({
+export const RadioList = ({
   name,
   id,
   label,
+  size = 'S',
   hint,
   value,
   options,
@@ -82,18 +84,31 @@ export const SmallRadioList = ({
         {errorMessage !== undefined && (
           <ErrorText mb={2}>{errorMessage}</ErrorText>
         )}
-        {options.map((option, index) => (
-          <SmallRadio
-            key={index}
-            name={name}
-            onChange={onChange}
-            value={option}
-            checked={option === value}
-            id={`${id}-${idify(option)}`}
-          >
-            {option}
-          </SmallRadio>
-        ))}
+        {options.map((option, index) =>
+          size === ('S' || 'Small') ? (
+            <SmallRadio
+              key={index}
+              name={name}
+              onChange={onChange}
+              value={option}
+              checked={option === value}
+              id={`${id}-${idify(option)}`}
+            >
+              {option}
+            </SmallRadio>
+          ) : (
+            <Radio
+              key={index}
+              name={name}
+              onChange={onChange}
+              value={option}
+              checked={option === value}
+              id={`${id}-${idify(option)}`}
+            >
+              {option}
+            </Radio>
+          )
+        )}
       </Fieldset>
     </RadioFormGroup>
   );
