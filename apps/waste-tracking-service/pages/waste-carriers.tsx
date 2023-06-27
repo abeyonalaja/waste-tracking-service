@@ -303,7 +303,7 @@ const WasteCarriers = () => {
               {wasteCarriersPage.showView === VIEWS.LIST ? (
                 <>
                   {' '}
-                  <SmallHeading>
+                  <SmallHeading size="L">
                     {t('exportJourney.wasteCarrierDetails.title')}
                   </SmallHeading>
                   <GovUK.Heading size={'LARGE'}>

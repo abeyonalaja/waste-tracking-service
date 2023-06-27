@@ -71,6 +71,7 @@
   "address.postcode": "Postcode (optional)",
   "address.country": "Country",
   "address.change": "Change address",
+  "address.hintCannotBeInUk": "This address cannot be in the UK.",
   "contact.nameHint": "Full name",
   "contact.emailAddress": "Email address",
   "contact.phoneNumber": "Phone number",
@@ -249,6 +250,7 @@
   "exportJourney.pointOfExit.intro": "For example, the nearest town, port or terminal.",
   "exportJourney.pointOfExit.inputLabel": "Enter the location",
   "exportJourney.recoveryFacilities.caption": "Recovery facility details",
+  "exportJourney.recoveryFacilities.countryHint": "We'll use this as the importing country. This cannot be the UK.",
   "exportJourney.recoveryFacilities.addressTitle": "What is the {{n}} recovery facility's address?",
   "exportJourney.recoveryFacilities.name": "Facility name",
   "exportJourney.recoveryFacilities.contactTitle": "What are the {{n}} recovery facility’s contact details?",
@@ -272,5 +274,11 @@
   "exportJourney.interimSite.confirmTitle": "Will the waste go to an interim site before it reaches the final recovery facility?",
   "exportJourney.interimSite.confirmHint": "This includes for storage or processing.",
   "exportJourney.interimSite.summary": "What is an interim site?",
-  "exportJourney.interimSite.details": "An interim site is an authorised facility where the waste gets limited additional processing. For example, at an interim site different plastic waste grades could be separated or stored temporarily before they move to one or more final recovery facilities."
+  "exportJourney.interimSite.details": "An interim site is an authorised facility where the waste gets limited additional processing. For example, at an interim site different plastic waste grades could be separated or stored temporarily before they move to one or more final recovery facilities.",
+  "exportJourney.laboratorySite.caption": "Laboratory details",
+  "exportJourney.laboratorySite.addressTitle": "What is the laboratory address?",
+  "exportJourney.laboratorySite.name": "Laboratory name",
+  "exportJourney.laboratorySite.contactTitle": "What are the laboratory contact details?",
+  "exportJourney.laboratorySite.contactPerson": "Laboratory contact person",
+  "exportJourney.laboratorySite.codeTitle": "What is the disposal code?"
 }

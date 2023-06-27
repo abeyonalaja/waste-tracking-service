@@ -551,7 +551,7 @@ const WasteCollection = () => {
                       }))}
                     />
                   )}
-                <GovUK.Caption>
+                <GovUK.Caption size="L">
                   {t('exportJourney.wasteCollectionDetails.caption')}
                 </GovUK.Caption>
                 {addressPage.showView === VIEWS.POSTCODE_SEARCH && (

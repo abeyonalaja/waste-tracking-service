@@ -163,7 +163,7 @@ const ImporterDetails = () => {
             {!isError && !isLoading && (
               <>
                 {' '}
-                <GovUK.Caption>
+                <GovUK.Caption size="L">
                   {t('exportJourney.importerDetails.title')}
                 </GovUK.Caption>
                 <GovUK.Heading size={'LARGE'}>

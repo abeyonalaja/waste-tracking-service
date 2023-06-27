@@ -38,6 +38,7 @@ import styled from 'styled-components';
 import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gateway';
 import Autocomplete from 'accessible-autocomplete/react';
 import { recoveryData } from '../utils/recoveryData';
+import boldUpToFirstColon from '../utils/boldUpToFirstColon';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -140,7 +141,9 @@ const recoveryReducer = (state: State, action: Action) => {
 
 const AddressField = styled(GovUK.InputField)`
   @media (min-width: 641px) {
-    width: 75%;
+    input {
+      width: 75%;
+    }
   }
 `;
 
@@ -223,7 +226,7 @@ const RecoveryFacilityDetails = () => {
               const filteredValues = data.values?.filter(
                 (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
               );
-              const emptyRecords = data.values.filter(
+              const emptyRecords = data.values?.filter(
                 (site) =>
                   site.addressDetails === undefined &&
                   site.recoveryFacilityType === undefined
@@ -685,7 +688,7 @@ const RecoveryFacilityDetails = () => {
                       }))}
                     />
                   )}
-                <GovUK.Caption>
+                <GovUK.Caption size="L">
                   {t('exportJourney.recoveryFacilities.caption')}
                 </GovUK.Caption>
                 {recoveryPage.showView === VIEWS.ADDRESS_DETAILS && (
@@ -729,6 +732,7 @@ const RecoveryFacilityDetails = () => {
                       </GovUK.TextArea>
                       <AddressField
                         mb={6}
+                        hint={t('exportJourney.recoveryFacilities.countryHint')}
                         input={{
                           name: 'country',
                           id: 'country',
@@ -995,8 +999,9 @@ const RecoveryFacilityDetails = () => {
                                   title: t(
                                     'exportJourney.recoveryFacilities.recoveryCode'
                                   ),
-                                  definition:
-                                    facility.recoveryFacilityType?.recoveryCode,
+                                  definition: boldUpToFirstColon(
+                                    facility.recoveryFacilityType?.recoveryCode
+                                  ),
                                 },
                               ]}
                             />

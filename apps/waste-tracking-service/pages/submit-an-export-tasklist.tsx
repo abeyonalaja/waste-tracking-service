@@ -514,7 +514,12 @@ const Tasklist = () => {
                           'Complete') &&
                         (tasklistPage.data?.wasteDescription?.wasteCode.type ===
                         'NotApplicable' ? (
-                          <AppLink href="#">
+                          <AppLink
+                            href={{
+                              pathname: `/laboratory-details`,
+                              query: { id, dashboard: true },
+                            }}
+                          >
                             {t(
                               'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
                             )}

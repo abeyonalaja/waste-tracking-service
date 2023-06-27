@@ -184,7 +184,7 @@ const WasteCarrierTrailer = () => {
             {!isError && !isLoading && (
               <>
                 {' '}
-                <SmallHeading>
+                <SmallHeading size="L">
                   {t('exportJourney.wasteCarrierDetails.title')}
                 </SmallHeading>
                 <GovUK.Heading size={'LARGE'}>

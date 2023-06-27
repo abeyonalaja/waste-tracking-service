@@ -2,6 +2,7 @@ import React, { ChangeEvent, ReactElement } from 'react';
 import { GREY_2, ERROR_COLOUR } from 'govuk-colours';
 import { Fieldset, HintText, ErrorText, Radio } from 'govuk-react';
 import styled from 'styled-components';
+import boldUpToFirstColon from '../utils/boldUpToFirstColon';
 
 interface Props {
   id?: string;
@@ -94,7 +95,7 @@ export const RadioList = ({
               checked={option === value}
               id={`${id}-${idify(option)}`}
             >
-              {option}
+              {boldUpToFirstColon(option)}
             </SmallRadio>
           ) : (
             <Radio
@@ -105,7 +106,7 @@ export const RadioList = ({
               checked={option === value}
               id={`${id}-${idify(option)}`}
             >
-              {option}
+              {boldUpToFirstColon(option)}
             </Radio>
           )
         )}

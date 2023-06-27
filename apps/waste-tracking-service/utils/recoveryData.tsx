@@ -18,6 +18,23 @@ const recoveryData = {
     'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11',
     'R13: Storage of wastes pending any of the operations numbered R01 to R12 (excluding temporary storage, pending collection, on the site where it is produced).',
   ],
+  disposalCodes: [
+    'D1: Deposit into or onto land',
+    'D2: Land Treatment',
+    'D3: Deep injection',
+    'D4: Surface impoundment',
+    'D5: Specially engineered landfill',
+    'D6: Release into a water body except seas/oceans',
+    'D7: Release into seas/oceans including seabed insertion',
+    'D8: Biological treatment not specified elsewhere which results in final compounds or mixtures which are disposed of by any of the operations numbered D01 to D12',
+    'D9: Physico-chemical treatment not specified elsewhere which results in final compounds or mixtures which are disposed of by any of the operations numbered D01 to D12',
+    'D10: Incineration on land',
+    'D11: Incineration at sea',
+    'D12: Permanent storage',
+    'D13: Blending or mixing prior to submission to any of the operations numbered D01 to D12',
+    'D14: Repackaging prior to submission to any of the operations numbered D01 to D12',
+    'D15: Storage pending any of the operations numbered D01 to D14 (excluding temporary storage, pending collection, on the site where it is produced).',
+  ],
 };
 
 export { recoveryData };
