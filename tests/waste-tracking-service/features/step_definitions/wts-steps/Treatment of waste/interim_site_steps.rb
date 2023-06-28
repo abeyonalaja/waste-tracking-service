@@ -33,3 +33,15 @@ end
 And(/^I should see Interim site contact page correctly translated$/) do
   InterimSiteContactDetailsPage.new.check_page_translation
 end
+
+And(/^I see Confirmation interim site page translated$/) do
+  ConfirmationInterimSitePage.new.check_page_translation
+end
+
+Then(/^I see interim site description translated$/) do
+  ConfirmationInterimSitePage.new.check_description_translation
+end
+
+And(/^I click description link$/) do
+  page.find(class: 'src__StyledSummary-sc-273hbe-1 gFIgVF').click
+end

@@ -125,3 +125,7 @@ end
 And(/^I complete Treatment of waste section$/) do
   RecoveryFacilityController.complete
 end
+
+And(/^I see previously selected option pre\-selected$/) do
+  expect(ConfirmationInterimSitePage.new.option_checked?('Yes')).to eq(true)
+end

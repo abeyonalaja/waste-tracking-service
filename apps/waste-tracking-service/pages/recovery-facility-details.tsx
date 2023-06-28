@@ -232,8 +232,8 @@ const RecoveryFacilityDetails = () => {
                   site.recoveryFacilityType === undefined
               );
               if (
-                (filteredValues === undefined || filteredValues.length === 0) &&
-                emptyRecords === undefined
+                (filteredValues === undefined && emptyRecords === undefined) ||
+                (filteredValues.length === 0 && emptyRecords.length === 0)
               ) {
                 createRecoveryFacility();
               } else {
@@ -507,7 +507,6 @@ const RecoveryFacilityDetails = () => {
         if (emptyRecords.length === 0) {
           createRecoveryFacility();
         } else {
-          emptyRecords.at(-1).id = 'Bigbogrockers';
           emptyRecords.at(-1).recoveryFacilityType = {
             type: 'RecoveryFacility',
             recoveryCode: '',
@@ -637,7 +636,7 @@ const RecoveryFacilityDetails = () => {
           onClick={() => {
             if (startPage === recoveryPage.showView) {
               router.push({
-                pathname: '/submit-an-export-tasklist',
+                pathname: '/interim-site',
                 query: { id },
               });
             } else {

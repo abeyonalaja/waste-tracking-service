@@ -248,5 +248,9 @@
   "contact.faxNumber": "Fax number (optional)",
   "contact.numberHint": "For international numbers include the country code",
   "address": "Address",
-  "address.country": "Country"
+  "address.country": "Country",
+  "exportJourney.interimSite.confirmTitle": "Will the waste go to an interim site before it reaches the final recovery facility?",
+  "exportJourney.interimSite.confirmHint": "This includes for storage or processing.",
+  "exportJourney.interimSite.summary": "What is an interim site?",
+  "exportJourney.interimSite.details": "An interim site is an authorised facility where the waste gets limited additional processing. For example, at an interim site different plastic waste grades could be separated or stored temporarily before they move to one or more final recovery facilities."
 }

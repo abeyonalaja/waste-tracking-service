@@ -8,8 +8,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     Then I should see recovery facility address page correctly translated
     When I complete recovery facility address page
     And I click the button Save and continue
@@ -27,8 +29,9 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
     When I complete recovery facility address page
     And I click the button Save and continue
@@ -47,8 +50,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I click the button Save and continue
     Then I remain on the recovery facility address page with an "Enter the recovery facility name" error message displayed
     And I remain on the recovery facility address page with an "Enter a country" error message displayed
@@ -64,8 +69,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I complete recovery facility address page
     And I click the button Save and continue
     And I click the button Save and continue
@@ -82,8 +89,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     When I complete recovery facility address page
     And I click the button Save and continue
     When I complete recovery facility contact details
@@ -98,13 +107,16 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temp page
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I complete recovery facility address page
     And I click the Save and return to draft
     Then the task "Recovery facility" should be "IN PROGRESS"
     When I click the "Recovery facility" link
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
     And I should see previously entered recovery facility details pre-populated
 
@@ -114,8 +126,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temo
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I complete the "first" recovery facility
     And I choose "Yes" radio button
     And I click the button Save and continue
@@ -127,10 +141,7 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then the task "Recovery facility" should be "COMPLETED"
     When I click the "Recovery facility" link
-    #temp
-    And I click the Recovery facilities page link
-    Then I should see first recovery facility details
-    And I should see second recovery facility details
+    Then the "Confirmation Interim Site" page is displayed
 
 
   Scenario: User can change previously entered recovery details
@@ -138,8 +149,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temo
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I complete the "first" recovery facility
     When I click the "Change" link
     Then I should see previously entered recovery facility details pre-populated
@@ -156,8 +169,10 @@ Feature: AS A waste producer/broker
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
-    #temo
-    And I click the Recovery facilities page link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
     And I complete the "first" recovery facility
     And I choose "Yes" radio button
     And I click the button Save and continue
