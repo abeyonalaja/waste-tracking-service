@@ -29,7 +29,7 @@ import {
   validateCountry,
   validateEmail,
   validateFullName,
-  validatePhone,
+  validateInternationalPhone,
   validateRecoveryCode,
   validateFieldNotEmpty,
 } from '../utils/validators';
@@ -269,7 +269,9 @@ const InterimSiteDetails = () => {
           newErrors = {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
-            phoneNumber: validatePhone(contactDetails?.phoneNumber),
+            phoneNumber: validateInternationalPhone(
+              contactDetails?.phoneNumber
+            ),
           };
 
           body = {

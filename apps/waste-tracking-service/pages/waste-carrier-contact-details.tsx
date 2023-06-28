@@ -18,7 +18,7 @@ import {
   isNotEmpty,
   validateFullName,
   validateEmail,
-  validatePhone,
+  validateInternationalPhone,
 } from '../utils/validators';
 
 const SmallHeading = styled(GovUK.Caption)`
@@ -114,7 +114,7 @@ const WasteCarrierContactDetails = () => {
       const newErrors = {
         fullName: validateFullName(fullName),
         email: validateEmail(email),
-        phone: validatePhone(phone),
+        phone: validateInternationalPhone(phone),
       };
 
       if (isNotEmpty(newErrors)) {
@@ -276,9 +276,7 @@ const WasteCarrierContactDetails = () => {
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
-                      hint={
-                        <>{t('exportJourney.wasteCarrierDetails.nameHint')}</>
-                      }
+                      hint={<>{t('contact.nameHint')}</>}
                       input={{
                         name: 'fullName',
                         id: 'fullName',
@@ -306,12 +304,10 @@ const WasteCarrierContactDetails = () => {
                         touched: !!errors?.email,
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.email')}
+                      {t('contact.emailAddress')}
                     </AddressInput>
                     <PostcodeInput
-                      hint={
-                        <>{t('exportJourney.wasteCarrierDetails.phoneHint')}</>
-                      }
+                      hint={<>{t('contact.numberHint')}</>}
                       input={{
                         name: 'phone',
                         id: 'phone',
@@ -324,12 +320,10 @@ const WasteCarrierContactDetails = () => {
                         touched: !!errors?.phone,
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.phone')}
+                      {t('contact.phoneNumber')}
                     </PostcodeInput>
                     <PostcodeInput
-                      hint={
-                        <> {t('exportJourney.wasteCarrierDetails.faxHint')}</>
-                      }
+                      hint={<> {t('contact.numberHint')}</>}
                       input={{
                         name: 'fax',
                         id: 'fax',
@@ -338,7 +332,7 @@ const WasteCarrierContactDetails = () => {
                         onChange: (e) => setFax(e.target.value),
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.fax')}
+                      {t('contact.faxNumber')}
                     </PostcodeInput>
                   </GovUK.FormGroup>
                   <ButtonGroup>

@@ -187,9 +187,6 @@ const ExporterManual = () => {
             {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
-                <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.exporterPostcode.title')}
-                </GovUK.Heading>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
                     heading={t('errorSummary.title')}
@@ -199,12 +196,18 @@ const ExporterManual = () => {
                     }))}
                   />
                 )}
+
+                <GovUK.Caption size="L">
+                  {t('exportJourney.exporterDetails.caption')}
+                </GovUK.Caption>
+                <GovUK.Heading size={'LARGE'}>
+                  {t('exportJourney.exporterPostcode.title')}
+                </GovUK.Heading>
+
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
-                      hint={t(
-                        'exportJourney.exporterManual.addressOneLabel.hint'
-                      )}
+                      hint={t('address.addressLine.hint')}
                       input={{
                         name: 'address',
                         id: 'address',
@@ -217,12 +220,10 @@ const ExporterManual = () => {
                         touched: !!errors?.address,
                       }}
                     >
-                      {t('exportJourney.exporterManual.addressOneLabel')}
+                      {t('address.addressLine1')}
                     </AddressInput>
                     <AddressInput
-                      hint={t(
-                        'exportJourney.exporterManual.addressTwoLabel.hint'
-                      )}
+                      hint={t('address.addressLine.hint')}
                       input={{
                         name: 'address2',
                         id: 'address2',
@@ -231,7 +232,7 @@ const ExporterManual = () => {
                         onChange: (e) => setAddress2(e.target.value),
                       }}
                     >
-                      {t('exportJourney.exporterManual.addressTwoLabel')}
+                      {t('address.addressLine2')}
                     </AddressInput>
                     <TownCountryInput
                       input={{
@@ -246,7 +247,7 @@ const ExporterManual = () => {
                         touched: !!errors?.townCity,
                       }}
                     >
-                      {t('exportJourney.exporterManual.townLabel')}
+                      {t('address.townCity')}
                     </TownCountryInput>
                     <PostcodeInput
                       input={{
@@ -257,7 +258,7 @@ const ExporterManual = () => {
                         onChange: (e) => setPostcode(e.target.value),
                       }}
                     >
-                      {t('exportJourney.exporterManual.postCodeLabel')}
+                      {t('address.postcodeOptional')}
                     </PostcodeInput>
                     <RadioList
                       value={country}

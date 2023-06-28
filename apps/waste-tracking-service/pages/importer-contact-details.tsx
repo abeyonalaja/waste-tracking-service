@@ -17,7 +17,7 @@ import {
   isNotEmpty,
   validateFullName,
   validateEmail,
-  validatePhone,
+  validateInternationalPhone,
 } from '../utils/validators';
 
 const AddressInput = styled(GovUK.InputField)`
@@ -88,7 +88,7 @@ const ImporterContactDetails = () => {
       const newErrors = {
         fullName: validateFullName(fullName),
         email: validateEmail(email),
-        phone: validatePhone(phone),
+        phone: validateInternationalPhone(phone),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -154,7 +154,7 @@ const ImporterContactDetails = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.exporterPostcode.title')}</title>
+        <title>{t('exportJourney.importerDetails.secondPageQuestion')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -168,13 +168,6 @@ const ImporterContactDetails = () => {
             {isLoading && <p>Loading</p>}
             {!isError && !isLoading && (
               <>
-                {' '}
-                <GovUK.Caption size="L">
-                  {t('exportJourney.importerDetails.title')}
-                </GovUK.Caption>
-                <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.importerDetails.secondPageQuestion')}
-                </GovUK.Heading>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
                     heading={t('errorSummary.title')}
@@ -184,10 +177,17 @@ const ImporterContactDetails = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.importerDetails.title')}
+                </GovUK.Caption>
+                <GovUK.Heading size={'LARGE'}>
+                  {t('exportJourney.importerDetails.secondPageQuestion')}
+                </GovUK.Heading>
+
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
-                      hint={<>{t('exportJourney.importerDetails.nameHint')}</>}
+                      hint={<>{t('contact.nameHint')}</>}
                       input={{
                         name: 'fullName',
                         id: 'fullName',
@@ -215,10 +215,10 @@ const ImporterContactDetails = () => {
                         touched: !!errors?.email,
                       }}
                     >
-                      {t('exportJourney.importerDetails.email')}
+                      {t('contact.emailAddress')}
                     </AddressInput>
                     <PostcodeInput
-                      hint={<>{t('exportJourney.importerDetails.phoneHint')}</>}
+                      hint={t('contact.numberHint')}
                       input={{
                         name: 'phone',
                         id: 'phone',
@@ -231,10 +231,10 @@ const ImporterContactDetails = () => {
                         touched: !!errors?.phone,
                       }}
                     >
-                      {t('exportJourney.importerDetails.phone')}
+                      {t('contact.phoneNumber')}
                     </PostcodeInput>
                     <PostcodeInput
-                      hint={<> {t('exportJourney.importerDetails.faxHint')}</>}
+                      hint={t('contact.numberHint')}
                       input={{
                         name: 'fax',
                         id: 'fax',
@@ -243,7 +243,7 @@ const ImporterContactDetails = () => {
                         onChange: (e) => setFax(e.target.value),
                       }}
                     >
-                      {t('exportJourney.importerDetails.fax')}
+                      {t('contact.faxNumber')}
                     </PostcodeInput>
                   </GovUK.FormGroup>
                   <ButtonGroup>

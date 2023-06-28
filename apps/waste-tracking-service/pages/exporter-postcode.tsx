@@ -177,6 +177,9 @@ const ExporterPostcode = () => {
               />
             )}
 
+            <GovUK.Caption size="L">
+              {t('exportJourney.exporterDetails.caption')}
+            </GovUK.Caption>
             <GovUK.Heading size={'LARGE'}>
               {t('exportJourney.exporterPostcode.title')}
             </GovUK.Heading>

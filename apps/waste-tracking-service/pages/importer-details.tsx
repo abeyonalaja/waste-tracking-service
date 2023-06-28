@@ -148,7 +148,7 @@ const ImporterDetails = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.exporterPostcode.title')}</title>
+        <title>{t('exportJourney.importerDetails.firstPageQuestion')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -162,13 +162,6 @@ const ImporterDetails = () => {
             {isLoading && <p>Loading</p>}
             {!isError && !isLoading && (
               <>
-                {' '}
-                <GovUK.Caption size="L">
-                  {t('exportJourney.importerDetails.title')}
-                </GovUK.Caption>
-                <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.importerDetails.firstPageQuestion')}
-                </GovUK.Heading>
                 {errors && !!Object.keys(errors).length && (
                   <GovUK.ErrorSummary
                     heading={t('errorSummary.title')}
@@ -178,6 +171,13 @@ const ImporterDetails = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.importerDetails.title')}
+                </GovUK.Caption>
+                <GovUK.Heading size={'LARGE'}>
+                  {t('exportJourney.importerDetails.firstPageQuestion')}
+                </GovUK.Heading>
+
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
@@ -194,7 +194,7 @@ const ImporterDetails = () => {
                         touched: !!errors?.organisationName,
                       }}
                     >
-                      {t('exportJourney.importerDetails.organisationName')}
+                      {t('contact.orgName')}
                     </AddressInput>
                     <GovUK.TextArea
                       mb={6}
@@ -210,7 +210,7 @@ const ImporterDetails = () => {
                         touched: !!errors?.address,
                       }}
                     >
-                      {t('exportJourney.importerDetails.address')}
+                      {t('address')}
                     </GovUK.TextArea>
                     <AddressInput
                       mb={6}
@@ -226,7 +226,7 @@ const ImporterDetails = () => {
                         touched: !!errors?.country,
                       }}
                     >
-                      {t('exportJourney.importerDetails.country')}
+                      {t('address.country')}
                     </AddressInput>
                   </GovUK.FormGroup>
                   <ButtonGroup>

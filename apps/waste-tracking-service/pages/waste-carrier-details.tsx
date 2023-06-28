@@ -303,7 +303,7 @@ const WasteCarrierDetails = () => {
                         touched: !!errors?.organisationName,
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.organisationName')}
+                      {t('contact.orgName')}
                     </AddressInput>
                     <AddressTextArea
                       input={{
@@ -318,7 +318,7 @@ const WasteCarrierDetails = () => {
                         touched: !!errors?.address,
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.address')}
+                      {t('address')}
                     </AddressTextArea>
                     <AddressInput
                       input={{
@@ -333,7 +333,7 @@ const WasteCarrierDetails = () => {
                         touched: !!errors?.country,
                       }}
                     >
-                      {t('exportJourney.wasteCarrierDetails.country')}
+                      {t('address.country')}
                     </AddressInput>
                   </GovUK.FormGroup>
                   <ButtonGroup>

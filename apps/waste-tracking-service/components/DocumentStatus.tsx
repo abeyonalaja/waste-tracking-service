@@ -1,42 +1,45 @@
 import React from 'react';
 import { Tag } from 'govuk-react';
+import '../i18n/config';
+import { useTranslation } from 'react-i18next';
 
 export const DocumentStatus = (props) => {
+  const { t } = useTranslation();
   const { status } = props;
   let name;
   switch (status) {
     case 'CannotStart':
       name = (
         <Tag id={props.id} data-testid="CST" tint="GREY">
-          Cannot start yet
+          {t('status.cannotStartYet')}
         </Tag>
       );
       break;
     case 'NotStarted':
       name = (
         <Tag id={props.id} data-testid="NS" tint="GREY">
-          Not started
+          {t('status.notStarted')}
         </Tag>
       );
       break;
     case 'Started':
       name = (
-        <Tag id={props.id} data-testid="NS" tint="BLUE">
-          In progress
+        <Tag id={props.id} data-testid="IP" tint="BLUE">
+          {t('status.inProgress')}
         </Tag>
       );
       break;
     case 'Complete':
       name = (
         <Tag id={props.id} data-testid="C">
-          Completed
+          {t('status.completed')}
         </Tag>
       );
       break;
     default:
       name = (
         <Tag id={props.id} tint="GREY">
-          Not started
+          {t('status.notStarted')}
         </Tag>
       );
       break;

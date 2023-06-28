@@ -860,7 +860,7 @@ const WasteCollection = () => {
                           touched: !!addressPage.errors?.organisationName,
                         }}
                       >
-                        {t('exportJourney.exporterDetails.organisationName')}
+                        {t('contact.orgName')}
                       </GovUK.InputField>
                       <GovUK.Fieldset>
                         <GovUK.Fieldset.Legend size="M">
@@ -880,7 +880,7 @@ const WasteCollection = () => {
                               touched: !!addressPage.errors?.fullName,
                             }}
                           >
-                            {t('exportJourney.exporterDetails.fullName')}
+                            {t('contact.fullName')}
                           </GovUK.InputField>
                         </GovUK.FormGroup>
                         <GovUK.FormGroup>
@@ -898,7 +898,7 @@ const WasteCollection = () => {
                               touched: !!addressPage.errors?.emailAddress,
                             }}
                           >
-                            {t('exportJourney.exporterDetails.email')}
+                            {t('contact.emailAddress')}
                           </GovUK.InputField>
                         </GovUK.FormGroup>
                         <GovUK.FormGroup>
@@ -907,7 +907,7 @@ const WasteCollection = () => {
                             error={!!addressPage.errors?.phoneNumber}
                           >
                             <GovUK.LabelText>
-                              {t('exportJourney.exporterDetails.phone')}
+                              {t('contact.phoneNumber')}
                             </GovUK.LabelText>
 
                             {addressPage.errors?.phoneNumber && (
@@ -932,7 +932,7 @@ const WasteCollection = () => {
                             error={!!addressPage.errors?.faxNumber}
                           >
                             <GovUK.LabelText>
-                              {t('exportJourney.exporterDetails.fax')}
+                              {t('contact.faxNumber')}
                             </GovUK.LabelText>
 
                             {addressPage.errors?.fax && (

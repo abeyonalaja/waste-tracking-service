@@ -28,7 +28,7 @@ import {
   validateCountry,
   validateEmail,
   validateFullName,
-  validatePhone,
+  validateInternationalPhone,
   validateRecoveryCode,
   validateAddAnotherFacility,
   validateConfirmRemove,
@@ -349,7 +349,9 @@ const RecoveryFacilityDetails = () => {
           newErrors = {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
-            phoneNumber: validatePhone(contactDetails?.phoneNumber),
+            phoneNumber: validateInternationalPhone(
+              contactDetails?.phoneNumber
+            ),
           };
           body = {
             status: 'Started',

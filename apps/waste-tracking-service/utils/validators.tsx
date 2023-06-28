@@ -122,6 +122,16 @@ export const validatePhone: (phone?: string) => string = (phone) => {
   }
 };
 
+export const validateInternationalPhone: (phone?: string) => string = (
+  phone
+) => {
+  if (phone?.length === 0) return 'Enter a phone number';
+  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 \\-\\(\\)\\.]{7,32}$');
+  if (!regex.test(phone)) {
+    return 'Enter a real phone number';
+  }
+};
+
 export const validateSelectAddress: (address?: string) => string = (
   address
 ) => {

@@ -200,6 +200,9 @@ const ExporterDetails = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.exporterDetails.caption')}
+                </GovUK.Caption>
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.exporterDetails.title')}
                 </GovUK.Heading>
@@ -231,7 +234,7 @@ const ExporterDetails = () => {
                         touched: !!errors?.organisationName,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.organisationName')}
+                      {t('contact.orgName')}
                     </AddressInput>
                     <GovUK.Heading size={'MEDIUM'}>
                       {t('exportJourney.exporterDetails.contactDetails')}
@@ -250,7 +253,7 @@ const ExporterDetails = () => {
                         touched: !!errors?.fullName,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.fullName')}
+                      {t('contact.fullName')}
                     </AddressInput>
                     <TownCountryInput
                       input={{
@@ -267,7 +270,7 @@ const ExporterDetails = () => {
                         touched: !!errors?.email,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.email')}
+                      {t('contact.emailAddress')}
                     </TownCountryInput>
                     <PostcodeInput
                       input={{
@@ -283,7 +286,7 @@ const ExporterDetails = () => {
                         touched: !!errors?.phone,
                       }}
                     >
-                      {t('exportJourney.exporterDetails.phone')}
+                      {t('contact.phoneNumber')}
                     </PostcodeInput>
                     <PostcodeInput
                       input={{
@@ -294,7 +297,7 @@ const ExporterDetails = () => {
                         onChange: (e) => setFax(e.target.value),
                       }}
                     >
-                      {t('exportJourney.exporterDetails.fax')}
+                      {t('contact.faxNumber')}
                     </PostcodeInput>
                   </GovUK.FormGroup>
 
