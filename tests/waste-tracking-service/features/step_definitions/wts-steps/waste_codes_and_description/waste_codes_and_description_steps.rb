@@ -28,3 +28,10 @@ end
 And(/^waste code description is displayed$/) do
   expect(WhatIsTheWasteCodePage.new).to have_waste_code TestStatus.test_status(:waste_code_description)
 end
+
+When(/^I change the waste code from small to bulk waste$/) do
+  WhatIsTheWasteCodePage.new.choose_option 'Basel Annex IX'
+  TestStatus.set_test_status(:waste_code_option, 'Basel Annex IX')
+  Log.info("Waste code option :  #{TestStatus.test_status(:waste_code_option)}")
+  WhatIsTheWasteCodePage.new.select_first_option
+end

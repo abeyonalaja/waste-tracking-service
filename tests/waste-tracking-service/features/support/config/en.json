@@ -252,5 +252,11 @@
   "exportJourney.interimSite.confirmTitle": "Will the waste go to an interim site before it reaches the final recovery facility?",
   "exportJourney.interimSite.confirmHint": "This includes for storage or processing.",
   "exportJourney.interimSite.summary": "What is an interim site?",
-  "exportJourney.interimSite.details": "An interim site is an authorised facility where the waste gets limited additional processing. For example, at an interim site different plastic waste grades could be separated or stored temporarily before they move to one or more final recovery facilities."
+  "exportJourney.interimSite.details": "An interim site is an authorised facility where the waste gets limited additional processing. For example, at an interim site different plastic waste grades could be separated or stored temporarily before they move to one or more final recovery facilities.",
+  "exportJourney.laboratorySite.caption": "Laboratory details",
+  "exportJourney.laboratorySite.addressTitle": "What is the laboratory address?",
+  "exportJourney.laboratorySite.name": "Laboratory name",
+  "exportJourney.laboratorySite.contactTitle": "What are the laboratory contact details?",
+  "exportJourney.laboratorySite.contactPerson": "Laboratory contact person",
+  "exportJourney.laboratorySite.codeTitle": "What is the disposal code?"
 }

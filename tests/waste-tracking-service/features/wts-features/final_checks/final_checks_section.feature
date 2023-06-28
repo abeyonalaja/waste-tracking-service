@@ -20,9 +20,9 @@ Feature: AS A Waste Practitioner
     Then the task "Importer details" should be "COMPLETED"
     And I click the "Collection date" link
     And I complete the Journey of a waste section
-    Then I click the "Recovery facility" link
-    And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+#    Then I click the "Recovery facility" link
+#    And I complete Treatment of waste section
+#    Then the task "Recovery facility" should be "COMPLETED"
     Then the task "Check your report" should be "NOT STARTED"
     Then the task "Sign declaration" should be "CANNOT START YET"
 

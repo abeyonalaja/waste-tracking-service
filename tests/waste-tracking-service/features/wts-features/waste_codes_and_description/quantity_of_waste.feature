@@ -87,7 +87,7 @@ Feature: AS A waste producer
     And I enter valid weight in cubic meters
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
-#    And I have 1 of 4 sections completed
+    And I have 1 of 4 sections completed
     When I click the "Quantity of waste" link
     Then I should see quantity option "No, I will enter an estimate" is selected
     And I click the button Save and continue
@@ -228,7 +228,7 @@ Feature: AS A waste producer
     And I enter valid weight in kilograms
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
-#    And I have 1 of 4 sections completed
+    And I have 1 of 5 sections completed
     When I click the "Quantity of waste" link
     Then I should see quantity option "No, I will enter an estimate" is selected
     And I click the button Save and continue

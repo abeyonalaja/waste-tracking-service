@@ -63,7 +63,6 @@ Feature: AS A waste producer/broker
     And I remain on the recovery facility address page with an "Enter a country" error message displayed
     And I remain on the recovery facility address page with an "Enter an address" error message displayed
 
-
   Scenario: User can't continue without completing facility contact details
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
