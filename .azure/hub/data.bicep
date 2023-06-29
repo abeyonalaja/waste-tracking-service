@@ -23,10 +23,19 @@ param subnet object = {
   id: null
 }
 
+@description('Reference to existing user-assigned managed identites.')
+param identities object = {
+  acrTask: {
+    id: null
+  }
+}
+
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
 var role = 'HUB'
+
+var acrTaskFilePath = 'acrTask.yaml'
 
 var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
@@ -34,6 +43,14 @@ var instance0 = {
 
 var containerRegistryName = join(
   [ env, svc, role, 'CR', envNum, padLeft(instance0, 3, '0') ], ''
+)
+
+var containerRegistryTaskName = join(
+  [
+    containerRegistryName
+    join([ env, svc, 'ACR', 'AT', envNum, padLeft(instance0, 3, '0') ], '')
+  ],
+  '-'
 )
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-12-01' = {
@@ -72,6 +89,38 @@ resource containerRegistryEndpont 'Microsoft.Network/privateEndpoints@2022-07-01
   }
 
   tags: union(defaultTags, { Name: containerRegistryEndpointName })
+}
+
+resource containerRegistryTask 'Microsoft.ContainerRegistry/registries/tasks@2019-06-01-preview' = {
+  name: containerRegistryTaskName
+  location: primaryRegion
+  tags: union(defaultTags, { Name: containerRegistryTaskName })
+  parent: containerRegistry
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identities.acrTask.id}': {}
+    }
+  }
+  properties: {
+    platform: {
+      architecture: 'amd64'
+      os: 'linux'
+    }
+    status: 'Enabled'
+    step: {
+      type: 'EncodedTask'
+      encodedTaskContent: loadFileAsBase64(acrTaskFilePath)
+    }
+    trigger: {
+      baseImageTrigger: {
+        baseImageTriggerType: 'Runtime'
+        name: 'defaultBaseImageTriggerName'
+        status: 'Enabled'
+        updateTriggerPayloadType: 'Default'
+      }
+    }
+  }
 }
 
 @description('Reference to created Azure Container Registry.')

@@ -86,6 +86,17 @@ module management './management.bicep' = {
   }
 }
 
+module identity './identity.bicep' = {
+  name: 'hub-identity'
+  params: {
+    env: environment
+    svc: serviceCode
+    envNum: environmentNumber
+    primaryRegion: primaryRegion
+    defaultTags: union(tags.outputs.defaultTags, { Tier: 'OTHER' })
+  }
+}
+
 module data './data.bicep' = {
   name: 'hub-data'
   params: {
@@ -94,6 +105,11 @@ module data './data.bicep' = {
     envNum: environmentNumber
     primaryRegion: primaryRegion
     subnet: network.outputs.subnets.data
+    identities: {
+      acrTask: {
+        id: identity.outputs.identities.acrTask.id
+      }
+    }
     defaultTags: union(tags.outputs.defaultTags, { Tier: 'DATA' })
   }
 }
