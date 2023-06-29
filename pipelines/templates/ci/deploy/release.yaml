@@ -1,0 +1,76 @@
+parameters:
+  - name: serviceConnection
+    type: string
+    default: ''
+  - name: containerRegistryName
+    type: string
+    default: ''
+  - name: appName
+    type: string
+    values:
+      - waste-tracking-service
+      - waste-tracking-gateway
+      - annex-vii
+      - address
+  - name: appNameTag
+    type: string
+    values:
+      - waste_tracking_service
+      - waste_tracking_gateway
+      - annex_vii
+      - address
+  - name: deployChart
+    type: string
+    default: ''
+
+steps:
+  - task: AzureCLI@2
+    name: repository_${{ parameters.appNameTag }}
+    displayName: ACR repository ${{ parameters.appName }}
+    condition: ${{ parameters.deployChart }}
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        response=$(az acr repository show-tags \
+          --repository $REPOSITORY_NAME \
+          --orderby time_desc \
+          --top 1
+        )
+        echo "##vso[task.setvariable variable=chartTag;isoutput=true]$( \
+          echo $response | jq -r .[] \
+        )"
+    env:
+      AZURE_DEFAULTS_ACR: ${{ parameters.containerRegistryName }}
+      REPOSITORY_NAME: charts/wts/${{ parameters.appName }}
+
+  - bash: |
+      existing=$(helm list \
+        -n $PROJECT_NAME \
+        --output json \
+        | jq -r '.[].chart' \
+      )
+      chart="${PROJECT_NAME}-${CHART_TAG}"
+      if [ -z "$existing" ]
+      then
+        echo "Helm chart: $chart cannot be found"
+        echo "##vso[task.setvariable variable=exists;isoutput=true]false"
+      else
+        if [ $chart == $existing ]
+        then
+          echo "Helm chart: $chart already installed"
+          echo "##vso[task.setvariable variable=exists;isoutput=true]true"
+        else
+          echo "Helm chart: $chart has not been installed"
+          echo "##vso[task.setvariable variable=exists;isoutput=true]false"
+        fi
+      fi
+    name: release_${{ parameters.appNameTag }}
+    displayName: Helm Release ${{ parameters.appName }}
+    condition: ${{ parameters.deployChart }}
+    env:
+      AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+      AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+      PROJECT_NAME: ${{ parameters.appName }}
+      CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)

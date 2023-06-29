@@ -1,0 +1,99 @@
+parameters:
+  - name: serviceConnection
+    type: string
+    default: ''
+  - name: containerRegistryName
+    type: string
+    default: ''
+  - name: appName
+    type: string
+    default: 'address'
+  - name: appNameTag
+    type: string
+    default: 'address'
+  - name: appInsightsConnectionString
+    type: string
+    default: ''
+  - name: keyVaultName
+    type: string
+    default: ''
+  - name: keyVaultTenantId
+    type: string
+    default: ''
+  - name: msiClientId
+    type: string
+    default: ''
+  - name: msiTenantId
+    type: string
+    default: ''
+  - name: addressLookupUrl
+    type: string
+    default: ''
+  - name: addressLookupKeyVaultCertName
+    type: string
+    default: ''
+  - name: deployChart
+    type: string
+    default: ''
+  - name: affectedCharts
+    type: string
+    default: ''
+
+steps:
+  - template: release.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      containerRegistryName: ${{ parameters.containerRegistryName }}
+      appName: ${{ parameters.appName }}
+      appNameTag: ${{ parameters.appNameTag }}
+      deployChart: ${{ parameters.deployChart }}
+
+  - bash: |
+      if ($([[ $AFFECTED_CHARTS_VALUES =~ (^|,)$PROJECT_NAME($|,) ]] && echo true || echo false))
+      then
+        echo "Chart: ${PROJECT_NAME} is in deployment list"
+        if [ $CHART_EXISTS == 'false' ]
+        then
+          echo "Installing release: ${PROJECT_NAME}"
+          chartFullName="${HOST}/${PROJECT_NAME}"
+          helm upgrade \
+            --install $PROJECT_NAME \
+            $chartFullName \
+            --version $CHART_TAG \
+            --create-namespace \
+            -n $PROJECT_NAME \
+            --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
+            --set secret.env.ADDRESS_LOOKUP_URL=$ADDRESS_LOOKUP_URL \
+            --set secret.env.CERT_FOLDER=$CERT_FOLDER \
+            --set secret.env.CERT_NAME=$CERT_NAME \
+            --set serviceAccount.annotations."azure\.workload\.identity/client-id"=$MSI_CLIENT_ID \
+            --set serviceAccount.annotations."azure\.workload\.identity/tenant-id"=$MSI_TENANT_ID \
+            --set secretProviderClass.clientId=$MSI_CLIENT_ID \
+            --set secretProviderClass.keyVault.name=$KEY_VAULT_NAME \
+            --set secretProviderClass.keyVault.tenantId=$KEY_VAULT_TENANT_ID \
+            --set volume.mountPath=$CERT_FOLDER \
+            --set "secretProviderClass.keyVault.secrets={$CERT_NAME}"
+        else
+          echo "Release: ${PROJECT_NAME} is already up to date"
+        fi
+      else
+        echo "Chart: ${PROJECT_NAME} is not in deployment list"
+      fi
+    displayName: AKS Deploy ${{ parameters.appName }}
+    condition: ${{ parameters.deployChart }}
+    env:
+      AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+      AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+      HOST: oci://$(acr.loginServer)/charts/wts
+      PROJECT_NAME: ${{ parameters.appName }}
+      CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
+      APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
+      MSI_CLIENT_ID: ${{ parameters.msiClientId }}
+      MSI_TENANT_ID: ${{ parameters.msiTenantId }}
+      KEY_VAULT_NAME: ${{ parameters.keyVaultName }}
+      KEY_VAULT_TENANT_ID: ${{ parameters.keyVaultTenantId }}
+      ADDRESS_LOOKUP_URL: ${{ parameters.addressLookupUrl }}
+      CERT_FOLDER: '/mnt/secrets-store/'
+      CERT_NAME: ${{ parameters.addressLookupKeyVaultCertName }}
+      CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
+      AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}

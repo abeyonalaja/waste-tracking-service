@@ -1,7 +1,7 @@
 controller:
   replicaCount: 2
   nodeSelector:
-    kubernetes.io/os': 'linux'
+    kubernetes.io/os: 'linux'
   service:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-ipv4: '52.151.120.75'

@@ -1,21 +1,21 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: drafts.state.annex-vii
-  namespace: annex-vii
+  name: drafts.state.APP_NAME
+  namespace: APP_NAME
   labels:
-    app.kubernetes.io/name: annex-vii
-    app.kubernetes.io/instance: annex-vii
+    app.kubernetes.io/name: APP_NAME
+    app.kubernetes.io/instance: APP_NAME
 spec:
   type: state.azure.cosmosdb
   version: v1
   metadata:
     - name: url
-      value: ''
+      value: COSMOS_DB_URL
     - name: masterKey
-      value: ''
+      value: COSMOS_DB_MASTER_KEY
     - name: database
-      value: annex-vii
+      value: APP_NAME
     - name: collection
       value: drafts
     - name: keyPrefix

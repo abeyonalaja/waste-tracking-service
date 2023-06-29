@@ -17,23 +17,10 @@ jobs:
       - checkout: self
         fetchDepth: 0
 
-      - task: AzureCLI@2
-        name: acr
-        displayName: ACR login
-        inputs:
-          azureSubscription: ${{ variables.serviceConnection }}
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            response=$(az acr login --expose-token)
-            echo "##vso[task.setvariable variable=loginServer;isoutput=true]$( \
-              echo $response | jq -r .loginServer \
-            )"
-            echo "##vso[task.setvariable variable=accessToken;isoutput=true;issecret=true]$( \
-              echo $response | jq -r .accessToken \
-            )"
-        env:
-          AZURE_DEFAULTS_ACR: $(containerRegistryName)
+      - template: templates/ci/acr-login.yaml
+        parameters:
+          serviceConnection: ${{ variables.serviceConnection }}
+          containerRegistryName: ${{ variables.containerRegistryName }}
 
       - task: Npm@1
         displayName: Install packages
@@ -54,12 +41,16 @@ jobs:
       - bash: |
           echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
           affected=$(npx nx print-affected --type=app --select=projects)
+          echo "##vso[task.setvariable variable=affectedProjects;isoutput=true]$( \
+            echo $affected | tr -d '[:space:]' \
+          )"
           export INPUT_PUSH=true
           for project in ${affected//,/}
           do
             export INPUT_IMAGES="${REGISTRY}/wts/${project}"
             npx nx container $project
           done
+        name: publishContainers
         displayName: Publish containers
         failOnStderr: true
         env:
@@ -67,16 +58,10 @@ jobs:
           NX_HEAD: $(branch)
           REGISTRY: $(acr.loginServer)
 
-      - bash: |
-          echo $PASSWORD \
-            | helm registry login $LOGIN_SERVER \
-                --username $USERNAME \
-                --password-stdin
-        displayName: Helm registry login
-        env:
-          USERNAME: 00000000-0000-0000-0000-000000000000
-          PASSWORD: $(acr.accessToken)
-          LOGIN_SERVER: $(acr.loginServer)
+      - template: templates/ci/helm-login.yaml
+        parameters:
+          accessToken: $(acr.accessToken)
+          loginServer: $(acr.loginServer)
 
       - bash: |
           affected=$(
@@ -84,6 +69,15 @@ jobs:
               | grep -Po "(?<=^cluster\/charts\/)[a-z-]+(?=\/)" \
               | uniq
           )
+          echo "##vso[task.setvariable variable=affectedCharts;isoutput=true]$( \
+            echo $affected | tr ' ' ',' \
+          )"
+          if [ -z "$affected" ]
+          then
+            echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+          else
+            echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+          fi
           version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
           for project in ${affected}
           do
@@ -94,9 +88,106 @@ jobs:
               $(Build.StagingDirectory)/${project}-${version}.tgz \
               $HOST
           done
+        name: publishCharts
         displayName: Publish charts
         env:
           HOST: oci://$(acr.loginServer)/charts/wts
+
+  - job: deploy
+    dependsOn: build
+    displayName: Deploy artifacts
+
+    variables:
+      - group: VG_SND_APPS_PARAMS
+      - name: serviceConnection
+        value: AZD-WTS-SND1
+      - name: containerRegistryName
+        value: SNDWTSHUBCR3401
+      - name: aksName
+        value: SNDWTSSPKKS2401
+      - name: resourceGroupName
+        value: SNDWTSAKSRG2401
+      - name: appList
+        value: address,annex-vii,waste-tracking-service,waste-tracking-gateway
+      - name: affectedProjects
+        value: $[ dependencies.build.outputs['publishContainers.affectedProjects'] ]
+      - name: affectedCharts
+        value: $[ dependencies.build.outputs['publishCharts.affectedCharts'] ]
+      - name: deployCharts
+        value: $[ replace(eq(dependencies.build.outputs['publishCharts.affected'], 'true'), False, '') ]
+
+    continueOnError: false
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - template: templates/ci/deploy/login.yaml
+        parameters:
+          serviceConnection: ${{ variables.serviceConnection }}
+          containerRegistryName: ${{ variables.containerRegistryName }}
+          aksName: ${{ variables.aksName }}
+          resourceGroupName: ${{ variables.resourceGroupName }}
+
+      - bash: |
+          affected=$(affectedProjects)
+          for project in ${affected//,/ }
+          do
+            echo "Restarting deployment: $project"
+            kubectl rollout restart deployment \
+              $project \
+              -n $project
+          done
+        displayName: AKS Restart Deployments
+        env:
+          AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+          AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+
+      - ${{ each app in split(variables.appList, ',') }}:
+          - ${{ if eq(app, 'address') }}:
+              - template: templates/ci/deploy/address.yaml
+                parameters:
+                  serviceConnection: ${{ variables.serviceConnection }}
+                  containerRegistryName: ${{ variables.containerRegistryName }}
+                  appName: ${{ app }}
+                  appNameTag: ${{ replace(app, '-', '_') }}
+                  appInsightsConnectionString: $(appInsightsConnectionString)
+                  keyVaultName: $(keyVaultName)
+                  keyVaultTenantId: $(keyVaultTenantId)
+                  msiClientId: $(addressMsiClientId)
+                  msiTenantId: $(addressMsiTenantId)
+                  addressLookupUrl: $(addressLookupUrl)
+                  addressLookupKeyVaultCertName: $(addressLookupKeyVaultCertName)
+                  deployChart: variables.deployCharts
+                  affectedCharts: $(affectedCharts)
+
+          - ${{ elseif eq(app, 'annex-vii') }}:
+              - template: templates/ci/deploy/annex-vii.yaml
+                parameters:
+                  serviceConnection: ${{ variables.serviceConnection }}
+                  containerRegistryName: ${{ variables.containerRegistryName }}
+                  appName: ${{ app }}
+                  appNameTag: ${{ replace(app, '-', '_') }}
+                  appInsightsConnectionString: $(appInsightsConnectionString)
+                  cosmosDbUri: $(cosmosDbUri)
+                  cosmosDbPrimaryKey: $(cosmosDbPrimaryKey)
+                  deployChart: variables.deployCharts
+                  affectedCharts: $(affectedCharts)
+
+          - ${{ elseif in(app, 'waste-tracking-service', 'waste-tracking-gateway')}}:
+              - template: templates/ci/deploy/wts-wtg.yaml
+                parameters:
+                  serviceConnection: ${{ variables.serviceConnection }}
+                  containerRegistryName: ${{ variables.containerRegistryName }}
+                  appName: ${{ app }}
+                  appNameTag: ${{ replace(app, '-', '_') }}
+                  appInsightsConnectionString: $(appInsightsConnectionString)
+                  deployChart: variables.deployCharts
+                  affectedCharts: $(affectedCharts)
+
+          - ${{ else }}:
+              - bash: |
+                  echo "Specify deployment template for: ${{ app }}"
+                displayName: Specify deployment template
 
   - job: test
     displayName: Acceptance tests
