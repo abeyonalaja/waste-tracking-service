@@ -28,19 +28,42 @@ param applicationResources object = {
   }
 }
 
+@description('Reference to existing nginx ingress controller service account namespace.')
+param ingressControllerServiceAccountNamespace string = 'nginx-system'
+
 @description('Reference to existing address microservice service account namespace.')
 param addressServiceAccountNamespace string = 'address'
 
 @description('Tagging baseline applied to all resources.')
 param defaultTags object = {}
 
+var ingressControllerRole = 'NIC'
 var addressRole = 'ADR'
 
+var ingressControllerServiceAccountName = 'nginx'
 var addressServiceAccountName = 'address'
 
 var instance0 = {
   northeurope: 1, westeurope: 201, uksouth: 401, ukwest: 601
 }[primaryRegion]
+
+var ingressControllerManagedIdentityName = join(
+  [ env, svc, ingressControllerRole, 'MI', envNum, padLeft(instance0, 3, '0') ],
+  ''
+)
+
+var ingressControllerManagedIdentityFederatedCredentialName = join(
+  [
+    addressManagedIdentityName
+    join([ env, svc, ingressControllerRole, 'FI', envNum, padLeft(instance0, 3, '0') ], '')
+  ],
+  '-'
+)
+
+var ingressControllerManagedIdentityFederatedCredentialSubjectName = join(
+  [ 'system', 'serviceaccount', ingressControllerServiceAccountNamespace, ingressControllerServiceAccountName ],
+  ':'
+)
 
 var addressManagedIdentityName = join(
   [ env, svc, addressRole, 'MI', envNum, padLeft(instance0, 3, '0') ],
@@ -60,22 +83,37 @@ var addressManagedIdentityFederatedCredentialSubjectName = join(
   ':'
 )
 
-resource addressManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+resource ingressControllerManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: ingressControllerManagedIdentityName
+  location: primaryRegion
+
+  resource federatedCreds 'federatedIdentityCredentials@2023-01-31' = {
+    name: ingressControllerManagedIdentityFederatedCredentialName
+    properties: {
+      audiences: [
+        'api://AzureADTokenExchange'
+      ]
+      issuer: applicationResources.aks.issuer
+      subject: ingressControllerManagedIdentityFederatedCredentialSubjectName
+    }
+  }
+}
+
+resource addressManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: addressManagedIdentityName
   location: primaryRegion
 
   tags: union(defaultTags, { Name: addressManagedIdentityName })
-}
 
-resource addressManagedIdentityFederatedCredential 'Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials@2023-01-31' = {
-  name: addressManagedIdentityFederatedCredentialName
-  parent: addressManagedIdentity
-  properties: {
-    audiences: [
-      'api://AzureADTokenExchange'
-    ]
-    issuer: applicationResources.aks.issuer
-    subject: addressManagedIdentityFederatedCredentialSubjectName
+  resource addressManagedIdentityFederatedCredential 'federatedIdentityCredentials@2023-01-31' = {
+    name: addressManagedIdentityFederatedCredentialName
+    properties: {
+      audiences: [
+        'api://AzureADTokenExchange'
+      ]
+      issuer: applicationResources.aks.issuer
+      subject: addressManagedIdentityFederatedCredentialSubjectName
+    }
   }
 }
 
@@ -84,7 +122,29 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' existing = {
 }
 
 var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
-resource readerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+var keyVaultSecretsUserRoleId = '4633458b-17de-408a-b874-0445c86b69e6'
+
+resource ingressControllerReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, ingressControllerManagedIdentity.id, resourceId('Microsoft.Authorization/roleDefinitions', readerRoleId))
+  scope: keyVault
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', readerRoleId)
+    principalId: ingressControllerManagedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource ingressControllerKeyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, ingressControllerManagedIdentity.id, resourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId))
+  scope: keyVault
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId)
+    principalId: ingressControllerManagedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource addressReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(keyVault.id, addressManagedIdentity.id, resourceId('Microsoft.Authorization/roleDefinitions', readerRoleId))
   scope: keyVault
   properties: {
@@ -94,8 +154,7 @@ resource readerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-0
   }
 }
 
-var keyVaultSecretsUserRoleId = '4633458b-17de-408a-b874-0445c86b69e6'
-resource keyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource addressKeyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(keyVault.id, addressManagedIdentity.id, resourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId))
   scope: keyVault
   properties: {

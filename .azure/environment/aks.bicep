@@ -166,6 +166,10 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
       'skip-nodes-with-local-storage': 'false'
       'skip-nodes-with-system-pods': 'true'
     }
+    autoUpgradeProfile: {
+      nodeOSUpgradeChannel: 'NodeImage'
+      upgradeChannel: 'stable'
+    }
     disableLocalAccounts: true
     dnsPrefix: toLower(svc)
     enableRBAC: true
@@ -201,6 +205,26 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-01-02-preview' = {
     securityProfile: {
       workloadIdentity: {
         enabled: true
+      }
+    }
+  }
+}
+
+resource dapr 'Microsoft.KubernetesConfiguration/extensions@2022-11-01' = {
+  name: 'dapr'
+  scope: aks
+  properties: {
+    autoUpgradeMinorVersion: true
+    configurationSettings: {
+      'global.ha.enabled': 'true'
+      'dapr_operator.replicaCount': '2'
+      'global.clusterType': 'managedclusters'
+    }
+    extensionType: 'microsoft.dapr'
+    releaseTrain: 'Stable'
+    scope: {
+      cluster: {
+        releaseNamespace: 'dapr-system'
       }
     }
   }
