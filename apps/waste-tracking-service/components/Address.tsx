@@ -29,18 +29,9 @@ const StyledAddress = styled('address')`
   }
   span {
     display: block;
-    &:after {
-      content: ',';
-    }
-    &:last-child:after {
-      content: '';
-    }
     &.houseNumber {
       display: inline-block;
       margin-right: 0.3em;
-      &:after {
-        content: '';
-      }
     }
     &.houseNumberFollower {
       display: inline-block;

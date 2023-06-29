@@ -628,6 +628,14 @@ const RecoveryFacilityDetails = () => {
     [confirmRemove]
   );
 
+  const completedRecoveryFacilities = (facilities) => {
+    return facilities.filter(
+      (facility) =>
+        facility.recoveryFacilityType?.type === 'RecoveryFacility' &&
+        facility.addressDetails !== undefined
+    );
+  };
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -935,11 +943,10 @@ const RecoveryFacilityDetails = () => {
                           )
                         : t('exportJourney.recoveryFacilities.listTitleSingle')}
                     </GovUK.Heading>
-                    {recoveryPage.data.values.map((facility, index) => {
-                      return (
-                        facility.recoveryFacilityType?.type ===
-                          'RecoveryFacility' &&
-                        facility.addressDetails !== undefined && (
+
+                    {completedRecoveryFacilities(recoveryPage.data.values).map(
+                      (facility, index) => {
+                        return (
                           <SummaryCard
                             key={`facility-list-item-${index + 1}`}
                             id={`facility-list-item-${index + 1}`}
@@ -1007,9 +1014,9 @@ const RecoveryFacilityDetails = () => {
                               ]}
                             />
                           </SummaryCard>
-                        )
-                      );
-                    })}
+                        );
+                      }
+                    )}
                     {facilityCount === 1 && (
                       <form onSubmit={handleSubmitAdditionalFacility}>
                         <GovUK.Fieldset>
