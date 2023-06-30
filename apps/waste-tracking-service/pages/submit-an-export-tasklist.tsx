@@ -259,6 +259,8 @@ const Tasklist = () => {
                   {t('exportJourney.submitAnExport.title')}
                 </GovUK.Heading>
 
+                <Paragraph>{t('exportJourney.submitAnExport.intro')}</Paragraph>
+
                 <GovUK.Heading as="h2" size="SMALL">
                   {sectionStatus < 5
                     ? t('exportJourney.submitAnExport.submissionIncomplete')

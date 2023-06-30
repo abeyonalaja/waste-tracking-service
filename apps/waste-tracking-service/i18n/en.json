@@ -89,6 +89,7 @@
   "actions.remove": "Remove",
   "exportJourney.submitAnExport.title": "Submit an export",
   "exportJourney.submitAnExport.breadcrumb": "Submit an export",
+  "exportJourney.submitAnExport.intro": "You'll be able to check and submit this export once you've completed all the sections.",
   "exportJourney.submitAnExport.yourRef": "Your reference",
   "exportJourney.submitAnExport.submissionIncomplete": "Submission incomplete",
   "exportJourney.submitAnExport.submissionComplete": "Submission complete",
