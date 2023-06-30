@@ -31,7 +31,7 @@ jobs:
       - bash: |
           echo "Installing Calico API Server"
           kubectl apply -f $MANIFEST_FILE_PATH
-        displayName: AKS Restart Deployments
+        displayName: AKS Deploy Calico API Server
         env:
           AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
           AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
