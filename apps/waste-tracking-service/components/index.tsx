@@ -6,6 +6,7 @@ import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
 import { DocumentStatus } from './DocumentStatus';
+import { EwcCodeSelector } from './EwcCodeSelector';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
 import { Paragraph } from './Paragraph';
@@ -30,6 +31,7 @@ export {
   CompleteHeader,
   ConditionalRadioWrap,
   DocumentStatus,
+  EwcCodeSelector,
   InputWithSuffix,
   Loading,
   Paragraph,

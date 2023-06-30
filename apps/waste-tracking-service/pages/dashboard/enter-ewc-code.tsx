@@ -8,7 +8,6 @@ import React, {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-import Autocomplete from 'accessible-autocomplete/react';
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,9 +18,9 @@ import {
   SubmissionNotFound,
   ButtonGroup,
   SaveReturnButton,
+  EwcCodeSelector,
 } from '../../components';
 import { isNotEmpty, validateEwcCodes } from '../../utils/validators';
-
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
 type State = {
@@ -199,25 +198,6 @@ const EwcCode = () => {
     [id, ewcCodesPage.data, router]
   );
 
-  function suggest(query, populateResults) {
-    const results = [
-      '010101: wastes from mineral metalliferous excavation',
-      '010102: wastes from mineral non-metalliferous excavation',
-      '010306: tailings other than those mentioned in 01 03 04 and 01 03 05',
-      '010308: dusty and powdery wastes other than those mentioned in 01 03 07',
-      '010309: red mud from alumina production other than the wastes mentioned in 01 03 10',
-      '010399: wastes not otherwise specified',
-      '010408: waste gravel and crushed rocks other than those mentioned in 01 04 07',
-      '010409: waste sand and clays',
-      '010410: dusty and powdery wastes other than those mentioned in 01 04 07',
-      '010411: wastes from potash and rock salt processing other than those mentioned in 01 04 07',
-    ];
-    const filteredResults = results.filter(
-      (result) => result.indexOf(query) !== -1
-    );
-    populateResults(filteredResults);
-  }
-
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -269,16 +249,11 @@ const EwcCode = () => {
                     <GovUK.FormGroup error={!!errors?.ewcCodes}>
                       <GovUK.HintText>{t('autocompleteHint')}</GovUK.HintText>
                       <GovUK.ErrorText>{errors?.ewcCodes}</GovUK.ErrorText>
-                      <Autocomplete
+                      <EwcCodeSelector
                         id="ewcCodes"
-                        source={suggest}
-                        showAllValues
-                        onConfirm={(option) => handleInputChange(option)}
-                        confirmOnBlur={false}
-                        meta={{
-                          error: errors?.ewcCodes,
-                          touched: !!errors?.ewcCodes,
-                        }}
+                        name="ewcCodes"
+                        errorMessage={errors?.ewcCodes}
+                        onChange={handleInputChange}
                       />
                     </GovUK.FormGroup>
                   </GovUK.Fieldset>
