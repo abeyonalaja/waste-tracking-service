@@ -54,3 +54,11 @@ And(/^I click the last "([^"]*)" link$/) do |option|
   get_key = Translations.key(option)
   all(text: Translations.value(get_key)).last.click
 end
+
+And(/^I wait for a second$/) do
+  sleep 1
+end
+
+And(/^I wait for a second long$/) do
+  sleep 100
+end

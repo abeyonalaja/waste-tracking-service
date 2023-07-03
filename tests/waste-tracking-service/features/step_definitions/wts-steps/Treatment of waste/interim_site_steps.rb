@@ -43,5 +43,6 @@ Then(/^I see interim site description translated$/) do
 end
 
 And(/^I click description link$/) do
-  page.find(class: 'src__StyledSummary-sc-273hbe-1 gFIgVF').click
+  click_on('What is an interim site?')
+  # page.find(class: 'src__StyledSummary-sc-273hbe-1 gFIgVF').click
 end

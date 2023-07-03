@@ -87,7 +87,7 @@ Feature: AS A waste producer
     And I enter valid weight in cubic meters
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
-    And I have 1 of 4 sections completed
+    And I have 1 of 5 sections completed
     When I click the "Quantity of waste" link
     Then I should see quantity option "No, I will enter an estimate" is selected
     And I click the button Save and continue
@@ -170,6 +170,7 @@ Feature: AS A waste producer
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
+    And I wait for a second
     And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
     Then the quality of small waste page is displayed

@@ -26,16 +26,15 @@ Then(/^I should see manually entered exporter details pre-populated$/) do
 end
 
 And(/^I enter valid input for all the fields on the manual address entry page$/) do
-  EnterExporterAddressManualPage.new.enter_address1(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
-  EnterExporterAddressManualPage.new.enter_town(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
+  EnterExporterAddressManualPage.new.enter_address1(Faker::Address.street_name)
+  EnterExporterAddressManualPage.new.enter_town(Faker::Address.city)
   EnterExporterAddressManualPage.new.enter_postcode('SE5 9NB')
   EnterExporterAddressManualPage.new.select_first_country_option
 end
 
 Then(/^I enter invalid postcode data$/) do
-  EnterExporterAddressManualPage.new.enter_address1(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
-  EnterExporterAddressManualPage.new.enter_town(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{250}/))
-  EnterExporterAddressManualPage.new.enter_address1(Faker::Base.regexify(/[a-z \s A-Z\s \\0-9\- \s ]{8,9}/))
+  EnterExporterAddressManualPage.new.enter_address1(Faker::Address.street_name)
+  EnterExporterAddressManualPage.new.enter_town(Faker::Address.city)
   EnterExporterAddressManualPage.new.select_first_country_option
 end
 

@@ -14,9 +14,9 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   FULL_NAME = Translations.value 'exportJourney.wasteCarrierDetails.nameHint'
   EMAIL = Translations.value 'exportJourney.wasteCarrierDetails.email'
   PHONE_NUMBER = Translations.value 'exportJourney.wasteCarrierDetails.phone'
-  PHONE_HINT = Translations.value 'exportJourney.wasteCarrierDetails.phoneHint'
+  PHONE_HINT = Translations.value 'contact.numberHint'
   FAX_NUMBER = Translations.value 'exportJourney.wasteCarrierDetails.fax'
-  FAX_HINT = Translations.value 'exportJourney.wasteCarrierDetails.faxHint'
+  FAX_HINT = Translations.value 'contact.numberHint'
 
   ORGANISATION_CONTACT_FIELD_ID = 'fullName'
   EMAIL_FILED_ID = 'email'

@@ -47,9 +47,11 @@ And(/^I complete Waste codes and description task$/) do
   EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
-  QuantityOfWastePage.new.save_and_return
+  sleep 1
+  QuantityOfWastePage.new.back
+  DescribeTheWastePage.new.save_and_return
 end
 
-And(/^I have (\d+) of 4 sections completed$/) do |completed|
-  expect(page).to have_text("You have completed #{completed} of 4 sections.")
+And(/^I have (\d+) of 5 sections completed$/) do |completed|
+  expect(page).to have_text("You have completed #{completed} of 5 sections.")
 end

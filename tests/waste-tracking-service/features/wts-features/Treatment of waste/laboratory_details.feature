@@ -24,6 +24,7 @@ Feature: AS A waste producer/broker
     When I navigate to the submit an export with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     When I click the "Laboratory details" link
+    And I wait for a second
     And I click the button Save and continue
     Then I remain on the Laboratory address page with an "Enter the laboratory name" error message displayed
     And I remain on the Laboratory address page with an "Enter an address" error message displayed
@@ -47,7 +48,6 @@ Feature: AS A waste producer/broker
     And I click the Save and return to draft
     Then I remain on the disposal code page with an "Enter a disposal code" error message displayed
     When I complete disposal code page
-    And I click the button Save and continue
     Then Submit an export page is displayed
     Then the task "Laboratory details" should be "COMPLETED"
 
@@ -55,6 +55,7 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
+    And I wait for a second
     When I click the "Laboratory details" link
     And I complete laboratory address details
     And I click "Back" link should display "Laboratory address" page

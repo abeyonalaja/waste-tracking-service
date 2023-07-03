@@ -53,6 +53,7 @@ Feature: AS A waste producer/broker
     Then the "Confirmation Interim Site" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
+    And I wait for a second
     Then the "Recovery facility address" page is displayed
     And I click the button Save and continue
     Then I remain on the recovery facility address page with an "Enter the recovery facility name" error message displayed
@@ -74,6 +75,7 @@ Feature: AS A waste producer/broker
     Then the "Recovery facility address" page is displayed
     And I complete recovery facility address page
     And I click the button Save and continue
+    And I wait for a second
     And I click the button Save and continue
     Then I remain on the recovery facility contact details page with an "Enter a full name" error message displayed
     And I remain on the recovery facility contact details page with an "Enter a real email address" error message displayed
@@ -96,6 +98,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     When I complete recovery facility contact details
     And I click the button Save and continue
+    And I wait for a second
     And I click the button Save and continue
     Then I remain on the recovery code page with an "Enter a recovery code" error message displayed
     When I click the Save and return to draft
@@ -142,7 +145,6 @@ Feature: AS A waste producer/broker
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
 
-
   Scenario: User can change previously entered recovery details
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -163,7 +165,7 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then I should see updated recovery country
 
-  Scenario: User can't continue from Remove waste carriers page and can remove previously entered waste carrier details
+  Scenario: User can't continue from Remove Recovery facility page and can remove previously entered recovery facility details
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I complete Waste codes and description task
@@ -176,6 +178,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes" radio button
     And I click the button Save and continue
     And I complete the "second" recovery facility
+    And I wait for a second
     And I click the last "Remove" link
     Then I should see remove recovery facility details page displayed
     When I click the button Save and continue
@@ -184,6 +187,7 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then I should see first recovery facility details
     And I should see second recovery facility details
+    And I wait for a second
     When I click the last "Remove" link
     When I choose "Yes" radio button
     When I click the button Save and continue

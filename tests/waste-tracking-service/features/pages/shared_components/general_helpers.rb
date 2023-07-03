@@ -6,6 +6,7 @@ module GeneralHelpers
   SAVE_AND_RETURN ||= Translations.value 'saveReturnButton'
   CONTINUE ||= Translations.value 'continueButton'
   FIND_ADDRESS ||= Translations.value 'postcode.findButton'
+  BACK ||= Translations.value 'back'
 
   def save_and_continue
     click_button SAVE_AND_CONTINUE_BUTTON_TEXT
@@ -21,5 +22,9 @@ module GeneralHelpers
 
   def find_address
     click_button FIND_ADDRESS
+  end
+
+  def back
+    click_link BACK
   end
 end

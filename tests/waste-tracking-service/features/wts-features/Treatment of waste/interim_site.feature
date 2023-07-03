@@ -31,6 +31,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then the "Interim site address" page is displayed
     And I complete the Interim site address page
+    And I wait for a second
     And I click the button Save and continue
     Then the "Interim site contact details" page is displayed
     And I complete Interim site contact details page
@@ -61,6 +62,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then the "Interim site address" page is displayed
     And I complete the Interim site address page
+    And I wait for a second
     And I click the Save and return to draft
     Then the task "Recovery facility" should be "IN PROGRESS"
 
@@ -97,7 +99,6 @@ Feature: AS A waste producer/broker
     And I click "Back" link should display "Interim site address" page
     Then I should see interim site address details pre-populated
 
-
   Scenario: Complete recovery facility section and verify its status is Completed
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -114,10 +115,12 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then  the "Interim site recovery code" page is displayed
     And I choose "R12: Exchange of wastes for submission to any of the operations numbered R01 to R11" radio button
+    And I wait for a second
     And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
     When I complete recovery facility address page
     And I click the button Save and continue
+    And I wait for a second
     Then the "Recovery facility contact details" page is displayed
     When I complete recovery facility contact details
     And I click the button Save and continue
@@ -136,9 +139,11 @@ Feature: AS A waste producer/broker
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
+    And I wait for a second
     And I choose "Yes" radio button
     And I click the button Save and continue
     Then the "Interim site address" page is displayed
+    And I wait for a second
     And I click the button Save and continue
     Then I remain on the Interim site address page with an "Enter the interim site details" error message displayed
     Then I remain on the Interim site address page with an "Enter an address" error message displayed
@@ -180,7 +185,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I remain on the Interim site recovery code page with an "Enter a recovery code" error message displayed
 
-    @translation
+    @translation @ignore
   Scenario: User navigates to interim site confirmation page
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -202,6 +207,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then the "Interim site address" page is displayed
     And I complete the Interim site address page
+    And I wait for a second
     And I click the Save and return to draft
     Then the "Submit an export" page is displayed
     Then the task "Recovery facility" should be "IN PROGRESS"

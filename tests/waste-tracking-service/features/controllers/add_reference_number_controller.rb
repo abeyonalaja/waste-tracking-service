@@ -2,7 +2,7 @@
 
 # Provides a way to happy path flow
 module AddReferenceNumberController
-  def self.complete(reference = 'TestExport')
+  def self.complete(reference = Faker::Alphanumeric.alphanumeric(number: 6))
     add_reference_number_page = AddReferenceNumberPage.new
     add_reference_number_page.check_page_displayed
     add_reference_number_page.choose_option 'Yes'

@@ -1,5 +1,5 @@
 And(/^I enter valid postcode$/) do
-  postcode = 'n1p3bp'
+  postcode = 'ng23lp'
   ExporterAddressPage.new.enter_postcode postcode
   TestStatus.set_test_status(:postcode, postcode)
   Log.info("Exporter postcode is #{postcode}")
@@ -37,5 +37,5 @@ When(/^I change exporter address with new address$/) do
   ExporterAddressPage.new.address_line_2 '2 Marsham St'
   ExporterAddressPage.new.town_city 'London'
   ExporterAddressPage.new.exporter_postcode 'SW1P 4DF'
-  TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,SW1P 4DF,United Kingdom')
+  TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,SW1P 4DF,England')
 end

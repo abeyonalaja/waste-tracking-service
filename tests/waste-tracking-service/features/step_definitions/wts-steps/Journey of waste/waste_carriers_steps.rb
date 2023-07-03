@@ -1,4 +1,5 @@
 And(/^I complete the Who is the waste carrier page$/) do
+  sleep 1
   WhoIsTheWasteCarrierPage.new.enter_organisation_name 'WTS Organisation'
   WhoIsTheWasteCarrierPage.new.enter_address 'wtsOrg1@mail.com'
   WhoIsTheWasteCarrierPage.new.enter_country 'England'

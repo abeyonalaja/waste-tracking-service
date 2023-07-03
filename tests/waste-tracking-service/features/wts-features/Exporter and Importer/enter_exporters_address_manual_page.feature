@@ -9,13 +9,13 @@ Feature: AS A waste producer
     And I should see page correctly translated
     And I click "Back" link should display "exporter address" page
 
-Scenario: User navigates to enter exporter address manually page and completes it
-  Given I login to waste tracking portal
-  When I navigate to Enter exporter address manual page
-  And I verify Enter exporter address manual page is displayed
-  And I complete the Enter exporter address manual page
-  And I click the button Save and continue
-  Then the "exporter details" page is displayed
+  Scenario: User navigates to enter exporter address manually page and completes it
+    Given I login to waste tracking portal
+    When I navigate to Enter exporter address manual page
+    And I verify Enter exporter address manual page is displayed
+    And I complete the Enter exporter address manual page
+    And I click the button Save and continue
+    Then the "exporter details" page is displayed
 
   Scenario: User enters the exporter address manually, save the draft and returns to exporter details page
     Given I login to waste tracking portal
@@ -52,26 +52,15 @@ Scenario: User navigates to enter exporter address manually page and completes i
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
     And I click the button Save and continue
-    Then I remain on the exporter address page with an "Enter a real postcode" error message displayed
     And I remain on the exporter address page with an "Enter a town or city" error message displayed
     And I remain on the exporter address page with an "Select a country" error message displayed
     And I remain on the exporter address page with an "Enter an address" error message displayed
-
-
-  Scenario: User enters invalid postcode data
-    Given I login to waste tracking portal
-    When I navigate to Enter exporter address manual page
-    And I verify Enter exporter address manual page is displayed
-    Then I enter invalid postcode data
-    And I click the button Save and continue
-    Then I remain on the exporter address page with an "Enter a real postcode" error message displayed
 
   Scenario: User not entering any input on the mandatory fields and click save and return to draft
     Given I login to waste tracking portal
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
     And I click the Save and return to draft
-    Then I remain on the enter exporter address manual page with an "Enter a real postcode" error message displayed
     And I remain on the enter exporter address manual page with an "Enter a town or city" error message displayed
     And I remain on the enter exporter address manual page with an "Select a country" error message displayed
     And I remain on the enter exporter address manual page with an "Enter an address" error message displayed

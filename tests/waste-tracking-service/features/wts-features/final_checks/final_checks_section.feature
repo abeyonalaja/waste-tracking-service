@@ -20,9 +20,10 @@ Feature: AS A Waste Practitioner
     Then the task "Importer details" should be "COMPLETED"
     And I click the "Collection date" link
     And I complete the Journey of a waste section
-#    Then I click the "Recovery facility" link
-#    And I complete Treatment of waste section
-#    Then the task "Recovery facility" should be "COMPLETED"
+    Then I click the "Recovery facility" link
+    And I wait for a second
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
     Then the task "Check your report" should be "NOT STARTED"
     Then the task "Sign declaration" should be "CANNOT START YET"
 
@@ -75,6 +76,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Waste codes and description" link
     And the "What is the waste code" page is displayed
     And I choose "Not applicable" radio button
+    And I wait for a second
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"
     Then the task "Waste carriers" should be "IN PROGRESS"

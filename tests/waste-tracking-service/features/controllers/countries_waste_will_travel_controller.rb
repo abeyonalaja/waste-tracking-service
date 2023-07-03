@@ -7,6 +7,7 @@ module CountriesWasteWillTravelController
     countries_waste_will_travel_page.choose_option 'Yes'
     countries_waste_will_travel_page.select_country_of_waste
     countries_waste_will_travel_page.save_and_continue
+    countries_waste_will_travel_page.page_refresh
     WasteTransitCountriesPage.new.choose_option 'No'
     WasteTransitCountriesPage.new.save_and_continue
   end

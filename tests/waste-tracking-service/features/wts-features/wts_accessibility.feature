@@ -1,6 +1,16 @@
 @accessibility @ignore
 Feature: Automation to check accessibility tool
 
+
+  Scenario: Check WTS Accessibility for Overview page
+    Given I login to waste tracking portal
+    And I click the "Green list waste overview" link
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
   Scenario: Check WTS Accessibility for submit an export page
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference

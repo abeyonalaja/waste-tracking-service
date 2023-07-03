@@ -6,4 +6,7 @@ module PageHelper
     choose(option, visible: false)
   end
 
+  def page_refresh
+    page.refresh
+  end
 end

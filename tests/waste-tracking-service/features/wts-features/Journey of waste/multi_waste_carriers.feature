@@ -13,6 +13,7 @@ Feature: AS A waste producer/broker
     And I should see only change link for first waste carrier
     When I choose "No" radio button
     And I click the button Save and continue
+    And I click Return to draft button
     Then the task "Waste carriers" should be "COMPLETED"
     When I click the "Waste carriers" link
     Then the "Multi waste carriers" page is displayed
@@ -63,9 +64,8 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I see previously entered Waste carrier contact details pre-populated
     And I click the button Save and continue
-    Then I should see "Shipping container" to be checked
     And I choose "Bulk vessel" radio button
-    When I click the button Save and continue
+    When I click Continue button
     And I enter IMO number
     And I click the button Save and continue
     And I should see org nam and country for each waste carries
@@ -103,6 +103,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes" radio button
     And I click the button Save and continue
     And I complete the "Second" waste carrier with "Shipping container"
+    And I wait for a second
     When I click the last "Change" link
     Then the who is the second waste carriers page is displayed
 

@@ -35,6 +35,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes" radio button
     When I select other countries of waste
     And I click the button Save and continue
+    And I wait for a second
     And I click the button Save and continue
     Then I remain on the Waste transit countries page with an "Select yes if there are any other countries the waste will travel through" error message displayed
     When I click the Save and return to draft
@@ -55,6 +56,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes" radio button
     When I select other countries of waste
     And I click the button Save and continue
+    And I wait for a second
     When I choose "No" radio button
     And I click the button Save and continue
     Then the task "Countries waste will travel through" should be "COMPLETED"
@@ -75,6 +77,7 @@ Feature: AS A waste producer/broker
     And I choose "Yes" radio button
     When I select other countries of waste
     And I click the button Save and continue
+    And I wait for a second
     And I choose "Yes" radio button
     And I select other countries of waste
     And I click the button Save and continue
@@ -143,11 +146,18 @@ Feature: AS A waste producer/broker
     When I click the Save and return to draft
     Then I remain on the remove waste travel country page with an "Select yes if you want to remove this country" error message displayed
 
-
-  #need to add remove and save
-  #
-#  Number of sections completed
-#    Given that the “Collection date”, Waste carriers”, “Waste collection details”, Location waste leaves the UK” and Countries waste will travel through” are set to completed
-#    And the other sections “About the waste” and “Exporter and Importer” have been completed
-#    Then the number of sections completed is 3 of 4
-#
+  Scenario: Completed sections need to update when user complete collection
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste sub-section
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section
+    Then I have 3 of 5 sections completed
