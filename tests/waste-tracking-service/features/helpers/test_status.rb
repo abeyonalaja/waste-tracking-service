@@ -7,6 +7,7 @@ module TestStatus
   @countries_waste_will_travel = []
   @waste_carrier_org_details = []
   @waste_carrier_titles = []
+
   def self.set_test_status(key, value)
     @test_status[key] = value
   end
@@ -24,8 +25,9 @@ module TestStatus
       @test_status['waste_carrier_org_details'] = @waste_carrier_org_details
       @test_status['waste_carrier_titles'] = @waste_carrier_titles
       @test_status
+    else
+      @test_status[key.to_sym]
     end
-    @test_status[key.to_sym]
   end
 
   def self.countries_waste_will_travel(country)

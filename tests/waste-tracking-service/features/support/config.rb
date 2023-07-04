@@ -46,15 +46,15 @@ Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox')
   # options.add_argument('--enable-features1=NetworkService,NetworkServiceInProcess')
-  # options.add_argument('--headless')
+  options.add_argument('--headless')
   options.add_argument('--disable-gpu')
   options.add_argument('window-size=1920,1080')
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('ignore-certificate-errors')
+  options.add_argument('--binary=../../chromedriver')
 
   Capybara::Selenium::Driver.new(app,
                                  browser: :chrome,
-                                 # url: 'http://seleniumtestbss:4444/wd/hub',
                                  capabilities: options)
 
 end
@@ -100,10 +100,10 @@ end
 
 
 # configure `AxeCapybara`
-driver = AxeCapybara.configure(:chrome) do |c|
-  # see below for a full list of configuration
-  c.jslib_path = "next-version/axe.js"
-end
+# driver = AxeCapybara.configure(:chrome) do |c|
+#   # see below for a full list of configuration
+#   c.jslib_path = "next-version/axe.js"
+# end
 
 # Should prevent error - Text file busy - /home/jenkins/.webdrivers/chromedriver (Errno::ETXTBSY)
 # Webdrivers.install_dir = File.expand_path('~/.webdrivers/' + ENV['TEST_ENV_NUMBER'].to_s)
