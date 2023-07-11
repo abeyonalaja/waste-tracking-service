@@ -627,7 +627,7 @@ describe(InMemorySubmissionBackend, () => {
     ).resolves.toEqual({ status: 'NotStarted' });
   });
 
-  it('resets collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
+  it('Resets collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
     const { id } = await subject.createSubmission(accountId, null);
     subject.submissions.set(id, mockInvalidDateSubmission);
 
@@ -789,10 +789,7 @@ describe(InMemorySubmissionBackend, () => {
       status: 'Started',
     };
 
-    const recoveryFacilities = await subject.createRecoveryFacilityDetail(
-      { id, accountId },
-      status
-    );
+    await subject.createRecoveryFacilityDetail({ id, accountId }, status);
 
     result = await subject.getSubmission({ id, accountId });
     expect(result?.recoveryFacilityDetail.status).toBe('Started');
@@ -826,10 +823,7 @@ describe(InMemorySubmissionBackend, () => {
       status: 'Started',
     };
 
-    const recoveryFacilities = await subject.createRecoveryFacilityDetail(
-      { id, accountId },
-      status
-    );
+    await subject.createRecoveryFacilityDetail({ id, accountId }, status);
 
     result = await subject.getSubmission({ id, accountId });
     expect(result?.recoveryFacilityDetail.status).toBe('Started');
@@ -844,5 +838,409 @@ describe(InMemorySubmissionBackend, () => {
 
     result = await subject.getSubmission({ id, accountId });
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
+  it('Reset quantity, carriers and recovery facility details when waste description is changed from small to bulk waste', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('CannotStart');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('CannotStart');
+
+    const mockSubmission = {
+      id: id,
+      reference: 'mock',
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: { type: 'NotApplicable' },
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: { status: 'NotStarted' },
+      importerDetail: { status: 'NotStarted' },
+      collectionDate: { status: 'NotStarted' },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: { status: 'NotStarted' },
+      ukExitLocation: { status: 'NotStarted' },
+      transitCountries: { status: 'NotStarted' },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: { status: 'NotStarted' },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as Submission;
+
+    subject.submissions.set(id, mockSubmission);
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('Complete');
+    expect(result?.carriers.status).toBe('Complete');
+    expect(result?.recoveryFacilityDetail.status).toBe('Complete');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('NotStarted');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
+  it('Reset quantity, carriers and recovery facility details when waste description is changed from bulk to small waste', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('CannotStart');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('CannotStart');
+
+    const mockSubmission = {
+      id: id,
+      reference: 'mock',
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: { status: 'NotStarted' },
+      importerDetail: { status: 'NotStarted' },
+      collectionDate: { status: 'NotStarted' },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: { status: 'NotStarted' },
+      ukExitLocation: { status: 'NotStarted' },
+      transitCountries: { status: 'NotStarted' },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: 'R1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: { status: 'NotStarted' },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as Submission;
+
+    subject.submissions.set(id, mockSubmission);
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('Complete');
+    expect(result?.carriers.status).toBe('Complete');
+    expect(result?.recoveryFacilityDetail.status).toBe('Complete');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'NotApplicable' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('NotStarted');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
+  it('Reset quantity, carriers and recovery facility details when waste description switches type of bulk-waste', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('CannotStart');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('CannotStart');
+
+    const mockSubmission = {
+      id: id,
+      reference: 'mock',
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: { status: 'NotStarted' },
+      importerDetail: { status: 'NotStarted' },
+      collectionDate: { status: 'NotStarted' },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: { status: 'NotStarted' },
+      ukExitLocation: { status: 'NotStarted' },
+      transitCountries: { status: 'NotStarted' },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: 'R1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: { status: 'NotStarted' },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as Submission;
+
+    subject.submissions.set(id, mockSubmission);
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('Complete');
+    expect(result?.carriers.status).toBe('Complete');
+    expect(result?.recoveryFacilityDetail.status).toBe('Complete');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'AnnexIIIB', value: 'X' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('NotStarted');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+  });
+
+  it('Resets status of quantity, carriers and recovery facility if input switches bulk-waste code with the same bulk-waste type', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+
+    let result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('CannotStart');
+    expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.recoveryFacilityDetail.status).toBe('CannotStart');
+
+    const mockSubmission = {
+      id: id,
+      reference: 'mock',
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: { status: 'NotStarted' },
+      importerDetail: { status: 'NotStarted' },
+      collectionDate: { status: 'NotStarted' },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: { status: 'NotStarted' },
+      ukExitLocation: { status: 'NotStarted' },
+      transitCountries: { status: 'NotStarted' },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: 'R1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: { status: 'NotStarted' },
+      submissionDeclaration: { status: 'CannotStart' },
+    } as Submission;
+
+    subject.submissions.set(id, mockSubmission);
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('Complete');
+    expect(result?.carriers.status).toBe('Complete');
+    expect(result?.recoveryFacilityDetail.status).toBe('Complete');
+
+    await subject.setWasteDescription(
+      { id, accountId },
+      {
+        status: 'Started',
+        wasteCode: { type: 'AnnexIIIA', value: 'Z' },
+      }
+    );
+
+    result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteQuantity.status).toBe('Started');
+    expect(result?.carriers.status).toBe('Started');
+    expect(result?.recoveryFacilityDetail.status).toBe('Started');
   });
 });

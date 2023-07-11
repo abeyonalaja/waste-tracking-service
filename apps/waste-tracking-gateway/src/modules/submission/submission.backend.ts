@@ -193,6 +193,59 @@ export interface SubmissionBackend {
   ): Promise<void>;
 }
 
+function isWasteCodeChangingBulkToSmall(
+  currentWasteDescription: WasteDescription,
+  newWasteDescription: WasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type === 'NotApplicable'
+  );
+}
+
+function isWasteCodeChangingSmallToBulk(
+  currentWasteDescription: WasteDescription,
+  newWasteDescription: WasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type === 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type !== 'NotApplicable'
+  );
+}
+
+function isWasteCodeChangingBulkToBulkDifferentType(
+  currentWasteDescription: WasteDescription,
+  newWasteDescription: WasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    currentWasteDescription.wasteCode?.type !==
+      newWasteDescription.wasteCode?.type
+  );
+}
+
+function isWasteCodeChangingBulkToBulkSameType(
+  currentWasteDescription: WasteDescription,
+  newWasteDescription: WasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type ===
+      newWasteDescription.wasteCode?.type &&
+    currentWasteDescription.wasteCode?.value !==
+      newWasteDescription.wasteCode?.value
+  );
+}
+
 /**
  * This is a mock backend and should not be used in production.
  */
@@ -320,43 +373,47 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       carriers.transport = false;
     }
 
-    if (
-      submission.wasteDescription.status !== 'NotStarted' &&
-      submission.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
-      value.status !== 'NotStarted' &&
-      value.wasteCode?.type === 'NotApplicable'
-    ) {
+    if (isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)) {
       wasteQuantity = { status: 'NotStarted' };
 
-      if (submission.carriers.status !== 'NotStarted') {
-        const updatedCarriers: dto.Carrier[] = [];
-        for (const c of submission.carriers.values) {
-          const carrier: dto.Carrier = {
-            id: c.id,
-            addressDetails: c.addressDetails,
-            contactDetails: c.contactDetails,
-          };
-          updatedCarriers.push(carrier);
-        }
-        carriers = {
-          status: 'Started',
-          transport: false,
-          values: updatedCarriers,
-        };
-      }
+      carriers = { status: 'NotStarted', transport: false };
 
-      carriers.transport = false;
+      recoveryFacilityDetail = { status: 'NotStarted' };
+    }
+
+    if (isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)) {
+      wasteQuantity = { status: 'NotStarted' };
+
+      carriers = { status: 'NotStarted', transport: true };
 
       recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
     if (
-      submission.wasteDescription.status !== 'NotStarted' &&
-      submission.wasteDescription.wasteCode?.type === 'NotApplicable' &&
-      value.status !== 'NotStarted' &&
-      value.wasteCode?.type !== 'NotApplicable'
+      isWasteCodeChangingBulkToBulkDifferentType(
+        submission.wasteDescription,
+        value
+      )
     ) {
       wasteQuantity = { status: 'NotStarted' };
+
+      carriers = { status: 'NotStarted', transport: true };
+
+      recoveryFacilityDetail = { status: 'NotStarted' };
+    }
+
+    if (
+      isWasteCodeChangingBulkToBulkSameType(submission.wasteDescription, value)
+    ) {
+      if (
+        submission.wasteQuantity.status !== 'CannotStart' &&
+        submission.wasteQuantity.status !== 'NotStarted'
+      ) {
+        wasteQuantity = {
+          status: 'Started',
+          value: submission.wasteQuantity.value,
+        };
+      }
 
       if (submission.carriers.status !== 'NotStarted') {
         carriers = {
@@ -366,9 +423,15 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         };
       }
 
-      carriers.transport = true;
-
-      recoveryFacilityDetail = { status: 'NotStarted' };
+      if (
+        submission.recoveryFacilityDetail.status === 'Started' ||
+        submission.recoveryFacilityDetail.status === 'Complete'
+      ) {
+        recoveryFacilityDetail = {
+          status: 'Started',
+          values: submission.recoveryFacilityDetail.values,
+        };
+      }
     }
 
     submission.wasteDescription = value;

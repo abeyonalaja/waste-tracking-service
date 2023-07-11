@@ -11,6 +11,61 @@ export type Handler<Request, Response> = (
   request: Request
 ) => Promise<Response>;
 
+type DraftWasteDescription = api.DraftSubmission['wasteDescription'];
+
+function isWasteCodeChangingBulkToSmall(
+  currentWasteDescription: DraftWasteDescription,
+  newWasteDescription: DraftWasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type === 'NotApplicable'
+  );
+}
+
+function isWasteCodeChangingSmallToBulk(
+  currentWasteDescription: DraftWasteDescription,
+  newWasteDescription: DraftWasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type === 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type !== 'NotApplicable'
+  );
+}
+
+function isWasteCodeChangingBulkToBulkDifferentType(
+  currentWasteDescription: DraftWasteDescription,
+  newWasteDescription: DraftWasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    newWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    currentWasteDescription.wasteCode?.type !==
+      newWasteDescription.wasteCode?.type
+  );
+}
+
+function isWasteCodeChangingBulkToBulkSameType(
+  currentWasteDescription: DraftWasteDescription,
+  newWasteDescription: DraftWasteDescription
+): boolean {
+  return (
+    currentWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
+    newWasteDescription.status !== 'NotStarted' &&
+    currentWasteDescription.wasteCode?.type ===
+      newWasteDescription.wasteCode?.type &&
+    currentWasteDescription.wasteCode?.value !==
+      newWasteDescription.wasteCode?.value
+  );
+}
+
 export default class DraftController {
   constructor(private repository: DraftRepository, private logger: Logger) {}
 
@@ -223,43 +278,47 @@ export default class DraftController {
         carriers.transport = false;
       }
 
-      if (
-        draft.wasteDescription.status !== 'NotStarted' &&
-        draft.wasteDescription.wasteCode?.type !== 'NotApplicable' &&
-        value.status !== 'NotStarted' &&
-        value.wasteCode?.type === 'NotApplicable'
-      ) {
+      if (isWasteCodeChangingBulkToSmall(draft.wasteDescription, value)) {
         wasteQuantity = { status: 'NotStarted' };
 
-        if (draft.carriers.status !== 'NotStarted') {
-          const updatedCarriers: api.DraftCarrier[] = [];
-          for (const c of draft.carriers.values) {
-            const carrier: api.DraftCarrier = {
-              id: c.id,
-              addressDetails: c.addressDetails,
-              contactDetails: c.contactDetails,
-            };
-            updatedCarriers.push(carrier);
-          }
-          carriers = {
-            status: 'Started',
-            transport: false,
-            values: updatedCarriers,
-          };
-        }
+        carriers = { status: 'NotStarted', transport: false };
 
-        carriers.transport = false;
+        recoveryFacilityDetail = { status: 'NotStarted' };
+      }
+
+      if (isWasteCodeChangingSmallToBulk(draft.wasteDescription, value)) {
+        wasteQuantity = { status: 'NotStarted' };
+
+        carriers = { status: 'NotStarted', transport: true };
 
         recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
       if (
-        draft.wasteDescription.status !== 'NotStarted' &&
-        draft.wasteDescription.wasteCode?.type === 'NotApplicable' &&
-        value.status !== 'NotStarted' &&
-        value.wasteCode?.type !== 'NotApplicable'
+        isWasteCodeChangingBulkToBulkDifferentType(
+          draft.wasteDescription,
+          value
+        )
       ) {
         wasteQuantity = { status: 'NotStarted' };
+
+        carriers = { status: 'NotStarted', transport: true };
+
+        recoveryFacilityDetail = { status: 'NotStarted' };
+      }
+
+      if (
+        isWasteCodeChangingBulkToBulkSameType(draft.wasteDescription, value)
+      ) {
+        if (
+          draft.wasteQuantity.status !== 'CannotStart' &&
+          draft.wasteQuantity.status !== 'NotStarted'
+        ) {
+          wasteQuantity = {
+            status: 'Started',
+            value: draft.wasteQuantity.value,
+          };
+        }
 
         if (draft.carriers.status !== 'NotStarted') {
           carriers = {
@@ -269,9 +328,15 @@ export default class DraftController {
           };
         }
 
-        carriers.transport = true;
-
-        recoveryFacilityDetail = { status: 'NotStarted' };
+        if (
+          draft.recoveryFacilityDetail.status === 'Started' ||
+          draft.recoveryFacilityDetail.status === 'Complete'
+        ) {
+          recoveryFacilityDetail = {
+            status: 'Started',
+            values: draft.recoveryFacilityDetail.values,
+          };
+        }
       }
 
       draft.wasteDescription = value;

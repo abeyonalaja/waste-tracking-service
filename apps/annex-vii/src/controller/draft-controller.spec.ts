@@ -354,8 +354,136 @@ describe(DraftController, () => {
       );
     });
 
-    it('resets waste-quantity section if input switches to bulk-waste', async () => {
+    it('Resets quantity, carriers and recovery facility details if input switches to small-waste', async () => {
       const id = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: {
+          status: 'Complete',
+          wasteCode: {
+            type: 'AnnexIIIA',
+            value: 'A',
+          },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+        wasteQuantity: {
+          status: 'Complete',
+          value: {
+            type: 'ActualData',
+            quantityType: 'Volume',
+            value: 12.0,
+          },
+        },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Complete',
+          transport: true,
+          values: [
+            {
+              transportDetails: {
+                shippingContainerNumber: '',
+                vehicleRegistration: '',
+                type: 'ShippingContainer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'RecoveryFacility',
+                recoveryCode: 'R1',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: rfdId,
+            },
+          ],
+        },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          wasteCode: { type: 'NotApplicable' },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: { type: 'NotApplicable' },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: false,
+          },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
+        },
+        accountId
+      );
+    });
+
+    it('Resets quantity, carriers and recovery facility details if input switches to bulk-waste', async () => {
+      const id = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -369,20 +497,65 @@ describe(DraftController, () => {
         wasteQuantity: {
           status: 'Complete',
           value: {
-            type: 'NotApplicable',
+            type: 'ActualData',
+            quantityType: 'Volume',
+            value: 12.0,
           },
         },
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
         carriers: {
-          status: 'NotStarted',
-          transport: false,
+          status: 'Complete',
+          transport: true,
+          values: [
+            {
+              transportDetails: {
+                shippingContainerNumber: '',
+                vehicleRegistration: '',
+                type: 'ShippingContainer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId,
+            },
+          ],
         },
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
-        recoveryFacilityDetail: { status: 'CannotStart' },
+        recoveryFacilityDetail: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: rfdId,
+            },
+          ],
+        },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
       });
@@ -436,11 +609,10 @@ describe(DraftController, () => {
       );
     });
 
-    it('resets all carriers transport details section if input switches to small-waste', async () => {
+    it('Resets quantity, carriers and recovery facility details if input switches type of bulk-waste', async () => {
       const id = faker.datatype.uuid();
-      const carrierId1 = faker.datatype.uuid();
-      const carrierId2 = faker.datatype.uuid();
-      const carrierId3 = faker.datatype.uuid();
+      const carrierId = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -454,7 +626,148 @@ describe(DraftController, () => {
           nationalCode: { provided: 'No' },
           description: '',
         },
-        wasteQuantity: { status: 'NotStarted' },
+        wasteQuantity: {
+          status: 'Complete',
+          value: {
+            type: 'ActualData',
+            quantityType: 'Volume',
+            value: 12.0,
+          },
+        },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Complete',
+          transport: true,
+          values: [
+            {
+              transportDetails: {
+                shippingContainerNumber: '',
+                vehicleRegistration: '',
+                type: 'ShippingContainer',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                organisationName: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'RecoveryFacility',
+                recoveryCode: 'R1',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: rfdId,
+            },
+          ],
+        },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+      });
+
+      const accountId = faker.datatype.uuid();
+      await subject.setDraftWasteDescriptionById({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          wasteCode: {
+            type: 'AnnexIIIB',
+            value: 'A',
+          },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalledWith(
+        {
+          id,
+          reference: null,
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: {
+              type: 'AnnexIIIB',
+              value: 'A',
+            },
+            ewcCodes: [],
+            nationalCode: { provided: 'No' },
+            description: '',
+          },
+          wasteQuantity: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          carriers: {
+            status: 'NotStarted',
+            transport: true,
+          },
+          collectionDetail: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          transitCountries: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'NotStarted' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
+        },
+        accountId
+      );
+    });
+
+    it('Resets status of quantity, carriers and recovery facility if input switches bulk-waste code with the same bulk-waste type', async () => {
+      const id = faker.datatype.uuid();
+      const carrierId1 = faker.datatype.uuid();
+      const carrierId2 = faker.datatype.uuid();
+      const carrierId3 = faker.datatype.uuid();
+      const rfdId = faker.datatype.uuid();
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: {
+          status: 'Complete',
+          wasteCode: {
+            type: 'AnnexIIIA',
+            value: 'A',
+          },
+          ewcCodes: [],
+          nationalCode: { provided: 'No' },
+          description: '',
+        },
+        wasteQuantity: {
+          status: 'Complete',
+          value: {
+            type: 'ActualData',
+            quantityType: 'Volume',
+            value: 12.0,
+          },
+        },
         exporterDetail: { status: 'NotStarted' },
         importerDetail: { status: 'NotStarted' },
         collectionDate: { status: 'NotStarted' },
@@ -523,7 +836,29 @@ describe(DraftController, () => {
         collectionDetail: { status: 'NotStarted' },
         ukExitLocation: { status: 'NotStarted' },
         transitCountries: { status: 'NotStarted' },
-        recoveryFacilityDetail: { status: 'CannotStart' },
+        recoveryFacilityDetail: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'RecoveryFacility',
+                recoveryCode: 'R1',
+              },
+              addressDetails: {
+                address: '',
+                country: '',
+                name: '',
+              },
+              contactDetails: {
+                emailAddress: '',
+                faxNumber: '',
+                fullName: '',
+                phoneNumber: '',
+              },
+              id: rfdId,
+            },
+          ],
+        },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
       });
@@ -534,7 +869,10 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Complete',
-          wasteCode: { type: 'NotApplicable' },
+          wasteCode: {
+            type: 'AnnexIIIA',
+            value: 'Z',
+          },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
           description: '',
@@ -547,20 +885,35 @@ describe(DraftController, () => {
           reference: null,
           wasteDescription: {
             status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
+            wasteCode: {
+              type: 'AnnexIIIA',
+              value: 'Z',
+            },
             ewcCodes: [],
             nationalCode: { provided: 'No' },
             description: '',
           },
-          wasteQuantity: { status: 'NotStarted' },
+          wasteQuantity: {
+            status: 'Started',
+            value: {
+              type: 'ActualData',
+              quantityType: 'Volume',
+              value: 12.0,
+            },
+          },
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           collectionDate: { status: 'NotStarted' },
           carriers: {
             status: 'Started',
-            transport: false,
+            transport: true,
             values: [
               {
+                transportDetails: {
+                  shippingContainerNumber: '',
+                  vehicleRegistration: '',
+                  type: 'ShippingContainer',
+                },
                 addressDetails: {
                   address: '',
                   country: '',
@@ -575,6 +928,11 @@ describe(DraftController, () => {
                 id: carrierId1,
               },
               {
+                transportDetails: {
+                  vehicleRegistration: '',
+                  trailerNumber: '',
+                  type: 'Trailer',
+                },
                 addressDetails: {
                   address: '',
                   country: '',
@@ -589,6 +947,10 @@ describe(DraftController, () => {
                 id: carrierId2,
               },
               {
+                transportDetails: {
+                  imo: '',
+                  type: 'BulkVessel',
+                },
                 addressDetails: {
                   address: '',
                   country: '',
@@ -607,7 +969,29 @@ describe(DraftController, () => {
           collectionDetail: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
+          recoveryFacilityDetail: {
+            status: 'Started',
+            values: [
+              {
+                recoveryFacilityType: {
+                  type: 'RecoveryFacility',
+                  recoveryCode: 'R1',
+                },
+                addressDetails: {
+                  address: '',
+                  country: '',
+                  name: '',
+                },
+                contactDetails: {
+                  emailAddress: '',
+                  faxNumber: '',
+                  fullName: '',
+                  phoneNumber: '',
+                },
+                id: rfdId,
+              },
+            ],
+          },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
         },
