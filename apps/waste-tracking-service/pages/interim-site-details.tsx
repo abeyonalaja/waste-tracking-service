@@ -139,6 +139,7 @@ const InterimSiteDetails = () => {
     initialState
   );
   const [id, setId] = useState(null);
+  const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
   const [addressDetails, setAddressDetails] = useState<{
     name: string;
@@ -170,6 +171,7 @@ const InterimSiteDetails = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setPage(router.query.page);
     }
   }, [router.isReady, router.query.id]);
 
@@ -208,6 +210,12 @@ const InterimSiteDetails = () => {
                 setAddressDetails(site.addressDetails);
                 setContactDetails(site.contactDetails);
                 setRecoveryFacilityType(site.recoveryFacilityType);
+                if (page !== undefined) {
+                  dispatchInterimPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS[page],
+                  });
+                }
               } else if (emptyRecords.length > 0) {
                 const [emptyInterimSite] = emptyRecords;
                 dispatchInterimPage({

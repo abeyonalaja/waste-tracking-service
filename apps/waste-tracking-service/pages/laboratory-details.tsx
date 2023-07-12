@@ -135,6 +135,7 @@ const LaboratoryDetails = () => {
     initialState
   );
   const [id, setId] = useState(null);
+  const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
   const [addressDetails, setAddressDetails] = useState<{
     name: string;
@@ -166,6 +167,7 @@ const LaboratoryDetails = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setPage(router.query.page);
     }
   }, [router.isReady, router.query.id]);
 
@@ -204,6 +206,12 @@ const LaboratoryDetails = () => {
                 setAddressDetails(site.addressDetails);
                 setContactDetails(site.contactDetails);
                 setRecoveryFacilityType(site.recoveryFacilityType);
+                if (page !== undefined) {
+                  dispatchLaboratoryPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS[page],
+                  });
+                }
               } else if (emptyRecords.length > 0) {
                 const [emptyLabSite] = emptyRecords;
                 dispatchLaboratoryPage({

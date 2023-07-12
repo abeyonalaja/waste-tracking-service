@@ -257,5 +257,6 @@
   "exportJourney.laboratorySite.name": "Laboratory name",
   "exportJourney.laboratorySite.contactTitle": "What are the laboratory contact details?",
   "exportJourney.laboratorySite.contactPerson": "Laboratory contact person",
-  "exportJourney.laboratorySite.codeTitle": "What is the disposal code?"
+  "exportJourney.laboratorySite.codeTitle": "What is the disposal code?",
+  "exportJourney.submitAnExport.SectionFive.checkYourReport": "Check your report"
 }

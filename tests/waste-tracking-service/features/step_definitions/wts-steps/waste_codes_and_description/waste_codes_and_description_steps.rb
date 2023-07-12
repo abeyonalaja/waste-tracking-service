@@ -35,3 +35,7 @@ When(/^I change the waste code from small to bulk waste$/) do
   Log.info("Waste code option :  #{TestStatus.test_status(:waste_code_option)}")
   WhatIsTheWasteCodePage.new.select_first_option
 end
+
+When(/^I update Waste codes and description task with Not applicable has waste code$/) do
+  WhatIsTheWasteCodePage.new.choose_option 'Not applicable'
+end

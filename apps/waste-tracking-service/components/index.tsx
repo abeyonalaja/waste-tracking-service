@@ -1,5 +1,8 @@
+import { Accordion } from './Accordion';
+import { AccordionSection } from './AccordionSection';
 import { Address } from './Address';
 import { AppLink } from './AppLink';
+import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
 import { CompleteFooter } from './CompleteFooter';
@@ -21,10 +24,14 @@ import { SummaryListWithActions } from './SummaryListWithActions';
 import { TextareaCharCount } from './TextareaCharCount';
 import { WasteCarrierHeading } from './WasteCarrierHeading';
 import { WasteCarrierHeadingNoCaps } from './WasteCarrierHeadingNoCaps';
+import { UnitDisplay } from './UnitDisplay';
 
 export {
+  Accordion,
+  AccordionSection,
   Address,
   AppLink,
+  BreakableString,
   BreadcrumbWrap,
   ButtonGroup,
   CompleteFooter,
@@ -46,4 +53,5 @@ export {
   TextareaCharCount,
   WasteCarrierHeading,
   WasteCarrierHeadingNoCaps,
+  UnitDisplay,
 };

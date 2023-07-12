@@ -159,7 +159,8 @@ const RecoveryFacilityDetails = () => {
     initialState
   );
   const [id, setId] = useState<string | string[]>(null);
-  const [emptyRecordId, setEmptyRecordId] = useState<string | string[]>(null);
+  const [page, setPage] = useState(null);
+  const [siteId, setSiteId] = useState<string | string[]>(null);
   const [facilityCount, setFacilityCount] = useState<number>(0);
   const [additionalFacility, setAdditionalFacility] = useState<string>(null);
   const [isSecond, setIsSecond] = useState<boolean>(false);
@@ -186,6 +187,8 @@ const RecoveryFacilityDetails = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setPage(router.query.page);
+      setSiteId(router.query.site);
     }
   }, [router.isReady, router.query.id]);
 
@@ -217,11 +220,32 @@ const RecoveryFacilityDetails = () => {
               payload: data,
             });
             if (data.status === 'Complete') {
-              setStartPage(VIEWS.LIST);
-              dispatchRecoveryPage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.LIST,
-              });
+              if (siteId !== undefined) {
+                const getRecord = data.values.filter(
+                  (record) => record.id === siteId
+                );
+                dispatchRecoveryPage({
+                  type: 'FACILITY_DATA_UPDATE',
+                  payload: getRecord[0],
+                });
+                const index = data.values.findIndex(
+                  (record) => record.id === siteId
+                );
+                setIsSecond(index === 1);
+                setAddressDetails(getRecord[0].addressDetails);
+                setContactDetails(getRecord[0].contactDetails);
+                setRecoveryFacilityType(getRecord[0].recoveryFacilityType);
+                dispatchRecoveryPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS[page],
+                });
+              } else {
+                setStartPage(VIEWS.LIST);
+                dispatchRecoveryPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.LIST,
+                });
+              }
             } else {
               const filteredValues = data.values?.filter(
                 (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
