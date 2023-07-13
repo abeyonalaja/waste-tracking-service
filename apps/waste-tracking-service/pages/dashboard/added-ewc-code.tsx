@@ -259,7 +259,7 @@ const EwcCodeList = () => {
             {ewcCodesPage.isLoading && <Loading />}
             {!ewcCodesPage.isError &&
               !ewcCodesPage.isLoading &&
-              ewcCodesPage.data.status === 'Started' && (
+              ewcCodesPage.data.status !== 'NotStarted' && (
                 <>
                   {ewcCodesPage.showView === VIEWS.LIST ? (
                     <>
