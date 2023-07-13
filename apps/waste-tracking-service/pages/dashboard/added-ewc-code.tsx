@@ -87,7 +87,7 @@ const ewcCodesReducer = (state: State, action: Action) => {
         showView: action.payload,
       };
     case 'REMOVE_EWC_CODE':
-      if (state.data.status === 'Started') {
+      if (state.data.status !== 'NotStarted') {
         return {
           ...state,
           isReadyToUpdate: true,
