@@ -84,17 +84,11 @@ const DefinitionList = styled('dl')`
   }
 `;
 
-interface RowProps {
-  readonly underline?: boolean;
-}
-
-const Row = styled('div')<RowProps>`
-  border-bottom: 1px solid
-    ${(props) => (props.underline ? BORDER_COLOUR : 'transparent')};
-  margin-bottom: 15px;
+const Row = styled('div')`
   @media (min-width: 40.0625em) {
-    display: table-row;
-    margin-bottom: 0;
+    display: flex;
+    margin-bottom: 1px;
+    flex-direction: row;
   }
 `;
 
@@ -102,35 +96,34 @@ const Key = styled('dt')`
   margin: 0 0 5px;
   font-weight: 700;
   @media (min-width: 40.0625em) {
-    display: table-cell;
     padding-top: 10px;
-    padding-right: 20px;
     padding-bottom: 10px;
-    margin-bottom: 5px;
-    width: 30%;
+    padding-right: 20px;
+    margin-bottom: 0;
+    flex: 0 0 30%;
   }
 `;
 
 const Value = styled('dd')`
-  margin: 0 0 10px;
+  margin: 0 0 15px;
   overflow-wrap: break-word;
   @media (min-width: 40.0625em) {
-    display: table-cell;
     padding-top: 10px;
     padding-right: 20px;
     padding-bottom: 10px;
+    margin-bottom: 0;
+    flex: 1 1 50%;
   }
 `;
 
 const Actions = styled('dd')`
   margin: 10px 0 15px;
   @media (min-width: 40.0625em) {
-    width: 20%;
-    display: table-cell;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-bottom: 5px;
     text-align: right;
+    margin: 0;
+    flex: 0 0 20%;
   }
   a {
     margin-right: 10px;
@@ -138,6 +131,15 @@ const Actions = styled('dd')`
       margin: 0 0 0 15px;
     }
   }
+`;
+
+const SectionBreak = styled.span`
+  background: ${BORDER_COLOUR};
+  border: none;
+  height: 1px;
+  margin: 10px 0;
+  display: block;
+  width: 100%;
 `;
 
 const WasteCodeType = styled.div`
@@ -602,7 +604,7 @@ const CheckYourReport = () => {
                             </Actions>
                           </Row>
 
-                          <Row underline={true}>
+                          <Row>
                             <Key id="exporter-country-header">
                               {t('address.country')}
                             </Key>
@@ -614,6 +616,7 @@ const CheckYourReport = () => {
                               <br />
                             </Value>
                           </Row>
+                          <SectionBreak />
                           <Row>
                             <Key id="exporter-organisation-name-header">
                               {t('contact.orgName')}
@@ -678,7 +681,7 @@ const CheckYourReport = () => {
                             </Value>
                           </Row>
 
-                          <Row underline={true}>
+                          <Row>
                             <Key id="exporter-fax-header">
                               {t('contact.faxNumber')}
                             </Key>
@@ -700,6 +703,7 @@ const CheckYourReport = () => {
                               )}
                             </Value>
                           </Row>
+                          <SectionBreak />
                         </DefinitionList>
                       </>
                     )}
@@ -748,7 +752,7 @@ const CheckYourReport = () => {
                             </Value>
                           </Row>
                           {/* COUNTRY */}
-                          <Row underline={true}>
+                          <Row>
                             <Key id="importer-country-header">
                               {t('address.country')}
                             </Key>
@@ -760,6 +764,7 @@ const CheckYourReport = () => {
                               <br />
                             </Value>
                           </Row>
+                          <SectionBreak />
                           {/*  Full name */}
                           <Row>
                             <Key id="importer-full-name-header">
@@ -844,7 +849,7 @@ const CheckYourReport = () => {
                       'Complete' && (
                       <>
                         <DefinitionList>
-                          <Row underline={true}>
+                          <Row>
                             <Key id="collection-date-header">
                               {t(
                                 'exportJourney.submitAnExport.SectionThree.collectionDate'
@@ -891,6 +896,7 @@ const CheckYourReport = () => {
                               </AppLink>
                             </Actions>
                           </Row>
+                          <SectionBreak />
                         </DefinitionList>
                       </>
                     )}
@@ -952,7 +958,7 @@ const CheckYourReport = () => {
                                     {item.addressDetails?.address}
                                   </Value>
                                 </Row>
-                                <Row underline={true}>
+                                <Row>
                                   <Key id={'carrier-country-header' + index}>
                                     {t('address.country')}
                                   </Key>
@@ -960,6 +966,7 @@ const CheckYourReport = () => {
                                     {item.addressDetails?.country}
                                   </Value>
                                 </Row>
+                                <SectionBreak />
                                 <Row>
                                   <Key id={'carrier-full-name-header' + index}>
                                     {t('contact.person')}
@@ -1088,7 +1095,7 @@ const CheckYourReport = () => {
                                             </AppLink>
                                           </Actions>
                                         </Row>
-                                        <Row underline={true}>
+                                        <Row>
                                           <Key
                                             id={
                                               'carrier-vehicle-registration-header' +
@@ -1124,6 +1131,7 @@ const CheckYourReport = () => {
                                             )}
                                           </Value>
                                         </Row>
+                                        <SectionBreak />
                                       </>
                                     )}
 
@@ -1183,7 +1191,7 @@ const CheckYourReport = () => {
                                           </Actions>
                                         </Row>
 
-                                        <Row underline={true}>
+                                        <Row>
                                           <Key
                                             id={
                                               'carrier-trailer-number-header' +
@@ -1218,13 +1226,14 @@ const CheckYourReport = () => {
                                             )}
                                           </Value>
                                         </Row>
+                                        <SectionBreak />
                                       </>
                                     )}
 
                                     {item.transportDetails?.type ===
                                       'BulkVessel' && (
                                       <>
-                                        <Row underline={true}>
+                                        <Row>
                                           <Key
                                             id={'carrier-imo-header' + index}
                                           >
@@ -1252,6 +1261,7 @@ const CheckYourReport = () => {
                                             </AppLink>
                                           </Actions>
                                         </Row>
+                                        <SectionBreak />
                                       </>
                                     )}
                                   </>
@@ -1310,7 +1320,7 @@ const CheckYourReport = () => {
                             </Actions>
                           </Row>
 
-                          <Row underline={true}>
+                          <Row>
                             <Key id="waste-collection-country-header">
                               {t('address.country')}
                             </Key>
@@ -1322,7 +1332,7 @@ const CheckYourReport = () => {
                               <br />
                             </Value>
                           </Row>
-
+                          <SectionBreak />
                           <Row>
                             <Key id="waste-collection-full-name-header">
                               {t(
@@ -1385,7 +1395,7 @@ const CheckYourReport = () => {
                             </Value>
                           </Row>
 
-                          <Row underline={true}>
+                          <Row>
                             <Key id="waste-collection-fax-header">
                               {t('contact.faxNumber')}
                             </Key>
@@ -1402,6 +1412,7 @@ const CheckYourReport = () => {
                                     ?.contactDetails.faxNumber}
                             </Value>
                           </Row>
+                          <SectionBreak />
                         </DefinitionList>
                       </>
                     )}
@@ -1412,7 +1423,7 @@ const CheckYourReport = () => {
                           {t('exportJourney.pointOfExit.caption')}
                         </GovUK.H3>
                         <DefinitionList>
-                          <Row underline={true}>
+                          <Row>
                             <Key id="exit-location-header">{t('location')}</Key>
                             <Value id="exit-location">
                               {checkYourReportPage.data?.ukExitLocation
@@ -1446,6 +1457,7 @@ const CheckYourReport = () => {
                               </AppLink>
                             </Actions>
                           </Row>
+                          <SectionBreak />
                         </DefinitionList>
                       </>
                     )}
@@ -1532,12 +1544,14 @@ const CheckYourReport = () => {
                               site.recoveryFacilityType?.type === 'InterimSite'
                           )
                           .map((filteredSite, index) => (
-                            <SiteDetails
-                              site={filteredSite}
-                              index={index}
-                              id={id}
-                              key={`interimSite${index}`}
-                            />
+                            <>
+                              <SiteDetails
+                                site={filteredSite}
+                                index={index}
+                                id={id}
+                                key={`interimSite${index}`}
+                              />
+                            </>
                           ))}
 
                         {checkYourReportPage.data.recoveryFacilityDetail.values
@@ -1552,6 +1566,15 @@ const CheckYourReport = () => {
                               index={index}
                               id={id}
                               key={`recFac${index}`}
+                              multiple={
+                                checkYourReportPage.data.recoveryFacilityDetail
+                                  .status === 'Complete' &&
+                                checkYourReportPage.data.recoveryFacilityDetail.values.filter(
+                                  (site) =>
+                                    site.recoveryFacilityType?.type ===
+                                    'RecoveryFacility'
+                                ).length > 1
+                              }
                             />
                           ))}
                       </>
@@ -1583,7 +1606,7 @@ const CheckYourReport = () => {
   );
 };
 
-const SiteDetails = ({ site, index, id }) => {
+const SiteDetails = ({ site, index, id, multiple = false }) => {
   const { t } = useTranslation();
   const type = site.recoveryFacilityType.type;
   let titleKey, nameKey, codeKey, url, code;
@@ -1604,7 +1627,11 @@ const SiteDetails = ({ site, index, id }) => {
       code = site.recoveryFacilityType.recoveryCode;
       break;
     case 'RecoveryFacility':
-      titleKey = 'exportJourney.checkAnswers.titleRecoveryFacility';
+      titleKey = !multiple
+        ? 'exportJourney.checkAnswers.titleRecoveryFacility'
+        : index === 0
+        ? 'exportJourney.recoveryFacilities.firstCardTitle'
+        : 'exportJourney.recoveryFacilities.secondCardTitle';
       nameKey = 'exportJourney.recoveryFacilities.name';
       url = '/recovery-facility-details';
       codeKey = 'exportJourney.recoveryFacilities.recoveryCode';
@@ -1644,7 +1671,7 @@ const SiteDetails = ({ site, index, id }) => {
           </Value>
         </Row>
 
-        <Row underline={true}>
+        <Row>
           <Key id={`${type.toLowerCase()}-country-title-${index}`}>
             {t('address.country')}
           </Key>
@@ -1652,7 +1679,7 @@ const SiteDetails = ({ site, index, id }) => {
             {site.addressDetails.country}
           </Value>
         </Row>
-
+        <SectionBreak />
         <Row>
           <Key id={`${type.toLowerCase()}-contact-person-title-${index}`}>
             {t('contact.person')}
@@ -1690,7 +1717,7 @@ const SiteDetails = ({ site, index, id }) => {
           </Value>
         </Row>
 
-        <Row underline={true}>
+        <Row>
           <Key id={`${type.toLowerCase()}-fax-title-${index}`}>
             {t('contact.faxNumber')}
           </Key>
@@ -1701,7 +1728,7 @@ const SiteDetails = ({ site, index, id }) => {
               : site.contactDetails.faxNumber}
           </Value>
         </Row>
-
+        <SectionBreak />
         <Row>
           <Key id={`${type.toLowerCase()}-code-title-${index}`}>
             {t(codeKey)}
@@ -1721,6 +1748,7 @@ const SiteDetails = ({ site, index, id }) => {
           </Actions>
         </Row>
       </DefinitionList>
+      {multiple && index === 0 && <SectionBreak />}
     </div>
   );
 };
