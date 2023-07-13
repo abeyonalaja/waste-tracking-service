@@ -473,6 +473,7 @@ const CheckYourReport = () => {
                             </Value>
                             <Actions>
                               <AppLink
+                                id="waste-destription-change"
                                 href={{
                                   pathname: '/describe-waste',
                                   query: { id },
