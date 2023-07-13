@@ -250,7 +250,7 @@ const CheckYourReport = () => {
   return (
     <>
       <Head>
-        <title>Check your report</title>
+        <title>{t('exportJourney.checkAnswers.pageTitle')}</title>
       </Head>
 
       <GovUK.Page
@@ -378,7 +378,7 @@ const CheckYourReport = () => {
                               <AppLink
                                 id="waste-code-type-change"
                                 href={{
-                                  pathname: '/waste-code',
+                                  pathname: '/changing-waste-code',
                                   query: { id },
                                 }}
                               >

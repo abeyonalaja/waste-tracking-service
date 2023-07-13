@@ -259,6 +259,7 @@
   "exportJourney.laboratorySite.contactTitle": "What are the laboratory contact details?",
   "exportJourney.laboratorySite.contactPerson": "Laboratory contact person",
   "exportJourney.laboratorySite.codeTitle": "What is the disposal code?",
+  "exportJourney.checkAnswers.pageTitle": "Check this export",
   "exportJourney.checkAnswers.caption": "Check this export",
   "exportJourney.checkAnswers.heading": "Check your answers before submitting this export",
   "exportJourney.checkAnswers.paragraph": "Changing an answer could affect other responses you’ve given. Check your responses to make sure they’re still correct",
@@ -283,5 +284,9 @@
   "exportJourney.checkAnswers.IMO": "International Maritime Organisation (IMO) number",
   "exportJourney.checkAnswers.estimated": "Estimated",
   "exportJourney.checkAnswers.conformButton": "Confirm all answers",
-  "exportJourney.checkAnswers.returnButton": "Return to draft"
+  "exportJourney.checkAnswers.returnButton": "Return to draft",
+  "exportJourney.checkAnswers.changeWasteCode.pageTitle": "You are changing your waste code",
+  "exportJourney.checkAnswers.changeWasteCode.heading": "You are changing your waste code",
+  "exportJourney.checkAnswers.changeWasteCode.paragraph": "if you need to change your waste code, this may affect other answers in this form that you may also need to update.",
+  "exportJourney.checkAnswers.changeWasteCode.confirmButton": "Continue and change the code"
 }
