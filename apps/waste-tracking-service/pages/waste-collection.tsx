@@ -154,6 +154,7 @@ const WasteCollection = () => {
     initialState
   );
   const [id, setId] = useState(null);
+  const [page, setPage] = useState(null);
   const [returnToTask, setReturnToTask] = useState(false);
   const [viewToReturnTo, setViewToReturnTo] = useState<number>();
   const [noOfWasteCarriers, setNoOfWasteCarriers] = useState<number>(1);
@@ -177,6 +178,7 @@ const WasteCollection = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setPage(router.query.page);
     }
   }, [router.isReady, router.query.id]);
 
@@ -203,10 +205,17 @@ const WasteCollection = () => {
               setReturnToTask(true);
               setAddressDetails(data.collectionDetail.address);
               setContactDetails(data.collectionDetail.contactDetails);
-              dispatchAddressPage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.CONTACT_DETAILS,
-              });
+              if (page !== undefined) {
+                dispatchAddressPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS[page],
+                });
+              } else {
+                dispatchAddressPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.CONTACT_DETAILS,
+                });
+              }
             }
           }
         });

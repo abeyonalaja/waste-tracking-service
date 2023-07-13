@@ -1312,7 +1312,7 @@ const CheckYourReport = () => {
                                 id="waste-collection-address-change"
                                 href={{
                                   pathname: '/waste-collection',
-                                  query: { id },
+                                  query: { id, page: 'MANUAL_ADDRESS' },
                                 }}
                               >
                                 {t('actions.change')}
@@ -1656,6 +1656,7 @@ const SiteDetails = ({ site, index, id, multiple = false }) => {
                 pathname: url,
                 query: { id, site: site.id, page: 'ADDRESS_DETAILS' },
               }}
+              id={`${type.toLowerCase()}-change-address-${index}`}
             >
               {t('actions.change')}
             </AppLink>
@@ -1693,6 +1694,7 @@ const SiteDetails = ({ site, index, id, multiple = false }) => {
                 pathname: url,
                 query: { id, site: site.id, page: 'CONTACT_DETAILS' },
               }}
+              id={`${type.toLowerCase()}-change-contact-${index}`}
             >
               {t('actions.change')}
             </AppLink>
@@ -1742,6 +1744,7 @@ const SiteDetails = ({ site, index, id, multiple = false }) => {
                 pathname: url,
                 query: { id, site: site.id, page: 'RECOVERY_CODE' },
               }}
+              id={`${type.toLowerCase()}-change-code-${index}`}
             >
               {t('actions.change')}
             </AppLink>
