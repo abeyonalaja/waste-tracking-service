@@ -27,7 +27,7 @@ class LocationWasteLeavesTheUkPage < GenericPage
 
   def enter_location(location)
     fill_in LOCATION_FIELD_ID, with: location, visible: false
-    TestStatus.set_test_status(:location, location)
+    TestStatus.set_test_status(:waste_leaves_UK_location, location)
   end
 
   def has_reference_location?(location)

@@ -42,7 +42,6 @@ Feature:AS A waste producer
     Then "Basel Annex IX" is still selected
     And I click the button Save and continue
     Then I verify copy text is present on the EWC page
-#    And I should see previously selected EWC code pre-populated
 
   Scenario: User should navigate to EWC list page after enter valid EWC code
     Given I login to waste tracking portal

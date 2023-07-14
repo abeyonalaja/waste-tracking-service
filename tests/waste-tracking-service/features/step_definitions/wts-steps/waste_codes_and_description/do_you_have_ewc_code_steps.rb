@@ -100,7 +100,7 @@ Then(/^I add (\d+) ewc codes$/) do |ewc_code|
     ewc_code_list_page = EwcCodeListPage.new
     ewc_code_list_page.choose_option('Yes')
     ewc_code_list_page.save_and_continue
-    enter_an_ewc_code_page.select_ewc_option i
+    enter_an_ewc_code_page.select_ewc_option rand(0..834)
     enter_an_ewc_code_page.save_and_continue
   end
 end

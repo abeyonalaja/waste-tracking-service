@@ -8,7 +8,7 @@ And(/^I chose first option from the dropdown list$/) do
 end
 
 Then(/^I should see selected address displayed with Change address link on the page$/) do
-  expect(WasteCollectionDetailsPage.new).to have_address TestStatus.test_status(:exporter_address)
+  expect(WasteCollectionDetailsPage.new).to have_address TestStatus.test_status(:waste_collection_address)
   expect(page).to have_link('Change address')
 end
 
@@ -28,4 +28,8 @@ And(/^I should see previously entered waste collection details pre-populated$/) 
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_full_name TestStatus.test_status(:full_name)
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_email TestStatus.test_status(:email)
   expect(ContactDetailsCollectionAddressPage.new).to have_reference_phone_number TestStatus.test_status(:phone_number)
+end
+
+And(/^I complete waste carrier location and collection details$/) do
+  WasteCollectionDetailsController.complete
 end

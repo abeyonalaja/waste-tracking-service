@@ -13,6 +13,7 @@ class TrailerDetailsPage < GenericPage
   VEHICLE_REG = Translations.value 'exportJourney.wasteCarrier.trailer.vehicleReg'
 
   VEHICLE_REG_FILED_ID = 'vehicleRegistration'
+  TRAILER = 'trailerNumber'
   def check_page_displayed
     # expect(self).to have_css 'h1', text: TITLE, exact_text: true
     expect(self).to have_css 'h1', text: 'Trailer details', exact_text: true
@@ -31,5 +32,9 @@ class TrailerDetailsPage < GenericPage
 
   def has_reference_vehicle_num?(vehicle_number)
     find(VEHICLE_REG_FILED_ID).value == vehicle_number
+  end
+
+  def enter_trailer_number(trailer)
+    fill_in TRAILER, with: trailer, visible: false
   end
 end

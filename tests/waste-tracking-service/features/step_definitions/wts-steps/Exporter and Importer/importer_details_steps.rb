@@ -9,9 +9,15 @@ And(/^I should see What are the importers contact details page translated$/) do
 end
 
 And(/^I complete who is the importer page$/) do
-  WhoIsTheImporterPage.new.enter_organisation_name 'DefraUK'
-  WhoIsTheImporterPage.new.enter_address 'Address,1 street'
+  org_name = Faker::Company.name
+  WhoIsTheImporterPage.new.enter_organisation_name org_name
+  TestStatus.set_test_status(:importer_org_name, org_name)
+  address = 'Address,1 street'
+  WhoIsTheImporterPage.new.enter_address address
+  TestStatus.set_test_status(:importer_address, address)
+  country = 'England'
   WhoIsTheImporterPage.new.enter_country 'England'
+  TestStatus.set_test_status(:importer_country, country)
 end
 
 And(/^I complete Importer contact details page$/) do
@@ -19,6 +25,10 @@ And(/^I complete Importer contact details page$/) do
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
   ImporterContactDetailsPage.new.enter_phone_number '+441234567891'
   ImporterContactDetailsPage.new.enter_fax_number '123Fax'
+  TestStatus.set_test_status(:importer_org_contact, 'John Arnold')
+  TestStatus.set_test_status(:importer_email, 'mail@mail.com')
+  TestStatus.set_test_status(:importer_phone_number, '+441234567891')
+  TestStatus.set_test_status(:importer_fax_number, '123Fax')
 end
 
 Then(/^I verify that previously entered details are pre\-populated$/) do

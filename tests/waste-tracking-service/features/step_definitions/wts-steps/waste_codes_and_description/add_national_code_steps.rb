@@ -27,7 +27,7 @@ And(/^I have selected Yes and entered valid national code$/) do
   national_code = Faker::Base.regexify(/[a-z \s A-Z\s \\0-9- \s ]{50}/)
   NationalCodePage.new.choose_option 'Yes'
   NationalCodePage.new.enter_input_value national_code
-  TestStatus.set_test_status(:national_code, national_code)
+  TestStatus.set_test_status(:national_code_text, national_code)
 end
 
 And(/^I have selected Yes and entered in-valid national code$/) do
@@ -36,7 +36,7 @@ And(/^I have selected Yes and entered in-valid national code$/) do
 end
 
 Then(/^I should see national code pre-populated$/) do
-  expect(NationalCodePage.new).to have_reference TestStatus.test_status(:national_code)
+  expect(NationalCodePage.new).to have_reference TestStatus.test_status(:national_code_text)
 end
 
 Then(/^I should see national code page is displayed$/) do

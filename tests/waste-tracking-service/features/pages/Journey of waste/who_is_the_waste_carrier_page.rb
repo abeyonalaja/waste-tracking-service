@@ -2,10 +2,12 @@
 
 require_relative '../shared_components/general_helpers'
 require_relative '../shared_components/error_box'
+require_relative '../shared_components/common_components'
 # this page is for Who is the waste carrier page details
 class WhoIsTheWasteCarrierPage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include CommonComponents
 
   TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion'
   FIRST_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion1'

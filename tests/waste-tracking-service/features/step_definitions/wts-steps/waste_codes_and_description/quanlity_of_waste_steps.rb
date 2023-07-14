@@ -150,3 +150,7 @@ end
 And(/^I complete Quantity of waste sub\-section$/) do
   QuantityOfWasteController.complete
 end
+
+When(/^I complete Quantity of waste with estimated bulk waste$/) do
+  QuantityOfWasteController.complete 'No, I will enter an estimate'
+end

@@ -8,3 +8,7 @@ And(/^I navigate on the Describe the waste$/) do
   NationalCodeController.complete
   DescribeTheWastePage.new.check_page_displayed
 end
+
+Then(/^I should see previously entered waste description details$/) do
+  expect(DescribeTheWastePage.new.check_description).to eq(TestStatus.test_status(:description_of_the_waste))
+end

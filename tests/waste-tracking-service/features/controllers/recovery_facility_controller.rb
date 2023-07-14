@@ -15,27 +15,28 @@ module RecoveryFacilityController
     confirmation_interim_site_page.choose_option 'Yes'
     confirmation_interim_site_page.save_and_continue
 
-    interim_address_page.enter_name 'Interim Site Name'
-    interim_address_page.enter_address 'interim address street, 6'
-    interim_address_page.enter_country 'Scotland'
+    interim_address_page.enter_name 'interim_site_name'
+    interim_address_page.enter_address 'interim_site_name'
+    interim_address_page.enter_country 'interim_site_name'
     interim_address_page.save_and_continue
 
-    interim_site_contact_details_page.enter_full_name 'Jonh Thomas'
-    interim_site_contact_details_page.enter_email 'mail@sample.com'
-    interim_site_contact_details_page.enter_phone_number '+441234567891'
+    interim_site_contact_details_page.enter_full_name 'interim_site_contact_name'
+    interim_site_contact_details_page.enter_email 'interim_site_contact_name'
+    interim_site_contact_details_page.enter_phone_number 'interim_site_contact_name'
     interim_site_contact_details_page.save_and_continue
 
     interim_site_recovery_code_page.choose_option 'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11'
+    TestStatus.set_test_status(:interim_site_recovery_code, 'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11')
     interim_site_recovery_code_page.save_and_continue
 
-    facility_address_page.enter_name 'Facility Name'
-    facility_address_page.enter_address 'Address Test 1, street'
-    facility_address_page.enter_country 'Wales'
+    facility_address_page.enter_name 'recovery_facility'
+    facility_address_page.enter_address 'recovery_facility'
+    facility_address_page.enter_country 'recovery_facility'
     facility_address_page.save_and_continue
 
-    facility_contact_details_page.enter_full_name 'John Johnson'
-    facility_contact_details_page.enter_email 'example@mail.com'
-    facility_contact_details_page.enter_phone_number '+441234567891'
+    facility_contact_details_page.enter_full_name 'recovery_facility'
+    facility_contact_details_page.enter_email 'recovery_facility'
+    facility_contact_details_page.enter_phone_number 'recovery_facility'
     facility_contact_details_page.save_and_continue
 
     recovery_code_page.select_first_option

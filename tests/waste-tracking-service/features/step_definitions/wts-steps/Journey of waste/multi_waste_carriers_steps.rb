@@ -1,9 +1,9 @@
 And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier, mode_of_transport|
   waste_carrier_org_name = "#{waste_carrier} WTS Organisation"
-  waste_carrier_title = "#{waste_carrier} waste carrier"
+  waste_carrier_address = "#{waste_carrier} waste carrier address"
   sleep 1
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
-  WhoIsTheWasteCarrierPage.new.enter_address "#{waste_carrier}@mail.com"
+  WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
   WhoIsTheWasteCarrierPage.new.save_and_continue
   sleep 1
@@ -11,15 +11,40 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
-  TestStatus.waste_carrier_titles(waste_carrier_title)
+  TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)
   WhatAreTheWasteCarriersContactDetailsPage.new.save_and_continue
   sleep 1
-  HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
-  HowWillTheWasteCarrierTransportTheWastePage.new.continue
-  sleep 0.5
-  ShippingContainerDetailsPage.new.enter_container_number 'ABCD1234567'
-  ShippingContainerDetailsPage.new.save_and_continue
+  case mode_of_transport
+  when 'Shipping container'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    sleep 0.5
+    ShippingContainerDetailsPage.new.enter_container_number 'ABCD1234567'
+    ShippingContainerDetailsPage.new.enter_vehicle_number 'AB12CD'
+    ShippingContainerDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
+    TestStatus.mode_of_travel_list("#{waste_carrier}_container_number".to_sym, 'ABCD1234567')
+    TestStatus.mode_of_travel_list("#{waste_carrier}_vehicle_number".to_sym, 'AB12CD')
+  when 'Trailer'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    sleep 0.5
+    TrailerDetailsPage.new.enter_vehicle_number 'CU57ABC'
+    TrailerDetailsPage.new.enter_trailer_number 'TRAILER'
+    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
+    TestStatus.mode_of_travel_list("#{waste_carrier}_vehicle_number".to_sym, 'CU57ABC')
+    TestStatus.mode_of_travel_list("#{waste_carrier}_trailer".to_sym, 'TRAILER')
+    ShippingContainerDetailsPage.new.save_and_continue
+  when 'Bulk vessel'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    sleep 0.5
+    BulkVesselDetailsPage.new.enter_imo_number 'IMO Number'
+    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
+    TestStatus.mode_of_travel_list("#{waste_carrier}_imo_number".to_sym, 'IMO Number')
+    ShippingContainerDetailsPage.new.save_and_continue
+  end
 end
 
 And(/^I should see first waste carrier displayed$/) do

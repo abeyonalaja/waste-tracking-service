@@ -77,5 +77,5 @@ Feature: AS A Waste Practitioner
     And I choose "Not applicable" radio button
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"
-    Then the task "Waste carriers" should be "IN PROGRESS"
+    Then the task "Waste carriers" should be "NOT STARTED"
     Then the task "Laboratory details" should be "NOT STARTED"

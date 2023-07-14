@@ -7,6 +7,9 @@ module TestStatus
   @countries_waste_will_travel = []
   @waste_carrier_org_details = []
   @waste_carrier_titles = []
+  @waste_carrier_addresses = []
+  @ewc_codes = []
+  @waste_mode_of_travel = {}
 
   def self.set_test_status(key, value)
     @test_status[key] = value
@@ -17,6 +20,9 @@ module TestStatus
     @countries_waste_will_travel = []
     @waste_carrier_org_details = []
     @waste_carrier_titles = []
+    @waste_carrier_addresses = []
+    @ewc_codes = []
+    @waste_mode_of_travel = {}
   end
 
   def self.test_status(key = 'all')
@@ -24,10 +30,25 @@ module TestStatus
       @test_status['countries_list'] = @countries_waste_will_travel
       @test_status['waste_carrier_org_details'] = @waste_carrier_org_details
       @test_status['waste_carrier_titles'] = @waste_carrier_titles
+      @test_status['waste_carrier_address'] = @waste_carrier_addresses
+      @test_status['ewc_codes'] = @ewc_codes
+      @test_status['waste_mode_of_travel'] = @waste_mode_of_travel
       @test_status
     else
       @test_status[key.to_sym]
     end
+  end
+
+  def self.mode_of_travel_list(key, value)
+    @test_status[key] = value
+  end
+
+  def self.ewc_codes(ewc_code)
+    @ewc_codes.push(ewc_code)
+  end
+
+  def self.ewc_code_list
+    @ewc_codes
   end
 
   def self.countries_waste_will_travel(country)
@@ -52,6 +73,14 @@ module TestStatus
 
   def self.waste_carrier_title
     @waste_carrier_titles
+  end
+
+  def self.waste_carrier_addresses(address)
+    @waste_carrier_addresses.push(address)
+  end
+
+  def self.waste_carrier_address
+    @waste_carrier_addresses
   end
 
   def self.recovery_facilities(facility)

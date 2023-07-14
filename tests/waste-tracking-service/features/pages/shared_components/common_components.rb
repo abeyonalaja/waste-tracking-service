@@ -11,7 +11,7 @@ module CommonComponents
   PHONE_ID = 'phoneNumber'
   FAX_ID = 'faxNumber'
 
-  org_name = Faker::Company.name
+  ORG_NAME = Faker::Company.name
   NAME = Faker::Name.name
   EMAIL = Faker::Internet.email
   PHONE_NUMBER = '08123456789'
@@ -26,6 +26,12 @@ module CommonComponents
     TestStatus.set_test_status("#{page}_address".to_sym, ADDRESS)
   end
 
+  def enter_organisation_name(page)
+    org_name = Faker::Company.name
+    fill_in ORGANISATION_NAME_ID, with: org_name, visible: false
+    TestStatus.set_test_status("#{page}_org_name".to_sym, org_name)
+  end
+
   def enter_country(page)
     fill_in COUNTRY_FIELD_ID, with: COUNTRY, visible: false
     TestStatus.set_test_status("#{page}_country".to_sym, COUNTRY)
@@ -33,17 +39,19 @@ module CommonComponents
 
   def update_country(page)
     fill_in COUNTRY_FIELD_ID, with: NEW_COUNTRY, visible: false
-    TestStatus.set_test_status("#{page}_country".to_sym, NEW_COUNTRY)
+    TestStatus.set_test_status("#{page}_update__country".to_sym, NEW_COUNTRY)
   end
 
   def enter_name(page)
-    fill_in NAME_FIELD_ID, with: NAME, visible: false
-    TestStatus.set_test_status("#{page}_name".to_sym, NAME)
+    name = Faker::Name.name
+    fill_in NAME_FIELD_ID, with: name, visible: false
+    TestStatus.set_test_status("#{page}_name".to_sym, name)
   end
 
   def enter_full_name(page)
-    fill_in FULL_NAME_ID, with: NAME, visible: false
-    TestStatus.set_test_status("#{page}_full_name".to_sym, NAME)
+    full_name = Faker::Name.name
+    fill_in FULL_NAME_ID, with: full_name, visible: false
+    TestStatus.set_test_status("#{page}_full_name".to_sym, full_name)
   end
 
   def enter_email(page)

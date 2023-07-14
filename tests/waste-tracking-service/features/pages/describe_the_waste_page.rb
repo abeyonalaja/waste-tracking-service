@@ -18,4 +18,8 @@ class DescribeTheWastePage < GenericPage
   def remaining_characters
     find('description-character-remaining-text')
   end
+
+  def check_description
+    find(DESCRIPTION).text
+  end
 end

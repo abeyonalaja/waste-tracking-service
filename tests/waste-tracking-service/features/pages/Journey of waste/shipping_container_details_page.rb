@@ -15,6 +15,7 @@ class ShippingContainerDetailsPage < GenericPage
   VEHICLE_REG_HINT = Translations.value 'exportJourney.wasteCarrier.shippingContainer.vehicleRegHint'
 
   SHIPPING_NUMBER_FILED_ID = 'shippingContainerNumber'
+  VEHICLE_REG_FILED_ID = 'vehicleRegistration'
   def check_page_displayed
     # expect(self).to have_css 'h1', text: TITLE, exact_text: true
     expect(self).to have_css 'h1', text: 'Shipping container details', exact_text: true
@@ -31,6 +32,11 @@ class ShippingContainerDetailsPage < GenericPage
   def enter_container_number(container_number)
     fill_in SHIPPING_NUMBER_FILED_ID, with: container_number, visible: false
     TestStatus.set_test_status(:container_number, container_number)
+  end
+
+  def enter_vehicle_number(vehicle_number)
+    fill_in VEHICLE_REG_FILED_ID, with: vehicle_number, visible: false
+    TestStatus.set_test_status(:container_number, vehicle_number)
   end
 
   def has_reference_container_num?(location)

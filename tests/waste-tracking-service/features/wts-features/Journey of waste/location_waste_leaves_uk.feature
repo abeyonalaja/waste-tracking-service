@@ -19,7 +19,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
     And I choose "Yes" radio button
     And I enter location
     And I click the button Save and continue
-    # Then the "Do you know the location where the waste will leave the UK" page is displayed
+     Then the "Countries Waste Will Travel" page is displayed
 
   Scenario: User chose No option and click Save and continue
     Given I login to waste tracking portal
@@ -28,7 +28,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
     Then the "Location waste leaves the UK" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    # Then the "Do you know the location where the waste will leave the UK" page is displayed
+     Then the "Countries Waste Will Travel" page is displayed
 
   Scenario: User can see previously entered details displayed
     Given I login to waste tracking portal

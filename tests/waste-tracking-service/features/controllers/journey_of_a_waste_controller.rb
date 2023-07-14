@@ -2,7 +2,7 @@
 
 # Provides a way to happy path flow
 module JourneyOfAWasteController
-  def self.complete
+  def self.complete(collection_date_option = 'Yes, I’ll enter the actual date')
     location_leaves_uk_page = LocationWasteLeavesTheUkPage.new
     who_is_waste_carrier_page = WhoIsTheWasteCarrierPage.new
     collection_date_page = CollectionDatePage.new
@@ -14,8 +14,14 @@ module JourneyOfAWasteController
     contact_details_address_page = ContactDetailsCollectionAddressPage.new
     countries_waste_will_travel_page = CountriesWasteWillTravelPage.new
 
-    collection_date_page.choose_option 'Yes, I’ll enter the actual date'
-    collection_date_page.enter_actual_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
+    collection_date_page.choose_option collection_date_option
+    if collection_date_option == 'Yes, I’ll enter the actual date'
+      collection_date_page.enter_actual_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
+    end
+    if collection_date_option == 'No, I’ll enter an estimate date'
+      collection_date_page.enter_estimate_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
+    end
+
     collection_date_page.save_and_continue
     sleep(1)
     who_is_waste_carrier_page.enter_organisation_name 'CompanyLTD'
@@ -28,6 +34,7 @@ module JourneyOfAWasteController
     waste_carrier_contact_details_page.enter_phone_number '+441234567891'
     waste_carrier_contact_details_page.save_and_continue
     mode_of_transport_page.choose_option 'Shipping container'
+    TestStatus.set_test_status(:waste_carrier_mode_of_transport, 'ShippingContainer')
     mode_of_transport_page.continue
     shipping_container_page.enter_container_number 'ABCD1234567'
     shipping_container_page.save_and_continue
@@ -45,7 +52,7 @@ module JourneyOfAWasteController
     contact_details_address_page.save_and_continue
 
     location_leaves_uk_page.choose_option 'Yes'
-    location_leaves_uk_page.enter_location 'Brighton'
+    location_leaves_uk_page.enter_location 'Dover'
     location_leaves_uk_page.save_and_continue
 
     sleep(2)

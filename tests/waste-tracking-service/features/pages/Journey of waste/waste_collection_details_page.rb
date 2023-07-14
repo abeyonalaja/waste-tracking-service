@@ -31,8 +31,8 @@ class WasteCollectionDetailsPage < GenericPage
   def select_first_address
     first('selectedAddress', minimum: 1)
     find(:css, '#selectedAddress>option:nth-child(2)').select_option
-    TestStatus.set_test_status(:exporter_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
-    Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
+    TestStatus.set_test_status(:waste_collection_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
+    Log.info("Waste collection address is: #{TestStatus.test_status(:waste_collection_address)}")
   end
 
   def has_address?(address)

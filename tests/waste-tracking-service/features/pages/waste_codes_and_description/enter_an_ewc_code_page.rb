@@ -20,6 +20,19 @@ class EnterAnEwcCodePage < GenericPage
   def select_ewc_option(index)
     first('ewcCodes', minimum: 1).click
     find("ewcCodes__option--#{index}").select_option
+    TestStatus.ewc_codes(find('ewcCodes').value)
+  end
+
+  def add_ewc_codes(ewc_code)
+    (1..ewc_code).each do |i|
+      index = rand(0..834)
+      enter_an_ewc_code_page = EnterAnEwcCodePage.new
+      ewc_code_list_page = EwcCodeListPage.new
+      ewc_code_list_page.choose_option('Yes')
+      ewc_code_list_page.save_and_continue
+      enter_an_ewc_code_page.select_ewc_option index
+      enter_an_ewc_code_page.save_and_continue
+    end
   end
 
   def ewc_code_options

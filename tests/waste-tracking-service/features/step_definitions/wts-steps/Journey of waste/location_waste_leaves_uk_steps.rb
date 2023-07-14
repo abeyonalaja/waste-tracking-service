@@ -7,7 +7,7 @@ And(/^I enter location$/) do
 end
 
 Then(/^I can see previously entered location details pre-populated$/) do
-  expect(LocationWasteLeavesTheUkPage.new).to have_reference_location TestStatus.test_status('location')
+  expect(LocationWasteLeavesTheUkPage.new).to have_reference_location TestStatus.test_status('waste_leaves_UK_location')
   expect(LocationWasteLeavesTheUkPage.new.option_checked?('Yes')).to eq(true)
 end
 
