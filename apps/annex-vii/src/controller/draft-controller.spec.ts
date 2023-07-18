@@ -2343,9 +2343,9 @@ describe(DraftController, () => {
         value: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
+          ewcCodes: ['EWC1', 'EWC2'],
+          nationalCode: { provided: 'Yes', value: 'NAT' },
+          description: 'Waste Description',
         },
       });
 
@@ -2356,9 +2356,9 @@ describe(DraftController, () => {
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
+            ewcCodes: ['EWC1', 'EWC2'],
+            nationalCode: { provided: 'Yes', value: 'NAT' },
+            description: 'Waste Description',
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2400,14 +2400,11 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
             value: 'A',
           },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -2416,7 +2413,7 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: {
               type: 'AnnexIIIA',
               value: 'A',

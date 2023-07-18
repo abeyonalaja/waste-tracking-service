@@ -854,6 +854,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'NotApplicable' },
+        ewcCodes: ['EWC1', 'EWC2'],
+        nationalCode: {
+          provided: 'Yes',
+          value: 'NAT',
+        },
+        description: 'Waste Description',
       },
       wasteQuantity: {
         status: 'Complete',
@@ -923,6 +929,7 @@ describe(InMemorySubmissionBackend, () => {
     subject.submissions.set(id, mockSubmission);
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Complete');
     expect(result?.wasteQuantity.status).toBe('Complete');
     expect(result?.carriers.status).toBe('Complete');
     expect(result?.recoveryFacilityDetail.status).toBe('Complete');
@@ -936,9 +943,15 @@ describe(InMemorySubmissionBackend, () => {
     );
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+    if (result?.wasteDescription.status === 'Started') {
+      expect(result?.wasteDescription.ewcCodes).toEqual([]);
+      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
+      expect(result?.wasteDescription.description).toEqual('');
+    }
   });
 
   it('Reset quantity, carriers and recovery facility details when waste description is changed from bulk to small waste', async () => {
@@ -955,6 +968,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        ewcCodes: ['EWC1', 'EWC2'],
+        nationalCode: {
+          provided: 'Yes',
+          value: 'NAT',
+        },
+        description: 'Waste Description',
       },
       wasteQuantity: {
         status: 'Complete',
@@ -1024,6 +1043,7 @@ describe(InMemorySubmissionBackend, () => {
     subject.submissions.set(id, mockSubmission);
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Complete');
     expect(result?.wasteQuantity.status).toBe('Complete');
     expect(result?.carriers.status).toBe('Complete');
     expect(result?.recoveryFacilityDetail.status).toBe('Complete');
@@ -1037,9 +1057,15 @@ describe(InMemorySubmissionBackend, () => {
     );
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+    if (result?.wasteDescription.status === 'Started') {
+      expect(result?.wasteDescription.ewcCodes).toEqual([]);
+      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
+      expect(result?.wasteDescription.description).toEqual('');
+    }
   });
 
   it('Reset quantity, carriers and recovery facility details when waste description switches type of bulk-waste', async () => {
@@ -1056,6 +1082,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        ewcCodes: ['EWC1', 'EWC2'],
+        nationalCode: {
+          provided: 'Yes',
+          value: 'NAT',
+        },
+        description: 'Waste Description',
       },
       wasteQuantity: {
         status: 'Complete',
@@ -1125,6 +1157,7 @@ describe(InMemorySubmissionBackend, () => {
     subject.submissions.set(id, mockSubmission);
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Complete');
     expect(result?.wasteQuantity.status).toBe('Complete');
     expect(result?.carriers.status).toBe('Complete');
     expect(result?.recoveryFacilityDetail.status).toBe('Complete');
@@ -1138,9 +1171,15 @@ describe(InMemorySubmissionBackend, () => {
     );
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
+    if (result?.wasteDescription.status === 'Started') {
+      expect(result?.wasteDescription.ewcCodes).toEqual([]);
+      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
+      expect(result?.wasteDescription.description).toEqual('');
+    }
   });
 
   it('Resets status of quantity, carriers and recovery facility if input switches bulk-waste code with the same bulk-waste type', async () => {
@@ -1157,6 +1196,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        ewcCodes: ['EWC1', 'EWC2'],
+        nationalCode: {
+          provided: 'Yes',
+          value: 'NAT',
+        },
+        description: 'Waste Description',
       },
       wasteQuantity: {
         status: 'Complete',
@@ -1226,6 +1271,7 @@ describe(InMemorySubmissionBackend, () => {
     subject.submissions.set(id, mockSubmission);
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Complete');
     expect(result?.wasteQuantity.status).toBe('Complete');
     expect(result?.carriers.status).toBe('Complete');
     expect(result?.recoveryFacilityDetail.status).toBe('Complete');
@@ -1239,6 +1285,7 @@ describe(InMemorySubmissionBackend, () => {
     );
 
     result = await subject.getSubmission({ id, accountId });
+    expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('Started');
     expect(result?.carriers.status).toBe('Started');
     expect(result?.recoveryFacilityDetail.status).toBe('Started');

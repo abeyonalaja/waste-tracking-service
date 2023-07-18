@@ -279,6 +279,12 @@ export default class DraftController {
       }
 
       if (isWasteCodeChangingBulkToSmall(draft.wasteDescription, value)) {
+        if (value.status === 'Started' || value.status === 'Complete') {
+          value.ewcCodes = [];
+          value.nationalCode = { provided: 'No' };
+          value.description = '';
+        }
+
         wasteQuantity = { status: 'NotStarted' };
 
         carriers = { status: 'NotStarted', transport: false };
@@ -287,6 +293,12 @@ export default class DraftController {
       }
 
       if (isWasteCodeChangingSmallToBulk(draft.wasteDescription, value)) {
+        if (value.status === 'Started' || value.status === 'Complete') {
+          value.ewcCodes = [];
+          value.nationalCode = { provided: 'No' };
+          value.description = '';
+        }
+
         wasteQuantity = { status: 'NotStarted' };
 
         carriers = { status: 'NotStarted', transport: true };
@@ -300,6 +312,12 @@ export default class DraftController {
           value
         )
       ) {
+        if (value.status === 'Started' || value.status === 'Complete') {
+          value.ewcCodes = [];
+          value.nationalCode = { provided: 'No' };
+          value.description = '';
+        }
+
         wasteQuantity = { status: 'NotStarted' };
 
         carriers = { status: 'NotStarted', transport: true };

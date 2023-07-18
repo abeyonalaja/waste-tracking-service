@@ -374,6 +374,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     if (isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)) {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        value.ewcCodes = [];
+        value.nationalCode = { provided: 'No' };
+        value.description = '';
+      }
+
       wasteQuantity = { status: 'NotStarted' };
 
       carriers = { status: 'NotStarted', transport: false };
@@ -382,6 +388,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     if (isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)) {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        value.ewcCodes = [];
+        value.nationalCode = { provided: 'No' };
+        value.description = '';
+      }
+
       wasteQuantity = { status: 'NotStarted' };
 
       carriers = { status: 'NotStarted', transport: true };
@@ -395,6 +407,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         value
       )
     ) {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        value.ewcCodes = [];
+        value.nationalCode = { provided: 'No' };
+        value.description = '';
+      }
+
       wasteQuantity = { status: 'NotStarted' };
 
       carriers = { status: 'NotStarted', transport: true };
