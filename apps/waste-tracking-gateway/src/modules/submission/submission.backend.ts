@@ -374,10 +374,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     if (isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)) {
-      if (value.status === 'Started' || value.status === 'Complete') {
-        value.ewcCodes = [];
-        value.nationalCode = { provided: 'No' };
-        value.description = '';
+      if (value.status === 'Started') {
+        value.ewcCodes = undefined;
+        value.nationalCode = undefined;
+        value.description = undefined;
       }
 
       wasteQuantity = { status: 'NotStarted' };
@@ -388,10 +388,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     if (isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)) {
-      if (value.status === 'Started' || value.status === 'Complete') {
-        value.ewcCodes = [];
-        value.nationalCode = { provided: 'No' };
-        value.description = '';
+      if (value.status === 'Started') {
+        value.ewcCodes = undefined;
+        value.nationalCode = undefined;
+        value.description = undefined;
       }
 
       wasteQuantity = { status: 'NotStarted' };
@@ -407,10 +407,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         value
       )
     ) {
-      if (value.status === 'Started' || value.status === 'Complete') {
-        value.ewcCodes = [];
-        value.nationalCode = { provided: 'No' };
-        value.description = '';
+      if (value.status === 'Started') {
+        value.ewcCodes = undefined;
+        value.nationalCode = undefined;
+        value.description = undefined;
       }
 
       wasteQuantity = { status: 'NotStarted' };
@@ -423,6 +423,12 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (
       isWasteCodeChangingBulkToBulkSameType(submission.wasteDescription, value)
     ) {
+      if (value.status === 'Started') {
+        value.ewcCodes = undefined;
+        value.nationalCode = undefined;
+        value.description = undefined;
+      }
+
       if (
         submission.wasteQuantity.status !== 'CannotStart' &&
         submission.wasteQuantity.status !== 'NotStarted'

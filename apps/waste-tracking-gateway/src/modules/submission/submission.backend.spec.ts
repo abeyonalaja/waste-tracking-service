@@ -874,13 +874,9 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: { status: 'NotStarted' },
       carriers: {
         status: 'Complete',
-        transport: true,
+        transport: false,
         values: [
           {
-            transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
-            },
             addressDetails: {
               address: faker.datatype.string(),
               country: faker.datatype.string(),
@@ -946,11 +942,12 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.carriers.transport).toBe(true);
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
     if (result?.wasteDescription.status === 'Started') {
-      expect(result?.wasteDescription.ewcCodes).toEqual([]);
-      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
-      expect(result?.wasteDescription.description).toEqual('');
+      expect(result?.wasteDescription.ewcCodes).toBeUndefined();
+      expect(result?.wasteDescription.nationalCode).toBeUndefined();
+      expect(result?.wasteDescription.description).toBeUndefined();
     }
   });
 
@@ -1060,11 +1057,12 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.carriers.transport).toBe(false);
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
     if (result?.wasteDescription.status === 'Started') {
-      expect(result?.wasteDescription.ewcCodes).toEqual([]);
-      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
-      expect(result?.wasteDescription.description).toEqual('');
+      expect(result?.wasteDescription.ewcCodes).toBeUndefined();
+      expect(result?.wasteDescription.nationalCode).toBeUndefined();
+      expect(result?.wasteDescription.description).toBeUndefined();
     }
   });
 
@@ -1174,11 +1172,12 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('NotStarted');
     expect(result?.carriers.status).toBe('NotStarted');
+    expect(result?.carriers.transport).toBe(true);
     expect(result?.recoveryFacilityDetail.status).toBe('NotStarted');
     if (result?.wasteDescription.status === 'Started') {
-      expect(result?.wasteDescription.ewcCodes).toEqual([]);
-      expect(result?.wasteDescription.nationalCode).toEqual({ provided: 'No' });
-      expect(result?.wasteDescription.description).toEqual('');
+      expect(result?.wasteDescription.ewcCodes).toBeUndefined();
+      expect(result?.wasteDescription.nationalCode).toBeUndefined();
+      expect(result?.wasteDescription.description).toBeUndefined();
     }
   });
 
@@ -1288,6 +1287,12 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.wasteDescription.status).toBe('Started');
     expect(result?.wasteQuantity.status).toBe('Started');
     expect(result?.carriers.status).toBe('Started');
+    expect(result?.carriers.transport).toBe(true);
     expect(result?.recoveryFacilityDetail.status).toBe('Started');
+    if (result?.wasteDescription.status === 'Started') {
+      expect(result?.wasteDescription.ewcCodes).toBeUndefined();
+      expect(result?.wasteDescription.nationalCode).toBeUndefined();
+      expect(result?.wasteDescription.description).toBeUndefined();
+    }
   });
 });

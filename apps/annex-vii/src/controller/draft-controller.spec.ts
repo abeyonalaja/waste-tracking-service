@@ -316,11 +316,8 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: { type: 'NotApplicable' },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -329,11 +326,8 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -442,11 +436,8 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: { type: 'NotApplicable' },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -455,11 +446,8 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -565,14 +553,11 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
             value: 'A',
           },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -581,14 +566,11 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: {
               type: 'AnnexIIIA',
               value: 'A',
             },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -697,14 +679,11 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: {
             type: 'AnnexIIIB',
             value: 'A',
           },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -713,14 +692,11 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: {
               type: 'AnnexIIIB',
               value: 'A',
             },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -868,14 +844,11 @@ describe(DraftController, () => {
         id,
         accountId,
         value: {
-          status: 'Complete',
+          status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
             value: 'Z',
           },
-          ewcCodes: [],
-          nationalCode: { provided: 'No' },
-          description: '',
         },
       });
 
@@ -884,14 +857,11 @@ describe(DraftController, () => {
           id,
           reference: null,
           wasteDescription: {
-            status: 'Complete',
+            status: 'Started',
             wasteCode: {
               type: 'AnnexIIIA',
               value: 'Z',
             },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
           },
           wasteQuantity: {
             status: 'Started',
@@ -2387,15 +2357,6 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalled();
       expect(response.success).toBe(true);
 
-      response = await subject.createDraftRecoveryFacilityDetails({
-        id,
-        accountId,
-        value: { status: 'Started' },
-      });
-
-      expect(mockRepository.saveDraft).toBeCalled();
-      expect(response.success).toBe(true);
-
       await subject.setDraftWasteDescriptionById({
         id,
         accountId,
@@ -2418,9 +2379,9 @@ describe(DraftController, () => {
               type: 'AnnexIIIA',
               value: 'A',
             },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
+            ewcCodes: undefined,
+            nationalCode: undefined,
+            description: undefined,
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2443,15 +2404,6 @@ describe(DraftController, () => {
       response = await subject.createDraftRecoveryFacilityDetails({
         id,
         accountId: accountId,
-        value: { status: 'Started' },
-      });
-
-      expect(mockRepository.saveDraft).toBeCalled();
-      expect(response.success).toBe(true);
-
-      response = await subject.createDraftRecoveryFacilityDetails({
-        id,
-        accountId,
         value: { status: 'Started' },
       });
 

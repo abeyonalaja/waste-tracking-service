@@ -279,10 +279,10 @@ export default class DraftController {
       }
 
       if (isWasteCodeChangingBulkToSmall(draft.wasteDescription, value)) {
-        if (value.status === 'Started' || value.status === 'Complete') {
-          value.ewcCodes = [];
-          value.nationalCode = { provided: 'No' };
-          value.description = '';
+        if (value.status === 'Started') {
+          value.ewcCodes = undefined;
+          value.nationalCode = undefined;
+          value.description = undefined;
         }
 
         wasteQuantity = { status: 'NotStarted' };
@@ -293,10 +293,10 @@ export default class DraftController {
       }
 
       if (isWasteCodeChangingSmallToBulk(draft.wasteDescription, value)) {
-        if (value.status === 'Started' || value.status === 'Complete') {
-          value.ewcCodes = [];
-          value.nationalCode = { provided: 'No' };
-          value.description = '';
+        if (value.status === 'Started') {
+          value.ewcCodes = undefined;
+          value.nationalCode = undefined;
+          value.description = undefined;
         }
 
         wasteQuantity = { status: 'NotStarted' };
@@ -312,10 +312,10 @@ export default class DraftController {
           value
         )
       ) {
-        if (value.status === 'Started' || value.status === 'Complete') {
-          value.ewcCodes = [];
-          value.nationalCode = { provided: 'No' };
-          value.description = '';
+        if (value.status === 'Started') {
+          value.ewcCodes = undefined;
+          value.nationalCode = undefined;
+          value.description = undefined;
         }
 
         wasteQuantity = { status: 'NotStarted' };
@@ -328,6 +328,12 @@ export default class DraftController {
       if (
         isWasteCodeChangingBulkToBulkSameType(draft.wasteDescription, value)
       ) {
+        if (value.status === 'Started') {
+          value.ewcCodes = undefined;
+          value.nationalCode = undefined;
+          value.description = undefined;
+        }
+
         if (
           draft.wasteQuantity.status !== 'CannotStart' &&
           draft.wasteQuantity.status !== 'NotStarted'
