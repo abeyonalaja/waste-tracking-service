@@ -20,10 +20,10 @@ export const validateReference: (
   if (reference.length === 1)
     return 'Enter a reference using more than 1 character';
 
-  if (reference.length > 50)
-    return 'Enter a reference using 50 character or less';
+  if (reference.length > 20)
+    return 'Enter a reference using 20 character or less';
 
-  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
+  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,20}$');
   if (!regex.test(reference))
     return 'The reference must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };

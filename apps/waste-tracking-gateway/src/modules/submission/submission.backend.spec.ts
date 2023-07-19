@@ -26,8 +26,8 @@ describe(InMemorySubmissionBackend, () => {
     expect(result.id).toEqual(id);
   });
 
-  it('bad request if reference more than 50 chars', () => {
-    const reference = faker.datatype.string(51);
+  it('bad request if reference more than 20 chars', () => {
+    const reference = faker.datatype.string(21);
     expect(
       subject.createSubmission(accountId, reference)
     ).rejects.toHaveProperty('isBoom', true);

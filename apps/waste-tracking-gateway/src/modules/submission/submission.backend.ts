@@ -256,9 +256,9 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     _: string,
     reference: CustomerReference
   ): Promise<Submission> {
-    if (reference && reference.length > 50) {
+    if (reference && reference.length > 20) {
       return Promise.reject(
-        Boom.badRequest('Supplied reference cannot exceed 50 characters')
+        Boom.badRequest('Supplied reference cannot exceed 20 characters')
       );
     }
 
@@ -314,9 +314,9 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    if (value && value.length > 50) {
+    if (value && value.length > 20) {
       return Promise.reject(
-        Boom.badRequest('Supplied reference cannot exceed 50 characters')
+        Boom.badRequest('Supplied reference cannot exceed 20 characters')
       );
     }
 

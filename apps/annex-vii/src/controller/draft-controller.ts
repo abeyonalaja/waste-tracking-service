@@ -156,6 +156,12 @@ export default class DraftController {
   createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
     async ({ accountId, reference }) => {
       try {
+        if (reference && reference.length > 20) {
+          return fromBoom(
+            Boom.badRequest('Supplied reference cannot exceed 20 characters')
+          );
+        }
+
         const value: DraftSubmission = {
           id: uuidv4(),
           reference,
@@ -211,6 +217,12 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      if (value && value.length > 20) {
+        return fromBoom(
+          Boom.badRequest('Supplied reference cannot exceed 20 characters')
+        );
+      }
+
       draft.reference = value;
 
       draft.submissionConfirmation = this.setSubmissionConfirmation(draft);
