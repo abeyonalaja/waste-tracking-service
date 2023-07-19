@@ -57,3 +57,7 @@ end
 When(/^I complete the Journey of a waste section with estimated collection date$/) do
   JourneyOfAWasteController.complete 'No, I’ll enter an estimate date'
 end
+
+And(/^I complete the Journey of a waste section with small waste$/) do
+  JourneyOfAWasteSmallWasteController.complete
+end

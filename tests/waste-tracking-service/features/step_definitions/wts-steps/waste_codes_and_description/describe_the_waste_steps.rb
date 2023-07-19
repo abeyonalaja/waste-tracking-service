@@ -12,3 +12,7 @@ end
 Then(/^I should see previously entered waste description details$/) do
   expect(DescribeTheWastePage.new.check_description).to eq(TestStatus.test_status(:description_of_the_waste))
 end
+
+And(/^I verify data is wiped out$/) do
+  expect(page).to have_field('description', with: '')
+end

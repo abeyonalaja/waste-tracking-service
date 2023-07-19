@@ -302,3 +302,11 @@ end
 Then(/^I should see warning text on check your report page$/) do
   CheckYourReportPage.new.check_warning_text
 end
+
+And(/^I verify Change waste code page is translated correctly$/) do
+  ChangeWasteCodePage.new.check_page_translation
+end
+
+And(/^I click Continue and change waste code button$/) do
+  ChangeWasteCodePage.new.change_waste_code_button
+end

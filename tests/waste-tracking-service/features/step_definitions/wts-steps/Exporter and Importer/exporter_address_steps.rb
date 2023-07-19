@@ -36,6 +36,7 @@ When(/^I change exporter address with new address$/) do
   ExporterAddressPage.new.address_line_1 'Seacole Building'
   ExporterAddressPage.new.address_line_2 '2 Marsham St'
   ExporterAddressPage.new.town_city 'London'
+  EnterExporterAddressManualPage.new.select_first_country_option
   ExporterAddressPage.new.exporter_postcode 'SW1P 4DF'
   TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,SW1P 4DF,England')
 end

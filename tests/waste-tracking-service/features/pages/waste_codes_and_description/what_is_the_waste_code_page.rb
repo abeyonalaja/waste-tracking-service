@@ -27,6 +27,19 @@ class WhatIsTheWasteCodePage < GenericPage
     TestStatus.set_test_status(:waste_code_description, first('BaselAnnexIXCode').value)
   end
 
+  def select_second_BaselAnnexIX_option
+    fill_in 'BaselAnnexIXCode', with: ''
+    first('BaselAnnexIXCode', minimum: 1).click
+    first('BaselAnnexIXCode__option--1', minimum: 1).select_option
+    TestStatus.set_test_status(:waste_code_description, first('BaselAnnexIXCode').value)
+  end
+
+  def select_first_OECD_option
+    first('OecdCode', minimum: 1).click
+    first('OecdCode__option--0', minimum: 1).select_option
+    TestStatus.set_test_status(:waste_code_description, first('OecdCode').value)
+  end
+
   def waste_code_options
     {
       'Basel Annex IX' => 'wasteCodeCategoryBaselAnnexIX',

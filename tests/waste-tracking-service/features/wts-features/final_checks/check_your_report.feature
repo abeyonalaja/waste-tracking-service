@@ -47,12 +47,14 @@ Feature: AS A Waste Practitioner
     When I click the "Check your report" link
     Then the "check your report" page is displayed
     When I click waste code Change link
+    Then the "Change waste code" page is displayed
+    And I click Continue and change waste code button
     Then the "what is the waste code" page is displayed
     And "Basel Annex IX" is still selected
     When I update Waste codes and description task with Not applicable has waste code
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"
-    Then the task "Waste carriers" should be "IN PROGRESS"
+    Then the task "Waste carriers" should be "NOT STARTED"
     Then the task "Laboratory details" should be "NOT STARTED"
     Then the task "Check your report" should be "CANNOT START YET"
 

@@ -273,5 +273,9 @@
   "exportJourney.checkAnswers.wasteDescription": "Waste description",
   "exportJourney.checkAnswers.wasteQuantity": "Waste quantity",
   "exportJourney.checkAnswers.ewcCodes": "EWC codes",
-  "exportJourney.checkAnswers.estimated": "Estimated"
+  "exportJourney.checkAnswers.estimated": "Estimated",
+  "exportJourney.checkAnswers.changeWasteCode.pageTitle": "You are changing your waste code",
+  "exportJourney.checkAnswers.changeWasteCode.heading": "You are changing your waste code",
+  "exportJourney.checkAnswers.changeWasteCode.paragraph": "If you need to change your waste code, this may affect other answers in this form that you may also need to update.",
+  "exportJourney.checkAnswers.changeWasteCode.confirmButton": "Continue and change the code"
 }

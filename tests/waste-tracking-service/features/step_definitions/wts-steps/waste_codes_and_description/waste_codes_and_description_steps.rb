@@ -56,3 +56,11 @@ When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$
   QuantityOfWastePage.new.back
   DescribeTheWastePage.new.save_and_return
 end
+
+And(/^I select first OECD code$/) do
+  WhatIsTheWasteCodePage.new.select_first_OECD_option
+end
+
+And(/^I select new Basel Annex IX code$/) do
+  WhatIsTheWasteCodePage.new.select_second_BaselAnnexIX_option
+end

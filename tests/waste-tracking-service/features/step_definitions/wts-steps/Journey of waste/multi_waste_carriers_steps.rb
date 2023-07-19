@@ -1,5 +1,6 @@
 And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier, mode_of_transport|
   waste_carrier_org_name = "#{waste_carrier} WTS Organisation"
+  waste_carrier_title = "#{waste_carrier} waste carrier"
   waste_carrier_address = "#{waste_carrier} waste carrier address"
   sleep 1
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
@@ -11,6 +12,7 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
+  TestStatus.waste_carrier_titles(waste_carrier_title)
   TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)
   WhatAreTheWasteCarriersContactDetailsPage.new.save_and_continue

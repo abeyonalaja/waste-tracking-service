@@ -15,3 +15,7 @@ end
 Then(/^I should see (\d+) EWC code added to the export$/) do |no_of_ewc_codes|
   expect(page).to have_text("You have added #{no_of_ewc_codes} EWC codes")
 end
+
+Then(/^EWC code page is display with no ewc codes$/) do
+  expect(page).to have_text('You have added 0 EWC codes')
+end

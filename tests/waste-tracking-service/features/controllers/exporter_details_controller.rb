@@ -6,6 +6,8 @@ module ExporterDetailsController
     submit_an_export_page = SubmitAnExportPage.new
     submit_an_export_page.exporter_details
     exporter_address_page = ExporterAddressPage.new
+
+    sleep 1
     if _postcode
       postcode = 'ng23lq'
       exporter_address_page.enter_postcode postcode
