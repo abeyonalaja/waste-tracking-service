@@ -2196,7 +2196,6 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Complete',
-          declaration: true,
         },
       });
       console.log(await subject.getDraftById({ id, accountId }));
@@ -2221,7 +2220,6 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Complete',
-          declaration: true,
         },
       });
 
@@ -2249,7 +2247,10 @@ describe(DraftController, () => {
       };
       mockSubmission.submissionDeclaration = {
         status: 'Complete',
-        declaration: true,
+        values: {
+          declarationTimestamp: new Date(),
+          transactionId: '2307_1234ABCD',
+        },
       };
       mockRepository.getDraft.mockResolvedValue(mockSubmission);
 

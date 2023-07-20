@@ -982,7 +982,7 @@ describe('validatePutSubmissionDeclarationRequest', () => {
 
     expect(
       validate({
-        status: 'Complete',
+        status: 'Test',
       })
     ).toBe(false);
   });
@@ -999,7 +999,6 @@ describe('validatePutSubmissionDeclarationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        declaration: true,
       })
     ).toBe(true);
   });

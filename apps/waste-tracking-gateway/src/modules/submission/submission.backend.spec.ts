@@ -354,166 +354,6 @@ describe(InMemorySubmissionBackend, () => {
     }
   });
 
-  let date = add(new Date(), { days: 1 });
-  let id = faker.datatype.uuid();
-
-  const mockInvalidDateSubmission = {
-    id: id,
-    reference: 'abc',
-    wasteDescription: {
-      wasteCode: {
-        type: faker.datatype.string(),
-        value: faker.datatype.string(),
-      },
-      ewcCodes: [faker.datatype.string()],
-      nationalCode: {
-        provided: 'Yes',
-        value: faker.datatype.string(),
-      },
-      status: 'Complete',
-      description: faker.datatype.string(),
-    },
-    wasteQuantity: {
-      status: 'Complete',
-      value: {
-        type: 'ActualData',
-        quantityType: 'Weight',
-        value: faker.datatype.number(),
-      },
-    },
-    exporterDetail: {
-      exporterAddress: {
-        country: faker.datatype.string(),
-        postcode: faker.datatype.string(),
-        townCity: faker.datatype.string(),
-        addressLine1: faker.datatype.string(),
-        addressLine2: faker.datatype.string(),
-      },
-      status: 'Complete',
-      exporterContactDetails: {
-        organisationName: faker.datatype.string(),
-        fullName: faker.datatype.string(),
-        emailAddress: faker.datatype.string(),
-        phoneNumber: faker.datatype.string(),
-      },
-    },
-    importerDetail: {
-      importerAddressDetails: {
-        address: faker.datatype.string(),
-        country: faker.datatype.string(),
-        organisationName: faker.datatype.string(),
-      },
-      status: 'Complete',
-      importerContactDetails: {
-        fullName: faker.datatype.string(),
-        emailAddress: faker.datatype.string(),
-        phoneNumber: faker.datatype.string(),
-      },
-    },
-    collectionDate: {
-      status: 'Complete',
-      value: {
-        type: 'ActualDate',
-        year: date.getFullYear().toString(),
-        month: (date.getMonth() + 1).toString().padStart(2, '0'),
-        day: date.getDate().toString().padStart(2, '0'),
-      },
-    },
-    carriers: {
-      status: 'Complete',
-      transport: true,
-      values: [
-        {
-          transportDetails: {
-            imo: faker.datatype.string(),
-            type: 'BulkVessel',
-          },
-          addressDetails: {
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
-            organisationName: faker.datatype.string(),
-          },
-          contactDetails: {
-            emailAddress: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-          },
-          id: faker.datatype.uuid(),
-        },
-      ],
-    },
-    collectionDetail: {
-      status: 'Complete',
-      address: {
-        addressLine1: faker.datatype.string(),
-        addressLine2: faker.datatype.string(),
-        townCity: faker.datatype.string(),
-        postcode: faker.datatype.string(),
-        country: faker.datatype.string(),
-      },
-      contactDetails: {
-        organisationName: faker.datatype.string(),
-        fullName: faker.datatype.string(),
-        emailAddress: faker.datatype.string(),
-        phoneNumber: faker.datatype.string(),
-      },
-    },
-    ukExitLocation: {
-      status: 'Complete',
-      exitLocation: {
-        provided: 'Yes',
-        value: faker.datatype.string(),
-      },
-    },
-    transitCountries: {
-      status: 'Complete',
-      values: ['Albania (AL)'],
-    },
-    recoveryFacilityDetail: {
-      status: 'Complete',
-      values: [
-        {
-          addressDetails: {
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
-            name: faker.datatype.string(),
-          },
-          contactDetails: {
-            emailAddress: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-          },
-          recoveryFacilityType: {
-            type: 'Laboratory',
-            disposalCode: 'D1',
-          },
-          id: faker.datatype.uuid(),
-        },
-      ],
-    },
-    submissionConfirmation: {
-      status: 'NotStarted',
-    },
-    submissionDeclaration: {
-      status: 'CannotStart',
-    },
-  } as Submission;
-
-  date = add(new Date(), { weeks: 2 });
-
-  const mockValidSubmission = { ...mockInvalidDateSubmission };
-  mockValidSubmission.collectionDate = {
-    status: 'Complete',
-    value: {
-      type: 'ActualDate',
-      year: date.getFullYear().toString(),
-      month: (date.getMonth() + 1).toString().padStart(2, '0'),
-      day: date.getDate().toString().padStart(2, '0'),
-    },
-  };
-
   it('rejects invalid set submission confirmation request', async () => {
     const { id } = await subject.createSubmission(accountId, null);
 
@@ -548,6 +388,166 @@ describe(InMemorySubmissionBackend, () => {
 
   it('accepts valid set submission confirmation request', async () => {
     const { id } = await subject.createSubmission(accountId, null);
+
+    let date = add(new Date(), { days: 1 });
+
+    const mockInvalidDateSubmission = {
+      id: id,
+      reference: 'abc',
+      wasteDescription: {
+        wasteCode: {
+          type: faker.datatype.string(),
+          value: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        status: 'Complete',
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        status: 'Complete',
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        status: 'Complete',
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: {
+        status: 'CannotStart',
+      },
+    } as Submission;
+
+    date = add(new Date(), { weeks: 2 });
+
+    const mockValidSubmission = { ...mockInvalidDateSubmission };
+    mockValidSubmission.collectionDate = {
+      status: 'Complete',
+      value: {
+        type: 'ActualDate',
+        year: date.getFullYear().toString(),
+        month: (date.getMonth() + 1).toString().padStart(2, '0'),
+        day: date.getDate().toString().padStart(2, '0'),
+      },
+    };
+
     subject.submissions.set(id, mockValidSubmission);
     expect(
       subject.getSubmissionConfirmation({ id, accountId })
@@ -586,49 +586,155 @@ describe(InMemorySubmissionBackend, () => {
     ).resolves.toEqual({ status: 'NotStarted' });
   });
 
-  it('updates the status of the submission confirmation based on the state of the submission', async () => {
-    id = (await subject.createSubmission(accountId, null)).id;
-    subject.submissions.set(id, mockValidSubmission);
+  it('Resets collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
 
-    expect(
-      subject.getSubmissionConfirmation({ id, accountId })
-    ).resolves.toEqual({ status: 'NotStarted' });
+    const date = add(new Date(), { days: 1 });
 
-    const SubmissionConfirmationRequest = {
-      status: 'Complete',
-      confirmation: true,
-    } as SubmissionConfirmation;
-    expect(
-      subject.setSubmissionConfirmation(
-        { id, accountId },
-        SubmissionConfirmationRequest
-      )
-    ).resolves;
-
-    subject.setExitLocation({ id, accountId }, { status: 'NotStarted' });
-
-    expect(
-      subject.getSubmissionConfirmation({ id, accountId })
-    ).resolves.toEqual({ status: 'CannotStart' });
-
-    subject.setExitLocation(
-      { id, accountId },
-      {
+    const mockInvalidDateSubmission = {
+      id: id,
+      reference: 'abc',
+      wasteDescription: {
+        wasteCode: {
+          type: faker.datatype.string(),
+          value: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        status: 'Complete',
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        status: 'Complete',
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        status: 'Complete',
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
         status: 'Complete',
         exitLocation: {
           provided: 'Yes',
           value: faker.datatype.string(),
         },
-      }
-    );
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: {
+        status: 'CannotStart',
+      },
+    } as Submission;
 
-    expect(
-      subject.getSubmissionConfirmation({ id, accountId })
-    ).resolves.toEqual({ status: 'NotStarted' });
-  });
-
-  it('Resets collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
     subject.submissions.set(id, mockInvalidDateSubmission);
 
     expect(
@@ -655,7 +761,6 @@ describe(InMemorySubmissionBackend, () => {
 
     const setSubmissionDeclarationRequest = {
       status: 'Complete',
-      declaration: true,
     } as SubmissionDeclaration;
 
     expect(
@@ -682,41 +787,177 @@ describe(InMemorySubmissionBackend, () => {
     ).rejects.toHaveProperty('isBoom', true);
   });
 
-  it('accepts valid set submission declaration request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
-
-    subject.submissions.set(id, mockValidSubmission);
-    subject.setSubmissionConfirmation(
-      { id, accountId },
-      { status: 'Complete', confirmation: true }
-    );
-
-    expect(
-      subject.getSubmissionDeclaration({ id, accountId })
-    ).resolves.toEqual({ status: 'NotStarted' });
-
-    const SubmissionDeclarationRequest = {
-      status: 'Complete',
-      declaration: true,
-    } as SubmissionDeclaration;
-    expect(
-      subject.setSubmissionDeclaration(
-        { id, accountId },
-        SubmissionDeclarationRequest
-      )
-    ).resolves;
-  });
-
   it('updates the status of the submission declaration based on the state of the submission confirmation', async () => {
-    id = (await subject.createSubmission(accountId, null)).id;
+    const id = (await subject.createSubmission(accountId, null)).id;
+
+    let date = add(new Date(), { days: 1 });
+
+    const mockInvalidDateSubmission = {
+      id: id,
+      reference: 'abc',
+      wasteDescription: {
+        wasteCode: {
+          type: faker.datatype.string(),
+          value: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        status: 'Complete',
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          quantityType: 'Weight',
+          value: faker.datatype.number(),
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        status: 'Complete',
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        status: 'Complete',
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: {
+        status: 'CannotStart',
+      },
+    } as Submission;
+
+    date = add(new Date(), { weeks: 2 });
+
+    const mockValidSubmission = { ...mockInvalidDateSubmission };
+    mockValidSubmission.collectionDate = {
+      status: 'Complete',
+      value: {
+        type: 'ActualDate',
+        year: date.getFullYear().toString(),
+        month: (date.getMonth() + 1).toString().padStart(2, '0'),
+        day: date.getDate().toString().padStart(2, '0'),
+      },
+    };
+
     subject.submissions.set(id, mockValidSubmission);
 
     expect(
       subject.getSubmissionConfirmation({ id, accountId })
-    ).resolves.toEqual({ status: 'Complete', confirmation: true });
+    ).resolves.toEqual({ status: 'NotStarted' });
+
     expect(
       subject.getSubmissionDeclaration({ id, accountId })
-    ).resolves.toEqual({ status: 'Complete', declaration: true });
+    ).resolves.toEqual({ status: 'CannotStart' });
 
     subject.setExitLocation({ id, accountId }, { status: 'NotStarted' });
 
@@ -757,19 +998,16 @@ describe(InMemorySubmissionBackend, () => {
       subject.getSubmissionDeclaration({ id, accountId })
     ).resolves.toEqual({ status: 'NotStarted' });
 
-    expect(
-      subject.setSubmissionDeclaration(
-        { id, accountId },
-        {
-          status: 'Complete',
-          declaration: true,
-        }
-      )
-    ).resolves;
+    subject.setSubmissionDeclaration(
+      { id, accountId },
+      {
+        status: 'Complete',
+      }
+    );
 
     expect(
-      subject.getSubmissionDeclaration({ id, accountId })
-    ).resolves.toEqual({ status: 'Complete', declaration: true });
+      (await subject.getSubmissionDeclaration({ id, accountId })).status
+    ).toEqual('Complete');
   });
 
   it('Reset recovery facility when waste description is changed from Non-Laboratory to Laborarory', async () => {

@@ -215,11 +215,16 @@ export type SubmissionConfirmation =
       confirmation: boolean;
     };
 
+export type SubmissionDeclarationData = {
+  declarationTimestamp: Date;
+  transactionId: string;
+};
+
 export type SubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
-      declaration: boolean;
+      values: SubmissionDeclarationData;
     };
 
 export type Submission = {
@@ -291,6 +296,9 @@ export type SetRecoveryFacilityDetailResponse = RecoveryFacilityDetail;
 export type PutSubmissionConfirmationRequest = SubmissionConfirmation;
 export type PutSubmissionConfirmationResponse = SubmissionConfirmation;
 export type GetSubmissionConfirmationResponse = SubmissionConfirmation;
-export type PutSubmissionDeclarationRequest = SubmissionDeclaration;
+export type PutSubmissionDeclarationRequest = Omit<
+  SubmissionDeclaration,
+  'values'
+>;
 export type PutSubmissionDeclarationResponse = SubmissionDeclaration;
 export type GetSubmissionDeclarationResponse = SubmissionDeclaration;

@@ -573,13 +573,6 @@ export const validatePutSubmissionConfirmationRequest =
 
 export const validatePutSubmissionDeclarationRequest =
   ajv.compile<PutSubmissionDeclarationRequest>({
-    definitions: {
-      submissionDeclaration: {
-        properties: {
-          declation: { type: 'boolean' },
-        },
-      },
-    },
     discriminator: 'status',
     mapping: {
       CannotStart: {
@@ -589,9 +582,7 @@ export const validatePutSubmissionDeclarationRequest =
         properties: {},
       },
       Complete: {
-        properties: {
-          declaration: { type: 'boolean' },
-        },
+        properties: {},
       },
     },
   });

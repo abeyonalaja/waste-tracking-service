@@ -594,7 +594,12 @@ const draftSubmissionDeclaration: SchemaObject = {
     },
     Complete: {
       properties: {
-        declaration: { type: 'boolean' },
+        values: {
+          properties: {
+            declarationTimestamp: { type: 'string' },
+            transactionId: { type: 'string' },
+          },
+        },
       },
     },
   },
@@ -1204,7 +1209,13 @@ export const setDraftSubmissionDeclarationByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: draftSubmissionDeclaration,
+    value: {
+      properties: {
+        status: {
+          enum: ['CannotStart', 'NotStarted', 'Complete'],
+        },
+      },
+    },
   },
 };
 

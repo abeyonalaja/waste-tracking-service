@@ -189,7 +189,7 @@ export interface SubmissionBackend {
   getSubmissionDeclaration(ref: SubmissionRef): Promise<SubmissionDeclaration>;
   setSubmissionDeclaration(
     ref: SubmissionRef,
-    value: SubmissionDeclaration
+    value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void>;
 }
 
@@ -1085,7 +1085,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   setSubmissionDeclaration(
     { id }: SubmissionRef,
-    value: SubmissionDeclaration
+    value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
@@ -1105,8 +1105,26 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.badRequest('Invalid collection date'));
     }
 
-    submission.submissionDeclaration = value;
-    this.submissions.set(id, submission);
+    if (
+      value.status === 'Complete' &&
+      submission.submissionDeclaration.status === 'NotStarted'
+    ) {
+      const timeStamp = new Date();
+      const transactionId =
+        timeStamp.getFullYear().toString().substring(2) +
+        (timeStamp.getMonth() + 1).toString().padStart(2, '0') +
+        '_' +
+        id.substring(0, 8).toUpperCase();
+      submission.submissionDeclaration = {
+        status: value.status,
+        values: {
+          declarationTimestamp: timeStamp,
+          transactionId: transactionId,
+        },
+      };
+      this.submissions.set(id, submission);
+    }
+
     return Promise.resolve();
   }
 }
@@ -1896,7 +1914,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
 
   async setSubmissionDeclaration(
     { id, accountId }: SubmissionRef,
-    value: SubmissionDeclaration
+    value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void> {
     let response: SetDraftSubmissionDeclarationByIdResponse;
     try {

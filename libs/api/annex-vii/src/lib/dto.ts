@@ -231,11 +231,16 @@ export type DraftSubmissionConfirmation =
       confirmation: boolean;
     };
 
+export type DraftSubmissionDeclarationData = {
+  declarationTimestamp: Date;
+  transactionId: string;
+};
+
 export type DraftSubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
-      declaration: boolean;
+      values: DraftSubmissionDeclarationData;
     };
 
 export type DraftSubmission = {
@@ -537,7 +542,7 @@ export const getDraftSubmissionDeclarationById: Method = {
 };
 
 export type SetDraftSubmissionDeclarationByIdRequest = IdRequest &
-  AccountIdRequest & { value: DraftSubmissionDeclaration };
+  AccountIdRequest & { value: Omit<DraftSubmissionDeclaration, 'values'> };
 export type SetDraftSubmissionDeclarationByIdResponse = Response<void>;
 export const setDraftSubmissionDeclarationById: Method = {
   name: 'setDraftSubmissionDeclarationById',

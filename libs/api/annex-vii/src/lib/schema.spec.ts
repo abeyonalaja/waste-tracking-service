@@ -689,7 +689,6 @@ describe('setDraftSubmissionDeclarationByIdRequest', () => {
       accountId: faker.datatype.uuid(),
       value: {
         status: 'Complete',
-        declaration: faker.datatype.boolean(),
       },
     };
 
