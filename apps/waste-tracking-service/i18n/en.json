@@ -288,5 +288,12 @@
   "exportJourney.checkAnswers.changeWasteCode.pageTitle": "You are changing your waste code",
   "exportJourney.checkAnswers.changeWasteCode.heading": "You are changing your waste code",
   "exportJourney.checkAnswers.changeWasteCode.paragraph": "If you need to change your waste code, this may affect other answers in this form that you may also need to update.",
-  "exportJourney.checkAnswers.changeWasteCode.confirmButton": "Continue and change the code"
+  "exportJourney.checkAnswers.changeWasteCode.confirmButton": "Continue and change the code",
+  "exportJourney.checkAnswers.signDeclaration.title": "Sign declaration",
+  "exportJourney.checkAnswers.signDeclaration.paragraph": "By submitting this form, you agree that the information you have provided is accurate. You are confirming that:",
+  "exportJourney.checkAnswers.signDeclaration.listItemOne": "all the information you've provided is complete and correct to the best of your knowledge",
+  "exportJourney.checkAnswers.signDeclaration.listItemTwo": "there is an effective written contractual obligation with the consignee",
+  "exportJourney.checkAnswers.signDeclaration.listItemThree": "you've checked with the relevant authorities if there are any local controls that apply in any country involved in the journey of the waste",
+  "exportJourney.checkAnswers.signDeclaration.listItemFour": "you've classified the waste appropriately",
+  "exportJourney.checkAnswers.signDeclaration.confirmButton": "I confirm-submit form"
 }

@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useReducer,
+  useCallback,
+  FormEvent,
+} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -229,6 +235,40 @@ const CheckYourReport = () => {
     });
     return sections.length === completedSections.length;
   };
+  const handleSubmit = useCallback(
+    (e: FormEvent, returnToDraft = false) => {
+      fetch(
+        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/submission-confirmation`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: 'Complete',
+            confirmation: true,
+          }),
+        }
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            const path = returnToDraft
+              ? '/submit-an-export-tasklist'
+              : '/sign-declaration';
+            router.push({
+              pathname: path,
+              query: { id },
+            });
+          }
+        });
+
+      e.preventDefault();
+    },
+    [id, router, checkYourReportPage.data]
+  );
 
   const BreadCrumbs = () => {
     return (
@@ -1583,9 +1623,9 @@ const CheckYourReport = () => {
                 </Accordion>
               </GovUK.GridCol>
             </GovUK.GridRow>
-
+            {/* sign-declaration */}
             <ButtonGroup>
-              <GovUK.Button id="saveButton">
+              <GovUK.Button id="saveButton" onClick={handleSubmit}>
                 {t('exportJourney.checkAnswers.conformButton')}
               </GovUK.Button>
               <SaveReturnButton
