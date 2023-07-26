@@ -310,3 +310,7 @@ end
 And(/^I click Continue and change waste code button$/) do
   ChangeWasteCodePage.new.change_waste_code_button
 end
+
+And(/^I click Confirm all answers button$/) do
+  CheckYourReportPage.new.confirm_answers_button
+end

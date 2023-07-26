@@ -10,6 +10,7 @@ class CheckYourReportPage < GenericPage
   WARNING = Translations.value 'exportJourney.checkAnswers.warning'
   TITLE = Translations.value 'exportJourney.checkAnswers.heading'
   SUBTEXT = Translations.value 'exportJourney.checkAnswers.paragraph'
+  CONFIRM_ANSWERS_BUTTON = Translations.value 'exportJourney.checkAnswers.conformButton'
 
   EXPORT_REFERENCE = '#your-reference > span'
 
@@ -33,6 +34,9 @@ class CheckYourReportPage < GenericPage
     expect(self).to have_css 'h3', text: 'Recovery facility', exact_text: true
   end
 
+  def confirm_answers_button
+    click_button CONFIRM_ANSWERS_BUTTON
+  end
 
   def check_warning_text
     expect(self).to have_text WARNING
