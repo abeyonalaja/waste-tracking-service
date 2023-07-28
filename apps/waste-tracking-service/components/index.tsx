@@ -9,6 +9,7 @@ import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
 import { DocumentStatus } from './DocumentStatus';
+import { DownloadPDFLink } from './DownloadPDFLink';
 import { EwcCodeSelector } from './EwcCodeSelector';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
@@ -38,6 +39,7 @@ export {
   CompleteHeader,
   ConditionalRadioWrap,
   DocumentStatus,
+  DownloadPDFLink,
   EwcCodeSelector,
   InputWithSuffix,
   Loading,

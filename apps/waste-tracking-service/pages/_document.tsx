@@ -1,43 +1,12 @@
-/* eslint-disable react/display-name */
-import Document, {
-  Html,
-  Head,
-  Main,
-  NextScript,
-  DocumentContext,
-  DocumentInitialProps,
-} from 'next/document';
-import { ServerStyleSheet } from 'styled-components';
-
-export default class CustomDocument extends Document {
-  static async getInitialProps(
-    ctx: DocumentContext
-  ): Promise<DocumentInitialProps> {
-    const originalRenderPage = ctx.renderPage;
-
-    const sheet = new ServerStyleSheet();
-
-    ctx.renderPage = () =>
-      originalRenderPage({
-        enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
-        enhanceComponent: (Component) => Component,
-      });
-
-    const intialProps = await Document.getInitialProps(ctx);
-    const styles = sheet.getStyleElement();
-
-    return { ...intialProps, styles };
-  }
-
-  render() {
-    return (
-      <Html className="govuk-template" lang="en">
-        <Head>{this.props.styles}</Head>
-        <body className="govuk-template__body">
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    );
-  }
+import { Html, Head, Main, NextScript } from 'next/document';
+export default function Document() {
+  return (
+    <Html className="govuk-template" lang="en">
+      <Head />
+      <body className="govuk-template__body">
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }

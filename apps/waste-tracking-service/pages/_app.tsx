@@ -1,20 +1,12 @@
 import { AppProps } from 'next/app';
-import Head from 'next/head';
+import Layout from '../components/Layout';
 import './styles.css';
 
-import { SubmissionContextProvider } from '../contexts/submissionContext';
+type AppPropsWithLayout = AppProps & {
+  Component;
+};
 
-function CustomApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Head>
-        <title>Green list waste overview</title>
-      </Head>
-      <SubmissionContextProvider>
-        <Component {...pageProps} />
-      </SubmissionContextProvider>
-    </>
-  );
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
+  return getLayout(<Component {...pageProps} />);
 }
-
-export default CustomApp;

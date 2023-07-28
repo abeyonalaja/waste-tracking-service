@@ -18,6 +18,8 @@ import {
   Loading,
   SaveReturnButton,
   ButtonGroup,
+  DownloadPDFLink,
+  Paragraph,
 } from '../components';
 
 import styled from 'styled-components';
@@ -183,6 +185,13 @@ const ExportSubmitted = () => {
                 <StyledHeading size="LARGE">
                   Export submitted - {exportSubmittedPage.data.id}
                 </StyledHeading>
+
+                <Paragraph>
+                  <DownloadPDFLink
+                    submissionId={id}
+                    reference={exportSubmittedPage.data.reference}
+                  />
+                </Paragraph>
 
                 <form>
                   <ButtonGroup>

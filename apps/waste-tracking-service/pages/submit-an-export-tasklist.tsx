@@ -62,11 +62,6 @@ const tasklistReducer = (state: State, action: Action) => {
   }
 };
 
-const Lower = styled('div')`
-  padding-top: 20px;
-  padding-bottom: 60px;
-`;
-
 const TaskListOL = styled.ol`
   counter-reset: tasklist;
   list-style-type: none;

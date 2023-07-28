@@ -312,11 +312,9 @@ const CheckYourReport = () => {
                 <GovUK.Caption id="my-reference">
                   {t('exportJourney.checkAnswers.caption')}
                 </GovUK.Caption>
-
                 <GovUK.Heading size="LARGE" id="template-heading">
                   {t('exportJourney.checkAnswers.heading')}
                 </GovUK.Heading>
-
                 <Paragraph>
                   {t('exportJourney.checkAnswers.paragraph')}
                 </Paragraph>

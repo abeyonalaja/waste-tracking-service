@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Submission } from '../types/Submission';
 
 interface ISubmissionContextProps {
-  submission: Submission;
-  setSubmission: (submission: Submission) => void;
+  submission: { id; ownReference; reference };
+  setSubmission: (submission) => void;
 }
 
 export const SubmissionContext = React.createContext<ISubmissionContextProps>(

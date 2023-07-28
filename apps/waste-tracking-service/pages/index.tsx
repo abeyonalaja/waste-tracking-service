@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
@@ -7,13 +6,10 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
+  Paragraph,
 } from '../components';
 import React from 'react';
-
-const Paragraph = styled.p`
-  margin-bottom: 20px;
-  font-size: 19px;
-`;
+import Head from 'next/head';
 
 const BreadCrumbs = () => {
   const { t } = useTranslation();
@@ -28,6 +24,9 @@ export function Index() {
   const { t } = useTranslation();
   return (
     <>
+      <Head>
+        <title>{t('app.title')}</title>
+      </Head>
       <GovUK.Page
         id="content"
         header={<CompleteHeader />}

@@ -11,9 +11,10 @@ interface Props {
   onClick?: (e: FormEvent) => void;
   children: ReactNode;
   testId?: string;
+  disabled?: boolean;
 }
 
-const StyledLink = styled(Link)<{ $isBold?: boolean }>`
+const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-decoration: underline;
@@ -23,6 +24,7 @@ const StyledLink = styled(Link)<{ $isBold?: boolean }>`
   font-weight: ${(props) => (props.$isBold ? '700' : '400')};
   font-size: 16px;
   line-height: 1.25;
+  opacity: ${(props) => (props.disabled ? '0.5' : '1')};
   @media (min-width: 40.0625em) {
     font-size: 19px;
     line-height: 1.3;
@@ -50,6 +52,7 @@ export const AppLink = ({
   children,
   onClick,
   testId,
+  disabled,
 }: Props) => {
   return (
     <StyledLink
@@ -58,6 +61,7 @@ export const AppLink = ({
       onClick={onClick}
       data-testid={testId}
       $isBold={isBold}
+      disabled={disabled}
     >
       {children}
     </StyledLink>
