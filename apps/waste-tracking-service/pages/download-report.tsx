@@ -327,19 +327,19 @@ const DownloadReport = () => {
         <>
           <Page>
             <PageHeader>
-              <H1>Annex VII</H1>
-              <p>
+              <H1 id="pdf-h1">Annex VII</H1>
+              <p id="pdf-intro">
                 Information Accompanying Shipments of Waste <br />
                 as referred to in Article 3 (2) and (4)
               </p>
             </PageHeader>
-            <p>
+            <p id="pdf-sub-heading">
               Consignment information <Ref>(1)</Ref>
             </p>
             <Row>
               {downloadReport.data.exporterDetail.status === 'Complete' && (
-                <Box>
-                  <SectionTitle>
+                <Box id="pdf-box-1">
+                  <SectionTitle id="pdf-box-1-title">
                     1. Person who arranges the shipment (exporter)
                   </SectionTitle>
                   <DataRow>
@@ -418,8 +418,10 @@ const DownloadReport = () => {
                 </Box>
               )}
               {downloadReport.data.importerDetail.status === 'Complete' && (
-                <Box>
-                  <SectionTitle>2. Importer/consignee</SectionTitle>
+                <Box id="pdf-box-2">
+                  <SectionTitle id="pdf-box-2-title">
+                    2. Importer/consignee
+                  </SectionTitle>
 
                   <DataRow>
                     <Label>Name</Label>
@@ -485,8 +487,8 @@ const DownloadReport = () => {
             <Row>
               {downloadReport.data.wasteQuantity.status === 'Complete' &&
                 downloadReport.data.wasteDescription.status === 'Complete' && (
-                  <Box>
-                    <InlineSectionTitle>
+                  <Box id="pdf-box-3">
+                    <InlineSectionTitle id="pdf-box-3-title">
                       3. Actual quantity:{' '}
                     </InlineSectionTitle>
                     <Value>
@@ -524,8 +526,8 @@ const DownloadReport = () => {
                   </Box>
                 )}
               {downloadReport.data.collectionDate.status === 'Complete' && (
-                <Box>
-                  <InlineSectionTitle>
+                <Box id="pdf-box-4">
+                  <InlineSectionTitle id="pdf-box-4-title">
                     4. Actual date of shipment:
                   </InlineSectionTitle>
                   <>
@@ -557,8 +559,8 @@ const DownloadReport = () => {
             </Row>
             {downloadReport.data.carriers.status === 'Complete' && (
               <Row>
-                <Box>
-                  <SectionTitle>
+                <Box id="pdf-box-5a">
+                  <SectionTitle id="pdf-box-5a-title">
                     5.(a) 1<sup>st</sup> carrier <Ref>(2)</Ref>
                   </SectionTitle>
                   <DataRow>
@@ -638,8 +640,8 @@ const DownloadReport = () => {
                     <Value></Value>
                   </DataRow>
                 </Box>
-                <Box>
-                  <SectionTitle>
+                <Box id="pdf-box-5b">
+                  <SectionTitle id="pdf-box-5b-title">
                     5.(b) 2<sup>nd</sup> carrier
                   </SectionTitle>
                   <DataRow>
@@ -712,8 +714,8 @@ const DownloadReport = () => {
                     <Value></Value>
                   </DataRow>
                 </Box>
-                <Box>
-                  <SectionTitle>
+                <Box id="pdf-box-5c">
+                  <SectionTitle id="pdf-box-5c-title">
                     5.(c) 3<sup>rd</sup> carrier{' '}
                   </SectionTitle>
                   <DataRow>
@@ -789,8 +791,8 @@ const DownloadReport = () => {
               </Row>
             )}
             <Row>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-6">
+                <SectionTitle id="pdf-box-6-title">
                   6. Waste generator <Ref>(3)</Ref>
                 </SectionTitle>
                 <SectionTitle>
@@ -869,8 +871,8 @@ const DownloadReport = () => {
                   </>
                 )}
               </Box>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-8">
+                <SectionTitle id="pdf-box-8-title">
                   8. Recovery operation (or if appropriate disposal operation in
                   the case of waste referred to in Article 3(4)):
                 </SectionTitle>
@@ -944,22 +946,26 @@ const DownloadReport = () => {
                   </Value>
                 </DataRow>
                 <Line></Line>
-                <SectionTitle>9. Usual description of the waste:</SectionTitle>
-                <DataRow>
-                  <Value>
-                    {downloadReport.data.wasteDescription.status ===
-                      'Complete' && (
-                      <span>
-                        {downloadReport.data.wasteDescription.description}
-                      </span>
-                    )}
-                  </Value>
-                </DataRow>
+                <div id="pdf-box-9">
+                  <SectionTitle id="pdf-box-9-title">
+                    9. Usual description of the waste:
+                  </SectionTitle>
+                  <DataRow>
+                    <Value>
+                      {downloadReport.data.wasteDescription.status ===
+                        'Complete' && (
+                        <span>
+                          {downloadReport.data.wasteDescription.description}
+                        </span>
+                      )}
+                    </Value>
+                  </DataRow>
+                </div>
               </Box>
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-7">
+                <SectionTitle id="pdf-box-7-title">
                   {downloadReport.data.wasteDescription.status ===
                     'Complete' && (
                     <>
@@ -1119,10 +1125,12 @@ const DownloadReport = () => {
                 )}
               </Box>
 
-              <Box>
+              <Box id="pdf-box-10">
                 {downloadReport.data.wasteDescription.status === 'Complete' && (
                   <>
-                    <SectionTitle>10. Waste identification:</SectionTitle>
+                    <SectionTitle id="pdf-box-10-title">
+                      10. Waste identification:
+                    </SectionTitle>
                     <DataRow>
                       {downloadReport.data.wasteDescription.wasteCode.type ===
                       'NotApplicable' ? (
@@ -1181,9 +1189,10 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>11. Countries/states concerned:</SectionTitle>
-
+              <Box id="pdf-box-11">
+                <SectionTitle id="pdf-box-11-title">
+                  11. Countries/states concerned:
+                </SectionTitle>
                 <Table>
                   {downloadReport.data.transitCountries.status ===
                     'Complete' && (
@@ -1239,8 +1248,8 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <InlineSectionTitle>
+              <Box id="pdf-box-12">
+                <InlineSectionTitle id="pdf-box-12-title">
                   12. Declaration of the person who arranges the shipment:&nbsp;
                 </InlineSectionTitle>
                 <span>
@@ -1259,8 +1268,8 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-13">
+                <SectionTitle id="pdf-box-13-title">
                   13. Signature upon receipt of the waste by the consignee:
                 </SectionTitle>
                 <DataRow>
@@ -1283,15 +1292,15 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
+              <Box id="pdf-box-14">
                 {downloadReport.data.wasteDescription.status === 'Complete' &&
                 downloadReport.data.wasteDescription.wasteCode.type ===
                   'NotApplicable' ? (
-                  <InlineSectionTitle>
+                  <InlineSectionTitle id="pdf-box-14-title">
                     14. Shipment received at laboratory &nbsp;
                   </InlineSectionTitle>
                 ) : (
-                  <InlineSectionTitle>
+                  <InlineSectionTitle id="pdf-box-14-title">
                     14. Shipment received at recovery facility &nbsp;
                   </InlineSectionTitle>
                 )}
@@ -1376,8 +1385,8 @@ const DownloadReport = () => {
             </Meta>
             <H2>Additional information for the Annex VII</H2>
             <Row>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-5c-4th-carr">
+                <SectionTitle id="pdf-box-5c-4th-carr-title">
                   5.(c) 4<sup>th</sup> carrier{' '}
                 </SectionTitle>
                 {downloadReport.data.carriers.status === 'Complete' && (
@@ -1454,8 +1463,8 @@ const DownloadReport = () => {
                   </>
                 )}
               </Box>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-5c-5th-carr">
+                <SectionTitle id="pdf-box-5c-5th-carr-title">
                   5.(c) 5<sup>th</sup> carrier{' '}
                 </SectionTitle>
                 {downloadReport.data.carriers.status === 'Complete' && (
@@ -1534,8 +1543,8 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>
+              <Box id="pdf-box-5c-cont">
+                <SectionTitle id="pdf-box-5c-cont-title">
                   5 cont. Means of transport details (if provided)
                 </SectionTitle>
               </Box>
@@ -1856,8 +1865,10 @@ const DownloadReport = () => {
                 )}
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>7. Second recovery site details:</SectionTitle>
+              <Box id="pdf-box-7-cont">
+                <SectionTitle id="pdf-box-7-cont-title">
+                  7. Second recovery site details:
+                </SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
                   'Complete' && (
                   <>
@@ -2135,8 +2146,8 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <InlineSectionTitle>
+              <Box id="pdf-box-10-cont">
+                <InlineSectionTitle id="pdf-box-10-cont-title">
                   10. Additional EWC waste identification codes:{' '}
                 </InlineSectionTitle>
                 <span>&nbsp;</span>
@@ -2152,8 +2163,10 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <SectionTitle>11. Countries/states concerned: </SectionTitle>
+              <Box id="pdf-box-11-cont">
+                <SectionTitle id="pdf-box-11-cont-title">
+                  11. Countries/states concerned:{' '}
+                </SectionTitle>
                 <InlineSectionTitle>
                   4<sup>th</sup>:{' '}
                 </InlineSectionTitle>
@@ -2177,8 +2190,8 @@ const DownloadReport = () => {
               </Box>
             </Row>
             <Row>
-              <Box>
-                <InlineSectionTitle>
+              <Box id="pdf-box-15-cont">
+                <InlineSectionTitle id="pdf-box-15-cont-title">
                   15. Location the waste will leave the UK:{' '}
                 </InlineSectionTitle>
                 <span>

@@ -1,10 +1,4 @@
-import React, {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-  useReducer,
-} from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -24,10 +18,7 @@ import {
 
 import styled from 'styled-components';
 
-import {
-  GetSubmissionDeclarationResponse,
-  Submission,
-} from '@wts/api/waste-tracking-gateway';
+import { Submission } from '@wts/api/waste-tracking-gateway';
 
 type State = {
   data: Submission;
@@ -102,7 +93,6 @@ const ExportSubmitted = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  console.log(id);
   const [errors] = useState<{
     description?: string;
   }>({});
@@ -111,13 +101,11 @@ const ExportSubmitted = () => {
     dispatchExportSubmittedPage({ type: 'DATA_FETCH_INIT' });
 
     if (id !== null) {
-      console.log('Win');
       fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
             dispatchExportSubmittedPage({ type: 'DATA_FETCH_FAILURE' });
-            console.log('fail');
           }
         })
         .then((data) => {
@@ -126,13 +114,10 @@ const ExportSubmitted = () => {
               type: 'DATA_FETCH_SUCCESS',
               payload: data,
             });
-            console.log('success');
           }
         });
     }
   }, [router.isReady, id]);
-
-  console.log(exportSubmittedPage.data);
 
   const BreadCrumbs = () => {
     return (
