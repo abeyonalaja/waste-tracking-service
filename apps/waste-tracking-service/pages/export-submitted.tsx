@@ -11,7 +11,6 @@ import {
   SubmissionNotFound,
   Loading,
   SaveReturnButton,
-  ButtonGroup,
   DownloadPDFLink,
   Paragraph,
 } from '../components';
@@ -74,6 +73,20 @@ const exportSubmittedReducer = (state: State, action: Action) => {
 
 const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
+`;
+
+const StyledPanel = styled(GovUK.Panel)`
+  background: #00703c;
+`;
+
+const StyledUnorderedList = styled(GovUK.UnorderedList)`
+  margin-top: 15px;
+`;
+
+const StyledParagraph = styled.p`
+  font-size: 19px;
+  line-height: 1.3;
+  margin-bottom: 20px;
 `;
 
 const ExportSubmitted = () => {
@@ -163,29 +176,50 @@ const ExportSubmitted = () => {
                   />
                 )}
 
-                <GovUK.Panel title="Export submitted - plus code thing">
-                  Export submitted - {exportSubmittedPage.data.id}
-                </GovUK.Panel>
+                <StyledPanel title="Annex VII document  submitted">
+                  {t('exportJourney.exportSubmitted.panel')}
+                  <br />
+                </StyledPanel>
 
-                <StyledHeading size="LARGE">
-                  Export submitted - {exportSubmittedPage.data.id}
+                <StyledHeading size="SMALL">
+                  {t('exportJourney.exportSubmitted.statement')}
                 </StyledHeading>
 
-                <Paragraph>
-                  <DownloadPDFLink
-                    submissionId={id}
-                    reference={exportSubmittedPage.data.reference}
-                  />
-                </Paragraph>
+                <StyledParagraph>
+                  {t('exportJourney.exportSubmitted.listHeader')}
+                  <StyledUnorderedList>
+                    <GovUK.ListItem>
+                      {t('exportJourney.exportSubmitted.listItemOne')}
+                    </GovUK.ListItem>
+                    <GovUK.ListItem>
+                      {t('exportJourney.exportSubmitted.listItemTwo')}
+                    </GovUK.ListItem>
+                    <GovUK.ListItem>
+                      {t('exportJourney.exportSubmitted.listItemThree')}
+                    </GovUK.ListItem>
+                  </StyledUnorderedList>
+                </StyledParagraph>
 
-                <form>
-                  <ButtonGroup>
-                    <GovUK.Button id="saveButton">
-                      {t('saveButton')}
-                    </GovUK.Button>
-                    <SaveReturnButton />
-                  </ButtonGroup>
-                </form>
+                <StyledParagraph>
+                  <>
+                    {t('exportJourney.exportSubmitted.legalStatementp1')}
+                    <DownloadPDFLink
+                      submissionId={id}
+                      reference={exportSubmittedPage.data.reference}
+                    />
+                    {t('exportJourney.exportSubmitted.legalStatementp2')}
+                  </>
+                </StyledParagraph>
+
+                <SaveReturnButton
+                  onClick={() =>
+                    router.push({
+                      pathname: '/dashboard',
+                    })
+                  }
+                >
+                  {t('exportJourney.exportSubmitted.button')}
+                </SaveReturnButton>
               </>
             )}
           </GovUK.GridCol>
