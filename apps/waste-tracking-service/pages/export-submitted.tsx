@@ -85,7 +85,11 @@ const StyledUnorderedList = styled(GovUK.UnorderedList)`
 
 const StyledParagraph = styled.p`
   font-size: 19px;
+<<<<<<< HEAD
+  line-height: 1.3157894736842106;
+=======
   line-height: 1.3;
+>>>>>>> origin
   margin-bottom: 20px;
 `;
 
@@ -179,6 +183,15 @@ const ExportSubmitted = () => {
                 <StyledPanel title="Annex VII document  submitted">
                   {t('exportJourney.exportSubmitted.panel')}
                   <br />
+                  {exportSubmittedPage?.data.submissionDeclaration.status ===
+                    'Complete' && (
+                    <>
+                      {
+                        exportSubmittedPage.data.submissionDeclaration.values
+                          .transactionId
+                      }
+                    </>
+                  )}
                 </StyledPanel>
 
                 <StyledHeading size="SMALL">
@@ -199,6 +212,28 @@ const ExportSubmitted = () => {
                     </GovUK.ListItem>
                   </StyledUnorderedList>
                 </StyledParagraph>
+                {exportSubmittedPage.data.submissionState.status ===
+                  'SubmittedWithEstimates' && (
+                  <>
+                    <StyledHeading size="SMALL">
+                      {t('exportJourney.exportSubmitted.optionalHeading')}
+                    </StyledHeading>
+
+                    <StyledParagraph>
+                      {t('exportJourney.exportSubmitted.secondListHeader')}
+                      <StyledUnorderedList>
+                        <GovUK.ListItem>
+                          {' '}
+                          {t('exportJourney.exportSubmitted.secondListItemOne')}
+                        </GovUK.ListItem>
+                        <GovUK.ListItem>
+                          {' '}
+                          {t('exportJourney.exportSubmitted.secondListItemTwo')}
+                        </GovUK.ListItem>
+                      </StyledUnorderedList>
+                    </StyledParagraph>
+                  </>
+                )}
 
                 <StyledParagraph>
                   <>

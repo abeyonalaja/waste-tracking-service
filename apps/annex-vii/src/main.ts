@@ -86,6 +86,23 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
+  api.deleteDraft.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.deleteDraftRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.deleteDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
   api.getDraftCustomerReferenceById.name,
   async ({ body }) => {
     if (body === undefined) {

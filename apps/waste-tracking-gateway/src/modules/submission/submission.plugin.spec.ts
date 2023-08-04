@@ -19,6 +19,7 @@ import {
   RecoveryFacilityDetail,
   SubmissionConfirmation,
   SubmissionDeclaration,
+  SubmissionSummary,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -29,15 +30,17 @@ jest.mock('winston', () => ({
   })),
 }));
 
-const accountId = 'c3c99728-3d5e-4357-bfcb-32dd913a55e8';
+const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
 
 const mockBackend = {
   createSubmission:
     jest.fn<
       (accountId: string, reference: CustomerReference) => Promise<Submission>
     >(),
-
   getSubmission: jest.fn<(ref: SubmissionRef) => Promise<Submission>>(),
+  deleteSubmission: jest.fn<(ref: SubmissionRef) => Promise<void>>(),
+  getSubmissions:
+    jest.fn<(accountId: string) => Promise<ReadonlyArray<SubmissionSummary>>>(),
   getCustomerReference:
     jest.fn<(ref: SubmissionRef) => Promise<CustomerReference>>(),
   setCustomerReference:
@@ -153,6 +156,8 @@ describe('SubmissionPlugin', () => {
   beforeEach(() => {
     mockBackend.createSubmission.mockClear();
     mockBackend.getSubmission.mockClear();
+    mockBackend.deleteSubmission.mockClear();
+    mockBackend.getSubmissions.mockClear();
     mockBackend.getWasteDescription.mockClear();
     mockBackend.setWasteDescription.mockClear();
     mockBackend.getWasteQuantity.mockClear();
@@ -191,6 +196,19 @@ describe('SubmissionPlugin', () => {
     });
   });
 
+  describe('GET /submissions', () => {
+    it('Responds 404 if no submissions exist', async () => {
+      const options = {
+        method: 'GET',
+        url: '/submissions',
+      };
+
+      mockBackend.getSubmissions.mockRejectedValue(Boom.notFound());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(404);
+    });
+  });
+
   describe('GET /submissions/{id}', () => {
     it("Responds 404 if submission doesn't exist", async () => {
       const options = {
@@ -201,6 +219,18 @@ describe('SubmissionPlugin', () => {
       mockBackend.getSubmission.mockRejectedValue(Boom.notFound());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('DELETE /submissions/{id}', () => {
+    it('Responds 400 if action is not supported', async () => {
+      const options = {
+        method: 'DELETE',
+        url: `/submissions/${faker.datatype.uuid()}?action=action`,
+      };
+
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
     });
   });
 

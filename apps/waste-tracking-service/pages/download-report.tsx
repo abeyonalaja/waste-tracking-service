@@ -509,10 +509,14 @@ const DownloadReport = () => {
                       {downloadReport.data.wasteQuantity.value.type ===
                         'ActualData' && (
                         <span>
-                          &nbsp;{downloadReport.data.wasteQuantity.value.value}
+                          &nbsp;
+                          {
+                            downloadReport.data.wasteQuantity.value.actualData
+                              .value
+                          }
                           <UnitDisplay
                             quantityType={
-                              downloadReport.data.wasteQuantity.value
+                              downloadReport.data.wasteQuantity.value.actualData
                                 .quantityType
                             }
                             type={
@@ -539,13 +543,16 @@ const DownloadReport = () => {
                           {format(
                             new Date(
                               Number(
-                                downloadReport.data.collectionDate.value.year
+                                downloadReport.data.collectionDate.value
+                                  .actualDate.year
                               ),
                               Number(
-                                downloadReport.data.collectionDate.value.month
+                                downloadReport.data.collectionDate.value
+                                  .actualDate.month
                               ) - 1,
                               Number(
-                                downloadReport.data.collectionDate.value.day
+                                downloadReport.data.collectionDate.value
+                                  .actualDate.day
                               )
                             ),
                             'd MMMM y'
@@ -1318,7 +1325,7 @@ const DownloadReport = () => {
                             <UnitDisplay
                               quantityType={
                                 downloadReport.data.wasteQuantity.value
-                                  .quantityType
+                                  .actualData.quantityType
                               }
                               type={
                                 downloadReport.data.wasteDescription.wasteCode

@@ -1,7 +1,9 @@
 import Boom from '@hapi/boom';
 import {
   CreateDraftResponse,
+  DeleteDraftResponse,
   GetDraftByIdResponse,
+  GetDraftsResponse,
   GetDraftCollectionDateByIdResponse,
   GetDraftCustomerReferenceByIdResponse,
   GetDraftExporterDetailByIdResponse,
@@ -42,11 +44,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 
 export type Submission = dto.Submission;
+export type SubmissionSummary = dto.SubmissionSummary;
 export type CustomerReference = dto.CustomerReference;
 export type WasteDescription = dto.WasteDescription;
+export type WasteQuantityRequest = dto.WasteQuantityRequest;
 export type WasteQuantity = dto.WasteQuantity;
 export type ExporterDetail = dto.ExporterDetail;
 export type ImporterDetail = dto.ImporterDetail;
+export type CollectionDateRequest = dto.CollectionDateRequest;
 export type CollectionDate = dto.CollectionDate;
 export type Carriers = dto.Carriers;
 export type CarrierData = dto.CarrierData;
@@ -66,6 +71,7 @@ function setSubmissionConfirmation(
     reference,
     submissionConfirmation,
     submissionDeclaration,
+    submissionState,
     ...filteredValues
   } = submission;
 
@@ -88,7 +94,7 @@ function setSubmissionDeclaration(
   }
 }
 
-function isCollectionDateValid(date: CollectionDate) {
+function isCollectionDateValid(date: CollectionDateRequest) {
   if (date.status !== 'NotStarted') {
     const { day: dayStr, month: monthStr, year: yearStr } = date.value;
 
@@ -114,12 +120,18 @@ export type SubmissionRef = {
   accountId: string;
 };
 
+export type ActionRef = {
+  action: 'CANCEL' | 'DELETE';
+};
+
 export interface SubmissionBackend {
   createSubmission(
     accountId: string,
     reference: CustomerReference
   ): Promise<Submission>;
   getSubmission(ref: SubmissionRef): Promise<Submission>;
+  deleteSubmission(ref: SubmissionRef, action: ActionRef): Promise<void>;
+  getSubmissions(accountId: string): Promise<ReadonlyArray<SubmissionSummary>>;
   getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
   setCustomerReference(
     ref: SubmissionRef,
@@ -130,14 +142,20 @@ export interface SubmissionBackend {
     ref: SubmissionRef,
     value: WasteDescription
   ): Promise<void>;
-  getWasteQuantity(ref: SubmissionRef): Promise<WasteQuantity>;
-  setWasteQuantity(ref: SubmissionRef, value: WasteQuantity): Promise<void>;
+  getWasteQuantity(ref: SubmissionRef): Promise<WasteQuantityRequest>;
+  setWasteQuantity(
+    ref: SubmissionRef,
+    value: WasteQuantityRequest
+  ): Promise<void>;
   getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
   setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
   getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
   setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
-  getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
-  setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
+  getCollectionDate(ref: SubmissionRef): Promise<CollectionDateRequest>;
+  setCollectionDate(
+    ref: SubmissionRef,
+    value: CollectionDateRequest
+  ): Promise<void>;
   listCarriers(ref: SubmissionRef): Promise<Carriers>;
   createCarriers(
     ref: SubmissionRef,
@@ -281,6 +299,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       recoveryFacilityDetail: { status: 'CannotStart' },
       submissionConfirmation: { status: 'CannotStart' },
       submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
     };
 
     this.submissions.set(id, value);
@@ -290,6 +312,54 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
   getSubmission({ id }: SubmissionRef): Promise<Submission> {
     const value = this.submissions.get(id);
     if (value === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    return Promise.resolve(value);
+  }
+
+  deleteSubmission(
+    { id }: SubmissionRef,
+    { action }: ActionRef
+  ): Promise<void> {
+    const value = this.submissions.get(id);
+    if (value === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    const timestamp = new Date();
+    value.submissionState =
+      action === 'CANCEL'
+        ? { status: 'Cancelled', timestamp: timestamp }
+        : { status: 'Deleted', timestamp: timestamp };
+
+    this.submissions.set(id, value);
+    return Promise.resolve();
+  }
+
+  getSubmissions(_: string): Promise<ReadonlyArray<SubmissionSummary>> {
+    const values: Submission[] = [...this.submissions.values()];
+    const value: ReadonlyArray<SubmissionSummary> = values.map((s) => {
+      return {
+        id: s.id,
+        reference: s.reference,
+        wasteDescription: s.wasteDescription,
+        wasteQuantity: { status: s.wasteQuantity.status },
+        exporterDetail: { status: s.exporterDetail.status },
+        importerDetail: { status: s.exporterDetail.status },
+        collectionDate: { status: s.collectionDetail.status },
+        carriers: { status: s.carriers.status },
+        collectionDetail: { status: s.collectionDetail.status },
+        ukExitLocation: { status: s.ukExitLocation.status },
+        transitCountries: { status: s.transitCountries.status },
+        recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
+        submissionConfirmation: { status: s.submissionConfirmation.status },
+        submissionDeclaration: s.submissionDeclaration,
+        submissionState: s.submissionState,
+      };
+    });
+
+    if (!Array.isArray(value) || value.length == 0) {
       return Promise.reject(Boom.notFound());
     }
 
@@ -470,25 +540,614 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve();
   }
 
-  getWasteQuantity({ id }: SubmissionRef): Promise<WasteQuantity> {
+  getWasteQuantity({ id }: SubmissionRef): Promise<WasteQuantityRequest> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    return Promise.resolve(submission.wasteQuantity);
+    const wasteQuantity: WasteQuantityRequest =
+      submission.wasteQuantity.status !== 'NotStarted' &&
+      submission.wasteQuantity.status !== 'CannotStart'
+        ? submission.wasteQuantity.status !== 'Started'
+          ? submission.wasteQuantity.value.type === 'NotApplicable'
+            ? {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                },
+              }
+            : submission.wasteQuantity.value.type === 'ActualData'
+            ? {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                  quantityType: submission.wasteQuantity.value.actualData
+                    ?.quantityType as 'Volume' | 'Weight',
+                  value: submission.wasteQuantity.value.actualData
+                    ?.value as number,
+                },
+              }
+            : {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                  quantityType: submission.wasteQuantity.value.estimateData
+                    ?.quantityType as 'Volume' | 'Weight',
+                  value: submission.wasteQuantity.value.estimateData
+                    ?.value as number,
+                },
+              }
+          : submission.wasteQuantity.value &&
+            submission.wasteQuantity.value.type
+          ? submission.wasteQuantity.value.type === 'NotApplicable'
+            ? {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                },
+              }
+            : submission.wasteQuantity.value.type === 'ActualData'
+            ? {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                  quantityType: submission.wasteQuantity.value.actualData
+                    ?.quantityType as 'Volume' | 'Weight' | undefined,
+                  value: submission.wasteQuantity.value.actualData?.value as
+                    | number
+                    | undefined,
+                },
+              }
+            : {
+                status: submission.wasteQuantity.status,
+                value: {
+                  type: submission.wasteQuantity.value.type,
+                  quantityType: submission.wasteQuantity.value.estimateData
+                    ?.quantityType as 'Volume' | 'Weight' | undefined,
+                  value: submission.wasteQuantity.value.estimateData?.value as
+                    | number
+                    | undefined,
+                },
+              }
+          : { status: submission.wasteQuantity.status }
+        : { status: submission.wasteQuantity.status };
+
+    return Promise.resolve(wasteQuantity);
   }
 
-  setWasteQuantity({ id }: SubmissionRef, value: WasteQuantity): Promise<void> {
+  setWasteQuantity(
+    { id }: SubmissionRef,
+    value: WasteQuantityRequest
+  ): Promise<void> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.wasteQuantity = value;
+    const wasteQuantity: WasteQuantity =
+      value.status !== 'CannotStart' && value.status !== 'NotStarted'
+        ? value.status !== 'Started'
+          ? value.value.type === 'NotApplicable'
+            ? {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                },
+              }
+            : value.value.type === 'ActualData'
+            ? submission.wasteQuantity.status !== 'CannotStart' &&
+              submission.wasteQuantity.status !== 'NotStarted'
+              ? submission.wasteQuantity.status !== 'Started'
+                ? submission.wasteQuantity.value.type === 'NotApplicable'
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : submission.wasteQuantity.value.estimateData
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                        estimateData:
+                          submission.wasteQuantity.value.estimateData,
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                : submission.wasteQuantity.value
+                ? submission.wasteQuantity.value.type === 'NotApplicable'
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : submission.wasteQuantity.value.estimateData
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                        estimateData:
+                          submission.wasteQuantity.value.estimateData,
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      actualData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+              : {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                    actualData: {
+                      quantityType: value.value.quantityType,
+                      value: value.value.value,
+                    },
+                  },
+                }
+            : submission.wasteQuantity.status !== 'CannotStart' &&
+              submission.wasteQuantity.status !== 'NotStarted'
+            ? submission.wasteQuantity.status !== 'Started'
+              ? submission.wasteQuantity.value.type === 'NotApplicable'
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : submission.wasteQuantity.value.actualData
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      actualData: submission.wasteQuantity.value.actualData,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+              : submission.wasteQuantity.value
+              ? submission.wasteQuantity.value.type === 'NotApplicable'
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : submission.wasteQuantity.value.actualData
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      actualData: submission.wasteQuantity.value.actualData,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+              : {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                    estimateData: {
+                      quantityType: value.value.quantityType,
+                      value: value.value.value,
+                    },
+                  },
+                }
+            : {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                  estimateData: {
+                    quantityType: value.value.quantityType,
+                    value: value.value.value,
+                  },
+                },
+              }
+          : value.value
+          ? value.value.type === 'NotApplicable'
+            ? {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                },
+              }
+            : value.value.type === 'ActualData'
+            ? submission.wasteQuantity.status !== 'CannotStart' &&
+              submission.wasteQuantity.status !== 'NotStarted'
+              ? submission.wasteQuantity.status !== 'Started'
+                ? submission.wasteQuantity.value.type === 'NotApplicable'
+                  ? value.value.quantityType && value.value.value
+                    ? {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          actualData: {
+                            quantityType: value.value.quantityType,
+                            value: value.value.value,
+                          },
+                        },
+                      }
+                    : {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                        },
+                      }
+                  : submission.wasteQuantity.value.estimateData
+                  ? value.value.quantityType && value.value.value
+                    ? {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          actualData: {
+                            quantityType: value.value.quantityType,
+                            value: value.value.value,
+                          },
+                          estimateData:
+                            submission.wasteQuantity.value.estimateData,
+                        },
+                      }
+                    : {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          estimateData:
+                            submission.wasteQuantity.value.estimateData,
+                        },
+                      }
+                  : value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                      },
+                    }
+                : submission.wasteQuantity.value
+                ? submission.wasteQuantity.value.type === 'NotApplicable'
+                  ? value.value.quantityType && value.value.value
+                    ? {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          actualData: {
+                            quantityType: value.value.quantityType,
+                            value: value.value.value,
+                          },
+                        },
+                      }
+                    : {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                        },
+                      }
+                  : submission.wasteQuantity.value.estimateData
+                  ? value.value.quantityType && value.value.value
+                    ? {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          actualData: {
+                            quantityType: value.value.quantityType,
+                            value: value.value.value,
+                          },
+                          estimateData:
+                            submission.wasteQuantity.value.estimateData,
+                        },
+                      }
+                    : {
+                        status: value.status,
+                        value: {
+                          type: value.value.type,
+                          estimateData:
+                            submission.wasteQuantity.value.estimateData,
+                        },
+                      }
+                  : value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                      },
+                    }
+                : value.value.quantityType && value.value.value
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      actualData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                    },
+                  }
+              : value.value.quantityType && value.value.value
+              ? {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                    actualData: {
+                      quantityType: value.value.quantityType,
+                      value: value.value.value,
+                    },
+                  },
+                }
+              : {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                  },
+                }
+            : submission.wasteQuantity.status !== 'CannotStart' &&
+              submission.wasteQuantity.status !== 'NotStarted'
+            ? submission.wasteQuantity.status !== 'Started'
+              ? submission.wasteQuantity.value.type === 'NotApplicable'
+                ? value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        estimateData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                      },
+                    }
+                : submission.wasteQuantity.value.actualData
+                ? value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: submission.wasteQuantity.value.actualData,
+                        estimateData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: submission.wasteQuantity.value.actualData,
+                      },
+                    }
+                : value.value.quantityType && value.value.value
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                    },
+                  }
+              : submission.wasteQuantity.value
+              ? submission.wasteQuantity.value.type === 'NotApplicable'
+                ? value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        estimateData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                      },
+                    }
+                : submission.wasteQuantity.value.actualData
+                ? value.value.quantityType && value.value.value
+                  ? {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: submission.wasteQuantity.value.actualData,
+                        estimateData: {
+                          quantityType: value.value.quantityType,
+                          value: value.value.value,
+                        },
+                      },
+                    }
+                  : {
+                      status: value.status,
+                      value: {
+                        type: value.value.type,
+                        actualData: submission.wasteQuantity.value.actualData,
+                      },
+                    }
+                : value.value.quantityType && value.value.value
+                ? {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                      estimateData: {
+                        quantityType: value.value.quantityType,
+                        value: value.value.value,
+                      },
+                    },
+                  }
+                : {
+                    status: value.status,
+                    value: {
+                      type: value.value.type,
+                    },
+                  }
+              : value.value.quantityType && value.value.value
+              ? {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                    estimateData: {
+                      quantityType: value.value.quantityType,
+                      value: value.value.value,
+                    },
+                  },
+                }
+              : {
+                  status: value.status,
+                  value: {
+                    type: value.value.type,
+                  },
+                }
+            : value.value.quantityType && value.value.value
+            ? {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                  estimateData: {
+                    quantityType: value.value.quantityType,
+                    value: value.value.value,
+                  },
+                },
+              }
+            : {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                },
+              }
+          : { status: value.status }
+        : { status: value.status };
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.wasteQuantity = wasteQuantity;
+
+    if (submission.submissionConfirmation.status !== 'Complete') {
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    }
+
+    if (submission.submissionDeclaration.status !== 'Complete') {
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    }
+
+    submission.submissionState =
+      submission.collectionDate.status === 'Complete' &&
+      submission.collectionDate.value.type === 'ActualDate' &&
+      submission.submissionState.status === 'SubmittedWithEstimates' &&
+      value.status === 'Complete' &&
+      value.value.type === 'ActualData'
+        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
+        : submission.submissionState;
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -548,18 +1207,46 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve();
   }
 
-  getCollectionDate({ id }: SubmissionRef): Promise<CollectionDate> {
+  getCollectionDate({ id }: SubmissionRef): Promise<CollectionDateRequest> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    return Promise.resolve(submission.collectionDate);
+    const value: CollectionDateRequest =
+      submission.collectionDate.status !== 'NotStarted'
+        ? submission.collectionDate.value.type === 'ActualDate'
+          ? {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.actualDate?.day as string,
+                month: submission.collectionDate.value.actualDate
+                  ?.month as string,
+                year: submission.collectionDate.value.actualDate
+                  ?.year as string,
+              },
+            }
+          : {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.estimateDate
+                  ?.day as string,
+                month: submission.collectionDate.value.estimateDate
+                  ?.month as string,
+                year: submission.collectionDate.value.estimateDate
+                  ?.year as string,
+              },
+            }
+        : { status: submission.collectionDate.status };
+
+    return Promise.resolve(value);
   }
 
   setCollectionDate(
     { id }: SubmissionRef,
-    value: CollectionDate
+    value: CollectionDateRequest
   ): Promise<void> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
@@ -568,10 +1255,79 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
     if (!isCollectionDateValid(value)) return Promise.reject(Boom.badRequest());
 
-    submission.collectionDate = value;
+    const collectionDateData: CollectionDate =
+      value.status !== 'NotStarted'
+        ? value.value.type === 'ActualDate'
+          ? submission.collectionDate.status === 'Complete' &&
+            submission.collectionDate.value.estimateDate
+            ? {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                  actualDate: {
+                    day: value.value.day,
+                    month: value.value.month,
+                    year: value.value.year,
+                  },
+                  estimateDate: submission.collectionDate.value.estimateDate,
+                },
+              }
+            : {
+                status: value.status,
+                value: {
+                  type: value.value.type,
+                  actualDate: {
+                    day: value.value.day,
+                    month: value.value.month,
+                    year: value.value.year,
+                  },
+                },
+              }
+          : submission.collectionDate.status === 'Complete' &&
+            submission.collectionDate.value.actualDate
+          ? {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                estimateDate: {
+                  day: value.value.day,
+                  month: value.value.month,
+                  year: value.value.year,
+                },
+                actualDate: submission.collectionDate.value.actualDate,
+              },
+            }
+          : {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                estimateDate: {
+                  day: value.value.day,
+                  month: value.value.month,
+                  year: value.value.year,
+                },
+              },
+            }
+        : { status: value.status };
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.collectionDate = collectionDateData;
+
+    if (submission.submissionConfirmation.status !== 'Complete') {
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    }
+
+    if (submission.submissionDeclaration.status !== 'Complete') {
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    }
+
+    submission.submissionState =
+      submission.wasteQuantity.status === 'Complete' &&
+      submission.wasteQuantity.value.type === 'ActualData' &&
+      submission.submissionState.status === 'SubmittedWithEstimates' &&
+      value.status === 'Complete' &&
+      value.value.type === 'ActualDate'
+        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
+        : submission.submissionState;
 
     this.submissions.set(id, submission);
     return Promise.resolve();
@@ -1057,7 +1813,36 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (submission.submissionConfirmation.status === 'CannotStart') {
       return Promise.reject(Boom.badRequest());
     }
-    if (!isCollectionDateValid(submission.collectionDate)) {
+
+    const collectionDate: CollectionDateRequest =
+      submission.collectionDate.status !== 'NotStarted'
+        ? submission.collectionDate.value.type === 'ActualDate'
+          ? {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.actualDate?.day as string,
+                month: submission.collectionDate.value.actualDate
+                  ?.month as string,
+                year: submission.collectionDate.value.actualDate
+                  ?.year as string,
+              },
+            }
+          : {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.estimateDate
+                  ?.day as string,
+                month: submission.collectionDate.value.estimateDate
+                  ?.month as string,
+                year: submission.collectionDate.value.estimateDate
+                  ?.year as string,
+              },
+            }
+        : { status: submission.collectionDate.status };
+
+    if (!isCollectionDateValid(collectionDate)) {
       submission.collectionDate = { status: 'NotStarted' };
       submission.submissionConfirmation = setSubmissionConfirmation(submission);
 
@@ -1095,7 +1880,36 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (submission.submissionDeclaration.status === 'CannotStart') {
       return Promise.reject(Boom.badRequest());
     }
-    if (!isCollectionDateValid(submission.collectionDate)) {
+
+    const collectionDate: CollectionDateRequest =
+      submission.collectionDate.status !== 'NotStarted'
+        ? submission.collectionDate.value.type === 'ActualDate'
+          ? {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.actualDate?.day as string,
+                month: submission.collectionDate.value.actualDate
+                  ?.month as string,
+                year: submission.collectionDate.value.actualDate
+                  ?.year as string,
+              },
+            }
+          : {
+              status: submission.collectionDate.status,
+              value: {
+                type: submission.collectionDate.value.type,
+                day: submission.collectionDate.value.estimateDate
+                  ?.day as string,
+                month: submission.collectionDate.value.estimateDate
+                  ?.month as string,
+                year: submission.collectionDate.value.estimateDate
+                  ?.year as string,
+              },
+            }
+        : { status: submission.collectionDate.status };
+
+    if (!isCollectionDateValid(collectionDate)) {
       submission.collectionDate = { status: 'NotStarted' };
 
       submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1122,6 +1936,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
           transactionId: transactionId,
         },
       };
+
+      const timestamp = new Date();
+      submission.submissionState =
+        submission.collectionDate.status === 'Complete' &&
+        submission.wasteQuantity.status === 'Complete' &&
+        submission.collectionDate.value.type === 'ActualDate' &&
+        submission.wasteQuantity.value.type === 'ActualData'
+          ? { status: 'SubmittedWithActuals', timestamp: timestamp }
+          : { status: 'SubmittedWithEstimates', timestamp: timestamp };
+
       this.submissions.set(id, submission);
     }
 
@@ -1157,6 +1981,49 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     let response: GetDraftByIdResponse;
     try {
       response = await this.client.getDraftById({ id, accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async deleteSubmission(
+    { id, accountId }: SubmissionRef,
+    { action }: ActionRef
+  ): Promise<void> {
+    let response: DeleteDraftResponse;
+    try {
+      response = await this.client.deleteDraft({
+        id,
+        accountId,
+        action,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async getSubmissions(
+    accountId: string
+  ): Promise<ReadonlyArray<SubmissionSummary>> {
+    let response: GetDraftsResponse;
+    try {
+      response = await this.client.getDrafts({ accountId });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1268,7 +2135,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
   async getWasteQuantity({
     id,
     accountId,
-  }: SubmissionRef): Promise<WasteQuantity> {
+  }: SubmissionRef): Promise<WasteQuantityRequest> {
     let response: GetDraftWasteQuantityByIdResponse;
     try {
       response = await this.client.getDraftWasteQuantityById({ id, accountId });
@@ -1288,7 +2155,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
 
   async setWasteQuantity(
     { id, accountId }: SubmissionRef,
-    value: WasteQuantity
+    value: WasteQuantityRequest
   ): Promise<void> {
     let response: SetDraftWasteQuantityByIdResponse;
     try {
@@ -1406,7 +2273,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
   async getCollectionDate({
     id,
     accountId,
-  }: SubmissionRef): Promise<CollectionDate> {
+  }: SubmissionRef): Promise<CollectionDateRequest> {
     let response: GetDraftCollectionDateByIdResponse;
     try {
       response = await this.client.getDraftCollectionDateById({
@@ -1429,7 +2296,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
 
   async setCollectionDate(
     { id, accountId }: SubmissionRef,
-    value: CollectionDate
+    value: CollectionDateRequest
   ): Promise<void> {
     let response: SetDraftCollectionDateByIdResponse;
     try {

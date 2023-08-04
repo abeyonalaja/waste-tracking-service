@@ -77,10 +77,7 @@ export function Index() {
           {t('greenListOverview.allExport.heading')}
         </H2WithTopMargin>
         <Paragraph>
-          <AppLink
-            href="dashboard/update-export-with-actual-details"
-            id="update-export-with-actual-details"
-          >
+          <AppLink href="update-annex-7" id="update-export-with-actual-details">
             {t('greenListOverview.allExport.linkOne')} (6)
           </AppLink>
         </Paragraph>

@@ -29,7 +29,7 @@ export default class DaprDraftRepository implements DraftRepository {
       return {
         id: s.id,
         reference: s.reference,
-        wasteDescription: { status: s.wasteDescription.status },
+        wasteDescription: s.wasteDescription,
         wasteQuantity: { status: s.wasteQuantity.status },
         exporterDetail: { status: s.exporterDetail.status },
         importerDetail: { status: s.exporterDetail.status },
@@ -40,7 +40,8 @@ export default class DaprDraftRepository implements DraftRepository {
         transitCountries: { status: s.transitCountries.status },
         recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
         submissionConfirmation: { status: s.submissionConfirmation.status },
-        submissionDeclaration: { status: s.submissionDeclaration.status },
+        submissionDeclaration: s.submissionDeclaration,
+        submissionState: s.submissionState,
       };
     });
   }
@@ -84,6 +85,7 @@ export default class DaprDraftRepository implements DraftRepository {
       recoveryFacilityDetail: data.recoveryFacilityDetail,
       submissionConfirmation: data.submissionConfirmation,
       submissionDeclaration: data.submissionDeclaration,
+      submissionState: data.submissionState,
     };
   }
 

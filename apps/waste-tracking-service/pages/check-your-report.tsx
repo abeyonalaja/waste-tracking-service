@@ -267,7 +267,7 @@ const CheckYourReport = () => {
 
       e.preventDefault();
     },
-    [id, router, checkYourReportPage.data]
+    [id, router, checkYourReportPage]
   );
 
   const BreadCrumbs = () => {
@@ -287,6 +287,32 @@ const CheckYourReport = () => {
 
   const handleAccordionShowAll = (expand) => {
     setExpandedAll(expand);
+  };
+
+  const quantityType = () => {
+    if (
+      checkYourReportPage?.data.wasteQuantity.status === 'Complete' &&
+      checkYourReportPage?.data.wasteDescription.status === 'Complete'
+    ) {
+      if (
+        checkYourReportPage.data.wasteDescription.wasteCode.type !==
+        'NotApplicable'
+      ) {
+        if (
+          checkYourReportPage.data.wasteQuantity?.value.type === 'EstimateData'
+        ) {
+          return checkYourReportPage.data.wasteQuantity.value.estimateData
+            .quantityType;
+        } else {
+          if (
+            checkYourReportPage.data.wasteQuantity?.value.type === 'ActualData'
+          ) {
+            return checkYourReportPage.data.wasteQuantity.value.actualData
+              .quantityType;
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -523,6 +549,7 @@ const CheckYourReport = () => {
                               </AppLink>
                             </Actions>
                           </Row>
+
                           {checkYourReportPage.data.wasteQuantity.status ===
                             'Complete' && (
                             <>
@@ -532,42 +559,57 @@ const CheckYourReport = () => {
                                     'exportJourney.checkAnswers.wasteQuantity'
                                   )}
                                 </Key>
-                                <Value id="waste-quanitity">
-                                  {checkYourReportPage?.data?.wasteQuantity
-                                    .value.type === 'EstimateData' && (
-                                    <b>
-                                      {t(
-                                        'exportJourney.checkAnswers.estimated'
+                                {checkYourReportPage?.data.wasteQuantity
+                                  .value && (
+                                  <Value id="waste-quanitity">
+                                    {checkYourReportPage?.data?.wasteQuantity
+                                      .value.type === 'EstimateData' && (
+                                      <b>
+                                        {t(
+                                          'exportJourney.checkAnswers.estimated'
+                                        )}
+                                        <br />
+                                      </b>
+                                    )}
+                                    {checkYourReportPage.data.wasteQuantity
+                                      .value.type !== 'NotApplicable' &&
+                                      checkYourReportPage.data?.wasteQuantity
+                                        ?.value.type === 'EstimateData' && (
+                                        <span>
+                                          {
+                                            checkYourReportPage?.data
+                                              .wasteQuantity.value.estimateData
+                                              .value
+                                          }
+                                        </span>
                                       )}
-                                      <br />
-                                    </b>
-                                  )}
-                                  {checkYourReportPage.data.wasteQuantity.value
-                                    .type !== 'NotApplicable' && (
-                                    <span>
-                                      {
-                                        checkYourReportPage?.data.wasteQuantity
-                                          .value.value
-                                      }
-                                    </span>
-                                  )}
+                                    {checkYourReportPage.data.wasteQuantity
+                                      .value.type !== 'NotApplicable' &&
+                                      checkYourReportPage.data?.wasteQuantity
+                                        ?.value.type === 'ActualData' && (
+                                        <span>
+                                          {
+                                            checkYourReportPage?.data
+                                              .wasteQuantity.value.actualData
+                                              .value
+                                          }
+                                        </span>
+                                      )}
 
-                                  {checkYourReportPage.data.wasteQuantity.value
-                                    .type !== 'NotApplicable' ? (
-                                    <UnitDisplay
-                                      quantityType={
-                                        checkYourReportPage.data.wasteQuantity
-                                          .value.quantityType
-                                      }
-                                      type={
-                                        checkYourReportPage.data
-                                          ?.wasteDescription.wasteCode.type
-                                      }
-                                    />
-                                  ) : (
-                                    <span> {t('weight.kg')}</span>
-                                  )}
-                                </Value>
+                                    {checkYourReportPage.data.wasteDescription
+                                      .wasteCode.type !== 'NotApplicable' ? (
+                                      <UnitDisplay
+                                        quantityType={quantityType()}
+                                        type={
+                                          checkYourReportPage.data
+                                            ?.wasteDescription.wasteCode.type
+                                        }
+                                      />
+                                    ) : (
+                                      <span> {t('weight.kg')}</span>
+                                    )}
+                                  </Value>
+                                )}
                                 <Actions>
                                   <AppLink
                                     id="waste-quanitity-change"
@@ -893,35 +935,60 @@ const CheckYourReport = () => {
                                 'exportJourney.submitAnExport.SectionThree.collectionDate'
                               )}
                             </Key>
-                            <Value id="collection-date">
-                              {checkYourReportPage?.data?.collectionDate?.value
-                                ?.type === 'EstimateDate' ? (
+
+                            {checkYourReportPage.data?.collectionDate.value
+                              .type === 'EstimateDate' && (
+                              <Value id="collection-date">
                                 <div>
                                   <b>
                                     {t('exportJourney.checkAnswers.estimated')}
                                   </b>
                                   <br />
                                 </div>
-                              ) : null}
 
-                              {format(
-                                new Date(
-                                  Number(
-                                    checkYourReportPage.data.collectionDate
-                                      .value.year
+                                {format(
+                                  new Date(
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.estimateDate.year
+                                    ),
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.estimateDate.month
+                                    ) - 1,
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.estimateDate.day
+                                    )
                                   ),
-                                  Number(
-                                    checkYourReportPage.data.collectionDate
-                                      .value.month
-                                  ) - 1,
-                                  Number(
-                                    checkYourReportPage.data.collectionDate
-                                      .value.day
-                                  )
-                                ),
-                                'd MMMM y'
-                              )}
-                            </Value>
+                                  'd MMMM y'
+                                )}
+                              </Value>
+                            )}
+
+                            {checkYourReportPage.data?.collectionDate.value
+                              .type === 'ActualDate' && (
+                              <Value id="collection-date">
+                                {format(
+                                  new Date(
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.actualDate.year
+                                    ),
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.actualDate.month
+                                    ) - 1,
+                                    Number(
+                                      checkYourReportPage.data.collectionDate
+                                        .value.actualDate.day
+                                    )
+                                  ),
+                                  'd MMMM y'
+                                )}
+                              </Value>
+                            )}
+
                             <Actions>
                               <AppLink
                                 id="collection-date-change"

@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import Ajv from 'ajv/dist/jtd';
 import {
+  DeleteDraftRequest,
   GetDraftByIdResponse,
   GetDraftsResponse,
   SetDraftCollectionDateByIdRequest,
@@ -20,6 +21,7 @@ import {
   SetDraftSubmissionDeclarationByIdRequest,
 } from './dto';
 import {
+  deleteDraftRequest,
   getDraftByIdResponse,
   getDraftsResponse,
   setDraftCustomerReferenceByIdResponse,
@@ -40,6 +42,28 @@ import {
 } from './schema';
 
 const ajv = new Ajv();
+
+describe('deleteDraftRequest', () => {
+  const validate = ajv.compile<DeleteDraftRequest>(deleteDraftRequest);
+
+  it('is compatible with dto values', () => {
+    let value: DeleteDraftRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      action: 'CANCEL',
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      action: 'DELETE',
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
 
 describe('getDraftsResponse', () => {
   const validate = ajv.compile<GetDraftsResponse>(getDraftsResponse);
@@ -63,6 +87,10 @@ describe('getDraftsResponse', () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: new Date(),
+          },
         },
       ],
     };
@@ -112,6 +140,10 @@ describe('getDraftByIdResponse', () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       },
     };
 
@@ -617,7 +649,7 @@ describe('setDraftSubmissionConfirmationByIdRequest', () => {
   );
 
   it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionConfirmationByIdRequest = {
+    let value: SetDraftSubmissionConfirmationByIdRequest = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
@@ -626,10 +658,8 @@ describe('setDraftSubmissionConfirmationByIdRequest', () => {
     };
 
     expect(validate(value)).toBe(true);
-  });
 
-  it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionConfirmationByIdRequest = {
+    value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
@@ -638,10 +668,8 @@ describe('setDraftSubmissionConfirmationByIdRequest', () => {
     };
 
     expect(validate(value)).toBe(true);
-  });
 
-  it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionConfirmationByIdRequest = {
+    value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
@@ -660,7 +688,7 @@ describe('setDraftSubmissionDeclarationByIdRequest', () => {
   );
 
   it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionDeclarationByIdRequest = {
+    let value: SetDraftSubmissionDeclarationByIdRequest = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
@@ -669,10 +697,8 @@ describe('setDraftSubmissionDeclarationByIdRequest', () => {
     };
 
     expect(validate(value)).toBe(true);
-  });
 
-  it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionDeclarationByIdRequest = {
+    value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {
@@ -681,10 +707,8 @@ describe('setDraftSubmissionDeclarationByIdRequest', () => {
     };
 
     expect(validate(value)).toBe(true);
-  });
 
-  it('is compatible with dto values', () => {
-    const value: SetDraftSubmissionDeclarationByIdRequest = {
+    value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
       value: {

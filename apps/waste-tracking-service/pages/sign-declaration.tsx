@@ -146,6 +146,10 @@ const SignDeclaration = () => {
     [id, router, signDeclarationPage.data]
   );
 
+  if (signDeclarationPage.data?.submissionDeclaration.status === 'Complete') {
+    router.push('/dashboard');
+  }
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>

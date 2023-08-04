@@ -1,6 +1,7 @@
 import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 import {
   CreateDraftRequest,
+  DeleteDraftRequest,
   CustomerReference,
   GetDraftByIdRequest,
   GetDraftCustomerReferenceByIdRequest,
@@ -86,7 +87,7 @@ const draftWasteDescription: SchemaObject = {
   },
 };
 
-const draftWasteQuantity: SchemaObject = {
+const draftWasteQuantityRequest: SchemaObject = {
   discriminator: 'status',
   mapping: {
     CannotStart: {
@@ -124,6 +125,83 @@ const draftWasteQuantity: SchemaObject = {
               properties: {
                 quantityType: { enum: ['Volume', 'Weight'] },
                 value: { type: 'float64' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const draftWasteQuantity: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    CannotStart: {
+      properties: {},
+    },
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {},
+      optionalProperties: {
+        value: {
+          properties: {},
+          optionalProperties: {
+            type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
+            estimateData: {
+              properties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                value: { type: 'float64' },
+              },
+            },
+            actualData: {
+              properties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                value: { type: 'float64' },
+              },
+            },
+          },
+        },
+      },
+    },
+    Complete: {
+      properties: {
+        value: {
+          discriminator: 'type',
+          mapping: {
+            NotApplicable: { properties: {} },
+            EstimateData: {
+              optionalProperties: {
+                estimateData: {
+                  properties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    value: { type: 'float64' },
+                  },
+                },
+                actualData: {
+                  properties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    value: { type: 'float64' },
+                  },
+                },
+              },
+            },
+            ActualData: {
+              optionalProperties: {
+                estimateData: {
+                  properties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    value: { type: 'float64' },
+                  },
+                },
+                actualData: {
+                  properties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    value: { type: 'float64' },
+                  },
+                },
               },
             },
           },
@@ -222,7 +300,7 @@ const draftImporterDetail: SchemaObject = {
   },
 };
 
-const draftCollectionDate: SchemaObject = {
+const draftCollectionDateRequest: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -236,6 +314,40 @@ const draftCollectionDate: SchemaObject = {
             day: { type: 'string' },
             month: { type: 'string' },
             year: { type: 'string' },
+          },
+        },
+      },
+    },
+  },
+};
+
+const draftCollectionDate: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Complete: {
+      properties: {
+        value: {
+          properties: {
+            type: { enum: ['EstimateDate', 'ActualDate'] },
+          },
+          optionalProperties: {
+            estimateDate: {
+              properties: {
+                day: { type: 'string' },
+                month: { type: 'string' },
+                year: { type: 'string' },
+              },
+            },
+            actualDate: {
+              properties: {
+                day: { type: 'string' },
+                month: { type: 'string' },
+                year: { type: 'string' },
+              },
+            },
           },
         },
       },
@@ -605,6 +717,42 @@ const draftSubmissionDeclaration: SchemaObject = {
   },
 };
 
+const draftSubmissionState: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    InProgress: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    Cancelled: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    Deleted: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    SubmittedWithEstimates: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    SubmittedWithActuals: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    UpdatedWithActuals: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+  },
+};
+
 const draftSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
@@ -621,6 +769,7 @@ const draftSubmission: SchemaObject = {
     recoveryFacilityDetail: draftRecoveryFacilityDetails,
     submissionConfirmation: draftSubmissionConfirmation,
     submissionDeclaration: draftSubmissionDeclaration,
+    submissionState: draftSubmissionState,
   },
 };
 
@@ -648,7 +797,8 @@ export const getDraftsResponse: SchemaObject = {
           transitCountries: { ref: 'sectionSummary' },
           recoveryFacilityDetail: { ref: 'sectionSummary' },
           submissionConfirmation: { ref: 'sectionSummary' },
-          submissionDeclaration: { ref: 'sectionSummary' },
+          submissionDeclaration: draftSubmissionDeclaration,
+          submissionState: draftSubmissionState,
         },
       },
     },
@@ -689,6 +839,22 @@ export const createDraftResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: draftSubmission,
+  },
+};
+
+export const deleteDraftRequest: JTDSchemaType<DeleteDraftRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    action: { enum: ['CANCEL', 'DELETE'] },
+  },
+};
+
+export const deleteDraftResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
   },
 };
 
@@ -776,7 +942,7 @@ export const setDraftWasteQuantityByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: draftWasteQuantity,
+    value: draftWasteQuantityRequest,
   },
 };
 
@@ -872,7 +1038,7 @@ export const setDraftCollectionDateByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: draftCollectionDate,
+    value: draftCollectionDateRequest,
   },
 };
 

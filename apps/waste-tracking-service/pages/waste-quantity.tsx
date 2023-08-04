@@ -24,7 +24,7 @@ const WasteQuantity = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
-  const [data, setData] = useState<GetWasteQuantityResponse>(null);
+  const [data, setData] = useState(null);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);
   const [quantityType, setQuantityType] = useState(null);
   const [savedQuantityType, setSavedQuantityType] = useState(null);

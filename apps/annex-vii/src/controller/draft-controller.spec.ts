@@ -100,6 +100,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'CannotStart' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       };
 
       mockRepository.getDraft.mockResolvedValue(value);
@@ -151,6 +155,7 @@ describe(DraftController, () => {
   describe('setWasteDescriptionById', () => {
     it('enables waste quantity on completion of waste description', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -169,6 +174,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'CannotStart' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -209,6 +218,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -216,6 +229,7 @@ describe(DraftController, () => {
 
     it('enables recovery facility where some waste code is provided', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -234,6 +248,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'CannotStart' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -268,6 +286,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -275,6 +297,7 @@ describe(DraftController, () => {
 
     it('resets waste-quantity section if input switches to small-waste', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -292,8 +315,10 @@ describe(DraftController, () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: 'Volume',
-            value: 12.0,
+            actualData: {
+              quantityType: 'Volume',
+              value: 12.0,
+            },
           },
         },
         exporterDetail: { status: 'NotStarted' },
@@ -309,6 +334,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'CannotStart' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -343,6 +372,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -352,6 +385,7 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -369,8 +403,10 @@ describe(DraftController, () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: 'Volume',
-            value: 12.0,
+            actualData: {
+              quantityType: 'Volume',
+              value: 12.0,
+            },
           },
         },
         exporterDetail: { status: 'NotStarted' },
@@ -429,6 +465,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -463,6 +503,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -472,6 +516,7 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -486,8 +531,10 @@ describe(DraftController, () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: 'Volume',
-            value: 12.0,
+            actualData: {
+              quantityType: 'Volume',
+              value: 12.0,
+            },
           },
         },
         exporterDetail: { status: 'NotStarted' },
@@ -546,6 +593,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -586,6 +637,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -595,6 +650,7 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -612,8 +668,10 @@ describe(DraftController, () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: 'Volume',
-            value: 12.0,
+            actualData: {
+              quantityType: 'Volume',
+              value: 12.0,
+            },
           },
         },
         exporterDetail: { status: 'NotStarted' },
@@ -672,6 +730,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -712,6 +774,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -723,6 +789,7 @@ describe(DraftController, () => {
       const carrierId2 = faker.datatype.uuid();
       const carrierId3 = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -740,8 +807,10 @@ describe(DraftController, () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: 'Volume',
-            value: 12.0,
+            actualData: {
+              quantityType: 'Volume',
+              value: 12.0,
+            },
           },
         },
         exporterDetail: { status: 'NotStarted' },
@@ -837,6 +906,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -867,8 +940,10 @@ describe(DraftController, () => {
             status: 'Started',
             value: {
               type: 'ActualData',
-              quantityType: 'Volume',
-              value: 12.0,
+              actualData: {
+                quantityType: 'Volume',
+                value: 12.0,
+              },
             },
           },
           exporterDetail: { status: 'NotStarted' },
@@ -964,6 +1039,10 @@ describe(DraftController, () => {
           },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -973,6 +1052,7 @@ describe(DraftController, () => {
   describe('setDraftCollectionDateById', () => {
     it('accepts a valid collection date', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -997,6 +1077,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1033,9 +1117,11 @@ describe(DraftController, () => {
             status: 'Complete',
             value: {
               type: 'ActualDate',
-              year: date.getFullYear().toString(),
-              month: (date.getMonth() + 1).toString().padStart(2, '0'),
-              day: date.getDate().toString().padStart(2, '0'),
+              actualDate: {
+                year: date.getFullYear().toString(),
+                month: (date.getMonth() + 1).toString().padStart(2, '0'),
+                day: date.getDate().toString().padStart(2, '0'),
+              },
             },
           },
           carriers: {
@@ -1048,6 +1134,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1102,6 +1192,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1164,6 +1258,7 @@ describe(DraftController, () => {
     it('accepts a valid carrier detail', async () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -1187,6 +1282,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1259,6 +1358,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1309,6 +1412,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1327,6 +1434,7 @@ describe(DraftController, () => {
   describe('setDraftExitLocationById', () => {
     it('accepts a request if provided is Yes and value given', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -1345,6 +1453,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const setExitLocationRequest = {
@@ -1377,6 +1489,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1386,6 +1502,7 @@ describe(DraftController, () => {
 
     it('accepts request if provided is No and no value is given', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -1404,6 +1521,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const setExitLocationRequest = {
@@ -1437,6 +1558,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1448,6 +1573,7 @@ describe(DraftController, () => {
   describe('setDraftTransitCountries', () => {
     it('accepts valid Transit Countries data', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -1466,6 +1592,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1500,6 +1630,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1529,6 +1663,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'NotStarted' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1573,6 +1711,7 @@ describe(DraftController, () => {
     it('accepts a valid recovery facility detail', async () => {
       const id = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -1598,6 +1737,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1671,6 +1814,10 @@ describe(DraftController, () => {
           },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -1723,6 +1870,10 @@ describe(DraftController, () => {
         },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -1763,8 +1914,10 @@ describe(DraftController, () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Weight',
-          value: faker.datatype.number(),
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.number(),
+          },
         },
       },
       exporterDetail: {
@@ -1800,9 +1953,11 @@ describe(DraftController, () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          year: date.getFullYear().toString(),
-          month: (date.getMonth() + 1).toString().padStart(2, '0'),
-          day: date.getDate().toString().padStart(2, '0'),
+          actualDate: {
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
         },
       },
       carriers: {
@@ -1883,6 +2038,10 @@ describe(DraftController, () => {
         status: 'NotStarted',
       },
       submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
     } as DraftSubmission;
 
     const mockInvalidDateSubmission = { ...mockValidSubmission };
@@ -1892,9 +2051,11 @@ describe(DraftController, () => {
       status: 'Complete',
       value: {
         type: 'ActualDate',
-        year: date.getFullYear().toString(),
-        month: (date.getMonth() + 1).toString().padStart(2, '0'),
-        day: date.getDate().toString().padStart(2, '0'),
+        actualDate: {
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
       },
     };
 
@@ -2048,8 +2209,10 @@ describe(DraftController, () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Weight',
-          value: faker.datatype.number(),
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.number(),
+          },
         },
       },
       exporterDetail: {
@@ -2085,9 +2248,11 @@ describe(DraftController, () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          year: date.getFullYear().toString(),
-          month: (date.getMonth() + 1).toString().padStart(2, '0'),
-          day: date.getDate().toString().padStart(2, '0'),
+          actualDate: {
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
         },
       },
       carriers: {
@@ -2168,6 +2333,10 @@ describe(DraftController, () => {
         status: 'NotStarted',
       },
       submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
     } as DraftSubmission;
 
     const mockInvalidDateSubmission = { ...mockSubmission };
@@ -2177,9 +2346,11 @@ describe(DraftController, () => {
       status: 'Complete',
       value: {
         type: 'ActualDate',
-        year: date.getFullYear().toString(),
-        month: (date.getMonth() + 1).toString().padStart(2, '0'),
-        day: date.getDate().toString().padStart(2, '0'),
+        actualDate: {
+          year: date.getFullYear().toString(),
+          month: (date.getMonth() + 1).toString().padStart(2, '0'),
+          day: date.getDate().toString().padStart(2, '0'),
+        },
       },
     };
 
@@ -2287,6 +2458,7 @@ describe(DraftController, () => {
   describe('setWasteDescriptionById', () => {
     it('Reset recoveryFacility status upon changing waste description from Laboratory to Non-Laboratory and vice versa', async () => {
       const id = faker.datatype.uuid();
+      const timestamp = new Date();
       mockRepository.getDraft.mockResolvedValue({
         id,
         reference: null,
@@ -2305,6 +2477,10 @@ describe(DraftController, () => {
         recoveryFacilityDetail: { status: 'CannotStart' },
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
       });
 
       const accountId = faker.datatype.uuid();
@@ -2345,6 +2521,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -2398,6 +2578,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );
@@ -2448,6 +2632,10 @@ describe(DraftController, () => {
           recoveryFacilityDetail: { status: 'NotStarted' },
           submissionConfirmation: { status: 'CannotStart' },
           submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
         },
         accountId
       );

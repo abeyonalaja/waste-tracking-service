@@ -31,12 +31,30 @@ export interface PluginOptions {
  * This is a placeholder for an account-ID that will be drawn from an identity
  * token; we are currently simulating a single account.
  */
-const accountId = 'c3c99728-3d5e-4357-bfcb-32dd913a55e8';
+const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
 
 const plugin: Plugin<PluginOptions> = {
   name: 'submissions',
   version: '1.0.0',
   register: async function (server, { backend, logger }) {
+    server.route({
+      method: 'GET',
+      path: '/',
+      handler: async function () {
+        try {
+          const value = await backend.getSubmissions(accountId);
+          return value as dto.GetSubmissionsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
     server.route({
       method: 'GET',
       path: '/{id}',
@@ -76,6 +94,45 @@ const plugin: Plugin<PluginOptions> = {
               )) as dto.CreateSubmissionResponse
             )
             .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'DELETE',
+      path: '/{id}',
+      handler: async function ({ params, query }, h) {
+        let action = query['action'] as string | undefined;
+        if (!action) {
+          return Boom.badRequest("Missing query parameter 'action'");
+        }
+
+        action = action.toUpperCase();
+        if (action !== 'CANCEL' && action !== 'DELETE') {
+          return Boom.badRequest(
+            "Incorrect value for query parameter 'action'"
+          );
+        }
+
+        try {
+          return h
+            .response(
+              (await backend.deleteSubmission(
+                {
+                  id: params.id,
+                  accountId,
+                },
+                { action }
+              )) as undefined
+            )
+            .code(204);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

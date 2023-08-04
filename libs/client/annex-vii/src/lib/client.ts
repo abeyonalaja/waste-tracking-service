@@ -2,6 +2,8 @@ import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
   CreateDraftRequest,
   CreateDraftResponse,
+  DeleteDraftRequest,
+  DeleteDraftResponse,
   GetDraftByIdRequest,
   GetDraftByIdResponse,
   GetDraftCustomerReferenceByIdRequest,
@@ -63,6 +65,7 @@ import {
   SetDraftSubmissionDeclarationByIdRequest,
   SetDraftSubmissionDeclarationByIdResponse,
   createDraft,
+  deleteDraft,
   getDraftById,
   getDraftCustomerReferenceById,
   getDraftExporterDetailById,
@@ -135,6 +138,15 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as CreateDraftResponse;
+  }
+
+  async deleteDraft(req: DeleteDraftRequest): Promise<DeleteDraftResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteDraft.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteDraftResponse;
   }
 
   async getDraftCustomerReferenceById(

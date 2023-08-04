@@ -9,6 +9,7 @@ type AccountIdRequest = { accountId: string };
 type IdRequest = { id: string };
 type CarrierIdRequest = { carrierId: string };
 type RfdIdRequest = { rfdId: string };
+type ActionRequest = { action: 'CANCEL' | 'DELETE' };
 
 type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
@@ -33,7 +34,7 @@ export type DraftWasteDescription =
   | ({ status: 'Started' } & Partial<DraftWasteDescriptionData>)
   | ({ status: 'Complete' } & DraftWasteDescriptionData);
 
-type DraftWasteQuantity =
+export type DraftWasteQuantityRequest =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
   | {
@@ -54,6 +55,42 @@ type DraftWasteQuantity =
             type: 'EstimateData' | 'ActualData';
             quantityType: 'Volume' | 'Weight';
             value: number;
+          };
+    };
+
+export type DraftWasteQuantity =
+  | { status: 'CannotStart' }
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started';
+      value?: {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        estimateData?: {
+          quantityType: 'Volume' | 'Weight';
+          value: number;
+        };
+        actualData?: {
+          quantityType: 'Volume' | 'Weight';
+          value: number;
+        };
+      };
+    }
+  | {
+      status: 'Complete';
+      value:
+        | {
+            type: 'NotApplicable';
+          }
+        | {
+            type: 'EstimateData' | 'ActualData';
+            estimateData?: {
+              quantityType: 'Volume' | 'Weight';
+              value: number;
+            };
+            actualData?: {
+              quantityType: 'Volume' | 'Weight';
+              value: number;
+            };
           };
     };
 
@@ -88,7 +125,7 @@ export type DraftImporterDetailData = {
   };
 };
 
-export type DraftCollectionDate =
+export type DraftCollectionDateRequest =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
@@ -97,6 +134,25 @@ export type DraftCollectionDate =
         day: string;
         month: string;
         year: string;
+      };
+    };
+
+export type DraftCollectionDate =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Complete';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        estimateDate?: {
+          day: string;
+          month: string;
+          year: string;
+        };
+        actualDate?: {
+          day: string;
+          month: string;
+          year: string;
+        };
       };
     };
 
@@ -243,6 +299,17 @@ export type DraftSubmissionDeclaration =
       values: DraftSubmissionDeclarationData;
     };
 
+export type DraftSubmissionState = {
+  status:
+    | 'InProgress'
+    | 'Cancelled'
+    | 'Deleted'
+    | 'SubmittedWithEstimates'
+    | 'SubmittedWithActuals'
+    | 'UpdatedWithActuals';
+  timestamp: Date;
+};
+
 export type DraftSubmission = {
   id: string;
   reference: CustomerReference;
@@ -258,12 +325,13 @@ export type DraftSubmission = {
   recoveryFacilityDetail: DraftRecoveryFacilityDetail;
   submissionConfirmation: DraftSubmissionConfirmation;
   submissionDeclaration: DraftSubmissionDeclaration;
+  submissionState: DraftSubmissionState;
 };
 
 export type DraftSubmissionSummary = Readonly<{
   id: string;
   reference: CustomerReference;
-  wasteDescription: DraftSectionSummary;
+  wasteDescription: DraftWasteDescription;
   wasteQuantity: DraftSectionSummary;
   exporterDetail: DraftSectionSummary;
   importerDetail: DraftSectionSummary;
@@ -274,7 +342,8 @@ export type DraftSubmissionSummary = Readonly<{
   transitCountries: DraftSectionSummary;
   recoveryFacilityDetail: DraftSectionSummary;
   submissionConfirmation: DraftSectionSummary;
-  submissionDeclaration: DraftSectionSummary;
+  submissionDeclaration: DraftSubmissionDeclaration;
+  submissionState: DraftSubmissionState;
 }>;
 
 export type GetDraftsRequest = AccountIdRequest;
@@ -290,6 +359,10 @@ export type CreateDraftRequest = AccountIdRequest & {
 };
 export type CreateDraftResponse = Response<DraftSubmission>;
 export const createDraft: Method = { name: 'createDraft', httpVerb: 'POST' };
+
+export type DeleteDraftRequest = IdRequest & AccountIdRequest & ActionRequest;
+export type DeleteDraftResponse = Response<void>;
+export const deleteDraft: Method = { name: 'deleteDraft', httpVerb: 'POST' };
 
 export type GetDraftCustomerReferenceByIdRequest = IdRequest & AccountIdRequest;
 export type GetDraftCustomerReferenceByIdResponse = Response<CustomerReference>;
@@ -323,14 +396,15 @@ export const setDraftWasteDescriptionById: Method = {
 };
 
 export type GetDraftWasteQuantityByIdRequest = IdRequest & AccountIdRequest;
-export type GetDraftWasteQuantityByIdResponse = Response<DraftWasteQuantity>;
+export type GetDraftWasteQuantityByIdResponse =
+  Response<DraftWasteQuantityRequest>;
 export const getDraftWasteQuantityById: Method = {
   name: 'getDraftWasteQuantityById',
   httpVerb: 'POST',
 };
 
 export type SetDraftWasteQuantityByIdRequest = IdRequest &
-  AccountIdRequest & { value: DraftWasteQuantity };
+  AccountIdRequest & { value: DraftWasteQuantityRequest };
 export type SetDraftWasteQuantityByIdResponse = Response<void>;
 export const setDraftWasteQuantityById: Method = {
   name: 'setDraftWasteQuantityById',
@@ -368,14 +442,15 @@ export const setDraftImporterDetailById: Method = {
 };
 
 export type GetDraftCollectionDateByIdRequest = IdRequest & AccountIdRequest;
-export type GetDraftCollectionDateByIdResponse = Response<DraftCollectionDate>;
+export type GetDraftCollectionDateByIdResponse =
+  Response<DraftCollectionDateRequest>;
 export const getDraftCollectionDateById: Method = {
   name: 'getDraftCollectionDateById',
   httpVerb: 'POST',
 };
 
 export type SetDraftCollectionDateByIdRequest = IdRequest &
-  AccountIdRequest & { value: DraftCollectionDate };
+  AccountIdRequest & { value: DraftCollectionDateRequest };
 export type SetDraftCollectionDateByIdResponse = Response<void>;
 export const setDraftCollectionDateById: Method = {
   name: 'setDraftCollectionDateById',

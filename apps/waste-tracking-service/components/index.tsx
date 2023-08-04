@@ -8,6 +8,7 @@ import { ButtonGroup } from './ButtonGroup';
 import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
+import { DateConverter } from './DateConverter';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { EwcCodeSelector } from './EwcCodeSelector';
@@ -38,6 +39,7 @@ export {
   CompleteFooter,
   CompleteHeader,
   ConditionalRadioWrap,
+  DateConverter,
   DocumentStatus,
   DownloadPDFLink,
   EwcCodeSelector,

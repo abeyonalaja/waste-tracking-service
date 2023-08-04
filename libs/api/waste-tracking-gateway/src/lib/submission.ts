@@ -1,3 +1,7 @@
+type SectionSummary = {
+  status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
+};
+
 export type CustomerReference = string | null;
 
 export type WasteDescriptionData = {
@@ -43,7 +47,7 @@ export type ImporterDetailData = {
   };
 };
 
-export type CollectionDate =
+export type CollectionDateRequest =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
@@ -55,12 +59,31 @@ export type CollectionDate =
       };
     };
 
+export type CollectionDate =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Complete';
+      value: {
+        type: 'EstimateDate' | 'ActualDate';
+        estimateDate?: {
+          day: string;
+          month: string;
+          year: string;
+        };
+        actualDate?: {
+          day: string;
+          month: string;
+          year: string;
+        };
+      };
+    };
+
 export type WasteDescription =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
   | ({ status: 'Complete' } & WasteDescriptionData);
 
-export type WasteQuantity =
+export type WasteQuantityRequest =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
   | {
@@ -81,6 +104,42 @@ export type WasteQuantity =
             type: 'EstimateData' | 'ActualData';
             quantityType: 'Volume' | 'Weight';
             value: number;
+          };
+    };
+
+export type WasteQuantity =
+  | { status: 'CannotStart' }
+  | { status: 'NotStarted' }
+  | {
+      status: 'Started';
+      value?: {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        estimateData?: {
+          quantityType: 'Volume' | 'Weight';
+          value: number;
+        };
+        actualData?: {
+          quantityType: 'Volume' | 'Weight';
+          value: number;
+        };
+      };
+    }
+  | {
+      status: 'Complete';
+      value:
+        | {
+            type: 'NotApplicable';
+          }
+        | {
+            type: 'EstimateData' | 'ActualData';
+            estimateData?: {
+              quantityType: 'Volume' | 'Weight';
+              value: number;
+            };
+            actualData?: {
+              quantityType: 'Volume' | 'Weight';
+              value: number;
+            };
           };
     };
 
@@ -227,6 +286,17 @@ export type SubmissionDeclaration =
       values: SubmissionDeclarationData;
     };
 
+export type SubmissionState = {
+  status:
+    | 'InProgress'
+    | 'Cancelled'
+    | 'Deleted'
+    | 'SubmittedWithEstimates'
+    | 'SubmittedWithActuals'
+    | 'UpdatedWithActuals';
+  timestamp: Date;
+};
+
 export type Submission = {
   id: string;
   reference: CustomerReference;
@@ -242,7 +312,28 @@ export type Submission = {
   recoveryFacilityDetail: RecoveryFacilityDetail;
   submissionConfirmation: SubmissionConfirmation;
   submissionDeclaration: SubmissionDeclaration;
+  submissionState: SubmissionState;
 };
+
+export type SubmissionSummary = Readonly<{
+  id: string;
+  reference: CustomerReference;
+  wasteDescription: WasteDescription;
+  wasteQuantity: SectionSummary;
+  exporterDetail: SectionSummary;
+  importerDetail: SectionSummary;
+  collectionDate: SectionSummary;
+  carriers: SectionSummary;
+  collectionDetail: SectionSummary;
+  ukExitLocation: SectionSummary;
+  transitCountries: SectionSummary;
+  recoveryFacilityDetail: SectionSummary;
+  submissionConfirmation: SectionSummary;
+  submissionDeclaration: SubmissionDeclaration;
+  submissionState: SubmissionState;
+}>;
+
+export type GetSubmissionsResponse = ReadonlyArray<SubmissionSummary>;
 
 export type GetSubmissionResponse = Submission;
 export type CreateSubmissionRequest = Pick<Submission, 'reference'>;
@@ -255,18 +346,18 @@ export type GetReferenceResponse = CustomerReference;
 export type PutWasteDescriptionRequest = WasteDescription;
 export type PutWasteDescriptionResponse = WasteDescription;
 export type GetWasteDescriptionResponse = WasteDescription;
-export type PutWasteQuantityRequest = WasteQuantity;
-export type PutWasteQuantityResponse = WasteQuantity;
-export type GetWasteQuantityResponse = WasteQuantity;
+export type PutWasteQuantityRequest = WasteQuantityRequest;
+export type PutWasteQuantityResponse = WasteQuantityRequest;
+export type GetWasteQuantityResponse = WasteQuantityRequest;
 export type PutExporterDetailRequest = ExporterDetail;
 export type PutExporterDetailResponse = ExporterDetail;
 export type GetExporterDetailResponse = ExporterDetail;
 export type PutImporterDetailRequest = ImporterDetail;
 export type PutImporterDetailResponse = ImporterDetail;
 export type GetImporterDetailResponse = ImporterDetail;
-export type PutCollectionDateRequest = CollectionDate;
-export type PutCollectionDateResponse = CollectionDate;
-export type GetCollectionDateResponse = CollectionDate;
+export type PutCollectionDateRequest = CollectionDateRequest;
+export type PutCollectionDateResponse = CollectionDateRequest;
+export type GetCollectionDateResponse = CollectionDateRequest;
 
 export type ListCarriersResponse = Carriers;
 export type CreateCarriersRequest = Omit<Carriers, 'transport' | 'values'>;
