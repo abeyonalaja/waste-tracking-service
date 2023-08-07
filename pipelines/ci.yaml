@@ -40,12 +40,12 @@ jobs:
 
       - bash: |
           echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
-          affected=$(npx nx print-affected --type=app --select=projects)
+          affected=$(npx nx show projects --affected)
           echo "##vso[task.setvariable variable=affectedProjects;isoutput=true]$( \
-            echo $affected | tr -d '[:space:]' \
+            echo $affected | tr ' ' ',' \
           )"
           export INPUT_PUSH=true
-          for project in ${affected//,/}
+          for project in ${affected}
           do
             export INPUT_IMAGES="${REGISTRY}/wts/${project}"
             npx nx container $project
