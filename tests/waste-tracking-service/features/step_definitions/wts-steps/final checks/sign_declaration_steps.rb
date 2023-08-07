@@ -7,7 +7,7 @@ And(/^I click confirm and submit button$/) do
 end
 
 Then(/^Export submitted page displayed$/) do
-  expect(page).to have_text('Export submitted - plus code thing')
+  expect(page).to have_text('Annex VII document submitted')
 end
 
 And(/^I can see page translated correctly for small waste$/) do

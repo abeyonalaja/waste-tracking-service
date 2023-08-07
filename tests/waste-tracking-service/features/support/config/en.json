@@ -285,5 +285,16 @@
   "exportJourney.checkAnswers.signDeclaration.listItemTwo": "there is an effective written contractual obligation with the consignee",
   "exportJourney.checkAnswers.signDeclaration.listItemThree": "you've checked with the relevant authorities if there are any local controls that apply in any country involved in the journey of the waste",
   "exportJourney.checkAnswers.signDeclaration.listItemFour": "you've classified the waste appropriately",
-  "exportJourney.checkAnswers.signDeclaration.confirmButton": "I confirm-submit form"
+  "exportJourney.checkAnswers.signDeclaration.confirmButton": "I confirm-submit form",
+  "exportJourney.updateAnnexSeven.title": "Update an Annex VII document with actual details",
+  "exportJourney.updateAnnexSeven.caption": "All waste movements",
+  "exportJourney.updateAnnexSeven.paragraph": "All exports with estimated details need updating with actual details as soon as possible.",
+  "exportJourney.updateAnnexSeven.table.transactionNumber": "Transaction number",
+  "exportJourney.updateAnnexSeven.table.submitted": "Submitted",
+  "exportJourney.updateAnnexSeven.table.wasteCode": "Waste code",
+  "exportJourney.updateAnnexSeven.table.yourOwnReference": "Your own reference",
+  "exportJourney.updateAnnexSeven.table.actions": "Actions",
+  "exportJourney.updateAnnexSeven.notApplicable": "N/A",
+  "exportJourney.updateAnnexSeven.notProvided": "Not provided",
+  "exportJourney.updateAnnexSeven.notResultsMessage": "You have no Annex VII forms to update"
 }
