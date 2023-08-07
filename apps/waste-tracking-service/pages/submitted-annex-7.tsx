@@ -16,7 +16,7 @@ import {
   Loading,
 } from '../components';
 import styled from 'styled-components';
-
+import { format } from 'date-fns';
 import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
 
 type State = {
@@ -36,7 +36,7 @@ const initialWasteDescState: State = {
   isError: false,
 };
 
-const upadateAnnex7Reducer = (state: State, action: Action) => {
+const submittedAnnex7Reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'DATA_FETCH_INIT':
       return {
@@ -75,27 +75,36 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const UpadateAnnex7 = () => {
+const Actions = styled.div`
+  align: right;
+  float: right;
+`;
+
+const Action = styled.div`
+  padding-bottom: 5px;
+`;
+
+const SubmittedAnnex7 = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [upadateAnnex7Page, dispatchUpadateAnnex7Page] = useReducer(
-    upadateAnnex7Reducer,
+  const [submittedAnnex7Page, dispatchSubmittedAnnex7Page] = useReducer(
+    submittedAnnex7Reducer,
     initialWasteDescState
   );
 
   useEffect(() => {
-    dispatchUpadateAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
     fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`)
       .then((response) => {
         if (response.ok) return response.json();
         else {
-          dispatchUpadateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
         }
       })
       .then((data) => {
         if (data !== undefined) {
-          dispatchUpadateAnnex7Page({
+          dispatchSubmittedAnnex7Page({
             type: 'DATA_FETCH_SUCCESS',
             payload: data,
           });
@@ -113,7 +122,7 @@ const UpadateAnnex7 = () => {
           <GovUK.Breadcrumbs.Link href="/dashboard">
             {t('app.channel.title')}
           </GovUK.Breadcrumbs.Link>
-          {t('exportJourney.updateAnnexSeven.title')}
+          {t('exportJourney.submittedAnnexSeven.title')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
     );
@@ -122,7 +131,7 @@ const UpadateAnnex7 = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.updateAnnexSeven.title')}</title>
+        <title>{t('exportJourney.submittedAnnexSeven.title')}</title>
       </Head>
 
       <GovUK.Page
@@ -131,11 +140,11 @@ const UpadateAnnex7 = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
-        {upadateAnnex7Page.isError && !upadateAnnex7Page.isLoading && (
+        {submittedAnnex7Page.isError && !submittedAnnex7Page.isLoading && (
           <SubmissionNotFound />
         )}
-        {upadateAnnex7Page.isLoading && <Loading />}
-        {!upadateAnnex7Page.isError && !upadateAnnex7Page.isLoading && (
+        {submittedAnnex7Page.isLoading && <Loading />}
+        {!submittedAnnex7Page.isError && !submittedAnnex7Page.isLoading && (
           <>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="two-thirds">
@@ -144,20 +153,20 @@ const UpadateAnnex7 = () => {
                 </GovUK.Caption>
 
                 <GovUK.Heading size="LARGE" id="template-heading">
-                  {t('exportJourney.updateAnnexSeven.title')}
+                  {t('exportJourney.submittedAnnexSeven.title')}
                 </GovUK.Heading>
 
                 <Paragraph>
-                  {t('exportJourney.updateAnnexSeven.paragraph')}
+                  {t('exportJourney.submittedAnnexSeven.paragraph')}
                 </Paragraph>
               </GovUK.GridCol>
             </GovUK.GridRow>
             <GovUK.GridRow>
               <GovUK.GridCol>
                 <>
-                  {upadateAnnex7Page.data.filter(
+                  {submittedAnnex7Page.data.filter(
                     (item) =>
-                      item.submissionState.status === 'SubmittedWithEstimates'
+                      item.submissionState.status === 'SubmittedWithActuals'
                   ).length !== 0 ? (
                     <>
                       <GovUK.Table>
@@ -173,7 +182,7 @@ const UpadateAnnex7 = () => {
                             id="table-header-submitted"
                           >
                             {t(
-                              'exportJourney.updateAnnexSeven.table.submitted'
+                              'exportJourney.submittedAnnexSeven.collectionDate'
                             )}
                           </TableHeader>
 
@@ -200,11 +209,11 @@ const UpadateAnnex7 = () => {
                           </TableHeader>
                         </GovUK.Table.Row>
 
-                        {upadateAnnex7Page.data
+                        {submittedAnnex7Page.data
                           .filter(
                             (item) =>
                               item.submissionState.status ===
-                              'SubmittedWithEstimates'
+                              'SubmittedWithActuals'
                           )
                           .reverse()
                           .map((item, index) => (
@@ -222,9 +231,27 @@ const UpadateAnnex7 = () => {
                               </TableCell>
 
                               <TableCell id={'date-' + index}>
-                                <DateConverter
-                                  dateString={item.submissionState.timestamp}
-                                />
+                                {item.collectionDate.status === 'Complete' && (
+                                  <>
+                                    {format(
+                                      new Date(
+                                        Number(
+                                          item.collectionDate.value.actualDate
+                                            .year
+                                        ),
+                                        Number(
+                                          item.collectionDate.value.actualDate
+                                            .month
+                                        ) - 1,
+                                        Number(
+                                          item.collectionDate.value.actualDate
+                                            .day
+                                        )
+                                      ),
+                                      'd MMMM y'
+                                    )}
+                                  </>
+                                )}
                               </TableCell>
 
                               <TableCell id={'waste-code-' + index}>
@@ -270,29 +297,17 @@ const UpadateAnnex7 = () => {
                                 )}
                               </TableCell>
                               <TableCellActions>
-                                <div>
-                                  <AppLink
-                                    id={'update-' + index}
-                                    href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
-                                    }}
-                                  >
-                                    Update
-                                  </AppLink>
-                                </div>
-
-                                <div>
-                                  <AppLink
-                                    id={'cancel-' + index}
-                                    href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
-                                    }}
-                                  >
-                                    Cancel
-                                  </AppLink>
-                                </div>
+                                <Actions>
+                                  <Action id={'update-' + index}>
+                                    <a
+                                      href={
+                                        '/view-submitted-annex-7?id=' + item.id
+                                      }
+                                    >
+                                      View
+                                    </a>
+                                  </Action>
+                                </Actions>
                               </TableCellActions>
                             </GovUK.Table.Row>
                           ))}
@@ -313,4 +328,4 @@ const UpadateAnnex7 = () => {
   );
 };
 
-export default UpadateAnnex7;
+export default SubmittedAnnex7;

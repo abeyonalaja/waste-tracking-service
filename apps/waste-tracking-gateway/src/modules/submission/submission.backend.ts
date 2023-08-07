@@ -347,7 +347,7 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         wasteQuantity: { status: s.wasteQuantity.status },
         exporterDetail: { status: s.exporterDetail.status },
         importerDetail: { status: s.exporterDetail.status },
-        collectionDate: { status: s.collectionDetail.status },
+        collectionDate: s.collectionDate,
         carriers: { status: s.carriers.status },
         collectionDetail: { status: s.collectionDetail.status },
         ukExitLocation: { status: s.ukExitLocation.status },

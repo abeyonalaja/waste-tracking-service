@@ -335,7 +335,7 @@ export type DraftSubmissionSummary = Readonly<{
   wasteQuantity: DraftSectionSummary;
   exporterDetail: DraftSectionSummary;
   importerDetail: DraftSectionSummary;
-  collectionDate: DraftSectionSummary;
+  collectionDate: DraftCollectionDate;
   carriers: DraftSectionSummary;
   collectionDetail: DraftSectionSummary;
   ukExitLocation: DraftSectionSummary;

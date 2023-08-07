@@ -322,7 +322,7 @@ export type SubmissionSummary = Readonly<{
   wasteQuantity: SectionSummary;
   exporterDetail: SectionSummary;
   importerDetail: SectionSummary;
-  collectionDate: SectionSummary;
+  collectionDate: CollectionDate;
   carriers: SectionSummary;
   collectionDetail: SectionSummary;
   ukExitLocation: SectionSummary;

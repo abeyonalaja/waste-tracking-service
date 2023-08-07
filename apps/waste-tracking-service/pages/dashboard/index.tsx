@@ -65,11 +65,7 @@ export function Index() {
           </AppLink>
         </Paragraph>
         <Paragraph>
-          <AppLink
-            href="dashboard/draft-export"
-            id="draft-export"
-            noVisitedState
-          >
+          <AppLink href="incomplete-annex-7" id="draft-export" noVisitedState>
             {t('greenListOverview.tellExport.linkFour')} (6)
           </AppLink>
         </Paragraph>
@@ -82,10 +78,7 @@ export function Index() {
           </AppLink>
         </Paragraph>
         <Paragraph>
-          <AppLink
-            href="dashboard/check-all-submitted-exports"
-            id="check-all-submitted-exports"
-          >
+          <AppLink href="submitted-annex-7" id="check-all-submitted-exports">
             {t('greenListOverview.allExport.linkTwo')} (20)
           </AppLink>
         </Paragraph>

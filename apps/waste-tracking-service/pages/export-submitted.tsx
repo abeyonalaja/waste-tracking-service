@@ -139,14 +139,14 @@ const ExportSubmitted = () => {
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
-        <GovUK.BackLink
-          href="#"
-          onClick={() => {
-            history.back();
-          }}
-        >
-          Back
-        </GovUK.BackLink>
+        <GovUK.Breadcrumbs>
+          <GovUK.Breadcrumbs.Link href="/">
+            {t('app.title')}
+          </GovUK.Breadcrumbs.Link>
+          <GovUK.Breadcrumbs.Link href="/dashboard">
+            {t('exportJourney.exportSubmitted.breadcrumb')}
+          </GovUK.Breadcrumbs.Link>
+        </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
     );
   };
@@ -183,14 +183,15 @@ const ExportSubmitted = () => {
                 <StyledPanel title="Annex VII document  submitted">
                   {t('exportJourney.exportSubmitted.panel')}
                   <br />
+
                   {exportSubmittedPage?.data.submissionDeclaration.status ===
                     'Complete' && (
-                    <>
+                    <div id="transaction-id">
                       {
                         exportSubmittedPage.data.submissionDeclaration.values
                           .transactionId
                       }
-                    </>
+                    </div>
                   )}
                 </StyledPanel>
 
@@ -242,7 +243,10 @@ const ExportSubmitted = () => {
                       submissionId={id}
                       reference={exportSubmittedPage.data.reference}
                     />
-                    {t('exportJourney.exportSubmitted.legalStatementp2')}
+                    {exportSubmittedPage.data.submissionState.status ===
+                      'SubmittedWithEstimates' && (
+                      <>{t('exportJourney.exportSubmitted.legalStatementp2')}</>
+                    )}
                   </>
                 </StyledParagraph>
 

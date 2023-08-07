@@ -36,7 +36,7 @@ const initialWasteDescState: State = {
   isError: false,
 };
 
-const upadateAnnex7Reducer = (state: State, action: Action) => {
+const incompleteAnnex7Reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'DATA_FETCH_INIT':
       return {
@@ -75,27 +75,36 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const UpadateAnnex7 = () => {
+const Actions = styled.div`
+  align: right;
+  float: right;
+`;
+
+const Action = styled.div`
+  padding-bottom: 5px;
+`;
+
+const IncompleteAnnex7 = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [upadateAnnex7Page, dispatchUpadateAnnex7Page] = useReducer(
-    upadateAnnex7Reducer,
+  const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(
+    incompleteAnnex7Reducer,
     initialWasteDescState
   );
 
   useEffect(() => {
-    dispatchUpadateAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
     fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`)
       .then((response) => {
         if (response.ok) return response.json();
         else {
-          dispatchUpadateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
         }
       })
       .then((data) => {
         if (data !== undefined) {
-          dispatchUpadateAnnex7Page({
+          dispatchIncompleteAnnex7Page({
             type: 'DATA_FETCH_SUCCESS',
             payload: data,
           });
@@ -113,7 +122,7 @@ const UpadateAnnex7 = () => {
           <GovUK.Breadcrumbs.Link href="/dashboard">
             {t('app.channel.title')}
           </GovUK.Breadcrumbs.Link>
-          {t('exportJourney.updateAnnexSeven.title')}
+          {t('exportJourney.incompleteAnnexSeven.title')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
     );
@@ -122,7 +131,7 @@ const UpadateAnnex7 = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.updateAnnexSeven.title')}</title>
+        <title>{t('exportJourney.incompleteAnnexSeven.title')}</title>
       </Head>
 
       <GovUK.Page
@@ -131,61 +140,32 @@ const UpadateAnnex7 = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
-        {upadateAnnex7Page.isError && !upadateAnnex7Page.isLoading && (
+        {incompleteAnnex7Page.isError && !incompleteAnnex7Page.isLoading && (
           <SubmissionNotFound />
         )}
-        {upadateAnnex7Page.isLoading && <Loading />}
-        {!upadateAnnex7Page.isError && !upadateAnnex7Page.isLoading && (
+        {incompleteAnnex7Page.isLoading && <Loading />}
+        {!incompleteAnnex7Page.isError && !incompleteAnnex7Page.isLoading && (
           <>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="two-thirds">
-                <GovUK.Caption id="my-reference">
-                  {t('exportJourney.updateAnnexSeven.caption')}
-                </GovUK.Caption>
-
                 <GovUK.Heading size="LARGE" id="template-heading">
-                  {t('exportJourney.updateAnnexSeven.title')}
+                  {t('exportJourney.incompleteAnnexSeven.title')}
                 </GovUK.Heading>
 
                 <Paragraph>
-                  {t('exportJourney.updateAnnexSeven.paragraph')}
+                  {t('exportJourney.incompleteAnnexSeven.paragraph')}
                 </Paragraph>
               </GovUK.GridCol>
             </GovUK.GridRow>
             <GovUK.GridRow>
               <GovUK.GridCol>
                 <>
-                  {upadateAnnex7Page.data.filter(
-                    (item) =>
-                      item.submissionState.status === 'SubmittedWithEstimates'
+                  {incompleteAnnex7Page.data.filter(
+                    (item) => item.submissionState.status === 'InProgress'
                   ).length !== 0 ? (
                     <>
                       <GovUK.Table>
                         <GovUK.Table.Row>
-                          <TableHeader id="table-header-transaction-number">
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.transactionNumber'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="15%"
-                            id="table-header-submitted"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.submitted'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="one-half"
-                            id="table-header-waste-code"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.wasteCode'
-                            )}
-                          </TableHeader>
-
                           <TableHeader
                             setWidth="15%"
                             id="table-header-your-own-ref"
@@ -195,29 +175,50 @@ const UpadateAnnex7 = () => {
                             )}
                           </TableHeader>
 
-                          <TableHeader id="table-header-actions">
-                            {t('exportJourney.updateAnnexSeven.table.actions')}
+                          <TableHeader
+                            setWidth="15%"
+                            id="table-header-last-saved"
+                          >
+                            {t('exportJourney.incompleteAnnexSeven.table.date')}
+                          </TableHeader>
+
+                          <TableHeader
+                            setWidth="60%"
+                            id="table-header-waste-code"
+                          >
+                            {t(
+                              'exportJourney.updateAnnexSeven.table.wasteCode'
+                            )}
+                          </TableHeader>
+
+                          <TableHeader setWidth="10%" id="table-header-actions">
+                            <Actions>
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.actions'
+                              )}
+                            </Actions>
                           </TableHeader>
                         </GovUK.Table.Row>
 
-                        {upadateAnnex7Page.data
+                        {incompleteAnnex7Page.data
                           .filter(
                             (item) =>
-                              item.submissionState.status ===
-                              'SubmittedWithEstimates'
+                              item.submissionState.status === 'InProgress'
                           )
                           .reverse()
                           .map((item, index) => (
                             <GovUK.Table.Row key={index}>
-                              <TableCell id={'transaction-id-' + index}>
-                                {item.submissionDeclaration.status ===
-                                  'Complete' && (
-                                  <b>
-                                    {
-                                      item.submissionDeclaration.values
-                                        .transactionId
-                                    }
-                                  </b>
+                              <TableCell id={'your-reference-' + index}>
+                                {' '}
+                                {item.reference && (
+                                  <span>{item.reference}</span>
+                                )}
+                                {!item.reference && (
+                                  <span id="your-reference-not-provided">
+                                    {t(
+                                      'exportJourney.checkAnswers.notProvided'
+                                    )}
+                                  </span>
                                 )}
                               </TableCell>
 
@@ -256,43 +257,32 @@ const UpadateAnnex7 = () => {
                                   </>
                                 )}
                               </TableCell>
-                              <TableCell id={'your-reference-' + index}>
-                                {' '}
-                                {item.reference && (
-                                  <span>{item.reference}</span>
-                                )}
-                                {!item.reference && (
-                                  <span id="your-reference-not-provided">
-                                    {t(
-                                      'exportJourney.checkAnswers.notProvided'
-                                    )}
-                                  </span>
-                                )}
-                              </TableCell>
-                              <TableCellActions>
-                                <div>
-                                  <AppLink
-                                    id={'update-' + index}
-                                    href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
-                                    }}
-                                  >
-                                    Update
-                                  </AppLink>
-                                </div>
 
-                                <div>
-                                  <AppLink
-                                    id={'cancel-' + index}
-                                    href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
-                                    }}
-                                  >
-                                    Cancel
-                                  </AppLink>
-                                </div>
+                              <TableCellActions>
+                                <Actions>
+                                  <Action>
+                                    <a
+                                      href={
+                                        '/submit-an-export-tasklist?id=' +
+                                        item.id
+                                      }
+                                    >
+                                      Continue
+                                    </a>
+                                  </Action>
+
+                                  <Action>
+                                    <AppLink
+                                      id={'cancel-' + index}
+                                      href={{
+                                        pathname: '/check-your-report',
+                                        query: {},
+                                      }}
+                                    >
+                                      Delete
+                                    </AppLink>
+                                  </Action>
+                                </Actions>
                               </TableCellActions>
                             </GovUK.Table.Row>
                           ))}
@@ -300,7 +290,9 @@ const UpadateAnnex7 = () => {
                     </>
                   ) : (
                     <GovUK.Heading size="SMALL">
-                      {t('exportJourney.updateAnnexSeven.notResultsMessage')}
+                      {t(
+                        'exportJourney.incompleteAnnexSeven.notResultsMessage'
+                      )}
                     </GovUK.Heading>
                   )}
                 </>
@@ -313,4 +305,4 @@ const UpadateAnnex7 = () => {
   );
 };
 
-export default UpadateAnnex7;
+export default IncompleteAnnex7;
