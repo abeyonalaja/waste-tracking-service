@@ -100,4 +100,21 @@ module CommonComponents
   def has_fax?(fax)
     find(FAX_ID).value == fax
   end
+
+  def application_ref
+    find 'your-reference-0'
+  end
+
+  def export_date
+    find 'date-0'
+  end
+
+  def transaction_number
+    find 'transaction-id-0'
+  end
+
+  def waste_code
+    find 'waste-code-0'
+  end
+
 end

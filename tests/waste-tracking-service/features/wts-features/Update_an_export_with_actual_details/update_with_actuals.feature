@@ -2,7 +2,8 @@ Feature: AS A waste practitioner
   I NEED to be able to amend the submitted Annex 7 form
   SO THAT I can update the form and replace any estimate with actuals
 
-  Scenario: User complete an export with actuals and verifies that there are no records in the update with actual section
+  @isolated
+  Scenario: User complete an export with actual and verifies that there are no records in the update with actual section
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page
@@ -29,8 +30,8 @@ Feature: AS A waste practitioner
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
     And I click confirm and submit button
-     # dummy page
     Then Export submitted page displayed
+    And I should see export submitted page is correctly translated
     And I click Return to export waste from UK button
     Then the "Overview" page is displayed
     And I click the "Update an export with actual details" link
@@ -38,7 +39,7 @@ Feature: AS A waste practitioner
     And I see message that there are no exports with estimates
 
 
-@translation
+  @translation
   Scenario: User completes an export with estimate date and verify record is saved on Update with actual section
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -66,14 +67,15 @@ Feature: AS A waste practitioner
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
     And I click confirm and submit button
-     # dummy page
     Then Export submitted page displayed
+    Then I should see export submitted page with estimates correctly translated
     And I click Return to export waste from UK button
     Then the "Overview" page is displayed
     And I click the "Update an export with actual details" link
     Then the "Update with actual" page is displayed
     And I can see Update with actual page correctly translated
     Then I verify that newly created record is on top of the table
+    And I should see correct date and waste code and transaction reference
     And I click browser back button
     Then the "Overview" page is displayed
 
@@ -107,11 +109,11 @@ Feature: AS A waste practitioner
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
     And I click confirm and submit button
-     # dummy page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Overview" page is displayed
     And I click the "Update an export with actual details" link
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
 

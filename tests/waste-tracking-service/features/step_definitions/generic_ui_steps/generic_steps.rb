@@ -62,3 +62,7 @@ end
 And(/^I wait for a second long$/) do
   sleep 100
 end
+
+When(/^I click the first continue link$/) do
+  click_link('Continue', :match => :first)
+end

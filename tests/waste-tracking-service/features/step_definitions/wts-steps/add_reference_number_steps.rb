@@ -23,6 +23,7 @@ end
 
 When(/^I have selected the No option$/) do
   AddReferenceNumberPage.new.choose_option 'No'
+  TestStatus.set_test_status(:application_reference_number, 'Not provided')
 end
 
 When(/^I have neither selected the Yes or No option$/) do

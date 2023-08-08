@@ -2,7 +2,7 @@ Feature: AS A waste producer/broker
   I NEED to sign the declaration for the export details
   SO THAT I can submit the completed export form
 
-@translation
+  @translation
   Scenario: Check sign declaration page after choosing Bulk waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -30,10 +30,9 @@ Feature: AS A waste producer/broker
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
     And I click confirm and submit button
-     # dummy page
     Then Export submitted page displayed
 
-    @translation
+  @translation
   Scenario: Check sign declaration page after choosing Small waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -68,5 +67,4 @@ Feature: AS A waste producer/broker
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for small waste
     And I click confirm and submit button
-        # dummy page
     Then Export submitted page displayed

@@ -2,13 +2,14 @@
 
 # this page is for overview page details
 class UpdateWithActualPage < GenericPage
+  include CommonComponents
 
   TITLE = Translations.value 'exportJourney.updateAnnexSeven.title'
   CAPTION = Translations.value 'exportJourney.updateAnnexSeven.caption'
   PARAGRAPH = Translations.value 'exportJourney.updateAnnexSeven.paragraph'
   PARAGRAPH = Translations.value 'exportJourney.updateAnnexSeven.paragraph'
   TRANSACTION_NUMBER = Translations.value 'exportJourney.updateAnnexSeven.table.transactionNumber'
-  SUBMITTED= Translations.value 'exportJourney.updateAnnexSeven.table.submitted'
+  SUBMITTED = Translations.value 'exportJourney.updateAnnexSeven.table.submitted'
   WASTE_CODE = Translations.value 'exportJourney.updateAnnexSeven.table.wasteCode'
   OWN_REFERENCE = Translations.value 'exportJourney.updateAnnexSeven.table.yourOwnReference'
   ACTIONS = Translations.value 'exportJourney.updateAnnexSeven.table.actions'
@@ -36,10 +37,6 @@ class UpdateWithActualPage < GenericPage
 
   def submit_a_single_waste_export
     click_link('Submit a single waste export')
-  end
-
-  def application_ref
-    find 'your-reference-0'
   end
 
 end
