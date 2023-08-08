@@ -1,10 +1,23 @@
 import puppeteer from 'puppeteer';
 
 async function createPDF(hostname, id) {
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox'],
-  });
+  const browser = await puppeteer.launch(
+    process.env['NODE_ENV'] !== 'production'
+      ? {
+          headless: 'new',
+          args: ['--no-sandbox'],
+        }
+      : {
+          headless: true,
+          executablePath: '/usr/bin/chromium-browser',
+          args: [
+            '--no-sandbox',
+            '--headless',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+          ],
+        }
+  );
   const page = await browser.newPage();
   await page.goto(`http://${hostname}/download-report?id=${id}`, {
     waitUntil: 'networkidle0',
