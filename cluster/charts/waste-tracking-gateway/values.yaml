@@ -93,6 +93,8 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: 'false'
   hosts:
     - paths:
-        - path: /api
+        - path: /api/submissions
+          pathType: Prefix
+        - path: /api/addresses
           pathType: Prefix
   labels: {}
