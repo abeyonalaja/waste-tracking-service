@@ -178,7 +178,7 @@ const SubmittedAnnex7 = () => {
 
                           <TableHeader
                             setWidth="15%"
-                            id="table-header-submitted"
+                            id="table-header-collection-date"
                           >
                             {t(
                               'exportJourney.submittedAnnexSeven.collectionDate'
