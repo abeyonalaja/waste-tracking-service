@@ -139,10 +139,6 @@ const UpadateAnnex7 = () => {
           <>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="two-thirds">
-                <GovUK.Caption id="my-reference">
-                  {t('exportJourney.updateAnnexSeven.caption')}
-                </GovUK.Caption>
-
                 <GovUK.Heading size="LARGE" id="template-heading">
                   {t('exportJourney.updateAnnexSeven.title')}
                 </GovUK.Heading>

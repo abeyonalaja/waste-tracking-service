@@ -12,7 +12,6 @@ import {
   Loading,
   SaveReturnButton,
   DownloadPDFLink,
-  Paragraph,
 } from '../components';
 
 import styled from 'styled-components';
@@ -85,12 +84,12 @@ const StyledUnorderedList = styled(GovUK.UnorderedList)`
 
 const StyledParagraph = styled.p`
   font-size: 19px;
-<<<<<<< HEAD
-  line-height: 1.3157894736842106;
-=======
   line-height: 1.3;
->>>>>>> origin
   margin-bottom: 20px;
+`;
+
+const IdDisplay = styled.div`
+  font-weight: 600;
 `;
 
 const ExportSubmitted = () => {
@@ -186,12 +185,12 @@ const ExportSubmitted = () => {
 
                   {exportSubmittedPage?.data.submissionDeclaration.status ===
                     'Complete' && (
-                    <div id="transaction-id">
+                    <IdDisplay id="transaction-id">
                       {
                         exportSubmittedPage.data.submissionDeclaration.values
                           .transactionId
                       }
-                    </div>
+                    </IdDisplay>
                   )}
                 </StyledPanel>
 

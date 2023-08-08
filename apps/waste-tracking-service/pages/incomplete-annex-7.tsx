@@ -261,27 +261,27 @@ const IncompleteAnnex7 = () => {
                               <TableCellActions>
                                 <Actions>
                                   <Action>
-                                    <a
+                                    <AppLink
+                                      id={'continue-link-' + index}
                                       href={
                                         '/submit-an-export-tasklist?id=' +
                                         item.id
                                       }
                                     >
                                       Continue
-                                    </a>
-                                  </Action>
-
-                                  <Action>
-                                    <AppLink
-                                      id={'cancel-' + index}
-                                      href={{
-                                        pathname: '/check-your-report',
-                                        query: {},
-                                      }}
-                                    >
-                                      Delete
                                     </AppLink>
                                   </Action>
+                                </Actions>
+                                <Actions>
+                                  <AppLink
+                                    id={'delete-link-' + index}
+                                    href={{
+                                      pathname: '/check-your-report',
+                                      query: {},
+                                    }}
+                                  >
+                                    Delete
+                                  </AppLink>
                                 </Actions>
                               </TableCellActions>
                             </GovUK.Table.Row>

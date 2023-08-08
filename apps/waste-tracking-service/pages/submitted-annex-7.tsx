@@ -10,7 +10,6 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  DateConverter,
   Paragraph,
   SubmissionNotFound,
   Loading,
@@ -248,7 +247,7 @@ const SubmittedAnnex7 = () => {
                                             .day
                                         )
                                       ),
-                                      'd MMMM y'
+                                      'd MMM y'
                                     )}
                                   </>
                                 )}
@@ -298,15 +297,14 @@ const SubmittedAnnex7 = () => {
                               </TableCell>
                               <TableCellActions>
                                 <Actions>
-                                  <Action id={'update-' + index}>
-                                    <a
-                                      href={
-                                        '/view-submitted-annex-7?id=' + item.id
-                                      }
-                                    >
-                                      View
-                                    </a>
-                                  </Action>
+                                  <AppLink
+                                    id={'view-link-' + index}
+                                    href={
+                                      '/view-submitted-annex-7?id=' + item.id
+                                    }
+                                  >
+                                    View
+                                  </AppLink>
                                 </Actions>
                               </TableCellActions>
                             </GovUK.Table.Row>

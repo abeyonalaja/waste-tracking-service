@@ -8,7 +8,7 @@ describe('DateConverter', () => {
     const dateStr = '2023-07-30T20:31:17.127Z';
     const { getByText } = render(<DateConverter dateString={dateStr} />);
 
-    const expectedFormattedDate = '30th July 2023';
+    const expectedFormattedDate = '30 Jul 2023';
     expect(getByText(expectedFormattedDate)).toBeInTheDocument();
   });
 });

@@ -321,7 +321,7 @@
   "exportJourney.exportSubmitted.listItemOne": "make a note of the transaction number for your records",
   "exportJourney.exportSubmitted.listItemTwo": "send these details to the relevant UK regulatory authority",
   "exportJourney.exportSubmitted.listItemThree": "send a completed Annex VII document with the waste",
-  "exportJourney.exportSubmitted.optionalHeading": "This export with actual details?",
+  "exportJourney.exportSubmitted.optionalHeading": "Update this export with actual details",
   "exportJourney.exportSubmitted.secondListHeader": "If you've provided estimates, you'll need to provide actual details as soon as possible. This includes the:",
   "exportJourney.exportSubmitted.secondListItemOne": "weight or volume",
   "exportJourney.exportSubmitted.secondListItemTwo": "collection date",
