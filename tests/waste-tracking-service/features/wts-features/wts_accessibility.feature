@@ -726,6 +726,29 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
+  Scenario: Check WTS Accessibility for - Check your answer page
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste sub-section
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    When I click the "Check your report" link
+    Then the "check your report" page is displayed
+    Then the page should be axe clean according to: wcag2a
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+
   Scenario: Check WTS Accessibility for - submitted records page
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
