@@ -23,13 +23,18 @@ module JourneyOfAWasteSmallWasteController
     collection_date_page.save_and_continue
     sleep(1)
     who_is_waste_carrier_page.enter_organisation_name 'CompanyLTD'
+    TestStatus.set_test_status(:waste_carrier_org_name, 'CompanyLTD')
     who_is_waste_carrier_page.enter_address 'Sample Address 1'
     who_is_waste_carrier_page.enter_country 'Wales'
+    TestStatus.set_test_status(:waste_carrier_address, 'Sample Address 1 Wales')
     who_is_waste_carrier_page.save_and_continue
     sleep 1
     waste_carrier_contact_details_page.enter_organisation_contact 'Nick Pope'
     waste_carrier_contact_details_page.enter_email 'sample@mail.com'
     waste_carrier_contact_details_page.enter_phone_number '+441234567891'
+    TestStatus.set_test_status(:waste_carrier_org_contact, 'Nick Pope')
+    TestStatus.set_test_status(:waste_carrier_email, 'sample@mail.com')
+    TestStatus.set_test_status(:waste_carrier_phone_number, '+441234567891')
     waste_carrier_contact_details_page.save_and_continue
     waste_carriers_list_page.choose_option 'No'
     waste_carriers_list_page.save_and_continue

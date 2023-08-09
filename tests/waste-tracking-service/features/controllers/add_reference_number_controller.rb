@@ -17,7 +17,10 @@ module AddReferenceNumberController
     SubmitAnExportPage.new.check_page_displayed
     @url = URI.parse(add_reference_number_page.current_url)
     Log.info("Reference: #{reference}")
-    Log.info("Export id is: #{@url}")
+    Log.info("Export url is: #{@url}")
+    id_value = add_reference_number_page.current_url.match(/id=([^&]+)/)[1]
+    TestStatus.set_test_status(:export_id, id_value)
+    Log.info("export id is #{id_value}")
     sleep 1
   end
 end

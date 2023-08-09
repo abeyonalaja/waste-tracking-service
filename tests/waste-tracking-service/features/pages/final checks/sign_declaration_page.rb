@@ -40,4 +40,12 @@ class SignDeclarationPage < GenericPage
   def confirm_submit_button
     click_button CONFIRM_BUTTON
   end
+
+  def pdf_title
+    find('pdf-h1')
+  end
+
+  def pdf_intro
+    find('pdf-intro')
+  end
 end

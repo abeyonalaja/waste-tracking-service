@@ -2054,7 +2054,7 @@ const DownloadReport = () => {
                   </>
                 )}
               </Box>
-              <Box>
+              <Box id="pdf-box-7-int">
                 <SectionTitle>Interim site:</SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
                   'Complete' && (

@@ -31,9 +31,23 @@ Feature: AS A waste producer/broker
     And I can see page translated correctly for bulk waste
     And I click confirm and submit button
     Then Export submitted page displayed
+    When I navigate to the export PDF
+    Then I should see pdf header details correctly loaded
+    And I should see section 1 exporter details correctly displayed
+    And I should see section 2 importer details correctly displayed
+    And I should see section 3 actual quantity details correctly displayed
+    And I should see section 4 actual collection date correctly displayed
+    And I should see section 5 first waste carrier details correctly displayed
+    And I should see section 6 waste generate details correctly displayed
+    And I should see section 7 recovery facility details correctly displayed
+    And I should see section interim site details correctly displayed
+    And I should see section 8 bulk waste recovery details correctly displayed
+    And I should see section 9 waste description details correctly displayed
+    And I should see section 10 waste identification details correctly displayed
+    And I should see section 11 countries details correctly displayed
 
   @translation
-  Scenario: Check sign declaration page after choosing Small waste
+  Scenario: Check sign declaration page after choosing Actual Small waste and Actual collection waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
@@ -68,3 +82,16 @@ Feature: AS A waste producer/broker
     And I can see page translated correctly for small waste
     And I click confirm and submit button
     Then Export submitted page displayed
+    When I navigate to the export PDF
+    Then I should see pdf header details correctly loaded
+    And I should see section 1 exporter details correctly displayed
+    And I should see section 2 importer details correctly displayed
+    And I should see section 3 actual quantity details correctly displayed
+    And I should see section 4 actual collection date correctly displayed
+    And I should see section 5 first waste carrier details correctly displayed
+    And I should see section 6 waste generate details correctly displayed
+    And I should see section 7 laboratory details correctly displayed
+    And I should see section 8 small waste recovery details correctly displayed
+    And I should see section 9 waste description details correctly displayed
+    And I should see section 10 waste identification details correctly displayed
+    And I should see section 11 countries details correctly displayed
