@@ -34,7 +34,7 @@ Capybara.javascript_driver = :chrome
 
 # Screenshot settings
 Capybara::Screenshot.prune_strategy = { keep: 5 }
-Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+# Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 
 
 # Screenshot driver for :chrome
