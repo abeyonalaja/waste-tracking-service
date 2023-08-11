@@ -19,9 +19,12 @@ async function createPDF(hostname, id) {
         }
   );
   const page = await browser.newPage();
-  await page.goto(`http://${hostname}/download-report?id=${id}`, {
-    waitUntil: 'networkidle0',
-  });
+  await page.goto(
+    `http://${hostname}${process.env.NX_EXPORT_URL}/download-report?id=${id}`,
+    {
+      waitUntil: 'networkidle0',
+    }
+  );
   const pdf = await page.pdf({
     format: 'A4',
     margin: { top: 20, left: 25.4, bottom: 20, right: 25.4 },

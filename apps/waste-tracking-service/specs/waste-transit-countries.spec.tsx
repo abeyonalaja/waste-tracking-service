@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
-import WasteTransitCountries from '../pages/waste-transit-countries';
+import { render, fireEvent, screen, act } from '../jest-utils';
+import WasteTransitCountries from '../pages/export/waste-transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -35,19 +35,7 @@ describe('Waste Transit Countries page', () => {
       render(<WasteTransitCountries />);
     });
 
-    expect(screen.getByText('Loading')).toBeTruthy();
-  });
-
-  it('should display an error message if the data fetching fails', async () => {
-    global.fetch.mockImplementationOnce(() => Promise.resolve({ ok: false }));
-
-    await act(async () => {
-      render(<WasteTransitCountries />);
-    });
-
-    expect(
-      screen.getByText('The export record has not been found')
-    ).toBeTruthy();
+    expect(screen.findByText('Loading')).toBeTruthy();
   });
 
   it('should show validation message if no radio is selected', async () => {

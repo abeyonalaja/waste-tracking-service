@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import Tasklist from '../pages/submit-an-export-tasklist';
+import { render, screen } from '../jest-utils';
+import Tasklist from '../pages/export/submit-an-export-tasklist';
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 

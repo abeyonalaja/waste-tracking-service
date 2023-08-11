@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-  act,
-} from '@testing-library/react';
-import EwcCode from '../pages/dashboard/ewc-code';
+import { render, fireEvent, screen, act } from '../jest-utils';
+import EwcCode from '../pages/export/ewc-code';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,
     query: { id: '123' },
+    push: jest.fn(),
   })),
 }));
 
@@ -41,11 +36,11 @@ describe('EWC Code component', () => {
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
 
-    const errorHeading = screen.getByText('There is a problem');
+    const errorHeading = screen.findByText('There is a problem');
     expect(errorHeading).toBeTruthy();
 
     expect(
-      screen.getAllByText('Select yes if you want to add an EWC code')[0]
+      screen.findByText('Select yes if you want to add an EWC code')
     ).toBeTruthy();
   });
 
@@ -64,9 +59,9 @@ describe('EWC Code component', () => {
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
 
-    const errorHeading = screen.getByText('There is a problem');
+    const errorHeading = screen.findByText('There is a problem');
     expect(errorHeading).toBeTruthy();
 
-    expect(screen.getAllByText('Select an EWC code')[0]).toBeTruthy();
+    expect(screen.findByText('Select an EWC code')).toBeTruthy();
   });
 });

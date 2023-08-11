@@ -16,7 +16,7 @@ export const DownloadPDFLink = ({
   children,
 }: Props) => {
   const [loading, setLoading] = React.useState(false);
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (loading) {
       return;
     }
@@ -24,6 +24,7 @@ export const DownloadPDFLink = ({
     savePDF(submissionId, reference).then(() => {
       setLoading(false);
     });
+    e.preventDefault();
   };
   return (
     <AppLink

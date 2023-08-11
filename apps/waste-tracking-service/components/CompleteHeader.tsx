@@ -1,8 +1,11 @@
 import React from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import styled from 'styled-components';
 import CrownIcon from '@govuk-react/icon-crown';
-import { GlobalStyle, Main, TopNav, Link, PhaseBanner } from 'govuk-react';
+import { GlobalStyle, Main, TopNav, PhaseBanner } from 'govuk-react';
+import Link from 'next/link';
 import { BLUE, BLACK, YELLOW } from 'govuk-colours';
+import { useTranslation } from 'react-i18next';
 
 const GovukHeader = styled.header`
   background: ${BLACK};
@@ -50,8 +53,23 @@ const GovukHeaderLogo = styled.div`
 const GovukHeaderContent = styled.div`
   padding-bottom: 10px;
   font-size: 18px;
+  font-weight: 700;
   @media (min-width: 40.0625em) {
     font-size: 24px;
+  }
+`;
+
+const GovukHeaderUserContent = styled.div`
+  padding-bottom: 10px;
+  font-size: 14px;
+  display: flex;
+  gap: 15px;
+  align-items: baseline;
+  display: none; /* Remove this after DCID */
+  @media (min-width: 40.0625em) {
+    font-size: 16px;
+    margin-left: auto;
+    gap: 20px;
   }
 `;
 
@@ -76,11 +94,45 @@ const GovukHeaderLogoLink = styled(TopNav.Anchor)`
   }
 `;
 
+const GovukHeaderLink = styled(Link)`
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-decoration: none;
+  text-decoration-thickness: max(1px, 0.0625rem);
+  text-underline-offset: 0.1em;
+  color: #fff;
+  font-weight: inherit;
+  line-height: 1.25;
+  @media (min-width: 40.0625em) {
+    line-height: 1.3;
+  }
+  &:visited,
+  &:link {
+    color: #fff;
+  }
+  &:hover {
+    text-decoration: underline;
+    text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
+    text-decoration-skip-ink: none;
+  }
+  &:focus {
+    outline: 3px solid rgba(0, 0, 0, 0);
+    color: ${BLACK};
+    background-color: ${YELLOW};
+    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    text-decoration: none;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+`;
+
 const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;
 `;
 
 export const CompleteHeader = () => {
+  const { t } = useTranslation();
+  const { data: session } = useSession();
   return (
     <>
       <GlobalStyle />
@@ -94,16 +146,48 @@ export const CompleteHeader = () => {
             </GovukHeaderLogoLink>
           </GovukHeaderLogo>
           <GovukHeaderContent>
-            <TopNav.NavLink href="/">Export green list waste</TopNav.NavLink>
+            <GovukHeaderLink href={{ pathname: '/' }}>
+              {t('app.title')}
+            </GovukHeaderLink>
           </GovukHeaderContent>
+          <GovukHeaderUserContent>
+            {!session && (
+              <>
+                <GovukHeaderLink
+                  href="/auth/signin"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signIn('defra-b2c');
+                  }}
+                >
+                  Sign in
+                </GovukHeaderLink>
+              </>
+            )}
+            {session?.user && (
+              <>
+                <GovukHeaderLink
+                  href={'https://your-account.cpdev.cui.defra.gov.uk'}
+                >
+                  {session.user.name}
+                </GovukHeaderLink>
+                <GovukHeaderLink
+                  href="/auth/signout"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signOut();
+                  }}
+                >
+                  Sign out
+                </GovukHeaderLink>
+              </>
+            )}
+          </GovukHeaderUserContent>
         </GovukHeaderInner>
       </GovukHeader>
       <Main>
         <PhaseBannerStyled level="Private beta">
-          This part of GOV.UK is being rebuilt –{' '}
-          <Link href="https://example.com" noVisitedState>
-            find out what that means
-          </Link>
+          This is a new service
         </PhaseBannerStyled>
       </Main>
     </>

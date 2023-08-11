@@ -1,7 +1,7 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteCollection from '../pages/waste-collection';
+import WasteCollection from '../pages/export/waste-collection';
 
 jest.mock('next/router', () => ({
   useRouter: () => ({

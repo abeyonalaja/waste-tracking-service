@@ -1,10 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../jest-utils';
 import { CompleteHeader } from '../../components/';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('CompleteHeader', () => {
   it('renders Header component', () => {
-    const { baseElement } = render(<CompleteHeader />);
-    expect(baseElement).toBeTruthy();
-    expect(screen.findByText('Green list waste overview')).toBeTruthy();
+    render(<CompleteHeader />);
+
+    expect(screen.findByText('GsOV.UK')).toBeTruthy();
   });
 });

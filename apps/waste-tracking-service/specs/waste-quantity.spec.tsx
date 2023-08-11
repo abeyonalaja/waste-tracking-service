@@ -1,7 +1,7 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteQuantity from '../pages/waste-quantity';
+import WasteQuantity from '../pages/export/waste-quantity';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -37,7 +37,7 @@ describe('Waste quantity page', () => {
       render(<WasteQuantity />);
     });
 
-    expect(screen.getByText('Loading')).toBeTruthy();
+    expect(screen.findByText('Loading')).toBeTruthy();
   });
 
   it('should display an error message if the data fetching fails', async () => {
@@ -48,7 +48,7 @@ describe('Waste quantity page', () => {
     });
 
     expect(
-      screen.getByText('The export record has not been found')
+      screen.findByText('The export record has not been found')
     ).toBeTruthy();
   });
 });

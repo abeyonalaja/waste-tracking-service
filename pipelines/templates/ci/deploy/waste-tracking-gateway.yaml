@@ -1,0 +1,64 @@
+parameters:
+  - name: serviceConnection
+    type: string
+    default: ''
+  - name: containerRegistryName
+    type: string
+    default: ''
+  - name: appName
+    type: string
+    default: 'waste-tracking-gateway'
+  - name: appNameTag
+    type: string
+    default: 'waste_tracking_gateway'
+  - name: appInsightsConnectionString
+    type: string
+    default: ''
+  - name: deployChart
+    type: string
+    default: ''
+  - name: affectedCharts
+    type: string
+    default: ''
+
+steps:
+  - template: release.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      containerRegistryName: ${{ parameters.containerRegistryName }}
+      appName: ${{ parameters.appName }}
+      appNameTag: ${{ parameters.appNameTag }}
+      deployChart: ${{ parameters.deployChart }}
+
+  - bash: |
+      if ($([[ $AFFECTED_CHARTS_VALUES =~ (^|,)$PROJECT_NAME($|,) ]] && echo true || echo false))
+      then
+        echo "Chart: ${PROJECT_NAME} is in deployment list"
+        if [ $CHART_EXISTS == 'false' ]
+        then
+          echo "Installing release: ${PROJECT_NAME}"
+          chartFullName="${HOST}/${PROJECT_NAME}"
+          helm upgrade \
+            --install $PROJECT_NAME \
+            $chartFullName \
+            --version $CHART_TAG \
+            --create-namespace \
+            -n $PROJECT_NAME \
+            --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
+        else
+          echo "Release: ${PROJECT_NAME} is already up to date"
+        fi
+      else
+        echo "Chart: ${PROJECT_NAME} is not in deployment list"
+      fi
+    displayName: AKS Deploy ${{ parameters.appName }}
+    condition: ${{ parameters.deployChart }}
+    env:
+      AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+      AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+      HOST: oci://$(acr.loginServer)/charts/wts
+      PROJECT_NAME: ${{ parameters.appName }}
+      CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
+      APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
+      CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
+      AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}

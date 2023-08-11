@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import {
   AppLink,
+  BreadcrumbWrap,
   CompleteFooter,
   CompleteHeader,
-  BreadcrumbWrap,
   Paragraph,
 } from '../components';
 import React from 'react';
@@ -15,7 +15,11 @@ const BreadCrumbs = () => {
   const { t } = useTranslation();
   return (
     <BreadcrumbWrap>
-      <GovUK.Breadcrumbs>{t('app.title')}</GovUK.Breadcrumbs>
+      <GovUK.Breadcrumbs>
+        <GovUK.Breadcrumbs.Link href="/">
+          {t('app.parentTitle')}
+        </GovUK.Breadcrumbs.Link>
+      </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
   );
 };
@@ -34,7 +38,9 @@ export function Index() {
         beforeChildren={<BreadCrumbs />}
       >
         <Paragraph>
-          <AppLink href="dashboard">{t('app.channel.title')}</AppLink>
+          <AppLink href={{ pathname: process.env.NX_EXPORT_URL }}>
+            {t('app.title')}
+          </AppLink>
         </Paragraph>
       </GovUK.Page>
     </>

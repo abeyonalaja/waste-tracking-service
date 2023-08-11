@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
-import ExporterPostcode from '../pages/exporter-postcode';
+import { render, fireEvent, screen, act } from '../jest-utils';
+import ExporterPostcode from '../pages/export/exporter-postcode';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -8,6 +8,13 @@ jest.mock('next/router', () => ({
     query: { id: '123' },
   })),
 }));
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Exporter postcode page', () => {
   it('should render the page', async () => {

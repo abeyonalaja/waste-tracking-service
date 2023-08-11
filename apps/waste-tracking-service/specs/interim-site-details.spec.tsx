@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
-import InterimSiteDetails from '../pages/interim-site-details';
+import { render, act } from '../jest-utils';
+import InterimSiteDetails from '../pages/export/interim-site-details';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -12,7 +12,11 @@ jest.mock('next/router', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve(),
+    json: () =>
+      Promise.resolve({
+        status: 'Started',
+        values: [{ id: 'idofinterimsite' }],
+      }),
   })
 );
 

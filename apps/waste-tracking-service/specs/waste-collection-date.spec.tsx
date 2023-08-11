@@ -1,7 +1,7 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteCollectionDate from '../pages/waste-collection-date';
+import WasteCollectionDate from '../pages/export/waste-collection-date';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -31,7 +31,7 @@ describe('Waste Collection Date page', () => {
       render(<WasteCollectionDate />);
     });
 
-    expect(screen.getByText('Loading')).toBeTruthy();
+    expect(screen.findByText('Loading')).toBeTruthy();
   });
 
   it('displays a validation message when no option is selected', async () => {

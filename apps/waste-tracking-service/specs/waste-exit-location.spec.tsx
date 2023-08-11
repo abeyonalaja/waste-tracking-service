@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
-import WasteExitLocation from '../pages/waste-exit-location';
+import { render, fireEvent, screen, act } from '../jest-utils';
+import WasteExitLocation from '../pages/export/waste-exit-location';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -35,7 +35,7 @@ describe('Point Of Exit page', () => {
       render(<WasteExitLocation />);
     });
 
-    expect(screen.getByText('Loading')).toBeTruthy();
+    expect(screen.findByText('Loading')).toBeTruthy();
   });
 
   it('should display an error message if the data fetching fails', async () => {
@@ -46,7 +46,7 @@ describe('Point Of Exit page', () => {
     });
 
     expect(
-      screen.getByText('The export record has not been found')
+      screen.findByText('The export record has not been found')
     ).toBeTruthy();
   });
 

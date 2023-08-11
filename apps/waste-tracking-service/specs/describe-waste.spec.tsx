@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
-import DescribeWaste from '../pages/describe-waste';
+import { render, fireEvent, screen, act } from '../jest-utils';
+import DescribeWaste from '../pages/export/describe-waste';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -17,10 +17,11 @@ global.fetch = jest.fn(() =>
 );
 
 describe('Describe the waste page', () => {
-  it('should fetch the data when the component mounts', async () => {
+  it('should render the page', async () => {
     await act(async () => {
       render(<DescribeWaste />);
     });
+    expect(screen.findByText('Describe the waste')).toBeTruthy();
   });
 
   it('should display a loading message while data is being fetched', async () => {
@@ -34,8 +35,8 @@ describe('Describe the waste page', () => {
     await act(async () => {
       render(<DescribeWaste />);
     });
-
-    expect(screen.getByText('Loading')).toBeTruthy();
+    expect(screen.findByText('Describe the waste')).toBeTruthy();
+    expect(screen.findByText('Loading')).toBeTruthy();
   });
 
   it('should display an error message if the data fetching fails', async () => {
@@ -46,7 +47,7 @@ describe('Describe the waste page', () => {
     });
 
     expect(
-      screen.getByText('The export record has not been found')
+      screen.findByText('The export record has not been found')
     ).toBeTruthy();
   });
 

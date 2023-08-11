@@ -1,12 +1,40 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import Link from 'next/link';
 import { Footer } from 'govuk-react';
+import { BLACK, YELLOW } from 'govuk-colours';
+import { Paragraph } from './index';
 
-const FooterLink = styled(Footer.Link)`
+const FooterLink = styled(Link)`
   display: inline-block;
   margin-bottom: 20px;
   margin-right: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-decoration: underline;
+  text-decoration-thickness: max(1px, 0.0625rem);
+  text-underline-offset: 0.1em;
+  color: ${BLACK};
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.25;
+  @media (min-width: 40.0625em) {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  &:hover {
+    text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
+    text-decoration-skip-ink: none;
+  }
+  &:focus {
+    outline: 3px solid rgba(0, 0, 0, 0);
+    color: ${BLACK};
+    background-color: ${YELLOW};
+    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    text-decoration: none;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
 `;
 
 export const CompleteFooter = () => {
@@ -15,14 +43,17 @@ export const CompleteFooter = () => {
       <Footer
         meta={
           <>
-            <FooterLink href="https://design-system.service.gov.uk/accessibility/">
-              Accessibility statement
+            <FooterLink href={{ pathname: '/help/accessibility' }}>
+              Accessibility
             </FooterLink>
-            <FooterLink href="/cookies">Cookies</FooterLink>
-            <FooterLink href="/">Privacy notice</FooterLink>
+            <FooterLink href={{ pathname: '/help/cookies' }}>
+              Cookies
+            </FooterLink>
+            <FooterLink href={{ pathname: '/help/privacy' }}>
+              Privacy
+            </FooterLink>
             <Footer.MetaCustom>
-              Built by the{' '}
-              <FooterLink href="/">Government Digital Service</FooterLink>
+              Built by the Department for Environment Food & Rural Affairs
             </Footer.MetaCustom>
           </>
         }

@@ -5,6 +5,7 @@ import { AppLink } from './AppLink';
 import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
+import { Card } from './Card';
 import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
@@ -36,6 +37,7 @@ export {
   BreakableString,
   BreadcrumbWrap,
   ButtonGroup,
+  Card,
   CompleteFooter,
   CompleteHeader,
   ConditionalRadioWrap,

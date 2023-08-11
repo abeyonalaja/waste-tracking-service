@@ -173,14 +173,34 @@ jobs:
                   deployChart: variables.deployCharts
                   affectedCharts: $(affectedCharts)
 
-          - ${{ elseif in(app, 'waste-tracking-service', 'waste-tracking-gateway')}}:
-              - template: templates/ci/deploy/wts-wtg.yaml
+          - ${{ elseif in(app, 'waste-tracking-gateway')}}:
+              - template: templates/ci/deploy/waste-tracking-gateway.yaml
                 parameters:
                   serviceConnection: ${{ variables.serviceConnection }}
                   containerRegistryName: ${{ variables.containerRegistryName }}
                   appName: ${{ app }}
                   appNameTag: ${{ replace(app, '-', '_') }}
                   appInsightsConnectionString: $(appInsightsConnectionString)
+                  deployChart: variables.deployCharts
+                  affectedCharts: $(affectedCharts)
+
+          - ${{ elseif in(app, 'waste-tracking-service')}}:
+              - template: templates/ci/deploy/waste-tracking-service.yaml
+                parameters:
+                  serviceConnection: ${{ variables.serviceConnection }}
+                  containerRegistryName: ${{ variables.containerRegistryName }}
+                  appName: ${{ app }}
+                  appNameTag: ${{ replace(app, '-', '_') }}
+                  appInsightsConnectionString: $(appInsightsConnectionString)
+                  dcidClientId: $(dcidClientId)
+                  dcidClientSecret: $(dcidClientSecret)
+                  dcidPolicy: $(dcidPolicy)
+                  dcidRedirect: $(dcidRedirect)
+                  dcidServiceId: $(dcidServiceId)
+                  dcidTenant: $(dcidTenant)
+                  dcidWellKnown: $(dcidWellKnown)
+                  nextAuthSecret: $(nextAuthSecret)
+                  nextAuthUrl: $(nextAuthUrl)
                   deployChart: variables.deployCharts
                   affectedCharts: $(affectedCharts)
 

@@ -11,7 +11,9 @@ export const SubmissionNotFound = ({ testId }: Props) => {
     <div data-testid={testId}>
       <Heading size="L">Not found</Heading>
       <Paragraph>The export record has not been found</Paragraph>
-      <AppLink href="/dashboard">Return to the overview</AppLink>
+      <AppLink href={{ pathname: process.env.NX_EXPORT_URL }}>
+        Return to the overview
+      </AppLink>
     </div>
   );
 };
