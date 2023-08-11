@@ -240,7 +240,7 @@ const ExportSubmitted = () => {
                     {t('exportJourney.exportSubmitted.legalStatementp1')}
                     <DownloadPDFLink
                       submissionId={id}
-                      reference={exportSubmittedPage.data.reference}
+                      transactionId={exportSubmittedPage.data.reference}
                     />
                     {exportSubmittedPage.data.submissionState.status ===
                       'SubmittedWithEstimates' && (
@@ -252,7 +252,7 @@ const ExportSubmitted = () => {
                 <SaveReturnButton
                   onClick={() =>
                     router.push({
-                      pathname: '/dashboard',
+                      pathname: process.env.NX_EXPORT_URL,
                     })
                   }
                 >

@@ -290,9 +290,10 @@ const SubmittedAnnex7 = () => {
                                 <Actions>
                                   <AppLink
                                     id={'view-link-' + index}
-                                    href={
-                                      '/view-submitted-annex-7?id=' + item.id
-                                    }
+                                    href={{
+                                      pathname: `${process.env.NX_EXPORT_URL}/submitted-annex-7-view`,
+                                      query: { id: item.id },
+                                    }}
                                   >
                                     View
                                   </AppLink>

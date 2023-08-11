@@ -5,14 +5,14 @@ import { savePDF } from '../utils/savePDF';
 interface Props {
   id?: string;
   submissionId: string;
-  reference?: string;
+  transactionId?: string;
   children?: ReactNode;
 }
 
 export const DownloadPDFLink = ({
   id,
   submissionId,
-  reference,
+  transactionId,
   children,
 }: Props) => {
   const [loading, setLoading] = React.useState(false);
@@ -21,7 +21,7 @@ export const DownloadPDFLink = ({
       return;
     }
     setLoading(true);
-    savePDF(submissionId, reference).then(() => {
+    savePDF(submissionId, transactionId).then(() => {
       setLoading(false);
     });
     e.preventDefault();

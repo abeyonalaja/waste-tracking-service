@@ -67,6 +67,7 @@
   "address.change": "Change address",
   "address.hintCannotBeInUk": "This address cannot be in the UK.",
   "location": "Location",
+  "actions": "Actions",
   "section": "section",
   "allSections": "all sections",
   "contact.orgName": "Organisation name",
@@ -316,5 +317,11 @@
   "exportJourney.exportSubmitted.secondListItemTwo": "collection date",
   "exportJourney.exportSubmitted.legalStatementp1": "  It is a legal requirement that a completed Annex VII form travels with the waste. You can use your own or ",
   "exportJourney.exportSubmitted.legalStatementp2": ". Any estimated details you have entered will not appear on the downloaded form. You also need to update any incomplete answers as soon as possible.",
-  "exportJourney.exportSubmitted.button": " Return to export waste from the UK"
+  "exportJourney.exportSubmitted.button": " Return to export waste from the UK",
+  "exportJourney.submittedView.caption": "Annex VII record",
+  "exportJourney.submittedView.title": "Transaction number",
+  "exportJourney.submittedView.intro": "You can download the Annex VII document or create a template based on a this submission.",
+  "exportJourney.submittedView.downloadPDF": "Download Annex VII document",
+  "exportJourney.submittedView.downloadPDFinfo": "(PDF, 2 pages)",
+  "exportJourney.submittedView.button": "Return to all Annex VII submissions"
 }

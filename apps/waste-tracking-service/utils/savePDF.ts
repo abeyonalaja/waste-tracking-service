@@ -1,4 +1,4 @@
-export const savePDF = (id, reference = null) => {
+export const savePDF = (id, transactionId = null) => {
   return fetch(`/api/pdf?id=${id}`)
     .then((res) => res.blob())
     .then((readableStream) => {
@@ -8,7 +8,7 @@ export const savePDF = (id, reference = null) => {
         const link = document.createElement('a');
         if (link.download !== undefined) {
           link.setAttribute('href', url);
-          link.setAttribute('download', fileName(reference));
+          link.setAttribute('download', fileName(transactionId));
           link.style.visibility = 'hidden';
           document.body.appendChild(link);
           link.click();
@@ -21,6 +21,6 @@ export const savePDF = (id, reference = null) => {
     .catch((e) => console.error(e));
 };
 
-const fileName = (reference) => {
-  return reference === null ? 'Annex VII' : `Annex VII - ${reference}`;
+const fileName = (transactionId) => {
+  return transactionId === null ? 'AnnexVII' : `AnnexVII_${transactionId}`;
 };

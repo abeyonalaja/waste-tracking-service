@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { isNotEmpty, validateQuantityType } from '../../utils/validators';
 import {
-  GetWasteQuantityResponse,
   PutWasteQuantityRequest,
   Submission,
 } from '@wts/api/waste-tracking-gateway';
