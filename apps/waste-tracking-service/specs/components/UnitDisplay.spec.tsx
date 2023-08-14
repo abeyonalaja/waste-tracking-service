@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { UnitDisplay } from '../../components/';
+import { UnitDisplay } from 'components';
 
 describe('UnitDisplay', () => {
   it('displays "kg" when type is "NotApplicable" and quantityType is "Weight"', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from '../jest-utils';
-import DescribeWaste from '../pages/export/describe-waste';
+import Description from '../pages/export/incomplete/about/description';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -19,7 +19,7 @@ global.fetch = jest.fn(() =>
 describe('Describe the waste page', () => {
   it('should render the page', async () => {
     await act(async () => {
-      render(<DescribeWaste />);
+      render(<Description />);
     });
     expect(screen.findByText('Describe the waste')).toBeTruthy();
   });
@@ -33,7 +33,7 @@ describe('Describe the waste page', () => {
     );
 
     await act(async () => {
-      render(<DescribeWaste />);
+      render(<Description />);
     });
     expect(screen.findByText('Describe the waste')).toBeTruthy();
     expect(screen.findByText('Loading')).toBeTruthy();
@@ -43,7 +43,7 @@ describe('Describe the waste page', () => {
     global.fetch.mockImplementationOnce(() => Promise.resolve({ ok: false }));
 
     await act(async () => {
-      render(<DescribeWaste />);
+      render(<Description />);
     });
 
     expect(
@@ -57,7 +57,7 @@ describe('Describe the waste page', () => {
     );
 
     await act(async () => {
-      render(<DescribeWaste />);
+      render(<Description />);
     });
 
     const textareaElement = screen.getByLabelText('Describe the waste');

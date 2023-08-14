@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteCollectionDate from '../pages/export/waste-collection-date';
+import CollectionDate from '../pages/export/incomplete/journey/collection-date';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -28,7 +28,7 @@ describe('Waste Collection Date page', () => {
     );
 
     await act(async () => {
-      render(<WasteCollectionDate />);
+      render(<CollectionDate />);
     });
 
     expect(screen.findByText('Loading')).toBeTruthy();
@@ -36,7 +36,7 @@ describe('Waste Collection Date page', () => {
 
   it('displays a validation message when no option is selected', async () => {
     await act(async () => {
-      render(<WasteCollectionDate />);
+      render(<CollectionDate />);
     });
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
@@ -47,7 +47,7 @@ describe('Waste Collection Date page', () => {
 
   it('displays a validation message when Actual Date selected and no date entered', async () => {
     await act(async () => {
-      render(<WasteCollectionDate />);
+      render(<CollectionDate />);
     });
 
     const actualRadioLabel = screen.getByLabelText(
@@ -64,7 +64,7 @@ describe('Waste Collection Date page', () => {
 
   it('displays a validation message when Actual Date selected and past date entered', async () => {
     await act(async () => {
-      render(<WasteCollectionDate />);
+      render(<CollectionDate />);
     });
 
     const actualRadioLabel = screen.getByLabelText(

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { RadioList } from '../../components/';
+import { RadioList } from 'components';
 
 describe('Small Radio List component', () => {
   const options = ['Option 1', 'Option 2', 'Option 3'];

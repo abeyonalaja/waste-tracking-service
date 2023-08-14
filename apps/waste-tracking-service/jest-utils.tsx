@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import 'i18n/config';
 import { render, RenderOptions } from '@testing-library/react';
 import { SessionProvider } from 'next-auth/react';
 

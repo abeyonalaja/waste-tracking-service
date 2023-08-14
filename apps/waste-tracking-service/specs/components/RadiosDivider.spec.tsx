@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { RadiosDivider } from '../../components/';
+import { RadiosDivider } from 'components';
 
 describe('RadiosDivider', () => {
   it('renders children', () => {

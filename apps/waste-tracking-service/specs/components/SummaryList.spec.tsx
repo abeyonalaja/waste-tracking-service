@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { SummaryListWithActions } from '../../components/';
+import { SummaryListWithActions } from 'components';
 
 describe('SummaryList', () => {
   it('renders a list of titles', () => {

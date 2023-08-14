@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from '../jest-utils';
-import EwcCode from '../pages/export/ewc-code';
+import EwcAddOptional from '../pages/export/incomplete/about/ewc';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -20,7 +20,7 @@ global.fetch = jest.fn(() =>
 describe('EWC Code component', () => {
   it('should render the component', async () => {
     await act(async () => {
-      render(<EwcCode />);
+      render(<EwcAddOptional />);
     });
   });
 
@@ -30,7 +30,7 @@ describe('EWC Code component', () => {
     );
 
     await act(async () => {
-      render(<EwcCode />);
+      render(<EwcAddOptional />);
     });
 
     const submitButton = screen.getByText('Save and continue');
@@ -50,7 +50,7 @@ describe('EWC Code component', () => {
     );
 
     await act(async () => {
-      render(<EwcCode />);
+      render(<EwcAddOptional />);
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');

@@ -1,4 +1,3 @@
-import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import {
@@ -7,7 +6,7 @@ import {
   CompleteFooter,
   CompleteHeader,
   Paragraph,
-} from '../components';
+} from 'components';
 import React from 'react';
 import Head from 'next/head';
 
@@ -38,7 +37,7 @@ export function Index() {
         beforeChildren={<BreadCrumbs />}
       >
         <Paragraph>
-          <AppLink href={{ pathname: process.env.NX_EXPORT_URL }}>
+          <AppLink href={{ pathname: '/export' }} id="dashboard_link">
             {t('app.title')}
           </AppLink>
         </Paragraph>

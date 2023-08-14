@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { AppLink } from '../../components/';
+import { AppLink } from 'components';
 
 describe('App Link', () => {
   const href = '/example-link';

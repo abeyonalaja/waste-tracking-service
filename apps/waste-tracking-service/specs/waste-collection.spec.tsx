@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteCollection from '../pages/export/waste-collection';
+import CollectionDetails from '../pages/export/incomplete/journey/collection-details';
 
 jest.mock('next/router', () => ({
   useRouter: () => ({
@@ -26,12 +26,12 @@ global.fetch = jest.fn(() =>
 describe('Waste Collection details page', () => {
   it('should render the page', async () => {
     await act(async () => {
-      render(<WasteCollection />);
+      render(<CollectionDetails />);
     });
   });
   it('should show validation message if no content is entered', async () => {
     await act(async () => {
-      render(<WasteCollection />);
+      render(<CollectionDetails />);
     });
 
     const submitButton = screen.getByText('Find address');

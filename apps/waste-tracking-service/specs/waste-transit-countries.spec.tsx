@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from '../jest-utils';
-import WasteTransitCountries from '../pages/export/waste-transit-countries';
+import TransitCountries from '../pages/export/incomplete/journey/transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -19,7 +19,7 @@ global.fetch = jest.fn(() =>
 describe('Waste Transit Countries page', () => {
   it('should fetch the data when the component mounts', async () => {
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
   });
 
@@ -32,7 +32,7 @@ describe('Waste Transit Countries page', () => {
     );
 
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     expect(screen.findByText('Loading')).toBeTruthy();
@@ -47,7 +47,7 @@ describe('Waste Transit Countries page', () => {
     );
 
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const pageTitle = screen.getByText(
@@ -64,7 +64,7 @@ describe('Waste Transit Countries page', () => {
 
   it('should show validation message if selected YES and do not select a country', async () => {
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');
@@ -87,7 +87,7 @@ describe('Waste Transit Countries page', () => {
     );
 
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const country = screen.getByText('1. England');
@@ -99,7 +99,7 @@ describe('Waste Transit Countries page', () => {
 
   it('should show validation message if selected YES to additional country and do not select a country', async () => {
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');
@@ -114,7 +114,7 @@ describe('Waste Transit Countries page', () => {
 
   it('should show change view when change link is clicked', async () => {
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const changeLink = screen.getByText('Change');
@@ -128,7 +128,7 @@ describe('Waste Transit Countries page', () => {
 
   it('should show confirm view when remove link is clicked', async () => {
     await act(async () => {
-      render(<WasteTransitCountries />);
+      render(<TransitCountries />);
     });
 
     const removeLink = screen.getByText('Remove');

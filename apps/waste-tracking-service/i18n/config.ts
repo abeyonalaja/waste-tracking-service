@@ -10,6 +10,5 @@ export const resources = {
 
 i18next.use(initReactI18next).init({
   lng: 'en',
-  debug: true,
   resources,
 });

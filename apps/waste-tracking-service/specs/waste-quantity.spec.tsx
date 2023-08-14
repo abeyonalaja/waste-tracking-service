@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, screen } from '../jest-utils';
 import '@testing-library/jest-dom';
-import WasteQuantity from '../pages/export/waste-quantity';
+import Quantity from '../pages/export/incomplete/about/quantity';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -21,7 +21,7 @@ global.fetch = jest.fn(() =>
 describe('Waste quantity page', () => {
   it('should fetch the data when the component mounts', async () => {
     await act(async () => {
-      render(<WasteQuantity />);
+      render(<Quantity />);
     });
   });
 
@@ -34,7 +34,7 @@ describe('Waste quantity page', () => {
     );
 
     await act(async () => {
-      render(<WasteQuantity />);
+      render(<Quantity />);
     });
 
     expect(screen.findByText('Loading')).toBeTruthy();
@@ -44,7 +44,7 @@ describe('Waste quantity page', () => {
     global.fetch.mockImplementationOnce(() => Promise.resolve({ ok: false }));
 
     await act(async () => {
-      render(<WasteQuantity />);
+      render(<Quantity />);
     });
 
     expect(

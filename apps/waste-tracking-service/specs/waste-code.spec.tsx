@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, render } from '../jest-utils';
-import WasteCode from '../pages/export/waste-code';
+import Code from '../pages/export/incomplete/about/waste-code';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({ query: {} })),
@@ -16,7 +16,7 @@ global.fetch = jest.fn(() =>
 describe('Waste code page', () => {
   it('should fetch the data when the page loads', async () => {
     await act(async () => {
-      render(<WasteCode />);
+      render(<Code />);
     });
   });
 });

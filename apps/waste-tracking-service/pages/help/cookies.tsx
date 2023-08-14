@@ -1,4 +1,3 @@
-import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import { CompleteFooter, CompleteHeader } from '../../components';

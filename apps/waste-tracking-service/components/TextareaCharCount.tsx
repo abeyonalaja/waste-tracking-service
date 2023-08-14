@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { Label, FormGroup, TextArea, HintText } from 'govuk-react';
 import styled from 'styled-components';
-import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 
 interface Props {

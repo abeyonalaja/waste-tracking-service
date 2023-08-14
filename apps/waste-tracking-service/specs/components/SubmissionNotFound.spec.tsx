@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { SubmissionNotFound } from '../../components/';
+import { SubmissionNotFound } from 'components';
 
 test('renders Submission Not Found component', () => {
   const { getByTestId, getByText } = render(

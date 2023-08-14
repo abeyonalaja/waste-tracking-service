@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from '../jest-utils';
-import ExporterPostcode from '../pages/export/exporter-postcode';
+import ExporterPostcode from '../pages/export/incomplete/exporter-importer/exporter-postcode';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

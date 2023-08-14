@@ -1,4 +1,3 @@
-import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import {
@@ -7,7 +6,6 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  Paragraph,
 } from '../../components';
 import React from 'react';
 import Head from 'next/head';
@@ -53,7 +51,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `${process.env.NX_EXPORT_URL}/add-your-own-export-reference`,
+                      pathname: `/export/incomplete/reference`,
                     }}
                     id="your-reference"
                   >
@@ -73,7 +71,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `${process.env.NX_EXPORT_URL}/incomplete-annex-7`,
+                      pathname: `/export/incomplete`,
                     }}
                   >
                     Manage incomplete Annex VII records
@@ -88,7 +86,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `${process.env.NX_EXPORT_URL}/update-annex-7`,
+                      pathname: `/export/estimated`,
                     }}
                   >
                     Update an Annex VII record with actual details
@@ -103,7 +101,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `${process.env.NX_EXPORT_URL}/submitted-annex-7`,
+                      pathname: `/export/submitted`,
                     }}
                   >
                     View all submitted Annex VII records

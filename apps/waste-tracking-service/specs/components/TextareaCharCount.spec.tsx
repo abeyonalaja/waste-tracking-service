@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { TextareaCharCount } from '../../components/';
+import { TextareaCharCount } from 'components';
+import 'i18n/config';
 
 describe('Character count textarea component', () => {
   const defaultProps = {

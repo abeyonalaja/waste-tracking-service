@@ -2,7 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-import { DocumentStatus } from '../../components/';
+import { DocumentStatus } from 'components';
+import 'i18n/config';
 
 describe('DocumentStatus', () => {
   test('renders "CANNOT START YET" tag when status is CannotStart', () => {

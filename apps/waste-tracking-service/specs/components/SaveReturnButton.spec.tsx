@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { SaveReturnButton } from '../../components/';
+import { SaveReturnButton } from 'components';
+import 'i18n/config';
 
 describe('Save Return Button', () => {
   const mockCallBack = jest.fn();

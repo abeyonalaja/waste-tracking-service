@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { ConditionalRadioWrap } from '../../components/';
+import { ConditionalRadioWrap } from 'components';
 
 describe('ConditionalRadioWrap', () => {
   it('renders', () => {

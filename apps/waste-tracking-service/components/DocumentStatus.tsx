@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tag } from 'govuk-react';
-import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 
 export const DocumentStatus = (props) => {

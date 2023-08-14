@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from '../jest-utils';
-import WasteExitLocation from '../pages/export/waste-exit-location';
+import ExitLocation from '../pages/export/incomplete/journey/exit-location';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -19,7 +19,7 @@ global.fetch = jest.fn(() =>
 describe('Point Of Exit page', () => {
   it('should fetch the data when the component mounts', async () => {
     await act(async () => {
-      render(<WasteExitLocation />);
+      render(<ExitLocation />);
     });
   });
 
@@ -32,7 +32,7 @@ describe('Point Of Exit page', () => {
     );
 
     await act(async () => {
-      render(<WasteExitLocation />);
+      render(<ExitLocation />);
     });
 
     expect(screen.findByText('Loading')).toBeTruthy();
@@ -42,7 +42,7 @@ describe('Point Of Exit page', () => {
     global.fetch.mockImplementationOnce(() => Promise.resolve({ ok: false }));
 
     await act(async () => {
-      render(<WasteExitLocation />);
+      render(<ExitLocation />);
     });
 
     expect(
@@ -52,7 +52,7 @@ describe('Point Of Exit page', () => {
 
   it('should show validation message if no radio is selected', async () => {
     await act(async () => {
-      render(<WasteExitLocation />);
+      render(<ExitLocation />);
     });
 
     const submitButton = screen.getByText('Save and continue');
@@ -64,7 +64,7 @@ describe('Point Of Exit page', () => {
 
   it('should show validation message if selected YES and do not enter a location', async () => {
     await act(async () => {
-      render(<WasteExitLocation />);
+      render(<ExitLocation />);
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');

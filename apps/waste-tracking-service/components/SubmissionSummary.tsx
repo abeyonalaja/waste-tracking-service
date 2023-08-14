@@ -156,7 +156,7 @@ export const SubmissionSummary = ({
                   <AppLink
                     id="your-reference-change"
                     href={{
-                      pathname: `${process.env.NX_EXPORT_URL}/add-your-own-export-reference`,
+                      pathname: `/export/incomplete/reference`,
                       query: { id: data.id },
                     }}
                   >
@@ -202,7 +202,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-code-type-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/changing-waste-code`,
+                          pathname: `/export/incomplete/about/waste-code-warning`,
                           query: { id: data.id },
                         }}
                       >
@@ -237,7 +237,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="ewc-codes-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/added-ewc-code`,
+                          pathname: `/export/incomplete/about/ewc-list`,
                           query: { id: data.id },
                         }}
                       >
@@ -264,7 +264,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="national-code-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/national-code`,
+                          pathname: `/export/incomplete/about/national-code`,
                           query: { id: data.id },
                         }}
                       >
@@ -288,7 +288,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-destription-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/describe-waste`,
+                          pathname: `/export/incomplete/about/description`,
                           query: { id: data.id },
                         }}
                       >
@@ -343,7 +343,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id="waste-quanitity-change"
                             href={{
-                              pathname: `${process.env.NX_EXPORT_URL}/waste-quantity`,
+                              pathname: `/export/incomplete/about/quantity`,
                               query: { id: data.id },
                             }}
                           >
@@ -386,7 +386,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exporter-address-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/exporter-details-manual`,
+                          pathname: `/export/incomplete/exporter-importer/exporter-details-manual`,
                           query: { id: data.id },
                         }}
                       >
@@ -419,7 +419,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exporter-organisation-name-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/exporter-details`,
+                          pathname: `/export/incomplete/exporter-importer/exporter-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -501,7 +501,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="importer-details-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/importer-details`,
+                          pathname: `/export/incomplete/exporter-importer/importer-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -538,7 +538,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="importer-contact-details-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/importer-contact-details`,
+                          pathname: `/export/incomplete/exporter-importer/importer-contact-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -636,7 +636,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="collection-date-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/waste-collection-date`,
+                          pathname: `/export/incomplete/journey/collection-date`,
                           query: { id: data.id, dashboard: true },
                         }}
                       >
@@ -676,7 +676,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-change' + index}
                             href={{
-                              pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-details`,
+                              pathname: `/export/incomplete/journey/carrier-details`,
                               query: { id: data.id, carrierId: item.id },
                             }}
                           >
@@ -714,7 +714,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-contact-details-change' + index}
                             href={{
-                              pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-contact-details`,
+                              pathname: `/export/incomplete/journey/carrier-contact-details`,
                               query: { id: data.id, carrierId: item.id },
                             }}
                           >
@@ -770,7 +770,7 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-change' + index}
                                 href={{
-                                  pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-transport-choice`,
+                                  pathname: `/export/incomplete/journey/carrier-transport-choice`,
                                   query: { id: data.id, carrierId: item.id },
                                 }}
                               >
@@ -805,7 +805,7 @@ export const SubmissionSummary = ({
                                   <AppLink
                                     id={'carrier-details-change' + index}
                                     href={{
-                                      pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-shipping-container`,
+                                      pathname: `/export/incomplete/journey/carrier-shipping-container`,
                                       query: {
                                         id: data.id,
                                         carrierId: item.id,
@@ -880,7 +880,7 @@ export const SubmissionSummary = ({
                                   <AppLink
                                     id={'carrier-details-change' + index}
                                     href={{
-                                      pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-trailer`,
+                                      pathname: `/export/incomplete/journey/carrier-trailer`,
                                       query: {
                                         id: data.id,
                                         carrierId: item.id,
@@ -931,7 +931,7 @@ export const SubmissionSummary = ({
                                   <AppLink
                                     id={'carrier-details-change' + index}
                                     href={{
-                                      pathname: `${process.env.NX_EXPORT_URL}/waste-carrier-bulk-vessel`,
+                                      pathname: `/export/incomplete/journey/carrier-bulk-vessel`,
                                       query: {
                                         id: data.id,
                                         carrierId: item.id,
@@ -978,7 +978,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-collection-address-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/waste-collection`,
+                          pathname: `/export/incomplete/journey/collection-details`,
                           query: { id: data.id, page: 'MANUAL_ADDRESS' },
                         }}
                       >
@@ -1010,7 +1010,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-collection-full-name-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/waste-collection`,
+                          pathname: `/export/incomplete/journey/collection-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -1089,7 +1089,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exit-location-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/waste-exit-location`,
+                          pathname: `/export/incomplete/journey/exit-location`,
                           query: { id: data.id },
                         }}
                       >
@@ -1134,7 +1134,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="transit-countries-change"
                         href={{
-                          pathname: `${process.env.NX_EXPORT_URL}/waste-transit-countries`,
+                          pathname: `/export/incomplete/journey/transit-countries`,
                           query: { id: data.id },
                         }}
                       >
@@ -1228,7 +1228,7 @@ const SiteDetails = ({
     case 'Laboratory':
       titleKey = 'exportJourney.checkAnswers.titleLaboratory';
       nameKey = 'exportJourney.laboratorySite.name';
-      url = '/laboratory-details';
+      url = '/laboratory';
       codeKey = 'exportJourney.checkAnswers.codeLaboratory';
       code = site.recoveryFacilityType.disposalCode;
       break;
@@ -1267,7 +1267,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `${process.env.NX_EXPORT_URL}/${url}`,
+                  pathname: `/export/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'ADDRESS_DETAILS' },
                 }}
                 id={`${type.toLowerCase()}-change-address-${index}`}
@@ -1307,7 +1307,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `${process.env.NX_EXPORT_URL}/${url}`,
+                  pathname: `/export/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'CONTACT_DETAILS' },
                 }}
                 id={`${type.toLowerCase()}-change-contact-${index}`}
@@ -1359,7 +1359,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `${process.env.NX_EXPORT_URL}/${url}`,
+                  pathname: `/export/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'RECOVERY_CODE' },
                 }}
                 id={`${type.toLowerCase()}-change-code-${index}`}

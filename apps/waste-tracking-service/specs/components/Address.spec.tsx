@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { Address } from '../../components/';
+import { Address } from 'components';
 
 describe('Address component', () => {
   const address = {

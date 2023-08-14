@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { InputWithSuffix } from '../../components/';
+import { InputWithSuffix } from 'components';
 
 describe('Input field with suffix', () => {
   const defaultProps = {

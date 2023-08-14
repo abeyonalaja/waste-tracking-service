@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import '../i18n/config';
 import { useTranslation } from 'react-i18next';
 
 interface Props {

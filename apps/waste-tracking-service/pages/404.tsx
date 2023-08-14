@@ -1,4 +1,4 @@
-import { AppLink, CompleteFooter, CompleteHeader } from '../components';
+import { AppLink, CompleteFooter, CompleteHeader } from 'components';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import React from 'react';

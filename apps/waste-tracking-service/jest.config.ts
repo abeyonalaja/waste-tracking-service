@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export default {
   displayName: 'waste-tracking-service',
   preset: '../../jest.preset.js',

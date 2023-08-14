@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { DateConverter } from '../../components/';
+import { DateConverter } from 'components';
 
 describe('DateConverter', () => {
   it('should display the formatted date', () => {

@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { BreadcrumbWrap } from '../../components/';
+import { BreadcrumbWrap } from 'components';
 
 describe('BreadcrumbWrap', () => {
   it('renders', () => {
