@@ -16,7 +16,7 @@ require_relative 'page_helpers/generic_page'
 require_relative '../pages/shared_components/translations'
 require 'report_builder'
 require 'axe-cucumber-steps'
-require "axe-capybara"
+require 'axe-capybara'
 
 
 World(Capybara::DSL)
@@ -29,12 +29,14 @@ Capybara.default_max_wait_time = 10
 Capybara.automatic_label_click = true
 # Capybara.app_host = 'http://localhost'
 
-Capybara.default_driver = :chrome
-Capybara.javascript_driver = :chrome
+driver = ENV['DRIVER'] || :chrome
+Capybara.default_driver = driver.to_sym
+Capybara.javascript_driver = driver.to_sym
 
 # Screenshot settings
 Capybara::Screenshot.prune_strategy = { keep: 5 }
-# Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
+Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
 
 # Screenshot driver for :chrome
@@ -61,7 +63,7 @@ Capybara.register_driver :chrome do |app|
 
 end
 
-Capybara.register_driver :remote_browser do |app|
+Capybara.register_driver :remote_driver do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('no-sandbox')
   options.add_argument('--enable-features1=NetworkService,NetworkServiceInProcess')
@@ -70,13 +72,15 @@ Capybara.register_driver :remote_browser do |app|
   options.add_argument('window-size=1920,1080')
   options.add_argument('disable-dev-shm-usage')
   options.add_argument('ignore-certificate-errors')
+  options.add_argument('--binary=../../chromedriver')
+
   # capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
   #   chromeOptions: { args: %w(disable-gpu no-sandbox,headless,disable-dev-shm-usage,ignore-certificate-errors,no-sandbox) }
   # )
 
   Capybara::Selenium::Driver.new(app,
-                                 :browser => :remote,
-                                 url: 'http://seleniumtestbss:4444/wd/hub',
+                                 :browser => :chrome,
+                                 # url: 'http://seleniumtestbss:4444/wd/hub',
                                  capabilities: options)
 end
 
