@@ -33,8 +33,8 @@ Feature: AS A waste practitioner
     Then Export submitted page displayed
     And I should see export submitted page is correctly translated
     And I click Return to export waste from UK button
-    Then the "Overview" page is displayed
-    And I click the "Update an export with actual details" link
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
     And I see message that there are no exports with estimates
 
@@ -70,20 +70,18 @@ Feature: AS A waste practitioner
     Then Export submitted page displayed
     Then I should see export submitted page with estimates correctly translated
     And I click Return to export waste from UK button
-    Then the "Overview" page is displayed
-    And I click the "Update an export with actual details" link
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
     And I can see Update with actual page correctly translated
     Then I verify that newly created record is on top of the table
     And I should see correct date and waste code and transaction reference
     And I click browser back button
-    Then the "Overview" page is displayed
+    Then the "Export waste from uk" page is displayed
 
   Scenario: User verifies that Not provided label is showing under the reference column on Update with actual page
     Given I login to waste tracking portal
-    And I navigate to the add reference page
-    When I have selected the No option
-    And I click the button Save and continue
+    And I navigate to the submit an export with no reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
@@ -111,8 +109,8 @@ Feature: AS A waste practitioner
     And I click confirm and submit button
     Then Export submitted page displayed
     And I click Return to export waste from UK button
-    Then the "Overview" page is displayed
-    And I click the "Update an export with actual details" link
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with 'Not provided'
     And I should see correct date and waste code and transaction reference

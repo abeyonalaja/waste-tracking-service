@@ -316,5 +316,9 @@
   "exportJourney.incompleteAnnexSeven.notResultsMessage": "You have no incomplete Annex VII forms",
   "exportJourney.submittedAnnexSeven.title": "Submitted Annex VII records",
   "exportJourney.submittedAnnexSeven.paragraph": "You can view your previously submitted records to download an Annex VII document or use them to create a template.",
-  "exportJourney.exportSubmitted.breadcrumb": "Create a green list waste movement record"
+  "exportJourney.exportSubmitted.breadcrumb": "Create a green list waste movement record",
+  "dashboard.title": "Export waste from the UK",
+  "exportJourney.exportSubmitted.viewSubmittedRecords": "View all submitted Annex VII records",
+  "exportJourney.exportSubmitted.updateAnnexRecordWithActuals": "Update an Annex VII record with actual details",
+  "exportJourney.exportSubmitted.manageIncompleteAnnexRecords": "Manage incomplete Annex VII records"
 }

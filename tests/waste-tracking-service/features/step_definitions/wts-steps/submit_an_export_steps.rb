@@ -7,14 +7,14 @@ And(/^the reference should be displayed$/) do
 end
 
 When(/^I navigate to the submit an export with reference$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.submit_a_single_waste_export
+  click_link('dashboard_link')
+  ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
 end
 
 When(/^I navigate to the submit an export with no reference$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.submit_a_single_waste_export
+  click_link('dashboard_link')
+  ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete 'No'
 end
 

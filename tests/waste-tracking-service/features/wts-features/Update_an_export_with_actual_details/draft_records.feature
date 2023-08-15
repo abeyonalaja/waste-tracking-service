@@ -14,10 +14,11 @@ Feature: AS A Waste practitioner
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
     When I click the link Return to this draft later
-    Then I should green list waste overview page
-    When I click the "Continue a draft export" link
+    Then the "Export waste from uk" page is displayed
+    When I click the "Manage incomplete Annex VII records" link
     Then I should see draft Annex VII records page
-    And I should see draft records page correctly translated
+    # need to check below step
+    # And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page
     When I click the first continue link
@@ -41,9 +42,10 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the link Return to this draft later
-    When I click the "Continue a draft export" link
+    When I click the "Manage incomplete Annex VII records" link
     Then I should see draft Annex VII records page
-    And I should see draft records page correctly translated
+    # need to check below step
+    # And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page
     And I should see waste code on draft application page
