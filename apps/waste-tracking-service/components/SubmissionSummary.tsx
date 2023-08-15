@@ -16,6 +16,7 @@ import styled from 'styled-components';
 interface Props {
   data: Submission;
   showChangeLinks?: boolean;
+  estimate?: boolean;
   testId?: string;
 }
 
@@ -100,10 +101,11 @@ const WasteCodeType = styled.div`
 export const SubmissionSummary = ({
   data,
   showChangeLinks = true,
+  estimate = false,
   testId,
 }: Props) => {
   const { t } = useTranslation();
-  const [expandedAll, setExpandedAll] = useState(true);
+  const [expandedAll, setExpandedAll] = useState(!estimate);
 
   const handleAccordionShowAll = (expand) => {
     setExpandedAll(expand);
@@ -171,6 +173,11 @@ export const SubmissionSummary = ({
           title={'1. ' + t('exportJourney.submitAnExport.SectionOne.heading')}
           expandedAll={expandedAll}
           id="check-answers-section-about-waste"
+          showTag={
+            data.wasteQuantity.status === 'Complete' &&
+            data.wasteQuantity.value.type === 'EstimateData' &&
+            estimate
+          }
         >
           {data.wasteDescription.status === 'Complete' && (
             <>
@@ -348,6 +355,19 @@ export const SubmissionSummary = ({
                             }}
                           >
                             {t('actions.change')}
+                          </AppLink>
+                        </Actions>
+                      )}
+                      {data?.wasteQuantity.value.type === 'EstimateData' && (
+                        <Actions>
+                          <AppLink
+                            id="update-estimated-quantity"
+                            href={{
+                              pathname: `/export/estimated/update-quantity`,
+                              query: { id: data.id },
+                            }}
+                          >
+                            {t('actions.update')}
                           </AppLink>
                         </Actions>
                       )}
@@ -587,6 +607,11 @@ export const SubmissionSummary = ({
           title={'3. ' + t('exportJourney.submitAnExport.SectionThree.heading')}
           expandedAll={expandedAll}
           id="check-answers-section-journey"
+          showTag={
+            data.collectionDate.status === 'Complete' &&
+            data.collectionDate.value.type === 'EstimateDate' &&
+            estimate
+          }
         >
           {data.collectionDate.status === 'Complete' && (
             <>
@@ -637,10 +662,24 @@ export const SubmissionSummary = ({
                         id="collection-date-change"
                         href={{
                           pathname: `/export/incomplete/journey/collection-date`,
-                          query: { id: data.id, dashboard: true },
+                          query: { id: data.id },
                         }}
                       >
                         {t('actions.change')}
+                      </AppLink>
+                    </Actions>
+                  )}
+
+                  {data.collectionDate.value.type === 'EstimateDate' && (
+                    <Actions>
+                      <AppLink
+                        id="collection-date-update"
+                        href={{
+                          pathname: `/export/estimated/update-collection-date`,
+                          query: { id: data.id },
+                        }}
+                      >
+                        {t('actions.update')}
                       </AppLink>
                     </Actions>
                   )}

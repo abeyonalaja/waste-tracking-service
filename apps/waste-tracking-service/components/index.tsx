@@ -15,6 +15,7 @@ import { DownloadPDFLink } from './DownloadPDFLink';
 import { EwcCodeSelector } from './EwcCodeSelector';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
+import { NotificationBanner } from './NotificationBanner';
 import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
 import { RadioList } from './RadioList';
@@ -48,6 +49,7 @@ export {
   EwcCodeSelector,
   InputWithSuffix,
   Loading,
+  NotificationBanner,
   Paragraph,
   RadiosDivider,
   RadioList,

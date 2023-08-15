@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect } from 'react';
 
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { Tag } from 'govuk-react';
 
 interface Props {
   title: string;
@@ -9,6 +10,7 @@ interface Props {
   resetToggleAllState?: () => void;
   expandedAll?: boolean;
   id?: string;
+  showTag?: boolean;
 }
 
 interface ContentProps {
@@ -38,6 +40,7 @@ const HeadingButton = styled.button`
   background: none;
   text-align: left;
   cursor: pointer;
+  position: relative;
   &:active {
     color: #0b0c0c;
     background: none;
@@ -142,12 +145,19 @@ const ToggleText = styled.span`
   }
 `;
 
+const UpdateNeeded = styled(Tag)`
+  position: absolute;
+  top: 10px;
+  right: 0;
+`;
+
 export const AccordionSection = ({
   title,
   children,
   resetToggleAllState,
   expandedAll,
   id = 'accordion-section',
+  showTag = false,
 }: Props) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = React.useState<boolean>(true);
@@ -182,6 +192,9 @@ export const AccordionSection = ({
               {expanded ? t('actions.hide') : t('actions.show')} {t('section')}
             </ToggleText>
           </Toggle>
+          {showTag && (
+            <UpdateNeeded tint="BLUE">{t('status.actualNeeded')}</UpdateNeeded>
+          )}
         </HeadingButton>
       </Heading>
       <Content expanded={expanded} id={`${id}-content`}>

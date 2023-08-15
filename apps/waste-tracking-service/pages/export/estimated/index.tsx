@@ -153,7 +153,9 @@ const UpadateAnnex7 = () => {
                 <>
                   {upadateAnnex7Page.data.filter(
                     (item) =>
-                      item.submissionState.status === 'SubmittedWithEstimates'
+                      item.submissionState.status ===
+                        'SubmittedWithEstimates' ||
+                      item.submissionState.status === 'UpdatedWithActuals'
                   ).length !== 0 ? (
                     <>
                       <GovUK.Table>
@@ -200,7 +202,9 @@ const UpadateAnnex7 = () => {
                           .filter(
                             (item) =>
                               item.submissionState.status ===
-                              'SubmittedWithEstimates'
+                                'SubmittedWithEstimates' ||
+                              item.submissionState.status ===
+                                'UpdatedWithActuals'
                           )
                           .reverse()
                           .map((item, index) => (
@@ -270,8 +274,8 @@ const UpadateAnnex7 = () => {
                                   <AppLink
                                     id={'update-' + index}
                                     href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
+                                      pathname: '/export/estimated/update',
+                                      query: { id: item.id },
                                     }}
                                   >
                                     Update
