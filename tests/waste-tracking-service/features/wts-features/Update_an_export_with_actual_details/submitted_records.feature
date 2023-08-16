@@ -35,3 +35,14 @@ Feature:AS A Waste practitioner
     Then the "submitted records" page is displayed
     And I should see submitted records page is correctly translated
     And I should see correct collection date and waste code and transaction reference
+    When I click the first view link
+    #text is removed for now
+#    Then I should see view submitted export page correctly translated
+    And I can view submitted export transaction number
+    And I should see export reference correctly displayed
+    And I should see export About the waste section correctly displayed
+    And I should see export Exporter and Importer details correctly displayed
+    And I should see export Journey of waste correctly displayed
+    And I should see export Treatment of waste correctly displayed
+    When I click the "Return to all Annex VII submissions" link
+    Then the "submitted records" page is displayed

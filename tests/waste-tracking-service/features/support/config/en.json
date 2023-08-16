@@ -320,5 +320,6 @@
   "dashboard.title": "Export waste from the UK",
   "exportJourney.exportSubmitted.viewSubmittedRecords": "View all submitted Annex VII records",
   "exportJourney.exportSubmitted.updateAnnexRecordWithActuals": "Update an Annex VII record with actual details",
-  "exportJourney.exportSubmitted.manageIncompleteAnnexRecords": "Manage incomplete Annex VII records"
+  "exportJourney.exportSubmitted.manageIncompleteAnnexRecords": "Manage incomplete Annex VII records",
+  "exportJourney.exportSubmissions.button": "Return to all Annex VII submissions"
 }

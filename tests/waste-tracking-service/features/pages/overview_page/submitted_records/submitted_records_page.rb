@@ -26,4 +26,8 @@ class SubmittedRecordsPage < GenericPage
     expect(self).to have_text CAPTION
     expect(self).to have_text ACTIONS
   end
+
+  def first_view_link
+    find('view-link-0').click
+  end
 end
