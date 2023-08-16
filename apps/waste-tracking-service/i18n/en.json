@@ -336,5 +336,7 @@
   "exportJourney.updateActualQuantity.Weight.title": "What is the actual net weight of the waste?",
   "exportJourney.updateActualQuantity.Volume.title": "What is the actual net volume of the waste?",
   "exportJourney.updateActualQuantity.Volume.intro": "Only provide the net volume. Do not include the weight of the container or vehicle",
-  "exportJourney.updateActualQuantity.success": "Your record has been updated"
+  "exportJourney.updateActualQuantity.success": "Your record has been updated",
+  "exportJourney.updateActualDate.title": "What is the actual collection date?",
+  "exportJourney.updateActualDate.intro": "Enter the date, for example"
 }

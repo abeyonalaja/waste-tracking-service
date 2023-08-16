@@ -272,6 +272,20 @@ export const validateDate: (date: Date) => string | undefined = (
     return 'Enter a date at least 3 business days in the future';
 };
 
+export const validateActualDate: (date: Date) => string | undefined = (
+  date: Date
+) => {
+  const day = Number(date?.day);
+  const month = Number(date?.month);
+  const year = Number(date?.year);
+  const dateString = new Date(year, month - 1, day);
+
+  if (!isValid(dateString)) return 'Enter a real date';
+
+  const dateStringRaw = `${day}/${month}/${year}`;
+  if (!isValidDate(dateStringRaw)) return 'Enter a real date';
+};
+
 export const validateKnowsPointOfExit: (
   knowsPointOfExit?: string
 ) => string | undefined = (knowsPointOfExit) => {

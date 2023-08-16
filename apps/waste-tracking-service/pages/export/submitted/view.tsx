@@ -153,15 +153,15 @@ const ViewRecord = () => {
                         .transactionId
                     }
                   </GovUK.Heading>
-                  <Paragraph>
-                    {t('exportJourney.submittedView.intro')}
-                  </Paragraph>
-
+                  {/*
+                    <Paragraph>
+                      {t('exportJourney.submittedView.intro')}
+                    </Paragraph>
+                  */}
                   <SubmissionSummary
                     data={viewRecordPage.data}
                     showChangeLinks={false}
                   />
-
                   <ButtonGroup>
                     <SaveReturnButton
                       href="#"

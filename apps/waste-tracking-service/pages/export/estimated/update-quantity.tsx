@@ -30,7 +30,7 @@ const BreadCrumbs = ({ id }) => {
         href="#"
         onClick={() => {
           router.push({
-            pathname: `/export/waste-quantity`,
+            pathname: `/export/incomplete/about/quantity`,
             query: { id },
           });
         }}
