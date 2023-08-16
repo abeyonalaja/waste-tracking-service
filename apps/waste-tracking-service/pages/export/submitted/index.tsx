@@ -156,7 +156,8 @@ const Index = () => {
                 <>
                   {submittedAnnex7Page.data.filter(
                     (item) =>
-                      item.submissionState.status === 'SubmittedWithActuals'
+                      item.submissionState.status === 'SubmittedWithActuals' ||
+                      item.submissionState.status === 'UpdatedWithActuals'
                   ).length !== 0 ? (
                     <>
                       <GovUK.Table>
@@ -203,7 +204,9 @@ const Index = () => {
                           .filter(
                             (item) =>
                               item.submissionState.status ===
-                              'SubmittedWithActuals'
+                                'SubmittedWithActuals' ||
+                              item.submissionState.status ===
+                                'UpdatedWithActuals'
                           )
                           .reverse()
                           .map((item, index) => (

@@ -12,6 +12,7 @@ import {
   Loading,
   SaveReturnButton,
   DownloadPDFLink,
+  Paragraph,
 } from 'components';
 
 import styled from 'styled-components';
@@ -76,16 +77,11 @@ const StyledHeading = styled(GovUK.Heading)`
 
 const StyledPanel = styled(GovUK.Panel)`
   background: #00703c;
+  margin-bottom: 30px;
 `;
 
 const StyledUnorderedList = styled(GovUK.UnorderedList)`
   margin-top: 15px;
-`;
-
-const StyledParagraph = styled.p`
-  font-size: 19px;
-  line-height: 1.3;
-  margin-bottom: 20px;
 `;
 
 const IdDisplay = styled.div`
@@ -179,10 +175,15 @@ const ExportSubmitted = () => {
                   />
                 )}
 
-                <StyledPanel title="Annex VII document  submitted">
+                <StyledPanel
+                  title={
+                    exportSubmittedPage.data.submissionState.status ===
+                    'UpdatedWithActuals'
+                      ? t('exportJourney.exportSubmitted.panelTitleUpdate')
+                      : t('exportJourney.exportSubmitted.panelTitle')
+                  }
+                >
                   {t('exportJourney.exportSubmitted.panel')}
-                  <br />
-
                   {exportSubmittedPage?.data.submissionDeclaration.status ===
                     'Complete' && (
                     <IdDisplay id="transaction-id">
@@ -198,7 +199,7 @@ const ExportSubmitted = () => {
                   {t('exportJourney.exportSubmitted.statement')}
                 </StyledHeading>
 
-                <StyledParagraph>
+                <Paragraph>
                   {t('exportJourney.exportSubmitted.listHeader')}
                   <StyledUnorderedList>
                     <GovUK.ListItem>
@@ -211,7 +212,7 @@ const ExportSubmitted = () => {
                       {t('exportJourney.exportSubmitted.listItemThree')}
                     </GovUK.ListItem>
                   </StyledUnorderedList>
-                </StyledParagraph>
+                </Paragraph>
                 {exportSubmittedPage.data.submissionState.status ===
                   'SubmittedWithEstimates' && (
                   <>
@@ -219,7 +220,7 @@ const ExportSubmitted = () => {
                       {t('exportJourney.exportSubmitted.optionalHeading')}
                     </StyledHeading>
 
-                    <StyledParagraph>
+                    <Paragraph>
                       {t('exportJourney.exportSubmitted.secondListHeader')}
                       <StyledUnorderedList>
                         <GovUK.ListItem>
@@ -231,11 +232,11 @@ const ExportSubmitted = () => {
                           {t('exportJourney.exportSubmitted.secondListItemTwo')}
                         </GovUK.ListItem>
                       </StyledUnorderedList>
-                    </StyledParagraph>
+                    </Paragraph>
                   </>
                 )}
 
-                <StyledParagraph>
+                <Paragraph mb={6}>
                   <>
                     {t('exportJourney.exportSubmitted.legalStatementp1')}
                     <DownloadPDFLink
@@ -247,7 +248,7 @@ const ExportSubmitted = () => {
                       <>{t('exportJourney.exportSubmitted.legalStatementp2')}</>
                     )}
                   </>
-                </StyledParagraph>
+                </Paragraph>
 
                 <SaveReturnButton
                   onClick={() =>

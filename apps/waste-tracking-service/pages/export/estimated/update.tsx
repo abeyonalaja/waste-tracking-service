@@ -140,6 +140,7 @@ const UpdateRecord = () => {
                   {router.query.success && (
                     <NotificationBanner
                       type="success"
+                      id="update-banner-success"
                       headingText={t(
                         'exportJourney.updateActualQuantity.success'
                       )}
@@ -170,7 +171,16 @@ const UpdateRecord = () => {
                   <ButtonGroup>
                     {viewRecordPage.data.submissionState.status ===
                       'UpdatedWithActuals' && (
-                      <GovUK.Button id="saveButton">
+                      <GovUK.Button
+                        id="saveButton"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          router.push({
+                            pathname: `/export/submitted/export-submitted`,
+                            query: { id },
+                          });
+                        }}
+                      >
                         {t('exportJourney.updateActual.button')}
                       </GovUK.Button>
                     )}

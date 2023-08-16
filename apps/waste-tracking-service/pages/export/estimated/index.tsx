@@ -153,9 +153,7 @@ const UpadateAnnex7 = () => {
                 <>
                   {upadateAnnex7Page.data.filter(
                     (item) =>
-                      item.submissionState.status ===
-                        'SubmittedWithEstimates' ||
-                      item.submissionState.status === 'UpdatedWithActuals'
+                      item.submissionState.status === 'SubmittedWithEstimates'
                   ).length !== 0 ? (
                     <>
                       <GovUK.Table>
@@ -202,9 +200,7 @@ const UpadateAnnex7 = () => {
                           .filter(
                             (item) =>
                               item.submissionState.status ===
-                                'SubmittedWithEstimates' ||
-                              item.submissionState.status ===
-                                'UpdatedWithActuals'
+                              'SubmittedWithEstimates'
                           )
                           .reverse()
                           .map((item, index) => (

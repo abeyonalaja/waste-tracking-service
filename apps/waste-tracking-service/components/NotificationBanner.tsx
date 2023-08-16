@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const NotificationBanner = ({ type, headingText }) => {
+export const NotificationBanner = ({ type, headingText, id = null }) => {
   const bannerClasses = `govuk-notification-banner ${
     type === 'important'
       ? 'govuk-notification-banner--important'
@@ -12,7 +12,7 @@ export const NotificationBanner = ({ type, headingText }) => {
       className={bannerClasses}
       role="alert"
       aria-labelledby="govuk-notification-banner-title"
-      data-module="govuk-notification-banner"
+      id={id}
     >
       <div className="govuk-notification-banner__header">
         <h2

@@ -136,7 +136,7 @@ const SignDeclaration = () => {
         .then((data) => {
           if (data !== undefined) {
             router.push({
-              pathname: `/export/incomplete/checks/export-submitted`,
+              pathname: `/export/submitted/export-submitted`,
               query: { id },
             });
           }

@@ -193,7 +193,9 @@ export const AccordionSection = ({
             </ToggleText>
           </Toggle>
           {showTag && (
-            <UpdateNeeded tint="BLUE">{t('status.actualNeeded')}</UpdateNeeded>
+            <UpdateNeeded tint="BLUE" id={`${id}-tag-update-needed`}>
+              {t('status.actualNeeded')}
+            </UpdateNeeded>
           )}
         </HeadingButton>
       </Heading>
