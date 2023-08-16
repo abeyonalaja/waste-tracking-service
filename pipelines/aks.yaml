@@ -6,6 +6,7 @@ jobs:
     displayName: Bootstrap AKS Cluster
 
     variables:
+      - group: VG_SND_APPS_PARAMS
       - name: serviceConnection
         value: AZD-WTS-SND1
       - name: containerRegistryName
@@ -60,6 +61,18 @@ jobs:
           ACR_IMPORT_TASK_NAME: ${{ variables.containerRegistryTaskName }}
 
       - bash: |
+          echo "Installing release: ${HELM_RELEASE_NAME} secretProviderClass"
+          kubectl get namespace \
+            | grep -q "^$HELM_RELEASE_NAMESPACE " \
+            || kubectl create namespace $HELM_RELEASE_NAMESPACE
+          sed -i "s/\TLS_CERT_K8S_SECRET_NAME\b/$TLS_CERT_K8S_SECRET_NAME/g" $SECRETPROVIDERCLASS_FILE_PATH
+          sed -i "s/\TLS_CERT_KV_SECRET_NAME\b/$TLS_CERT_KV_SECRET_NAME/g" $SECRETPROVIDERCLASS_FILE_PATH
+          sed -i "s/\TLS_KV_NAME\b/$TLS_KV_NAME/g" $SECRETPROVIDERCLASS_FILE_PATH
+          sed -i "s/\TLS_KV_TENANT_ID\b/$TLS_KV_TENANT_ID/g" $SECRETPROVIDERCLASS_FILE_PATH
+          sed -i "s/\MSI_CLIENT_ID\b/$MSI_CLIENT_ID/g" $SECRETPROVIDERCLASS_FILE_PATH
+          kubectl apply -f $SECRETPROVIDERCLASS_FILE_PATH
+          sed -i "s/\MSI_CLIENT_ID\b/$MSI_CLIENT_ID/g" $HELM_VALUES_FILE_PATH
+          sed -i "s/\MSI_TENANT_ID\b/$MSI_TENANT_ID/g" $HELM_VALUES_FILE_PATH
           echo "Installing release: ${HELM_RELEASE_NAME}"
           helmChartName="${HELM_REPO_NAME}/${HELM_RELEASE_NAME}"
           helm repo add $HELM_REPO_NAME $HELM_REPO_URL
@@ -79,4 +92,11 @@ jobs:
           HELM_REPO_URL: https://kubernetes.github.io/ingress-nginx
           HELM_RELEASE_NAME: ingress-nginx
           HELM_RELEASE_NAMESPACE: nginx-system
-          HELM_VALUES_FILE_PATH: $(Build.SourcesDirectory)/cluster/system/values-nginx.yaml
+          HELM_VALUES_FILE_PATH: $(Build.SourcesDirectory)/cluster/system/nginx/values.yaml
+          TLS_CERT_K8S_SECRET_NAME: ingress-tls-csi
+          TLS_CERT_KV_SECRET_NAME: star-azure-defra-cloud-cert
+          TLS_KV_NAME: $(keyVaultName)
+          TLS_KV_TENANT_ID: $(keyVaultTenantId)
+          MSI_CLIENT_ID: $(nginxMsiClientId)
+          MSI_TENANT_ID: $(nginxMsiTenantId)
+          SECRETPROVIDERCLASS_FILE_PATH: $(Build.SourcesDirectory)/cluster/system/nginx/secretproviderclass.yaml

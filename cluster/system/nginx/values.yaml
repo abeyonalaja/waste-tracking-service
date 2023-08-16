@@ -24,3 +24,23 @@ controller:
       # For internal lb:
       # service.beta.kubernetes.io/azure-load-balancer-ipv4: '10.178.92.4'
       # service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+  labels:
+    azure.workload.identity/use: 'true'
+  extraVolumes:
+    - name: secrets-store-inline
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: 'azure-tls'
+  extraVolumeMounts:
+    - name: secrets-store-inline
+      mountPath: '/mnt/secrets-store'
+      readOnly: true
+# For TLS default cert:
+# extraArgs:
+#   default-ssl-certificate: TLS_CERT_K8S_SECRET_NAME
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: MSI_CLIENT_ID
+    azure.workload.identity/tenant-id: MSI_TENANT_ID
