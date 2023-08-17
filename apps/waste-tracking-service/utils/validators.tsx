@@ -354,6 +354,12 @@ export const validateConfirmRemoveCarrier: (
   if (value === null) return 'Select yes if you want to remove this carrier';
 };
 
+export const validateConfirmRemoveDocument: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null) return 'Select yes if you want to remove this document';
+};
+
 export const validateRecoveryFacilityName: (facility?: string) => string = (
   facility
 ) => {

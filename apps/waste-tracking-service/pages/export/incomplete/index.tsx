@@ -1,4 +1,10 @@
-import React, { useEffect, useReducer } from 'react';
+import React, {
+  useEffect,
+  useReducer,
+  useState,
+  FormEvent,
+  useRef,
+} from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -14,26 +20,42 @@ import {
   Paragraph,
   SubmissionNotFound,
   Loading,
+  NotificationBanner,
 } from '../../../components';
 import styled from 'styled-components';
 
-import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
+import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
 
 type State = {
-  data: GetSubmissionsResponse;
+  data: any;
   isLoading: boolean;
   isError: boolean;
+  showView: number;
+  errors: null;
 };
 
 type Action = {
-  type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
-  payload?: GetSubmissionsResponse;
+  type:
+    | 'DATA_FETCH_INIT'
+    | 'DATA_FETCH_SUCCESS'
+    | 'DATA_FETCH_FAILURE'
+    | 'SHOW_VIEW'
+    | 'ERRORS_UPDATE'
+    | 'REMOVE_WASTE_CARRIER';
+  payload?: any;
 };
 
-const initialWasteDescState: State = {
+const VIEWS = {
+  LIST: 1,
+  CONFIRM: 2,
+};
+
+const initialPageState: State = {
   data: null,
   isLoading: true,
   isError: false,
+  showView: VIEWS.LIST,
+  errors: null,
 };
 
 const incompleteAnnex7Reducer = (state: State, action: Action) => {
@@ -56,6 +78,23 @@ const incompleteAnnex7Reducer = (state: State, action: Action) => {
         ...state,
         isLoading: false,
         isError: true,
+      };
+    case 'SHOW_VIEW':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        showView: action.payload,
+      };
+    case 'ERRORS_UPDATE':
+      return {
+        ...state,
+        errors: action.payload,
+      };
+    case 'REMOVE_WASTE_CARRIER':
+      return {
+        ...state,
+        data: action.payload,
       };
     default:
       throw new Error();
@@ -88,8 +127,32 @@ const IncompleteAnnex7 = () => {
   const router = useRouter();
   const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(
     incompleteAnnex7Reducer,
-    initialWasteDescState
+    initialPageState
   );
+
+  const [item, setItem] = useState(null);
+
+  const [confirm, setConfirm] = useState(null);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotification(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
@@ -108,6 +171,7 @@ const IncompleteAnnex7 = () => {
             .filter((item) => item.submissionState.status === 'InProgress')
             .reverse();
         }
+
         dispatchIncompleteAnnex7Page({
           type: 'DATA_FETCH_SUCCESS',
           payload: filteredData,
@@ -115,18 +179,95 @@ const IncompleteAnnex7 = () => {
       });
   }, [router.isReady]);
 
+  const handleRemove = (item) => {
+    setItem(item);
+
+    dispatchIncompleteAnnex7Page({
+      type: 'SHOW_VIEW',
+      payload: VIEWS.CONFIRM,
+    });
+  };
+
+  const handleConfirmSubmit = (e: FormEvent) => {
+    const newErrors = {
+      confirm: validateConfirmRemoveDocument(confirm),
+    };
+    if (isNotEmpty(newErrors)) {
+      dispatchIncompleteAnnex7Page({
+        type: 'ERRORS_UPDATE',
+        payload: newErrors,
+      });
+    } else {
+      if (confirm === 'no') {
+        dispatchIncompleteAnnex7Page({
+          type: 'SHOW_VIEW',
+          payload: VIEWS.LIST,
+        });
+        setConfirm(null);
+        dispatchIncompleteAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
+      }
+      if (confirm === 'yes') {
+        dispatchIncompleteAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
+        try {
+          fetch(
+            `${process.env.NX_API_GATEWAY_URL}/submissions/${item.id}?action=DELETE`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          ).then((data) => {
+            const newData = incompleteAnnex7Page.data.filter(
+              (wc) => wc.id !== item.id
+            );
+            dispatchIncompleteAnnex7Page({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: newData,
+            });
+            dispatchIncompleteAnnex7Page({
+              type: 'SHOW_VIEW',
+              payload: VIEWS.LIST,
+            });
+            handleDeleteClick();
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    e.preventDefault();
+  };
+  const handleDeleteClick = () => {
+    setShowNotification(!showNotification);
+  };
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
-        <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
-            {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
-          {t('exportJourney.incompleteAnnexSeven.title')}
-        </GovUK.Breadcrumbs>
+        {incompleteAnnex7Page.showView === VIEWS.LIST ? (
+          <GovUK.Breadcrumbs>
+            <GovUK.Breadcrumbs.Link href="/">
+              {t('app.parentTitle')}
+            </GovUK.Breadcrumbs.Link>
+            <GovUK.Breadcrumbs.Link href="/export">
+              {t('app.title')}
+            </GovUK.Breadcrumbs.Link>
+            {t('exportJourney.incompleteAnnexSeven.title')}
+          </GovUK.Breadcrumbs>
+        ) : (
+          <GovUK.BackLink
+            href="#"
+            onClick={() => {
+              dispatchIncompleteAnnex7Page({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.LIST,
+              });
+            }}
+          >
+            Back
+          </GovUK.BackLink>
+        )}
       </BreadcrumbWrap>
     );
   };
@@ -147,21 +288,34 @@ const IncompleteAnnex7 = () => {
           <SubmissionNotFound />
         )}
         {incompleteAnnex7Page.isLoading && <Loading />}
+
         {!incompleteAnnex7Page.isError && !incompleteAnnex7Page.isLoading && (
           <>
-            <GovUK.GridRow>
-              <GovUK.GridCol setWidth="two-thirds">
-                <GovUK.Heading size="LARGE" id="template-heading">
-                  {t('exportJourney.incompleteAnnexSeven.title')}
-                </GovUK.Heading>
+            {incompleteAnnex7Page.showView === VIEWS.LIST ? (
+              <>
+                <GovUK.GridRow>
+                  <GovUK.GridCol setWidth="two-thirds">
+                    {showNotification && (
+                      <div ref={notificationRef}>
+                        <NotificationBanner
+                          type="success"
+                          id="delete-success-banner"
+                          headingText={t(
+                            'exportJourney.incompleteAnnexSeven.delete.notification'
+                          )}
+                        />
+                      </div>
+                    )}
+                    <GovUK.Heading size="LARGE" id="template-heading">
+                      {t('exportJourney.incompleteAnnexSeven.title')}
+                    </GovUK.Heading>
 
-                <Paragraph>
-                  {t('exportJourney.incompleteAnnexSeven.paragraph')}
-                </Paragraph>
-              </GovUK.GridCol>
-            </GovUK.GridRow>
-            <GovUK.GridRow>
-              <GovUK.GridCol>
+                    <Paragraph>
+                      {t('exportJourney.incompleteAnnexSeven.paragraph')}
+                    </Paragraph>
+                  </GovUK.GridCol>
+                </GovUK.GridRow>
+
                 {incompleteAnnex7Page.data === undefined ||
                 incompleteAnnex7Page.data.length === 0 ? (
                   <>
@@ -251,19 +405,20 @@ const IncompleteAnnex7 = () => {
                                   query: { id: item.id },
                                 }}
                               >
-                                Continue
+                                {t('continueButton')}
                               </AppLink>
                             </Action>
                           </Actions>
                           <Actions>
                             <AppLink
                               id={'delete-link-' + index}
-                              href={{
-                                pathname: '/check-your-report',
-                                query: {},
-                              }}
+                              onClick={
+                                () => handleRemove(item)
+                                // handleDeleteClick()
+                              }
+                              href="#"
                             >
-                              Delete
+                              {t('deleteButton')}
                             </AppLink>
                           </Actions>
                         </TableCellActions>
@@ -271,8 +426,67 @@ const IncompleteAnnex7 = () => {
                     ))}
                   </GovUK.Table>
                 )}
-              </GovUK.GridCol>
-            </GovUK.GridRow>
+              </>
+            ) : null}
+
+            {incompleteAnnex7Page.showView === VIEWS.CONFIRM ? (
+              <form onSubmit={handleConfirmSubmit}>
+                <GovUK.GridRow>
+                  <GovUK.GridCol setWidth="two-thirds">
+                    {incompleteAnnex7Page.errors &&
+                      !!Object.keys(incompleteAnnex7Page.errors).length && (
+                        <GovUK.ErrorSummary
+                          heading={t('errorSummary.title')}
+                          errors={Object.keys(incompleteAnnex7Page.errors).map(
+                            (key) => ({
+                              targetName: key,
+                              text: incompleteAnnex7Page.errors[key],
+                            })
+                          )}
+                        />
+                      )}
+
+                    {item.reference && (
+                      <GovUK.Caption>
+                        {t('exportJourney.incompleteAnnexSeven.delete.caption')}
+                        {item.reference}
+                      </GovUK.Caption>
+                    )}
+                    <GovUK.Fieldset>
+                      <GovUK.Fieldset.Legend size="LARGE" isPageHeading>
+                        {t('exportJourney.incompleteAnnexSeven.delete.title')}
+                      </GovUK.Fieldset.Legend>
+                    </GovUK.Fieldset>
+
+                    <GovUK.FormGroup>
+                      <GovUK.MultiChoice
+                        label=""
+                        meta={{
+                          error: incompleteAnnex7Page.errors?.confirm,
+                          touched: !!incompleteAnnex7Page.errors?.confirm,
+                        }}
+                      >
+                        <GovUK.Radio
+                          name="confirm-delete"
+                          onChange={() => setConfirm('yes')}
+                        >
+                          {t('radio.yes')}
+                        </GovUK.Radio>
+                        <GovUK.Radio
+                          name="confirm-delete"
+                          onChange={() => setConfirm('no')}
+                        >
+                          {t('radio.no')}
+                        </GovUK.Radio>
+                      </GovUK.MultiChoice>
+                    </GovUK.FormGroup>
+                    <GovUK.Button id="saveButton">
+                      {t('exportJourney.incompleteAnnexSeven.delete.button')}
+                    </GovUK.Button>
+                  </GovUK.GridCol>
+                </GovUK.GridRow>
+              </form>
+            ) : null}
           </>
         )}
       </GovUK.Page>
