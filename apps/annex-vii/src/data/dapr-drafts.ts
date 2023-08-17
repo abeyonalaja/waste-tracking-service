@@ -17,7 +17,7 @@ export default class DaprDraftRepository implements DraftRepository {
     const response = await this.daprClient.state.query(this.stateStoreName, {
       filter: { EQ: { accountId } },
       sort: [],
-      page: { limit: 10 },
+      page: { limit: 100 },
     });
 
     if (response.results === undefined) {
