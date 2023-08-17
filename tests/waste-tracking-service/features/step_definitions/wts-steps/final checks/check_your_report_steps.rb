@@ -19,7 +19,7 @@ And(/^I should see export About the waste section correctly displayed$/) do
 
   expect(CheckYourReportPage.new.national_code).to eq TestStatus.test_status(:national_code_text)
   expect(CheckYourReportPage.new.describe_the_waste).to eq TestStatus.test_status(:description_of_the_waste)
-  expect(CheckYourReportPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_in_tones)}"
+  expect(CheckYourReportPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_units)}"
 end
 
 And(/^I should see export Exporter and Importer details correctly displayed$/) do
@@ -156,7 +156,7 @@ And(/^I should see export Treatment of waste correctly displayed$/) do
 end
 
 Then(/^I should see Estimate Collection date$/) do
-  expect(CheckYourReportPage.new.waste_quantity).to eq "Estimated #{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_in_tones)}"
+  expect(CheckYourReportPage.new.waste_quantity).to eq "Estimated #{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_units)}"
 end
 
 And(/^I should see Estimate Quantity of Waste$/) do

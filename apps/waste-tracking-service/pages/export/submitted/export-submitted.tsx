@@ -183,7 +183,10 @@ const ExportSubmitted = () => {
                       : t('exportJourney.exportSubmitted.panelTitle')
                   }
                 >
-                  {t('exportJourney.exportSubmitted.panel')}
+                  {exportSubmittedPage.data.submissionState.status ===
+                  'UpdatedWithActuals'
+                    ? t('exportJourney.exportSubmitted.panelUpdate')
+                    : t('exportJourney.exportSubmitted.panel')}
                   {exportSubmittedPage?.data.submissionDeclaration.status ===
                     'Complete' && (
                     <IdDisplay id="transaction-id">

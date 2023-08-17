@@ -11,7 +11,7 @@ module QuantityOfWasteController
     net_weight_page.enter_weight_in_tonnes '5.25'
     net_weight_page.save_and_continue
     TestStatus.set_test_status(:quantity_of_waste_type, option)
-    TestStatus.set_test_status(:weight_in_tones, 'tonnes')
+    TestStatus.set_test_status(:weight_units, 'tonnes')
     TestStatus.set_test_status(:weight_quantity_in_tones, '5.25')
     Log.info("Quantity of waste type #{option}")
     Log.info('Weight in tonnes of 5.25')

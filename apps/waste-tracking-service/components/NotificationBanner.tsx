@@ -23,7 +23,9 @@ export const NotificationBanner = ({ type, headingText, id = null }) => {
         </h2>
       </div>
       <div className="govuk-notification-banner__content">
-        <h3 className="govuk-notification-banner__heading">{headingText}</h3>
+        <h3 className="govuk-notification-banner__heading" id={`${id}_body`}>
+          {headingText}
+        </h3>
       </div>
     </div>
   );

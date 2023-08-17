@@ -39,4 +39,28 @@ class UpdateWithActualPage < GenericPage
     click_link('Submit a single waste export')
   end
 
+  def first_update_link
+    find('update-0').click
+  end
+
+  def update_quantity_of_waste
+    find('update-estimated-quantity').click
+  end
+
+  def expand_about_waste
+    find('check-answers-section-about-waste-heading-text').click
+  end
+
+  def success_title
+    find('govuk-notification-banner-title')
+  end
+
+  def success_body
+    find('update-banner-success_body')
+  end
+
+  def transaction_id
+    find 'transaction-id'
+  end
+
 end

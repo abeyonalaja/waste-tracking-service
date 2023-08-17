@@ -102,12 +102,16 @@ const IncompleteAnnex7 = () => {
         }
       })
       .then((data) => {
-        if (data !== undefined) {
-          dispatchIncompleteAnnex7Page({
-            type: 'DATA_FETCH_SUCCESS',
-            payload: data,
-          });
+        let filteredData;
+        if (data) {
+          filteredData = data
+            .filter((item) => item.submissionState.status === 'InProgress')
+            .reverse();
         }
+        dispatchIncompleteAnnex7Page({
+          type: 'DATA_FETCH_SUCCESS',
+          payload: filteredData,
+        });
       });
   }, [router.isReady]);
 
@@ -158,143 +162,115 @@ const IncompleteAnnex7 = () => {
             </GovUK.GridRow>
             <GovUK.GridRow>
               <GovUK.GridCol>
-                <>
-                  {incompleteAnnex7Page.data.filter(
-                    (item) => item.submissionState.status === 'InProgress'
-                  ).length !== 0 ? (
-                    <>
-                      <GovUK.Table>
-                        <GovUK.Table.Row>
-                          <TableHeader
-                            setWidth="15%"
-                            id="table-header-your-own-ref"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.yourOwnReference'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="15%"
-                            id="table-header-last-saved"
-                          >
-                            {t('exportJourney.incompleteAnnexSeven.table.date')}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="60%"
-                            id="table-header-waste-code"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.wasteCode'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader setWidth="10%" id="table-header-actions">
-                            <Actions>
-                              {t(
-                                'exportJourney.updateAnnexSeven.table.actions'
-                              )}
-                            </Actions>
-                          </TableHeader>
-                        </GovUK.Table.Row>
-
-                        {incompleteAnnex7Page.data
-                          .filter(
-                            (item) =>
-                              item.submissionState.status === 'InProgress'
-                          )
-                          .reverse()
-                          .map((item, index) => (
-                            <GovUK.Table.Row key={index}>
-                              <TableCell id={'your-reference-' + index}>
-                                {' '}
-                                {item.reference && (
-                                  <span>{item.reference}</span>
-                                )}
-                                {!item.reference && (
-                                  <span id="your-reference-not-provided">
-                                    {t(
-                                      'exportJourney.checkAnswers.notProvided'
-                                    )}
-                                  </span>
-                                )}
-                              </TableCell>
-
-                              <TableCell id={'date-' + index}>
-                                <DateConverter
-                                  dateString={item.submissionState.timestamp}
-                                />
-                              </TableCell>
-
-                              <TableCell id={'waste-code-' + index}>
-                                {item.wasteDescription?.status ===
-                                  'Complete' && (
-                                  <>
-                                    {item.wasteDescription?.wasteCode.type !==
-                                      'NotApplicable' && (
-                                      <>
-                                        {item.wasteDescription?.wasteCode
-                                          .value && (
-                                          <span>
-                                            {
-                                              item.wasteDescription?.wasteCode
-                                                .value
-                                            }
-                                          </span>
-                                        )}
-                                      </>
-                                    )}
-                                    {item.wasteDescription?.wasteCode.type ===
-                                      'NotApplicable' && (
-                                      <span id="waste-code-not-provided">
-                                        {t(
-                                          'exportJourney.updateAnnexSeven.notApplicable'
-                                        )}
-                                      </span>
-                                    )}
-                                  </>
-                                )}
-                              </TableCell>
-
-                              <TableCellActions>
-                                <Actions>
-                                  <Action>
-                                    <AppLink
-                                      id={'continue-link-' + index}
-                                      href={{
-                                        pathname: '/export/incomplete/tasklist',
-                                        query: { id: item.id },
-                                      }}
-                                    >
-                                      Continue
-                                    </AppLink>
-                                  </Action>
-                                </Actions>
-                                <Actions>
-                                  <AppLink
-                                    id={'delete-link-' + index}
-                                    href={{
-                                      pathname: '/check-your-report',
-                                      query: {},
-                                    }}
-                                  >
-                                    Delete
-                                  </AppLink>
-                                </Actions>
-                              </TableCellActions>
-                            </GovUK.Table.Row>
-                          ))}
-                      </GovUK.Table>
-                    </>
-                  ) : (
+                {incompleteAnnex7Page.data === undefined ||
+                incompleteAnnex7Page.data.length === 0 ? (
+                  <>
                     <GovUK.Heading size="SMALL">
                       {t(
                         'exportJourney.incompleteAnnexSeven.notResultsMessage'
                       )}
                     </GovUK.Heading>
-                  )}
-                </>
+                  </>
+                ) : (
+                  <GovUK.Table>
+                    <GovUK.Table.Row>
+                      <TableHeader
+                        setWidth="15%"
+                        id="table-header-your-own-ref"
+                      >
+                        {t(
+                          'exportJourney.updateAnnexSeven.table.yourOwnReference'
+                        )}
+                      </TableHeader>
+
+                      <TableHeader setWidth="15%" id="table-header-last-saved">
+                        {t('exportJourney.incompleteAnnexSeven.table.date')}
+                      </TableHeader>
+
+                      <TableHeader setWidth="60%" id="table-header-waste-code">
+                        {t('exportJourney.updateAnnexSeven.table.wasteCode')}
+                      </TableHeader>
+
+                      <TableHeader setWidth="10%" id="table-header-actions">
+                        <Actions>
+                          {t('exportJourney.updateAnnexSeven.table.actions')}
+                        </Actions>
+                      </TableHeader>
+                    </GovUK.Table.Row>
+
+                    {incompleteAnnex7Page.data.map((item, index) => (
+                      <GovUK.Table.Row key={index}>
+                        <TableCell id={'your-reference-' + index}>
+                          {' '}
+                          {item.reference && <span>{item.reference}</span>}
+                          {!item.reference && (
+                            <span id="your-reference-not-provided">
+                              {t('exportJourney.checkAnswers.notProvided')}
+                            </span>
+                          )}
+                        </TableCell>
+
+                        <TableCell id={'date-' + index}>
+                          <DateConverter
+                            dateString={item.submissionState.timestamp}
+                          />
+                        </TableCell>
+
+                        <TableCell id={'waste-code-' + index}>
+                          {item.wasteDescription?.status === 'Complete' && (
+                            <>
+                              {item.wasteDescription?.wasteCode.type !==
+                                'NotApplicable' && (
+                                <>
+                                  {item.wasteDescription?.wasteCode.value && (
+                                    <span>
+                                      {item.wasteDescription?.wasteCode.value}
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                              {item.wasteDescription?.wasteCode.type ===
+                                'NotApplicable' && (
+                                <span id="waste-code-not-provided">
+                                  {t(
+                                    'exportJourney.updateAnnexSeven.notApplicable'
+                                  )}
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </TableCell>
+
+                        <TableCellActions>
+                          <Actions>
+                            <Action>
+                              <AppLink
+                                id={'continue-link-' + index}
+                                href={{
+                                  pathname: '/export/incomplete/tasklist',
+                                  query: { id: item.id },
+                                }}
+                              >
+                                Continue
+                              </AppLink>
+                            </Action>
+                          </Actions>
+                          <Actions>
+                            <AppLink
+                              id={'delete-link-' + index}
+                              href={{
+                                pathname: '/check-your-report',
+                                query: {},
+                              }}
+                            >
+                              Delete
+                            </AppLink>
+                          </Actions>
+                        </TableCellActions>
+                      </GovUK.Table.Row>
+                    ))}
+                  </GovUK.Table>
+                )}
               </GovUK.GridCol>
             </GovUK.GridRow>
           </>

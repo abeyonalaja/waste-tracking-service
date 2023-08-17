@@ -11,7 +11,7 @@ module AddReferenceNumberController
       add_reference_number_page.enter_reference_number reference
       TestStatus.set_test_status(:application_reference_number, reference)
     else
-      TestStatus.set_test_status(:application_reference_number, 'Not Provided')
+      TestStatus.set_test_status(:application_reference_number, 'Not provided')
     end
     add_reference_number_page.save_and_continue
     SubmitAnExportPage.new.check_page_displayed

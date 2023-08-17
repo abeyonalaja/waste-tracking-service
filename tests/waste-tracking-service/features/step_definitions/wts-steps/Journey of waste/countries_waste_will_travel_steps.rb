@@ -61,3 +61,7 @@ end
 And(/^I complete the Journey of a waste section with small waste$/) do
   JourneyOfAWasteSmallWasteController.complete
 end
+
+And(/^I complete the Journey of a waste section with estimated small waste$/) do
+  JourneyOfAWasteSmallWasteController.complete'No, I’ll enter an estimate date'
+end
