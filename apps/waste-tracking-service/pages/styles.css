@@ -16,7 +16,7 @@
   font-display: fallback;
 }
 
-.govuk-template {
+html {
   overflow-y: scroll;
   background-color: #f3f2f1;
   -webkit-text-size-adjust: 100%;
@@ -24,7 +24,7 @@
   text-size-adjust: 100%;
 }
 
-.govuk-template__body {
+body {
   margin: 0;
   background-color: #fff;
 }
