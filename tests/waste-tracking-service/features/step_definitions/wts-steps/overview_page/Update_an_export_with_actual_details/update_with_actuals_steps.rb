@@ -1,7 +1,3 @@
-And(/^I click Return to export waste from UK button$/) do
-  click_link('Return to export waste from the UK')
-end
-
 And(/^I can see Update with actual page correctly translated$/) do
   UpdateWithActualPage.new.check_page_displayed
 end
@@ -55,4 +51,29 @@ end
 
 And(/^I should see the transaction number on update estimate page$/) do
   expect(UpdateWithActualPage.new.transaction_id.text).to eq "Transaction number: #{TestStatus.test_status(:export_transaction_number)}"
+end
+
+And(/^I verify update annex record page is correctly translated$/) do
+  UpdateAnnexRecordPage.new.check_translation
+end
+
+Then(/^I click show all sections link$/) do
+  find('check-answers-accordion-toggle-all-text').click
+end
+
+And(/^I verify hide all sections link is now visible$/) do
+  expect(page).to have_text('Hide all sections')
+end
+
+And(/^I verify that estimated warning message is not present on the page$/) do
+  UpdateAnnexRecordPage.new.no_estimate_warning_message
+end
+
+And(/^I verify Actual needed labels are present on the page$/) do
+  expect(UpdateAnnexRecordPage.new.waste_quantity_label).to eq 'ACTUAL NEEDED'
+  expect(UpdateAnnexRecordPage.new.collection_date_label).to eq 'ACTUAL NEEDED'
+end
+
+And(/^I click return to all exports button$/) do
+  UpdateAnnexRecordPage.new.return_to_all_exports_button
 end

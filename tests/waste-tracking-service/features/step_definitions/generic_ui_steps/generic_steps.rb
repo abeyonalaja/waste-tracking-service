@@ -70,3 +70,7 @@ end
 And(/^I click the button update$/) do
   click_on 'updateButton'
 end
+
+And(/^I click Return to export waste from UK button$/) do
+  click_on Translations.value 'exportJourney.exportSubmitted.button'
+end

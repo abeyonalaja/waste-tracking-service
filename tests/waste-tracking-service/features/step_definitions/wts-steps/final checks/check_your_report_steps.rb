@@ -314,3 +314,59 @@ end
 And(/^I click Confirm all answers button$/) do
   CheckYourReportPage.new.confirm_answers_button
 end
+
+And(/^I should see export Journey of waste with estimated collection date correctly displayed$/) do
+
+  expect(CheckYourReportPage.new.collection_date_header).to eq 'Collection date'
+  # Waste carrier
+  # expect(CheckYourReportPage.new.carrier_organisation_name_header0).to eq 'Organisation name'
+  expect(CheckYourReportPage.new.carrier_address_header(0)).to eq 'Address'
+  expect(CheckYourReportPage.new.carrier_country_header(0)).to eq 'Country'
+  expect(CheckYourReportPage.new.carrier_full_name_header(0)).to eq 'Contact person'
+  expect(CheckYourReportPage.new.carrier_email_header(0)).to eq 'Email address'
+  expect(CheckYourReportPage.new.carrier_phone_header(0)).to eq 'Phone number'
+  expect(CheckYourReportPage.new.carrier_fax_header(0)).to eq 'Fax number (optional)'
+  expect(CheckYourReportPage.new.carrier_type_header(0)).to eq 'Transport of waste'
+  expect(CheckYourReportPage.new.carrier_shipping_container_number_header(0)).to eq 'Shipping container number'
+  expect(CheckYourReportPage.new.carrier_vehicle_registration_header(0)).to eq 'Vehicle registration (optional)'
+
+  # waste collection details
+  expect(CheckYourReportPage.new.waste_collection_address_header).to eq 'Address'
+  expect(CheckYourReportPage.new.waste_collection_country_header).to eq 'Country'
+  expect(CheckYourReportPage.new.waste_collection_organisation_header).to eq 'Organisation name'
+  expect(CheckYourReportPage.new.waste_collection_full_name_header).to eq 'Contact person'
+  expect(CheckYourReportPage.new.waste_collection_email_header).to eq 'Email address'
+  expect(CheckYourReportPage.new.waste_collection_phone_header).to eq 'Phone number'
+  # waste leaves uk
+
+  expect(CheckYourReportPage.new.exit_location_header).to eq 'Location'
+  expect(CheckYourReportPage.new.transit_countries_header).to eq 'Waste transit countries'
+
+  # data check
+  # collection-date
+  collection_date = HelperMethods.convert_date TestStatus.test_status(:estimate_collection_date)
+  expect(CheckYourReportPage.new.collection_date).to eq "Estimated " + collection_date
+  # waste carrier
+  expect(CheckYourReportPage.new.carrier_organisation_name(0)).to eq TestStatus.test_status(:organisation_name)
+  expect(CheckYourReportPage.new.carrier_address(0)).to eq TestStatus.test_status(:address)
+  expect(CheckYourReportPage.new.carrier_country(0)).to eq TestStatus.test_status(:country)
+  expect(CheckYourReportPage.new.carrier_full_name(0)).to eq TestStatus.test_status(:organisation_contact)
+  expect(CheckYourReportPage.new.carrier_email(0)).to eq TestStatus.test_status(:email)
+  expect(CheckYourReportPage.new.carrier_phone(0)).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourReportPage.new.carrier_fax(0)).to eq 'Not provided'
+  expect(CheckYourReportPage.new.carrier_type(0)).to eq TestStatus.test_status(:waste_carrier_mode_of_transport)
+  expect(CheckYourReportPage.new.carrier_shipping_container_number(0)).to eq TestStatus.test_status(:container_number)
+  expect(CheckYourReportPage.new.carrier_vehicle_registration(0)).to eq 'Not provided'
+
+  # collection details
+  # expect(CheckYourReportPage.new.waste_collection_address).to eq TestStatus.test_status(:waste_collection_address)
+  expect(CheckYourReportPage.new.waste_collection_country).to eq 'United Kingdom'
+  expect(CheckYourReportPage.new.waste_collection_organisation).to eq TestStatus.test_status(:waste_contact_organisation_name)
+  expect(CheckYourReportPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
+
+  expect(CheckYourReportPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
+  expect(CheckYourReportPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
+  # expect(CheckYourReportPage.new.waste_collection_fax).to eq 'Not provided'
+  expect(CheckYourReportPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
+  expect(CheckYourReportPage.new.transit_countries).to eq TestStatus.countries_list[0]
+end

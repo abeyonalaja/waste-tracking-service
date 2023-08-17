@@ -38,7 +38,6 @@ Feature: AS A waste practitioner
     Then the "Update with actual" page is displayed
     And I see message that there are no exports with estimates
 
-
   @translation
   Scenario: User completes an export with estimate date and verify record is saved on Update with actual section
     Given I login to waste tracking portal
@@ -255,6 +254,91 @@ Feature: AS A waste practitioner
     Then I should see success message translated correctly
     And I expand About the waste section
     Then I should see quantity of actual waste updated in kilograms
+
+  @translation
+  Scenario: User creates an export record, navigates to update annex record page and verify that entered information is correct
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste sub-section
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    Then I should see export submitted page with estimates correctly translated
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I click the first update link
+    Then the "Update annex record" page is displayed
+    And I verify update annex record page is correctly translated
+    Then I click show all sections link
+    And I verify hide all sections link is now visible
+    And I should see export reference correctly displayed
+    And I should see export About the waste section correctly displayed
+    And I should see export Exporter and Importer details correctly displayed
+    And I should see export Journey of waste with estimated collection date correctly displayed
+    And I should see export Treatment of waste correctly displayed
+    # And I click return to all exports button
+    # needs to be checked
+    And I click the "Return to all Annex VII submissions" link
+    Then the "Update with actual" page is displayed
+
+  Scenario: User verifies Actual needed label present on the estimated values
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    When I click the first update link
+    Then the "Update annex record" page is displayed
+    And I verify Actual needed labels are present on the page
 
 
 
