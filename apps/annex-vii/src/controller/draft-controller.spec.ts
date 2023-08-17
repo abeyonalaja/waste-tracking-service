@@ -1144,31 +1144,6 @@ describe(DraftController, () => {
 
       expect(response.success).toBe(true);
     });
-
-    it('rejects dates less than three business dates in the future', async () => {
-      const date = add(new Date(), { days: 1 });
-      const response = await subject.setDraftCollectionDateById({
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
-        value: {
-          status: 'Complete',
-          value: {
-            type: 'ActualDate',
-            year: date.getFullYear().toString(),
-            month: (date.getMonth() + 1).toString().padStart(2, '0'),
-            day: date.getDate().toString().padStart(2, '0'),
-          },
-        },
-      });
-
-      expect(response.success).toBe(false);
-      if (response.success) {
-        return;
-      }
-
-      expect(mockRepository.saveDraft).not.toBeCalled();
-      expect(response.error.statusCode).toBe(400);
-    });
   });
 
   describe('createDraftCarriers', () => {

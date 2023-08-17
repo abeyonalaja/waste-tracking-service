@@ -1253,8 +1253,6 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    if (!isCollectionDateValid(value)) return Promise.reject(Boom.badRequest());
-
     const collectionDateData: CollectionDate =
       value.status !== 'NotStarted'
         ? value.value.type === 'ActualDate'

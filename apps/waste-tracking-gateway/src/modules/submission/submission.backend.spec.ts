@@ -110,7 +110,7 @@ describe(InMemorySubmissionBackend, () => {
     ).rejects.toHaveProperty('isBoom', true);
   });
 
-  it('rejects if collection date less than three days in future', async () => {
+  it('accepts if collection date less than three days in future', async () => {
     const { id } = await subject.createSubmission(accountId, null);
 
     const date = add(new Date(), { days: 1 });
@@ -127,26 +127,7 @@ describe(InMemorySubmissionBackend, () => {
           },
         }
       )
-    ).rejects.toHaveProperty('isBoom', true);
-  });
-
-  it("rejects if collection date values aren't numbers", async () => {
-    const { id } = await subject.createSubmission(accountId, null);
-
-    expect(
-      subject.setCollectionDate(
-        { id, accountId },
-        {
-          status: 'Complete',
-          value: {
-            type: 'ActualDate',
-            year: 'X',
-            month: '01',
-            day: '01',
-          },
-        }
-      )
-    ).rejects.toHaveProperty('isBoom', true);
+    ).resolves.toEqual(undefined);
   });
 
   it('lets us change a carrier detail', async () => {

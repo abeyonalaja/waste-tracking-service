@@ -1188,13 +1188,6 @@ export default class DraftController {
     api.SetDraftCollectionDateByIdResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (!this.isCollectionDateValid(value))
-        return fromBoom(
-          Boom.badRequest(
-            'Date should be at least three business days in the future'
-          )
-        );
-
       const draft = await this.repository.getDraft(id, accountId);
 
       const collectionDateData: DraftCollectionDate =
