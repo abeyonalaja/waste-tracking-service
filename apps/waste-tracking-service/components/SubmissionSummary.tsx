@@ -358,19 +358,20 @@ export const SubmissionSummary = ({
                           </AppLink>
                         </Actions>
                       )}
-                      {data?.wasteQuantity.value.type === 'EstimateData' && (
-                        <Actions>
-                          <AppLink
-                            id="update-estimated-quantity"
-                            href={{
-                              pathname: `/export/estimated/update-quantity`,
-                              query: { id: data.id },
-                            }}
-                          >
-                            {t('actions.update')}
-                          </AppLink>
-                        </Actions>
-                      )}
+                      {!showChangeLinks &&
+                        data?.wasteQuantity.value.type === 'EstimateData' && (
+                          <Actions>
+                            <AppLink
+                              id="update-estimated-quantity"
+                              href={{
+                                pathname: `/export/estimated/update-quantity`,
+                                query: { id: data.id },
+                              }}
+                            >
+                              {t('actions.update')}
+                            </AppLink>
+                          </Actions>
+                        )}
                     </Row>
                   </>
                 )}
@@ -670,19 +671,20 @@ export const SubmissionSummary = ({
                     </Actions>
                   )}
 
-                  {data.collectionDate.value.type === 'EstimateDate' && (
-                    <Actions>
-                      <AppLink
-                        id="collection-date-update"
-                        href={{
-                          pathname: `/export/estimated/update-collection-date`,
-                          query: { id: data.id },
-                        }}
-                      >
-                        {t('actions.update')}
-                      </AppLink>
-                    </Actions>
-                  )}
+                  {!showChangeLinks &&
+                    data.collectionDate.value.type === 'EstimateDate' && (
+                      <Actions>
+                        <AppLink
+                          id="collection-date-update"
+                          href={{
+                            pathname: `/export/estimated/update-collection-date`,
+                            query: { id: data.id },
+                          }}
+                        >
+                          {t('actions.update')}
+                        </AppLink>
+                      </Actions>
+                    )}
                 </Row>
                 <SectionBreak />
               </DefinitionList>
