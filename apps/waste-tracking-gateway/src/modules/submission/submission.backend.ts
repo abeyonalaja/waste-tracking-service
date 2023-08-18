@@ -311,7 +311,11 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   getSubmission({ id }: SubmissionRef): Promise<Submission> {
     const value = this.submissions.get(id);
-    if (value === undefined) {
+    if (
+      value === undefined ||
+      value.submissionState.status === 'Cancelled' ||
+      value.submissionState.status === 'Deleted'
+    ) {
       return Promise.reject(Boom.notFound());
     }
 
@@ -339,25 +343,28 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   getSubmissions(_: string): Promise<ReadonlyArray<SubmissionSummary>> {
     const values: Submission[] = [...this.submissions.values()];
-    const value: ReadonlyArray<SubmissionSummary> = values.map((s) => {
-      return {
-        id: s.id,
-        reference: s.reference,
-        wasteDescription: s.wasteDescription,
-        wasteQuantity: { status: s.wasteQuantity.status },
-        exporterDetail: { status: s.exporterDetail.status },
-        importerDetail: { status: s.exporterDetail.status },
-        collectionDate: s.collectionDate,
-        carriers: { status: s.carriers.status },
-        collectionDetail: { status: s.collectionDetail.status },
-        ukExitLocation: { status: s.ukExitLocation.status },
-        transitCountries: { status: s.transitCountries.status },
-        recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
-        submissionConfirmation: { status: s.submissionConfirmation.status },
-        submissionDeclaration: s.submissionDeclaration,
-        submissionState: s.submissionState,
-      };
-    });
+    const value: ReadonlyArray<SubmissionSummary> = values
+      .map((s) => {
+        return {
+          id: s.id,
+          reference: s.reference,
+          wasteDescription: s.wasteDescription,
+          wasteQuantity: { status: s.wasteQuantity.status },
+          exporterDetail: { status: s.exporterDetail.status },
+          importerDetail: { status: s.exporterDetail.status },
+          collectionDate: s.collectionDate,
+          carriers: { status: s.carriers.status },
+          collectionDetail: { status: s.collectionDetail.status },
+          ukExitLocation: { status: s.ukExitLocation.status },
+          transitCountries: { status: s.transitCountries.status },
+          recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
+          submissionConfirmation: { status: s.submissionConfirmation.status },
+          submissionDeclaration: s.submissionDeclaration,
+          submissionState: s.submissionState,
+        };
+      })
+      .filter((i) => !i.submissionState.status.includes('Cancelled'))
+      .filter((i) => !i.submissionState.status.includes('Deleted'));
 
     if (!Array.isArray(value) || value.length == 0) {
       return Promise.reject(Boom.notFound());

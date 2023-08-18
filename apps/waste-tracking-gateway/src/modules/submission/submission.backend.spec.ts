@@ -2164,12 +2164,14 @@ describe(InMemorySubmissionBackend, () => {
       }
     );
 
-    let result = await subject.getSubmission({ id, accountId });
+    const result = await subject.getSubmission({ id, accountId });
     expect(result?.submissionState.status).toBe('SubmittedWithActuals');
 
     await subject.deleteSubmission({ id, accountId }, { action: 'CANCEL' });
-    result = await subject.getSubmission({ id, accountId });
-    expect(result?.submissionState.status).toBe('Cancelled');
+    expect(subject.getSubmission({ id, accountId })).rejects.toHaveProperty(
+      'isBoom',
+      true
+    );
   });
 
   it('sets submission state status to Deleted when submission has been removed', async () => {
@@ -2331,11 +2333,13 @@ describe(InMemorySubmissionBackend, () => {
       }
     );
 
-    let result = await subject.getSubmission({ id, accountId });
+    const result = await subject.getSubmission({ id, accountId });
     expect(result?.submissionState.status).toBe('SubmittedWithActuals');
 
     await subject.deleteSubmission({ id, accountId }, { action: 'DELETE' });
-    result = await subject.getSubmission({ id, accountId });
-    expect(result?.submissionState.status).toBe('Deleted');
+    expect(subject.getSubmission({ id, accountId })).rejects.toHaveProperty(
+      'isBoom',
+      true
+    );
   });
 });
