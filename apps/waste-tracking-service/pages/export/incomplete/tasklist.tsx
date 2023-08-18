@@ -154,10 +154,18 @@ const Tasklist = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            dispatchTasklistPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
+            if (data.submissionState) {
+              if (data.submissionState.status === 'Deleted') {
+                dispatchTasklistPage({
+                  type: 'DATA_FETCH_FAILURE',
+                });
+              } else {
+                dispatchTasklistPage({
+                  type: 'DATA_FETCH_SUCCESS',
+                  payload: data,
+                });
+              }
+            }
           }
         });
     }
@@ -242,6 +250,7 @@ const Tasklist = () => {
           <SubmissionNotFound />
         )}
         {tasklistPage.isLoading && <Loading />}
+
         {!tasklistPage.isError && !tasklistPage.isLoading && (
           <>
             <GovUK.GridRow>
