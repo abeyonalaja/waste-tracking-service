@@ -67,7 +67,7 @@ When(/^I click the first continue link$/) do
   click_link('Continue', :match => :first)
 end
 
-And(/^I click the button update$/) do
+And(/^I click the update button$/) do
   click_on 'updateButton'
 end
 

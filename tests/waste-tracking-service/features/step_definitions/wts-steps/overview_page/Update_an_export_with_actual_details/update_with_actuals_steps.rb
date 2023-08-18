@@ -77,3 +77,23 @@ end
 And(/^I click return to all exports button$/) do
   UpdateAnnexRecordPage.new.return_to_all_exports_button
 end
+
+And(/^I should see actual collection date correctly translated$/) do
+  ActualCollectionDatePage.new.check_translation
+end
+
+And(/^I should see actual collection date correctly displayed$/) do
+  expect(CheckYourReportPage.new.collection_date).to eq HelperMethods.convert_date TestStatus.test_status(:actual_collection_date)
+end
+
+Then(/^Export update submitted page displayed$/) do
+  ExportUpdateSubmissionConfirmationPage.new.check_page_displayed
+end
+
+And(/^I should see export update submitted page correctly translated$/) do
+  ExportUpdateSubmissionConfirmationPage.new.check_page_translation
+end
+
+And(/^I should see the transaction number remains same$/) do
+  expect(ExportUpdateSubmissionConfirmationPage.new.transaction_id.text).to eq TestStatus.test_status(:export_transaction_number)
+end

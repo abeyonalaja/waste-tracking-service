@@ -36,9 +36,6 @@ Capybara.javascript_driver = driver.to_sym
 # Screenshot settings
 Capybara::Screenshot.prune_strategy = { keep: 5 }
 
-# Webdrivers::Chromedriver.required_version = '116.0.5845.96'
-
-
 # Screenshot driver for :chrome
 Capybara.save_path = './report/'
 Capybara::Screenshot.register_driver(:chrome) do |driver, path|
@@ -69,6 +66,7 @@ Capybara.register_driver :remote_driver do |app|
   options.add_argument('--enable-features1=NetworkService,NetworkServiceInProcess')
   options.add_argument('headless')
   options.add_argument('disable-gpu')
+  options.add_argument('--disable-dev-shm-usage')
   options.add_argument('window-size=1920,1080')
   options.add_argument('disable-dev-shm-usage')
   options.add_argument('ignore-certificate-errors')

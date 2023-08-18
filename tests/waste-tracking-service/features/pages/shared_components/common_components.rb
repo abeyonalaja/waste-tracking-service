@@ -117,4 +117,8 @@ module CommonComponents
     find 'waste-code-0'
   end
 
+  def transaction_id
+    find 'transaction-id'
+  end
+
 end
