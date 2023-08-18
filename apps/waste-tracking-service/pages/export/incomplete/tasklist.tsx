@@ -207,13 +207,14 @@ const Tasklist = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
+          <GovUK.Breadcrumbs.Link href="/" id="index-link">
             {t('app.parentTitle')}
           </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
+          <GovUK.Breadcrumbs.Link href="/export" id="glw-index-link">
             {t('app.title')}
           </GovUK.Breadcrumbs.Link>
           <GovUK.Breadcrumbs.Link
+            id="add-reference-link"
             href={`/export/incomplete/reference?id=${id}`}
           >
             {t('yourReference.breadcrumb')}

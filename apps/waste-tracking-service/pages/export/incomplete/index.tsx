@@ -300,9 +300,15 @@ const IncompleteAnnex7 = () => {
                         <NotificationBanner
                           type="success"
                           id="delete-success-banner"
-                          headingText={t(
-                            'exportJourney.incompleteAnnexSeven.delete.notification'
-                          )}
+                          headingText={
+                            item.reference === null
+                              ? t(
+                                  'exportJourney.incompleteAnnexSeven.delete.notification'
+                                )
+                              : `${item.reference} ${t(
+                                  'exportJourney.incompleteAnnexSeven.delete.notificationRef'
+                                )}`
+                          }
                         />
                       </div>
                     )}
