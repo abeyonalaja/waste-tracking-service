@@ -168,6 +168,10 @@ const UpdateRecord = () => {
                     estimate={true}
                   />
 
+                  <Paragraph mb={6}>
+                    {t('exportJourney.updateActual.footerText')}
+                  </Paragraph>
+
                   <ButtonGroup>
                     {viewRecordPage.data.submissionState.status ===
                       'UpdatedWithActuals' && (

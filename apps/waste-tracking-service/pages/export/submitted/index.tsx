@@ -67,15 +67,10 @@ const TableCell = styled(GovUK.Table.Cell)`
 
 const TableCellActions = styled(GovUK.Table.Cell)`
   vertical-align: top;
-  text-align: right;
 `;
 
 const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
-`;
-
-const Actions = styled.div`
-  float: right;
 `;
 
 const Index = () => {
@@ -268,17 +263,15 @@ const Index = () => {
                           )}
                         </TableCell>
                         <TableCellActions>
-                          <Actions>
-                            <AppLink
-                              id={'view-link-' + index}
-                              href={{
-                                pathname: `/export/submitted/view`,
-                                query: { id: item.id },
-                              }}
-                            >
-                              View
-                            </AppLink>
-                          </Actions>
+                          <AppLink
+                            id={'view-link-' + index}
+                            href={{
+                              pathname: `/export/submitted/view`,
+                              query: { id: item.id },
+                            }}
+                          >
+                            View
+                          </AppLink>
                         </TableCellActions>
                       </GovUK.Table.Row>
                     ))}

@@ -107,19 +107,14 @@ const TableCell = styled(GovUK.Table.Cell)`
 
 const TableCellActions = styled(GovUK.Table.Cell)`
   vertical-align: top;
-  text-align: right;
 `;
 
 const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const Actions = styled.div`
-  float: right;
-`;
-
 const Action = styled.div`
-  padding-bottom: 5px;
+  margin-bottom: 7px;
 `;
 
 const IncompleteAnnex7 = () => {
@@ -179,13 +174,13 @@ const IncompleteAnnex7 = () => {
       });
   }, [router.isReady]);
 
-  const handleRemove = (item) => {
+  const handleRemove = (e, item) => {
     setItem(item);
-
     dispatchIncompleteAnnex7Page({
       type: 'SHOW_VIEW',
       payload: VIEWS.CONFIRM,
     });
+    e.preventDefault();
   };
 
   const handleConfirmSubmit = (e: FormEvent) => {
@@ -352,9 +347,7 @@ const IncompleteAnnex7 = () => {
                       </TableHeader>
 
                       <TableHeader setWidth="10%" id="table-header-actions">
-                        <Actions>
-                          {t('exportJourney.updateAnnexSeven.table.actions')}
-                        </Actions>
+                        {t('exportJourney.updateAnnexSeven.table.actions')}
                       </TableHeader>
                     </GovUK.Table.Row>
 
@@ -402,31 +395,25 @@ const IncompleteAnnex7 = () => {
                         </TableCell>
 
                         <TableCellActions>
-                          <Actions>
-                            <Action>
-                              <AppLink
-                                id={'continue-link-' + index}
-                                href={{
-                                  pathname: '/export/incomplete/tasklist',
-                                  query: { id: item.id },
-                                }}
-                              >
-                                {t('continueButton')}
-                              </AppLink>
-                            </Action>
-                          </Actions>
-                          <Actions>
+                          <Action>
                             <AppLink
-                              id={'delete-link-' + index}
-                              onClick={
-                                () => handleRemove(item)
-                                // handleDeleteClick()
-                              }
-                              href="#"
+                              id={'continue-link-' + index}
+                              href={{
+                                pathname: '/export/incomplete/tasklist',
+                                query: { id: item.id },
+                              }}
                             >
-                              {t('deleteButton')}
+                              {t('continueButton')}
                             </AppLink>
-                          </Actions>
+                          </Action>
+
+                          <AppLink
+                            id={'delete-link-' + index}
+                            onClick={(e) => handleRemove(e, item)}
+                            href="#"
+                          >
+                            {t('deleteButton')}
+                          </AppLink>
                         </TableCellActions>
                       </GovUK.Table.Row>
                     ))}

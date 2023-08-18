@@ -17,7 +17,7 @@ interface ContentProps {
 const AccordionWrap = styled.div`
   border-bottom: 1px solid #b1b4b6;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const Button = styled.button`

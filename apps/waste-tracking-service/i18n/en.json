@@ -341,6 +341,7 @@
   "exportJourney.updateActual.title": "Update an Annex VII record with actual details",
   "exportJourney.updateActual.warning": "All exports with estimated details need updating with actual details as soon as possible.",
   "exportJourney.updateActual.button": "Confirm all answers",
+  "exportJourney.updateActual.footerText": "You cannot fully complete this record until all your estimates have been updated with actual answers.",
   "exportJourney.updateActualQuantity.updateInTonnes": "Update quantity in tonnes",
   "exportJourney.updateActualQuantity.updateInCubic": "Update quantity in cubic metres (m3)",
   "exportJourney.updateActualQuantity.Weight.title": "What is the actual weight of the waste?",

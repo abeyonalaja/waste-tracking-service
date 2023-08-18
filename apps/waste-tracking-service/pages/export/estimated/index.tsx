@@ -68,11 +68,14 @@ const TableCell = styled(GovUK.Table.Cell)`
 
 const TableCellActions = styled(GovUK.Table.Cell)`
   vertical-align: top;
-  text-align: right;
 `;
 
 const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
+`;
+
+const Action = styled.div`
+  margin-bottom: 7px;
 `;
 
 const UpdateAnnex7 = () => {
@@ -247,7 +250,7 @@ const UpdateAnnex7 = () => {
                           )}
                         </TableCell>
                         <TableCellActions>
-                          <div>
+                          <Action>
                             <AppLink
                               id={'update-' + index}
                               href={{
@@ -257,19 +260,17 @@ const UpdateAnnex7 = () => {
                             >
                               Update
                             </AppLink>
-                          </div>
+                          </Action>
 
-                          <div>
-                            <AppLink
-                              id={'cancel-' + index}
-                              href={{
-                                pathname: '/check-your-report',
-                                query: {},
-                              }}
-                            >
-                              Cancel
-                            </AppLink>
-                          </div>
+                          <AppLink
+                            id={'cancel-' + index}
+                            href={{
+                              pathname: '/check-your-report',
+                              query: {},
+                            }}
+                          >
+                            Cancel
+                          </AppLink>
                         </TableCellActions>
                       </GovUK.Table.Row>
                     ))}
