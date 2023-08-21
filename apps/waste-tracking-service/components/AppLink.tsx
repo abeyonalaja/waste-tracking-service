@@ -25,6 +25,7 @@ const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
   font-size: 16px;
   line-height: 1.25;
   opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+  cursor: ${(props) => (props.disabled ? 'wait' : 'pointer')};
   @media (min-width: 40.0625em) {
     font-size: 19px;
     line-height: 1.3;

@@ -12,6 +12,7 @@ import { ConditionalRadioWrap } from './ConditionalRadioWrap';
 import { DateConverter } from './DateConverter';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
+import { Error404Content } from './Error404Content';
 import { EwcCodeSelector } from './EwcCodeSelector';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
@@ -46,6 +47,7 @@ export {
   DateConverter,
   DocumentStatus,
   DownloadPDFLink,
+  Error404Content,
   EwcCodeSelector,
   InputWithSuffix,
   Loading,

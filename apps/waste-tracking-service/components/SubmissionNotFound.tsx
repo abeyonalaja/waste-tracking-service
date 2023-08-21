@@ -1,19 +1,6 @@
 import React from 'react';
-import { Heading } from 'govuk-react';
-import { AppLink, Paragraph } from './index';
+import { Error404Content } from './Error404Content';
 
-interface Props {
-  testId?: string;
-}
-
-export const SubmissionNotFound = ({ testId }: Props) => {
-  return (
-    <div data-testid={testId}>
-      <Heading size="L">Not found</Heading>
-      <Paragraph>The export record has not been found</Paragraph>
-      <AppLink href={{ pathname: process.env.NX_EXPORT_URL }}>
-        Return to the overview
-      </AppLink>
-    </div>
-  );
+export const SubmissionNotFound = () => {
+  return <Error404Content />;
 };
