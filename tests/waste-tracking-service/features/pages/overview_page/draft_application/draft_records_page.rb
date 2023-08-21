@@ -12,6 +12,7 @@ class DraftRecordsPage < GenericPage
   LAST_SAVED = Translations.value 'exportJourney.incompleteAnnexSeven.table.date'
   WASTE_CODE = Translations.value 'exportJourney.updateAnnexSeven.table.wasteCode'
   ACTIONS = Translations.value 'exportJourney.updateAnnexSeven.table.actions'
+  SUCCESS_MESSAGE = Translations.value 'exportJourney.incompleteAnnexSeven.delete.notification'
 
   #bread crumbs
   GREEN_LIST_WASTE = Translations.value 'app.channel.title'
@@ -29,6 +30,18 @@ class DraftRecordsPage < GenericPage
     expect(self).to have_text ACTIONS
     expect(self).to have_text GREEN_LIST_WASTE
     expect(self).to have_text APP_TITLE
+  end
+
+  def click_first_delete_link
+    click_link('delete-link-0')
+  end
+
+  def your_own_reference
+    find('your-reference-0').text
+  end
+
+  def delete_notification
+    find('delete-success-banner_body').text
   end
 
 end

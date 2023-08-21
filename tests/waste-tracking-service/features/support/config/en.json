@@ -330,5 +330,10 @@
   "exportJourney.updateActualDate.title": "What is the actual collection date?",
   "exportJourney.updateActualDate.intro": "Enter the date, for example",
   "exportJourney.exportSubmitted.panelTitleUpdate": "Annex VII document update is complete",
-  "exportJourney.exportSubmitted.panelUpdate": "Your transaction number is still"
+  "exportJourney.exportSubmitted.panelUpdate": "Your transaction number is still",
+  "exportJourney.incompleteAnnexSeven.delete.title": "Are you sure you want to delete this incomplete Annex VII record?",
+  "exportJourney.incompleteAnnexSeven.delete.caption": "Your reference: ",
+  "exportJourney.incompleteAnnexSeven.delete.button": "Confirm",
+  "exportJourney.incompleteAnnexSeven.delete.notification": "Your Annex VII document has been deleted",
+  "exportJourney.incompleteAnnexSeven.delete.notificationRef": " has been deleted"
 }

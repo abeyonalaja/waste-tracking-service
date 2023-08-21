@@ -61,3 +61,11 @@ end
 And(/^I have (\d+) of 5 sections completed$/) do |completed|
   expect(page).to have_text("You have completed #{completed} of 5 sections.")
 end
+
+And(/^I click Export waste from UK breadcrumb$/) do
+  click_link('glw-index-link')
+end
+
+And(/^I click Move export or import waste breadcrumb$/) do
+  click_link('index-link')
+end
