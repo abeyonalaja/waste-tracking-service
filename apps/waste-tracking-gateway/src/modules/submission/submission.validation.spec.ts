@@ -186,8 +186,11 @@ describe('validatePutWasteQuantityRequest', () => {
         status: 'Started',
         value: {
           type: 'ActualData',
-          quantityType: 'Weight',
-          value: faker.datatype.float({ precision: 0.01 }),
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.float({ precision: 0.01 }),
+          },
+          estimateData: {},
         },
       })
     ).toBe(true);
@@ -197,8 +200,11 @@ describe('validatePutWasteQuantityRequest', () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Volume',
-          value: faker.datatype.float({ precision: 0.01 }),
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.float({ precision: 0.01 }),
+          },
+          estimateData: {},
         },
       })
     ).toBe(true);
@@ -404,9 +410,12 @@ describe('validatePutCollectionDateRequest', () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          day: 10,
-          month: 12,
-          year: 2020,
+          actualDate: {
+            day: 10,
+            month: 12,
+            year: 2020,
+          },
+          estimateDate: {},
         },
       })
     ).toBe(false);
@@ -424,9 +433,12 @@ describe('validatePutCollectionDateRequest', () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          day: '10',
-          month: '07',
-          year: '2020',
+          actualDate: {
+            day: '10',
+            month: '07',
+            year: '2020',
+          },
+          estimateDate: {},
         },
       })
     ).toBe(true);

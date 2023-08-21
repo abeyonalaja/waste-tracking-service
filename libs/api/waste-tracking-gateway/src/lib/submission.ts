@@ -47,33 +47,21 @@ export type ImporterDetailData = {
   };
 };
 
-export type CollectionDateRequest =
-  | { status: 'NotStarted' }
-  | {
-      status: 'Complete';
-      value: {
-        type: 'EstimateDate' | 'ActualDate';
-        day: string;
-        month: string;
-        year: string;
-      };
-    };
-
 export type CollectionDate =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
       value: {
         type: 'EstimateDate' | 'ActualDate';
-        estimateDate?: {
-          day: string;
-          month: string;
-          year: string;
+        estimateDate: {
+          day?: string;
+          month?: string;
+          year?: string;
         };
-        actualDate?: {
-          day: string;
-          month: string;
-          year: string;
+        actualDate: {
+          day?: string;
+          month?: string;
+          year?: string;
         };
       };
     };
@@ -83,30 +71,6 @@ export type WasteDescription =
   | ({ status: 'Started' } & Partial<WasteDescriptionData>)
   | ({ status: 'Complete' } & WasteDescriptionData);
 
-export type WasteQuantityRequest =
-  | { status: 'CannotStart' }
-  | { status: 'NotStarted' }
-  | {
-      status: 'Started';
-      value?: {
-        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
-        quantityType?: 'Volume' | 'Weight';
-        value?: number;
-      };
-    }
-  | {
-      status: 'Complete';
-      value:
-        | {
-            type: 'NotApplicable';
-          }
-        | {
-            type: 'EstimateData' | 'ActualData';
-            quantityType: 'Volume' | 'Weight';
-            value: number;
-          };
-    };
-
 export type WasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
@@ -115,12 +79,12 @@ export type WasteQuantity =
       value?: {
         type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
         estimateData?: {
-          quantityType: 'Volume' | 'Weight';
-          value: number;
+          quantityType?: 'Volume' | 'Weight';
+          value?: number;
         };
         actualData?: {
-          quantityType: 'Volume' | 'Weight';
-          value: number;
+          quantityType?: 'Volume' | 'Weight';
+          value?: number;
         };
       };
     }
@@ -132,13 +96,13 @@ export type WasteQuantity =
           }
         | {
             type: 'EstimateData' | 'ActualData';
-            estimateData?: {
-              quantityType: 'Volume' | 'Weight';
-              value: number;
+            estimateData: {
+              quantityType?: 'Volume' | 'Weight';
+              value?: number;
             };
-            actualData?: {
-              quantityType: 'Volume' | 'Weight';
-              value: number;
+            actualData: {
+              quantityType?: 'Volume' | 'Weight';
+              value?: number;
             };
           };
     };
@@ -346,18 +310,18 @@ export type GetReferenceResponse = CustomerReference;
 export type PutWasteDescriptionRequest = WasteDescription;
 export type PutWasteDescriptionResponse = WasteDescription;
 export type GetWasteDescriptionResponse = WasteDescription;
-export type PutWasteQuantityRequest = WasteQuantityRequest;
-export type PutWasteQuantityResponse = WasteQuantityRequest;
-export type GetWasteQuantityResponse = WasteQuantityRequest;
+export type PutWasteQuantityRequest = WasteQuantity;
+export type PutWasteQuantityResponse = WasteQuantity;
+export type GetWasteQuantityResponse = WasteQuantity;
 export type PutExporterDetailRequest = ExporterDetail;
 export type PutExporterDetailResponse = ExporterDetail;
 export type GetExporterDetailResponse = ExporterDetail;
 export type PutImporterDetailRequest = ImporterDetail;
 export type PutImporterDetailResponse = ImporterDetail;
 export type GetImporterDetailResponse = ImporterDetail;
-export type PutCollectionDateRequest = CollectionDateRequest;
-export type PutCollectionDateResponse = CollectionDateRequest;
-export type GetCollectionDateResponse = CollectionDateRequest;
+export type PutCollectionDateRequest = CollectionDate;
+export type PutCollectionDateResponse = CollectionDate;
+export type GetCollectionDateResponse = CollectionDate;
 
 export type ListCarriersResponse = Carriers;
 export type CreateCarriersRequest = Omit<Carriers, 'transport' | 'values'>;

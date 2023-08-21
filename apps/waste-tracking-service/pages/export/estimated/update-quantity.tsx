@@ -45,6 +45,7 @@ const QuantityEntry = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
+  const [data, setData] = useState(null);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);
   const [quantityType, setQuantityType] = useState(null);
   const [transactionId, setTransactionId] = useState('');
@@ -79,6 +80,7 @@ const QuantityEntry = () => {
         })
         .then((data) => {
           if (data !== undefined) {
+            setData(data.wasteQuantity);
             setQuantityType(
               data.wasteQuantity.value.estimateData.quantityType || null
             );
@@ -130,10 +132,17 @@ const QuantityEntry = () => {
           status: 'Complete',
           value: {
             type: 'ActualData',
-            quantityType: quantityType,
-            value: parseFloat(quantityType === 'Weight' ? weight : volume),
+            estimateData: { ...data.value.estimateData },
+            actualData: { ...data.value.actualData },
           },
         };
+
+        if (updatedData.value.type === 'ActualData') {
+          updatedData.value.actualData = {
+            quantityType: quantityType,
+            value: parseFloat(quantityType === 'Weight' ? weight : volume),
+          };
+        }
 
         try {
           fetch(

@@ -21,6 +21,7 @@ import {
   validateQuantityValue,
 } from 'utils/validators';
 import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
+import { updateOutput } from 'ts-jest/dist/legacy/compiler/compiler-utils';
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
@@ -50,6 +51,7 @@ const QuantityEntry = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
+  const [data, setData] = useState(null);
   const [estimate, setEstimate] = useState<boolean>(false);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);
   const [quantityType, setQuantityType] = useState(null);
@@ -84,13 +86,23 @@ const QuantityEntry = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setEstimate(data.wasteQuantity.value.type === 'EstimateData');
-            setQuantityType(data.wasteQuantity.value.quantityType || null);
+            setData(data.wasteQuantity);
 
-            if (data.wasteQuantity.value.quantityType === 'Weight')
-              setWeight(data.wasteQuantity.value.value);
-            if (data.wasteQuantity.value.quantityType === 'Volume')
-              setVolume(data.wasteQuantity.value.value);
+            setEstimate(data.wasteQuantity.value.type === 'EstimateData');
+            const type =
+              data.wasteQuantity.value.type === 'EstimateData'
+                ? 'estimateData'
+                : 'actualData';
+
+            setQuantityType(
+              data.wasteQuantity.value[type]?.quantityType || null
+            );
+
+            if (data.wasteQuantity.value[type]?.quantityType === 'Weight')
+              setWeight(data.wasteQuantity.value[type]?.value);
+
+            if (data.wasteQuantity.value[type]?.quantityType === 'Volume')
+              setVolume(data.wasteQuantity.value[type]?.value);
 
             if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
               setBulkWaste(false);
@@ -132,13 +144,19 @@ const QuantityEntry = () => {
       } else {
         setErrors(null);
 
-        const updatedData: PutWasteQuantityRequest = {
+        const updatedData = {
           status: 'Complete',
           value: {
             type: estimate ? 'EstimateData' : 'ActualData',
-            quantityType: quantityType,
-            value: parseFloat(quantityType === 'Weight' ? weight : volume),
+            estimateData: { ...data.value.estimateData },
+            actualData: { ...data.value.actualData },
           },
+        };
+
+        const type = estimate ? 'estimateData' : 'actualData';
+        updatedData.value[type] = {
+          quantityType: quantityType,
+          value: parseFloat(quantityType === 'Weight' ? weight : volume),
         };
 
         try {

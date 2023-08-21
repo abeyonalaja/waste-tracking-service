@@ -121,9 +121,12 @@ describe(InMemorySubmissionBackend, () => {
           status: 'Complete',
           value: {
             type: 'ActualDate',
-            year: date.getFullYear().toString(),
-            month: (date.getMonth() + 1).toString().padStart(2, '0'),
-            day: date.getDate().toString().padStart(2, '0'),
+            actualDate: {
+              year: date.getFullYear().toString(),
+              month: (date.getMonth() + 1).toString().padStart(2, '0'),
+              day: date.getDate().toString().padStart(2, '0'),
+            },
+            estimateDate: {},
           },
         }
       )
@@ -318,6 +321,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -358,6 +362,7 @@ describe(InMemorySubmissionBackend, () => {
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
+          estimateDate: {},
         },
       },
       carriers: {
@@ -454,6 +459,7 @@ describe(InMemorySubmissionBackend, () => {
           month: (date.getMonth() + 1).toString().padStart(2, '0'),
           day: date.getDate().toString().padStart(2, '0'),
         },
+        estimateDate: {},
       },
     };
 
@@ -524,6 +530,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -564,6 +571,7 @@ describe(InMemorySubmissionBackend, () => {
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
+          estimateDate: {},
         },
       },
       carriers: {
@@ -732,6 +740,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -772,6 +781,7 @@ describe(InMemorySubmissionBackend, () => {
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
+          estimateDate: {},
         },
       },
       carriers: {
@@ -872,6 +882,7 @@ describe(InMemorySubmissionBackend, () => {
           month: (date.getMonth() + 1).toString().padStart(2, '0'),
           day: date.getDate().toString().padStart(2, '0'),
         },
+        estimateDate: {},
       },
     };
 
@@ -1033,6 +1044,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: { status: 'NotStarted' },
@@ -1150,6 +1162,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: { status: 'NotStarted' },
@@ -1271,6 +1284,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: { status: 'NotStarted' },
@@ -1392,6 +1406,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: { status: 'NotStarted' },
@@ -1508,6 +1523,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -1541,12 +1557,13 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: {
         status: 'Complete',
         value: {
+          type: 'ActualDate',
           actualDate: {
             year: date.getFullYear().toString(),
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
-          type: 'ActualDate',
+          estimateDate: {},
         },
       },
       carriers: {
@@ -1667,6 +1684,7 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         value: {
           type: 'EstimateData',
+          actualData: {},
           estimateData: {
             quantityType: 'Weight',
             value: faker.datatype.number(),
@@ -1704,12 +1722,13 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: {
         status: 'Complete',
         value: {
+          type: 'EstimateDate',
+          actualDate: {},
           estimateDate: {
             year: date.getFullYear().toString(),
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
-          type: 'EstimateDate',
         },
       },
       carriers: {
@@ -1830,6 +1849,7 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         value: {
           type: 'EstimateData',
+          actualData: {},
           estimateData: {
             quantityType: 'Weight',
             value: faker.datatype.number(),
@@ -1867,12 +1887,13 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: {
         status: 'Complete',
         value: {
+          type: 'EstimateDate',
+          actualDate: {},
           estimateDate: {
             year: date.getFullYear().toString(),
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
-          type: 'EstimateDate',
         },
       },
       carriers: {
@@ -1978,8 +1999,11 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Weight',
-          value: faker.datatype.number(),
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.number(),
+          },
+          estimateData: {},
         },
       }
     );
@@ -1993,9 +2017,12 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          year: date.getFullYear().toString(),
-          month: (date.getMonth() + 1).toString().padStart(2, '0'),
-          day: date.getDate().toString().padStart(2, '0'),
+          actualDate: {
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+          estimateDate: {},
         },
       }
     );
@@ -2024,11 +2051,11 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Weight',
           actualData: {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -2062,12 +2089,13 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: {
         status: 'Complete',
         value: {
+          type: 'ActualDate',
           actualDate: {
             year: date.getFullYear().toString(),
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
-          type: 'ActualDate',
+          estimateDate: {},
         },
       },
       carriers: {
@@ -2198,6 +2226,7 @@ describe(InMemorySubmissionBackend, () => {
             quantityType: 'Weight',
             value: faker.datatype.number(),
           },
+          estimateData: {},
         },
       },
       exporterDetail: {
@@ -2231,12 +2260,13 @@ describe(InMemorySubmissionBackend, () => {
       collectionDate: {
         status: 'Complete',
         value: {
+          type: 'ActualDate',
           actualDate: {
             year: date.getFullYear().toString(),
             month: (date.getMonth() + 1).toString().padStart(2, '0'),
             day: date.getDate().toString().padStart(2, '0'),
           },
-          type: 'ActualDate',
+          estimateDate: {},
         },
       },
       carriers: {

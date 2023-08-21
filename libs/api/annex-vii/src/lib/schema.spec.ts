@@ -206,8 +206,11 @@ describe('setDraftWasteQuantityByIdRequest', () => {
         status: 'Complete',
         value: {
           type: 'ActualData',
-          quantityType: 'Volume',
-          value: 12,
+          actualData: {
+            quantityType: 'Volume',
+            value: 12,
+          },
+          estimateData: {},
         },
       },
     };
@@ -237,9 +240,12 @@ describe('setDraftCollectionDateByIdRequest', () => {
         status: 'Complete',
         value: {
           type: 'ActualDate',
-          year: '1970',
-          month: '00',
-          day: '01',
+          actualDate: {
+            year: '1970',
+            month: '00',
+            day: '01',
+          },
+          estimateDate: {},
         },
       },
     };

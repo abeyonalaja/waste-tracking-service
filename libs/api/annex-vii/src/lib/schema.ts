@@ -87,53 +87,6 @@ const draftWasteDescription: SchemaObject = {
   },
 };
 
-const draftWasteQuantityRequest: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    CannotStart: {
-      properties: {},
-    },
-    NotStarted: {
-      properties: {},
-    },
-    Started: {
-      properties: {},
-      optionalProperties: {
-        value: {
-          properties: {},
-          optionalProperties: {
-            type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
-            quantityType: { enum: ['Volume', 'Weight'] },
-            value: { type: 'float64' },
-          },
-        },
-      },
-    },
-    Complete: {
-      properties: {
-        value: {
-          discriminator: 'type',
-          mapping: {
-            NotApplicable: { properties: {} },
-            EstimateData: {
-              properties: {
-                quantityType: { enum: ['Volume', 'Weight'] },
-                value: { type: 'float64' },
-              },
-            },
-            ActualData: {
-              properties: {
-                quantityType: { enum: ['Volume', 'Weight'] },
-                value: { type: 'float64' },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
 const draftWasteQuantity: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -151,13 +104,13 @@ const draftWasteQuantity: SchemaObject = {
           optionalProperties: {
             type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
             estimateData: {
-              properties: {
+              optionalProperties: {
                 quantityType: { enum: ['Volume', 'Weight'] },
                 value: { type: 'float64' },
               },
             },
             actualData: {
-              properties: {
+              optionalProperties: {
                 quantityType: { enum: ['Volume', 'Weight'] },
                 value: { type: 'float64' },
               },
@@ -173,15 +126,15 @@ const draftWasteQuantity: SchemaObject = {
           mapping: {
             NotApplicable: { properties: {} },
             EstimateData: {
-              optionalProperties: {
+              properties: {
                 estimateData: {
-                  properties: {
+                  optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
                     value: { type: 'float64' },
                   },
                 },
                 actualData: {
-                  properties: {
+                  optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
                     value: { type: 'float64' },
                   },
@@ -189,15 +142,15 @@ const draftWasteQuantity: SchemaObject = {
               },
             },
             ActualData: {
-              optionalProperties: {
+              properties: {
                 estimateData: {
-                  properties: {
+                  optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
                     value: { type: 'float64' },
                   },
                 },
                 actualData: {
-                  properties: {
+                  optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
                     value: { type: 'float64' },
                   },
@@ -300,27 +253,6 @@ const draftImporterDetail: SchemaObject = {
   },
 };
 
-const draftCollectionDateRequest: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    NotStarted: {
-      properties: {},
-    },
-    Complete: {
-      properties: {
-        value: {
-          properties: {
-            type: { enum: ['EstimateDate', 'ActualDate'] },
-            day: { type: 'string' },
-            month: { type: 'string' },
-            year: { type: 'string' },
-          },
-        },
-      },
-    },
-  },
-};
-
 const draftCollectionDate: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -332,17 +264,15 @@ const draftCollectionDate: SchemaObject = {
         value: {
           properties: {
             type: { enum: ['EstimateDate', 'ActualDate'] },
-          },
-          optionalProperties: {
             estimateDate: {
-              properties: {
+              optionalProperties: {
                 day: { type: 'string' },
                 month: { type: 'string' },
                 year: { type: 'string' },
               },
             },
             actualDate: {
-              properties: {
+              optionalProperties: {
                 day: { type: 'string' },
                 month: { type: 'string' },
                 year: { type: 'string' },
@@ -942,7 +872,7 @@ export const setDraftWasteQuantityByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: draftWasteQuantityRequest,
+    value: draftWasteQuantity,
   },
 };
 
@@ -1038,7 +968,7 @@ export const setDraftCollectionDateByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: draftCollectionDateRequest,
+    value: draftCollectionDate,
   },
 };
 

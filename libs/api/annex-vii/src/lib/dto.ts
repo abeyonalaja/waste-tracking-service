@@ -34,30 +34,6 @@ export type DraftWasteDescription =
   | ({ status: 'Started' } & Partial<DraftWasteDescriptionData>)
   | ({ status: 'Complete' } & DraftWasteDescriptionData);
 
-export type DraftWasteQuantityRequest =
-  | { status: 'CannotStart' }
-  | { status: 'NotStarted' }
-  | {
-      status: 'Started';
-      value?: {
-        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
-        quantityType?: 'Volume' | 'Weight';
-        value?: number;
-      };
-    }
-  | {
-      status: 'Complete';
-      value:
-        | {
-            type: 'NotApplicable';
-          }
-        | {
-            type: 'EstimateData' | 'ActualData';
-            quantityType: 'Volume' | 'Weight';
-            value: number;
-          };
-    };
-
 export type DraftWasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
@@ -66,12 +42,12 @@ export type DraftWasteQuantity =
       value?: {
         type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
         estimateData?: {
-          quantityType: 'Volume' | 'Weight';
-          value: number;
+          quantityType?: 'Volume' | 'Weight';
+          value?: number;
         };
         actualData?: {
-          quantityType: 'Volume' | 'Weight';
-          value: number;
+          quantityType?: 'Volume' | 'Weight';
+          value?: number;
         };
       };
     }
@@ -83,13 +59,13 @@ export type DraftWasteQuantity =
           }
         | {
             type: 'EstimateData' | 'ActualData';
-            estimateData?: {
-              quantityType: 'Volume' | 'Weight';
-              value: number;
+            estimateData: {
+              quantityType?: 'Volume' | 'Weight';
+              value?: number;
             };
-            actualData?: {
-              quantityType: 'Volume' | 'Weight';
-              value: number;
+            actualData: {
+              quantityType?: 'Volume' | 'Weight';
+              value?: number;
             };
           };
     };
@@ -125,33 +101,21 @@ export type DraftImporterDetailData = {
   };
 };
 
-export type DraftCollectionDateRequest =
-  | { status: 'NotStarted' }
-  | {
-      status: 'Complete';
-      value: {
-        type: 'EstimateDate' | 'ActualDate';
-        day: string;
-        month: string;
-        year: string;
-      };
-    };
-
 export type DraftCollectionDate =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
       value: {
         type: 'EstimateDate' | 'ActualDate';
-        estimateDate?: {
-          day: string;
-          month: string;
-          year: string;
+        estimateDate: {
+          day?: string;
+          month?: string;
+          year?: string;
         };
-        actualDate?: {
-          day: string;
-          month: string;
-          year: string;
+        actualDate: {
+          day?: string;
+          month?: string;
+          year?: string;
         };
       };
     };
@@ -396,15 +360,14 @@ export const setDraftWasteDescriptionById: Method = {
 };
 
 export type GetDraftWasteQuantityByIdRequest = IdRequest & AccountIdRequest;
-export type GetDraftWasteQuantityByIdResponse =
-  Response<DraftWasteQuantityRequest>;
+export type GetDraftWasteQuantityByIdResponse = Response<DraftWasteQuantity>;
 export const getDraftWasteQuantityById: Method = {
   name: 'getDraftWasteQuantityById',
   httpVerb: 'POST',
 };
 
 export type SetDraftWasteQuantityByIdRequest = IdRequest &
-  AccountIdRequest & { value: DraftWasteQuantityRequest };
+  AccountIdRequest & { value: DraftWasteQuantity };
 export type SetDraftWasteQuantityByIdResponse = Response<void>;
 export const setDraftWasteQuantityById: Method = {
   name: 'setDraftWasteQuantityById',
@@ -442,15 +405,14 @@ export const setDraftImporterDetailById: Method = {
 };
 
 export type GetDraftCollectionDateByIdRequest = IdRequest & AccountIdRequest;
-export type GetDraftCollectionDateByIdResponse =
-  Response<DraftCollectionDateRequest>;
+export type GetDraftCollectionDateByIdResponse = Response<DraftCollectionDate>;
 export const getDraftCollectionDateById: Method = {
   name: 'getDraftCollectionDateById',
   httpVerb: 'POST',
 };
 
 export type SetDraftCollectionDateByIdRequest = IdRequest &
-  AccountIdRequest & { value: DraftCollectionDateRequest };
+  AccountIdRequest & { value: DraftCollectionDate };
 export type SetDraftCollectionDateByIdResponse = Response<void>;
 export const setDraftCollectionDateById: Method = {
   name: 'setDraftCollectionDateById',

@@ -5,13 +5,7 @@ import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { DraftRepository } from '../data';
-import {
-  DraftSubmission,
-  DraftWasteQuantity,
-  DraftWasteQuantityRequest,
-  DraftCollectionDate,
-  DraftCollectionDateRequest,
-} from '../model';
+import { DraftSubmission } from '../model';
 
 export type Handler<Request, Response> = (
   request: Request
@@ -75,14 +69,19 @@ function isWasteCodeChangingBulkToBulkSameType(
 export default class DraftController {
   constructor(private repository: DraftRepository, private logger: Logger) {}
 
-  isCollectionDateValid(date: DraftCollectionDateRequest) {
+  isCollectionDateValid(date: DraftSubmission['collectionDate']) {
     if (date.status !== 'NotStarted') {
-      const { day: dayStr, month: monthStr, year: yearStr } = date.value;
-
+      const {
+        day: dayStr,
+        month: monthStr,
+        year: yearStr,
+      } = date.value[
+        date.value.type === 'ActualDate' ? 'actualDate' : 'estimateDate'
+      ];
       const [day, month, year] = [
-        parseInt(dayStr),
-        parseInt(monthStr) - 1,
-        parseInt(yearStr),
+        parseInt(dayStr as string),
+        parseInt(monthStr as string) - 1,
+        parseInt(yearStr as string),
       ];
 
       if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
@@ -450,74 +449,7 @@ export default class DraftController {
   > = async ({ id, accountId }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-
-      const wasteQuantity: DraftWasteQuantityRequest =
-        draft.wasteQuantity.status !== 'NotStarted' &&
-        draft.wasteQuantity.status !== 'CannotStart'
-          ? draft.wasteQuantity.status !== 'Started'
-            ? draft.wasteQuantity.value.type === 'NotApplicable'
-              ? {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                  },
-                }
-              : draft.wasteQuantity.value.type === 'ActualData'
-              ? {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                    quantityType: draft.wasteQuantity.value.actualData
-                      ?.quantityType as 'Volume' | 'Weight',
-                    value: draft.wasteQuantity.value.actualData
-                      ?.value as number,
-                  },
-                }
-              : {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                    quantityType: draft.wasteQuantity.value.estimateData
-                      ?.quantityType as 'Volume' | 'Weight',
-                    value: draft.wasteQuantity.value.estimateData
-                      ?.value as number,
-                  },
-                }
-            : draft.wasteQuantity.value && draft.wasteQuantity.value.type
-            ? draft.wasteQuantity.value.type === 'NotApplicable'
-              ? {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                  },
-                }
-              : draft.wasteQuantity.value.type === 'ActualData'
-              ? {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                    quantityType: draft.wasteQuantity.value.actualData
-                      ?.quantityType as 'Volume' | 'Weight' | undefined,
-                    value: draft.wasteQuantity.value.actualData?.value as
-                      | number
-                      | undefined,
-                  },
-                }
-              : {
-                  status: draft.wasteQuantity.status,
-                  value: {
-                    type: draft.wasteQuantity.value.type,
-                    quantityType: draft.wasteQuantity.value.estimateData
-                      ?.quantityType as 'Volume' | 'Weight' | undefined,
-                    value: draft.wasteQuantity.value.estimateData?.value as
-                      | number
-                      | undefined,
-                  },
-                }
-            : { status: draft.wasteQuantity.status }
-          : { status: draft.wasteQuantity.status };
-
-      return success(wasteQuantity);
+      return success(draft.wasteQuantity);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -535,508 +467,47 @@ export default class DraftController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
 
-      const wasteQuantity: DraftWasteQuantity =
-        value.status !== 'CannotStart' && value.status !== 'NotStarted'
-          ? value.status !== 'Started'
-            ? value.value.type === 'NotApplicable'
-              ? {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                  },
-                }
-              : value.value.type === 'ActualData'
-              ? draft.wasteQuantity.status !== 'CannotStart' &&
-                draft.wasteQuantity.status !== 'NotStarted'
-                ? draft.wasteQuantity.status !== 'Started'
-                  ? draft.wasteQuantity.value.type === 'NotApplicable'
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : draft.wasteQuantity.value.estimateData
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                          estimateData: draft.wasteQuantity.value.estimateData,
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                  : draft.wasteQuantity.value
-                  ? draft.wasteQuantity.value.type === 'NotApplicable'
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : draft.wasteQuantity.value.estimateData
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                          estimateData: draft.wasteQuantity.value.estimateData,
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        actualData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                : {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                      actualData: {
-                        quantityType: value.value.quantityType,
-                        value: value.value.value,
-                      },
-                    },
-                  }
-              : draft.wasteQuantity.status !== 'CannotStart' &&
-                draft.wasteQuantity.status !== 'NotStarted'
-              ? draft.wasteQuantity.status !== 'Started'
-                ? draft.wasteQuantity.value.type === 'NotApplicable'
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : draft.wasteQuantity.value.actualData
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        actualData: draft.wasteQuantity.value.actualData,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                : draft.wasteQuantity.value
-                ? draft.wasteQuantity.value.type === 'NotApplicable'
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : draft.wasteQuantity.value.actualData
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        actualData: draft.wasteQuantity.value.actualData,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                : {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                      estimateData: {
-                        quantityType: value.value.quantityType,
-                        value: value.value.value,
-                      },
-                    },
-                  }
-              : {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                    estimateData: {
-                      quantityType: value.value.quantityType,
-                      value: value.value.value,
-                    },
-                  },
-                }
-            : value.value
-            ? value.value.type === 'NotApplicable'
-              ? {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                  },
-                }
-              : value.value.type === 'ActualData'
-              ? draft.wasteQuantity.status !== 'CannotStart' &&
-                draft.wasteQuantity.status !== 'NotStarted'
-                ? draft.wasteQuantity.status !== 'Started'
-                  ? draft.wasteQuantity.value.type === 'NotApplicable'
-                    ? value.value.quantityType && value.value.value
-                      ? {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            actualData: {
-                              quantityType: value.value.quantityType,
-                              value: value.value.value,
-                            },
-                          },
-                        }
-                      : {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                          },
-                        }
-                    : draft.wasteQuantity.value.estimateData
-                    ? value.value.quantityType && value.value.value
-                      ? {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            actualData: {
-                              quantityType: value.value.quantityType,
-                              value: value.value.value,
-                            },
-                            estimateData:
-                              draft.wasteQuantity.value.estimateData,
-                          },
-                        }
-                      : {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            estimateData:
-                              draft.wasteQuantity.value.estimateData,
-                          },
-                        }
-                    : value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                        },
-                      }
-                  : draft.wasteQuantity.value
-                  ? draft.wasteQuantity.value.type === 'NotApplicable'
-                    ? value.value.quantityType && value.value.value
-                      ? {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            actualData: {
-                              quantityType: value.value.quantityType,
-                              value: value.value.value,
-                            },
-                          },
-                        }
-                      : {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                          },
-                        }
-                    : draft.wasteQuantity.value.estimateData
-                    ? value.value.quantityType && value.value.value
-                      ? {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            actualData: {
-                              quantityType: value.value.quantityType,
-                              value: value.value.value,
-                            },
-                            estimateData:
-                              draft.wasteQuantity.value.estimateData,
-                          },
-                        }
-                      : {
-                          status: value.status,
-                          value: {
-                            type: value.value.type,
-                            estimateData:
-                              draft.wasteQuantity.value.estimateData,
-                          },
-                        }
-                    : value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                        },
-                      }
-                  : value.value.quantityType && value.value.value
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        actualData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                      },
-                    }
-                : value.value.quantityType && value.value.value
-                ? {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                      actualData: {
-                        quantityType: value.value.quantityType,
-                        value: value.value.value,
-                      },
-                    },
-                  }
-                : {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                    },
-                  }
-              : draft.wasteQuantity.status !== 'CannotStart' &&
-                draft.wasteQuantity.status !== 'NotStarted'
-              ? draft.wasteQuantity.status !== 'Started'
-                ? draft.wasteQuantity.value.type === 'NotApplicable'
-                  ? value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          estimateData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                        },
-                      }
-                  : draft.wasteQuantity.value.actualData
-                  ? value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: draft.wasteQuantity.value.actualData,
-                          estimateData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: draft.wasteQuantity.value.actualData,
-                        },
-                      }
-                  : value.value.quantityType && value.value.value
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                      },
-                    }
-                : draft.wasteQuantity.value
-                ? draft.wasteQuantity.value.type === 'NotApplicable'
-                  ? value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          estimateData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                        },
-                      }
-                  : draft.wasteQuantity.value.actualData
-                  ? value.value.quantityType && value.value.value
-                    ? {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: draft.wasteQuantity.value.actualData,
-                          estimateData: {
-                            quantityType: value.value.quantityType,
-                            value: value.value.value,
-                          },
-                        },
-                      }
-                    : {
-                        status: value.status,
-                        value: {
-                          type: value.value.type,
-                          actualData: draft.wasteQuantity.value.actualData,
-                        },
-                      }
-                  : value.value.quantityType && value.value.value
-                  ? {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                        estimateData: {
-                          quantityType: value.value.quantityType,
-                          value: value.value.value,
-                        },
-                      },
-                    }
-                  : {
-                      status: value.status,
-                      value: {
-                        type: value.value.type,
-                      },
-                    }
-                : value.value.quantityType && value.value.value
-                ? {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                      estimateData: {
-                        quantityType: value.value.quantityType,
-                        value: value.value.value,
-                      },
-                    },
-                  }
-                : {
-                    status: value.status,
-                    value: {
-                      type: value.value.type,
-                    },
-                  }
-              : value.value.quantityType && value.value.value
-              ? {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                    estimateData: {
-                      quantityType: value.value.quantityType,
-                      value: value.value.value,
-                    },
-                  },
-                }
-              : {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                  },
-                }
-            : { status: value.status }
-          : { status: value.status };
+      let wasteQuantity = value;
+      if (
+        value.status !== 'CannotStart' &&
+        value.status !== 'NotStarted' &&
+        value.value &&
+        value.value.type &&
+        value.value.type !== 'NotApplicable' &&
+        draft.wasteQuantity.status !== 'CannotStart' &&
+        draft.wasteQuantity.status !== 'NotStarted' &&
+        draft.wasteQuantity.value &&
+        draft.wasteQuantity.value.type &&
+        draft.wasteQuantity.value.type !== 'NotApplicable'
+      ) {
+        if (
+          value.value.type === 'ActualData' &&
+          draft.wasteQuantity.value.estimateData
+        ) {
+          wasteQuantity = {
+            status: value.status,
+            value: {
+              type: value.value.type,
+              actualData: value.value.actualData ?? {},
+              estimateData: draft.wasteQuantity.value.estimateData,
+            },
+          };
+        }
+
+        if (
+          value.value.type === 'EstimateData' &&
+          draft.wasteQuantity.value.actualData
+        ) {
+          wasteQuantity = {
+            status: value.status,
+            value: {
+              type: value.value.type,
+              actualData: draft.wasteQuantity.value.actualData,
+              estimateData: value.value.estimateData ?? {},
+            },
+          };
+        }
+      }
 
       draft.wasteQuantity = wasteQuantity;
 
@@ -1159,30 +630,7 @@ export default class DraftController {
   > = async ({ id, accountId }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      const collectionDate: DraftCollectionDateRequest =
-        draft.collectionDate.status !== 'NotStarted'
-          ? draft.collectionDate.value.type === 'ActualDate'
-            ? {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.actualDate?.day as string,
-                  month: draft.collectionDate.value.actualDate?.month as string,
-                  year: draft.collectionDate.value.actualDate?.year as string,
-                },
-              }
-            : {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.estimateDate?.day as string,
-                  month: draft.collectionDate.value.estimateDate
-                    ?.month as string,
-                  year: draft.collectionDate.value.estimateDate?.year as string,
-                },
-              }
-          : { status: draft.collectionDate.status };
-      return success(collectionDate);
+      return success(draft.collectionDate);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1200,62 +648,41 @@ export default class DraftController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
 
-      const collectionDateData: DraftCollectionDate =
-        value.status !== 'NotStarted'
-          ? value.value.type === 'ActualDate'
-            ? draft.collectionDate.status === 'Complete' &&
-              draft.collectionDate.value.estimateDate
-              ? {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                    actualDate: {
-                      day: value.value.day,
-                      month: value.value.month,
-                      year: value.value.year,
-                    },
-                    estimateDate: draft.collectionDate.value.estimateDate,
-                  },
-                }
-              : {
-                  status: value.status,
-                  value: {
-                    type: value.value.type,
-                    actualDate: {
-                      day: value.value.day,
-                      month: value.value.month,
-                      year: value.value.year,
-                    },
-                  },
-                }
-            : draft.collectionDate.status === 'Complete' &&
-              draft.collectionDate.value.actualDate
-            ? {
-                status: value.status,
-                value: {
-                  type: value.value.type,
-                  estimateDate: {
-                    day: value.value.day,
-                    month: value.value.month,
-                    year: value.value.year,
-                  },
-                  actualDate: draft.collectionDate.value.actualDate,
-                },
-              }
-            : {
-                status: value.status,
-                value: {
-                  type: value.value.type,
-                  estimateDate: {
-                    day: value.value.day,
-                    month: value.value.month,
-                    year: value.value.year,
-                  },
-                },
-              }
-          : { status: value.status };
+      let collectionDate = value;
+      if (
+        value.status !== 'NotStarted' &&
+        draft.collectionDate.status !== 'NotStarted'
+      ) {
+        if (value.value.type === 'ActualDate') {
+          collectionDate = {
+            status: value.status,
+            value: {
+              type: value.value.type,
+              actualDate: {
+                day: value.value.actualDate.day,
+                month: value.value.actualDate.month,
+                year: value.value.actualDate.year,
+              },
+              estimateDate: draft.collectionDate.value.estimateDate,
+            },
+          };
+        } else {
+          collectionDate = {
+            status: value.status,
+            value: {
+              type: value.value.type,
+              estimateDate: {
+                day: value.value.estimateDate.day,
+                month: value.value.estimateDate.month,
+                year: value.value.estimateDate.year,
+              },
+              actualDate: draft.collectionDate.value.actualDate,
+            },
+          };
+        }
+      }
 
-      draft.collectionDate = collectionDateData;
+      draft.collectionDate = collectionDate;
 
       if (draft.submissionConfirmation.status !== 'Complete') {
         draft.submissionConfirmation =
@@ -1877,31 +1304,7 @@ export default class DraftController {
         return fromBoom(Boom.badRequest());
       }
 
-      const collectionDate: DraftCollectionDateRequest =
-        draft.collectionDate.status !== 'NotStarted'
-          ? draft.collectionDate.value.type === 'ActualDate'
-            ? {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.actualDate?.day as string,
-                  month: draft.collectionDate.value.actualDate?.month as string,
-                  year: draft.collectionDate.value.actualDate?.year as string,
-                },
-              }
-            : {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.estimateDate?.day as string,
-                  month: draft.collectionDate.value.estimateDate
-                    ?.month as string,
-                  year: draft.collectionDate.value.estimateDate?.year as string,
-                },
-              }
-          : { status: draft.collectionDate.status };
-
-      if (!this.isCollectionDateValid(collectionDate)) {
+      if (!this.isCollectionDateValid(draft.collectionDate)) {
         draft.collectionDate = { status: 'NotStarted' };
         draft.submissionConfirmation =
           this.setSubmissionConfirmationStatus(draft);
@@ -1950,31 +1353,7 @@ export default class DraftController {
         return fromBoom(Boom.badRequest());
       }
 
-      const collectionDate: DraftCollectionDateRequest =
-        draft.collectionDate.status !== 'NotStarted'
-          ? draft.collectionDate.value.type === 'ActualDate'
-            ? {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.actualDate?.day as string,
-                  month: draft.collectionDate.value.actualDate?.month as string,
-                  year: draft.collectionDate.value.actualDate?.year as string,
-                },
-              }
-            : {
-                status: draft.collectionDate.status,
-                value: {
-                  type: draft.collectionDate.value.type,
-                  day: draft.collectionDate.value.estimateDate?.day as string,
-                  month: draft.collectionDate.value.estimateDate
-                    ?.month as string,
-                  year: draft.collectionDate.value.estimateDate?.year as string,
-                },
-              }
-          : { status: draft.collectionDate.status };
-
-      if (!this.isCollectionDateValid(collectionDate)) {
+      if (!this.isCollectionDateValid(draft.collectionDate)) {
         draft.collectionDate = { status: 'NotStarted' };
 
         draft.submissionConfirmation =

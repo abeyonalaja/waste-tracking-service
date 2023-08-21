@@ -97,8 +97,18 @@ export const validatePutWasteQuantityRequest =
             properties: {},
             optionalProperties: {
               type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
-              quantityType: { enum: ['Volume', 'Weight'] },
-              value: { type: 'float64' },
+              estimateData: {
+                optionalProperties: {
+                  quantityType: { enum: ['Volume', 'Weight'] },
+                  value: { type: 'float64' },
+                },
+              },
+              actualData: {
+                optionalProperties: {
+                  quantityType: { enum: ['Volume', 'Weight'] },
+                  value: { type: 'float64' },
+                },
+              },
             },
           },
         },
@@ -111,14 +121,34 @@ export const validatePutWasteQuantityRequest =
               NotApplicable: { properties: {} },
               EstimateData: {
                 properties: {
-                  quantityType: { enum: ['Volume', 'Weight'] },
-                  value: { type: 'float64' },
+                  estimateData: {
+                    optionalProperties: {
+                      quantityType: { enum: ['Volume', 'Weight'] },
+                      value: { type: 'float64' },
+                    },
+                  },
+                  actualData: {
+                    optionalProperties: {
+                      quantityType: { enum: ['Volume', 'Weight'] },
+                      value: { type: 'float64' },
+                    },
+                  },
                 },
               },
               ActualData: {
                 properties: {
-                  quantityType: { enum: ['Volume', 'Weight'] },
-                  value: { type: 'float64' },
+                  estimateData: {
+                    optionalProperties: {
+                      quantityType: { enum: ['Volume', 'Weight'] },
+                      value: { type: 'float64' },
+                    },
+                  },
+                  actualData: {
+                    optionalProperties: {
+                      quantityType: { enum: ['Volume', 'Weight'] },
+                      value: { type: 'float64' },
+                    },
+                  },
                 },
               },
             },
@@ -229,9 +259,20 @@ export const validatePutCollectionDateRequest =
           value: {
             properties: {
               type: { enum: ['EstimateDate', 'ActualDate'] },
-              day: { type: 'string' },
-              month: { type: 'string' },
-              year: { type: 'string' },
+              actualDate: {
+                optionalProperties: {
+                  day: { type: 'string' },
+                  month: { type: 'string' },
+                  year: { type: 'string' },
+                },
+              },
+              estimateDate: {
+                optionalProperties: {
+                  day: { type: 'string' },
+                  month: { type: 'string' },
+                  year: { type: 'string' },
+                },
+              },
             },
           },
         },

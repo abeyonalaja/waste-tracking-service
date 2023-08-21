@@ -26,6 +26,7 @@ const CollectionDate = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
+  const [data, setData] = useState(null);
   const [collectionDate, setCollectionDate] = useState<Date>();
   const [transactionId, setTransactionId] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -61,6 +62,7 @@ const CollectionDate = () => {
                 query: { id },
               });
             }
+            setData(data.collectionDate);
             setTransactionId(data.submissionDeclaration.values.transactionId);
             setIsLoading(false);
             setIsError(false);
@@ -83,13 +85,18 @@ const CollectionDate = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
+
         const body = {
           status: 'Complete',
           value: {
             type: 'ActualDate',
-            ...collectionDate,
+            actualDate: { ...data?.value?.actualDate },
+            estimateDate: { ...data?.value?.estimateDate },
           },
         };
+
+        body.value.actualDate = collectionDate;
+
         try {
           fetch(
             `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-date`,

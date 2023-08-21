@@ -28,6 +28,7 @@ const CollectionDate = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
+  const [data, setData] = useState(null);
   const [dateType, setDateType] = useState<'ActualDate' | 'EstimateDate'>(null);
   const [collectionDate, setCollectionDate] = useState<Date>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -61,11 +62,16 @@ const CollectionDate = () => {
         .then((data: GetCollectionDateResponse) => {
           if (data !== undefined) {
             if (data.status === 'Complete') {
+              setData(data);
+              const type =
+                data.value.type === 'EstimateDate'
+                  ? 'estimateDate'
+                  : 'actualDate';
               setDateType(data.value.type);
               setCollectionDate({
-                day: data.value.day,
-                month: data.value.month,
-                year: data.value.year,
+                day: data.value[type].day,
+                month: data.value[type].month,
+                year: data.value[type].year,
               });
             }
             setIsLoading(false);
@@ -102,13 +108,19 @@ const CollectionDate = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
+        const type =
+          dateType === 'EstimateDate' ? 'estimateDate' : 'actualDate';
         const body = {
           status: 'Complete',
           value: {
             type: dateType,
-            ...collectionDate,
+            actualDate: { ...data?.value?.actualDate },
+            estimateDate: { ...data?.value?.estimateDate },
           },
         };
+
+        body.value[type] = collectionDate;
+
         try {
           fetch(
             `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-date`,
