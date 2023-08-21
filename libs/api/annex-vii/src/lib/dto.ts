@@ -9,7 +9,6 @@ type AccountIdRequest = { accountId: string };
 type IdRequest = { id: string };
 type CarrierIdRequest = { carrierId: string };
 type RfdIdRequest = { rfdId: string };
-type ActionRequest = { action: 'CANCEL' | 'DELETE' };
 
 type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
@@ -263,16 +262,33 @@ export type DraftSubmissionDeclaration =
       values: DraftSubmissionDeclarationData;
     };
 
-export type DraftSubmissionState = {
-  status:
-    | 'InProgress'
-    | 'Cancelled'
-    | 'Deleted'
-    | 'SubmittedWithEstimates'
-    | 'SubmittedWithActuals'
-    | 'UpdatedWithActuals';
-  timestamp: Date;
-};
+export type DraftSubmissionCancellationType =
+  | {
+      type: 'ChangeOfRecoveryFacilityOrLaboratory';
+    }
+  | {
+      type: 'NoLongerExportingWaste';
+    }
+  | {
+      type: 'Other';
+      reason: string;
+    };
+
+export type DraftSubmissionState =
+  | {
+      status:
+        | 'InProgress'
+        | 'Deleted'
+        | 'SubmittedWithEstimates'
+        | 'SubmittedWithActuals'
+        | 'UpdatedWithActuals';
+      timestamp: Date;
+    }
+  | {
+      status: 'Cancelled';
+      timestamp: Date;
+      cancellationType: DraftSubmissionCancellationType;
+    };
 
 export type DraftSubmission = {
   id: string;
@@ -324,9 +340,14 @@ export type CreateDraftRequest = AccountIdRequest & {
 export type CreateDraftResponse = Response<DraftSubmission>;
 export const createDraft: Method = { name: 'createDraft', httpVerb: 'POST' };
 
-export type DeleteDraftRequest = IdRequest & AccountIdRequest & ActionRequest;
+export type DeleteDraftRequest = IdRequest & AccountIdRequest;
 export type DeleteDraftResponse = Response<void>;
 export const deleteDraft: Method = { name: 'deleteDraft', httpVerb: 'POST' };
+
+export type CancelDraftByIdRequest = IdRequest &
+  AccountIdRequest & { cancellationType: DraftSubmissionCancellationType };
+export type CancelDraftByIdResponse = Response<void>;
+export const cancelDraft: Method = { name: 'cancelDraft', httpVerb: 'POST' };
 
 export type GetDraftCustomerReferenceByIdRequest = IdRequest & AccountIdRequest;
 export type GetDraftCustomerReferenceByIdResponse = Response<CustomerReference>;

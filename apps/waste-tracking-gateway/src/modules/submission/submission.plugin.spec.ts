@@ -20,6 +20,7 @@ import {
   SubmissionConfirmation,
   SubmissionDeclaration,
   SubmissionSummary,
+  SubmissionCancellationType,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -39,6 +40,13 @@ const mockBackend = {
     >(),
   getSubmission: jest.fn<(ref: SubmissionRef) => Promise<Submission>>(),
   deleteSubmission: jest.fn<(ref: SubmissionRef) => Promise<void>>(),
+  cancelSubmission:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        cancellationType: SubmissionCancellationType
+      ) => Promise<void>
+    >(),
   getSubmissions:
     jest.fn<(accountId: string) => Promise<ReadonlyArray<SubmissionSummary>>>(),
   getCustomerReference:
@@ -157,6 +165,7 @@ describe('SubmissionPlugin', () => {
     mockBackend.createSubmission.mockClear();
     mockBackend.getSubmission.mockClear();
     mockBackend.deleteSubmission.mockClear();
+    mockBackend.cancelSubmission.mockClear();
     mockBackend.getSubmissions.mockClear();
     mockBackend.getWasteDescription.mockClear();
     mockBackend.setWasteDescription.mockClear();
@@ -222,11 +231,11 @@ describe('SubmissionPlugin', () => {
     });
   });
 
-  describe('DELETE /submissions/{id}', () => {
+  describe('Cancel /submissions/{id}/cancel', () => {
     it('Responds 400 if action is not supported', async () => {
       const options = {
-        method: 'DELETE',
-        url: `/submissions/${faker.datatype.uuid()}?action=action`,
+        method: 'PUT',
+        url: `/submissions/${faker.datatype.uuid()}/cancel`,
       };
 
       const response = await app.inject(options);

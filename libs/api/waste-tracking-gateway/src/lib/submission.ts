@@ -250,16 +250,33 @@ export type SubmissionDeclaration =
       values: SubmissionDeclarationData;
     };
 
-export type SubmissionState = {
-  status:
-    | 'InProgress'
-    | 'Cancelled'
-    | 'Deleted'
-    | 'SubmittedWithEstimates'
-    | 'SubmittedWithActuals'
-    | 'UpdatedWithActuals';
-  timestamp: Date;
-};
+export type SubmissionCancellationType =
+  | {
+      type: 'ChangeOfRecoveryFacilityOrLaboratory';
+    }
+  | {
+      type: 'NoLongerExportingWaste';
+    }
+  | {
+      type: 'Other';
+      reason: string;
+    };
+
+export type SubmissionState =
+  | {
+      status:
+        | 'InProgress'
+        | 'Deleted'
+        | 'SubmittedWithEstimates'
+        | 'SubmittedWithActuals'
+        | 'UpdatedWithActuals';
+      timestamp: Date;
+    }
+  | {
+      status: 'Cancelled';
+      timestamp: Date;
+      cancellationType: SubmissionCancellationType;
+    };
 
 export type Submission = {
   id: string;
@@ -357,3 +374,5 @@ export type PutSubmissionDeclarationRequest = Omit<
 >;
 export type PutSubmissionDeclarationResponse = SubmissionDeclaration;
 export type GetSubmissionDeclarationResponse = SubmissionDeclaration;
+export type PutSubmissionCancellationRequest = SubmissionCancellationType;
+export type PutSubmissionCancellationReponse = SubmissionCancellationType;

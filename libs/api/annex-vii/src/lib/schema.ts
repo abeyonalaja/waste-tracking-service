@@ -2,6 +2,7 @@ import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 import {
   CreateDraftRequest,
   DeleteDraftRequest,
+  CancelDraftByIdRequest,
   CustomerReference,
   GetDraftByIdRequest,
   GetDraftCustomerReferenceByIdRequest,
@@ -24,6 +25,7 @@ import {
   GetDraftCollectionDetailRequest,
   GetDraftSubmissionConfirmationByIdRequest,
   GetDraftSubmissionDeclarationByIdRequest,
+  DraftSubmissionCancellationType,
 } from './dto';
 
 const errorResponseValue: SchemaObject = {
@@ -647,6 +649,24 @@ const draftSubmissionDeclaration: SchemaObject = {
   },
 };
 
+const draftSubmissionCancellationType: JTDSchemaType<DraftSubmissionCancellationType> =
+  {
+    discriminator: 'type',
+    mapping: {
+      ChangeOfRecoveryFacilityOrLaboratory: {
+        properties: {},
+      },
+      NoLongerExportingWaste: {
+        properties: {},
+      },
+      Other: {
+        properties: {
+          reason: { type: 'string' },
+        },
+      },
+    },
+  };
+
 const draftSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -658,6 +678,7 @@ const draftSubmissionState: SchemaObject = {
     Cancelled: {
       properties: {
         timestamp: { type: 'timestamp' },
+        cancellationType: draftSubmissionCancellationType,
       },
     },
     Deleted: {
@@ -776,11 +797,26 @@ export const deleteDraftRequest: JTDSchemaType<DeleteDraftRequest> = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    action: { enum: ['CANCEL', 'DELETE'] },
   },
 };
 
 export const deleteDraftResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
+  },
+};
+
+export const cancelDraftByIdRequest: JTDSchemaType<CancelDraftByIdRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    cancellationType: draftSubmissionCancellationType,
+  },
+};
+
+export const cancelDraftByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

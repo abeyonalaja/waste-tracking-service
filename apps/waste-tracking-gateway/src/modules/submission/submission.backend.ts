@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import {
   CreateDraftResponse,
   DeleteDraftResponse,
+  CancelDraftByIdResponse,
   GetDraftByIdResponse,
   GetDraftsResponse,
   GetDraftCollectionDateByIdResponse,
@@ -60,6 +61,7 @@ export type RecoveryFacilityDetail = dto.RecoveryFacilityDetail;
 export type RecoveryFacilityData = dto.RecoveryFacilityData;
 export type SubmissionConfirmation = dto.SubmissionConfirmation;
 export type SubmissionDeclaration = dto.SubmissionDeclaration;
+export type SubmissionCancellationType = dto.SubmissionCancellationType;
 
 function setSubmissionConfirmation(
   submission: Submission
@@ -123,17 +125,17 @@ export type SubmissionRef = {
   accountId: string;
 };
 
-export type ActionRef = {
-  action: 'CANCEL' | 'DELETE';
-};
-
 export interface SubmissionBackend {
   createSubmission(
     accountId: string,
     reference: CustomerReference
   ): Promise<Submission>;
   getSubmission(ref: SubmissionRef): Promise<Submission>;
-  deleteSubmission(ref: SubmissionRef, action: ActionRef): Promise<void>;
+  deleteSubmission(ref: SubmissionRef): Promise<void>;
+  cancelSubmission(
+    ref: SubmissionRef,
+    cancellationType: dto.SubmissionCancellationType
+  ): Promise<void>;
   getSubmissions(accountId: string): Promise<ReadonlyArray<SubmissionSummary>>;
   getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
   setCustomerReference(
@@ -319,20 +321,32 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve(value);
   }
 
-  deleteSubmission(
+  deleteSubmission({ id }: SubmissionRef): Promise<void> {
+    const value = this.submissions.get(id);
+    if (value === undefined) {
+      return Promise.reject(Boom.notFound());
+    }
+
+    value.submissionState = { status: 'Deleted', timestamp: new Date() };
+
+    this.submissions.set(id, value);
+    return Promise.resolve();
+  }
+
+  cancelSubmission(
     { id }: SubmissionRef,
-    { action }: ActionRef
+    cancellationType: dto.SubmissionCancellationType
   ): Promise<void> {
     const value = this.submissions.get(id);
     if (value === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    const timestamp = new Date();
-    value.submissionState =
-      action === 'CANCEL'
-        ? { status: 'Cancelled', timestamp: timestamp }
-        : { status: 'Deleted', timestamp: timestamp };
+    value.submissionState = {
+      status: 'Cancelled',
+      timestamp: new Date(),
+      cancellationType: cancellationType,
+    };
 
     this.submissions.set(id, value);
     return Promise.resolve();
@@ -1351,16 +1365,35 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
     return response.value;
   }
 
-  async deleteSubmission(
-    { id, accountId }: SubmissionRef,
-    { action }: ActionRef
-  ): Promise<void> {
+  async deleteSubmission({ id, accountId }: SubmissionRef): Promise<void> {
     let response: DeleteDraftResponse;
     try {
       response = await this.client.deleteDraft({
         id,
         accountId,
-        action,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+  }
+
+  async cancelSubmission(
+    { id, accountId }: SubmissionRef,
+    cancellationType: dto.SubmissionCancellationType
+  ): Promise<void> {
+    let response: CancelDraftByIdResponse;
+    try {
+      response = await this.client.cancelDraft({
+        id,
+        accountId,
+        cancellationType,
       });
     } catch (err) {
       this.logger.error(err);

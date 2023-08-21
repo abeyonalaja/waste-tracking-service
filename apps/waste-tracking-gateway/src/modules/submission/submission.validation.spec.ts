@@ -14,6 +14,7 @@ import {
   validateSetRecoveryFacilityDetailRequest,
   validatePutSubmissionConfirmationRequest,
   validatePutSubmissionDeclarationRequest,
+  validatePutSubmissionCancellationRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -1011,6 +1012,37 @@ describe('validatePutSubmissionDeclarationRequest', () => {
     expect(
       validate({
         status: 'Complete',
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutSubmissionCancellationRequest', () => {
+  const validate = validatePutSubmissionCancellationRequest;
+
+  it('Rejects an invalid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        type: 'Test',
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts a valid request', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        type: 'ChangeOfRecoveryFacilityOrLaboratory',
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        type: 'Other',
+        reason: 'Reason',
       })
     ).toBe(true);
   });

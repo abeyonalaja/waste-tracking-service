@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import Ajv from 'ajv/dist/jtd';
 import {
   DeleteDraftRequest,
+  CancelDraftByIdRequest,
   GetDraftByIdResponse,
   GetDraftsResponse,
   SetDraftCollectionDateByIdRequest,
@@ -22,6 +23,7 @@ import {
 } from './dto';
 import {
   deleteDraftRequest,
+  cancelDraftByIdRequest,
   getDraftByIdResponse,
   getDraftsResponse,
   setDraftCustomerReferenceByIdResponse,
@@ -50,7 +52,6 @@ describe('deleteDraftRequest', () => {
     let value: DeleteDraftRequest = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
-      action: 'CANCEL',
     };
 
     expect(validate(value)).toBe(true);
@@ -58,7 +59,39 @@ describe('deleteDraftRequest', () => {
     value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
-      action: 'DELETE',
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('cancelDraftRequest', () => {
+  const validate = ajv.compile<CancelDraftByIdRequest>(cancelDraftByIdRequest);
+
+  it('is compatible with dto values', () => {
+    let value: CancelDraftByIdRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      cancellationType: { type: 'ChangeOfRecoveryFacilityOrLaboratory' },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      cancellationType: { type: 'ChangeOfRecoveryFacilityOrLaboratory' },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      cancellationType: {
+        type: 'Other',
+        reason: 'I just wanted to calcel it!',
+      },
     };
 
     expect(validate(value)).toBe(true);

@@ -15,6 +15,7 @@ import {
   SetRecoveryFacilityDetailRequest,
   PutSubmissionConfirmationRequest,
   PutSubmissionDeclarationRequest,
+  PutSubmissionCancellationRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -624,6 +625,24 @@ export const validatePutSubmissionDeclarationRequest =
       },
       Complete: {
         properties: {},
+      },
+    },
+  });
+
+export const validatePutSubmissionCancellationRequest =
+  ajv.compile<PutSubmissionCancellationRequest>({
+    discriminator: 'type',
+    mapping: {
+      ChangeOfRecoveryFacilityOrLaboratory: {
+        properties: {},
+      },
+      NoLongerExportingWaste: {
+        properties: {},
+      },
+      Other: {
+        properties: {
+          reason: { type: 'string' },
+        },
       },
     },
   });

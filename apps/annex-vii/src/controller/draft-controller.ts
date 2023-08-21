@@ -215,14 +215,10 @@ export default class DraftController {
     };
 
   deleteDraft: Handler<api.DeleteDraftRequest, api.DeleteDraftResponse> =
-    async ({ id, accountId, action }) => {
+    async ({ id, accountId }) => {
       try {
         const draft = await this.repository.getDraft(id, accountId);
-        const timestamp = new Date();
-        draft.submissionState =
-          action === 'CANCEL'
-            ? { status: 'Cancelled', timestamp: timestamp }
-            : { status: 'Deleted', timestamp: timestamp };
+        draft.submissionState = { status: 'Deleted', timestamp: new Date() };
         await this.repository.saveDraft({ ...draft }, accountId);
         return success(undefined);
       } catch (err) {
@@ -234,6 +230,29 @@ export default class DraftController {
         return fromBoom(Boom.internal());
       }
     };
+
+  cancelDraft: Handler<
+    api.CancelDraftByIdRequest,
+    api.CancelDraftByIdResponse
+  > = async ({ id, accountId, cancellationType }) => {
+    try {
+      const draft = await this.repository.getDraft(id, accountId);
+      draft.submissionState = {
+        status: 'Cancelled',
+        timestamp: new Date(),
+        cancellationType: cancellationType,
+      };
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 
   getDraftCustomerReferenceById: Handler<
     api.GetDraftCustomerReferenceByIdRequest,

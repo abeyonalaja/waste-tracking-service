@@ -2949,4 +2949,83 @@ describe(DraftController, () => {
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
     });
   });
+
+  describe('cancelDraftSubmission', () => {
+    it('successfully cancels a draft submission', async () => {
+      const id = faker.datatype.uuid();
+      const accountId = faker.datatype.uuid();
+
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
+      });
+
+      expect(
+        (await mockRepository.getDraft(id, accountId)).submissionState.status
+      ).toBe('InProgress');
+
+      subject.cancelDraft({
+        id,
+        accountId,
+        cancellationType: { type: 'ChangeOfRecoveryFacilityOrLaboratory' },
+      });
+
+      expect(
+        (await mockRepository.getDraft(id, accountId)).submissionState.status
+      ).toBe('Cancelled');
+
+      mockRepository.getDraft.mockResolvedValue({
+        id,
+        reference: null,
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'CannotStart' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
+      });
+
+      subject.cancelDraft({
+        id,
+        accountId,
+        cancellationType: { type: 'Other', reason: 'Not sure !!!' },
+      });
+
+      expect(
+        (await mockRepository.getDraft(id, accountId)).submissionState.status
+      ).toBe('Cancelled');
+    });
+  });
 });

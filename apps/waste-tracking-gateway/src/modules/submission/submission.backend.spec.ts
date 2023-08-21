@@ -2031,177 +2031,6 @@ describe(InMemorySubmissionBackend, () => {
     expect(result?.submissionState.status).toBe('UpdatedWithActuals');
   });
 
-  it('sets submission state status to Cancelled when submission has been removed', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
-    const date = add(new Date(), { days: 20 });
-    const value = {
-      id: id,
-      reference: null,
-      wasteDescription: {
-        status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
-        nationalCode: {
-          provided: 'Yes',
-          value: 'NAT',
-        },
-        description: 'Waste Description',
-      },
-      wasteQuantity: {
-        status: 'Complete',
-        value: {
-          type: 'ActualData',
-          actualData: {
-            quantityType: 'Weight',
-            value: faker.datatype.number(),
-          },
-          estimateData: {},
-        },
-      },
-      exporterDetail: {
-        status: 'Complete',
-        exporterAddress: {
-          addressLine1: '1 Sth Str',
-          country: 'England',
-          postcode: 'W140QA',
-          townCity: 'London',
-        },
-        exporterContactDetails: {
-          organisationName: 'Org Name',
-          fullName: 'Name',
-          emailAddress: 'name@name.com',
-          phoneNumber: '07888888888',
-        },
-      },
-      importerDetail: {
-        status: 'Complete',
-        importerContactDetails: {
-          emailAddress: 'thomas@fleurada.de',
-          fullName: 'Thomas Albers',
-          phoneNumber: '07733222555',
-        },
-        importerAddressDetails: {
-          address: 'Middel Broekweg 41A, \n2675 KD Honselersdijk',
-          country: 'Holland',
-          organisationName: 'Fleurada Holland BV',
-        },
-      },
-      collectionDate: {
-        status: 'Complete',
-        value: {
-          type: 'ActualDate',
-          actualDate: {
-            year: date.getFullYear().toString(),
-            month: (date.getMonth() + 1).toString().padStart(2, '0'),
-            day: date.getDate().toString().padStart(2, '0'),
-          },
-          estimateDate: {},
-        },
-      },
-      carriers: {
-        status: 'Complete',
-        transport: true,
-        values: [
-          {
-            transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
-            },
-            addressDetails: {
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
-              organisationName: faker.datatype.string(),
-            },
-            contactDetails: {
-              emailAddress: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
-              fullName: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-            },
-            id: faker.datatype.uuid(),
-          },
-        ],
-      },
-      collectionDetail: {
-        status: 'Complete',
-        address: {
-          addressLine1: '123 Main St',
-          townCity: 'Anytown',
-          postcode: '12345',
-          country: 'UK',
-        },
-        contactDetails: {
-          organisationName: 'Acme Inc.',
-          fullName: 'John Doe',
-          emailAddress: 'johndoe@acme.com',
-          phoneNumber: '555-1234',
-          faxNumber: '555-5678',
-        },
-      },
-      ukExitLocation: {
-        status: 'Complete',
-        exitLocation: {
-          provided: 'Yes',
-          value: 'Dover',
-        },
-      },
-      transitCountries: {
-        status: 'Complete',
-        values: ['France (FR)', 'Belgium (BE)'],
-      },
-      recoveryFacilityDetail: {
-        status: 'Complete',
-        values: [
-          {
-            addressDetails: {
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
-              name: faker.datatype.string(),
-            },
-            contactDetails: {
-              emailAddress: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
-              fullName: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-            },
-            recoveryFacilityType: {
-              type: 'RecoveryFacility',
-              recoveryCode: 'R1',
-            },
-            id: faker.datatype.uuid(),
-          },
-        ],
-      },
-      submissionConfirmation: {
-        status: 'Complete',
-        confirmation: true,
-      },
-      submissionDeclaration: { status: 'NotStarted' },
-      submissionState: {
-        status: 'InProgress',
-        timestamp: new Date(),
-      },
-    } as Submission;
-
-    subject.submissions.set(id, value);
-
-    await subject.setSubmissionDeclaration(
-      { id, accountId },
-      {
-        status: 'Complete',
-      }
-    );
-
-    const result = await subject.getSubmission({ id, accountId });
-    expect(result?.submissionState.status).toBe('SubmittedWithActuals');
-
-    await subject.deleteSubmission({ id, accountId }, { action: 'CANCEL' });
-    expect(subject.getSubmission({ id, accountId })).rejects.toHaveProperty(
-      'isBoom',
-      true
-    );
-  });
-
   it('sets submission state status to Deleted when submission has been removed', async () => {
     const { id } = await subject.createSubmission(accountId, null);
     const date = add(new Date(), { days: 20 });
@@ -2366,7 +2195,182 @@ describe(InMemorySubmissionBackend, () => {
     const result = await subject.getSubmission({ id, accountId });
     expect(result?.submissionState.status).toBe('SubmittedWithActuals');
 
-    await subject.deleteSubmission({ id, accountId }, { action: 'DELETE' });
+    await subject.deleteSubmission({ id, accountId });
+    expect(subject.getSubmission({ id, accountId })).rejects.toHaveProperty(
+      'isBoom',
+      true
+    );
+  });
+
+  it('sets submission state status to Cancelled when submission has been removed', async () => {
+    const { id } = await subject.createSubmission(accountId, null);
+    const date = add(new Date(), { days: 20 });
+    const value = {
+      id: id,
+      reference: null,
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        ewcCodes: ['EWC1', 'EWC2'],
+        nationalCode: {
+          provided: 'Yes',
+          value: 'NAT',
+        },
+        description: 'Waste Description',
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.number(),
+          },
+          estimateData: {},
+        },
+      },
+      exporterDetail: {
+        status: 'Complete',
+        exporterAddress: {
+          addressLine1: '1 Sth Str',
+          country: 'England',
+          postcode: 'W140QA',
+          townCity: 'London',
+        },
+        exporterContactDetails: {
+          organisationName: 'Org Name',
+          fullName: 'Name',
+          emailAddress: 'name@name.com',
+          phoneNumber: '07888888888',
+        },
+      },
+      importerDetail: {
+        status: 'Complete',
+        importerContactDetails: {
+          emailAddress: 'thomas@fleurada.de',
+          fullName: 'Thomas Albers',
+          phoneNumber: '07733222555',
+        },
+        importerAddressDetails: {
+          address: 'Middel Broekweg 41A, \n2675 KD Honselersdijk',
+          country: 'Holland',
+          organisationName: 'Fleurada Holland BV',
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          actualDate: {
+            year: date.getFullYear().toString(),
+            month: (date.getMonth() + 1).toString().padStart(2, '0'),
+            day: date.getDate().toString().padStart(2, '0'),
+          },
+          estimateDate: {},
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              imo: faker.datatype.string(),
+              type: 'BulkVessel',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: '123 Main St',
+          townCity: 'Anytown',
+          postcode: '12345',
+          country: 'UK',
+        },
+        contactDetails: {
+          organisationName: 'Acme Inc.',
+          fullName: 'John Doe',
+          emailAddress: 'johndoe@acme.com',
+          phoneNumber: '555-1234',
+          faxNumber: '555-5678',
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: 'Dover',
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['France (FR)', 'Belgium (BE)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: 'R1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'Complete',
+        confirmation: true,
+      },
+      submissionDeclaration: { status: 'NotStarted' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    subject.submissions.set(id, value);
+
+    await subject.setSubmissionDeclaration(
+      { id, accountId },
+      {
+        status: 'Complete',
+      }
+    );
+
+    const result = await subject.getSubmission({ id, accountId });
+    expect(result?.submissionState.status).toBe('SubmittedWithActuals');
+
+    await subject.cancelSubmission(
+      { id, accountId },
+      { type: 'NoLongerExportingWaste' }
+    );
+
     expect(subject.getSubmission({ id, accountId })).rejects.toHaveProperty(
       'isBoom',
       true

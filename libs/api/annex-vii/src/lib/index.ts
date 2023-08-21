@@ -1,6 +1,7 @@
 export {
   createDraft,
   deleteDraft,
+  cancelDraft,
   getDraftById,
   getDraftCustomerReferenceById,
   getDraftExporterDetailById,
@@ -42,6 +43,8 @@ export type {
   CreateDraftResponse,
   DeleteDraftRequest,
   DeleteDraftResponse,
+  CancelDraftByIdRequest,
+  CancelDraftByIdResponse,
   DraftSubmission,
   DraftSubmissionSummary,
   DraftWasteQuantity,

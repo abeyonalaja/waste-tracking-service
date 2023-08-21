@@ -15,6 +15,7 @@ import {
   schema,
   SetDraftSubmissionConfirmationByIdRequest,
   SetDraftSubmissionDeclarationByIdRequest,
+  CancelDraftByIdRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -91,3 +92,6 @@ export const setDraftSubmissionDeclarationByIdRequest =
   ajv.compile<SetDraftSubmissionDeclarationByIdRequest>(
     schema.setDraftSubmissionDeclarationByIdRequest
   );
+
+export const setDraftSubmissionCancellationByIdRequest =
+  ajv.compile<CancelDraftByIdRequest>(schema.cancelDraftByIdRequest);

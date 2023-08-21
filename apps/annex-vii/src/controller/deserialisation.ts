@@ -1,6 +1,7 @@
 import {
   CreateDraftRequest,
   DeleteDraftRequest,
+  CancelDraftByIdRequest,
   GetDraftByIdRequest,
   GetDraftCustomerReferenceByIdRequest,
   GetDraftExporterDetailByIdRequest,
@@ -40,6 +41,10 @@ export const createDraftRequest = ajv.compileParser<CreateDraftRequest>(
 
 export const deleteDraftRequest = ajv.compileParser<DeleteDraftRequest>(
   schema.deleteDraftRequest
+);
+
+export const cancelDraftRequest = ajv.compileParser<CancelDraftByIdRequest>(
+  schema.cancelDraftByIdRequest
 );
 
 export const getDraftCustomerReferenceByIdRequest =

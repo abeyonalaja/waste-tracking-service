@@ -103,6 +103,23 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
+  api.cancelDraft.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.cancelDraftRequest(body);
+    if (!validate.setDraftSubmissionCancellationByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.cancelDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
   api.getDraftCustomerReferenceById.name,
   async ({ body }) => {
     if (body === undefined) {

@@ -17,6 +17,7 @@ import {
   validateCreateRecoveryFacilityDetailRequest,
   validatePutSubmissionConfirmationRequest,
   validatePutSubmissionDeclarationRequest,
+  validatePutSubmissionCancellationRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -108,31 +109,40 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'DELETE',
       path: '/{id}',
-      handler: async function ({ params, query }, h) {
-        let action = query['action'] as string | undefined;
-        if (!action) {
-          return Boom.badRequest("Missing query parameter 'action'");
-        }
-
-        action = action.toUpperCase();
-        if (action !== 'CANCEL' && action !== 'DELETE') {
-          return Boom.badRequest(
-            "Incorrect value for query parameter 'action'"
-          );
-        }
-
+      handler: async function ({ params }, h) {
         try {
           return h
             .response(
-              (await backend.deleteSubmission(
-                {
-                  id: params.id,
-                  accountId,
-                },
-                { action }
-              )) as undefined
+              (await backend.deleteSubmission({
+                id: params.id,
+                accountId,
+              })) as undefined
             )
             .code(204);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/{id}/cancel',
+      handler: async function ({ params, payload }) {
+        if (!validatePutSubmissionCancellationRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const request = payload as dto.PutSubmissionCancellationRequest;
+
+        try {
+          await backend.cancelSubmission({ id: params.id, accountId }, request);
+          return request as dto.PutSubmissionCancellationReponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
