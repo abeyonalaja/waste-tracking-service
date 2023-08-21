@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import { format } from 'date-fns';
-import { UnitDisplay } from 'components';
+import { UnitDisplay, BreakableString } from 'components';
 
 type State = {
   data: Submission;
@@ -373,6 +373,11 @@ const Download = () => {
                         downloadReport.data.exporterDetail.exporterAddress
                           .postcode
                       }
+                      ,{' '}
+                      {
+                        downloadReport.data.exporterDetail.exporterAddress
+                          .country
+                      }
                     </Value>
                   </DataRow>
                   <DataRow>
@@ -438,6 +443,11 @@ const Download = () => {
                       {
                         downloadReport.data.importerDetail
                           .importerAddressDetails.address
+                      }
+                      ,{' '}
+                      {
+                        downloadReport.data.importerDetail
+                          .importerAddressDetails.country
                       }
                     </Value>
                   </DataRow>
@@ -586,6 +596,11 @@ const Download = () => {
                         downloadReport.data.carriers.values[0].addressDetails
                           .address
                       }
+                      ,{' '}
+                      {
+                        downloadReport.data.carriers.values[0].addressDetails
+                          .country
+                      }
                     </Value>
                   </DataRow>
                   <DataRow>
@@ -662,9 +677,19 @@ const Download = () => {
                   <DataRow>
                     <Label>Address</Label>
                     <Value>
-                      {downloadReport.data.carriers.values.length > 1 &&
-                        downloadReport.data.carriers.values[1].addressDetails
-                          .address}
+                      {downloadReport.data.carriers.values.length > 1 && (
+                        <>
+                          {
+                            downloadReport.data.carriers.values[1]
+                              .addressDetails.address
+                          }
+                          ,{' '}
+                          {
+                            downloadReport.data.carriers.values[1]
+                              .addressDetails.country
+                          }
+                        </>
+                      )}
                     </Value>
                   </DataRow>
                   <DataRow>
@@ -736,9 +761,19 @@ const Download = () => {
                   <DataRow>
                     <Label>Address</Label>
                     <Value>
-                      {downloadReport.data.carriers.values.length > 2 &&
-                        downloadReport.data.carriers.values[2].addressDetails
-                          .address}
+                      {downloadReport.data.carriers.values.length > 2 && (
+                        <>
+                          {
+                            downloadReport.data.carriers.values[2]
+                              .addressDetails.address
+                          }
+                          ,{' '}
+                          {
+                            downloadReport.data.carriers.values[2]
+                              .addressDetails.country
+                          }
+                        </>
+                      )}
                     </Value>
                   </DataRow>
                   <DataRow>
@@ -961,9 +996,9 @@ const Download = () => {
                     <Value>
                       {downloadReport.data.wasteDescription.status ===
                         'Complete' && (
-                        <span>
+                        <BreakableString>
                           {downloadReport.data.wasteDescription.description}
-                        </span>
+                        </BreakableString>
                       )}
                     </Value>
                   </DataRow>
@@ -985,150 +1020,19 @@ const Download = () => {
                 </SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
                   'Complete' && (
-                  <>
-                    <DataRow>
-                      <Label>Name</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' ? (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.name
-                            }
-                          </span>
-                        ) : (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[1].addressDetails.name
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Address</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' ? (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.address
-                            }
-                            ,&nbsp;
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.country
-                            }
-                          </span>
-                        ) : (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[1].addressDetails.address
-                            }
-                            ,&nbsp;
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[1].addressDetails.country
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Contact person</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' ? (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.fullName
-                            }
-                          </span>
-                        ) : (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[1].contactDetails.fullName
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <GridRow>
-                        <div>
-                          <Label>Tel.</Label>
-                          <Value>
-                            {downloadReport.data.recoveryFacilityDetail
-                              .values[0].recoveryFacilityType.type !==
-                            'InterimSite' ? (
-                              <span>
-                                {
-                                  downloadReport.data.recoveryFacilityDetail
-                                    .values[0].contactDetails.phoneNumber
-                                }
-                              </span>
-                            ) : (
-                              <span>
-                                {
-                                  downloadReport.data.recoveryFacilityDetail
-                                    .values[1].contactDetails.phoneNumber
-                                }
-                              </span>
-                            )}
-                          </Value>
-                        </div>
-                        <div>
-                          <Label>Fax</Label>
-                          <Value>
-                            {downloadReport.data.recoveryFacilityDetail
-                              .values[0].recoveryFacilityType.type !==
-                            'InterimSite' ? (
-                              <span>
-                                {
-                                  downloadReport.data.recoveryFacilityDetail
-                                    .values[0].contactDetails.faxNumber
-                                }
-                              </span>
-                            ) : (
-                              <span>
-                                {
-                                  downloadReport.data.recoveryFacilityDetail
-                                    .values[1].contactDetails.faxNumber
-                                }
-                              </span>
-                            )}
-                          </Value>
-                        </div>
-                      </GridRow>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Email</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' ? (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.emailAddress
-                            }
-                          </span>
-                        ) : (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[1].contactDetails.emailAddress
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                  </>
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type={
+                      downloadReport.data.wasteDescription.status ===
+                        'Complete' &&
+                      downloadReport.data.wasteDescription.wasteCode.type ===
+                        'NotApplicable'
+                        ? 'Laboratory'
+                        : 'RecoveryFacility'
+                    }
+                    index={0}
+                    inlineFax={true}
+                  />
                 )}
               </Box>
 
@@ -1143,12 +1047,7 @@ const Download = () => {
                       'NotApplicable' ? (
                         <>
                           <Label>Waste code</Label>
-                          <Value>
-                            {
-                              downloadReport.data.wasteDescription.wasteCode
-                                .type
-                            }
-                          </Value>
+                          <Value>Not applicable</Value>
                         </>
                       ) : (
                         <>
@@ -1386,7 +1285,7 @@ const Download = () => {
                 </li>
                 <li>
                   The BEU codes listed in Annex IIIB to Regulation (EC) No
-                  1013/2006 are to be used
+                  1013/2006 are to be used.
                 </li>
               </ol>
             </Meta>
@@ -1394,7 +1293,7 @@ const Download = () => {
             <Row>
               <Box id="pdf-box-5c-4th-carr">
                 <SectionTitle id="pdf-box-5c-4th-carr-title">
-                  5.(c) 4<sup>th</sup> carrier{' '}
+                  5.(d) 4<sup>th</sup> carrier{' '}
                 </SectionTitle>
                 {downloadReport.data.carriers.status === 'Complete' && (
                   <>
@@ -1409,9 +1308,19 @@ const Download = () => {
                     <DataRow>
                       <Label>Address</Label>
                       <Value>
-                        {downloadReport.data.carriers.values.length > 3 &&
-                          downloadReport.data.carriers.values[3].addressDetails
-                            .address}
+                        {downloadReport.data.carriers.values.length > 3 && (
+                          <>
+                            {
+                              downloadReport.data.carriers.values[3]
+                                .addressDetails.address
+                            }
+                            ,{' '}
+                            {
+                              downloadReport.data.carriers.values[3]
+                                .addressDetails.country
+                            }
+                          </>
+                        )}
                       </Value>
                     </DataRow>
                     <DataRow>
@@ -1472,7 +1381,7 @@ const Download = () => {
               </Box>
               <Box id="pdf-box-5c-5th-carr">
                 <SectionTitle id="pdf-box-5c-5th-carr-title">
-                  5.(c) 5<sup>th</sup> carrier{' '}
+                  5.(e) 5<sup>th</sup> carrier{' '}
                 </SectionTitle>
                 {downloadReport.data.carriers.status === 'Complete' && (
                   <>
@@ -1487,9 +1396,19 @@ const Download = () => {
                     <DataRow>
                       <Label>Address</Label>
                       <Value>
-                        {downloadReport.data.carriers.values.length > 4 &&
-                          downloadReport.data.carriers.values[4].addressDetails
-                            .address}
+                        {downloadReport.data.carriers.values.length > 4 && (
+                          <>
+                            {
+                              downloadReport.data.carriers.values[4]
+                                .addressDetails.address
+                            }
+                            ,{' '}
+                            {
+                              downloadReport.data.carriers.values[4]
+                                .addressDetails.country
+                            }
+                          </>
+                        )}
                       </Value>
                     </DataRow>
                     <DataRow>
@@ -1878,277 +1797,29 @@ const Download = () => {
                 </SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
                   'Complete' && (
-                  <>
-                    <DataRow>
-                      <Label>Name</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].addressDetails.name
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].addressDetails.name
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Address</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].addressDetails.address
-                              }
-                              ,&nbsp;
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].addressDetails.country
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].addressDetails.address
-                              }
-                              ,&nbsp;
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].addressDetails.country
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Contact person</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].contactDetails.fullName
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].contactDetails.fullName
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Tel.</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].contactDetails.phoneNumber
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].contactDetails.phoneNumber
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Fax</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].contactDetails.faxNumber
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].contactDetails.faxNumber
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Email</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 3 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[2].contactDetails.emailAddress
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type !== 'InterimSite' &&
-                          downloadReport.data.recoveryFacilityDetail.values
-                            .length === 2 && (
-                            <span>
-                              {
-                                downloadReport.data.recoveryFacilityDetail
-                                  .values[1].contactDetails.emailAddress
-                              }
-                            </span>
-                          )}
-                      </Value>
-                    </DataRow>
-                  </>
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type={
+                      downloadReport.data.wasteDescription.status ===
+                        'Complete' &&
+                      downloadReport.data.wasteDescription.wasteCode.type ===
+                        'NotApplicable'
+                        ? 'Laboratory'
+                        : 'RecoveryFacility'
+                    }
+                    index={1}
+                  />
                 )}
               </Box>
               <Box id="pdf-box-7-int">
                 <SectionTitle>Interim site:</SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
                   'Complete' && (
-                  <>
-                    <DataRow>
-                      <Label>Name</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.name
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Address</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.address
-                            }
-                            ,&nbsp;
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].addressDetails.country
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Contact person</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.fullName
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Tel</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.phoneNumber
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Fax</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.faxNumber
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                    <DataRow>
-                      <Label>Email</Label>
-                      <Value>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            {
-                              downloadReport.data.recoveryFacilityDetail
-                                .values[0].contactDetails.emailAddress
-                            }
-                          </span>
-                        )}
-                      </Value>
-                    </DataRow>
-                  </>
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type="InterimSite"
+                    index={0}
+                  />
                 )}
               </Box>
             </Row>
@@ -2221,3 +1892,68 @@ Download.getLayout = function getLayout(page) {
 };
 
 export default Download;
+
+const SiteDetails = ({ data, type, index, inlineFax = false }) => {
+  const facilities = data.values.filter(
+    (f) => f.recoveryFacilityType.type === type
+  );
+  let facility;
+
+  if (index === 0 && facilities.length > 0) {
+    facility = facilities[0];
+  }
+
+  if (index === 1 && facilities.length > 1) {
+    facility = facilities[1];
+  }
+
+  return (
+    <>
+      <DataRow>
+        <Label>Name</Label>
+        <Value>{facility?.addressDetails.name}</Value>
+      </DataRow>
+      <DataRow>
+        <Label>Address</Label>
+        <Value>
+          {facility?.addressDetails.address}, {facility?.addressDetails.country}
+        </Value>
+      </DataRow>
+      <DataRow>
+        <Label>Contact person</Label>
+        <Value>{facility?.contactDetails.fullName}</Value>
+      </DataRow>
+
+      {inlineFax ? (
+        <DataRow>
+          <GridRow>
+            <div>
+              <Label>Tel.</Label>
+              <Value>{facility?.contactDetails.phoneNumber}</Value>
+            </div>
+            <div>
+              <Label>Fax</Label>
+              <Value>{facility?.contactDetails.faxNumber}</Value>
+            </div>
+          </GridRow>
+        </DataRow>
+      ) : (
+        <>
+          <DataRow>
+            <Label>Tel.</Label>
+            <Value>{facility?.contactDetails.phoneNumber}</Value>
+          </DataRow>
+          <DataRow>
+            <Label>Fax</Label>
+            <Value>{facility?.contactDetails.faxNumber}</Value>
+          </DataRow>
+        </>
+      )}
+
+      <DataRow>
+        <Label>Email</Label>
+        <Value>{facility?.contactDetails.emailAddress}</Value>
+      </DataRow>
+    </>
+  );
+};
