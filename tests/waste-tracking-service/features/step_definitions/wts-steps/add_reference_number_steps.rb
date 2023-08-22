@@ -1,16 +1,17 @@
 When(/^I navigate to the add reference page$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.submit_a_single_waste_export
+  click_link('dashboard_link')
+  ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberPage.new.check_page_displayed
 end
 
 And(/^I see the breadcrumb Waste tracking service, Green list waste overview, Your reference displayed$/) do
-  expect(page).to have_link('Green list waste overview')
-  expect(page).to have_link('Waste tracking service')
+  expect(page).to have_link('Export waste from the UK')
+  expect(page).to have_link('Move, export or import waste')
 end
 
-When(/^I click Green list waste overview from the breadcrumb$/) do
-  click_link('Green list waste overview')
+When(/^I click Export waste from the UK from the breadcrumb$/) do
+  AddReferenceNumberPage.new.export_waste_from_the_uk
+
 end
 
 And(/^I have selected Yes and entered my reference$/) do

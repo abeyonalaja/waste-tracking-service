@@ -1,6 +1,6 @@
 When(/^I navigate to Enter exporter address manual page$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.submit_a_single_waste_export
+  click_link('dashboard_link')
+  ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   click_link('Exporter details')
   ExporterAddressPage.new.check_page_displayed

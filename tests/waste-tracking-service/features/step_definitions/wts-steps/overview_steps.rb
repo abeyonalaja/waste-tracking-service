@@ -6,8 +6,7 @@ Given(/^I login to waste tracking portal$/) do
 end
 
 And(/^I navigate to the overview page$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.check_page_displayed
+  click_link('dashboard_link')
 end
 
 Then(/^I can see all the sections$/) do
@@ -27,10 +26,7 @@ And(/^I can see links for each sections$/) do
   expect(page).to have_link('Manage your templates')
 end
 
-Then(/^Green list overview page is displayed$/) do
-  OverviewPage.new.check_page_displayed
+Then(/^Export waste from UK page is displayed$/) do
+  ExportWasteFromUkPage.new.check_page_displayed
 end
 
-Then(/^I should green list waste overview page$/) do
-  OverviewPage.new.check_page_displayed
-end

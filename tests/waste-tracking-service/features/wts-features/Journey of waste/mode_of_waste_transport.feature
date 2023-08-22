@@ -2,7 +2,7 @@ Feature: AS A waste producer/broker
   I NEED to be able to add a mode transport for my waste
   SO THAT I describe how the waste will be moved to end destination
 
-@translation
+  @translation
   Scenario: User navigates to mode of transport page
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference

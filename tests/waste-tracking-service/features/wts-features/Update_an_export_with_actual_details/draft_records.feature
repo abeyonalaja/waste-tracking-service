@@ -5,8 +5,8 @@ Feature: AS A Waste practitioner
   @translation
   Scenario: User can navigate to empty incomplete Annex VII page
     Given I login to waste tracking portal
-    And I click the "Green list waste overview" link
-    When I click the "Continue a draft export" link
+    And I navigate to the overview page
+    When I click the "Manage incomplete Annex VII records" link
     Then I should see empty draft Annex VII page
 
   @translation

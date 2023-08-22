@@ -8,8 +8,8 @@ Feature: AS A Waste Producer/Broker
     Given I login to waste tracking portal
     When I navigate to the add reference page
     And I see the breadcrumb Waste tracking service, Green list waste overview, Your reference displayed
-    When I click Green list waste overview from the breadcrumb
-    Then Green list overview page is displayed
+    When I click Export waste from the UK from the breadcrumb
+    Then Export waste from UK page is displayed
 
   Scenario: Saving reference in the front end
     Given I login to waste tracking portal

@@ -38,7 +38,7 @@ Feature: AS A Waste Producer/Broker
     Given I login to waste tracking portal
     When I navigate to the submit an export with reference
     And I click the link Return to this draft later
-    Then I should green list waste overview page
+    Then Export waste from UK page is displayed
 
 
 

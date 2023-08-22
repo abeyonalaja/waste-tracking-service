@@ -1,6 +1,6 @@
 Given(/^I navigate to National Code page$/) do
-  click_link('Green list waste overview')
-  OverviewPage.new.submit_a_single_waste_export
+  click_link('dashboard_link')
+  ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete

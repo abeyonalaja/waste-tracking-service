@@ -86,6 +86,7 @@ And(/^I complete Waste codes and description task with "([^"]*)" has waste code$
   NationalCodeController.complete
   DescribeTheWasteController.complete
   sleep 1
+  QuantityOfSmallWastePage.new.check_page_displayed
   QuantityOfWastePage.new.back
   DescribeTheWastePage.new.save_and_return
 end

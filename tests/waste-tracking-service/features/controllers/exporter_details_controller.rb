@@ -29,7 +29,7 @@ module ExporterDetailsController
     exporter_details_page.enter_exporter_full_name exporter_name
     exporter_details_page.enter_exporter_email email
     exporter_details_page.exporter_phone_num exporter_phone
-
+    sleep 1
     TestStatus.set_test_status(:exporter_org_name, org_name)
     TestStatus.set_test_status(:exporter_name, exporter_name)
     TestStatus.set_test_status(:exporter_email, email)

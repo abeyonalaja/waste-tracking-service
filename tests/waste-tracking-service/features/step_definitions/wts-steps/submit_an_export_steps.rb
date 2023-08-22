@@ -54,6 +54,7 @@ And(/^I complete Waste codes and description task$/) do
   NationalCodeController.complete
   DescribeTheWasteController.complete
   sleep 1
+  QuantityOfWastePage.new.check_page_displayed
   QuantityOfWastePage.new.back
   DescribeTheWastePage.new.save_and_return
 end
