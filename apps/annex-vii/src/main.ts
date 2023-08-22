@@ -109,7 +109,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.cancelDraftRequest(body);
+    const request = JSON.parse(body) as api.CancelDraftByIdRequest;
     if (!validate.setDraftSubmissionCancellationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }

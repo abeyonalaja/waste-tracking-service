@@ -15,7 +15,21 @@ export default class DaprDraftRepository implements DraftRepository {
 
   async getDrafts(accountId: string): Promise<DraftSubmissionSummary[]> {
     const response = await this.daprClient.state.query(this.stateStoreName, {
-      filter: { EQ: { accountId } },
+      filter: {
+        AND: [
+          { EQ: { accountId } },
+          {
+            IN: {
+              'submissionState.status': [
+                'InProgress',
+                'SubmittedWithEstimates',
+                'SubmittedWithActuals',
+                'UpdatedWithActuals',
+              ],
+            },
+          },
+        ],
+      },
       sort: [],
       page: { limit: 100 },
     });
@@ -70,6 +84,12 @@ export default class DaprDraftRepository implements DraftRepository {
     }
 
     const data = response[0].data as DraftSubmissionData;
+    if (
+      data.submissionState.status === 'Cancelled' ||
+      data.submissionState.status === 'Deleted'
+    ) {
+      throw Boom.notFound();
+    }
     return {
       id: data.id,
       reference: data.reference,

@@ -53,6 +53,7 @@ describe('getDraft', () => {
   it('retrieves a value with the associated id', async () => {
     const id = faker.datatype.uuid();
     const accountId = faker.datatype.uuid();
+    const timestamp = new Date();
     const mockResponse = [
       {
         key: id,
@@ -66,6 +67,12 @@ describe('getDraft', () => {
           exporterDetail: { status: 'NotStarted' },
           importerDetail: { status: 'NotStarted' },
           recoveryFacilityDetail: { status: 'CannotStart' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'InProgress',
+            timestamp: timestamp,
+          },
           transitCountries: { status: 'NotStarted' },
           ukExitLocation: { status: 'NotStarted' },
           wasteDescription: { status: 'NotStarted' },
@@ -86,6 +93,12 @@ describe('getDraft', () => {
       exporterDetail: { status: 'NotStarted' },
       importerDetail: { status: 'NotStarted' },
       recoveryFacilityDetail: { status: 'CannotStart' },
+      submissionConfirmation: { status: 'CannotStart' },
+      submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: timestamp,
+      },
       transitCountries: { status: 'NotStarted' },
       ukExitLocation: { status: 'NotStarted' },
       wasteDescription: { status: 'NotStarted' },
@@ -104,6 +117,79 @@ describe('getDraft', () => {
     expect(subject.getDraft(id, faker.datatype.uuid())).rejects.toThrow(
       Boom.notFound()
     );
+    expect(mockGetBulk).toBeCalledTimes(1);
+  });
+
+  it('throws Not Found exception if submission state is Deleted', async () => {
+    const id = faker.datatype.uuid();
+    const accountId = faker.datatype.uuid();
+    const timestamp = new Date();
+    const mockResponse = [
+      {
+        key: id,
+        data: {
+          id,
+          accountId,
+          reference: null,
+          carriers: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'CannotStart' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'Deleted',
+            timestamp: timestamp,
+          },
+          transitCountries: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'CannotStart' },
+        },
+      },
+    ];
+    mockGetBulk.mockResolvedValueOnce(mockResponse);
+    expect(subject.getDraft(id, accountId)).rejects.toThrow(Boom.notFound());
+    expect(mockGetBulk).toBeCalledTimes(1);
+  });
+
+  it('throws Not Found exception if submission state is Cancelled', async () => {
+    const id = faker.datatype.uuid();
+    const accountId = faker.datatype.uuid();
+    const timestamp = new Date();
+    const mockResponse = [
+      {
+        key: id,
+        data: {
+          id,
+          accountId,
+          reference: null,
+          carriers: { status: 'NotStarted' },
+          collectionDate: { status: 'NotStarted' },
+          collectionDetail: { status: 'NotStarted' },
+          exporterDetail: { status: 'NotStarted' },
+          importerDetail: { status: 'NotStarted' },
+          recoveryFacilityDetail: { status: 'CannotStart' },
+          submissionConfirmation: { status: 'CannotStart' },
+          submissionDeclaration: { status: 'CannotStart' },
+          submissionState: {
+            status: 'Cancelled',
+            timestamp: timestamp,
+            cancellationType: {
+              type: 'NoLongerExportingWaste',
+            },
+          },
+          transitCountries: { status: 'NotStarted' },
+          ukExitLocation: { status: 'NotStarted' },
+          wasteDescription: { status: 'NotStarted' },
+          wasteQuantity: { status: 'CannotStart' },
+        },
+      },
+    ];
+    mockGetBulk.mockResolvedValueOnce(mockResponse);
+    expect(subject.getDraft(id, accountId)).rejects.toThrow(Boom.notFound());
     expect(mockGetBulk).toBeCalledTimes(1);
   });
 });
