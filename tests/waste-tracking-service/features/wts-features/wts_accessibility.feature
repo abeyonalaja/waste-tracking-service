@@ -909,3 +909,51 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
+  Scenario: Check WTS Accessibility for - Export waste from the UK page
+    Given I login to waste tracking portal
+    And I navigate to Export waste from UK page
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+
+  Scenario: Check WTS Accessibility for - Update Annex record page
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    When I click the first update link
+    Then the "Update annex record" page is displayed
+    And I verify Actual needed labels are present on the page
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
