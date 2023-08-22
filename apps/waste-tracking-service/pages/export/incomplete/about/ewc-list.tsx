@@ -295,7 +295,7 @@ const EwcCodeList = () => {
                             id="saveButton"
                             onClick={() => {
                               router.push({
-                                pathname: `/exportnational-code`,
+                                pathname: `/export/incomplete/about/national-code`,
                                 query: { id },
                               });
                             }}

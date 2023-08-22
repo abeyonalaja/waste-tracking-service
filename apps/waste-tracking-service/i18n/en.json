@@ -341,7 +341,7 @@
   "exportJourney.submittedView.downloadPDF": "Download Annex VII document",
   "exportJourney.submittedView.downloadPDFinfo": "(PDF, 2 pages)",
   "exportJourney.submittedView.button": "Return to all Annex VII submissions",
-  "exportJourney.updateActual.title": "Update an Annex VII record with actual details",
+  "exportJourney.updateActual.title": "Update an Annex VII document with actual details",
   "exportJourney.updateActual.warning": "All exports with estimated details need updating with actual details as soon as possible.",
   "exportJourney.updateActual.button": "Confirm all answers",
   "exportJourney.updateActual.footerText": "You cannot fully complete this record until all your estimates have been updated with actual answers.",
@@ -350,7 +350,7 @@
   "exportJourney.updateActualQuantity.Weight.title": "What is the actual weight of the waste?",
   "exportJourney.updateActualQuantity.Volume.title": "What is the actual volume of the waste?",
   "exportJourney.updateActualQuantity.Volume.intro": "Only provide the net volume. Do not include the weight of the container or vehicle",
-  "exportJourney.updateActualQuantity.success": "Your record has been updated",
+  "exportJourney.updateActualQuantity.success": "Your document has been updated",
   "exportJourney.updateActualDate.title": "What is the actual collection date?",
   "exportJourney.updateActualDate.intro": "Enter the date, for example"
 }
