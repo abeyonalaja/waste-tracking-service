@@ -371,7 +371,98 @@ Feature: AS A waste practitioner
     And I expand About the waste section
     Then I should see quantity of actual waste updated in kilograms
 
+  Scenario: Check the back link from estimated collection date and estimated small quantity of waste
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page with "Not applicable" has waste code
+    When I complete Quantity of waste with estimated small waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated small waste
+    Then I click the "Laboratory details" link
+    And I complete laboratory address details
+    And I complete laboratory contact details
+    And I complete disposal code page
+    Then the task "Laboratory details" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for small waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    When I click the first update link
+    And I expand About the waste section
+    When I click update estimated quantity of waste
+    Then the "net small weight" page is displayed
+    When I click "Back" link should display "update with actual" page
+    Then I click show all sections link
+    When I click the update collection date link
+    Then the "actual collection date" page is displayed
+    When I click "Back" link should display "update with actual" page
 
+
+  Scenario: Check the back link from estimated collection date and estimated bulk quantity of waste
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page
+    When I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
+    When I click the first update link
+    And I expand About the waste section
+    When I click update estimated quantity of waste
+    Then the "actual weight" page is displayed
+    When I click "Back" link should display "update with actual" page
+    And I expand About the waste section
+    When I click update estimated quantity of waste
+    Then the "actual weight" page is displayed
+    When I click the "Update quantity in cubic metres (m3)" link
+    Then the "Actual volume" page is displayed
+    When I click "Back" link should display "update with actual" page
 
 
 

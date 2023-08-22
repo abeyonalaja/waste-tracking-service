@@ -4,7 +4,7 @@
 class UpdateAnnexRecordPage < GenericPage
   include CommonComponents
 
-  TITLE = Translations.value 'exportJourney.updateActual.title'
+  TITLE = Translations.value 'exportJourney.updateAnnexSeven.title'
   WARNING = Translations.value 'exportJourney.updateActual.warning'
   RETURN_TO_ALL_EXPORTS = Translations.value 'exportJourney.submittedView.button'
 

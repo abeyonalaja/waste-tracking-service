@@ -1,5 +1,5 @@
 And(/^I can see Update with actual page correctly translated$/) do
-  UpdateWithActualPage.new.check_page_displayed
+  UpdateWithActualPage.new.check_translation
 end
 
 Then(/^I verify that newly created record is on top of the table$/) do
@@ -38,7 +38,7 @@ end
 
 Then(/^I should see success message translated correctly$/) do
   expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
-  expect(UpdateWithActualPage.new.success_body.text).to eq 'Your record has been updated'
+  expect(UpdateWithActualPage.new.success_body.text).to eq 'Your document has been updated'
 end
 
 Then(/^I should see quantity of actual waste updated in cubic meters$/) do
@@ -96,4 +96,8 @@ end
 
 And(/^I should see the transaction number remains same$/) do
   expect(ExportUpdateSubmissionConfirmationPage.new.transaction_id.text).to eq TestStatus.test_status(:export_transaction_number)
+end
+
+When(/^I click the update collection date link$/) do
+  UpdateWithActualPage.new.second_update_link
 end

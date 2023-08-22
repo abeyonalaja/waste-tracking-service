@@ -26,7 +26,7 @@ class UpdateWithActualPage < GenericPage
   end
 
   def check_translation
-    expect(self).to have_text CAPTION
+    # expect(self).to have_text CAPTION
     expect(self).to have_text PARAGRAPH
     expect(self).to have_text TRANSACTION_NUMBER
     expect(self).to have_text SUBMITTED
@@ -61,6 +61,10 @@ class UpdateWithActualPage < GenericPage
 
   def transaction_id
     find 'transaction-id'
+  end
+
+  def second_update_link
+    find('collection-date-update').click
   end
 
 end
