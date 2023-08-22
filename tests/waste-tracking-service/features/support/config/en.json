@@ -7,7 +7,7 @@
   "404.title": "Page not found",
   "404.paragraph1": "If you typed the web address, check it is correct.",
   "404.paragraph2": "If you pasted the web address, check you copied the entire address.",
-  "404.link": "Return to the homepage",
+  "404.link": "Go to your account",
   "charCount.positive": "You have 1 character remaining",
   "charCount.negative": "You have 1 character too many",
   "charsCount.positive": "You have {{n}} characters remaining",
@@ -335,5 +335,8 @@
   "exportJourney.incompleteAnnexSeven.delete.caption": "Your reference: ",
   "exportJourney.incompleteAnnexSeven.delete.button": "Confirm",
   "exportJourney.incompleteAnnexSeven.delete.notification": "Your Annex VII document has been deleted",
-  "exportJourney.incompleteAnnexSeven.delete.notificationRef": " has been deleted"
+  "exportJourney.incompleteAnnexSeven.delete.notificationRef": " has been deleted",
+  "500.title": "Sorry, there is a problem with the service",
+  "500.paragraph1": "Try again later.",
+  "500.paragraph2": "We saved your answers. They will be available when you can access the service again."
 }
