@@ -360,6 +360,21 @@ export const validateConfirmRemoveDocument: (
   if (value === null) return 'Select yes if you want to remove this document';
 };
 
+export const validateConfirmCancelDocument: (
+  value?: string
+) => string | undefined = (value) => {
+  if (value === null)
+    return 'Select a reason if you want to cancel this document';
+};
+
+export const validateConfirmCancelReason: (
+  type?: string,
+  reason?: string
+) => string | undefined = (type, reason) => {
+  if (type !== 'Other') return;
+  if (reason === null) return 'Enter a reason';
+};
+
 export const validateRecoveryFacilityName: (facility?: string) => string = (
   facility
 ) => {
