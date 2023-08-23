@@ -222,12 +222,16 @@ jobs:
           versionSpec: '>= 3.0'
 
       - bash: |
+          mkdir -p report
+          mkdir -p screen
           gem install bundler
           bundle install
-          bundle exec cucumber --profile ci
+          cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags 'not @ignore'
+          allure generate Allure_results --clean -o allure-report
         displayName: Run tests
         env:
           START_PAGE_URL: $(wasteTrackingServiceRootUrl)
+          DRIVER: remote_driver
         workingDirectory: tests/waste-tracking-service
 
       - task: PublishTestResults@2
