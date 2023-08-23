@@ -50,7 +50,7 @@ podAnnotations: {}
 resources:
   limits:
     cpu: 50m
-    memory: 128Mi
+    memory: 256Mi
 
 # Profile of the secret and values used for environment variable config
 secret:
