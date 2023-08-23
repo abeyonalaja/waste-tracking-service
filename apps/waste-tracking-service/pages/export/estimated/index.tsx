@@ -502,7 +502,8 @@ const UpdateAnnex7 = () => {
                         }}
                       >
                         <GovUK.Radio
-                          name="confirm-ChangeOfRecoveryFacilityOrLaboratory"
+                          id="change-of-recovery-facility-or-laboratory"
+                          name="confirm-cancel"
                           checked={
                             type === 'ChangeOfRecoveryFacilityOrLaboratory'
                           }
@@ -513,14 +514,16 @@ const UpdateAnnex7 = () => {
                           {t('exportJourney.updateAnnexSeven.delete.q1')}
                         </GovUK.Radio>
                         <GovUK.Radio
-                          name="confirm-delete"
+                          id="no-longer-exporting-waste"
+                          name="confirm-cancel"
                           checked={type === 'NoLongerExportingWaste'}
                           onChange={() => setType('NoLongerExportingWaste')}
                         >
                           {t('exportJourney.updateAnnexSeven.delete.q2')}
                         </GovUK.Radio>
                         <GovUK.Radio
-                          name="confirm-delete"
+                          id="other"
+                          name="confirm-cancel"
                           checked={type === 'Other'}
                           onChange={() => setType('Other')}
                         >
