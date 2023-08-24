@@ -63,7 +63,9 @@ export function Reference() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(ownReference === 'yes' ? reference : null),
+            body: JSON.stringify(
+              ownReference === 'yes' ? reference.trim() : null
+            ),
           }).then(() => {
             router.push({
               pathname: `/export/incomplete/tasklist`,

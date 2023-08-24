@@ -15,6 +15,10 @@ export const validateReference: (
 ) => string | null = (ownReference, reference) => {
   if (ownReference !== 'yes') return;
 
+  if (reference !== null) {
+    reference = reference.trim();
+  }
+
   if (reference === null || reference === '') return 'Enter a reference ';
 
   if (reference.length === 1)
