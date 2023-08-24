@@ -1,25 +1,42 @@
-import Document, { DocumentContext } from 'next/document';
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-export default class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
-    const sheet = new ServerStyleSheet();
+export default class CustomDocument extends Document {
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<DocumentInitialProps> {
     const originalRenderPage = ctx.renderPage;
 
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            sheet.collectStyles(<App {...props} />),
-        });
+    const sheet = new ServerStyleSheet();
 
-      const initialProps = await Document.getInitialProps(ctx);
-      return {
-        ...initialProps,
-        styles: [initialProps.styles, sheet.getStyleElement()],
-      };
-    } finally {
-      sheet.seal();
-    }
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+        enhanceComponent: (Component) => Component,
+      });
+
+    const initialProps = await Document.getInitialProps(ctx);
+    const styles = sheet.getStyleElement();
+
+    return { ...initialProps, styles };
+  }
+
+  render() {
+    return (
+      <Html className="govuk-template" lang="en">
+        <Head>{this.props.styles}</Head>
+        <body className="govuk-template__body">
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }
