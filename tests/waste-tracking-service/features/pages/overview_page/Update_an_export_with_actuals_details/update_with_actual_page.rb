@@ -67,4 +67,17 @@ class UpdateWithActualPage < GenericPage
     find('collection-date-update').click
   end
 
+  def first_cancel_link
+    find('cancel-link-0').click
+  end
+
+  def cancel_notification
+    find('cancel-success-banner_body').text
+  end
+
+  def update_reason(reason)
+    fill_in 'reason', with: reason, visible: false
+    TestStatus.set_test_status(:export_cancel_reason, reason)
+  end
+
 end

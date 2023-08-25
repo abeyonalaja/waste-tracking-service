@@ -416,7 +416,6 @@ Feature: AS A waste practitioner
     Then the "actual collection date" page is displayed
     When I click "Back" link should display "update with actual" page
 
-
   Scenario: Check the back link from estimated collection date and estimated bulk quantity of waste
     Given I login to waste tracking portal
     And I navigate to the submit an export with no reference
@@ -463,6 +462,190 @@ Feature: AS A waste practitioner
     When I click the "Update quantity in cubic metres (m3)" link
     Then the "Actual volume" page is displayed
     When I click "Back" link should display "update with actual" page
+
+  Scenario: User can't Cancel estimated export without selecting any reason
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page
+    When I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
+    When I click first cancel button
+    Then the "cancel the export" page is displayed
+    And I should see cancel the export page correctly translated
+    When I click the "Cancel this export" button
+    Then I remain on the cancel the export page with an "Select a reason if you want to cancel this document" error message displayed
+
+  Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page
+    When I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
+    When I click first cancel button
+    Then the "cancel the export" page is displayed
+    And I should see cancel the export page correctly translated
+    When I choose "Change of recovery facility or laboratory" radio button
+    When I click the "Cancel this export" button
+    Then the "Update with actual" page is displayed
+    And I should see Success cancelled message
+    And I should not see cancelled export on update with actual page
+
+  Scenario: User can Cancel estimated export with No longer exporting this waste reason
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page
+    When I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
+    When I click first cancel button
+    Then the "cancel the export" page is displayed
+    And I should see cancel the export page correctly translated
+    When I choose "No longer exporting this waste" radio button
+    When I click the "Cancel this export" button
+    Then the "Update with actual" page is displayed
+    And I should see Success cancelled message
+    And I should not see cancelled export on update with actual page
+
+  Scenario: User can Cancel estimated export with other reason
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with no reference
+    Then Submit an export page is displayed
+    And I navigate to Quantity of waste page
+    When I complete Quantity of waste with estimated bulk waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with estimated collection date
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    Then the task "Recovery facility" should be "COMPLETED"
+    And I click the "Check your report" link
+    Then the "check your report" page is displayed
+    And I click Confirm all answers button
+    Then the "sign declaration" page is displayed
+    And I can see page translated correctly for bulk waste
+    And I click confirm and submit button
+    Then Export submitted page displayed
+    And I click Return to export waste from UK button
+    Then the "Export waste from uk" page is displayed
+    And I click the "Update an Annex VII record with actual details" link
+    Then the "Update with actual" page is displayed
+    And I verify reference section is filled with 'Not provided'
+    And I should see correct date and waste code and transaction reference
+    When I click first cancel button
+    And I should see cancel the export page correctly translated
+    When I click the "Return to Annex VII documents" link
+    Then the "Update with actual" page is displayed
+    And I should see cancelled export on update with actual page
+    When I click first cancel button
+    Then the "cancel the export" page is displayed
+    And I should see cancel the export page correctly translated
+    When I choose "Other" radio button
+    When I click the "Cancel this export" button
+    Then I remain on the cancel the export page with an "Enter a reason" error message displayed
+    When I enter a valid cancellation reason
+    When I click the "Cancel this export" button
+    Then the "Update with actual" page is displayed
+    And I should see Success cancelled message
+    And I should not see cancelled export on update with actual page
+
+
+
 
 
 

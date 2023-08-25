@@ -74,3 +74,8 @@ end
 And(/^I click Return to export waste from UK button$/) do
   click_on Translations.value 'exportJourney.exportSubmitted.button'
 end
+
+When(/^I click the "([^"]*)" button$/) do |option|
+  get_key = Translations.key(option)
+  click_button Translations.value(get_key)
+end

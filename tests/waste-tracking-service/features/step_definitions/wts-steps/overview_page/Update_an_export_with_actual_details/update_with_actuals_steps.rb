@@ -101,3 +101,29 @@ end
 When(/^I click the update collection date link$/) do
   UpdateWithActualPage.new.second_update_link
 end
+
+When(/^I click first cancel button$/) do
+  UpdateWithActualPage.new.first_cancel_link
+end
+
+And(/^I should see cancel the export page correctly translated$/) do
+  CancelTheExportPage.new.check_page_translation
+end
+
+And(/^I should see Success cancelled message$/) do
+  expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
+  expect(UpdateWithActualPage.new.cancel_notification).to eq Translations.value('exportJourney.updateAnnexSeven.delete.notification')
+end
+
+And(/^I should not see cancelled export on update with actual page$/) do
+  expect(UpdateWithActualPage.new.transaction_number.text).not_to eq "#{TestStatus.test_status(:export_transaction_number)}"
+end
+
+When(/^I enter a valid cancellation reason$/) do
+  reason = "Don't need the export any more"
+  UpdateWithActualPage.new.update_reason reason
+end
+
+And(/^I should see cancelled export on update with actual page$/) do
+  expect(UpdateWithActualPage.new.transaction_number.text).to eq "#{TestStatus.test_status(:export_transaction_number)}"
+end

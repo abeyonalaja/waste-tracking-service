@@ -121,4 +121,8 @@ module CommonComponents
     find 'transaction-id'
   end
 
+  def success_title
+    find('govuk-notification-banner-title')
+  end
+
 end

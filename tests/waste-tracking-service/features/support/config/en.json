@@ -338,5 +338,16 @@
   "exportJourney.incompleteAnnexSeven.delete.notificationRef": " has been deleted",
   "500.title": "Sorry, there is a problem with the service",
   "500.paragraph1": "Try again later.",
-  "500.paragraph2": "We saved your answers. They will be available when you can access the service again."
+  "500.paragraph2": "We saved your answers. They will be available when you can access the service again.",
+  "exportJourney.updateAnnexSeven.delete.caption": "Transaction number: ",
+  "exportJourney.updateAnnexSeven.delete.title": "Why do you want to cancel this export?",
+  "exportJourney.updateAnnexSeven.delete.paragraph": "If you cancel this export, all data will be deleted and any reference to this export will no longer exist.",
+  "exportJourney.updateAnnexSeven.delete.q1": "Change of recovery facility or laboratory",
+  "exportJourney.updateAnnexSeven.delete.q2": "No longer exporting this waste",
+  "exportJourney.updateAnnexSeven.delete.q3": "Other",
+  "exportJourney.updateAnnexSeven.delete.q3.additionalText": "Enter a reason",
+  "exportJourney.updateAnnexSeven.delete.notification": "Your Annex VII document has been cancelled",
+  "exportJourney.updateAnnexSeven.delete.notificationRef": " has been cancelled",
+  "exportJourney.updateAnnexSeven.delete.button": "Cancel this export",
+  "returnToAnnexs": "Return to Annex VII documents"
 }
