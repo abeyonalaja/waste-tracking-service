@@ -10,7 +10,7 @@ class Env
   end
 
   def self.export_pdf_url(id)
-    "#{Env.start_page_url}/download-report?id=#{id}"
+    "#{Env.start_page_url}/export/submitted/download?id=#{id}"
   end
 
 end

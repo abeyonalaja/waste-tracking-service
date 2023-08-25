@@ -17,6 +17,7 @@ And(/^I can see page translated correctly for small waste$/) do
 end
 
 When(/^I navigate to the export PDF$/) do
+  Log.info("export PDF url #{Env.export_pdf_url(TestStatus.test_status(:export_id))}")
   visit(Env.export_pdf_url(TestStatus.test_status(:export_id)))
   switch_to_window(windows.last)
 end
