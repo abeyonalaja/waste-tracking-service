@@ -219,15 +219,16 @@ jobs:
     steps:
       - task: UseRubyVersion@0
         inputs:
-          versionSpec: '>= 3.0'
+        versionSpec: '>= 3.0'
 
       - bash: |
+          npm install -g allure-commandline
           mkdir -p report
           mkdir -p screen
           gem install bundler
           bundle install
-          cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags 'not @ignore'
-          allure generate Allure_results --clean -o allure-report
+          cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags '@submitted'
+          allure generate ./Allure_results --clean -o ./allure-report
         displayName: Run tests
         env:
           START_PAGE_URL: $(wasteTrackingServiceRootUrl)

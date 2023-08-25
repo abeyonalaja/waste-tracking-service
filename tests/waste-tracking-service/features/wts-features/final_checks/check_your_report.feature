@@ -107,10 +107,9 @@ Feature: AS A Waste Practitioner
     And I click the button Save and continue
     And I complete the "Fourth" waste carrier with "Shipping container"
     And I choose "No" radio button
-    #bug raised for this issue
-#    And I choose "Yes" radio button
-#    And I click the button Save and continue
-#    And I complete the "Fifth" waste carrier with "Shipping container"
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "Fifth" waste carrier with "Shipping container"
     And I click the button Save and continue
     And I complete waste carrier location and collection details
     Then I click the "Recovery facility" link
