@@ -390,14 +390,20 @@ const Carriers = () => {
                           'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'
                         )}
                       </GovUK.Heading>
-                      <form onSubmit={handleLinkSubmit}>
-                        <ButtonGroup>
-                          <GovUK.Button id="saveButton">
-                            {t('saveButton')}
-                          </GovUK.Button>
-                          <SaveReturnButton onClick={handleLinkSubmit} />
-                        </ButtonGroup>
-                      </form>
+                      <ButtonGroup>
+                        <GovUK.Button
+                          id="saveButton"
+                          onClick={() => {
+                            router.push({
+                              pathname: `/export/incomplete/journey/collection-details`,
+                              query: { id },
+                            });
+                          }}
+                        >
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton onClick={handleLinkSubmit} />
+                      </ButtonGroup>
                     </>
                   ) : (
                     <>
