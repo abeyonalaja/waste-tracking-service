@@ -70,3 +70,7 @@ end
 And(/^I click Move export or import waste breadcrumb$/) do
   click_link('index-link')
 end
+
+And(/^I navigate to Export waste from UK page$/) do
+  click_link('dashboard_link')
+end

@@ -52,3 +52,10 @@ Feature: AS A Waste Producer/Broker
     When  I have entered an invalid reference containing more than 20 characters
     And I click the button Save and continue
     Then I remain on the Add Reference Number page with an "Enter a reference using 20 character or less" error message displayed
+
+  Scenario: Error messages for entering empty spaces
+    Given I login to waste tracking portal
+    And I navigate to the add reference page
+    When  I have entered few empty spaces
+    And I click the button Save and continue
+    Then I remain on the Add Reference Number page with an "Enter a reference" error message displayed

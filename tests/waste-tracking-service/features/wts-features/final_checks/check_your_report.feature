@@ -106,7 +106,6 @@ Feature: AS A Waste Practitioner
     And I choose "Yes" radio button
     And I click the button Save and continue
     And I complete the "Fourth" waste carrier with "Shipping container"
-    And I choose "No" radio button
     And I choose "Yes" radio button
     And I click the button Save and continue
     And I complete the "Fifth" waste carrier with "Shipping container"
@@ -121,7 +120,7 @@ Feature: AS A Waste Practitioner
     And I complete the "second" recovery facility
     And I click the button Save and continue
     When I click the "Check your report" link
-    Then I should see 4 waste carriers on check your export page
+    Then I should see 5 waste carriers on check your export page
     And I should see 5 ewc codes on check your export page
     And I should see 2 recovery facilities on check your export page
 
