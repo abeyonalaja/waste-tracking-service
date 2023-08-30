@@ -60,8 +60,8 @@ end
 And(/^I should see section 4 actual collection date correctly displayed$/) do
   within 'pdf-box-4' do
     collection_date = TestStatus.test_status(:actual_collection_date)
-    date_object = Date.parse(collection_date, '%d %m %Y')
-    formatted_date = date_object.strftime('%e %B %Y')
+    parsed_date = Date.strptime(collection_date, '%d %m %Y')
+    formatted_date = parsed_date.strftime('%e %B %Y')
     expect(SignDeclarationPage.new).to have_text formatted_date
   end
 end
