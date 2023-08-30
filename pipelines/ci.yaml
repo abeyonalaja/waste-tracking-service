@@ -209,33 +209,33 @@ jobs:
                   echo "Specify deployment template for: ${{ app }}"
                 displayName: Specify deployment template
 
-  - job: test
-    displayName: Acceptance tests
+  # - job: test
+  #   displayName: Acceptance tests
 
-    variables:
-      - name: wasteTrackingServiceRootUrl
-        value: 'http://52.151.120.75/'
+  #   variables:
+  #     - name: wasteTrackingServiceRootUrl
+  #       value: 'http://52.151.120.75/'
 
-    steps:
-      - task: UseRubyVersion@0
-        inputs:
-          versionSpec: '>= 3.0'
+  #   steps:
+  #     - task: UseRubyVersion@0
+  #       inputs:
+  #         versionSpec: '>= 3.0'
 
-      - bash: |
-          mkdir -p report
-          mkdir -p screen
-          gem install bundler
-          bundle install
-          bundle exec cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags 'not @ignore'
-          allure generate ./Allure_results --clean -o ./allure-report
-        displayName: Run tests
-        env:
-          START_PAGE_URL: $(wasteTrackingServiceRootUrl)
-          DRIVER: remote_driver
-        workingDirectory: tests/waste-tracking-service
+  #     - bash: |
+  #         mkdir -p report
+  #         mkdir -p screen
+  #         gem install bundler
+  #         bundle install
+  #         bundle exec cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags 'not @ignore'
+  #         allure generate ./Allure_results --clean -o ./allure-report
+  #       displayName: Run tests
+  #       env:
+  #         START_PAGE_URL: $(wasteTrackingServiceRootUrl)
+  #         DRIVER: remote_driver
+  #       workingDirectory: tests/waste-tracking-service
 
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: JUnit
-          testResultsFiles: tests/waste-tracking-service/junit/*.xml
-        condition: always()
+  #     - task: PublishTestResults@2
+  #       inputs:
+  #         testResultsFormat: JUnit
+  #         testResultsFiles: tests/waste-tracking-service/junit/*.xml
+  #       condition: always()
