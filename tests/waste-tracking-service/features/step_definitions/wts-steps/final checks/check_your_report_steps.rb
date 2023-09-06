@@ -156,11 +156,11 @@ And(/^I should see export Treatment of waste correctly displayed$/) do
 end
 
 Then(/^I should see Estimate Collection date$/) do
-  expect(CheckYourReportPage.new.waste_quantity).to eq "Estimated #{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_units)}"
+  expect(CheckYourReportPage.new.collection_date).to eq "Estimated #{HelperMethods.convert_date TestStatus.test_status(:estimate_collection_date)}"
 end
 
 And(/^I should see Estimate Quantity of Waste$/) do
-  expect(CheckYourReportPage.new.collection_date).to eq "Estimated #{HelperMethods.convert_date TestStatus.test_status(:estimate_collection_date)}"
+  expect(CheckYourReportPage.new.waste_quantity).to eq "Estimated #{TestStatus.test_status(:weight_quantity_in_tones)} #{TestStatus.test_status(:weight_units)}"
 end
 
 Then(/^I should see (\d+) waste carriers on check your export page$/) do |waste_carriers|

@@ -15,8 +15,9 @@ class DraftRecordsPage < GenericPage
   SUCCESS_MESSAGE = Translations.value 'exportJourney.incompleteAnnexSeven.delete.notification'
 
   #bread crumbs
-  GREEN_LIST_WASTE = Translations.value 'app.channel.title'
+  # bug raised need to be checked after fix
   APP_TITLE = Translations.value 'app.title'
+  PARENT_APP_TITLE = Translations.value 'app.parentTitle'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -28,7 +29,7 @@ class DraftRecordsPage < GenericPage
     expect(self).to have_text LAST_SAVED
     expect(self).to have_text WASTE_CODE
     expect(self).to have_text ACTIONS
-    expect(self).to have_text GREEN_LIST_WASTE
+    expect(self).to have_text PARENT_APP_TITLE
     expect(self).to have_text APP_TITLE
   end
 

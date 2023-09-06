@@ -17,7 +17,7 @@ Feature: AS A Waste practitioner
     Then the "Export waste from uk" page is displayed
     When I click the "Manage incomplete Annex VII records" link
     Then I should see draft Annex VII records page
-    # need to check below step
+    # bug raised for incorrect breadcrumb name
     # And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page

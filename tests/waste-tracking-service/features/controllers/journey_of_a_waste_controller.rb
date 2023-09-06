@@ -16,10 +16,10 @@ module JourneyOfAWasteController
 
     collection_date_page.choose_option collection_date_option
     if collection_date_option == 'Yes, I’ll enter the actual date'
-      collection_date_page.enter_actual_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
+      collection_date_page.enter_actual_collection_date DateTime.now.next_day(7).strftime('%-d %m %Y')
     end
     if collection_date_option == 'No, I’ll enter an estimate date'
-      collection_date_page.enter_estimate_collection_date DateTime.now.next_day(7).strftime('%d %m %Y')
+      collection_date_page.enter_estimate_collection_date DateTime.now.next_day(7).strftime('%-d %m %Y')
     end
 
     collection_date_page.save_and_continue

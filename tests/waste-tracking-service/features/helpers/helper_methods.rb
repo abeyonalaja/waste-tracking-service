@@ -3,11 +3,11 @@
 # Module is for ruby methods
 module HelperMethods
   def self.convert_date(date)
-    Date.strptime(date, '%d %m %Y').strftime('%d %B %Y')
+    Date.strptime(date, '%d %m %Y').strftime('%-d %B %Y')
   end
 
   def self.convert_date_to_short_month(date)
-    Date.strptime(date, '%d %m %Y').strftime('%d %b %Y')
+    Date.strptime(date, '%d %m %Y').strftime('%-d %b %Y')
   end
 
 

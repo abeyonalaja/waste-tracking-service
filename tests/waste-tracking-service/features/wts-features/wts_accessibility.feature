@@ -841,7 +841,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the link Return to this draft later
-    When I click the "Continue a draft export" link
+    When I click the "Manage incomplete Annex VII records" link
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
