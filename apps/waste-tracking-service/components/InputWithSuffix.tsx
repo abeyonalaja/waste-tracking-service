@@ -21,6 +21,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: string;
   testId?: string;
+  maxLength?: number;
 }
 
 const StyledInputWrapper = styled.div`
@@ -60,6 +61,7 @@ export const InputWithSuffix = ({
   hint,
   suffix,
   testId,
+  maxLength = 250,
 }: Props) => {
   return (
     <FormGroup error={errorMessage !== undefined}>
@@ -73,7 +75,13 @@ export const InputWithSuffix = ({
       <HintText>{hint}</HintText>
       {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
       <StyledInputWrapper data-testid={testId}>
-        <StyledInput id={id} name={name} value={value} onChange={onChange} />
+        <StyledInput
+          id={id}
+          name={name}
+          value={value}
+          maxLength={maxLength}
+          onChange={onChange}
+        />
         <StyledSuffix aria-hidden="true">{suffix}</StyledSuffix>
       </StyledInputWrapper>
     </FormGroup>

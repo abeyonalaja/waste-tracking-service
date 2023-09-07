@@ -20,8 +20,6 @@ import {
   validateWeightOrVolume,
   validateQuantityValue,
 } from 'utils/validators';
-import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
-import { updateOutput } from 'ts-jest/dist/legacy/compiler/compiler-utils';
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
@@ -261,6 +259,7 @@ const QuantityEntry = () => {
                             value={weight}
                             errorMessage={errors?.quantityWeightError}
                             suffix={t('weight.tonnes')}
+                            maxLength={10}
                             hint={t('exportJourney.quantityValue.inputHint')}
                           />
                         </StyledInputWrap>
@@ -282,6 +281,7 @@ const QuantityEntry = () => {
                             value={volume}
                             errorMessage={errors?.quantityVolumeError}
                             suffix={t('volume.m3')}
+                            maxLength={10}
                             hint={t('exportJourney.quantityValue.inputHint')}
                           />
                         </StyledInputWrap>
@@ -317,6 +317,7 @@ const QuantityEntry = () => {
                         value={weight}
                         errorMessage={errors?.quantityWeightError}
                         suffix={t('weight.kg')}
+                        maxLength={10}
                         hint={t('exportJourney.quantityValue.inputHint')}
                       />
                       <ButtonGroup>

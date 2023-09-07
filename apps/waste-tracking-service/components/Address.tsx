@@ -22,6 +22,8 @@ const StyledAddress = styled('address')`
   line-height: 1.25;
   margin-top: 0;
   margin-bottom: 15px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   @media (min-width: 40.0625em) {
     font-size: 19px;
     line-height: 1.32;

@@ -25,10 +25,6 @@ const DefinitionList = styled('dl')`
   font-size: 16px;
   line-height: 1.25;
   @media (min-width: 40.0625em) {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
     font-size: 19px;
     line-height: 1.35;
     margin-bottom: 20px;
@@ -58,6 +54,9 @@ const Key = styled('dt')`
 const Value = styled('dd')`
   margin: 0 0 15px;
   overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
   @media (min-width: 40.0625em) {
     padding-top: 10px;
     padding-right: 20px;

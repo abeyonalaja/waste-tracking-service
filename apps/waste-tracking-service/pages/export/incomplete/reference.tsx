@@ -197,7 +197,7 @@ export function Reference() {
                           name: 'reference',
                           id: 'reference',
                           value: reference === null ? '' : reference,
-                          maxLength: 50,
+                          maxLength: 20,
                           onChange: (e) => setReference(e.target.value),
                         }}
                         meta={{

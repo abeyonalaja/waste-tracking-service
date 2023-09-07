@@ -176,6 +176,9 @@ const SignSignature = styled.span`
 
 const Value = styled.span`
   display: inline;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
 `;
 
 const Warning = styled.span`
@@ -1120,10 +1123,12 @@ const Download = () => {
                       </tr>
                       <tr>
                         <td>
-                          {downloadReport.data.exporterDetail.status ===
-                            'Complete' &&
-                            downloadReport.data.exporterDetail.exporterAddress
-                              .country}
+                          <BreakableString>
+                            {downloadReport.data.exporterDetail.status ===
+                              'Complete' &&
+                              downloadReport.data.exporterDetail.exporterAddress
+                                .country}
+                          </BreakableString>
                         </td>
                         <td>
                           {downloadReport.data.transitCountries.values.length >
@@ -1142,10 +1147,12 @@ const Download = () => {
                           </td>
                         )}
                         <td>
-                          {downloadReport.data.importerDetail.status ===
-                            'Complete' &&
-                            downloadReport.data.importerDetail
-                              .importerAddressDetails.country}
+                          <BreakableString>
+                            {downloadReport.data.importerDetail.status ===
+                              'Complete' &&
+                              downloadReport.data.importerDetail
+                                .importerAddressDetails.country}
+                          </BreakableString>
                         </td>
                       </tr>
                     </>

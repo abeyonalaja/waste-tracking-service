@@ -25,10 +25,9 @@ import {
   ConditionalRadioWrap,
   SaveReturnButton,
   TextareaCharCount,
-} from '../../../components';
+} from 'components';
 import styled from 'styled-components';
 
-import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
 import {
   validateConfirmCancelReason,
   validateConfirmCancelDocument,
@@ -140,7 +139,7 @@ const UpdateAnnex7 = () => {
   );
   const [item, setItem] = useState(null);
   const [type, setType] = useState(null);
-  const [reason, setReason] = useState(null);
+  const [reason, setReason] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
 
@@ -337,7 +336,10 @@ const UpdateAnnex7 = () => {
                     ) : (
                       <GovUK.Table>
                         <GovUK.Table.Row>
-                          <TableHeader id="table-header-transaction-number">
+                          <TableHeader
+                            id="table-header-transaction-number"
+                            scope="col"
+                          >
                             {t(
                               'exportJourney.updateAnnexSeven.table.transactionNumber'
                             )}
@@ -346,6 +348,7 @@ const UpdateAnnex7 = () => {
                           <TableHeader
                             setWidth="15%"
                             id="table-header-submitted"
+                            scope="col"
                           >
                             {t(
                               'exportJourney.updateAnnexSeven.table.submitted'
@@ -355,6 +358,7 @@ const UpdateAnnex7 = () => {
                           <TableHeader
                             setWidth="one-half"
                             id="table-header-waste-code"
+                            scope="col"
                           >
                             {t(
                               'exportJourney.updateAnnexSeven.table.wasteCode'
@@ -364,13 +368,14 @@ const UpdateAnnex7 = () => {
                           <TableHeader
                             setWidth="15%"
                             id="table-header-your-own-ref"
+                            scope="col"
                           >
                             {t(
                               'exportJourney.updateAnnexSeven.table.yourOwnReference'
                             )}
                           </TableHeader>
 
-                          <TableHeader id="table-header-actions">
+                          <TableHeader id="table-header-actions" scope="col">
                             {t('exportJourney.updateAnnexSeven.table.actions')}
                           </TableHeader>
                         </GovUK.Table.Row>

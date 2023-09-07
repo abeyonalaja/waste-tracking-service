@@ -92,6 +92,9 @@ export const validateNationalCode: (
 export const validateWasteDescription: (
   description?: string
 ) => string | undefined = (description) => {
+  if (description) {
+    description = description.trim();
+  }
   if (description === undefined || description?.length === 0)
     return 'Enter a description';
   if (description?.length > 100)
@@ -376,7 +379,11 @@ export const validateConfirmCancelReason: (
   reason?: string
 ) => string | undefined = (type, reason) => {
   if (type !== 'Other') return;
-  if (reason === null) return 'Enter a reason';
+  if (reason) {
+    reason = reason.trim();
+  }
+  if (reason.length === 0) return 'Enter a reason';
+  if (reason.length > 100) return 'Reason must be 100 characters or less';
 };
 
 export const validateRecoveryFacilityName: (facility?: string) => string = (

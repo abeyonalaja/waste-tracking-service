@@ -10,6 +10,7 @@ describe('Input field with suffix', () => {
     name: 'test-name',
     label: 'Input label',
     suffix: 'suffix',
+    maxLength: 250,
   };
 
   it('should render without errors', () => {
