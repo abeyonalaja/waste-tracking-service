@@ -12,6 +12,8 @@ import { WasteCarrierHeading } from './WasteCarrierHeading';
 import { useTranslation } from 'react-i18next';
 import { BORDER_COLOUR } from 'govuk-colours';
 import styled from 'styled-components';
+import formatEwcCode from '../utils/formatEwcCode';
+import { EwcCodeType } from '../types/EwcCode';
 
 interface Props {
   data: Submission;
@@ -226,11 +228,14 @@ export const SubmissionSummary = ({
                   </Key>
                   <Value id="ewc-codes">
                     <GovUK.UnorderedList listStyleType="none">
-                      {data.wasteDescription?.ewcCodes?.map((item, index) => (
-                        <GovUK.ListItem key={index}>
-                          {boldUpToFirstColon(item)}
-                        </GovUK.ListItem>
-                      ))}
+                      {data.wasteDescription?.ewcCodes?.map(
+                        (item: EwcCodeType, index) => (
+                          <GovUK.ListItem key={index}>
+                            <strong>{formatEwcCode(item.code)}</strong>
+                            <span>: {item.description}</span>
+                          </GovUK.ListItem>
+                        )
+                      )}
                       {data.wasteDescription?.ewcCodes.length === 0 && (
                         <span id="ewc-not-provided">
                           {t('exportJourney.checkAnswers.notProvided')}
@@ -243,7 +248,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="ewc-codes-change"
                         href={{
-                          pathname: `/export/incomplete/about/ewc-list`,
+                          pathname: `/export/incomplete/about/ewc-code`,
                           query: { id: data.id },
                         }}
                       >

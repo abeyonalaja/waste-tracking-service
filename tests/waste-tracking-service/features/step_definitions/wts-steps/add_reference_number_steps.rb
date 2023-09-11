@@ -51,7 +51,9 @@ end
 
 When(/^I have entered an invalid reference containing more than (\d+) characters$/) do |arg|
   AddReferenceNumberPage.new.choose_option 'Yes'
-  AddReferenceNumberPage.new.enter_reference_number Faker::Base.regexify(%r{[a-zA-Z0-9]{21}})
+  ref = Faker::Base.regexify(%r{[a-zA-Z0-9]{21}})
+  AddReferenceNumberPage.new.enter_reference_number ref
+  Log.info("App ref -#{ref}")
 end
 
 When(/^I have entered few empty spaces$/) do

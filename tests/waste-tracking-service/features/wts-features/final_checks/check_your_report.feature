@@ -109,6 +109,7 @@ Feature: AS A Waste Practitioner
     And I choose "Yes" radio button
     And I click the button Save and continue
     And I complete the "Fifth" waste carrier with "Shipping container"
+    And I wait for a second
     And I click the button Save and continue
     And I complete waste carrier location and collection details
     Then I click the "Recovery facility" link
@@ -168,7 +169,9 @@ Feature: AS A Waste Practitioner
     Then the "check your report" page is displayed
    # ewc code change link
     When I click ewc code Change link
-    Then I should see selected EWC code on EWC codes page
+    Then I should see ewc code description on EWC list page
+    And I choose "No" radio button
+#    Then I should see selected EWC code on EWC codes page
     When I click the Save and return to draft
     When I click the "Check your report" link
     #national code
@@ -203,14 +206,29 @@ Feature: AS A Waste Practitioner
     And I complete Treatment of waste section
     When I click the "Check your report" link
     Then the "check your report" page is displayed
+    #exporter change link
     When I click Exporter address Change link
     Then I verify Enter exporter address manual page is displayed
     When I click the button Save and continue
     When I wait for a second
     When I click the Save and return to draft
     When I click the "Check your report" link
-    When I click Exporter details Change link
+    And I click Exporter details Change link
     Then the "exporter details" page is displayed
+    When I click the Save and return to draft
+    When I click the "Check your report" link
+    Then the "check your report" page is displayed
+    #importer change link
+    When I click importer details Change link
+    Then the "who is the importer" page is displayed
+    When I click the button Save and continue
+    Then the "importer contact details" page is displayed
+    When I click the Save and return to draft
+    When I click the "Check your report" link
+    #importer contact change link
+    When I click importer contact details Change link
+    Then the "importer contact details" page is displayed
+
 
   Scenario: User can navigate to Journey of waste from check your report page using change link
     Given I login to waste tracking portal
@@ -287,31 +305,32 @@ Feature: AS A Waste Practitioner
     And I complete Treatment of waste section
     When I click the "Check your report" link
 
-    Scenario: Remove only EWC code from check your export page
-      Given I login to waste tracking portal
-      And I navigate to the submit an export with reference
-      And I navigate to Quantity of waste page
-      And I complete Quantity of waste sub-section
-      Then I complete Exporter details with valid postcode
-      And the "who is the importer" page is displayed
-      And I complete who is the importer page
-      And I click the button Save and continue
-      Then the "Importer contact details" page is displayed
-      Then I complete Importer contact details page
-      And I click the button Save and continue
-      And I click the "Collection date" link
-      And I complete the Journey of a waste section
-      Then I click the "Recovery facility" link
-      And I complete Treatment of waste section
-      When I click the "Check your report" link
-      Then the "check your report" page is displayed
+  Scenario: Remove only EWC code from check your export page
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste sub-section
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    When I click the "Check your report" link
+    Then the "check your report" page is displayed
    # ewc code change link
-      When I click ewc code Change link
-      When I click the "Remove" link
-      Then I verify confirmation page is displayed
-      And I choose "Yes" radio button
-      And I click the button Save and continue
-      Then I should see 0 EWC code added to the export
+    When I click ewc code Change link
+    When I click the "Remove" link
+    Then I verify confirmation page is displayed
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    Then Enter an EWC code is displayed
+
 
 
 

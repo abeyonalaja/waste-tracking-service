@@ -12,6 +12,7 @@ interface Props {
   children: ReactNode;
   testId?: string;
   disabled?: boolean;
+  target?: string;
 }
 
 const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
@@ -54,6 +55,7 @@ export const AppLink = ({
   onClick,
   testId,
   disabled,
+  target,
 }: Props) => {
   return (
     <StyledLink
@@ -63,6 +65,7 @@ export const AppLink = ({
       data-testid={testId}
       $isBold={isBold}
       disabled={disabled}
+      target={target}
     >
       {children}
     </StyledLink>

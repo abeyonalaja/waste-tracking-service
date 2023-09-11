@@ -69,7 +69,7 @@ Feature: AS A Waste practitioner
     And I choose "Not applicable" as a waste code
     And I click the button Save and continue
     Then the "Enter an ewc code" page is displayed
-    And I choose first EWC code description from list
+    And I enter valid ewc code
     And I click the button Save and continue
     And I choose "No" radio button
     And I click the button Save and continue
@@ -114,8 +114,12 @@ Feature: AS A Waste practitioner
     Then the "What is the waste code" page is displayed
     And I choose "OECD" as a waste code
     And I select first OECD code
+    And I wait for a second
     And I click the button Save and continue
-    Then the "Do you have ewc code" page is displayed
+    And I wait for a second
+    Then Enter an EWC code is displayed
+    And I enter valid ewc code
+    And I click the button Save and continue
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "National code" page is displayed
@@ -189,7 +193,10 @@ Feature: AS A Waste practitioner
     And I choose "OECD" as a waste code
     And I select first OECD code
     And I click the button Save and continue
-    Then the "Do you have EWC code" page is displayed
+    And I wait for a second
+    Then Enter an EWC code is displayed
+    And I enter valid ewc code
+    And I click the button Save and continue
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "National code" page is displayed
@@ -262,7 +269,10 @@ Feature: AS A Waste practitioner
     Then the "What is the waste code" page is displayed
     And I select new Basel Annex IX code
     And I click the button Save and continue
-    Then the "Do you have EWC code" page is displayed
+    And I wait for a second
+    Then Enter an EWC code is displayed
+    And I enter valid ewc code
+    And I click the button Save and continue
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "National code" page is displayed

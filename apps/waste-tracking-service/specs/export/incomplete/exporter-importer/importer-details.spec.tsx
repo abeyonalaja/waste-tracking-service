@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '../jest-utils';
-import ExporterPostcode from '../pages/export/incomplete/exporter-importer/exporter-postcode';
+import { render, fireEvent, screen, act } from 'jest-utils';
+import ImporterDetails from 'pages/export/incomplete/exporter-importer/importer-details';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -12,23 +12,26 @@ jest.mock('next/router', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({ data: {} }),
+    json: () =>
+      Promise.resolve({
+        data: {},
+      }),
   })
 );
 
-describe('Exporter postcode page', () => {
+describe('Importer details page', () => {
   it('should render the page', async () => {
     await act(async () => {
-      render(<ExporterPostcode />);
+      render(<ImporterDetails />);
     });
   });
 
-  it('should show validation message if no content is entered', async () => {
+  it('should show validation message if nothing entered', async () => {
     await act(async () => {
-      render(<ExporterPostcode />);
+      render(<ImporterDetails />);
     });
 
-    const submitButton = screen.getByText('Find address');
+    const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);
 
     const errorHeading = screen.getByText('There is a problem');

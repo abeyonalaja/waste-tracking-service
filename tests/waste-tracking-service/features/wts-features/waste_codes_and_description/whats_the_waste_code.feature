@@ -8,7 +8,6 @@ Feature: AS A waste producer/broker
     When I choose Not applicable option
     And I click the button Save and continue
     Then Enter an EWC code is displayed
-    And I choose first EWC code description from list
     When I click "Back" link should display "What is the waste code" page
 
   Scenario: Display "laboratory details" as an option on the "submit an export" page

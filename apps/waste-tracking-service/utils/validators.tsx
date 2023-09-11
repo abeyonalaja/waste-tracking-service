@@ -1,4 +1,5 @@
 import aOrAn from './aOrAn';
+import { ewcCodeData } from './ewcCodes';
 import { isPast, isValid, addBusinessDays, differenceInDays } from 'date-fns';
 
 export function isNotEmpty(obj) {
@@ -57,20 +58,6 @@ export const validateWasteCode: (
     return `Enter ${aOrAn(
       wasteCodeCategory.charAt(0)
     )} ${wasteCodeCategoryLabel} waste code`;
-};
-
-export const validateDoYouHaveAnEWCCode: (value?: string) => string | null = (
-  value
-) => {
-  return value ? null : 'Select yes if you want to add an EWC code';
-};
-
-export const validateEwcCodes: (
-  ewcCodes?: string[],
-  showInput?: string
-) => string | undefined = (ewcCodes, showInput) => {
-  if (showInput !== 'yes') return;
-  if (ewcCodes === undefined) return 'Select an EWC code ';
 };
 
 export const validateNationalCode: (
@@ -379,9 +366,8 @@ export const validateConfirmCancelReason: (
   reason?: string
 ) => string | undefined = (type, reason) => {
   if (type !== 'Other') return;
-  if (reason) {
-    reason = reason.trim();
-  }
+  if (reason === null || reason === undefined) return 'Enter a reason';
+  reason = reason.trim();
   if (reason.length === 0) return 'Enter a reason';
   if (reason.length > 100) return 'Reason must be 100 characters or less';
 };
@@ -414,4 +400,25 @@ export const validateTransport: (value?: string) => string | undefined = (
   value
 ) => {
   if (value === undefined) return 'Select a method of transport';
+};
+
+export const validateEwcCode: (
+  hasEWCCode?: string,
+  ewcCode?: string
+) => string | undefined = (hasEWCCode, ewcCode) => {
+  if (hasEWCCode !== 'Yes') return;
+
+  if (ewcCode === null || ewcCode.length === 0) return 'Enter a code';
+
+  const regex = /[A-Z-_|.* ]/gi;
+  ewcCode = ewcCode.replace(regex, '');
+
+  if (ewcCode.length != 6) {
+    return 'Enter a code with 6 digits';
+  }
+
+  const result = ewcCodeData.find(({ code }) => code.slice(0, 6) === ewcCode);
+  if (result === undefined) {
+    return 'Enter a code in the correct format';
+  }
 };

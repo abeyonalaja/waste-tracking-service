@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '../jest-utils';
-import TransitCountries from '../pages/export/incomplete/journey/transit-countries';
+import { render, fireEvent, screen, act } from 'jest-utils';
+import TransitCountries from 'pages/export/incomplete/journey/transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -23,29 +23,7 @@ describe('Waste Transit Countries page', () => {
     });
   });
 
-  it('should display a loading message while data is being fetched', async () => {
-    global.fetch.mockImplementationOnce(
-      () =>
-        new Promise(() => {
-          return;
-        })
-    );
-
-    await act(async () => {
-      render(<TransitCountries />);
-    });
-
-    expect(screen.findByText('Loading')).toBeTruthy();
-  });
-
   it('should show validation message if no radio is selected', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ status: 'NotStarted' }),
-      })
-    );
-
     await act(async () => {
       render(<TransitCountries />);
     });

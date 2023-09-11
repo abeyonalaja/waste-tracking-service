@@ -68,7 +68,7 @@ export const TextareaCharCount = ({
             id: id,
             name: name,
             rows: rows,
-            value: value,
+            value: value || '',
             onChange: handleChange,
           }}
         >

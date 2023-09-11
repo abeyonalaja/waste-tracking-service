@@ -177,7 +177,7 @@ class CheckYourReportPage < GenericPage
   end
 
   def importer_details_change
-    find('importer-details-change').text
+    click_link('importer-details-change')
   end
 
   def importer_address_header
@@ -205,7 +205,7 @@ class CheckYourReportPage < GenericPage
   end
 
   def importer_contact_details_change
-    find('importer-contact-details-change').text
+    click_link('importer-contact-details-change')
   end
 
   def importer_email_header

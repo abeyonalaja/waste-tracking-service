@@ -81,10 +81,10 @@ const CarrierContactDetails = () => {
               (singleCarrier) => singleCarrier.id === carrierId
             );
             setData(data);
-            setFullName(targetData.contactDetails?.fullName);
-            setEmail(targetData.contactDetails?.emailAddress);
-            setPhone(targetData.contactDetails?.phoneNumber);
-            setFax(targetData.contactDetails?.faxNumber);
+            setFullName(targetData.contactDetails?.fullName || '');
+            setEmail(targetData.contactDetails?.emailAddress || '');
+            setPhone(targetData.contactDetails?.phoneNumber || '');
+            setFax(targetData.contactDetails?.faxNumber || '');
             setIsLoading(false);
             setIsError(false);
           }
@@ -190,29 +190,30 @@ const CarrierContactDetails = () => {
     [fullName, email, phone, fax, data, carrierId, id, router]
   );
 
-  if (id !== undefined && carrierId !== undefined) {
-    fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`)
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          setIsLoading(false);
-          setIsError(true);
-        }
-      })
-      .then((data) => {
-        if (data !== undefined) {
-          setCarrierCount(data.values.length);
-          setCarrierIndex(
-            data.values.findIndex(
-              (item: { id: unknown }) => item.id === carrierId
-            )
-          );
-
-          setIsLoading(false);
-          setIsError(false);
-        }
-      });
-  }
+  useEffect(() => {
+    if (id !== undefined && carrierId !== undefined) {
+      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`)
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            setIsLoading(false);
+            setIsError(true);
+          }
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setCarrierCount(data.values.length);
+            setCarrierIndex(
+              data.values.findIndex(
+                (item: { id: unknown }) => item.id === carrierId
+              )
+            );
+            setIsLoading(false);
+            setIsError(false);
+          }
+        });
+    }
+  }, [id, carrierId]);
 
   const BreadCrumbs = () => {
     return (

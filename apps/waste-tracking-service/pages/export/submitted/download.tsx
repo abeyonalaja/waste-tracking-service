@@ -1,4 +1,4 @@
-import PDFLayout from '../../../components/PDFLayout';
+import PDFLayout from 'components/PDFLayout';
 import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import { format } from 'date-fns';
 import { UnitDisplay, BreakableString } from 'components';
+import { EwcCodeType } from 'types/EwcCode';
 
 type State = {
   data: Submission;
@@ -1076,8 +1077,8 @@ const Download = () => {
                         <CommaList>
                           {downloadReport.data.wasteDescription.ewcCodes
                             .slice(0, 3)
-                            .map((item, index) => (
-                              <span key={index}>{item.split(':')[0]}</span>
+                            .map((item: EwcCodeType, index) => (
+                              <span key={index}>{item.code}</span>
                             ))}
                         </CommaList>
                       </Value>
@@ -1840,8 +1841,8 @@ const Download = () => {
                   <CommaList>
                     {downloadReport.data.wasteDescription.ewcCodes
                       .slice(3, 5)
-                      .map((item, index) => (
-                        <span key={index}>{item.split(':')[0]}</span>
+                      .map((item: EwcCodeType, index) => (
+                        <span key={index}>{item.code}</span>
                       ))}
                   </CommaList>
                 )}

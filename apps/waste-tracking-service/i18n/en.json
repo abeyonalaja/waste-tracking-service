@@ -130,12 +130,6 @@
   "exportJourney.nationalCode.inputLabel": "Enter code",
   "exportJourney.describeWaste.title": "Describe the waste",
   "exportJourney.describeWaste.hint": "Give the usual description of the waste. For example, baled PET bottles, bagged HDPE pellets or OCC paper.",
-  "exportJourney.ewcCode.title": "Do you have an EWC code?",
-  "exportJourney.enterEwcCode.title": "Enter an EWC code",
-  "exportJourney.addedEwcCode.title": "You have added {{n}} EWC codes",
-  "exportJourney.addedEwcCode.question": "Do you need to add another EWC code?",
-  "exportJourney.addedEwcCode.delete": "Are you sure you want to remove this EWC code?",
-  "exportJourney.addedEwcCode.remove": "Remove",
   "exportJourney.exporterDetails.caption": "Exporter details",
   "exportJourney.exporterPostcode.title": "What's the exporter's address?",
   "exportJourney.exporterPostcode.hint": "The exporter is the person who arranges the shipment. This must be a UK address.",
@@ -365,5 +359,13 @@
   "exportJourney.updateActualQuantity.Volume.intro": "Only provide the net volume. Do not include the weight of the container or vehicle",
   "exportJourney.updateActualQuantity.success": "Your document has been updated",
   "exportJourney.updateActualDate.title": "What is the actual collection date?",
-  "exportJourney.updateActualDate.intro": "Enter the date, for example"
+  "exportJourney.updateActualDate.intro": "Enter the date, for example",
+  "exportJourney.ewc.caption": "Waste codes and description",
+  "exportJourney.ewc.title": "What is the first European Waste Catalogue (EWC) code?",
+  "exportJourney.ewc.label": "Enter code",
+  "exportJourney.ewc.listTitleSingle": "You have added 1 European Waste Catalogue (EWC) code",
+  "exportJourney.ewc.listTitleMultiple": "You have added {{count}} European Waste Catalogue (EWC) codes",
+  "exportJourney.ewc.addAnotherTitle": "Do you need to add another EWC code?",
+  "exportJourney.ewc.confirmRemoveTitle": "Are you sure you want to remove code: {{code}}?",
+  "exportJourney.ewc.maxReached": "You have added the maximum number of EWC codes."
 }

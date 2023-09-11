@@ -36,6 +36,6 @@ Feature:AS A Waste Producer/Broker
 
   Scenario: Back function clicked
     Given I login to waste tracking portal
-    Then I navigate to National Code page
+    When I navigate to National Code page
     And I click browser back button
-    Then I verify add ewc code page is displayed
+    Then I should see ewc code description on EWC list page

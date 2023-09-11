@@ -1,5 +1,5 @@
 Then(/^I verify add ewc code page is displayed$/) do
-  DoYouHaveEwcCodePage.new.check_page_displayed
+  EnterAnEwcCodePage.new.check_page_displayed
 end
 
 And(/^I navigate to Add EWC code page$/) do
@@ -11,11 +11,11 @@ And(/^I navigate to Add EWC code page$/) do
 end
 
 Then(/^I verify copy text is present on the EWC page$/) do
-  DoYouHaveEwcCodePage.new.check_translation
+  EnterAnEwcCodePage.new.check_translation
 end
 
 And(/^I have selected valid ewc code$/) do
-  DoYouHaveEwcCodePage.new.select_first_option
+  EnterAnEwcCodePage.new.select_first_option
 end
 
 Then(/^I verify Do you need to add another page is displayed$/) do
@@ -29,7 +29,6 @@ end
 
 When(/^I verify enter ewc code page is displayed$/) do
   EnterAnEwcCodePage.new.check_page_displayed
-  expect(page).to have_text('Choose from the list or start typing')
 end
 
 Then(/^the question "Do you need to add another EWC code\? is hidden$/) do
@@ -60,7 +59,7 @@ And(/^I click Remove link$/) do
 end
 
 Then(/^I verify confirmation page is displayed$/) do
-  expect(page).to have_text('Are you sure you want to remove this EWC code?')
+  expect(page).to have_text("Are you sure you want to remove code: #{TestStatus.test_status(:ewc_code).gsub(/(..)(?=.)/, '\1 ')}?")
 end
 
 And(/^I verify the code is added$/) do
@@ -89,22 +88,18 @@ And(/^I verify Do you need to add another EWC code question is not present on th
   expect(page).not_to have_text('Do you need to add another EWC code?')
 end
 
-And(/^I verify that i have added 5 ewc codes$/) do
-  expect(page).to have_text('You have added 5 EWC codes')
-end
-
-
 Then(/^I add (\d+) ewc codes$/) do |ewc_code|
   (1..ewc_code).each do |i|
     enter_an_ewc_code_page = EnterAnEwcCodePage.new
     ewc_code_list_page = EwcCodeListPage.new
     ewc_code_list_page.choose_option('Yes')
     ewc_code_list_page.save_and_continue
-    enter_an_ewc_code_page.select_ewc_option rand(0..834)
+    puts TestData.get_ewc_codes i
+    EnterAnEwcCodePage.new.enter_ewc_code TestData.get_ewc_codes i
     enter_an_ewc_code_page.save_and_continue
   end
 end
 
 Then(/^I should see previously selected EWC code pre\-populated$/) do
-  expect(DoYouHaveEwcCodePage.new.ewc_code).to eq(TestStatus.test_status(:ewc_code))
+  expect(EnterAnEwcCodePage.new.ewc_code).to eq(TestStatus.test_status(:ewc_code))
 end

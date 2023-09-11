@@ -9,7 +9,7 @@ class EwcCodeListPage < GenericPage
   include PageHelper
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: 'Do you need to add another EWC code?', exact_text: true
+    expect(self).to have_css 'h1', text: 'You have added 1 European Waste Catalogue (EWC) code', exact_text: true
   end
 
 end

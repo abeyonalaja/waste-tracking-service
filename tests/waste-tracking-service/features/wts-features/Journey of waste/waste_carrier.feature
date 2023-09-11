@@ -85,6 +85,6 @@ Feature: AS A waste producer/broker
     Then I should see "what are the waste carriers contact details" page is displayed
     And I click the button Save and continue
     Then I remain on the what are the waste carriers contact details page with an "Enter a full name" error message displayed
-    And I remain on the what are the waste carriers contact details page with an "Enter a real email address" error message displayed
-    And I remain on the what are the waste carriers contact details page with an "Enter a real phone number" error message displayed
+    And I remain on the what are the waste carriers contact details page with an "Enter an email address" error message displayed
+    And I remain on the what are the waste carriers contact details page with an "Enter a phone number" error message displayed
 

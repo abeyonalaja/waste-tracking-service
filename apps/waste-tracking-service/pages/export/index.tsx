@@ -6,7 +6,7 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-} from '../../components';
+} from 'components';
 import React from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
@@ -56,16 +56,6 @@ export function Index() {
                     id="your-reference"
                   >
                     Create a single Annex VII record
-                  </AppLink>
-                </GovUK.ListItem>
-                <GovUK.ListItem>
-                  <AppLink href="" disabled={true}>
-                    Use a template to create a single Annex VII record
-                  </AppLink>
-                </GovUK.ListItem>
-                <GovUK.ListItem>
-                  <AppLink href="" disabled={true}>
-                    Create multiple Annex VII records
                   </AppLink>
                 </GovUK.ListItem>
                 <GovUK.ListItem>

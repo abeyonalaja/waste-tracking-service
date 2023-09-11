@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen, act } from '../jest-utils';
-import Index from '../pages/index';
+import { render, screen, act } from 'jest-utils';
+import Index from 'pages/index';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({

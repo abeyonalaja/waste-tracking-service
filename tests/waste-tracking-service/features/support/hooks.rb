@@ -26,6 +26,12 @@ After do |scenario|
     # file_path = "screen/#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     # puts file_path
     # puts '****'
+    Log.console("Failed scenario is #{scenario.name}")
+    Log.warn("Test status report: #{JSON.pretty_generate(TestStatus.test_status)}")
+
+    file = Tempfile.new(%w[screenshot_ .png], 'report')
+    screenshot_path = File.join('report', "#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.png")
+    puts screenshot_path
     png_files = Dir.glob(File.join('report', 'screenshot_*.png'))
     puts png_files
     puts '&&&&&&&&&'

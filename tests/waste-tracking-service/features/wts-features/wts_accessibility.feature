@@ -36,24 +36,21 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for - EWC code page with option YES
+  Scenario: Check WTS Accessibility for - EWC code page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
-    And I have selected "Yes" option
     Then the page should be axe clean according to: wcag2a
 
-
-  Scenario: Check WTS Accessibility for - EWC code page with option YES
+  Scenario: Check WTS Accessibility for - EWC code error page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
-    And I have selected "Yes" option
+    And I click the button Save and continue
     Then the page should be axe clean according to: wcag2a
 
   Scenario: Check WTS Accessibility for - EWC code list page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
-    And I have selected "Yes" option
-    And I have selected valid ewc code
+    And I enter valid ewc code
     And I click the button Save and continue
     Then the page should be axe clean according to: wcag2a
 
@@ -76,7 +73,6 @@ Feature: Automation to check accessibility tool
     When I click the "Quantity of waste" link
     And I click the button Save and continue
     Then the page should be axe clean according to: wcag2a
-
 
   Scenario: Check WTS Accessibility for - actual net weight or volume of the waste
     Given I login to waste tracking portal

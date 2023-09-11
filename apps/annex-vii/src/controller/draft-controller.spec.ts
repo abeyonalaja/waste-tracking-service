@@ -2391,7 +2391,12 @@ describe(DraftController, () => {
           type: faker.datatype.string(),
           value: faker.datatype.string(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [
+          {
+            code: faker.datatype.string(),
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: faker.datatype.string(),
@@ -2689,7 +2694,12 @@ describe(DraftController, () => {
           type: faker.datatype.string(),
           value: faker.datatype.string(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [
+          {
+            code: faker.datatype.string(),
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: faker.datatype.string(),

@@ -13,7 +13,6 @@ import { DateConverter } from './DateConverter';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { Error404Content } from './Error404Content';
-import { EwcCodeSelector } from './EwcCodeSelector';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
 import { NotificationBanner } from './NotificationBanner';
@@ -48,7 +47,6 @@ export {
   DocumentStatus,
   DownloadPDFLink,
   Error404Content,
-  EwcCodeSelector,
   InputWithSuffix,
   Loading,
   NotificationBanner,

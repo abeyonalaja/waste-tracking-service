@@ -15,6 +15,6 @@ module WasteCodeController
 
     Log.info("waste code is: #{waste_code}")
     whats_waste_code_page.save_and_continue
-    waste_code == 'Not applicable' ? EnterAnEwcCodePage.new.check_page_displayed : DoYouHaveEwcCodePage.new.check_page_displayed
+    EnterAnEwcCodePage.new.check_page_displayed
   end
 end

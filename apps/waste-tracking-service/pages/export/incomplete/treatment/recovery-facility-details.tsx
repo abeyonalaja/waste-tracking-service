@@ -485,7 +485,7 @@ const RecoveryFacilityDetails = () => {
     const { name, value } = e.target;
     setAddressDetails((addressDetails) => ({
       ...addressDetails,
-      [name]: value,
+      [name]: value || '',
     }));
   };
 
@@ -493,7 +493,7 @@ const RecoveryFacilityDetails = () => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
       ...contactDetails,
-      [name]: value,
+      [name]: value || '',
     }));
   };
 
@@ -737,7 +737,7 @@ const RecoveryFacilityDetails = () => {
                         input={{
                           name: 'name',
                           id: 'name',
-                          value: addressDetails?.name,
+                          value: addressDetails?.name || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -753,7 +753,7 @@ const RecoveryFacilityDetails = () => {
                         input={{
                           name: 'address',
                           id: 'address',
-                          value: addressDetails?.address,
+                          value: addressDetails?.address || '',
                           onChange: onAddressDetailsChange,
                         }}
                         meta={{
@@ -769,7 +769,7 @@ const RecoveryFacilityDetails = () => {
                         input={{
                           name: 'country',
                           id: 'country',
-                          value: addressDetails?.country,
+                          value: addressDetails?.country || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -811,7 +811,7 @@ const RecoveryFacilityDetails = () => {
                         input={{
                           name: 'fullName',
                           id: 'fullName',
-                          value: contactDetails?.fullName,
+                          value: contactDetails?.fullName || '',
                           maxLength: 250,
                           onChange: onContactDetailsChange,
                         }}
@@ -828,7 +828,7 @@ const RecoveryFacilityDetails = () => {
                           name: 'emailAddress',
                           id: 'emailAddress',
                           type: 'email',
-                          value: contactDetails?.emailAddress,
+                          value: contactDetails?.emailAddress || '',
                           maxLength: 250,
                           onChange: onContactDetailsChange,
                         }}
@@ -859,7 +859,7 @@ const RecoveryFacilityDetails = () => {
                           <TelephoneInput
                             name="phoneNumber"
                             id="phoneNumber"
-                            value={contactDetails?.phoneNumber}
+                            value={contactDetails?.phoneNumber || ''}
                             maxLength={50}
                             type="tel"
                             error={recoveryPage.errors?.phoneNumber}
@@ -887,7 +887,7 @@ const RecoveryFacilityDetails = () => {
                           <TelephoneInput
                             name="faxNumber"
                             id="faxNumber"
-                            value={contactDetails?.faxNumber}
+                            value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
                             onChange={onContactDetailsChange}

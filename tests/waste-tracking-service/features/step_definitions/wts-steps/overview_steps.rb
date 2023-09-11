@@ -10,20 +10,17 @@ And(/^I navigate to the overview page$/) do
 end
 
 Then(/^I can see all the sections$/) do
-  expect(page).to have_css 'h2', text: 'Tell us about an export', exact_text: true
-  expect(page).to have_css 'h2', text: 'All exports', exact_text: true
-  expect(page).to have_css 'h2', text: 'Templates', exact_text: true
+  expect(page).to have_css 'h2', text: 'Create a new Annex VII record', exact_text: true
+  expect(page).to have_css 'h2', text: 'Update an Annex VII record', exact_text: true
+  expect(page).to have_css 'h2', text: 'Submitted Annex VII records', exact_text: true
+  # expect(page).to have_css 'h2', text: 'Templates', exact_text: true
 end
 
 And(/^I can see links for each sections$/) do
-  expect(page).to have_link('Submit a single waste export')
-  expect(page).to have_link('Submit a waste export from a template')
-  expect(page).to have_link('Submit multiple exports from a CSV file')
-  expect(page).to have_link('Continue a draft export')
-  expect(page).to have_link('Update an export with actual details')
-  expect(page).to have_link('Check all submitted exports')
-  expect(page).to have_link('Create a new template')
-  expect(page).to have_link('Manage your templates')
+  expect(page).to have_link('Create a single Annex VII record')
+  expect(page).to have_link('Manage incomplete Annex VII records')
+  expect(page).to have_link('Update an Annex VII record with actual details')
+  expect(page).to have_link('View all submitted Annex VII records')
 end
 
 Then(/^Export waste from UK page is displayed$/) do

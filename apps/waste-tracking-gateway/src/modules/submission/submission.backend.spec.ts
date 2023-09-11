@@ -305,7 +305,12 @@ describe(InMemorySubmissionBackend, () => {
           type: faker.datatype.string(),
           value: faker.datatype.string(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: faker.datatype.string(),
@@ -514,7 +519,12 @@ describe(InMemorySubmissionBackend, () => {
           type: faker.datatype.string(),
           value: faker.datatype.string(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: faker.datatype.string(),
@@ -724,7 +734,12 @@ describe(InMemorySubmissionBackend, () => {
           type: faker.datatype.string(),
           value: faker.datatype.string(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: faker.datatype.string(),
@@ -1029,7 +1044,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'NotApplicable' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1147,7 +1167,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1269,7 +1294,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1391,7 +1421,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1508,7 +1543,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1673,7 +1713,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -1838,7 +1883,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -2040,7 +2090,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',
@@ -2211,7 +2266,12 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
-        ewcCodes: ['EWC1', 'EWC2'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: faker.datatype.string(),
+          },
+        ],
         nationalCode: {
           provided: 'Yes',
           value: 'NAT',

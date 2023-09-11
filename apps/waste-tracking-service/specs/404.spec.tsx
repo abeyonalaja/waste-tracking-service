@@ -1,7 +1,7 @@
 import React from 'react';
-import { act, render, screen } from '../jest-utils';
+import { act, render, screen } from 'jest-utils';
 import '@testing-library/jest-dom';
-import Custom404 from '../pages/404';
+import Custom404 from 'pages/404';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({

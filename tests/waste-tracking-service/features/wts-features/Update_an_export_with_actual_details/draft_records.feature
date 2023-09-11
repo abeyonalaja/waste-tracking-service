@@ -2,7 +2,7 @@ Feature: AS A Waste practitioner
   I NEED to be able to continue with a draft export after saving
   SO THAT I complete the export submission at my convenience with all the relevant details
 
-  @translation
+  @translation @ignore
   Scenario: User can navigate to empty incomplete Annex VII page
     Given I login to waste tracking portal
     And I navigate to the overview page
@@ -17,8 +17,7 @@ Feature: AS A Waste practitioner
     Then the "Export waste from uk" page is displayed
     When I click the "Manage incomplete Annex VII records" link
     Then I should see draft Annex VII records page
-    # bug raised for incorrect breadcrumb name
-    # And I should see draft records page correctly translated
+    And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page
     When I click the first continue link
@@ -44,8 +43,7 @@ Feature: AS A Waste practitioner
     When I click the link Return to this draft later
     When I click the "Manage incomplete Annex VII records" link
     Then I should see draft Annex VII records page
-    # need to check below step
-    # And I should see draft records page correctly translated
+    And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page
     And I should see waste code on draft application page

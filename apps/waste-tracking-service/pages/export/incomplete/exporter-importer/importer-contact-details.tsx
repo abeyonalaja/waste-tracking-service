@@ -63,10 +63,10 @@ const ImporterContactDetails = () => {
         .then((data) => {
           if (data !== undefined) {
             setData(data);
-            setFullName(data.importerContactDetails?.fullName);
-            setEmail(data.importerContactDetails?.emailAddress);
-            setPhone(data.importerContactDetails?.phoneNumber);
-            setFax(data.importerContactDetails?.faxNumber);
+            setFullName(data.importerContactDetails?.fullName || '');
+            setEmail(data.importerContactDetails?.emailAddress || '');
+            setPhone(data.importerContactDetails?.phoneNumber || '');
+            setFax(data.importerContactDetails?.faxNumber || '');
             setIsLoading(false);
             setIsError(false);
           }

@@ -192,44 +192,13 @@ const WasteCode = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                if (wasteCodeCategory === 'NotApplicable' && !data.ewcCodes) {
-                  const path = returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/about/ewc-add`;
-                  router.push({
-                    pathname: path,
-                    query: { id },
-                  });
-                }
-                if (wasteCodeCategory === 'NotApplicable' && data.ewcCodes) {
-                  const path = returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/about/ewc-list`;
-                  router.push({
-                    pathname: path,
-                    query: { id },
-                  });
-                }
-
-                if (wasteCodeCategory !== 'NotApplicable' && !data.ewcCodes) {
-                  const path = returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/about/ewc`;
-                  router.push({
-                    pathname: path,
-                    query: { id },
-                  });
-                }
-
-                if (wasteCodeCategory !== 'NotApplicable' && data.ewcCodes) {
-                  const path = returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/about/ewc-list`;
-                  router.push({
-                    pathname: path,
-                    query: { id },
-                  });
-                }
+                const path = returnToDraft
+                  ? `/export/incomplete/tasklist`
+                  : `/export/incomplete/about/ewc-code`;
+                router.push({
+                  pathname: path,
+                  query: { id },
+                });
               }
             });
         } catch (e) {

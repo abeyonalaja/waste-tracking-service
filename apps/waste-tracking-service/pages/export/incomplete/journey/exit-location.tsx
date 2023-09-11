@@ -63,7 +63,7 @@ const ExitLocation = () => {
 
   const [pointOfExitPage, dispatchPointOfExitPage] = useReducer(
     pointOfExitReducer,
-    { data: {}, isLoading: true, isError: false }
+    { data: null, isLoading: true, isError: false }
   );
 
   const [id, setId] = useState(null);

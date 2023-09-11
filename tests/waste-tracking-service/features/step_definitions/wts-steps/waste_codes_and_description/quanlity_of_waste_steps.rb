@@ -74,7 +74,7 @@ end
 And(/^I navigate to Quantity of waste page with "([^"]*)" has waste code$/) do |waste_code|
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete waste_code
-  EwcCodeController.complete ' '
+  EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
 end
@@ -82,7 +82,7 @@ end
 And(/^I complete Waste codes and description task with "([^"]*)" has waste code$/) do |waste_code|
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete waste_code
-  EwcCodeController.complete ' '
+  EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete
   sleep 1

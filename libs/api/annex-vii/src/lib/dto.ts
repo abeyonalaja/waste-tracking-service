@@ -23,7 +23,7 @@ type DraftWasteDescriptionData = {
         type: 'BaselAnnexIX' | 'Oecd' | 'AnnexIIIA' | 'AnnexIIIB';
         value: string;
       };
-  ewcCodes: string[];
+  ewcCodes: object[];
   nationalCode: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
 };

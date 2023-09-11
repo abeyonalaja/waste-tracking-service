@@ -127,3 +127,8 @@ end
 And(/^I should see cancelled export on update with actual page$/) do
   expect(UpdateWithActualPage.new.transaction_number.text).to eq "#{TestStatus.test_status(:export_transaction_number)}"
 end
+
+When(/^I enter a reason more than 100 character$/) do
+  reason = Faker::Base.regexify(%r{[a-zA-Z0-9]{130}})
+  UpdateWithActualPage.new.update_reason reason
+end

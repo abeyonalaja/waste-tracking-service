@@ -13,9 +13,10 @@ And(/^I should see export About the waste section correctly displayed$/) do
   expect(CheckYourReportPage.new.waste_description_header).to eq 'Waste description'
   expect(CheckYourReportPage.new.waste_quantity_header).to eq 'Waste quantity'
   # need to uncomment this after fixing the space
-  # expect(CheckYourReportPage.new.waste_code_type).to eq TestStatus.test_status(:waste_code)
+  expect(CheckYourReportPage.new.waste_code_type).to eq TestStatus.test_status(:waste_code).gsub(/\s+/, '').gsub(' ', '')
   expect(CheckYourReportPage.new.waste_code_description).to eq TestStatus.test_status(:waste_code_description)
-  expect(CheckYourReportPage.new.ewc_codes).to eq TestStatus.test_status(:ewc_code).gsub(/\s+/, ' ')
+  description = TestData.get_ewc_code_description(TestStatus.test_status(:ewc_code))
+  expect(CheckYourReportPage.new.ewc_codes).to eq "#{TestStatus.test_status(:ewc_code).gsub(/(..)(?=.)/, '\1 ')}: #{description}"
 
   expect(CheckYourReportPage.new.national_code).to eq TestStatus.test_status(:national_code_text)
   expect(CheckYourReportPage.new.describe_the_waste).to eq TestStatus.test_status(:description_of_the_waste)
@@ -198,7 +199,8 @@ end
 And(/^I should see (\d+) ewc codes on check your export page$/) do |ewc_codes|
   expect(CheckYourReportPage.new.ewc_codes_list.count).to eq TestStatus.ewc_code_list.size
   (0...ewc_codes).each do |i|
-    expect(CheckYourReportPage.new.ewc_codes_list[i].text.gsub(/\s+/, ' ')).to eq TestStatus.ewc_code_list[i].gsub(/\s+/, ' ')
+    description = TestData.get_ewc_code_description(TestStatus.ewc_code_list[i])
+    expect(CheckYourReportPage.new.ewc_codes_list[i].text.gsub(/\s+/, ' ').gsub(' *:', ':')).to eq "#{TestStatus.ewc_code_list[i].gsub(/(..)(?=.)/, '\1 ')}: #{description}"
   end
 end
 
@@ -260,7 +262,7 @@ When(/^I click Exporter details Change link$/) do
 end
 
 Then(/^I should see selected EWC code on EWC codes page$/) do
-  expect(DoYouHaveEwcCodePage.new).to have_text(TestStatus.test_status(:ewc_code).gsub(/\s+/, ' '))
+  expect(EnterAnEwcCodePage.new).to have_text(TestStatus.test_status(:ewc_code).gsub(/\s+/, ' '))
 end
 
 When(/^I click on Collection date Change link$/) do
@@ -345,7 +347,7 @@ And(/^I should see export Journey of waste with estimated collection date correc
   # data check
   # collection-date
   collection_date = HelperMethods.convert_date TestStatus.test_status(:estimate_collection_date)
-  expect(CheckYourReportPage.new.collection_date).to eq "Estimated " + collection_date
+  expect(CheckYourReportPage.new.collection_date).to eq "Estimated #{collection_date}"
   # waste carrier
   expect(CheckYourReportPage.new.carrier_organisation_name(0)).to eq TestStatus.test_status(:organisation_name)
   expect(CheckYourReportPage.new.carrier_address(0)).to eq TestStatus.test_status(:address)
@@ -370,3 +372,12 @@ And(/^I should see export Journey of waste with estimated collection date correc
   expect(CheckYourReportPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourReportPage.new.transit_countries).to eq TestStatus.countries_list[0]
 end
+
+When(/^I click importer details Change link$/) do
+  CheckYourReportPage.new.importer_details_change
+end
+
+When(/^I click importer contact details Change link$/) do
+  CheckYourReportPage.new.importer_contact_details_change
+end
+

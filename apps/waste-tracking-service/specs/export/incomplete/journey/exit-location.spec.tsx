@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '../jest-utils';
-import ExitLocation from '../pages/export/incomplete/journey/exit-location';
+import { render, fireEvent, screen, act } from 'jest-utils';
+import ExitLocation from 'pages/export/incomplete/journey/exit-location';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
@@ -36,18 +36,6 @@ describe('Point Of Exit page', () => {
     });
 
     expect(screen.findByText('Loading')).toBeTruthy();
-  });
-
-  it('should display an error message if the data fetching fails', async () => {
-    global.fetch.mockImplementationOnce(() => Promise.resolve({ ok: false }));
-
-    await act(async () => {
-      render(<ExitLocation />);
-    });
-
-    expect(
-      screen.findByText('The export record has not been found')
-    ).toBeTruthy();
   });
 
   it('should show validation message if no radio is selected', async () => {

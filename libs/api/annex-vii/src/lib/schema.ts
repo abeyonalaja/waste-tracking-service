@@ -52,7 +52,18 @@ const draftWasteDescriptionData = {
       AnnexIIIB: { properties: { value: { type: 'string' } } },
     },
   },
-  ewcCodes: { elements: { type: 'string' } },
+  ewcCodes: {
+    elements: {
+      properties: {
+        code: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+      },
+    },
+  },
   nationalCode: {
     discriminator: 'provided',
     mapping: {

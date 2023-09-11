@@ -123,15 +123,17 @@ const CarrierDetails = () => {
               values: [targetData],
             };
             setData(singleRecord);
-            setOrganisationName(targetData.addressDetails?.organisationName);
-            setAddress(targetData.addressDetails?.address);
-            setCountry(targetData.addressDetails?.country);
+            setOrganisationName(
+              targetData.addressDetails?.organisationName || ''
+            );
+            setAddress(targetData.addressDetails?.address || '');
+            setCountry(targetData.addressDetails?.country || '');
             setIsLoading(false);
             setIsError(false);
           }
         });
     }
-  }, [router.isReady, id, carrierId, router.query.carrierId, router]);
+  }, [router.isReady, id, carrierId]);
 
   const createFirstCarrierRecord = () => {
     try {

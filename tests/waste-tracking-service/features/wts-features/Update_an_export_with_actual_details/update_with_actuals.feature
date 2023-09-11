@@ -627,17 +627,22 @@ Feature: AS A waste practitioner
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with 'Not provided'
     And I should see correct date and waste code and transaction reference
+    And I wait for a second
     When I click first cancel button
     And I should see cancel the export page correctly translated
     When I click the "Return to Annex VII documents" link
     Then the "Update with actual" page is displayed
     And I should see cancelled export on update with actual page
     When I click first cancel button
+    And I wait for a second
     Then the "cancel the export" page is displayed
     And I should see cancel the export page correctly translated
     When I choose "Other" radio button
     When I click the "Cancel this export" button
     Then I remain on the cancel the export page with an "Enter a reason" error message displayed
+    When I enter a reason more than 100 character
+    When I click the "Cancel this export" button
+    Then I remain on the cancel the export page with an "Reason must be 100 characters or less" error message displayed
     When I enter a valid cancellation reason
     When I click the "Cancel this export" button
     Then the "Update with actual" page is displayed

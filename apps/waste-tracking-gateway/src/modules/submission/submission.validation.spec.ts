@@ -105,7 +105,12 @@ describe('validatePutWasteDescriptionRequest', () => {
       validate({
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: faker.datatype.string(10) },
-        ewcCodes: ['Z'],
+        ewcCodes: [
+          {
+            code: '010101',
+            description: 'wastes from mineral metalliferous excavation',
+          },
+        ],
         nationalCode: { provided: 'No' },
         description: 'Waste',
       })

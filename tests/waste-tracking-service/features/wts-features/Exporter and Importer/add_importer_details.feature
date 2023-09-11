@@ -77,8 +77,8 @@ SO THAT the importer can be tracked
     Then the "Importer contact details" page is displayed
     And I click the button Save and continue
     Then I remain on the Importer contact details page with an "Enter a full name" error message displayed
-    And I remain on the Importer contact details page with an "Enter a real email address" error message displayed
-    And I remain on the Importer contact details page with an "Enter a real phone number" error message displayed
+    And I remain on the Importer contact details page with an "Enter an email address" error message displayed
+    And I remain on the Importer contact details page with an "Enter a phone number" error message displayed
 
   Scenario: User can see previously saved details Importer contact details page
     Given I login to waste tracking portal

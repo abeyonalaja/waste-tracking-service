@@ -43,11 +43,10 @@ end
 When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$/) do
   SubmitAnExportPage.new.waste_codes_and_description
   WasteCodeController.complete
-  EnterAnEwcCodePage.new.choose_option 'Yes'
-  EnterAnEwcCodePage.new.select_ewc_option rand(0..834)
+  EnterAnEwcCodePage.new.enter_ewc_code TestData.get_ewc_codes 0
   EnterAnEwcCodePage.new.save_and_continue
   sleep 1
-  EnterAnEwcCodePage.new.add_ewc_codes 4
+  EnterAnEwcCodePage.new.enter_multiple_ewc_code 4
   sleep 1
   EnterAnEwcCodePage.new.save_and_continue
   NationalCodeController.complete

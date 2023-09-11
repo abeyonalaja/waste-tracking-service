@@ -15,7 +15,6 @@ class DraftRecordsPage < GenericPage
   SUCCESS_MESSAGE = Translations.value 'exportJourney.incompleteAnnexSeven.delete.notification'
 
   #bread crumbs
-  # bug raised need to be checked after fix
   APP_TITLE = Translations.value 'app.title'
   PARENT_APP_TITLE = Translations.value 'app.parentTitle'
 

@@ -107,7 +107,7 @@ end
 And(/^I should see section 10 waste identification details correctly displayed$/) do
   within 'pdf-box-10' do
     # expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:waste_code)
-    expect(SignDeclarationPage.new).to have_text '01 01 0'
+    expect(SignDeclarationPage.new).to have_text '010101'
     expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:national_code_text)
   end
 end
