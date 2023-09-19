@@ -172,125 +172,133 @@ const Index = () => {
                     </GovUK.Heading>
                   </>
                 ) : (
-                  <GovUK.Table>
-                    <GovUK.Table.Row>
-                      <TableHeader id="table-header-transaction-number">
-                        {t(
-                          'exportJourney.updateAnnexSeven.table.transactionNumber'
-                        )}
-                      </TableHeader>
-
-                      <TableHeader
-                        setWidth="15%"
-                        id="table-header-collection-date"
-                      >
-                        {t('exportJourney.submittedAnnexSeven.collectionDate')}
-                      </TableHeader>
-
-                      <TableHeader
-                        setWidth="one-half"
-                        id="table-header-waste-code"
-                      >
-                        {t('exportJourney.updateAnnexSeven.table.wasteCode')}
-                      </TableHeader>
-
-                      <TableHeader
-                        setWidth="15%"
-                        id="table-header-your-own-ref"
-                      >
-                        {t(
-                          'exportJourney.updateAnnexSeven.table.yourOwnReference'
-                        )}
-                      </TableHeader>
-
-                      <TableHeader id="table-header-actions">
-                        {t('exportJourney.updateAnnexSeven.table.actions')}
-                      </TableHeader>
-                    </GovUK.Table.Row>
-
-                    {submittedAnnex7Page.data.values.map((item, index) => (
-                      <GovUK.Table.Row key={index}>
-                        <TableCell id={'transaction-id-' + index}>
-                          {item.submissionDeclaration.status === 'Complete' && (
-                            <b>
-                              {item.submissionDeclaration.values.transactionId}
-                            </b>
+                  <>
+                    <GovUK.Table>
+                      <GovUK.Table.Row>
+                        <TableHeader id="table-header-transaction-number">
+                          {t(
+                            'exportJourney.updateAnnexSeven.table.transactionNumber'
                           )}
-                        </TableCell>
-                        <TableCell id={'date-' + index}>
-                          {item.collectionDate.status === 'Complete' && (
-                            <>
-                              {format(
-                                new Date(
-                                  Number(
-                                    item.collectionDate.value.actualDate.year
-                                  ),
-                                  Number(
-                                    item.collectionDate.value.actualDate.month
-                                  ) - 1,
-                                  Number(
-                                    item.collectionDate.value.actualDate.day
-                                  )
-                                ),
-                                'd MMM y'
-                              )}
-                            </>
-                          )}
-                        </TableCell>
+                        </TableHeader>
 
-                        <TableCell id={'waste-code-' + index}>
-                          {item.wasteDescription?.status === 'Complete' && (
-                            <>
-                              {item.wasteDescription?.wasteCode.type !==
-                                'NotApplicable' && (
-                                <>
-                                  {item.wasteDescription?.wasteCode.value && (
-                                    <span>
-                                      {item.wasteDescription?.wasteCode.value}
-                                    </span>
-                                  )}
-                                </>
-                              )}
-                              {item.wasteDescription?.wasteCode.type ===
-                                'NotApplicable' && (
-                                <span id="waste-code-not-provided">
-                                  {t(
-                                    'exportJourney.updateAnnexSeven.notApplicable'
-                                  )}
-                                </span>
-                              )}
-                            </>
+                        <TableHeader
+                          setWidth="15%"
+                          id="table-header-collection-date"
+                        >
+                          {t(
+                            'exportJourney.submittedAnnexSeven.collectionDate'
                           )}
-                        </TableCell>
-                        <TableCell id={'your-reference-' + index}>
-                          {' '}
-                          {item.reference && <span>{item.reference}</span>}
-                          {!item.reference && (
-                            <span id="your-reference-not-provided">
-                              {t('exportJourney.checkAnswers.notProvided')}
-                            </span>
+                        </TableHeader>
+
+                        <TableHeader
+                          setWidth="one-half"
+                          id="table-header-waste-code"
+                        >
+                          {t('exportJourney.updateAnnexSeven.table.wasteCode')}
+                        </TableHeader>
+
+                        <TableHeader
+                          setWidth="15%"
+                          id="table-header-your-own-ref"
+                        >
+                          {t(
+                            'exportJourney.updateAnnexSeven.table.yourOwnReference'
                           )}
-                        </TableCell>
-                        <TableCellActions>
-                          <AppLink
-                            id={'view-link-' + index}
-                            href={{
-                              pathname: `/export/submitted/view`,
-                              query: { id: item.id },
-                            }}
-                          >
-                            View
-                          </AppLink>
-                        </TableCellActions>
+                        </TableHeader>
+
+                        <TableHeader id="table-header-actions">
+                          {t('exportJourney.updateAnnexSeven.table.actions')}
+                        </TableHeader>
                       </GovUK.Table.Row>
-                    ))}
+
+                      {submittedAnnex7Page.data.values.map((item, index) => (
+                        <GovUK.Table.Row key={index}>
+                          <TableCell id={'transaction-id-' + index}>
+                            {item.submissionDeclaration.status ===
+                              'Complete' && (
+                              <b>
+                                {
+                                  item.submissionDeclaration.values
+                                    .transactionId
+                                }
+                              </b>
+                            )}
+                          </TableCell>
+                          <TableCell id={'date-' + index}>
+                            {item.collectionDate.status === 'Complete' && (
+                              <>
+                                {format(
+                                  new Date(
+                                    Number(
+                                      item.collectionDate.value.actualDate.year
+                                    ),
+                                    Number(
+                                      item.collectionDate.value.actualDate.month
+                                    ) - 1,
+                                    Number(
+                                      item.collectionDate.value.actualDate.day
+                                    )
+                                  ),
+                                  'd MMM y'
+                                )}
+                              </>
+                            )}
+                          </TableCell>
+
+                          <TableCell id={'waste-code-' + index}>
+                            {item.wasteDescription?.status === 'Complete' && (
+                              <>
+                                {item.wasteDescription?.wasteCode.type !==
+                                  'NotApplicable' && (
+                                  <>
+                                    {item.wasteDescription?.wasteCode.value && (
+                                      <span>
+                                        {item.wasteDescription?.wasteCode.value}
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                                {item.wasteDescription?.wasteCode.type ===
+                                  'NotApplicable' && (
+                                  <span id="waste-code-not-provided">
+                                    {t(
+                                      'exportJourney.updateAnnexSeven.notApplicable'
+                                    )}
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </TableCell>
+                          <TableCell id={'your-reference-' + index}>
+                            {' '}
+                            {item.reference && <span>{item.reference}</span>}
+                            {!item.reference && (
+                              <span id="your-reference-not-provided">
+                                {t('exportJourney.checkAnswers.notProvided')}
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCellActions>
+                            <AppLink
+                              id={'view-link-' + index}
+                              href={{
+                                pathname: `/export/submitted/view`,
+                                query: { id: item.id },
+                              }}
+                            >
+                              View
+                            </AppLink>
+                          </TableCellActions>
+                        </GovUK.Table.Row>
+                      ))}
+                    </GovUK.Table>
                     <Pagination
                       url="/export/submitted"
                       pages={submittedAnnex7Page.data.pages}
                       currentPage={submittedAnnex7Page.data.currentPage}
                       totalPages={submittedAnnex7Page.data.totalPages}
                     />
-                  </GovUK.Table>
+                  </>
                 )}
               </GovUK.GridCol>
             </GovUK.GridRow>
