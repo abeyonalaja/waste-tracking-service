@@ -61,7 +61,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/incomplete`,
+                      pathname: '/export/incomplete',
                     }}
                   >
                     Manage incomplete Annex VII records

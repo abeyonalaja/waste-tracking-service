@@ -19,6 +19,7 @@ import {
   ButtonGroup,
   DateConverter,
   Paragraph,
+  Pagination,
   SubmissionNotFound,
   Loading,
   NotificationBanner,
@@ -143,10 +144,23 @@ const UpdateAnnex7 = () => {
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (router.isReady) {
+      setToken(router.query.token);
+    }
+  }, [router.isReady, router.query.token]);
+
   useEffect(() => {
     dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-    fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`)
+    let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates`;
+    if (token) {
+      url = `${url}&token=${token}`;
+    }
+
+    fetch(url)
       .then((response) => {
         if (response.ok) return response.json();
         else {
@@ -156,18 +170,14 @@ const UpdateAnnex7 = () => {
       .then((data) => {
         let filteredData;
         if (data) {
-          filteredData = data
-            .filter(
-              (item) => item.submissionState.status === 'SubmittedWithEstimates'
-            )
-            .reverse();
+          filteredData = data;
         }
         dispatchUpdateAnnex7Page({
           type: 'DATA_FETCH_SUCCESS',
           payload: filteredData,
         });
       });
-  }, [router.isReady]);
+  }, [router.isReady, token]);
 
   const doNotCancel = () => {
     dispatchUpdateAnnex7Page({
@@ -334,133 +344,148 @@ const UpdateAnnex7 = () => {
                         </GovUK.Heading>
                       </>
                     ) : (
-                      <GovUK.Table>
-                        <GovUK.Table.Row>
-                          <TableHeader
-                            id="table-header-transaction-number"
-                            scope="col"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.transactionNumber'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="15%"
-                            id="table-header-submitted"
-                            scope="col"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.submitted'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="one-half"
-                            id="table-header-waste-code"
-                            scope="col"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.wasteCode'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader
-                            setWidth="15%"
-                            id="table-header-your-own-ref"
-                            scope="col"
-                          >
-                            {t(
-                              'exportJourney.updateAnnexSeven.table.yourOwnReference'
-                            )}
-                          </TableHeader>
-
-                          <TableHeader id="table-header-actions" scope="col">
-                            {t('exportJourney.updateAnnexSeven.table.actions')}
-                          </TableHeader>
-                        </GovUK.Table.Row>
-
-                        {updateAnnex7Page.data.map((item, index) => (
-                          <GovUK.Table.Row key={index}>
-                            <TableCell id={'transaction-id-' + index}>
-                              {item.submissionDeclaration.status ===
-                                'Complete' && (
-                                <b>
-                                  {
-                                    item.submissionDeclaration.values
-                                      .transactionId
-                                  }
-                                </b>
+                      <>
+                        <GovUK.Table>
+                          <GovUK.Table.Row>
+                            <TableHeader
+                              id="table-header-transaction-number"
+                              scope="col"
+                            >
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.transactionNumber'
                               )}
-                            </TableCell>
+                            </TableHeader>
 
-                            <TableCell id={'date-' + index}>
-                              <DateConverter
-                                dateString={item.submissionState.timestamp}
-                              />
-                            </TableCell>
-
-                            <TableCell id={'waste-code-' + index}>
-                              {item.wasteDescription?.status === 'Complete' && (
-                                <>
-                                  {item.wasteDescription?.wasteCode.type !==
-                                    'NotApplicable' && (
-                                    <>
-                                      {item.wasteDescription?.wasteCode
-                                        .value && (
-                                        <span>
-                                          {
-                                            item.wasteDescription?.wasteCode
-                                              .value
-                                          }
-                                        </span>
-                                      )}
-                                    </>
-                                  )}
-                                  {item.wasteDescription?.wasteCode.type ===
-                                    'NotApplicable' && (
-                                    <span id="waste-code-not-provided">
-                                      {t(
-                                        'exportJourney.updateAnnexSeven.notApplicable'
-                                      )}
-                                    </span>
-                                  )}
-                                </>
+                            <TableHeader
+                              setWidth="15%"
+                              id="table-header-submitted"
+                              scope="col"
+                            >
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.submitted'
                               )}
-                            </TableCell>
-                            <TableCell id={'your-reference-' + index}>
-                              {' '}
-                              {item.reference && <span>{item.reference}</span>}
-                              {!item.reference && (
-                                <span id="your-reference-not-provided">
-                                  {t('exportJourney.checkAnswers.notProvided')}
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCellActions>
-                              <Action>
-                                <AppLink
-                                  id={'update-' + index}
-                                  href={{
-                                    pathname: '/export/estimated/update',
-                                    query: { id: item.id },
-                                  }}
-                                >
-                                  {t('updateButton')}
-                                </AppLink>
-                              </Action>
+                            </TableHeader>
 
-                              <AppLink
-                                id={'cancel-link-' + index}
-                                onClick={(e) => handleRemove(e, item)}
-                                href="#"
-                              >
-                                {t('cancelButton')}
-                              </AppLink>
-                            </TableCellActions>
+                            <TableHeader
+                              setWidth="one-half"
+                              id="table-header-waste-code"
+                              scope="col"
+                            >
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.wasteCode'
+                              )}
+                            </TableHeader>
+
+                            <TableHeader
+                              setWidth="15%"
+                              id="table-header-your-own-ref"
+                              scope="col"
+                            >
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.yourOwnReference'
+                              )}
+                            </TableHeader>
+
+                            <TableHeader id="table-header-actions" scope="col">
+                              {t(
+                                'exportJourney.updateAnnexSeven.table.actions'
+                              )}
+                            </TableHeader>
                           </GovUK.Table.Row>
-                        ))}
-                      </GovUK.Table>
+
+                          {updateAnnex7Page.data.values.map((item, index) => (
+                            <GovUK.Table.Row key={index}>
+                              <TableCell id={'transaction-id-' + index}>
+                                {item.submissionDeclaration.status ===
+                                  'Complete' && (
+                                  <b>
+                                    {
+                                      item.submissionDeclaration.values
+                                        .transactionId
+                                    }
+                                  </b>
+                                )}
+                              </TableCell>
+
+                              <TableCell id={'date-' + index}>
+                                <DateConverter
+                                  dateString={item.submissionState.timestamp}
+                                />
+                              </TableCell>
+
+                              <TableCell id={'waste-code-' + index}>
+                                {item.wasteDescription?.status ===
+                                  'Complete' && (
+                                  <>
+                                    {item.wasteDescription?.wasteCode.type !==
+                                      'NotApplicable' && (
+                                      <>
+                                        {item.wasteDescription?.wasteCode
+                                          .value && (
+                                          <span>
+                                            {
+                                              item.wasteDescription?.wasteCode
+                                                .value
+                                            }
+                                          </span>
+                                        )}
+                                      </>
+                                    )}
+                                    {item.wasteDescription?.wasteCode.type ===
+                                      'NotApplicable' && (
+                                      <span id="waste-code-not-provided">
+                                        {t(
+                                          'exportJourney.updateAnnexSeven.notApplicable'
+                                        )}
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </TableCell>
+                              <TableCell id={'your-reference-' + index}>
+                                {' '}
+                                {item.reference && (
+                                  <span>{item.reference}</span>
+                                )}
+                                {!item.reference && (
+                                  <span id="your-reference-not-provided">
+                                    {t(
+                                      'exportJourney.checkAnswers.notProvided'
+                                    )}
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCellActions>
+                                <Action>
+                                  <AppLink
+                                    id={'update-' + index}
+                                    href={{
+                                      pathname: '/export/estimated/update',
+                                      query: { id: item.id },
+                                    }}
+                                  >
+                                    {t('updateButton')}
+                                  </AppLink>
+                                </Action>
+
+                                <AppLink
+                                  id={'cancel-link-' + index}
+                                  onClick={(e) => handleRemove(e, item)}
+                                  href="#"
+                                >
+                                  {t('cancelButton')}
+                                </AppLink>
+                              </TableCellActions>
+                            </GovUK.Table.Row>
+                          ))}
+                        </GovUK.Table>
+                        <Pagination
+                          url="/export/estimated"
+                          pages={updateAnnex7Page.data.pages}
+                          currentPage={updateAnnex7Page.data.currentPage}
+                          totalPages={updateAnnex7Page.data.totalPages}
+                        />
+                      </>
                     )}
                   </GovUK.GridCol>
                 </GovUK.GridRow>

@@ -47,6 +47,8 @@ export type {
   CancelDraftByIdResponse,
   DraftSubmission,
   DraftSubmissionSummary,
+  DraftSubmissionSummaryPage,
+  DraftSubmissionPageMetadata,
   DraftWasteQuantity,
   DraftCollectionDate,
   GetDraftByIdRequest,

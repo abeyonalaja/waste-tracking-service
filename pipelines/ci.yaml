@@ -169,7 +169,8 @@ jobs:
                   appNameTag: ${{ replace(app, '-', '_') }}
                   appInsightsConnectionString: $(appInsightsConnectionString)
                   cosmosDbUri: $(cosmosDbUri)
-                  cosmosDbPrimaryKey: $(cosmosDbPrimaryKey)
+                  msiClientId: $(annexViiMsiClientId)
+                  msiTenantId: $(annexViiMsiTenantId)
                   deployChart: variables.deployCharts
                   affectedCharts: $(affectedCharts)
 

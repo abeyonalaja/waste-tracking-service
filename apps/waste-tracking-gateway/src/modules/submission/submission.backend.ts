@@ -46,6 +46,7 @@ import { Logger } from 'winston';
 
 export type Submission = dto.Submission;
 export type SubmissionSummary = dto.SubmissionSummary;
+export type SubmissionSummaryPage = dto.SubmissionSummaryPage;
 export type CustomerReference = dto.CustomerReference;
 export type WasteDescription = dto.WasteDescription;
 export type WasteQuantity = dto.WasteQuantity;
@@ -61,6 +62,7 @@ export type RecoveryFacilityDetail = dto.RecoveryFacilityDetail;
 export type RecoveryFacilityData = dto.RecoveryFacilityData;
 export type SubmissionConfirmation = dto.SubmissionConfirmation;
 export type SubmissionDeclaration = dto.SubmissionDeclaration;
+export type SubmissionState = dto.SubmissionState;
 export type SubmissionCancellationType = dto.SubmissionCancellationType;
 
 function setSubmissionConfirmation(
@@ -125,6 +127,10 @@ export type SubmissionRef = {
   accountId: string;
 };
 
+export type OrderRef = {
+  order: 'ASC' | 'DESC';
+};
+
 export interface SubmissionBackend {
   createSubmission(
     accountId: string,
@@ -136,7 +142,13 @@ export interface SubmissionBackend {
     ref: SubmissionRef,
     cancellationType: dto.SubmissionCancellationType
   ): Promise<void>;
-  getSubmissions(accountId: string): Promise<ReadonlyArray<SubmissionSummary>>;
+  getSubmissions(
+    accountId: string,
+    order: OrderRef,
+    pageLimit?: number,
+    state?: SubmissionState['status'][],
+    token?: string
+  ): Promise<SubmissionSummaryPage>;
   getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
   setCustomerReference(
     ref: SubmissionRef,
@@ -269,6 +281,10 @@ function isWasteCodeChangingBulkToBulkSameType(
 export class InMemorySubmissionBackend implements SubmissionBackend {
   readonly submissions = new Map<string, Submission>();
 
+  private paginateArray(array: any[], pageSize: number, pageNumber: number) {
+    return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+  }
+
   createSubmission(
     _: string,
     reference: CustomerReference
@@ -352,9 +368,15 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve();
   }
 
-  getSubmissions(_: string): Promise<ReadonlyArray<SubmissionSummary>> {
-    const values: Submission[] = [...this.submissions.values()];
-    const value: ReadonlyArray<SubmissionSummary> = values
+  getSubmissions(
+    _: string,
+    { order }: OrderRef,
+    pageLimit = 15,
+    state?: SubmissionState['status'][],
+    token?: string
+  ): Promise<SubmissionSummaryPage> {
+    const rawValues: Submission[] = [...this.submissions.values()];
+    let values: ReadonlyArray<SubmissionSummary> = rawValues
       .map((s) => {
         return {
           id: s.id,
@@ -374,14 +396,99 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
           submissionState: s.submissionState,
         };
       })
-      .filter((i) => !i.submissionState.status.includes('Cancelled'))
-      .filter((i) => !i.submissionState.status.includes('Deleted'));
+      .sort((x, y) => {
+        return x.submissionState.timestamp > y.submissionState.timestamp
+          ? 1
+          : -1;
+      });
 
-    if (!Array.isArray(value) || value.length == 0) {
+    if (order === 'DESC') {
+      values = rawValues
+        .map((s) => {
+          return {
+            id: s.id,
+            reference: s.reference,
+            wasteDescription: s.wasteDescription,
+            wasteQuantity: { status: s.wasteQuantity.status },
+            exporterDetail: { status: s.exporterDetail.status },
+            importerDetail: { status: s.exporterDetail.status },
+            collectionDate: s.collectionDate,
+            carriers: { status: s.carriers.status },
+            collectionDetail: { status: s.collectionDetail.status },
+            ukExitLocation: { status: s.ukExitLocation.status },
+            transitCountries: { status: s.transitCountries.status },
+            recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
+            submissionConfirmation: { status: s.submissionConfirmation.status },
+            submissionDeclaration: s.submissionDeclaration,
+            submissionState: s.submissionState,
+          };
+        })
+        .sort((x, y) => {
+          return x.submissionState.timestamp > y.submissionState.timestamp
+            ? 1
+            : -1;
+        })
+        .reverse();
+    }
+
+    if (state) {
+      values = values.filter((i) =>
+        state.some((val) => i.submissionState.status.includes(val))
+      );
+    }
+
+    if (!Array.isArray(values) || values.length === 0) {
       return Promise.reject(Boom.notFound());
     }
 
-    return Promise.resolve(value);
+    let hasMoreResults = true;
+    let totalSubmissions = 0;
+    let totalPages = 0;
+    let currentPage = 0;
+    let pageNumber = 0;
+    let contToken = '';
+    const metadataArray: dto.SubmissionPageMetadata[] = [];
+    let pageValues: ReadonlyArray<SubmissionSummary> = [];
+
+    while (hasMoreResults) {
+      totalPages += 1;
+      pageNumber += 1;
+
+      const paginatedValues = this.paginateArray(values, pageLimit, pageNumber);
+
+      if ((!token && pageNumber === 1) || token === contToken) {
+        pageValues = paginatedValues;
+        currentPage = pageNumber;
+      }
+
+      const nextPaginatedValues = this.paginateArray(
+        values,
+        pageLimit,
+        pageNumber + 1
+      );
+
+      hasMoreResults = nextPaginatedValues.length === 0 ? false : true;
+      totalSubmissions += paginatedValues.length;
+      contToken = nextPaginatedValues.length === 0 ? '' : pageNumber.toString();
+
+      const pageMetadata: dto.SubmissionPageMetadata = {
+        pageNumber: pageNumber,
+        token: nextPaginatedValues.length === 0 ? '' : pageNumber.toString(),
+      };
+      metadataArray.push(pageMetadata);
+
+      if (!hasMoreResults && token === '') {
+        break;
+      }
+    }
+
+    return Promise.resolve({
+      totalSubmissions: totalSubmissions,
+      totalPages: totalPages,
+      currentPage: currentPage,
+      pages: metadataArray,
+      values: pageValues,
+    });
   }
 
   getCustomerReference({ id }: SubmissionRef): Promise<CustomerReference> {
@@ -1350,6 +1457,7 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
   async getSubmission({ id, accountId }: SubmissionRef): Promise<Submission> {
     let response: GetDraftByIdResponse;
     try {
+      console.log('getSubmission');
       response = await this.client.getDraftById({ id, accountId });
     } catch (err) {
       this.logger.error(err);
@@ -1408,11 +1516,21 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
   }
 
   async getSubmissions(
-    accountId: string
-  ): Promise<ReadonlyArray<SubmissionSummary>> {
+    accountId: string,
+    { order }: OrderRef,
+    pageLimit?: number,
+    state?: SubmissionState['status'][],
+    token?: string
+  ): Promise<SubmissionSummaryPage> {
     let response: GetDraftsResponse;
     try {
-      response = await this.client.getDrafts({ accountId });
+      response = await this.client.getDrafts({
+        accountId,
+        order,
+        pageLimit,
+        state,
+        token,
+      });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();

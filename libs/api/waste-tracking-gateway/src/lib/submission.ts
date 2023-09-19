@@ -314,7 +314,20 @@ export type SubmissionSummary = Readonly<{
   submissionState: SubmissionState;
 }>;
 
-export type GetSubmissionsResponse = ReadonlyArray<SubmissionSummary>;
+export type SubmissionPageMetadata = {
+  pageNumber: number;
+  token: string;
+};
+
+export type SubmissionSummaryPage = {
+  totalSubmissions: number;
+  totalPages: number;
+  currentPage: number;
+  pages: SubmissionPageMetadata[];
+  values: ReadonlyArray<SubmissionSummary>;
+};
+
+export type GetSubmissionsResponse = SubmissionSummaryPage;
 
 export type GetSubmissionResponse = Submission;
 export type CreateSubmissionRequest = Pick<Submission, 'reference'>;

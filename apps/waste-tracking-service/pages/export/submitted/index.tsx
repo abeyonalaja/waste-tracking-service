@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
@@ -11,6 +11,7 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   Paragraph,
+  Pagination,
   SubmissionNotFound,
   Loading,
 } from 'components';
@@ -81,9 +82,23 @@ const Index = () => {
     initialWasteDescState
   );
 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (router.isReady) {
+      setToken(router.query.token);
+    }
+  }, [router.isReady, router.query.token]);
+
   useEffect(() => {
     dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
-    fetch(`${process.env.NX_API_GATEWAY_URL}/submissions`)
+
+    let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals`;
+    if (token) {
+      url = `${url}&token=${token}`;
+    }
+
+    fetch(url)
       .then((response) => {
         if (response.ok) return response.json();
         else {
@@ -93,20 +108,14 @@ const Index = () => {
       .then((data) => {
         let filteredData;
         if (data) {
-          filteredData = data
-            .filter(
-              (item) =>
-                item.submissionState.status === 'SubmittedWithActuals' ||
-                item.submissionState.status === 'UpdatedWithActuals'
-            )
-            .reverse();
+          filteredData = data;
         }
         dispatchSubmittedAnnex7Page({
           type: 'DATA_FETCH_SUCCESS',
           payload: filteredData,
         });
       });
-  }, [router.isReady]);
+  }, [router.isReady, token]);
 
   const BreadCrumbs = () => {
     return (
@@ -156,7 +165,7 @@ const Index = () => {
             <GovUK.GridRow>
               <GovUK.GridCol>
                 {submittedAnnex7Page.data === undefined ||
-                submittedAnnex7Page.data.length === 0 ? (
+                submittedAnnex7Page.data.values.length === 0 ? (
                   <>
                     <GovUK.Heading size="SMALL">
                       {t('exportJourney.submittedAnnexSeven.notResultsMessage')}
@@ -199,7 +208,7 @@ const Index = () => {
                       </TableHeader>
                     </GovUK.Table.Row>
 
-                    {submittedAnnex7Page.data.map((item, index) => (
+                    {submittedAnnex7Page.data.values.map((item, index) => (
                       <GovUK.Table.Row key={index}>
                         <TableCell id={'transaction-id-' + index}>
                           {item.submissionDeclaration.status === 'Complete' && (
@@ -275,6 +284,12 @@ const Index = () => {
                         </TableCellActions>
                       </GovUK.Table.Row>
                     ))}
+                    <Pagination
+                      url="/export/submitted"
+                      pages={submittedAnnex7Page.data.pages}
+                      currentPage={submittedAnnex7Page.data.currentPage}
+                      totalPages={submittedAnnex7Page.data.totalPages}
+                    />
                   </GovUK.Table>
                 )}
               </GovUK.GridCol>

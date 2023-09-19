@@ -16,6 +16,7 @@ import { Error404Content } from './Error404Content';
 import { InputWithSuffix } from './InputWithSuffix';
 import { Loading } from './Loading';
 import { NotificationBanner } from './NotificationBanner';
+import { Pagination } from './Pagination';
 import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
 import { RadioList } from './RadioList';
@@ -50,6 +51,7 @@ export {
   InputWithSuffix,
   Loading,
   NotificationBanner,
+  Pagination,
   Paragraph,
   RadiosDivider,
   RadioList,

@@ -11,6 +11,7 @@ interface Props {
   onClick?: (e: FormEvent) => void;
   children: ReactNode;
   testId?: string;
+  rel?: string;
   disabled?: boolean;
   target?: string;
 }
@@ -54,6 +55,7 @@ export const AppLink = ({
   children,
   onClick,
   testId,
+  rel,
   disabled,
   target,
 }: Props) => {
@@ -66,6 +68,7 @@ export const AppLink = ({
       $isBold={isBold}
       disabled={disabled}
       target={target}
+      rel={rel}
     >
       {children}
     </StyledLink>

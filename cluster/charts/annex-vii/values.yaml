@@ -29,22 +29,17 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    {}
-    # Required for using Managed Identities on pod level
-    # azure.workload.identity/client-id: USER_ASSIGNED_CLIENT_ID # of the application MI
+    azure.workload.identity/tenant-id: '' # of the application MI
+    azure.workload.identity/client-id: '' # of the application MI
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ''
   labels:
-    {}
-    # Required for using Managed Identities on pod level
-    # azure.workload.identity/use: "true"
+    azure.workload.identity/use: 'true'
 
 # Custom labels for a pod
 podLabels:
-  {}
-  # Required for using Managed Identities on pod level
-  # azure.workload.identity/use: "true"
+  azure.workload.identity/use: 'true'
 
 # Annotations on pod level
 podAnnotations:
@@ -70,6 +65,9 @@ secret:
   name: ''
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
+    COSMOS_ENDPOINT: ''
+    COSMOS_DATABASE_NAME: 'annex-vii'
+    COSMOS_DRAFTS_CONTAINER_NAME: 'drafts'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

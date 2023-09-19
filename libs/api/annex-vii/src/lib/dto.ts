@@ -9,6 +9,7 @@ type AccountIdRequest = { accountId: string };
 type IdRequest = { id: string };
 type CarrierIdRequest = { carrierId: string };
 type RfdIdRequest = { rfdId: string };
+type OrderRequest = { order: 'ASC' | 'DESC' };
 
 type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
@@ -326,8 +327,26 @@ export type DraftSubmissionSummary = Readonly<{
   submissionState: DraftSubmissionState;
 }>;
 
-export type GetDraftsRequest = AccountIdRequest;
-export type GetDraftsResponse = Response<ReadonlyArray<DraftSubmissionSummary>>;
+export type DraftSubmissionPageMetadata = {
+  pageNumber: number;
+  token: string;
+};
+
+export type DraftSubmissionSummaryPage = {
+  totalSubmissions: number;
+  totalPages: number;
+  currentPage: number;
+  pages: DraftSubmissionPageMetadata[];
+  values: ReadonlyArray<DraftSubmissionSummary>;
+};
+
+export type GetDraftsRequest = AccountIdRequest &
+  OrderRequest & {
+    pageLimit?: number;
+    state?: DraftSubmissionState['status'][];
+    token?: string;
+  };
+export type GetDraftsResponse = Response<DraftSubmissionSummaryPage>;
 export const getDrafts: Method = { name: 'getDrafts', httpVerb: 'POST' };
 
 export type GetDraftByIdRequest = IdRequest & AccountIdRequest;

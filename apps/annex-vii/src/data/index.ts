@@ -1,2 +1,2 @@
 export * from './repository';
-export { default as DaprDraftRepository } from './dapr-drafts';
+export { default as CosmosDraftRepository } from './cosmos-drafts';

@@ -5,7 +5,18 @@ import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
 import { DraftController, parse, validate } from './controller';
-import { DaprDraftRepository } from './data';
+import { CosmosDraftRepository } from './data';
+import { CosmosClient } from '@azure/cosmos';
+import { CosmosAnnexViiClient } from './clients';
+import {
+  AzureCliCredential,
+  ChainedTokenCredential,
+  WorkloadIdentityCredential,
+} from '@azure/identity';
+
+if (!process.env['COSMOS_ENDPOINT']) {
+  throw new Error('Missing COSMOS_ENDPOINT configuration');
+}
 
 const logger = winston.createLogger({
   level: 'info',
@@ -25,11 +36,22 @@ const server = new DaprServer({
   },
 });
 
+const aadCredentials = new ChainedTokenCredential(
+  new AzureCliCredential(),
+  new WorkloadIdentityCredential()
+);
+
 const draftController = new DraftController(
-  new DaprDraftRepository(
-    server.client,
-    logger,
-    process.env['DAPR_DRAFT_STATE_STORE'] || 'drafts.state.annex-vii'
+  new CosmosDraftRepository(
+    new CosmosAnnexViiClient(
+      new CosmosClient({
+        endpoint: process.env['COSMOS_ENDPOINT'],
+        aadCredentials,
+      }),
+      process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'
+    ),
+    process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+    logger
   ),
   logger
 );

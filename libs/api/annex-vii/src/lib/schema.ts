@@ -736,7 +736,26 @@ const draftSubmission: SchemaObject = {
 };
 
 export const getDraftsRequest: JTDSchemaType<GetDraftsRequest> = {
-  properties: { accountId: { type: 'string' } },
+  properties: {
+    accountId: { type: 'string' },
+    order: { enum: ['ASC', 'DESC'] },
+  },
+  optionalProperties: {
+    pageLimit: { type: 'float64' },
+    state: {
+      elements: {
+        enum: [
+          'InProgress',
+          'Cancelled',
+          'Deleted',
+          'SubmittedWithEstimates',
+          'SubmittedWithActuals',
+          'UpdatedWithActuals',
+        ],
+      },
+    },
+    token: { type: 'string' },
+  },
 };
 
 export const getDraftsResponse: SchemaObject = {
@@ -744,23 +763,38 @@ export const getDraftsResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: {
-      elements: {
-        properties: {
-          id: { type: 'string' },
-          reference: customerReference,
-          wasteDescription: { ref: 'sectionSummary' },
-          wasteQuantity: { ref: 'sectionSummary' },
-          exporterDetail: { ref: 'sectionSummary' },
-          importerDetail: { ref: 'sectionSummary' },
-          collectionDate: { ref: 'sectionSummary' },
-          carriers: { ref: 'sectionSummary' },
-          collectionDetail: { ref: 'sectionSummary' },
-          ukExitLocation: { ref: 'sectionSummary' },
-          transitCountries: { ref: 'sectionSummary' },
-          recoveryFacilityDetail: { ref: 'sectionSummary' },
-          submissionConfirmation: { ref: 'sectionSummary' },
-          submissionDeclaration: draftSubmissionDeclaration,
-          submissionState: draftSubmissionState,
+      properties: {
+        totalSubmissions: { type: 'float64' },
+        totalPages: { type: 'float64' },
+        currentPage: { type: 'float64' },
+        pages: {
+          elements: {
+            properties: {
+              pageNumber: { type: 'float64' },
+              token: { type: 'string' },
+            },
+          },
+        },
+        values: {
+          elements: {
+            properties: {
+              id: { type: 'string' },
+              reference: customerReference,
+              wasteDescription: draftWasteDescription,
+              wasteQuantity: { ref: 'sectionSummary' },
+              exporterDetail: { ref: 'sectionSummary' },
+              importerDetail: { ref: 'sectionSummary' },
+              collectionDate: draftCollectionDate,
+              carriers: { ref: 'sectionSummary' },
+              collectionDetail: { ref: 'sectionSummary' },
+              ukExitLocation: { ref: 'sectionSummary' },
+              transitCountries: { ref: 'sectionSummary' },
+              recoveryFacilityDetail: { ref: 'sectionSummary' },
+              submissionConfirmation: { ref: 'sectionSummary' },
+              submissionDeclaration: draftSubmissionDeclaration,
+              submissionState: draftSubmissionState,
+            },
+          },
         },
       },
     },

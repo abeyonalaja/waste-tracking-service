@@ -104,28 +104,39 @@ describe('getDraftsResponse', () => {
   it('is compatible with success value', () => {
     const value: GetDraftsResponse = {
       success: true,
-      value: [
-        {
-          id: faker.datatype.uuid(),
-          reference: null,
-          wasteDescription: { status: 'NotStarted' },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: { status: 'NotStarted' },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: new Date(),
+      value: {
+        totalSubmissions: 1,
+        totalPages: 1,
+        currentPage: 1,
+        pages: [
+          {
+            pageNumber: 1,
+            token: '',
           },
-        },
-      ],
+        ],
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            reference: null,
+            wasteDescription: { status: 'NotStarted' },
+            wasteQuantity: { status: 'NotStarted' },
+            exporterDetail: { status: 'NotStarted' },
+            importerDetail: { status: 'NotStarted' },
+            collectionDate: { status: 'NotStarted' },
+            carriers: { status: 'NotStarted' },
+            collectionDetail: { status: 'NotStarted' },
+            ukExitLocation: { status: 'NotStarted' },
+            transitCountries: { status: 'NotStarted' },
+            recoveryFacilityDetail: { status: 'NotStarted' },
+            submissionConfirmation: { status: 'CannotStart' },
+            submissionDeclaration: { status: 'CannotStart' },
+            submissionState: {
+              status: 'InProgress',
+              timestamp: new Date(),
+            },
+          },
+        ],
+      },
     };
 
     expect(validate(value)).toBe(true);

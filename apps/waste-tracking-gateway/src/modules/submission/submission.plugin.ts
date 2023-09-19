@@ -41,9 +41,43 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/',
-      handler: async function () {
+      handler: async function ({ query }) {
+        let order = query['order'] as string | undefined;
+        if (!order) {
+          order = 'ASC';
+        }
+
+        order = order.toUpperCase();
+        if (order !== 'ASC' && order !== 'DESC') {
+          return Boom.badRequest("Incorrect value for query parameter 'order'");
+        }
+
+        const pageLimitStr = query['pageLimit'] as string | undefined;
+        if (pageLimitStr && Number.isNaN(parseInt(pageLimitStr))) {
+          return Boom.badRequest(
+            "Query parameter 'pageLimit' should be a number"
+          );
+        }
+        const pageLimit = pageLimitStr ? parseInt(pageLimitStr) : undefined;
+
+        const stateStr = query['state'] as string | undefined;
+        let state: dto.SubmissionState['status'][] | undefined;
+        if (stateStr) {
+          state = stateStr
+            .replace(/\s/g, '')
+            .split(',')
+            .map((i) => i as dto.SubmissionState['status']);
+        }
+
+        const token = query['token'] as string | undefined;
         try {
-          const value = await backend.getSubmissions(accountId);
+          const value = await backend.getSubmissions(
+            accountId,
+            { order },
+            pageLimit,
+            state,
+            token
+          );
           return value as dto.GetSubmissionsResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {

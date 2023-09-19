@@ -132,9 +132,21 @@ export default class DraftController {
 
   getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async ({
     accountId,
+    order,
+    pageLimit,
+    state,
+    token,
   }) => {
     try {
-      return success(await this.repository.getDrafts(accountId));
+      return success(
+        await this.repository.getDrafts(
+          accountId,
+          order,
+          pageLimit,
+          state,
+          token
+        )
+      );
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -148,7 +160,14 @@ export default class DraftController {
   getDraftById: Handler<api.GetDraftByIdRequest, api.GetDraftByIdResponse> =
     async ({ id, accountId }) => {
       try {
-        return success(await this.repository.getDraft(id, accountId));
+        const draft = await this.repository.getDraft(id, accountId);
+        if (
+          draft.submissionState.status === 'Cancelled' ||
+          draft.submissionState.status === 'Deleted'
+        ) {
+          return fromBoom(Boom.notFound());
+        }
+        return success(draft);
       } catch (err) {
         if (err instanceof Boom.Boom) {
           return fromBoom(err);

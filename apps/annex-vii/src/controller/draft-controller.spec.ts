@@ -3,7 +3,7 @@ import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import { add } from 'date-fns';
 import winston from 'winston';
-import { DraftSubmission, DraftSubmissionSummary } from '../model';
+import { DraftSubmission, DraftSubmissionSummaryPage } from '../model';
 import DraftController from './draft-controller';
 
 jest.mock('winston', () => ({
@@ -14,7 +14,15 @@ jest.mock('winston', () => ({
 
 const mockRepository = {
   getDrafts:
-    jest.fn<(accountId: string) => Promise<DraftSubmissionSummary[]>>(),
+    jest.fn<
+      (
+        accountId: string,
+        order: 'ASC' | 'DESC',
+        pageLimit?: number,
+        state?: DraftSubmission['submissionState']['status'][],
+        token?: string
+      ) => Promise<DraftSubmissionSummaryPage>
+    >(),
   getDraft:
     jest.fn<(id: string, accountId: string) => Promise<DraftSubmission>>(),
   saveDraft:
@@ -33,32 +41,64 @@ describe(DraftController, () => {
   describe('getDrafts', () => {
     it('forwards thrown Boom errors', async () => {
       const accountId = faker.datatype.uuid();
+      const order = 'ASC';
       mockRepository.getDrafts.mockRejectedValue(Boom.teapot());
 
-      const response = await subject.getDrafts({ accountId });
+      const response = await subject.getDrafts({
+        accountId,
+        order,
+      });
 
       expect(response.success).toBe(false);
       if (response.success) {
         return;
       }
 
-      expect(mockRepository.getDrafts).toBeCalledWith(accountId);
+      expect(mockRepository.getDrafts).toBeCalledWith(
+        accountId,
+        order,
+        undefined,
+        undefined,
+        undefined
+      );
       expect(response.error.statusCode).toBe(418);
     });
 
     it('successfully returns values from repository', async () => {
       const accountId = faker.datatype.uuid();
-      mockRepository.getDrafts.mockResolvedValue([]);
+      const order = 'ASC';
+      mockRepository.getDrafts.mockResolvedValue({
+        totalSubmissions: 0,
+        totalPages: 0,
+        currentPage: 0,
+        pages: [],
+        values: [],
+      });
 
-      const response = await subject.getDrafts({ accountId });
+      const response = await subject.getDrafts({
+        accountId,
+        order,
+      });
 
       expect(response.success).toBe(true);
       if (!response.success) {
         return;
       }
 
-      expect(mockRepository.getDrafts).toHaveBeenCalledWith(accountId);
-      expect(response.value).toEqual([]);
+      expect(mockRepository.getDrafts).toHaveBeenCalledWith(
+        accountId,
+        order,
+        undefined,
+        undefined,
+        undefined
+      );
+      expect(response.value).toEqual({
+        totalSubmissions: 0,
+        totalPages: 0,
+        currentPage: 0,
+        pages: [],
+        values: [],
+      });
     });
   });
 

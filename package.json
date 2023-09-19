@@ -61,8 +61,10 @@
     "@nrwl/nx-linux-x64-gnu": "^16.2.1"
   },
   "dependencies": {
+    "@azure/cosmos": "^3.17.3",
+    "@azure/identity": "^3.3.0",
     "@azure/monitor-opentelemetry-exporter": "^1.0.0-beta.11",
-    "@dapr/dapr": "^3.0.0",
+    "@dapr/dapr": "^3.1.2",
     "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^20.2.2",
     "@opentelemetry/instrumentation-grpc": "^0.38.0",

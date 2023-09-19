@@ -7,6 +7,7 @@ import {
   Submission,
   SubmissionBackend,
   SubmissionRef,
+  OrderRef,
   WasteDescription,
   WasteQuantity,
   ExporterDetail,
@@ -19,8 +20,8 @@ import {
   RecoveryFacilityDetail,
   SubmissionConfirmation,
   SubmissionDeclaration,
-  SubmissionSummary,
   SubmissionCancellationType,
+  SubmissionSummaryPage,
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
@@ -48,7 +49,16 @@ const mockBackend = {
       ) => Promise<void>
     >(),
   getSubmissions:
-    jest.fn<(accountId: string) => Promise<ReadonlyArray<SubmissionSummary>>>(),
+    jest.fn<
+      (
+        accountId: string,
+        order: OrderRef,
+        pageNumber: number,
+        pageLimit?: number,
+        state?: Submission['submissionState']['status'][],
+        token?: string
+      ) => Promise<SubmissionSummaryPage>
+    >(),
   getCustomerReference:
     jest.fn<(ref: SubmissionRef) => Promise<CustomerReference>>(),
   setCustomerReference:
@@ -209,7 +219,7 @@ describe('SubmissionPlugin', () => {
     it('Responds 404 if no submissions exist', async () => {
       const options = {
         method: 'GET',
-        url: '/submissions',
+        url: '/submission',
       };
 
       mockBackend.getSubmissions.mockRejectedValue(Boom.notFound());
