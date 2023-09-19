@@ -108,6 +108,40 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
     return { token: encodeURIComponent(pages[pageNumber - 2].token) };
   };
 
+  const getPageRange = () => {
+    const range = [];
+    const maxPagesToShow = 5;
+    const totalPagesInRange = Math.min(totalPages, maxPagesToShow);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        range.push(i);
+      }
+    } else if (currentPage <= maxPagesToShow) {
+      for (let i = 1; i <= totalPagesInRange; i++) {
+        range.push(i);
+      }
+      range.push('...');
+      range.push(totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      range.push(1);
+      range.push('...');
+      for (let i = totalPages - totalPagesInRange + 1; i <= totalPages; i++) {
+        range.push(i);
+      }
+    } else {
+      range.push(1);
+      range.push('...');
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        range.push(i);
+      }
+      range.push('...');
+      range.push(totalPages);
+    }
+
+    return range;
+  };
+
   return (
     <>
       {totalPages > 1 && (
@@ -136,21 +170,25 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
             </Previous>
           )}
           <PaginationList>
-            {pages.map((page) => (
+            {getPageRange().map((page, index) => (
               <PaginationListItem
-                key={`page-${page.pageNumber}`}
-                isCurrent={page.pageNumber === currentPage}
+                key={`pagination-page-${page}-${index}`}
+                isCurrent={page === currentPage}
               >
-                <PaginationLink
-                  isCurrent={page.pageNumber === currentPage}
-                  aria-label={`Page ${page.pageNumber}`}
-                  href={{
-                    pathname: url,
-                    query: getToken(page.pageNumber),
-                  }}
-                >
-                  {page.pageNumber}
-                </PaginationLink>
+                {page === '...' ? (
+                  <span>...</span>
+                ) : (
+                  <PaginationLink
+                    isCurrent={page === currentPage}
+                    aria-label={`Page ${page}`}
+                    href={{
+                      pathname: url,
+                      query: getToken(page),
+                    }}
+                  >
+                    {page}
+                  </PaginationLink>
+                )}
               </PaginationListItem>
             ))}
           </PaginationList>
