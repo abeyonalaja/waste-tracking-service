@@ -91,30 +91,32 @@ const Index = () => {
   }, [router.isReady, router.query.token]);
 
   useEffect(() => {
-    dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    if (router.isReady) {
+      dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-    let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals`;
-    if (token) {
-      url = `${url}&token=${token}`;
-    }
+      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals`;
+      if (token) {
+        url = `${url}&token=${token}`;
+      }
 
-    fetch(url)
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-        }
-      })
-      .then((data) => {
-        let filteredData;
-        if (data) {
-          filteredData = data;
-        }
-        dispatchSubmittedAnnex7Page({
-          type: 'DATA_FETCH_SUCCESS',
-          payload: filteredData,
+      fetch(url)
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          let filteredData;
+          if (data) {
+            filteredData = data;
+          }
+          dispatchSubmittedAnnex7Page({
+            type: 'DATA_FETCH_SUCCESS',
+            payload: filteredData,
+          });
         });
-      });
+    }
   }, [router.isReady, token]);
 
   const BreadCrumbs = () => {

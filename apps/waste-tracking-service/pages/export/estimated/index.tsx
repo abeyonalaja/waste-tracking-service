@@ -153,30 +153,32 @@ const UpdateAnnex7 = () => {
   }, [router.isReady, router.query.token]);
 
   useEffect(() => {
-    dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    if (router.isReady) {
+      dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-    let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates`;
-    if (token) {
-      url = `${url}&token=${token}`;
-    }
+      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates&order=desc`;
+      if (token) {
+        url = `${url}&token=${token}`;
+      }
 
-    fetch(url)
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-        }
-      })
-      .then((data) => {
-        let filteredData;
-        if (data) {
-          filteredData = data;
-        }
-        dispatchUpdateAnnex7Page({
-          type: 'DATA_FETCH_SUCCESS',
-          payload: filteredData,
+      fetch(url)
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          let filteredData;
+          if (data) {
+            filteredData = data;
+          }
+          dispatchUpdateAnnex7Page({
+            type: 'DATA_FETCH_SUCCESS',
+            payload: filteredData,
+          });
         });
-      });
+    }
   }, [router.isReady, token]);
 
   const doNotCancel = () => {
@@ -227,11 +229,9 @@ const UpdateAnnex7 = () => {
             },
             body: JSON.stringify(body),
           }
-        ).then((data) => {
-          console.log(data);
-          const newData = updateAnnex7Page.data.filter(
-            (wc) => wc.id !== item.id
-          );
+        ).then(() => {
+          const newData = updateAnnex7Page.data;
+          newData.values = newData.values.filter((wc) => wc.id !== item.id);
           dispatchUpdateAnnex7Page({
             type: 'DATA_FETCH_SUCCESS',
             payload: newData,

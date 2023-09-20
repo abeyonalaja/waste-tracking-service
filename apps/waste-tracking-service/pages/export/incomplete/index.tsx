@@ -160,31 +160,33 @@ const IncompleteAnnex7 = () => {
   }, [router.isReady, router.query.token]);
 
   useEffect(() => {
-    dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    if (router.isReady) {
+      dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-    let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=InProgress`;
-    if (token) {
-      url = `${url}&token=${token}`;
-    }
+      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=InProgress&order=desc`;
+      if (token) {
+        url = `${url}&token=${token}`;
+      }
 
-    fetch(url)
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-        }
-      })
-      .then((data) => {
-        let filteredData;
-        if (data) {
-          filteredData = data;
-        }
+      fetch(url)
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          let filteredData;
+          if (data) {
+            filteredData = data;
+          }
 
-        dispatchIncompleteAnnex7Page({
-          type: 'DATA_FETCH_SUCCESS',
-          payload: filteredData,
+          dispatchIncompleteAnnex7Page({
+            type: 'DATA_FETCH_SUCCESS',
+            payload: filteredData,
+          });
         });
-      });
+    }
   }, [router.isReady, token]);
 
   const handleRemove = (e, item) => {
@@ -225,10 +227,9 @@ const IncompleteAnnex7 = () => {
                 'Content-Type': 'application/json',
               },
             }
-          ).then((data) => {
-            const newData = incompleteAnnex7Page.data.filter(
-              (wc) => wc.id !== item.id
-            );
+          ).then(() => {
+            const newData = incompleteAnnex7Page.data;
+            newData.values = newData.values.filter((wc) => wc.id !== item.id);
             dispatchIncompleteAnnex7Page({
               type: 'DATA_FETCH_SUCCESS',
               payload: newData,
