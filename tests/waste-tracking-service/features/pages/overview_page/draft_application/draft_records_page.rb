@@ -14,7 +14,7 @@ class DraftRecordsPage < GenericPage
   ACTIONS = Translations.value 'exportJourney.updateAnnexSeven.table.actions'
   SUCCESS_MESSAGE = Translations.value 'exportJourney.incompleteAnnexSeven.delete.notification'
 
-  #bread crumbs
+  # bread crumbs
   APP_TITLE = Translations.value 'app.title'
   PARENT_APP_TITLE = Translations.value 'app.parentTitle'
 
@@ -42,6 +42,18 @@ class DraftRecordsPage < GenericPage
 
   def delete_notification
     find('delete-success-banner_body').text
+  end
+
+  def next_link
+    find(:css, "[rel='next']")
+  end
+
+  def click_next_link
+    click_link Translations.value 'nextPage'
+  end
+
+  def click_previous_link
+    click_link Translations.value 'previousPage'
   end
 
 end

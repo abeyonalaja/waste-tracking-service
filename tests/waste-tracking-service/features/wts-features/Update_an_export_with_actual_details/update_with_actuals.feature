@@ -73,6 +73,8 @@ Feature: AS A waste practitioner
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
     And I can see Update with actual page correctly translated
+      #check pagination
+    Then I should see pagination when exports are more than 15
     Then I verify that newly created record is on top of the table
     And I should see correct date and waste code and transaction reference
     And I click browser back button

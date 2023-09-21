@@ -744,7 +744,6 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-
   Scenario: Check WTS Accessibility for - submitted records page
     Given I login to waste tracking portal
     And I navigate to the submit an export with reference
@@ -773,8 +772,8 @@ Feature: Automation to check accessibility tool
     And I click confirm and submit button
     And Export submitted page displayed
     And I click Return to export waste from UK button
-    Then the "Overview" page is displayed
-    And I click the "Check all submitted exports" link
+    Then the "Export waste from uk" page is displayed
+    And I click the "View all submitted Annex VII records" link
     Then the "submitted records" page is displayed
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -912,7 +911,6 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
 
   Scenario: Check WTS Accessibility for - Update Annex record page
     Given I login to waste tracking portal

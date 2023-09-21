@@ -356,5 +356,7 @@
   "exportJourney.updateAnnexSeven.delete.notification": "Your Annex VII document has been cancelled",
   "exportJourney.updateAnnexSeven.delete.notificationRef": " has been cancelled",
   "exportJourney.updateAnnexSeven.delete.button": "Cancel this export",
-  "returnToAnnexs": "Return to Annex VII documents"
+  "returnToAnnexs": "Return to Annex VII documents",
+  "previousPage": "Previous page",
+  "nextPage": "Next page"
 }

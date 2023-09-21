@@ -125,4 +125,9 @@ module CommonComponents
     find('govuk-notification-banner-title')
   end
 
+  def export_count
+    all(:css, 'table > tbody >tr').count
+  end
+
+
 end

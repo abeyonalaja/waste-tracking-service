@@ -21,3 +21,12 @@ end
 Then(/^I should see empty draft Annex VII page$/) do
   expect(DraftRecordsPage.new).to have_text Translations.value 'exportJourney.incompleteAnnexSeven.notResultsMessage'
 end
+
+Then(/^I should see pagination when exports are more than 15$/) do
+  if DraftRecordsPage.new.export_count - 1 >= 15
+    expect(DraftRecordsPage.new.next_link.text).to eq Translations.value 'nextPage'
+    DraftRecordsPage.new.click_next_link
+    Log.info 'Successfully tested pagination in the Run'
+    DraftRecordsPage.new.click_previous_link
+  end
+end

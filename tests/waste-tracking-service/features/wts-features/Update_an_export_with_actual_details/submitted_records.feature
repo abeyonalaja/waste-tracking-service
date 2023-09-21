@@ -35,6 +35,8 @@ Feature:AS A Waste practitioner
     And I click the "View all submitted Annex VII records" link
     Then the "submitted records" page is displayed
     And I should see submitted records page is correctly translated
+    #check pagination
+    Then I should see pagination when exports are more than 15
     And I should see correct collection date and waste code and transaction reference
     When I click the first view link
     #text is removed for now

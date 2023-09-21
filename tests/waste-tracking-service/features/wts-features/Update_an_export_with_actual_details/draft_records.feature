@@ -60,4 +60,29 @@ Feature: AS A Waste practitioner
     And the task "Countries waste will travel through" should be "COMPLETED"
     And the task "Recovery facility or laboratory" should be "COMPLETED"
 
+  Scenario: User can use pagination to view incomplete exports
+    Given I login to waste tracking portal
+    And I navigate to the submit an export with reference
+    And I navigate to Quantity of waste page
+    When I click the Save and return to draft
+    When I click the link Return to this draft later
+    When I click the "Manage incomplete Annex VII records" link
+    Then I should see draft Annex VII records page
+    And I should see draft records page correctly translated
+    Then I should see my draft application saved on the top
+    And  I should see correct date on draft application page
+    And I should see waste code on draft application page
+    #check pagination
+    Then I should see pagination when exports are more than 15
+    Then I should see my draft application saved on the top
+    And  I should see correct date on draft application page
+    And I should see waste code on draft application page
+    When I click the first continue link
+    Then Submit an export page is displayed
+
+
+
+
+
+
 
