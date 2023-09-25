@@ -119,7 +119,7 @@
   "exportJourney.submitAnExport.SectionFour.laboratoryDetails": "Laboratory details",
   "exportJourney.submitAnExport.SectionFour.recoveryDetails": "Recovery facility",
   "exportJourney.submitAnExport.SectionFive.heading": "Final checks",
-  "exportJourney.submitAnExport.SectionFive.checkYourReport": "Check your report",
+  "exportJourney.submitAnExport.SectionFive.checkYourReport": "Check your record",
   "exportJourney.submitAnExport.SectionFive.signDeclaration": "Sign declaration",
   "exportJourney.submitAnExport.finalCheck.title": "Final check",
   "exportJourney.submitAnExport.finalCheck.description": "You'll be able to check and submit this record once you've completed all the sections.",
@@ -171,7 +171,7 @@
   "exportJourney.wasteCarrierDetails.firstPageQuestion3": "Who is the third waste carrier?",
   "exportJourney.wasteCarrierDetails.firstPageQuestion4": "Who is the fourth waste carrier?",
   "exportJourney.wasteCarrierDetails.firstPageQuestion5": "Who is the fifth waste carrier?",
-  "exportJourney.wasteCarrierDetails.YouCanEditMessage": "You'll be able to update these details after submitting the export.",
+  "exportJourney.wasteCarrierDetails.YouCanEditMessage": "You'll be able to update these details after submitting the record.",
   "exportJourney.wasteCarrierDetails.secondPageQuestion": "What are the waste carrier's contact details?",
   "exportJourney.wasteCarrierDetails.secondPageQuestion1": "What are the first waste carrier's contact details?",
   "exportJourney.wasteCarrierDetails.secondPageQuestion2": "What are the second waste carrier's contact details?",
@@ -256,8 +256,8 @@
   "exportJourney.laboratorySite.contactTitle": "What are the laboratory contact details?",
   "exportJourney.laboratorySite.contactPerson": "Laboratory contact person",
   "exportJourney.laboratorySite.codeTitle": "What is the disposal code?",
-  "exportJourney.checkAnswers.pageTitle": "Check this record",
-  "exportJourney.checkAnswers.caption": "Check this record",
+  "exportJourney.checkAnswers.pageTitle": "Check your record",
+  "exportJourney.checkAnswers.caption": "Check your record",
   "exportJourney.checkAnswers.heading": "Check your answers before submitting this record",
   "exportJourney.checkAnswers.paragraph": "Changing an answer could affect other responses you’ve given. Check your responses to make sure they’re still correct",
   "exportJourney.checkAnswers.warning": "You'll need to update any estimated details with actual details as soon as possible after submitting this record.",
@@ -369,5 +369,6 @@
   "exportJourney.ewc.listTitleMultiple": "You have added {{count}} European Waste Catalogue (EWC) codes",
   "exportJourney.ewc.addAnotherTitle": "Do you need to add another EWC code?",
   "exportJourney.ewc.confirmRemoveTitle": "Are you sure you want to remove code: {{code}}?",
-  "exportJourney.ewc.maxReached": "You have added the maximum number of EWC codes."
+  "exportJourney.ewc.maxReached": "You have added the maximum number of EWC codes.",
+  "exportJourney.downloadPDFLinkText": "download the Annex VII records created from this export (PDF, 2 pages)"
 }

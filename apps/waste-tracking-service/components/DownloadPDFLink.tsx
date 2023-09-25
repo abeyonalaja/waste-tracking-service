@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { AppLink } from './AppLink';
 import { savePDF } from '../utils/savePDF';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   id?: string;
@@ -15,6 +16,7 @@ export const DownloadPDFLink = ({
   transactionId,
   children,
 }: Props) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = React.useState(false);
   const handleClick = (e) => {
     if (loading) {
@@ -34,9 +36,7 @@ export const DownloadPDFLink = ({
       disabled={loading}
       onClick={handleClick}
     >
-      {children
-        ? children
-        : 'download the Annex VII documents created from this export (PDF, 2 pages)'}
+      {children ? children : t('exportJourney.downloadPDFLinkText')}
     </AppLink>
   );
 };
