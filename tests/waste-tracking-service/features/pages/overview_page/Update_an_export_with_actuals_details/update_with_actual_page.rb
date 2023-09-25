@@ -7,7 +7,6 @@ class UpdateWithActualPage < GenericPage
   TITLE = Translations.value 'exportJourney.updateAnnexSeven.title'
   CAPTION = Translations.value 'exportJourney.updateAnnexSeven.caption'
   PARAGRAPH = Translations.value 'exportJourney.updateAnnexSeven.paragraph'
-  PARAGRAPH = Translations.value 'exportJourney.updateAnnexSeven.paragraph'
   TRANSACTION_NUMBER = Translations.value 'exportJourney.updateAnnexSeven.table.transactionNumber'
   SUBMITTED = Translations.value 'exportJourney.updateAnnexSeven.table.submitted'
   WASTE_CODE = Translations.value 'exportJourney.updateAnnexSeven.table.wasteCode'

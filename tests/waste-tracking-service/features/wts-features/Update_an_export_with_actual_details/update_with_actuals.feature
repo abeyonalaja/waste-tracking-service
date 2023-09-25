@@ -24,7 +24,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -60,7 +60,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -102,7 +102,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -126,7 +126,7 @@ Feature: AS A waste practitioner
     And I should see export Treatment of waste correctly displayed
     # And I click return to all exports button
     # needs to be checked
-    And I click the "Return to all Annex VII submissions" link
+    And I click the "Return to all Annex VII records" link
     Then the "Update with actual" page is displayed
 
   Scenario: User verifies Actual needed label present on the estimated values
@@ -150,7 +150,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -187,7 +187,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -223,7 +223,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -280,7 +280,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -348,7 +348,7 @@ Feature: AS A waste practitioner
     And I complete laboratory contact details
     And I complete disposal code page
     Then the task "Laboratory details" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -397,7 +397,7 @@ Feature: AS A waste practitioner
     And I complete laboratory contact details
     And I complete disposal code page
     Then the task "Laboratory details" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -440,7 +440,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -487,7 +487,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -503,7 +503,7 @@ Feature: AS A waste practitioner
     When I click first cancel button
     Then the "cancel the export" page is displayed
     And I should see cancel the export page correctly translated
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then I remain on the cancel the export page with an "Select a reason if you want to cancel this document" error message displayed
 
   Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
@@ -528,7 +528,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -545,7 +545,7 @@ Feature: AS A waste practitioner
     Then the "cancel the export" page is displayed
     And I should see cancel the export page correctly translated
     When I choose "Change of recovery facility or laboratory" radio button
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then the "Update with actual" page is displayed
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
@@ -572,7 +572,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -589,7 +589,7 @@ Feature: AS A waste practitioner
     Then the "cancel the export" page is displayed
     And I should see cancel the export page correctly translated
     When I choose "No longer exporting this waste" radio button
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then the "Update with actual" page is displayed
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
@@ -616,7 +616,7 @@ Feature: AS A waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -632,7 +632,7 @@ Feature: AS A waste practitioner
     And I wait for a second
     When I click first cancel button
     And I should see cancel the export page correctly translated
-    When I click the "Return to Annex VII documents" link
+    When I click the "Return to Annex VII records" link
     Then the "Update with actual" page is displayed
     And I should see cancelled export on update with actual page
     When I click first cancel button
@@ -640,13 +640,13 @@ Feature: AS A waste practitioner
     Then the "cancel the export" page is displayed
     And I should see cancel the export page correctly translated
     When I choose "Other" radio button
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then I remain on the cancel the export page with an "Enter a reason" error message displayed
     When I enter a reason more than 100 character
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then I remain on the cancel the export page with an "Reason must be 100 characters or less" error message displayed
     When I enter a valid cancellation reason
-    When I click the "Cancel this export" button
+    When I click the "Cancel this record" button
     Then the "Update with actual" page is displayed
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page

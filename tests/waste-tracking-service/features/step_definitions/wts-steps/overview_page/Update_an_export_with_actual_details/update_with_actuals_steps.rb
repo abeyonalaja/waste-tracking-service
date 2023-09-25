@@ -38,7 +38,7 @@ end
 
 Then(/^I should see success message translated correctly$/) do
   expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
-  expect(UpdateWithActualPage.new.success_body.text).to eq 'Your document has been updated'
+  expect(UpdateWithActualPage.new.success_body.text).to eq 'Your record has been updated'
 end
 
 Then(/^I should see quantity of actual waste updated in cubic meters$/) do

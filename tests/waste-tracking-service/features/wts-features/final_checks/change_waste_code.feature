@@ -24,7 +24,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -60,7 +60,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -106,7 +106,7 @@ Feature: AS A Waste practitioner
     And I complete laboratory contact details
     And I complete disposal code page
     Then the task "Laboratory details" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -148,7 +148,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -184,7 +184,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -226,7 +226,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -261,7 +261,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -301,7 +301,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -329,7 +329,7 @@ Feature: AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed

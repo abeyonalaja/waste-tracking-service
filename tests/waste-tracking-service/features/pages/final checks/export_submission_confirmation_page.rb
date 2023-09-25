@@ -8,7 +8,7 @@ class ExportSubmissionConfirmationPage < GenericPage
   include ErrorBox
   include CommonComponents
 
-  TITLE = 'Annex VII document submitted'
+  TITLE = 'Annex VII record submitted'
 
   SUBTEXT = Translations.value 'exportJourney.exportSubmitted.panel'
   TEXT1 = Translations.value 'exportJourney.exportSubmitted.statement'

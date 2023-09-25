@@ -738,7 +738,7 @@ Feature: Automation to check accessibility tool
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     Then the page should be axe clean according to: wcag2a
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -765,7 +765,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -802,7 +802,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -863,7 +863,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -893,7 +893,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -933,7 +933,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -974,7 +974,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed

@@ -24,7 +24,7 @@ Feature:AS A Waste practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     Then the "check your report" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
@@ -47,5 +47,5 @@ Feature:AS A Waste practitioner
     And I should see export Exporter and Importer details correctly displayed
     And I should see export Journey of waste correctly displayed
     And I should see export Treatment of waste correctly displayed
-    When I click the "Return to all Annex VII submissions" link
+    When I click the "Return to all Annex VII records" link
     Then the "submitted records" page is displayed

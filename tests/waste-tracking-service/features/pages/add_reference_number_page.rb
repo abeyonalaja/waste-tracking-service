@@ -8,9 +8,10 @@ class AddReferenceNumberPage < GenericPage
   include ErrorBox
 
   REFERENCE_NUMBER_INPUT_ID = 'reference'
+  TITLE = Translations.value 'yourReference.title'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: 'Do you want to add your own reference to this export?', exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
 
   def choose_option option

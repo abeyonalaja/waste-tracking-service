@@ -18,7 +18,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     #need to check the translation
     And I should see check your report page is correctly translated
@@ -44,7 +44,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
@@ -74,7 +74,7 @@ Feature: AS A Waste Practitioner
     When I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then I should see warning text on check your report page
     Then I should see Estimate Collection date
     And I should see Estimate Quantity of Waste
@@ -120,7 +120,7 @@ Feature: AS A Waste Practitioner
     And I click the button Save and continue
     And I complete the "second" recovery facility
     And I click the button Save and continue
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then I should see 5 waste carriers on check your export page
     And I should see 5 ewc codes on check your export page
     And I should see 2 recovery facilities on check your export page
@@ -141,7 +141,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     #ref change link
     When I click your own reference Change link
@@ -165,7 +165,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
    # ewc code change link
     When I click ewc code Change link
@@ -173,18 +173,18 @@ Feature: AS A Waste Practitioner
     And I choose "No" radio button
 #    Then I should see selected EWC code on EWC codes page
     When I click the Save and return to draft
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     #national code
     When I click national code Change link
     Then I verify Yes option is selected
     And I should see national code pre-populated
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     #waste description
     When I click Waste description Change link
     Then I should see previously entered waste description details
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click Waste quantity Change link
     Then I should see quantity option "Yes, I know the actual amount" is selected
 
@@ -204,7 +204,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     #exporter change link
     When I click Exporter address Change link
@@ -212,11 +212,11 @@ Feature: AS A Waste Practitioner
     When I click the button Save and continue
     When I wait for a second
     When I click the Save and return to draft
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     And I click Exporter details Change link
     Then the "exporter details" page is displayed
     When I click the Save and return to draft
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     #importer change link
     When I click importer details Change link
@@ -224,7 +224,7 @@ Feature: AS A Waste Practitioner
     When I click the button Save and continue
     Then the "importer contact details" page is displayed
     When I click the Save and return to draft
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     #importer contact change link
     When I click importer contact details Change link
     Then the "importer contact details" page is displayed
@@ -246,44 +246,44 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
     When I click on Collection date Change link
     Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click on Waste carrier Change link
     Then the "Who is the waste carrier" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     And I wait for a second
     When I click on Waste carrier contact Change link
     And I wait for a second
     Then the "What Are The Waste Carriers Contact Details" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click the waste carrier transport Change link
     Then the "How Will The Waste Carrier Transport The Waste" page is displayed
     When I click Continue button
     And I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     And I wait for a second
     When I click waste carrier details Change link
     Then the "Shipping container details" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click waste collection address Change link
 #    Then the "Manual Address Entry Waste Collection" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click waste collection contact change link
     Then the "Contact Details Collection Address" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click waste leaves location change link
     Then the "Location Waste Leaves The Uk" page is displayed
     When I click the Save and return to draft
-    And I click the "Check your report" link
+    And I click the "Check your record" link
     When I click transit countries change link
     Then the "Waste Transit Countries" page is displayed
 
@@ -303,7 +303,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
 
   Scenario: Remove only EWC code from check your export page
     Given I login to waste tracking portal
@@ -321,7 +321,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    When I click the "Check your report" link
+    When I click the "Check your record" link
     Then the "check your report" page is displayed
    # ewc code change link
     When I click ewc code Change link
