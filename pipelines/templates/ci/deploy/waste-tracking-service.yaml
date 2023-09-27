@@ -80,7 +80,7 @@ steps:
         then
           echo "Installing release: ${PROJECT_NAME}"
           chartFullName="${HOST}/${PROJECT_NAME}"
-          isTemplateEnabled="${IS_TEMPLATE_ENABLED}"
+          isTemplateEnabled="${IS_TEMPLATE_ENABLED^^}"
           helm upgrade \
             --install $PROJECT_NAME \
             $chartFullName \
