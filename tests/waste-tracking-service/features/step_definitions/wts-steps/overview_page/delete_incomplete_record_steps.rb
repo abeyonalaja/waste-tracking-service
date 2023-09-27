@@ -11,7 +11,7 @@ And(/^I verify record is not present on the page$/) do
 end
 
 And(/^I verify success message does not contain reference number$/) do
-  expect(DraftRecordsPage.new.delete_notification).to eq Translations.value('exportJourney.incompleteAnnexSeven.delete.notification')
+  expect(DraftRecordsPage.new.delete_notification).to eq "#{TestStatus.test_status(:application_reference_number)} #{Translations.value('exportJourney.incompleteAnnexSeven.delete.notificationRef')}"
 end
 
 And(/^I verify record is present on the page$/) do
@@ -19,7 +19,7 @@ And(/^I verify record is present on the page$/) do
 end
 
 And(/^I verify that correct success message is displayed$/) do
-  expect(DraftRecordsPage.new.delete_notification).to eq TestStatus.test_status(:application_reference_number) + Translations.value('exportJourney.incompleteAnnexSeven.delete.notificationRef')
+  expect(DraftRecordsPage.new.delete_notification).to eq "#{TestStatus.test_status(:application_reference_number)} #{Translations.value('exportJourney.incompleteAnnexSeven.delete.notificationRef')}"
 end
 
 And(/^I verify reference caption is present$/) do

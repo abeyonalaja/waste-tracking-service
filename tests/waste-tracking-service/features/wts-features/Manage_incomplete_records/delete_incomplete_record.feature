@@ -9,12 +9,6 @@ Feature: AS A waste practitioner
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
     Then the "submit an export" page is displayed
-    And I click Move export or import waste breadcrumb
-    And I navigate to the submit an export with reference
-    Then Submit an export page is displayed
-    And I navigate to Quantity of waste page
-    When I complete Quantity of waste with estimated bulk waste
-    Then the "submit an export" page is displayed
     And I click Export waste from UK breadcrumb
     Then the "Export waste from uk" page is displayed
     And I click the "Manage incomplete Annex VII records" link
@@ -36,7 +30,7 @@ Feature: AS A waste practitioner
     When I complete Quantity of waste with estimated bulk waste
     Then the "submit an export" page is displayed
     And I click Move export or import waste breadcrumb
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste

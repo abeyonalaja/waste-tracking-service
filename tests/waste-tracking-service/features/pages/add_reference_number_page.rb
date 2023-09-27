@@ -9,9 +9,18 @@ class AddReferenceNumberPage < GenericPage
 
   REFERENCE_NUMBER_INPUT_ID = 'reference'
   TITLE = Translations.value 'yourReference.title'
+  HINT_TEXT = Translations.value 'yourReference.intro'
+  YOUR_REFERENCE = Translations.value 'yourReference.breadcrumb'
+  APP_TITLE = Translations.value 'app.title'
+  PARENT_TITLE = Translations.value 'app.parentTitle'
+  SINGLE_EXPORT_TITLE = Translations.value 'exportJourney.submitAnExport.breadcrumb'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
+  end
+
+  def check_page_translation
+    expect(self).to have_text HINT_TEXT
   end
 
   def choose_option option
@@ -33,5 +42,12 @@ class AddReferenceNumberPage < GenericPage
   def export_waste_from_the_uk
     link = all(:link, text: 'Export waste from the UK').last
     link.click
+  end
+
+  def check_bread_crumbs_translation
+    expect(self).to have_text YOUR_REFERENCE
+    expect(self).to have_text APP_TITLE
+    expect(self).to have_text PARENT_TITLE
+    expect(self).to have_text SINGLE_EXPORT_TITLE
   end
 end

@@ -23,7 +23,7 @@ class ExportUpdateSubmissionConfirmationPage < GenericPage
 
   # bread crumb
   TEXT12 = Translations.value 'exportJourney.exportSubmitted.breadcrumb'
-  TEXT13 = Translations.value 'dashboard.title'
+  TEXT13 = Translations.value 'app.title'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true

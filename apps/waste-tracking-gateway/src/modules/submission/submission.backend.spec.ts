@@ -21,7 +21,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('persists a created submission', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const result = await subject.getSubmission({ id, accountId });
     expect(result.id).toEqual(id);
   });
@@ -33,11 +34,6 @@ describe(InMemorySubmissionBackend, () => {
     ).rejects.toHaveProperty('isBoom', true);
   });
 
-  it('creates submission without a reference', async () => {
-    const result = await subject.createSubmission(accountId, null);
-    expect(result.reference).toBeNull();
-  });
-
   it('creates a submission with a reference', async () => {
     const reference = faker.datatype.string(10);
     const result = await subject.createSubmission(accountId, reference);
@@ -45,7 +41,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('enables waste quantity on completion of waste description', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     await subject.setWasteDescription(
       { id, accountId },
       {
@@ -62,15 +59,17 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('cannot initially start recovery facility section', async () => {
+    const reference = faker.datatype.string(10);
     const { recoveryFacilityDetail } = await subject.createSubmission(
       accountId,
-      null
+      reference
     );
     expect(recoveryFacilityDetail.status).toBe('CannotStart');
   });
 
   it('enables recovery facility where some waste code is provided', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     await subject.setWasteDescription(
       { id, accountId },
       {
@@ -84,16 +83,14 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('lets us change a customer reference', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
-
     const reference = faker.datatype.string(10);
-    await subject.setCustomerReference({ id, accountId }, reference);
-    expect(await subject.getCustomerReference({ id, accountId })).toBe(
-      reference
-    );
+    const { id } = await subject.createSubmission(accountId, reference);
 
-    await subject.setCustomerReference({ id, accountId }, null);
-    expect(await subject.getCustomerReference({ id, accountId })).toBeNull();
+    const referenceUpdate = faker.datatype.string(12);
+    await subject.setCustomerReference({ id, accountId }, referenceUpdate);
+    expect(await subject.getCustomerReference({ id, accountId })).toBe(
+      referenceUpdate
+    );
   });
 
   it('rejects where reference not found', () => {
@@ -111,7 +108,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('accepts if collection date less than three days in future', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const date = add(new Date(), { days: 1 });
     expect(
@@ -134,7 +132,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('lets us change a carrier detail', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const status: Omit<Carriers, 'transport' | 'values'> = {
       status: 'Started',
     };
@@ -178,7 +177,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('accepts set exit location if provided is Yes and value is given', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setExitLocationRequest = {
       status: 'Complete',
@@ -191,7 +191,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('accepts set exit location if provided is No and value is not given', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setExitLocationRequest = {
       status: 'Complete',
@@ -204,7 +205,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('lets us change a Transit Countries data', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const transitCountryData = {
       status: 'Complete',
@@ -217,7 +219,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('lets us change a Recovery Facility Detail', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const status: Omit<RecoveryFacilityDetail, 'values'> = {
       status: 'Started',
     };
@@ -261,7 +264,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('rejects invalid set submission confirmation request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setSubmissionConfirmationRequest = {
       status: 'NotStarted',
@@ -277,7 +281,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('rejects invalid set submission confirmation request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setSubmissionConfirmationRequest = {
       status: 'CannotStart',
@@ -293,7 +298,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('accepts valid set submission confirmation request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     let date = add(new Date(), { days: 1 });
 
@@ -507,7 +513,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Resets collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const date = add(new Date(), { days: 1 });
 
@@ -691,7 +698,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('rejects invalid set submission declaration request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setSubmissionDeclarationRequest = {
       status: 'Complete',
@@ -706,7 +714,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('rejects invalid set submission declaration request', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     const setSubmissionDeclarationRequest = {
       status: 'CannotStart',
@@ -722,7 +731,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('updates the status of the submission declaration based on the state of the submission confirmation', async () => {
-    const id = (await subject.createSubmission(accountId, null)).id;
+    const reference = faker.datatype.string(10);
+    const id = (await subject.createSubmission(accountId, reference)).id;
 
     let date = add(new Date(), { days: 1 });
 
@@ -963,7 +973,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Reset recovery facility when waste description is changed from Non-Laboratory to Laborarory', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     await subject.setWasteDescription(
       { id, accountId },
       {
@@ -997,7 +1008,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Reset recovery facility when waste description is changed from Laboratory to Non-Laborarory', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     await subject.setWasteDescription(
       { id, accountId },
       {
@@ -1031,7 +1043,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Reset quantity, carriers and recovery facility details when waste description is changed from small to bulk waste', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     let result = await subject.getSubmission({ id, accountId });
     expect(result?.wasteQuantity.status).toBe('CannotStart');
@@ -1154,7 +1167,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Reset quantity, carriers and recovery facility details when waste description is changed from bulk to small waste', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     let result = await subject.getSubmission({ id, accountId });
     expect(result?.wasteQuantity.status).toBe('CannotStart');
@@ -1281,7 +1295,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Reset quantity, carriers and recovery facility details when waste description switches type of bulk-waste', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     let result = await subject.getSubmission({ id, accountId });
     expect(result?.wasteQuantity.status).toBe('CannotStart');
@@ -1408,7 +1423,8 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('Resets status of quantity, carriers and recovery facility if input switches bulk-waste code with the same bulk-waste type', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
 
     let result = await subject.getSubmission({ id, accountId });
     expect(result?.wasteQuantity.status).toBe('CannotStart');
@@ -1535,11 +1551,12 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('sets submission state status to SubmittedWithActuals when all data has actual values on initial submission', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const date = add(new Date(), { days: 20 });
     const value = {
       id: id,
-      reference: null,
+      reference: reference,
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -1705,11 +1722,12 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('sets submission state status to SubmittedWithEstimates when data has estimated values on initial submission', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const date = add(new Date(), { days: 20 });
     const value = {
       id: id,
-      reference: null,
+      reference: reference,
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -1875,11 +1893,12 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('sets submission state status to UpdatedWithActuals when data has estimated values on initial submission followed by update with actuals', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const date = add(new Date(), { days: 20 });
     const value = {
       id: id,
-      reference: null,
+      reference: reference,
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -2082,11 +2101,12 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('sets submission state status to Deleted when submission has been removed', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const date = add(new Date(), { days: 20 });
     const value = {
       id: id,
-      reference: null,
+      reference: reference,
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -2258,11 +2278,12 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('sets submission state status to Cancelled when submission has been removed', async () => {
-    const { id } = await subject.createSubmission(accountId, null);
+    const reference = faker.datatype.string(10);
+    const { id } = await subject.createSubmission(accountId, reference);
     const date = add(new Date(), { days: 20 });
     const value = {
       id: id,
-      reference: null,
+      reference: reference,
       wasteDescription: {
         status: 'Complete',
         wasteCode: { type: 'AnnexIIIA', value: 'X' },

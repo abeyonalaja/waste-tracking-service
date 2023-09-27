@@ -81,7 +81,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     When I complete Waste codes and description with Bulk waste and Max EWC codes
     And I click the "Quantity of waste" link
     And I complete Quantity of waste sub-section

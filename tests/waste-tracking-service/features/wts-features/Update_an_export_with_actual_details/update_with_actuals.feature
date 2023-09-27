@@ -167,7 +167,7 @@ Feature: AS A waste practitioner
 
   Scenario: User verifies that Not provided label is showing under the reference column on Update with actual page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
@@ -203,7 +203,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can update estimated quantity in tonnes and collection date but didn't not confirm the changes
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -260,7 +260,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can update estimated quantity in cubic meters and collection date and confirm the changes, export should be in submitted lists
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -326,7 +326,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can update estimated quantity in kilograms after submission
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I complete Quantity of waste with estimated small waste
@@ -375,7 +375,7 @@ Feature: AS A waste practitioner
 
   Scenario: Check the back link from estimated collection date and estimated small quantity of waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I complete Quantity of waste with estimated small waste
@@ -420,7 +420,7 @@ Feature: AS A waste practitioner
 
   Scenario: Check the back link from estimated collection date and estimated bulk quantity of waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -467,7 +467,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can't Cancel estimated export without selecting any reason
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -508,7 +508,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -552,7 +552,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can Cancel estimated export with No longer exporting this waste reason
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
@@ -596,7 +596,7 @@ Feature: AS A waste practitioner
 
   Scenario: User can Cancel estimated export with other reason
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste

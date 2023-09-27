@@ -38,7 +38,6 @@ const errorResponseValue: SchemaObject = {
 
 const customerReference: JTDSchemaType<CustomerReference> = {
   type: 'string',
-  nullable: true,
 };
 
 const draftWasteDescriptionData = {

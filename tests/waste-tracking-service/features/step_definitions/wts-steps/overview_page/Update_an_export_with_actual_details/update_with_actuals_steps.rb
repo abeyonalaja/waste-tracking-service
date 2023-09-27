@@ -112,7 +112,7 @@ end
 
 And(/^I should see Success cancelled message$/) do
   expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
-  expect(UpdateWithActualPage.new.cancel_notification).to eq Translations.value('exportJourney.updateAnnexSeven.delete.notification')
+  expect(UpdateWithActualPage.new.cancel_notification).to eq "#{TestStatus.test_status(:application_reference_number)} #{Translations.value('exportJourney.updateAnnexSeven.delete.notificationRef')}"
 end
 
 And(/^I should not see cancelled export on update with actual page$/) do

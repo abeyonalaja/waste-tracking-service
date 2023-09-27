@@ -2,29 +2,21 @@ import React, { useState, useCallback, FormEvent, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
+import { useSubmissionContext } from 'contexts';
 import { useTranslation } from 'react-i18next';
 import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  ConditionalRadioWrap,
-} from '../../../components';
-import {
-  isNotEmpty,
-  validateOwnReference,
-  validateReference,
-} from '../../../utils/validators';
-import { useSubmissionContext } from '../../../contexts';
+  Paragraph,
+} from 'components';
+import { isNotEmpty, validateReference } from 'utils/validators';
 
 export function Reference() {
   const { t } = useTranslation();
   const router = useRouter();
   const { submission, setSubmission } = useSubmissionContext();
   const [id, setId] = useState<string>(submission?.id || null);
-  const [ownReference, setOwnReference] = useState<string>(
-    submission?.ownReference
-  );
   const [reference, setReference] = useState<string>(
     submission?.reference || null
   );
@@ -44,7 +36,6 @@ export function Reference() {
               const { id, reference } = data;
               setId(id);
               setReference(reference);
-              setOwnReference(reference === null ? 'no' : 'yes');
             });
         } catch (e) {
           console.error(e);
@@ -63,9 +54,7 @@ export function Reference() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(
-              ownReference === 'yes' ? reference.trim() : null
-            ),
+            body: JSON.stringify(reference.trim()),
           }).then(() => {
             router.push({
               pathname: `/export/incomplete/tasklist`,
@@ -78,13 +67,8 @@ export function Reference() {
       };
 
       const postData = () => {
-        let body;
         const url = `${process.env.NX_API_GATEWAY_URL}/submissions`;
-        if (ownReference === 'yes') {
-          body = JSON.stringify({ reference });
-        } else {
-          body = JSON.stringify({});
-        }
+        const body = JSON.stringify({ reference });
         try {
           fetch(url, {
             method: 'POST',
@@ -97,9 +81,8 @@ export function Reference() {
             .then((data) => {
               const { id } = data;
               setSubmission({
-                id: id,
-                ownReference: ownReference,
-                reference: ownReference === 'yes' ? reference : null,
+                id,
+                reference,
               });
               router.push({
                 pathname: `/export/incomplete/tasklist`,
@@ -112,8 +95,7 @@ export function Reference() {
       };
 
       const newErrors = {
-        ownReference: validateOwnReference(ownReference),
-        reference: validateReference(ownReference, reference),
+        reference: validateReference(reference),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -127,7 +109,7 @@ export function Reference() {
       }
       e.preventDefault();
     },
-    [ownReference, reference, id, router, setSubmission]
+    [reference, id, router, setSubmission]
   );
 
   const BreadCrumbs = () => {
@@ -168,59 +150,35 @@ export function Reference() {
                 }))}
               />
             )}
-            <form onSubmit={handleSubmit}>
-              <GovUK.Fieldset>
-                <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                  {t('yourReference.title')}
-                </GovUK.Fieldset.Legend>
-                <GovUK.MultiChoice
-                  mb={6}
-                  hint={t('yourReference.hint')}
-                  meta={{
-                    error: errors?.ownReference,
-                    touched: !!errors?.ownReference,
-                  }}
-                  label=""
-                >
-                  <GovUK.Radio
-                    name="ownReference"
-                    id="ownReferenceYes"
-                    checked={ownReference === 'yes'}
-                    onChange={() => setOwnReference('yes')}
-                  >
-                    Yes
-                  </GovUK.Radio>
-                  {ownReference === 'yes' && (
-                    <ConditionalRadioWrap>
-                      <GovUK.InputField
-                        input={{
-                          name: 'reference',
-                          id: 'reference',
-                          value: reference === null ? '' : reference,
-                          maxLength: 20,
-                          onChange: (e) => setReference(e.target.value),
-                        }}
-                        meta={{
-                          error: errors?.reference,
-                          touched: !!errors?.reference,
-                        }}
-                      >
-                        {t('yourReference.inputLabel')}
-                      </GovUK.InputField>
-                    </ConditionalRadioWrap>
-                  )}
-                  <GovUK.Radio
-                    name="ownReference"
-                    id="ownReferenceNo"
-                    checked={ownReference === 'no'}
-                    onChange={() => setOwnReference('no')}
-                  >
-                    No
-                  </GovUK.Radio>
-                </GovUK.MultiChoice>
-              </GovUK.Fieldset>
-              <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
-            </form>
+
+            <GovUK.Heading size="LARGE" id="template-use-title">
+              {t('yourReference.title')}
+            </GovUK.Heading>
+            <Paragraph>{t('yourReference.intro')}</Paragraph>
+            <GovUK.GridRow>
+              <GovUK.GridCol setWidth="one-half">
+                <form onSubmit={handleSubmit}>
+                  <GovUK.FormGroup>
+                    <GovUK.InputField
+                      input={{
+                        name: 'reference',
+                        id: 'reference',
+                        value: reference === null ? '' : reference,
+                        maxLength: 20,
+                        onChange: (e) => setReference(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.reference,
+                        touched: !!errors?.reference,
+                      }}
+                    >
+                      {t('yourReference.inputLabel')}
+                    </GovUK.InputField>
+                  </GovUK.FormGroup>
+                  <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
+                </form>
+              </GovUK.GridCol>
+            </GovUK.GridRow>
           </GovUK.GridCol>
         </GovUK.GridRow>
       </GovUK.Page>

@@ -16,60 +16,44 @@ global.fetch = jest.fn(() =>
 jest.mock('next/router', () => require('next-router-mock'));
 
 describe('Add reference to submission', () => {
-  it('renders without crashing', () => {
-    act(() => {
+  it('renders the page', async () => {
+    await act(async () => {
       render(<Reference />);
     });
-    expect(
-      screen.findByText('Do you want to add your own reference to this export?')
-    ).toBeTruthy();
+    const referenceField = screen.getByLabelText('Enter a reference');
+    expect(referenceField).toBeTruthy();
   });
 
-  it('displays a validation message when no option is selected', () => {
-    act(() => {
+  it('displays a validation message when no reference is entered', async () => {
+    await act(async () => {
       render(<Reference />);
     });
     expect(
-      screen.findByText('Do you want to add your own reference to this export?')
+      screen.getByText(
+        'What is your unique reference for this Annex VII record?'
+      )
     ).toBeTruthy();
-    const submitButton = screen.getByText('Save and continue');
 
+    const submitButton = screen.getByText('Save and continue');
     act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(screen.findByText('There is a problem')).toBeTruthy();
-    expect(
-      screen.getAllByText('Select yes if you want to add a reference')[0]
-    ).toBeTruthy();
-  });
-
-  it('displays a validation message when "Yes" is selected but no reference is entered', () => {
-    act(() => {
-      render(<Reference />);
-    });
-    expect(
-      screen.findByText('Do you want to add your own reference to this export?')
-    ).toBeTruthy();
-    const yesRadioButton = screen.getByLabelText('Yes');
-    const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(yesRadioButton);
-    fireEvent.click(submitButton);
     expect(screen.getByText('There is a problem')).toBeTruthy();
     expect(screen.getAllByText('Enter a reference')[0]).toBeTruthy();
   });
 
-  it('displays a validation message when "Yes" and only spaces are entered for the reference', () => {
-    act(() => {
+  it('displays a validation message when only spaces are entered for the reference', async () => {
+    await act(async () => {
       render(<Reference />);
     });
     expect(
-      screen.findByText('Do you want to add your own reference to this export?')
+      screen.getByText(
+        'What is your unique reference for this Annex VII record?'
+      )
     ).toBeTruthy();
-    const yesRadioButton = screen.getByLabelText('Yes');
-    fireEvent.click(yesRadioButton);
 
-    const reference = screen.getByLabelText('Enter your reference');
+    const reference = screen.getByLabelText('Enter a reference');
     fireEvent.change(reference, { target: { value: '    ' } });
 
     const submitButton = screen.getByText('Save and continue');
@@ -77,5 +61,75 @@ describe('Add reference to submission', () => {
 
     expect(screen.getByText('There is a problem')).toBeTruthy();
     expect(screen.getAllByText('Enter a reference')[0]).toBeTruthy();
+  });
+
+  it('displays a validation message when only spaces are entered for the reference', async () => {
+    await act(async () => {
+      render(<Reference />);
+    });
+    expect(
+      screen.getByText(
+        'What is your unique reference for this Annex VII record?'
+      )
+    ).toBeTruthy();
+
+    const reference = screen.getByLabelText('Enter a reference');
+    fireEvent.change(reference, { target: { value: '    ' } });
+
+    const submitButton = screen.getByText('Save and continue');
+    fireEvent.click(submitButton);
+
+    expect(screen.getByText('There is a problem')).toBeTruthy();
+    expect(screen.getAllByText('Enter a reference')[0]).toBeTruthy();
+  });
+
+  it('displays a validation message when too many characters are entered for the reference', async () => {
+    await act(async () => {
+      render(<Reference />);
+    });
+    expect(
+      screen.getByText(
+        'What is your unique reference for this Annex VII record?'
+      )
+    ).toBeTruthy();
+
+    const reference = screen.getByLabelText('Enter a reference');
+    fireEvent.change(reference, {
+      target: { value: '012345678901234567890123456789' },
+    });
+
+    const submitButton = screen.getByText('Save and continue');
+    fireEvent.click(submitButton);
+
+    expect(screen.getByText('There is a problem')).toBeTruthy();
+    expect(
+      screen.getAllByText('Enter a reference using 20 character or less')[0]
+    ).toBeTruthy();
+  });
+
+  it('displays a validation message when invalid characters are entered for the reference', async () => {
+    await act(async () => {
+      render(<Reference />);
+    });
+    expect(
+      screen.getByText(
+        'What is your unique reference for this Annex VII record?'
+      )
+    ).toBeTruthy();
+
+    const reference = screen.getByLabelText('Enter a reference');
+    fireEvent.change(reference, {
+      target: { value: '?&£%iuat' },
+    });
+
+    const submitButton = screen.getByText('Save and continue');
+    fireEvent.click(submitButton);
+
+    expect(screen.getByText('There is a problem')).toBeTruthy();
+    expect(
+      screen.getAllByText(
+        'The reference must only include letters a to z, numbers, spaces, hyphens and back slashes'
+      )[0]
+    ).toBeTruthy();
   });
 });

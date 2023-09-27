@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Pagination } from 'components';
 import '@testing-library/jest-dom/extend-expect';
+import 'i18n/config';
 
 describe('Pagination Component', () => {
   it('renders the component with page numbers and previous/next buttons', () => {

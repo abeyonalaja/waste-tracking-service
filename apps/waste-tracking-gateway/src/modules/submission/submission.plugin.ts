@@ -125,7 +125,7 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.createSubmission(
                 accountId,
-                reference === undefined ? null : reference
+                reference
               )) as dto.CreateSubmissionResponse
             )
             .code(201);

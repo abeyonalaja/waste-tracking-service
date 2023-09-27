@@ -7,9 +7,10 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
 } from 'components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
+import { useSubmissionContext } from 'contexts';
 
 const UnderlinedH1 = styled(GovUK.Heading)`
   border-bottom: 2px solid #e2e3e4;
@@ -31,6 +32,12 @@ const BreadCrumbs = () => {
 };
 
 export function Index() {
+  const { setSubmission } = useSubmissionContext();
+
+  useEffect(() => {
+    setSubmission({});
+  }, [setSubmission]);
+
   const { t } = useTranslation();
   return (
     <>

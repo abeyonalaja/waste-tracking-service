@@ -954,7 +954,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Cancel export page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with no reference
+    And I navigate to the submit an export with reference
     Then Submit an export page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste

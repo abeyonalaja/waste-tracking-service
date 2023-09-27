@@ -22,6 +22,7 @@ describe('validateCreateSubmissionRequest', () => {
 
   it('Rejects invalid values', () => {
     expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
     expect(validate(faker.datatype.string(10))).toBe(false);
     expect(validate({ ref: faker.datatype.string(10) })).toBe(false);
     expect(validate({ reference: faker.datatype.number() })).toBe(false);
@@ -30,7 +31,6 @@ describe('validateCreateSubmissionRequest', () => {
   });
 
   it('Accepts valid values', () => {
-    expect(validate({})).toBe(true);
     expect(validate({ reference: faker.datatype.string(10) })).toBe(true);
   });
 });

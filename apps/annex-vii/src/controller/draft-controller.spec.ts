@@ -124,7 +124,7 @@ describe(DraftController, () => {
       const accountId = faker.datatype.uuid();
       const value: DraftSubmission = {
         id,
-        reference: null,
+        reference: faker.datatype.string(10),
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -164,7 +164,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockRejectedValue(Boom.teapot());
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
-        reference: null,
+        reference: faker.datatype.string(10),
       });
 
       expect(response.success).toBe(false);
@@ -180,7 +180,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockResolvedValue();
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
-        reference: null,
+        reference: faker.datatype.string(10),
       });
 
       expect(response.success).toBe(true);
@@ -196,9 +196,10 @@ describe(DraftController, () => {
     it('enables waste quantity on completion of waste description', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -236,7 +237,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -270,9 +271,10 @@ describe(DraftController, () => {
     it('enables recovery facility where some waste code is provided', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -307,7 +309,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -338,9 +340,10 @@ describe(DraftController, () => {
     it('resets waste-quantity section if input switches to small-waste', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -394,7 +397,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'NotApplicable' },
@@ -427,9 +430,10 @@ describe(DraftController, () => {
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -526,7 +530,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'NotApplicable' },
@@ -559,9 +563,10 @@ describe(DraftController, () => {
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -658,7 +663,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -694,9 +699,10 @@ describe(DraftController, () => {
       const carrierId = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -796,7 +802,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -834,9 +840,10 @@ describe(DraftController, () => {
       const carrierId3 = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -973,7 +980,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -1099,9 +1106,10 @@ describe(DraftController, () => {
     it('persists both actual and estimate waste quantity data', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1149,7 +1157,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1209,7 +1217,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1267,7 +1275,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1326,7 +1334,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1389,7 +1397,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1439,9 +1447,10 @@ describe(DraftController, () => {
     it('accepts a valid collection date', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1491,7 +1500,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1538,9 +1547,10 @@ describe(DraftController, () => {
     it('persists both actual and estimate collection date data', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1590,7 +1600,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1652,7 +1662,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1703,9 +1713,10 @@ describe(DraftController, () => {
   describe('createDraftCarriers', () => {
     it('successfully creates up to 5 carrier references', async () => {
       const id = faker.datatype.uuid();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -1788,9 +1799,10 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -1851,7 +1863,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -1903,9 +1915,10 @@ describe(DraftController, () => {
     it('accepts a valid carrier reference', async () => {
       const id = faker.datatype.uuid();
       const carrierId = faker.datatype.uuid();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -1964,9 +1977,10 @@ describe(DraftController, () => {
     it('accepts a request if provided is Yes and value given', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2002,7 +2016,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2032,9 +2046,10 @@ describe(DraftController, () => {
     it('accepts request if provided is No and no value is given', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2071,7 +2086,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2103,9 +2118,10 @@ describe(DraftController, () => {
     it('accepts valid Transit Countries data', async () => {
       const id = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2140,7 +2156,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2176,7 +2192,7 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: faker.datatype.string(10),
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2241,9 +2257,10 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
       const timestamp = new Date();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2305,7 +2322,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: null,
+          reference: reference,
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2359,9 +2376,10 @@ describe(DraftController, () => {
     it('accepts a valid recovery facility reference', async () => {
       const id = faker.datatype.uuid();
       const rfdId = faker.datatype.uuid();
+      const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: reference,
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -3007,7 +3025,7 @@ describe(DraftController, () => {
 
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: faker.datatype.string(10),
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -3045,7 +3063,7 @@ describe(DraftController, () => {
 
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: null,
+        reference: faker.datatype.string(10),
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },

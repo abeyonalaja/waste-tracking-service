@@ -5,7 +5,7 @@ Feature: AS A Waste Producer/Broker
   Scenario: Reference number should be displayed on Submit an export page
     Given I login to waste tracking portal
     And I navigate to the add reference page
-    When I have selected Yes and entered my reference
+    When I have entered my reference
     Then Submit an export page is displayed
     And the reference should be displayed
 

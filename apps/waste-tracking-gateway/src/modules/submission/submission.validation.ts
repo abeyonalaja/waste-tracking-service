@@ -23,7 +23,7 @@ const ajv = new Ajv();
 
 export const validateCreateSubmissionRequest =
   ajv.compile<CreateSubmissionRequest>({
-    optionalProperties: {
+    properties: {
       reference: { type: 'string' },
     },
   });

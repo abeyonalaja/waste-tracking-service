@@ -12,12 +12,6 @@ When(/^I navigate to the submit an export with reference$/) do
   AddReferenceNumberController.complete
 end
 
-When(/^I navigate to the submit an export with no reference$/) do
-  click_link('dashboard_link')
-  ExportWasteFromUkPage.new.create_single_annex_record
-  AddReferenceNumberController.complete 'No'
-end
-
 Then(/^I have submission incomplete 0 of 5 sections$/) do
   expect(page).to have_text('You have completed 0 of 5 sections.')
   expect(page).to have_text("You'll be able to check and submit this record once you've completed all the sections.")

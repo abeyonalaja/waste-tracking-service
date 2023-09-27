@@ -47,9 +47,9 @@ const PaginationListItem = styled('li')<{ isCurrent?: boolean }>`
   }
 `;
 
-const PaginationLink = styled(Link)<{ isCurrent?: boolean }>`
-  color: ${(props) => (props.isCurrent ? '#fff' : LINK_COLOUR)};
-  font-weight: ${(props) => (props.isCurrent ? '700' : 'inherit')};
+const PaginationLink = styled(Link)<{ $isCurrent?: boolean }>`
+  color: ${(props) => (props.$isCurrent ? '#fff' : LINK_COLOUR)};
+  font-weight: ${(props) => (props.$isCurrent ? '700' : 'inherit')};
   text-decoration: underline;
   text-decoration-thickness: max(1px, 0.0625rem);
   text-underline-offset: 0.1em;
@@ -60,7 +60,7 @@ const PaginationLink = styled(Link)<{ isCurrent?: boolean }>`
     line-height: 1.3;
   }
   &:hover {
-    color: ${(props) => (props.isCurrent ? '#fff' : '#003078')};
+    color: ${(props) => (props.$isCurrent ? '#fff' : '#003078')};
     text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
     text-decoration-skip-ink: none;
   }
@@ -179,7 +179,7 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
                   <span>...</span>
                 ) : (
                   <PaginationLink
-                    isCurrent={page === currentPage}
+                    $isCurrent={page === currentPage}
                     aria-label={`Page ${page}`}
                     href={{
                       pathname: url,

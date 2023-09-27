@@ -10,12 +10,9 @@ export const validateOwnReference: (value?: string) => string | undefined = (
   value
 ) => (value ? undefined : 'Select yes if you want to add a reference');
 
-export const validateReference: (
-  ownReference?: string,
-  reference?: string
-) => string | null = (ownReference, reference) => {
-  if (ownReference !== 'yes') return;
-
+export const validateReference: (reference?: string) => string | null = (
+  reference
+) => {
   if (reference !== null) {
     reference = reference.trim();
   }

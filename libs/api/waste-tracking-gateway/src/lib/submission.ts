@@ -2,7 +2,7 @@ type SectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
 };
 
-export type CustomerReference = string | null;
+export type CustomerReference = string;
 
 export type WasteDescriptionData = {
   wasteCode:

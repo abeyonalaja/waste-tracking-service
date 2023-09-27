@@ -15,7 +15,7 @@ type DraftSectionSummary = {
   status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
 };
 
-export type CustomerReference = string | null;
+export type CustomerReference = string;
 
 type DraftWasteDescriptionData = {
   wasteCode:

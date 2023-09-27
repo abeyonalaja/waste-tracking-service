@@ -7,30 +7,17 @@ Feature: AS A Waste Producer/Broker
   Scenario: Display page breadcrumbs
     Given I login to waste tracking portal
     When I navigate to the add reference page
-    And I see the breadcrumb Waste tracking service, Green list waste overview, Your reference displayed
+    Then I should see enter reference page correctly translated
     When I click Export waste from the UK from the breadcrumb
     Then Export waste from UK page is displayed
 
   Scenario: Saving reference in the front end
     Given I login to waste tracking portal
     When I navigate to the add reference page
-    And I have selected Yes and entered my reference
+    And I have entered my reference
+    And I see the breadcrumb Waste tracking service, Green list waste overview, Your reference displayed
     And I click browser back button
     Then I should see reference number pre-populated
-
-  Scenario: Proceeding without a reference
-    Given I login to waste tracking portal
-    And I navigate to the add reference page
-    When I have selected the No option
-    And I click the button Save and continue
-    Then Submit an export page is displayed
-
-  Scenario: Error for no selection for unique reference
-    Given I login to waste tracking portal
-    And I navigate to the add reference page
-    When I have neither selected the Yes or No option
-    And I click the button Save and continue
-    Then I remain on the Add Reference Number page with an "Select yes if you want to add a reference" error message displayed
 
   Scenario: Error for entering 1 character
     Given I login to waste tracking portal
@@ -49,6 +36,5 @@ Feature: AS A Waste Producer/Broker
   Scenario: Error messages for entering empty spaces
     Given I login to waste tracking portal
     And I navigate to the add reference page
-    When  I have entered few empty spaces
-    And I click the button Save and continue
+    When I click the button Save and continue
     Then I remain on the Add Reference Number page with an "Enter a reference" error message displayed

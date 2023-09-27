@@ -117,7 +117,7 @@ describe('getDraftsResponse', () => {
         values: [
           {
             id: faker.datatype.uuid(),
-            reference: null,
+            reference: faker.datatype.string(10),
             wasteDescription: { status: 'NotStarted' },
             wasteQuantity: { status: 'NotStarted' },
             exporterDetail: { status: 'NotStarted' },
@@ -162,7 +162,7 @@ describe('getDraftByIdResponse', () => {
       success: true,
       value: {
         id: faker.datatype.uuid(),
-        reference: null,
+        reference: faker.datatype.string(10),
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
