@@ -80,6 +80,7 @@ steps:
         then
           echo "Installing release: ${PROJECT_NAME}"
           chartFullName="${HOST}/${PROJECT_NAME}"
+          isTemplateEnabled="${IS_TEMPLATE_ENABLED}"
           helm upgrade \
             --install $PROJECT_NAME \
             $chartFullName \
@@ -100,7 +101,7 @@ steps:
             --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
             --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
             --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL \
-            --set secret.env.IS_TEMPLATE_ENABLED='${IS_TEMPLATE_ENABLED}'
+            --set secret.env.IS_TEMPLATE_ENABLED=isTemplateEnabled
         else
           echo "Release: ${PROJECT_NAME} is already up to date"
         fi

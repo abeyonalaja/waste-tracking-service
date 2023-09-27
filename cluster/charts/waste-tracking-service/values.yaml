@@ -6,7 +6,7 @@
 labels: {}
 
 # Number of pod replicas if horizontal pod autoscaler is not enable
-replicaCount: 2
+replicaCount: 1
 
 # Profile of the image used to create the pod containers
 image:
