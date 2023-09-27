@@ -56,9 +56,12 @@ podAnnotations:
 
 # Container resource allocation
 resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
   limits:
     cpu: 50m
-    memory: 128Mi
+    memory: 256Mi
 
 # Profile of the secret and values used for environment variable config
 secret:

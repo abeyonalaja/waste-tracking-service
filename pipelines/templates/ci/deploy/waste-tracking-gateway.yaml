@@ -11,6 +11,18 @@ parameters:
   - name: appNameTag
     type: string
     default: 'waste_tracking_gateway'
+  - name: requestsCpu
+    type: string
+    default: '25m'
+  - name: requestsMemory
+    type: string
+    default: '128Mi'
+  - name: limitsCpu
+    type: string
+    default: '50m'
+  - name: limitsMemory
+    type: string
+    default: '256Mi'
   - name: appInsightsConnectionString
     type: string
     default: ''
@@ -44,6 +56,10 @@ steps:
             --version $CHART_TAG \
             --create-namespace \
             -n $PROJECT_NAME \
+            --set resources.requests.cpu=$REQUESTS_CPU \
+            --set resources.requests.memory=$REQUESTS_MEMORY \
+            --set resources.limits.cpu=$LIMITS_CPU \
+            --set resources.limits.memory=$LIMITS_MEMORY \
             --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
         else
           echo "Release: ${PROJECT_NAME} is already up to date"
@@ -59,6 +75,10 @@ steps:
       HOST: oci://$(acr.loginServer)/charts/wts
       PROJECT_NAME: ${{ parameters.appName }}
       CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
+      REQUESTS_CPU: ${{ parameters.requestsCpu }}
+      REQUESTS_MEMORY: ${{ parameters.requestsMemory }}
+      LIMITS_CPU: ${{ parameters.limitsCpu }}
+      LIMITS_MEMORY: ${{ parameters.limitsMemory }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
       AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}

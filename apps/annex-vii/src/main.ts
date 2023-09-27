@@ -14,8 +14,8 @@ import {
   WorkloadIdentityCredential,
 } from '@azure/identity';
 
-if (!process.env['COSMOS_ENDPOINT']) {
-  throw new Error('Missing COSMOS_ENDPOINT configuration');
+if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
+  throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration');
 }
 
 const logger = winston.createLogger({
@@ -45,7 +45,7 @@ const draftController = new DraftController(
   new CosmosDraftRepository(
     new CosmosAnnexViiClient(
       new CosmosClient({
-        endpoint: process.env['COSMOS_ENDPOINT'],
+        endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
         aadCredentials,
       }),
       process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'

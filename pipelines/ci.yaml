@@ -168,13 +168,13 @@ jobs:
                   appName: ${{ app }}
                   appNameTag: ${{ replace(app, '-', '_') }}
                   appInsightsConnectionString: $(appInsightsConnectionString)
-                  cosmosDbUri: $(cosmosDbUri)
+                  cosmosDbAccountUri: $(cosmosDbAccountUri)
                   msiClientId: $(annexViiMsiClientId)
                   msiTenantId: $(annexViiMsiTenantId)
                   deployChart: variables.deployCharts
                   affectedCharts: $(affectedCharts)
 
-          - ${{ elseif in(app, 'waste-tracking-gateway')}}:
+          - ${{ elseif eq(app, 'waste-tracking-gateway')}}:
               - template: templates/ci/deploy/waste-tracking-gateway.yaml
                 parameters:
                   serviceConnection: ${{ variables.serviceConnection }}
@@ -185,7 +185,7 @@ jobs:
                   deployChart: variables.deployCharts
                   affectedCharts: $(affectedCharts)
 
-          - ${{ elseif in(app, 'waste-tracking-service')}}:
+          - ${{ elseif eq(app, 'waste-tracking-service')}}:
               - template: templates/ci/deploy/waste-tracking-service.yaml
                 parameters:
                   serviceConnection: ${{ variables.serviceConnection }}

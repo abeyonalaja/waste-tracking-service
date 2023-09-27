@@ -11,6 +11,18 @@ parameters:
   - name: appNameTag
     type: string
     default: 'waste_tracking_service'
+  - name: requestsCpu
+    type: string
+    default: '25m'
+  - name: requestsMemory
+    type: string
+    default: '128Mi'
+  - name: limitsCpu
+    type: string
+    default: '50m'
+  - name: limitsMemory
+    type: string
+    default: '256Mi'
   - name: appInsightsConnectionString
     type: string
     default: ''
@@ -41,6 +53,9 @@ parameters:
   - name: nextAuthUrl
     type: string
     default: ''
+  - name: isTemplateEnabled
+    type: string
+    default: 'false'
   - name: deployChart
     type: string
     default: ''
@@ -71,16 +86,21 @@ steps:
             --version $CHART_TAG \
             --create-namespace \
             -n $PROJECT_NAME \
+            --set resources.requests.cpu=$REQUESTS_CPU \
+            --set resources.requests.memory=$REQUESTS_MEMORY \
+            --set resources.limits.cpu=$LIMITS_CPU \
+            --set resources.limits.memory=$LIMITS_MEMORY \
             --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
-            --set secret.env.DCID_CLIENTID=$DCID_CLIENTID \
-            --set secret.env.DCID_CLIENTSECRET=$DCID_CLIENTSECRET \
+            --set secret.env.DCID_CLIENT_ID=$DCID_CLIENT_ID \
+            --set secret.env.DCID_CLIENT_SECRET=$DCID_CLIENT_SECRET \
             --set secret.env.DCID_POLICY=$DCID_POLICY \
             --set secret.env.DCID_REDIRECT=$DCID_REDIRECT \
-            --set secret.env.DCID_SERVICEID=$DCID_SERVICEID \
+            --set secret.env.DCID_SERVICE_ID=$DCID_SERVICE_ID \
             --set secret.env.DCID_TENANT=$DCID_TENANT \
             --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
             --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
-            --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL
+            --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL \
+            --set secret.env.IS_TEMPLATE_ENABLED=$IS_TEMPLATE_ENABLED
         else
           echo "Release: ${PROJECT_NAME} is already up to date"
         fi
@@ -95,15 +115,20 @@ steps:
       HOST: oci://$(acr.loginServer)/charts/wts
       PROJECT_NAME: ${{ parameters.appName }}
       CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
+      REQUESTS_CPU: ${{ parameters.requestsCpu }}
+      REQUESTS_MEMORY: ${{ parameters.requestsMemory }}
+      LIMITS_CPU: ${{ parameters.limitsCpu }}
+      LIMITS_MEMORY: ${{ parameters.limitsMemory }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
-      DCID_CLIENTID: ${{ parameters.dcidClientId }}
-      DCID_CLIENTSECRET: ${{ parameters.dcidClientSecret }}
+      DCID_CLIENT_ID: ${{ parameters.dcidClientId }}
+      DCID_CLIENT_SECRET: ${{ parameters.dcidClientSecret }}
       DCID_POLICY: ${{ parameters.dcidPolicy }}
       DCID_REDIRECT: ${{ parameters.dcidRedirect }}
-      DCID_SERVICEID: ${{ parameters.dcidServiceId }}
+      DCID_SERVICE_ID: ${{ parameters.dcidServiceId }}
       DCID_TENANT: ${{ parameters.dcidTenant }}
       DCID_WELLKNOWN: ${{ parameters.dcidWellKnown }}
       NEXTAUTH_SECRET: ${{ parameters.nextAuthSecret }}
       NEXTAUTH_URL: ${{ parameters.nextAuthUrl }}
+      IS_TEMPLATE_ENABLED: ${{ parameters.isTemplateEnabled }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
       AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}
