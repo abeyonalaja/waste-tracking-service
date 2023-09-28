@@ -1,6 +1,7 @@
 import { DraftSubmission, DraftSubmissionSummaryPage } from '../model';
+import { BaseRepository } from './base-repository';
 
-export interface DraftRepository {
+export interface DraftRepository extends BaseRepository {
   getDrafts(
     accountId: string,
     order: 'ASC' | 'DESC',

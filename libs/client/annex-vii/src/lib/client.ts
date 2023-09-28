@@ -111,6 +111,49 @@ import {
   setDraftSubmissionConfirmationById,
   getDraftSubmissionDeclarationById,
   setDraftSubmissionDeclarationById,
+  GetTemplatesRequest,
+  GetTemplatesResponse,
+  GetTemplateByIdRequest,
+  GetTemplateByIdResponse,
+  CreateTemplateRequest,
+  CreateTemplateFromSubmissionRequest,
+  CreateTemplateFromTemplateRequest,
+  CreateTemplateResponse,
+  DeleteTemplateRequest,
+  DeleteTemplateResponse,
+  getTemplates,
+  getTemplateById,
+  createTemplate,
+  deleteTemplate,
+  CreateDraftFromTemplateRequest,
+  createDraftFromTemplate,
+  UpdateTemplateRequest,
+  UpdateTemplateResponse,
+  createTemplateFromSubmission,
+  createTemplateFromTemplate,
+  updateTemplate,
+  getTemplateWasteDescriptionById,
+  createTemplateCarriers,
+  createTemplateRecoveryFacilityDetails,
+  deleteTemplateCarriers,
+  deleteTemplateRecoveryFacilityDetails,
+  getTemplateCarriers,
+  getTemplateCollectionDetail,
+  getTemplateExitLocationById,
+  getTemplateExporterDetailById,
+  getTemplateImporterDetailById,
+  getTemplateRecoveryFacilityDetails,
+  getTemplateTransitCountries,
+  listTemplateCarriers,
+  listTemplateRecoveryFacilityDetails,
+  setTemplateCarriers,
+  setTemplateCollectionDetail,
+  setTemplateExitLocationById,
+  setTemplateExporterDetailById,
+  setTemplateImporterDetailById,
+  setTemplateRecoveryFacilityDetails,
+  setTemplateTransitCountries,
+  setTemplateWasteDescriptionById,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -138,6 +181,17 @@ export class DaprAnnexViiClient {
     return (await this.daprClient.invoker.invoke(
       this.annexViiAppId,
       createDraft.name,
+      HttpMethod.POST,
+      req
+    )) as CreateDraftResponse;
+  }
+
+  async createDraftFromTemplate(
+    req: CreateDraftFromTemplateRequest
+  ): Promise<CreateDraftResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createDraftFromTemplate.name,
       HttpMethod.POST,
       req
     )) as CreateDraftResponse;
@@ -513,5 +567,322 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as SetDraftSubmissionDeclarationByIdResponse;
+  }
+
+  async getTemplates(req: GetTemplatesRequest): Promise<GetTemplatesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplates.name,
+      HttpMethod.POST,
+      req
+    )) as GetTemplatesResponse;
+  }
+
+  async getTemplateById(
+    req: GetTemplateByIdRequest
+  ): Promise<GetTemplateByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateById.name,
+      HttpMethod.POST,
+      req
+    )) as GetTemplateByIdResponse;
+  }
+
+  async createTemplate(
+    req: CreateTemplateRequest
+  ): Promise<CreateTemplateResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createTemplate.name,
+      HttpMethod.POST,
+      req
+    )) as CreateTemplateResponse;
+  }
+
+  async createTemplateFromSubmission(
+    req: CreateTemplateFromSubmissionRequest
+  ): Promise<CreateTemplateResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createTemplateFromSubmission.name,
+      HttpMethod.POST,
+      req
+    )) as CreateTemplateResponse;
+  }
+
+  async createTemplateFromTemplate(
+    req: CreateTemplateFromTemplateRequest
+  ): Promise<CreateTemplateResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createTemplateFromTemplate.name,
+      HttpMethod.POST,
+      req
+    )) as CreateTemplateResponse;
+  }
+
+  async updateTemplate(
+    req: UpdateTemplateRequest
+  ): Promise<UpdateTemplateResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      updateTemplate.name,
+      HttpMethod.POST,
+      req
+    )) as UpdateTemplateResponse;
+  }
+
+  async deleteTemplate(
+    req: DeleteTemplateRequest
+  ): Promise<DeleteTemplateResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteTemplate.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteTemplateResponse;
+  }
+
+  async getTemplateWasteDescriptionById(
+    req: GetDraftWasteDescriptionByIdRequest
+  ): Promise<GetDraftWasteDescriptionByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateWasteDescriptionById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftWasteDescriptionByIdResponse;
+  }
+
+  async setTemplateWasteDescriptionById(
+    req: SetDraftWasteDescriptionByIdRequest
+  ): Promise<SetDraftWasteDescriptionByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateWasteDescriptionById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftWasteDescriptionByIdResponse;
+  }
+
+  async getTemplateExporterDetailById(
+    req: GetDraftExporterDetailByIdRequest
+  ): Promise<GetDraftExporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateExporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftExporterDetailByIdResponse;
+  }
+
+  async setTemplateExporterDetailById(
+    req: SetDraftExporterDetailByIdRequest
+  ): Promise<SetDraftExporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateExporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftExporterDetailByIdResponse;
+  }
+
+  async getTemplateImporterDetailById(
+    req: GetDraftImporterDetailByIdRequest
+  ): Promise<GetDraftImporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateImporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftImporterDetailByIdResponse;
+  }
+
+  async setTemplateImporterDetailById(
+    req: SetDraftImporterDetailByIdRequest
+  ): Promise<SetDraftImporterDetailByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateImporterDetailById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftImporterDetailByIdResponse;
+  }
+
+  async listTemplateCarriers(
+    req: ListDraftCarriersRequest
+  ): Promise<ListDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      listTemplateCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as ListDraftCarriersResponse;
+  }
+
+  async createTemplateCarriers(
+    req: CreateDraftCarriersRequest
+  ): Promise<CreateDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createTemplateCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as CreateDraftCarriersResponse;
+  }
+
+  async getTemplateCarriers(
+    req: GetDraftCarriersRequest
+  ): Promise<GetDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftCarriersResponse;
+  }
+
+  async setTemplateCarriers(
+    req: SetDraftCarriersRequest
+  ): Promise<SetDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftCarriersResponse;
+  }
+
+  async deleteTemplateCarriers(
+    req: DeleteDraftCarriersRequest
+  ): Promise<DeleteDraftCarriersResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteTemplateCarriers.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteDraftCarriersResponse;
+  }
+
+  async getTemplateCollectionDetail(
+    req: GetDraftCollectionDetailRequest
+  ): Promise<GetDraftCollectionDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateCollectionDetail.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftCollectionDetailResponse;
+  }
+
+  async setTemplateCollectionDetail(
+    req: SetDraftCollectionDetailRequest
+  ): Promise<SetDraftCollectionDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateCollectionDetail.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftCollectionDetailResponse;
+  }
+
+  async getTemplateExitLocationById(
+    req: GetDraftExitLocationByIdRequest
+  ): Promise<GetDraftExitLocationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateExitLocationById.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftExitLocationByIdResponse;
+  }
+
+  async setTemplateExitLocationById(
+    req: SetDraftExitLocationByIdRequest
+  ): Promise<SetDraftExitLocationByIdResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateExitLocationById.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftExitLocationByIdResponse;
+  }
+
+  async getTemplateTransitCountries(
+    req: GetDraftTransitCountriesRequest
+  ): Promise<GetDraftTransitCountriesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateTransitCountries.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftTransitCountriesResponse;
+  }
+
+  async setTemplateTransitCountries(
+    req: SetDraftTransitCountriesRequest
+  ): Promise<SetDraftTransitCountriesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateTransitCountries.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftTransitCountriesResponse;
+  }
+
+  async listTemplateRecoveryFacilityDetails(
+    req: ListDraftRecoveryFacilityDetailsRequest
+  ): Promise<ListDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      listTemplateRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as ListDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async createTemplateRecoveryFacilityDetails(
+    req: CreateDraftRecoveryFacilityDetailsRequest
+  ): Promise<CreateDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createTemplateRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as CreateDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async getTemplateRecoveryFacilityDetails(
+    req: GetDraftRecoveryFacilityDetailsRequest
+  ): Promise<GetDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      getTemplateRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async setTemplateRecoveryFacilityDetails(
+    req: SetDraftRecoveryFacilityDetailsRequest
+  ): Promise<SetDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      setTemplateRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as SetDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async deleteTemplateRecoveryFacilityDetails(
+    req: DeleteDraftRecoveryFacilityDetailsRequest
+  ): Promise<DeleteDraftRecoveryFacilityDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      deleteTemplateRecoveryFacilityDetails.name,
+      HttpMethod.POST,
+      req
+    )) as DeleteDraftRecoveryFacilityDetailsResponse;
   }
 }

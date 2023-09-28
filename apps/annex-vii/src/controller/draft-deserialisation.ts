@@ -18,107 +18,145 @@ import {
   GetDraftRecoveryFacilityDetailsRequest,
   ListDraftRecoveryFacilityDetailsRequest,
   DeleteDraftRecoveryFacilityDetailsRequest,
-  schema,
+  submissionSchema,
+  submissionBaseSchema,
   GetDraftSubmissionConfirmationByIdRequest,
   GetDraftSubmissionDeclarationByIdRequest,
+  templateSchema,
+  GetTemplatesRequest,
+  GetTemplateByIdRequest,
+  CreateTemplateRequest,
+  DeleteTemplateRequest,
+  CreateTemplateFromSubmissionRequest,
+  CreateTemplateFromTemplateRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
 const ajv = new Ajv();
 
 export const getDraftsRequest = ajv.compileParser<GetDraftsRequest>(
-  schema.getDraftsRequest
+  submissionSchema.getDraftsRequest
 );
 
 export const getDraftByIdRequest = ajv.compileParser<GetDraftByIdRequest>(
-  schema.getDraftByIdRequest
+  submissionSchema.getDraftByIdRequest
 );
 
 export const createDraftRequest = ajv.compileParser<CreateDraftRequest>(
-  schema.createDraftRequest
+  submissionSchema.createDraftRequest
 );
 
 export const deleteDraftRequest = ajv.compileParser<DeleteDraftRequest>(
-  schema.deleteDraftRequest
+  submissionSchema.deleteDraftRequest
 );
 
 export const getDraftCustomerReferenceByIdRequest =
   ajv.compileParser<GetDraftCustomerReferenceByIdRequest>(
-    schema.getDraftCustomerReferenceByIdRequest
+    submissionSchema.getDraftCustomerReferenceByIdRequest
   );
 
 export const getDraftWasteDescriptionByIdRequest =
   ajv.compileParser<GetDraftWasteDescriptionByIdRequest>(
-    schema.getDraftWasteDescriptionByIdRequest
+    submissionBaseSchema.getDraftWasteDescriptionByIdRequest
   );
 
 export const getDraftWasteQuantityByIdRequest =
   ajv.compileParser<GetDraftWasteQuantityByIdRequest>(
-    schema.getDraftWasteQuantityByIdRequest
+    submissionSchema.getDraftWasteQuantityByIdRequest
   );
 
 export const getDraftExporterDetailByIdRequest =
   ajv.compileParser<GetDraftExporterDetailByIdRequest>(
-    schema.getDraftExporterDetailByIdRequest
+    submissionBaseSchema.getDraftExporterDetailByIdRequest
   );
 
 export const getDraftImporterDetailByIdRequest =
   ajv.compileParser<GetDraftImporterDetailByIdRequest>(
-    schema.getDraftImporterDetailByIdRequest
+    submissionBaseSchema.getDraftImporterDetailByIdRequest
   );
 
 export const getDraftCollectionDateByIdRequest =
   ajv.compileParser<GetDraftCollectionDateByIdRequest>(
-    schema.getDraftCollectionDateByIdRequest
+    submissionSchema.getDraftCollectionDateByIdRequest
   );
 
 export const getDraftCarriersRequest =
-  ajv.compileParser<GetDraftCarriersRequest>(schema.getDraftCarriersRequest);
+  ajv.compileParser<GetDraftCarriersRequest>(
+    submissionBaseSchema.getDraftCarriersRequest
+  );
 
 export const listDraftCarriersRequest =
-  ajv.compileParser<ListDraftCarriersRequest>(schema.listDraftCarriersRequest);
+  ajv.compileParser<ListDraftCarriersRequest>(
+    submissionBaseSchema.listDraftCarriersRequest
+  );
 
 export const deleteDraftCarriersRequest =
   ajv.compileParser<DeleteDraftCarriersRequest>(
-    schema.deleteDraftCarriersRequest
+    submissionBaseSchema.deleteDraftCarriersRequest
   );
 
 export const getDraftCollectionDetailRequest =
   ajv.compileParser<GetDraftCollectionDetailRequest>(
-    schema.getDraftCollectionDetailRequest
+    submissionBaseSchema.getDraftCollectionDetailRequest
   );
 
 export const getDraftExitLocationByIdRequest =
   ajv.compileParser<GetDraftExitLocationByIdRequest>(
-    schema.getDraftExitLocationByIdRequest
+    submissionBaseSchema.getDraftExitLocationByIdRequest
   );
 
 export const getDraftTransitCountriesRequest =
   ajv.compileParser<GetDraftTransitCountriesRequest>(
-    schema.getDraftTransitCountriesRequest
+    submissionBaseSchema.getDraftTransitCountriesRequest
   );
 
 export const getDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<GetDraftRecoveryFacilityDetailsRequest>(
-    schema.getDraftRecoveryFacilityDetailsRequest
+    submissionBaseSchema.getDraftRecoveryFacilityDetailsRequest
   );
 
 export const listDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<ListDraftRecoveryFacilityDetailsRequest>(
-    schema.listDraftRecoveryFacilityDetailsRequest
+    submissionBaseSchema.listDraftRecoveryFacilityDetailsRequest
   );
 
 export const deleteDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<DeleteDraftRecoveryFacilityDetailsRequest>(
-    schema.deleteDraftRecoveryFacilityDetailsRequest
+    submissionBaseSchema.deleteDraftRecoveryFacilityDetailsRequest
   );
 
 export const getDraftSubmissionConfirmationByIdRequest =
   ajv.compileParser<GetDraftSubmissionConfirmationByIdRequest>(
-    schema.getDraftSubmissionConfirmationByIdByIdRequest
+    submissionSchema.getDraftSubmissionConfirmationByIdByIdRequest
   );
 
 export const getDraftSubmissionDeclarationByIdRequest =
   ajv.compileParser<GetDraftSubmissionDeclarationByIdRequest>(
-    schema.getDraftSubmissionDeclarationByIdByIdRequest
+    submissionSchema.getDraftSubmissionDeclarationByIdByIdRequest
   );
+
+export const getTemplatesRequest = ajv.compileParser<GetTemplatesRequest>(
+  templateSchema.getTemplatesRequest
+);
+
+export const getTemplateByIdRequest = ajv.compileParser<GetTemplateByIdRequest>(
+  templateSchema.getTemplateByIdRequest
+);
+
+export const createTemplateRequest = ajv.compileParser<CreateTemplateRequest>(
+  templateSchema.createTemplateRequest
+);
+
+export const createTemplateFromSubmissionRequest =
+  ajv.compileParser<CreateTemplateFromSubmissionRequest>(
+    templateSchema.createTemplateFromSubmissionRequest
+  );
+
+export const createTemplateFromTemplateRequest =
+  ajv.compileParser<CreateTemplateFromTemplateRequest>(
+    templateSchema.createTemplateFromTemplateRequest
+  );
+
+export const deleteTemplateRequest = ajv.compileParser<DeleteTemplateRequest>(
+  templateSchema.deleteTemplateRequest
+);

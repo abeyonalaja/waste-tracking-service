@@ -3,8 +3,13 @@ import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import { add } from 'date-fns';
 import winston from 'winston';
-import { DraftSubmission, DraftSubmissionSummaryPage } from '../model';
+import {
+  DraftSubmission,
+  DraftSubmissionSummaryPage,
+  Template,
+} from '../model';
 import DraftController from './draft-controller';
+import { DraftCarriers, DraftRecoveryFacilityDetail } from '@wts/api/annex-vii';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -27,6 +32,30 @@ const mockRepository = {
     jest.fn<(id: string, accountId: string) => Promise<DraftSubmission>>(),
   saveDraft:
     jest.fn<(value: DraftSubmission, accountId: string) => Promise<void>>(),
+  createTemplateFromSubmission:
+    jest.fn<
+      (
+        id: string,
+        accountId: string,
+        templateName: string,
+        templateDescription?: string
+      ) => Promise<Template>
+    >(),
+  createSubmissionFromTemplate:
+    jest.fn<
+      (
+        id: string,
+        accountId: string,
+        reference: string
+      ) => Promise<DraftSubmission>
+    >(),
+  copyCarriers: jest.fn<(sourceCarriers: DraftCarriers) => DraftCarriers>(),
+  copyRecoveryFacilities:
+    jest.fn<
+      (
+        sourceFacilities: DraftRecoveryFacilityDetail
+      ) => DraftRecoveryFacilityDetail
+    >(),
 };
 
 describe(DraftController, () => {
@@ -124,7 +153,7 @@ describe(DraftController, () => {
       const accountId = faker.datatype.uuid();
       const value: DraftSubmission = {
         id,
-        reference: faker.datatype.string(10),
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -164,7 +193,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockRejectedValue(Boom.teapot());
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
-        reference: faker.datatype.string(10),
+        reference: 'abc',
       });
 
       expect(response.success).toBe(false);
@@ -180,7 +209,7 @@ describe(DraftController, () => {
       mockRepository.saveDraft.mockResolvedValue();
       const response = await subject.createDraft({
         accountId: faker.datatype.uuid(),
-        reference: faker.datatype.string(10),
+        reference: 'abc',
       });
 
       expect(response.success).toBe(true);
@@ -199,7 +228,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -237,7 +266,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -274,7 +303,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -309,7 +338,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'AnnexIIIA', value: 'X' },
@@ -343,7 +372,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -397,7 +426,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'NotApplicable' },
@@ -433,7 +462,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -530,7 +559,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: { type: 'NotApplicable' },
@@ -566,7 +595,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -663,7 +692,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -702,7 +731,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -802,7 +831,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -843,7 +872,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -980,7 +1009,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Started',
             wasteCode: {
@@ -1109,7 +1138,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1157,7 +1186,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1217,7 +1246,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1275,7 +1304,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1334,7 +1363,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1397,7 +1426,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1450,7 +1479,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1500,7 +1529,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1550,7 +1579,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: {
           status: 'Complete',
           wasteCode: { type: 'NotApplicable' },
@@ -1600,7 +1629,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1662,7 +1691,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: {
             status: 'Complete',
             wasteCode: { type: 'NotApplicable' },
@@ -1716,7 +1745,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -1802,7 +1831,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -1863,7 +1892,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -1918,7 +1947,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -1980,7 +2009,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2016,7 +2045,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2049,7 +2078,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2086,7 +2115,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2121,7 +2150,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2156,7 +2185,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2192,7 +2221,7 @@ describe(DraftController, () => {
       const id = faker.datatype.uuid();
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: faker.datatype.string(10),
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2260,7 +2289,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'NotStarted' },
         exporterDetail: { status: 'NotStarted' },
@@ -2322,7 +2351,7 @@ describe(DraftController, () => {
       expect(mockRepository.saveDraft).toBeCalledWith(
         {
           id,
-          reference: reference,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -2379,7 +2408,7 @@ describe(DraftController, () => {
       const reference = faker.datatype.string(10);
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: reference,
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -2932,7 +2961,6 @@ describe(DraftController, () => {
           status: 'Complete',
         },
       });
-      console.log(await subject.getDraftById({ id, accountId }));
       expect(mockRepository.saveDraft).toBeCalled();
       expect(response.success).toBe(true);
     });
@@ -3025,7 +3053,7 @@ describe(DraftController, () => {
 
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: faker.datatype.string(10),
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },
@@ -3063,7 +3091,7 @@ describe(DraftController, () => {
 
       mockRepository.getDraft.mockResolvedValue({
         id,
-        reference: faker.datatype.string(10),
+        reference: 'abc',
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
         exporterDetail: { status: 'NotStarted' },

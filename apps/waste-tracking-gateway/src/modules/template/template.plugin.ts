@@ -1,31 +1,25 @@
 import { Plugin } from '@hapi/hapi';
 import * as dto from '@wts/api/waste-tracking-gateway';
+import { validateCreateTemplateRequest } from './template.validation';
+import Boom from '@hapi/boom';
+import { TemplateBackend } from './template.backend';
+import { Logger } from 'winston';
 import {
-  validateCreateSubmissionRequest,
-  validatePutWasteDescriptionRequest,
-  validatePutReferenceRequest,
-  validatePutWasteQuantityRequest,
+  validateCreateCarriersRequest,
+  validateCreateRecoveryFacilityDetailRequest,
+  validatePutExitLocationRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
-  validatePutCollectionDateRequest,
-  validateCreateCarriersRequest,
+  validatePutTransitCountriesRequest,
+  validatePutWasteDescriptionRequest,
   validateSetCarriersRequest,
   validateSetCollectionDetailRequest,
-  validatePutExitLocationRequest,
-  validatePutTransitCountriesRequest,
   validateSetRecoveryFacilityDetailRequest,
-  validateCreateRecoveryFacilityDetailRequest,
-  validatePutSubmissionConfirmationRequest,
-  validatePutSubmissionDeclarationRequest,
-  validatePutSubmissionCancellationRequest,
-} from './submission.validation';
-import Boom from '@hapi/boom';
-import { SubmissionBackend } from './submission.backend';
-import { Logger } from 'winston';
+} from '../submission/submission.validation';
 import { DraftWasteDescription } from '@wts/api/annex-vii';
 
 export interface PluginOptions {
-  backend: SubmissionBackend;
+  backend: TemplateBackend;
   logger: Logger;
 }
 
@@ -36,7 +30,7 @@ export interface PluginOptions {
 export const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
 
 const plugin: Plugin<PluginOptions> = {
-  name: 'submissions',
+  name: 'templates',
   version: '1.0.0',
   register: async function (server, { backend, logger }) {
     server.route({
@@ -61,25 +55,15 @@ const plugin: Plugin<PluginOptions> = {
         }
         const pageLimit = pageLimitStr ? parseInt(pageLimitStr) : undefined;
 
-        const stateStr = query['state'] as string | undefined;
-        let state: dto.SubmissionState['status'][] | undefined;
-        if (stateStr) {
-          state = stateStr
-            .replace(/\s/g, '')
-            .split(',')
-            .map((i) => i as dto.SubmissionState['status']);
-        }
-
         const token = query['token'] as string | undefined;
         try {
-          const value = await backend.getSubmissions(
+          const value = await backend.getTemplates(
             accountId,
             { order },
             pageLimit,
-            state,
             token
           );
-          return value as dto.GetSubmissionsResponse;
+          return value as dto.GetTemplatesResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -96,11 +80,11 @@ const plugin: Plugin<PluginOptions> = {
       path: '/{id}',
       handler: async function ({ params }) {
         try {
-          const value = await backend.getSubmission({
+          const value = await backend.getTemplate({
             id: params.id,
             accountId,
           });
-          return value as dto.GetSubmissionResponse;
+          return value as dto.GetTemplateResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -116,18 +100,49 @@ const plugin: Plugin<PluginOptions> = {
       method: 'POST',
       path: '/',
       handler: async function ({ payload }, h) {
-        if (!validateCreateSubmissionRequest(payload)) {
+        if (!validateCreateTemplateRequest(payload)) {
           return Boom.badRequest();
         }
 
-        const { reference } = payload as dto.CreateSubmissionRequest;
+        const { templateDetails } = payload as dto.CreateTemplateRequest;
         try {
           return h
             .response(
-              (await backend.createSubmission(
+              (await backend.createTemplate(
                 accountId,
-                reference
-              )) as dto.CreateSubmissionResponse
+                templateDetails
+              )) as dto.CreateTemplateResponse
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/copy-submission/{id}',
+      handler: async function ({ params, payload }, h) {
+        if (!validateCreateTemplateRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const { templateDetails } = payload as dto.CreateTemplateRequest;
+
+        try {
+          return h
+            .response(
+              (await backend.createTemplateFromSubmission(
+                params.id,
+                accountId,
+                templateDetails
+              )) as dto.CreateTemplateResponse
             )
             .code(201);
         } catch (err) {
@@ -145,19 +160,51 @@ const plugin: Plugin<PluginOptions> = {
       method: 'POST',
       path: '/copy-template/{id}',
       handler: async function ({ params, payload }, h) {
-        if (!validateCreateSubmissionRequest(payload)) {
+        if (!validateCreateTemplateRequest(payload)) {
           return Boom.badRequest();
         }
 
-        const { reference } = payload as dto.CreateSubmissionRequest;
+        const { templateDetails } = payload as dto.CreateTemplateRequest;
+
         try {
           return h
             .response(
-              (await backend.createSubmissionFromTemplate(
+              (await backend.createTemplateFromTemplate(
                 params.id,
                 accountId,
-                reference
-              )) as dto.CreateSubmissionResponse
+                templateDetails
+              )) as dto.CreateTemplateResponse
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/update/{id}',
+      handler: async function ({ params, payload }, h) {
+        if (!validateCreateTemplateRequest(payload)) {
+          return Boom.badRequest();
+        }
+
+        const { templateDetails } = payload as dto.CreateTemplateRequest;
+
+        try {
+          return h
+            .response(
+              (await backend.updateTemplate(
+                params.id,
+                accountId,
+                templateDetails
+              )) as dto.CreateTemplateResponse
             )
             .code(201);
         } catch (err) {
@@ -178,36 +225,12 @@ const plugin: Plugin<PluginOptions> = {
         try {
           return h
             .response(
-              (await backend.deleteSubmission({
+              (await backend.deleteTemplate({
                 id: params.id,
                 accountId,
               })) as undefined
             )
             .code(204);
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/cancel',
-      handler: async function ({ params, payload }) {
-        if (!validatePutSubmissionCancellationRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutSubmissionCancellationRequest;
-
-        try {
-          await backend.cancelSubmission({ id: params.id, accountId }, request);
-          return request as dto.PutSubmissionCancellationReponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -255,97 +278,6 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutWasteDescriptionResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'GET',
-      path: '/{id}/waste-quantity',
-      handler: async function ({ params }) {
-        try {
-          const value = await backend.getWasteQuantity({
-            id: params.id,
-            accountId,
-          });
-          return value as dto.GetWasteQuantityResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/waste-quantity',
-      handler: async function ({ params, payload }) {
-        if (!validatePutWasteQuantityRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutWasteQuantityRequest;
-        try {
-          await backend.setWasteQuantity({ id: params.id, accountId }, request);
-          return request as dto.PutWasteDescriptionRequest;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'GET',
-      path: '/{id}/reference',
-      handler: async function ({ params }) {
-        try {
-          const value = await backend.getCustomerReference({
-            id: params.id,
-            accountId,
-          });
-          return value as dto.GetReferenceResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/reference',
-      handler: async function ({ params, payload }) {
-        if (!validatePutReferenceRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutReferenceRequest;
-        try {
-          await backend.setCustomerReference(
-            { id: params.id, accountId },
-            request
-          );
-          return request as dto.PutReferenceResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -440,53 +372,6 @@ const plugin: Plugin<PluginOptions> = {
             request
           );
           return request as dto.PutImporterDetailResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'GET',
-      path: '/{id}/collection-date',
-      handler: async function ({ params }) {
-        try {
-          const value = await backend.getCollectionDate({
-            id: params.id,
-            accountId,
-          });
-          return value as dto.GetCollectionDateResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/collection-date',
-      handler: async function ({ params, payload }) {
-        if (!validatePutCollectionDateRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutCollectionDateRequest;
-        try {
-          await backend.setCollectionDate(
-            { id: params.id, accountId },
-            request
-          );
-          return request as dto.PutCollectionDateResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -907,100 +792,6 @@ const plugin: Plugin<PluginOptions> = {
               )) as undefined
             )
             .code(204);
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'GET',
-      path: '/{id}/submission-confirmation',
-      handler: async function ({ params }) {
-        try {
-          const value = await backend.getSubmissionConfirmation({
-            id: params.id,
-            accountId,
-          });
-          return value as dto.GetSubmissionConfirmationResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/submission-confirmation',
-      handler: async function ({ params, payload }) {
-        if (!validatePutSubmissionConfirmationRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutSubmissionConfirmationRequest;
-        try {
-          await backend.setSubmissionConfirmation(
-            { id: params.id, accountId },
-            request
-          );
-          return request as dto.PutSubmissionConfirmationResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'GET',
-      path: '/{id}/submission-declaration',
-      handler: async function ({ params }) {
-        try {
-          const value = await backend.getSubmissionDeclaration({
-            id: params.id,
-            accountId,
-          });
-          return value as dto.GetSubmissionDeclarationResponse;
-        } catch (err) {
-          if (err instanceof Boom.Boom) {
-            return err;
-          }
-
-          logger.error('Unknown error', { error: err });
-          return Boom.internal();
-        }
-      },
-    });
-
-    server.route({
-      method: 'PUT',
-      path: '/{id}/submission-declaration',
-      handler: async function ({ params, payload }) {
-        if (!validatePutSubmissionDeclarationRequest(payload)) {
-          return Boom.badRequest();
-        }
-
-        const request = payload as dto.PutSubmissionDeclarationRequest;
-        try {
-          await backend.setSubmissionDeclaration(
-            { id: params.id, accountId },
-            request
-          );
-          return request as dto.PutSubmissionDeclarationResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

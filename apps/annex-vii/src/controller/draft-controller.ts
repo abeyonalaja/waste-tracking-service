@@ -4,70 +4,18 @@ import { fromBoom, success } from '@wts/util/invocation';
 import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
-import { DraftRepository } from '../data';
 import { DraftSubmission } from '../model';
+import {
+  BaseController,
+  Handler,
+  SubmissionBasePlusId,
+} from './base-controller';
+import { DraftRepository } from '../data/repository';
 
-export type Handler<Request, Response> = (
-  request: Request
-) => Promise<Response>;
-
-type DraftWasteDescription = api.DraftSubmission['wasteDescription'];
-
-function isWasteCodeChangingBulkToSmall(
-  currentWasteDescription: DraftWasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type === 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingSmallToBulk(
-  currentWasteDescription: DraftWasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type === 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingBulkToBulkDifferentType(
-  currentWasteDescription: DraftWasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    currentWasteDescription.wasteCode?.type !==
-      newWasteDescription.wasteCode?.type
-  );
-}
-
-function isWasteCodeChangingBulkToBulkSameType(
-  currentWasteDescription: DraftWasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type ===
-      newWasteDescription.wasteCode?.type &&
-    currentWasteDescription.wasteCode?.value !==
-      newWasteDescription.wasteCode?.value
-  );
-}
-
-export default class DraftController {
-  constructor(private repository: DraftRepository, private logger: Logger) {}
+export default class DraftController extends BaseController {
+  constructor(private repository: DraftRepository, private logger: Logger) {
+    super();
+  }
 
   isCollectionDateValid(date: DraftSubmission['collectionDate']) {
     if (date.status !== 'NotStarted') {
@@ -98,7 +46,7 @@ export default class DraftController {
   }
 
   setSubmissionConfirmationStatus(
-    submission: DraftSubmission
+    draft: DraftSubmission
   ): DraftSubmission['submissionConfirmation'] {
     const {
       id,
@@ -107,7 +55,7 @@ export default class DraftController {
       submissionDeclaration,
       submissionState,
       ...filteredValues
-    } = submission;
+    } = draft;
 
     if (
       Object.values(filteredValues).every(
@@ -121,41 +69,14 @@ export default class DraftController {
   }
 
   setSubmissionDeclarationStatus(
-    submission: DraftSubmission
+    draft: DraftSubmission
   ): DraftSubmission['submissionDeclaration'] {
-    if (submission.submissionConfirmation.status === 'Complete') {
+    if (draft.submissionConfirmation.status === 'Complete') {
       return { status: 'NotStarted' };
     } else {
       return { status: 'CannotStart' };
     }
   }
-
-  getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async ({
-    accountId,
-    order,
-    pageLimit,
-    state,
-    token,
-  }) => {
-    try {
-      return success(
-        await this.repository.getDrafts(
-          accountId,
-          order,
-          pageLimit,
-          state,
-          token
-        )
-      );
-    } catch (err) {
-      if (err instanceof Boom.Boom) {
-        return fromBoom(err);
-      }
-
-      this.logger.error('Unknown error', { error: err });
-      return fromBoom(Boom.internal());
-    }
-  };
 
   getDraftById: Handler<api.GetDraftByIdRequest, api.GetDraftByIdResponse> =
     async ({ id, accountId }) => {
@@ -178,10 +99,37 @@ export default class DraftController {
       }
     };
 
+  getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async ({
+    accountId,
+    order,
+    pageLimit,
+    state,
+    token,
+  }) => {
+    try {
+      return success(
+        await this.repository.getDrafts(
+          accountId,
+          order,
+          pageLimit,
+          state,
+          token
+        )
+      ) as api.GetDraftsResponse;
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
   createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
     async ({ accountId, reference }) => {
       try {
-        if (reference && reference.length > 20) {
+        if (reference.length > 20) {
           return fromBoom(
             Boom.badRequest('Supplied reference cannot exceed 20 characters')
           );
@@ -222,6 +170,34 @@ export default class DraftController {
         return fromBoom(Boom.internal());
       }
     };
+
+  createDraftFromTemplate: Handler<
+    api.CreateDraftFromTemplateRequest,
+    api.CreateDraftResponse
+  > = async ({ id, accountId, reference }) => {
+    try {
+      if (reference.length > 20) {
+        return fromBoom(
+          Boom.badRequest('Supplied reference cannot exceed 20 characters')
+        );
+      }
+
+      return success(
+        await this.repository.createSubmissionFromTemplate(
+          id,
+          accountId,
+          reference
+        )
+      );
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 
   deleteDraft: Handler<api.DeleteDraftRequest, api.DeleteDraftResponse> =
     async ({ id, accountId }) => {
@@ -283,16 +259,16 @@ export default class DraftController {
   setDraftCustomerReferenceById: Handler<
     api.SetDraftCustomerReferenceByIdRequest,
     api.SetDraftCustomerReferenceByIdResponse
-  > = async ({ id, accountId, value }) => {
+  > = async ({ id, accountId, reference }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      if (value && value.length > 20) {
+      if (reference.length > 20) {
         return fromBoom(
           Boom.badRequest('Supplied reference cannot exceed 20 characters')
         );
       }
 
-      draft.reference = value;
+      draft.reference = reference;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -343,79 +319,29 @@ export default class DraftController {
         wasteQuantity = { status: 'NotStarted' };
       }
 
-      let recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
-        draft.recoveryFacilityDetail.status === 'CannotStart' &&
-        value.status !== 'NotStarted' &&
-        value.wasteCode !== undefined
-          ? { status: 'NotStarted' }
-          : draft.recoveryFacilityDetail;
-
-      let carriers: DraftSubmission['carriers'] = draft.carriers;
-
-      if (
-        draft.wasteDescription.status === 'NotStarted' &&
-        value.status !== 'NotStarted' &&
-        value.wasteCode?.type === 'NotApplicable'
-      ) {
-        carriers.transport = false;
+      if (this.isWasteCodeChangingBulkToSmall(draft.wasteDescription, value)) {
+        wasteQuantity = { status: 'NotStarted' };
       }
 
-      if (isWasteCodeChangingBulkToSmall(draft.wasteDescription, value)) {
-        if (value.status === 'Started') {
-          value.ewcCodes = undefined;
-          value.nationalCode = undefined;
-          value.description = undefined;
-        }
-
+      if (this.isWasteCodeChangingSmallToBulk(draft.wasteDescription, value)) {
         wasteQuantity = { status: 'NotStarted' };
-
-        carriers = { status: 'NotStarted', transport: false };
-
-        recoveryFacilityDetail = { status: 'NotStarted' };
-      }
-
-      if (isWasteCodeChangingSmallToBulk(draft.wasteDescription, value)) {
-        if (value.status === 'Started') {
-          value.ewcCodes = undefined;
-          value.nationalCode = undefined;
-          value.description = undefined;
-        }
-
-        wasteQuantity = { status: 'NotStarted' };
-
-        carriers = { status: 'NotStarted', transport: true };
-
-        recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
       if (
-        isWasteCodeChangingBulkToBulkDifferentType(
+        this.isWasteCodeChangingBulkToBulkDifferentType(
           draft.wasteDescription,
           value
         )
       ) {
-        if (value.status === 'Started') {
-          value.ewcCodes = undefined;
-          value.nationalCode = undefined;
-          value.description = undefined;
-        }
-
         wasteQuantity = { status: 'NotStarted' };
-
-        carriers = { status: 'NotStarted', transport: true };
-
-        recoveryFacilityDetail = { status: 'NotStarted' };
       }
 
       if (
-        isWasteCodeChangingBulkToBulkSameType(draft.wasteDescription, value)
+        this.isWasteCodeChangingBulkToBulkSameType(
+          draft.wasteDescription,
+          value
+        )
       ) {
-        if (value.status === 'Started') {
-          value.ewcCodes = undefined;
-          value.nationalCode = undefined;
-          value.description = undefined;
-        }
-
         if (
           draft.wasteQuantity.status !== 'CannotStart' &&
           draft.wasteQuantity.status !== 'NotStarted'
@@ -425,30 +351,17 @@ export default class DraftController {
             value: draft.wasteQuantity.value,
           };
         }
-
-        if (draft.carriers.status !== 'NotStarted') {
-          carriers = {
-            status: 'Started',
-            transport: true,
-            values: draft.carriers.values,
-          };
-        }
-
-        if (
-          draft.recoveryFacilityDetail.status === 'Started' ||
-          draft.recoveryFacilityDetail.status === 'Complete'
-        ) {
-          recoveryFacilityDetail = {
-            status: 'Started',
-            values: draft.recoveryFacilityDetail.values,
-          };
-        }
       }
 
-      draft.wasteDescription = value;
+      const submissionBase = this.setBaseWasteDescription(
+        draft as api.SubmissionBase,
+        value
+      );
+
+      draft.wasteDescription = submissionBase.wasteDescription;
+      draft.carriers = submissionBase.carriers;
+      draft.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
       draft.wasteQuantity = wasteQuantity;
-      draft.carriers = carriers;
-      draft.recoveryFacilityDetail = recoveryFacilityDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -593,7 +506,11 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      draft.exporterDetail = value;
+
+      draft.exporterDetail = this.setBaseExporterDetail(
+        draft as api.SubmissionBase,
+        value
+      ).exporterDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -634,7 +551,10 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      draft.importerDetail = value;
+      draft.importerDetail = this.setBaseImporterDetail(
+        draft as api.SubmissionBase,
+        value
+      ).importerDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -760,79 +680,6 @@ export default class DraftController {
     }
   };
 
-  createDraftCarriers: Handler<
-    api.CreateDraftCarriersRequest,
-    api.CreateDraftCarriersResponse
-  > = async ({ id, accountId, value }) => {
-    try {
-      if (value.status !== 'Started') {
-        return fromBoom(
-          Boom.badRequest(
-            `"Status cannot be ${value.status} on carrier detail creation"`
-          )
-        );
-      }
-
-      const draft = await this.repository.getDraft(id, accountId);
-
-      const transport: api.DraftCarriers['transport'] =
-        draft.wasteDescription.status !== 'NotStarted' &&
-        draft.wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
-
-      const carrier = { id: uuidv4() };
-      if (draft.carriers.status === 'NotStarted') {
-        draft.carriers = {
-          status: value.status,
-          transport: transport,
-          values: [carrier],
-        };
-
-        draft.submissionConfirmation =
-          this.setSubmissionConfirmationStatus(draft);
-        draft.submissionDeclaration =
-          this.setSubmissionDeclarationStatus(draft);
-
-        await this.repository.saveDraft({ ...draft }, accountId);
-        return success(draft.carriers);
-      }
-
-      if (draft.carriers.values.length === 5) {
-        return fromBoom(Boom.badRequest('Cannot add more than 5 carriers'));
-      }
-
-      const carriers: api.DraftCarrier[] = [];
-      for (const c of draft.carriers.values) {
-        carriers.push(c);
-      }
-      carriers.push(carrier);
-      draft.carriers = {
-        status: value.status,
-        transport: transport,
-        values: carriers,
-      };
-
-      draft.submissionConfirmation =
-        this.setSubmissionConfirmationStatus(draft);
-      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
-
-      await this.repository.saveDraft({ ...draft }, accountId);
-      return success({
-        status: value.status,
-        transport: transport,
-        values: [carrier],
-      });
-    } catch (err) {
-      if (err instanceof Boom.Boom) {
-        return fromBoom(err);
-      }
-
-      this.logger.error('Unknown error', { error: err });
-      return fromBoom(Boom.internal());
-    }
-  };
-
   getDraftCarriers: Handler<
     api.GetDraftCarriersRequest,
     api.GetDraftCarriersResponse
@@ -868,44 +715,97 @@ export default class DraftController {
     }
   };
 
+  createDraftCarriers: Handler<
+    api.CreateDraftCarriersRequest,
+    api.CreateDraftCarriersResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      if (value.status !== 'Started') {
+        return fromBoom(
+          Boom.badRequest(
+            `"Status cannot be ${value.status} on carrier detail creation"`
+          )
+        );
+      }
+
+      const draft = await this.repository.getDraft(id, accountId);
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
+
+      if (draft.carriers.status !== 'NotStarted') {
+        if (draft.carriers.values.length === 5) {
+          return fromBoom(Boom.badRequest('Cannot add more than 5 carriers'));
+        }
+      }
+
+      const submissionBasePlusId: SubmissionBasePlusId =
+        this.createBaseCarriers(draft as api.SubmissionBase, value);
+
+      draft.carriers = submissionBasePlusId.submissionBase.carriers;
+
+      draft.submissionConfirmation =
+        this.setSubmissionConfirmationStatus(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success({
+        status: value.status,
+        transport: submissionBasePlusId.submissionBase.carriers.transport,
+        values: [{ id: submissionBasePlusId.id }],
+      });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
   setDraftCarriers: Handler<
     api.SetDraftCarriersRequest,
     api.SetDraftCarriersResponse
   > = async ({ id, accountId, carrierId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
+
       if (draft.carriers.status === 'NotStarted') {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
       if (value.status === 'NotStarted') {
-        draft.carriers = value;
+        draft.carriers = this.setBaseNoCarriers(
+          draft as api.SubmissionBase,
+          carrierId,
+          value
+        ).carriers;
+      } else {
+        const carrier = value.values.find((c) => {
+          return c.id === carrierId;
+        });
+        if (carrier === undefined) {
+          return Promise.reject(Boom.badRequest());
+        }
 
-        draft.submissionConfirmation =
-          this.setSubmissionConfirmationStatus(draft);
-        draft.submissionDeclaration =
-          this.setSubmissionDeclarationStatus(draft);
-
-        await this.repository.saveDraft({ ...draft }, accountId);
-        return success(undefined);
+        const index = draft.carriers.values.findIndex((c) => {
+          return c.id === carrierId;
+        });
+        if (index === -1) {
+          return Promise.reject(Boom.notFound());
+        }
+        draft.carriers = this.setBaseCarriers(
+          draft as api.SubmissionBase,
+          carrierId,
+          value,
+          carrier,
+          index
+        ).carriers;
       }
-
-      const carrier = value.values.find((c) => {
-        return c.id === carrierId;
-      });
-      if (carrier === undefined) {
-        return fromBoom(Boom.badRequest());
-      }
-
-      const index = draft.carriers.values.findIndex((c) => {
-        return c.id === carrierId;
-      });
-      if (index === -1) {
-        return fromBoom(Boom.notFound());
-      }
-
-      draft.carriers.status = value.status;
-      draft.carriers.values[index] = carrier as api.DraftCarrier;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -929,8 +829,12 @@ export default class DraftController {
   > = async ({ id, accountId, carrierId }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
+
       if (draft.carriers.status === 'NotStarted') {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
       const index = draft.carriers.values.findIndex((c) => {
@@ -938,22 +842,13 @@ export default class DraftController {
       });
 
       if (index === -1) {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
-      draft.carriers.values.splice(index, 1);
-      if (draft.carriers.values.length === 0) {
-        const transport: api.DraftCarriers['transport'] =
-          draft.wasteDescription.status !== 'NotStarted' &&
-          draft.wasteDescription.wasteCode?.type === 'NotApplicable'
-            ? false
-            : true;
-
-        draft.carriers = {
-          status: 'NotStarted',
-          transport: transport,
-        };
-      }
+      draft.carriers = this.deleteBaseCarriers(
+        draft as api.SubmissionBase,
+        carrierId
+      ).carriers;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -994,31 +889,10 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      draft.collectionDetail = value;
-
-      draft.submissionConfirmation =
-        this.setSubmissionConfirmationStatus(draft);
-      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
-
-      await this.repository.saveDraft({ ...draft }, accountId);
-      return success(undefined);
-    } catch (err) {
-      if (err instanceof Boom.Boom) {
-        return fromBoom(err);
-      }
-
-      this.logger.error('Unknown error', { error: err });
-      return fromBoom(Boom.internal());
-    }
-  };
-
-  setDraftExitLocationById: Handler<
-    api.SetDraftExitLocationByIdRequest,
-    api.SetDraftExitLocationByIdResponse
-  > = async ({ id, accountId, value }) => {
-    try {
-      const draft = await this.repository.getDraft(id, accountId);
-      draft.ukExitLocation = value;
+      draft.collectionDetail = this.setBaseCollectionDetail(
+        draft as api.SubmissionBase,
+        value
+      ).collectionDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -1053,13 +927,16 @@ export default class DraftController {
     }
   };
 
-  setDraftTransitCountries: Handler<
-    api.SetDraftTransitCountriesRequest,
-    api.SetDraftTransitCountriesResponse
+  setDraftExitLocationById: Handler<
+    api.SetDraftExitLocationByIdRequest,
+    api.SetDraftExitLocationByIdResponse
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      draft.transitCountries = value;
+      draft.ukExitLocation = this.setBaseExitLocation(
+        draft as api.SubmissionBase,
+        value
+      ).ukExitLocation;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -1094,13 +971,23 @@ export default class DraftController {
     }
   };
 
-  listDraftRecoveryFacilityDetails: Handler<
-    api.ListDraftRecoveryFacilityDetailsRequest,
-    api.ListDraftRecoveryFacilityDetailsResponse
-  > = async ({ id, accountId }) => {
+  setDraftTransitCountries: Handler<
+    api.SetDraftTransitCountriesRequest,
+    api.SetDraftTransitCountriesResponse
+  > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      return success(draft.recoveryFacilityDetail);
+      draft.transitCountries = this.setBaseTransitCountries(
+        draft as api.SubmissionBase,
+        value
+      ).transitCountries;
+
+      draft.submissionConfirmation =
+        this.setSubmissionConfirmationStatus(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1111,67 +998,13 @@ export default class DraftController {
     }
   };
 
-  createDraftRecoveryFacilityDetails: Handler<
-    api.CreateDraftRecoveryFacilityDetailsRequest,
-    api.CreateDraftRecoveryFacilityDetailsResponse
-  > = async ({ id, accountId, value }) => {
+  listDraftRecoveryFacilityDetails: Handler<
+    api.ListDraftRecoveryFacilityDetailsRequest,
+    api.ListDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId }) => {
     try {
-      if (value.status !== 'Started') {
-        return fromBoom(
-          Boom.badRequest(
-            `"Status cannot be ${value.status} on recovery facility detail creation"`
-          )
-        );
-      }
-
       const draft = await this.repository.getDraft(id, accountId);
-
-      const rfdId = { id: uuidv4() };
-      if (
-        draft.recoveryFacilityDetail.status !== 'Started' &&
-        draft.recoveryFacilityDetail.status !== 'Complete'
-      ) {
-        draft.recoveryFacilityDetail = {
-          status: value.status,
-          values: [rfdId],
-        };
-
-        draft.submissionConfirmation =
-          this.setSubmissionConfirmationStatus(draft);
-        draft.submissionDeclaration =
-          this.setSubmissionDeclarationStatus(draft);
-
-        await this.repository.saveDraft({ ...draft }, accountId);
-        return success(draft.recoveryFacilityDetail);
-      }
-
-      if (draft.recoveryFacilityDetail.values.length === 3) {
-        return fromBoom(
-          Boom.badRequest(
-            'Cannot add more than 3 recovery facilities (Maximum: 1 InterimSite & 2 Recovery Facilities )'
-          )
-        );
-      }
-
-      const recoveryFacility = [];
-      for (const rfd of draft.recoveryFacilityDetail.values) {
-        recoveryFacility.push(rfd);
-      }
-      recoveryFacility.push(rfdId);
-      draft.recoveryFacilityDetail = {
-        status: value.status,
-        values: recoveryFacility,
-      };
-
-      draft.submissionConfirmation =
-        this.setSubmissionConfirmationStatus(draft);
-      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
-
-      await this.repository.saveDraft({ ...draft }, accountId);
-      return success({
-        status: value.status,
-        values: [rfdId],
-      });
+      return success(draft.recoveryFacilityDetail);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1221,47 +1054,104 @@ export default class DraftController {
     }
   };
 
+  createDraftRecoveryFacilityDetails: Handler<
+    api.CreateDraftRecoveryFacilityDetailsRequest,
+    api.CreateDraftRecoveryFacilityDetailsResponse
+  > = async ({ id, accountId, value }) => {
+    try {
+      if (value.status !== 'Started') {
+        return fromBoom(
+          Boom.badRequest(
+            `"Status cannot be ${value.status} on recovery facility detail creation"`
+          )
+        );
+      }
+
+      const draft = await this.repository.getDraft(id, accountId);
+
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
+
+      if (
+        draft.recoveryFacilityDetail.status === 'Started' ||
+        draft.recoveryFacilityDetail.status === 'Complete'
+      ) {
+        if (draft.recoveryFacilityDetail.values.length === 3) {
+          return fromBoom(
+            Boom.badRequest(
+              'Cannot add more than 3 recovery facilities (Maximum: 1 InterimSite & 2 Recovery Facilities )'
+            )
+          );
+        }
+      }
+
+      const submissionBasePlusId: SubmissionBasePlusId =
+        this.createBaseRecoveryFacilityDetail(
+          draft as api.SubmissionBase,
+          value
+        );
+
+      draft.recoveryFacilityDetail =
+        submissionBasePlusId.submissionBase.recoveryFacilityDetail;
+
+      draft.submissionConfirmation =
+        this.setSubmissionConfirmationStatus(draft);
+      draft.submissionDeclaration = this.setSubmissionDeclarationStatus(draft);
+
+      await this.repository.saveDraft({ ...draft }, accountId);
+      return success({
+        status: value.status,
+        values: [{ id: submissionBasePlusId.id }],
+      });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
   setDraftRecoveryFacilityDetails: Handler<
     api.SetDraftRecoveryFacilityDetailsRequest,
     api.SetDraftRecoveryFacilityDetailsResponse
   > = async ({ id, accountId, rfdId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
+
       if (
         draft.recoveryFacilityDetail.status !== 'Started' &&
         draft.recoveryFacilityDetail.status !== 'Complete'
       ) {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
-      if (value.status !== 'Started' && value.status !== 'Complete') {
-        draft.recoveryFacilityDetail = value;
+      if (value.status === 'Started' || value.status === 'Complete') {
+        const recoveryFacility = value.values.find((rf) => {
+          return rf.id === rfdId;
+        });
 
-        draft.submissionConfirmation =
-          this.setSubmissionConfirmationStatus(draft);
-        draft.submissionDeclaration =
-          this.setSubmissionDeclarationStatus(draft);
-
-        await this.repository.saveDraft({ ...draft }, accountId);
-        return success(undefined);
+        if (recoveryFacility === undefined) {
+          return Promise.reject(Boom.badRequest());
+        }
+        const index = draft.recoveryFacilityDetail.values.findIndex((rf) => {
+          return rf.id === rfdId;
+        });
+        if (index === -1) {
+          return Promise.reject(Boom.notFound());
+        }
       }
 
-      const recoveryFacility = value.values.find((c) => {
-        return c.id === rfdId;
-      });
-      if (recoveryFacility === undefined) {
-        return fromBoom(Boom.badRequest());
-      }
-
-      const index = draft.recoveryFacilityDetail.values.findIndex((c) => {
-        return c.id === rfdId;
-      });
-      if (index === -1) {
-        return fromBoom(Boom.notFound());
-      }
-
-      draft.recoveryFacilityDetail.status = value.status;
-      draft.recoveryFacilityDetail.values[index] = recoveryFacility;
+      draft.recoveryFacilityDetail = this.setBaseRecoveryFacilityDetail(
+        draft as api.SubmissionBase,
+        rfdId,
+        value
+      ).recoveryFacilityDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);
@@ -1285,25 +1175,28 @@ export default class DraftController {
   > = async ({ id, accountId, rfdId }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      if (draft === undefined) {
+        return Promise.reject(Boom.notFound());
+      }
       if (
         draft.recoveryFacilityDetail.status !== 'Started' &&
         draft.recoveryFacilityDetail.status !== 'Complete'
       ) {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
-      const index = draft.recoveryFacilityDetail.values.findIndex((c) => {
-        return c.id === rfdId;
+      const index = draft.recoveryFacilityDetail.values.findIndex((rf) => {
+        return rf.id === rfdId;
       });
 
       if (index === -1) {
-        return fromBoom(Boom.notFound());
+        return Promise.reject(Boom.notFound());
       }
 
-      draft.recoveryFacilityDetail.values.splice(index, 1);
-      if (draft.recoveryFacilityDetail.values.length === 0) {
-        draft.recoveryFacilityDetail = { status: 'NotStarted' };
-      }
+      draft.recoveryFacilityDetail = this.deleteBaseRecoveryFacilityDetail(
+        draft as api.SubmissionBase,
+        rfdId
+      ).recoveryFacilityDetail;
 
       draft.submissionConfirmation =
         this.setSubmissionConfirmationStatus(draft);

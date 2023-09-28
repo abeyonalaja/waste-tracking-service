@@ -4,7 +4,12 @@ import * as api from '@wts/api/annex-vii';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
-import { DraftController, parse, validate } from './controller';
+import {
+  DraftController,
+  TemplateController,
+  parse,
+  validate,
+} from './controller';
 import { CosmosDraftRepository } from './data';
 import { CosmosClient } from '@azure/cosmos';
 import { CosmosAnnexViiClient } from './clients';
@@ -13,6 +18,7 @@ import {
   ChainedTokenCredential,
   WorkloadIdentityCredential,
 } from '@azure/identity';
+import CosmosTemplateRepository from './data/cosmos-templates';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration');
@@ -50,6 +56,23 @@ const draftController = new DraftController(
       }),
       process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'
     ),
+    process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+    process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
+    logger
+  ),
+  logger
+);
+
+const templateController = new TemplateController(
+  new CosmosTemplateRepository(
+    new CosmosAnnexViiClient(
+      new CosmosClient({
+        endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
+        aadCredentials,
+      }),
+      process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'
+    ),
+    process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
     logger
   ),
@@ -103,6 +126,23 @@ await server.invoker.listen(
     }
 
     return await draftController.createDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createDraftFromTemplate.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateDraftFromTemplateRequest;
+    if (!validate.createDraftFromTemplateRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.createDraftFromTemplate(request);
   },
   { method: HttpMethod.POST }
 );
@@ -691,6 +731,509 @@ await server.invoker.listen(
     }
 
     return await draftController.setDraftSubmissionDeclarationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getTemplateByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplates.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getTemplatesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplates(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createTemplate.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateTemplateRequest;
+    if (!validate.createTemplateRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.createTemplate(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createTemplateFromSubmission.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateTemplateFromSubmissionRequest;
+    if (!validate.createTemplateFromSubmissionRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.createTemplateFromSubmission(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createTemplateFromTemplate.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateTemplateFromTemplateRequest;
+    if (!validate.createTemplateFromTemplateRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.createTemplateFromTemplate(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.updateTemplate.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.UpdateTemplateRequest;
+    if (!validate.updateTemplateRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.updateTemplate(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.deleteTemplate.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.DeleteTemplateRequest;
+    if (!validate.deleteTemplateRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.deleteTemplate(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateWasteDescriptionById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftWasteDescriptionByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateWasteDescriptionById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateWasteDescriptionById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftWasteDescriptionByIdRequest;
+    if (!validate.setDraftWasteDescriptionByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateWasteDescriptionById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateExporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftExporterDetailByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateExporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateExporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftExporterDetailByIdRequest;
+    if (!validate.setDraftExporterDetailByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateExporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateImporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftImporterDetailByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateImporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateImporterDetailById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftImporterDetailByIdRequest;
+    if (!validate.setDraftImporterDetailByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateImporterDetailById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.listTemplateCarriers.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.listDraftCarriersRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.listTemplateCarriers(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateCarriers.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftCarriersRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateCarriers(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createTemplateCarriers.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateDraftCarriersRequest;
+    if (!validate.createDraftCarriersRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.createTemplateCarriers(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateCarriers.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftCarriersRequest;
+    if (!validate.setDraftCarriersRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateCarriers(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.deleteTemplateCarriers.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.deleteDraftCarriersRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.deleteTemplateCarriers(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateCollectionDetail.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftCollectionDetailRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateCollectionDetail(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateCollectionDetail.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftCollectionDetailRequest;
+    if (!validate.setDraftCollectionDetailRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateCollectionDetail(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateExitLocationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftExitLocationByIdRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateExitLocationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateExitLocationById.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftExitLocationByIdRequest;
+    if (!validate.setDraftExitLocationByIdRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateExitLocationById(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateTransitCountries.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftTransitCountriesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateTransitCountries(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateTransitCountries.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.SetDraftTransitCountriesRequest;
+    if (!validate.setDraftTransitCountriesRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateTransitCountries(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.listTemplateRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.listDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.listTemplateRecoveryFacilityDetails(
+      request
+    );
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getTemplateRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getTemplateRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createTemplateRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.CreateDraftRecoveryFacilityDetailsRequest;
+    if (!validate.createDraftRecoveryFacilityDetailsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.createTemplateRecoveryFacilityDetails(
+      request
+    );
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.setTemplateRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(
+      body
+    ) as api.SetDraftRecoveryFacilityDetailsRequest;
+    if (!validate.setDraftRecoveryFacilityDetailsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.setTemplateRecoveryFacilityDetails(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.deleteTemplateRecoveryFacilityDetails.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.deleteDraftRecoveryFacilityDetailsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.deleteTemplateRecoveryFacilityDetails(
+      request
+    );
   },
   { method: HttpMethod.POST }
 );

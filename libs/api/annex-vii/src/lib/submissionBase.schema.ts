@@ -1,17 +1,8 @@
 import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 import {
-  CreateDraftRequest,
-  DeleteDraftRequest,
-  CancelDraftByIdRequest,
-  CustomerReference,
-  GetDraftByIdRequest,
-  GetDraftCustomerReferenceByIdRequest,
   GetDraftExporterDetailByIdRequest,
   GetDraftImporterDetailByIdRequest,
-  GetDraftCollectionDateByIdRequest,
   GetDraftWasteDescriptionByIdRequest,
-  GetDraftWasteQuantityByIdRequest,
-  GetDraftsRequest,
   ListDraftCarriersRequest,
   CreateDraftCarriersRequest,
   DeleteDraftCarriersRequest,
@@ -23,21 +14,14 @@ import {
   GetDraftExitLocationByIdRequest,
   GetDraftTransitCountriesRequest,
   GetDraftCollectionDetailRequest,
-  GetDraftSubmissionConfirmationByIdRequest,
-  GetDraftSubmissionDeclarationByIdRequest,
-  DraftSubmissionCancellationType,
-} from './dto';
+} from './submissionBase.dto';
 
-const errorResponseValue: SchemaObject = {
+export const errorResponseValue: SchemaObject = {
   properties: {
     statusCode: { type: 'uint16' },
     name: { type: 'string' },
     message: { type: 'string' },
   },
-};
-
-const customerReference: JTDSchemaType<CustomerReference> = {
-  type: 'string',
 };
 
 const draftWasteDescriptionData = {
@@ -73,7 +57,7 @@ const draftWasteDescriptionData = {
   description: { type: 'string' },
 };
 
-const draftWasteDescription: SchemaObject = {
+export const draftWasteDescription: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -94,83 +78,6 @@ const draftWasteDescription: SchemaObject = {
         nationalCode: draftWasteDescriptionData.nationalCode,
         ewcCodes: draftWasteDescriptionData.ewcCodes,
         description: draftWasteDescriptionData.description,
-      },
-    },
-  },
-};
-
-const draftWasteQuantity: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    CannotStart: {
-      properties: {},
-    },
-    NotStarted: {
-      properties: {},
-    },
-    Started: {
-      properties: {},
-      optionalProperties: {
-        value: {
-          properties: {},
-          optionalProperties: {
-            type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
-            estimateData: {
-              optionalProperties: {
-                quantityType: { enum: ['Volume', 'Weight'] },
-                value: { type: 'float64' },
-              },
-            },
-            actualData: {
-              optionalProperties: {
-                quantityType: { enum: ['Volume', 'Weight'] },
-                value: { type: 'float64' },
-              },
-            },
-          },
-        },
-      },
-    },
-    Complete: {
-      properties: {
-        value: {
-          discriminator: 'type',
-          mapping: {
-            NotApplicable: { properties: {} },
-            EstimateData: {
-              properties: {
-                estimateData: {
-                  optionalProperties: {
-                    quantityType: { enum: ['Volume', 'Weight'] },
-                    value: { type: 'float64' },
-                  },
-                },
-                actualData: {
-                  optionalProperties: {
-                    quantityType: { enum: ['Volume', 'Weight'] },
-                    value: { type: 'float64' },
-                  },
-                },
-              },
-            },
-            ActualData: {
-              properties: {
-                estimateData: {
-                  optionalProperties: {
-                    quantityType: { enum: ['Volume', 'Weight'] },
-                    value: { type: 'float64' },
-                  },
-                },
-                actualData: {
-                  optionalProperties: {
-                    quantityType: { enum: ['Volume', 'Weight'] },
-                    value: { type: 'float64' },
-                  },
-                },
-              },
-            },
-          },
-        },
       },
     },
   },
@@ -201,7 +108,7 @@ const draftExporterDetailData = {
   },
 };
 
-const draftExporterDetail: SchemaObject = {
+export const draftExporterDetail: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -243,7 +150,7 @@ const draftImporterDetailData = {
   },
 };
 
-const draftImporterDetail: SchemaObject = {
+export const draftImporterDetail: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -265,39 +172,7 @@ const draftImporterDetail: SchemaObject = {
   },
 };
 
-const draftCollectionDate: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    NotStarted: {
-      properties: {},
-    },
-    Complete: {
-      properties: {
-        value: {
-          properties: {
-            type: { enum: ['EstimateDate', 'ActualDate'] },
-            estimateDate: {
-              optionalProperties: {
-                day: { type: 'string' },
-                month: { type: 'string' },
-                year: { type: 'string' },
-              },
-            },
-            actualDate: {
-              optionalProperties: {
-                day: { type: 'string' },
-                month: { type: 'string' },
-                year: { type: 'string' },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-const draftCarriers: SchemaObject = {
+export const draftCarriers: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -447,7 +322,7 @@ const draftCollectionDetailData = {
   },
 };
 
-const draftCollectionDetail: SchemaObject = {
+export const draftCollectionDetail: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -469,7 +344,7 @@ const draftCollectionDetail: SchemaObject = {
   },
 };
 
-const draftRecoveryFacilityDetails: SchemaObject = {
+export const draftRecoveryFacilityDetails: SchemaObject = {
   discriminator: 'status',
   mapping: {
     CannotStart: {
@@ -581,7 +456,7 @@ const draftRecoveryFacilityDetails: SchemaObject = {
   },
 };
 
-const draftExitLocation: SchemaObject = {
+export const draftExitLocation: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -601,7 +476,7 @@ const draftExitLocation: SchemaObject = {
   },
 };
 
-const draftTransitCountries: SchemaObject = {
+export const draftTransitCountries: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -620,286 +495,6 @@ const draftTransitCountries: SchemaObject = {
   },
 };
 
-const draftSubmissionConfirmation: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    CannotStart: {
-      properties: {},
-    },
-    NotStarted: {
-      properties: {},
-    },
-    Complete: {
-      properties: {
-        confirmation: { type: 'boolean' },
-      },
-    },
-  },
-};
-
-const draftSubmissionDeclaration: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    CannotStart: {
-      properties: {},
-    },
-    NotStarted: {
-      properties: {},
-    },
-    Complete: {
-      properties: {
-        values: {
-          properties: {
-            declarationTimestamp: { type: 'string' },
-            transactionId: { type: 'string' },
-          },
-        },
-      },
-    },
-  },
-};
-
-const draftSubmissionCancellationType: JTDSchemaType<DraftSubmissionCancellationType> =
-  {
-    discriminator: 'type',
-    mapping: {
-      ChangeOfRecoveryFacilityOrLaboratory: {
-        properties: {},
-      },
-      NoLongerExportingWaste: {
-        properties: {},
-      },
-      Other: {
-        properties: {
-          reason: { type: 'string' },
-        },
-      },
-    },
-  };
-
-const draftSubmissionState: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    InProgress: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-      },
-    },
-    Cancelled: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-        cancellationType: draftSubmissionCancellationType,
-      },
-    },
-    Deleted: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-      },
-    },
-    SubmittedWithEstimates: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-      },
-    },
-    SubmittedWithActuals: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-      },
-    },
-    UpdatedWithActuals: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-      },
-    },
-  },
-};
-
-const draftSubmission: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    reference: customerReference,
-    wasteDescription: draftWasteDescription,
-    wasteQuantity: draftWasteQuantity,
-    exporterDetail: draftExporterDetail,
-    importerDetail: draftImporterDetail,
-    collectionDate: draftCollectionDate,
-    carriers: draftCarriers,
-    collectionDetail: draftCollectionDetail,
-    ukExitLocation: draftExitLocation,
-    transitCountries: draftTransitCountries,
-    recoveryFacilityDetail: draftRecoveryFacilityDetails,
-    submissionConfirmation: draftSubmissionConfirmation,
-    submissionDeclaration: draftSubmissionDeclaration,
-    submissionState: draftSubmissionState,
-  },
-};
-
-export const getDraftsRequest: JTDSchemaType<GetDraftsRequest> = {
-  properties: {
-    accountId: { type: 'string' },
-    order: { enum: ['ASC', 'DESC'] },
-  },
-  optionalProperties: {
-    pageLimit: { type: 'float64' },
-    state: {
-      elements: {
-        enum: [
-          'InProgress',
-          'Cancelled',
-          'Deleted',
-          'SubmittedWithEstimates',
-          'SubmittedWithActuals',
-          'UpdatedWithActuals',
-        ],
-      },
-    },
-    token: { type: 'string' },
-  },
-};
-
-export const getDraftsResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      properties: {
-        totalSubmissions: { type: 'float64' },
-        totalPages: { type: 'float64' },
-        currentPage: { type: 'float64' },
-        pages: {
-          elements: {
-            properties: {
-              pageNumber: { type: 'float64' },
-              token: { type: 'string' },
-            },
-          },
-        },
-        values: {
-          elements: {
-            properties: {
-              id: { type: 'string' },
-              reference: customerReference,
-              wasteDescription: draftWasteDescription,
-              wasteQuantity: { ref: 'sectionSummary' },
-              exporterDetail: { ref: 'sectionSummary' },
-              importerDetail: { ref: 'sectionSummary' },
-              collectionDate: draftCollectionDate,
-              carriers: { ref: 'sectionSummary' },
-              collectionDetail: { ref: 'sectionSummary' },
-              ukExitLocation: { ref: 'sectionSummary' },
-              transitCountries: { ref: 'sectionSummary' },
-              recoveryFacilityDetail: { ref: 'sectionSummary' },
-              submissionConfirmation: { ref: 'sectionSummary' },
-              submissionDeclaration: draftSubmissionDeclaration,
-              submissionState: draftSubmissionState,
-            },
-          },
-        },
-      },
-    },
-  },
-  definitions: {
-    sectionSummary: {
-      properties: {
-        status: { enum: ['CannotStart', 'NotStarted', 'Started', 'Complete'] },
-      },
-    },
-  },
-};
-
-export const getDraftByIdRequest: JTDSchemaType<GetDraftByIdRequest> = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-  },
-};
-
-export const getDraftByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftSubmission,
-  },
-};
-
-export const createDraftRequest: JTDSchemaType<CreateDraftRequest> = {
-  properties: {
-    accountId: { type: 'string' },
-    reference: customerReference,
-  },
-};
-
-export const createDraftResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftSubmission,
-  },
-};
-
-export const deleteDraftRequest: JTDSchemaType<DeleteDraftRequest> = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-  },
-};
-
-export const deleteDraftResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const cancelDraftByIdRequest: JTDSchemaType<CancelDraftByIdRequest> = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    cancellationType: draftSubmissionCancellationType,
-  },
-};
-
-export const cancelDraftByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const getDraftCustomerReferenceByIdRequest: JTDSchemaType<GetDraftCustomerReferenceByIdRequest> =
-  {
-    properties: {
-      id: { type: 'string' },
-      accountId: { type: 'string' },
-    },
-  };
-
-export const getDraftCustomerReferenceByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: customerReference,
-  },
-};
-
-export const setDraftCustomerReferenceByIdRequest: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    value: customerReference,
-  },
-};
-
-export const setDraftCustomerReferenceByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
 export const getDraftWasteDescriptionByIdRequest: JTDSchemaType<GetDraftWasteDescriptionByIdRequest> =
   {
     properties: {
@@ -912,7 +507,7 @@ export const getDraftWasteDescriptionByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
-    value: draftSubmission,
+    value: draftWasteDescription,
   },
 };
 
@@ -925,38 +520,6 @@ export const setDraftWasteDescriptionByIdRequest: SchemaObject = {
 };
 
 export const setDraftWasteDescriptionByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const getDraftWasteQuantityByIdRequest: JTDSchemaType<GetDraftWasteQuantityByIdRequest> =
-  {
-    properties: {
-      id: { type: 'string' },
-      accountId: { type: 'string' },
-    },
-  };
-
-export const getDraftWasteQuantityByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftWasteQuantity,
-  },
-};
-
-export const setDraftWasteQuantityByIdRequest: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    value: draftWasteQuantity,
-  },
-};
-
-export const setDraftWasteQuantityByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
@@ -1021,38 +584,6 @@ export const setDraftImporterDetailByIdRequest: SchemaObject = {
 };
 
 export const setDraftImporterDetailByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const getDraftCollectionDateByIdRequest: JTDSchemaType<GetDraftCollectionDateByIdRequest> =
-  {
-    properties: {
-      id: { type: 'string' },
-      accountId: { type: 'string' },
-    },
-  };
-
-export const getDraftCollectionDateByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftCollectionDate,
-  },
-};
-
-export const setDraftCollectionDateByIdRequest: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    value: draftCollectionDate,
-  },
-};
-
-export const setDraftCollectionDateByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
@@ -1326,76 +857,6 @@ export const deleteDraftRecoveryFacilityDetailsRequest: JTDSchemaType<DeleteDraf
   };
 
 export const deleteDraftRecoveryFacilityDetailsResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const getDraftSubmissionConfirmationByIdByIdRequest: JTDSchemaType<GetDraftSubmissionConfirmationByIdRequest> =
-  {
-    properties: {
-      id: { type: 'string' },
-      accountId: { type: 'string' },
-    },
-  };
-
-export const getDraftSubmissionConfirmationByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftSubmissionConfirmation,
-  },
-};
-
-export const setDraftSubmissionConfirmationByIdRequest: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    value: draftSubmissionConfirmation,
-  },
-};
-
-export const setDraftSubmissionConfirmationByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: { properties: {} },
-  },
-};
-
-export const getDraftSubmissionDeclarationByIdByIdRequest: JTDSchemaType<GetDraftSubmissionDeclarationByIdRequest> =
-  {
-    properties: {
-      id: { type: 'string' },
-      accountId: { type: 'string' },
-    },
-  };
-
-export const getDraftSubmissionDeclarationByIdResponse: SchemaObject = {
-  properties: { success: { type: 'boolean' } },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: draftSubmissionDeclaration,
-  },
-};
-
-export const setDraftSubmissionDeclarationByIdRequest: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    accountId: { type: 'string' },
-    value: {
-      properties: {
-        status: {
-          enum: ['CannotStart', 'NotStarted', 'Complete'],
-        },
-      },
-    },
-  },
-};
-
-export const setDraftSubmissionDeclarationByIdResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

@@ -40,6 +40,9 @@ type Action = {
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
+    | 'PAGE_DATA_FETCH_INIT'
+    | 'PAGE_DATA_FETCH_SUCCESS'
+    | 'PAGE_DATA_FETCH_FAILURE'
     | 'SHOW_VIEW'
     | 'ERRORS_UPDATE'
     | 'REMOVE_WASTE_CARRIER';
@@ -126,6 +129,11 @@ const IncompleteAnnex7 = () => {
     incompleteAnnex7Reducer,
     initialPageState
   );
+
+  // const set3 = "+RID:~wxd5AM+t5WISAAAAAAAAAA==#RT:1#TRC:2#RTD:yekIZmFpDd6fAVpcF/pVBTMxMzQuMTkuNDJVMzE7MTU7MzEvOjo5WwA=#ISV:2#IEO:65567#QCF:8"; // Alphanumeric Characters + Space
+
+  // console.log(set3)
+  // console.log(encodeURIComponent(set3)); // ABC%20abc%20123 (the space gets encoded as %20)
 
   const [item, setItem] = useState(null);
 

@@ -3,46 +3,53 @@ import {
   CreateDraftResponse,
   DeleteDraftResponse,
   CancelDraftByIdResponse,
-  GetDraftByIdResponse,
   GetDraftsResponse,
   GetDraftCollectionDateByIdResponse,
   GetDraftCustomerReferenceByIdResponse,
-  GetDraftExporterDetailByIdResponse,
-  GetDraftImporterDetailByIdResponse,
-  GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdResponse,
   SetDraftCollectionDateByIdResponse,
   SetDraftCustomerReferenceByIdResponse,
-  SetDraftExporterDetailByIdResponse,
-  SetDraftImporterDetailByIdResponse,
-  SetDraftWasteDescriptionByIdResponse,
   SetDraftWasteQuantityByIdResponse,
-  ListDraftCarriersResponse,
-  CreateDraftCarriersResponse,
-  GetDraftCarriersResponse,
-  SetDraftCarriersResponse,
-  DeleteDraftCarriersResponse,
-  GetDraftExitLocationByIdResponse,
-  SetDraftExitLocationByIdResponse,
-  GetDraftTransitCountriesResponse,
-  SetDraftTransitCountriesResponse,
-  GetDraftCollectionDetailResponse,
-  SetDraftCollectionDetailResponse,
-  ListDraftRecoveryFacilityDetailsResponse,
-  CreateDraftRecoveryFacilityDetailsResponse,
-  GetDraftRecoveryFacilityDetailsResponse,
-  SetDraftRecoveryFacilityDetailsResponse,
-  DeleteDraftRecoveryFacilityDetailsResponse,
   GetDraftSubmissionConfirmationByIdResponse,
   SetDraftSubmissionConfirmationByIdResponse,
   GetDraftSubmissionDeclarationByIdResponse,
   SetDraftSubmissionDeclarationByIdResponse,
+  DraftSubmission,
+  Template,
+  DraftWasteDescription,
+  CreateDraftCarriersResponse,
+  CreateDraftRecoveryFacilityDetailsResponse,
+  DeleteDraftCarriersResponse,
+  DeleteDraftRecoveryFacilityDetailsResponse,
+  GetDraftCarriersResponse,
+  GetDraftCollectionDetailResponse,
+  GetDraftExitLocationByIdResponse,
+  GetDraftExporterDetailByIdResponse,
+  GetDraftImporterDetailByIdResponse,
+  GetDraftRecoveryFacilityDetailsResponse,
+  GetDraftTransitCountriesResponse,
+  GetDraftWasteDescriptionByIdResponse,
+  ListDraftCarriersResponse,
+  ListDraftRecoveryFacilityDetailsResponse,
+  SetDraftCarriersResponse,
+  SetDraftCollectionDetailResponse,
+  SetDraftExitLocationByIdResponse,
+  SetDraftExporterDetailByIdResponse,
+  SetDraftImporterDetailByIdResponse,
+  SetDraftRecoveryFacilityDetailsResponse,
+  SetDraftTransitCountriesResponse,
+  SetDraftWasteDescriptionByIdResponse,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import { Logger } from 'winston';
+import {
+  AnnexViiServiceSubmissionBaseBackend,
+  InMemorySubmissionBaseBackend,
+  SubmissionBaseBackend,
+  SubmissionBasePlusId,
+} from '../submissionBase/submissionBase.backend';
+import { TemplateRef } from '../template';
 
 export type Submission = dto.Submission;
 export type SubmissionSummary = dto.SubmissionSummary;
@@ -131,12 +138,16 @@ export type OrderRef = {
   order: 'ASC' | 'DESC';
 };
 
-export interface SubmissionBackend {
+export interface SubmissionBackend extends SubmissionBaseBackend {
   createSubmission(
     accountId: string,
     reference: CustomerReference
   ): Promise<Submission>;
-  getSubmission(ref: SubmissionRef): Promise<Submission>;
+  createSubmissionFromTemplate(
+    id: string,
+    accountId: string,
+    reference: CustomerReference
+  ): Promise<DraftSubmission>;
   deleteSubmission(ref: SubmissionRef): Promise<void>;
   cancelSubmission(
     ref: SubmissionRef,
@@ -154,60 +165,10 @@ export interface SubmissionBackend {
     ref: SubmissionRef,
     value: CustomerReference
   ): Promise<void>;
-  getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
-  setWasteDescription(
-    ref: SubmissionRef,
-    value: WasteDescription
-  ): Promise<void>;
   getWasteQuantity(ref: SubmissionRef): Promise<WasteQuantity>;
   setWasteQuantity(ref: SubmissionRef, value: WasteQuantity): Promise<void>;
-  getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
-  setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
-  getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
-  setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
   getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
   setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
-  listCarriers(ref: SubmissionRef): Promise<Carriers>;
-  createCarriers(
-    ref: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
-  ): Promise<Carriers>;
-  getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
-  setCarriers(
-    ref: SubmissionRef,
-    carrerId: string,
-    value: Carriers
-  ): Promise<void>;
-  deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
-  getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
-  setCollectionDetail(
-    ref: SubmissionRef,
-    value: CollectionDetail
-  ): Promise<void>;
-  getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
-  setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
-  getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
-  setTransitCountries(
-    ref: SubmissionRef,
-    value: TransitCountries
-  ): Promise<void>;
-  listRecoveryFacilityDetail(
-    ref: SubmissionRef
-  ): Promise<RecoveryFacilityDetail>;
-  createRecoveryFacilityDetail(
-    ref: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
-  ): Promise<RecoveryFacilityDetail>;
-  getRecoveryFacilityDetail(
-    ref: SubmissionRef,
-    id: string
-  ): Promise<RecoveryFacilityDetail>;
-  setRecoveryFacilityDetail(
-    ref: SubmissionRef,
-    id: string,
-    value: RecoveryFacilityDetail
-  ): Promise<void>;
-  deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
   getSubmissionConfirmation(
     ref: SubmissionRef
   ): Promise<SubmissionConfirmation>;
@@ -222,74 +183,25 @@ export interface SubmissionBackend {
   ): Promise<void>;
 }
 
-function isWasteCodeChangingBulkToSmall(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: WasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type === 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingSmallToBulk(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: WasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type === 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingBulkToBulkDifferentType(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: WasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    currentWasteDescription.wasteCode?.type !==
-      newWasteDescription.wasteCode?.type
-  );
-}
-
-function isWasteCodeChangingBulkToBulkSameType(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: WasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type ===
-      newWasteDescription.wasteCode?.type &&
-    currentWasteDescription.wasteCode?.value !==
-      newWasteDescription.wasteCode?.value
-  );
-}
-
 /**
  * This is a mock backend and should not be used in production.
  */
-export class InMemorySubmissionBackend implements SubmissionBackend {
-  readonly submissions = new Map<string, Submission>();
-
-  private paginateArray(array: any[], pageSize: number, pageNumber: number) {
-    return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+export class InMemorySubmissionBackend
+  extends InMemorySubmissionBaseBackend
+  implements SubmissionBackend
+{
+  constructor(
+    protected submissions: Map<string, Submission>,
+    protected templates: Map<string, Template>
+  ) {
+    super(submissions, templates);
   }
 
   createSubmission(
     _: string,
     reference: CustomerReference
   ): Promise<Submission> {
-    if (reference && reference.length > 20) {
+    if (reference.length > 20) {
       return Promise.reject(
         Boom.badRequest('Supplied reference cannot exceed 20 characters')
       );
@@ -324,16 +236,51 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     return Promise.resolve(value);
   }
 
-  getSubmission({ id }: SubmissionRef): Promise<Submission> {
-    const value = this.submissions.get(id);
-    if (
-      value === undefined ||
-      value.submissionState.status === 'Cancelled' ||
-      value.submissionState.status === 'Deleted'
-    ) {
+  async createSubmissionFromTemplate(
+    id: string,
+    accountId: string,
+    reference: CustomerReference
+  ): Promise<DraftSubmission> {
+    if (reference.length > 20) {
+      return Promise.reject(
+        Boom.badRequest('Supplied reference cannot exceed 20 characters')
+      );
+    }
+
+    const template = await this.getTemplate({ id } as TemplateRef);
+    if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
+    id = uuidv4();
+
+    const value: DraftSubmission = {
+      id,
+      reference,
+      wasteDescription: template.wasteDescription,
+      wasteQuantity:
+        template.wasteDescription.status === 'NotStarted'
+          ? { status: 'CannotStart' }
+          : { status: 'NotStarted' },
+      exporterDetail: template.exporterDetail,
+      importerDetail: template.importerDetail,
+      collectionDate: { status: 'NotStarted' },
+      carriers: this.copyCarriers(template.carriers),
+      collectionDetail: template.collectionDetail,
+      ukExitLocation: template.ukExitLocation,
+      transitCountries: template.transitCountries,
+      recoveryFacilityDetail: this.copyRecoveryFacilities(
+        template.recoveryFacilityDetail
+      ),
+      submissionConfirmation: { status: 'CannotStart' },
+      submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+
+    this.submissions.set(id, value as Submission);
     return Promise.resolve(value);
   }
 
@@ -502,20 +449,20 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   setCustomerReference(
     { id }: SubmissionRef,
-    value: CustomerReference
+    reference: CustomerReference
   ): Promise<void> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    if (value && value.length > 20) {
+    if (reference.length > 20) {
       return Promise.reject(
         Boom.badRequest('Supplied reference cannot exceed 20 characters')
       );
     }
 
-    submission.reference = value;
+    submission.reference = reference;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -535,14 +482,15 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
 
   setWasteDescription(
     { id }: SubmissionRef,
-    value: WasteDescription
+    value: DraftWasteDescription
   ): Promise<void> {
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    let wasteQuantity: Submission['wasteQuantity'] = submission.wasteQuantity;
+    let wasteQuantity: dto.Submission['wasteQuantity'] =
+      submission.wasteQuantity;
 
     if (
       wasteQuantity.status === 'CannotStart' &&
@@ -551,79 +499,33 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       wasteQuantity = { status: 'NotStarted' };
     }
 
-    let recoveryFacilityDetail: Submission['recoveryFacilityDetail'] =
-      submission.recoveryFacilityDetail.status === 'CannotStart' &&
-      value.status !== 'NotStarted' &&
-      value.wasteCode !== undefined
-        ? { status: 'NotStarted' }
-        : submission.recoveryFacilityDetail;
-
-    let carriers: Submission['carriers'] = submission.carriers;
-
     if (
-      submission.wasteDescription.status === 'NotStarted' &&
-      value.status !== 'NotStarted' &&
-      value.wasteCode?.type === 'NotApplicable'
+      this.isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)
     ) {
-      carriers.transport = false;
-    }
-
-    if (isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)) {
-      if (value.status === 'Started') {
-        value.ewcCodes = undefined;
-        value.nationalCode = undefined;
-        value.description = undefined;
-      }
-
       wasteQuantity = { status: 'NotStarted' };
-
-      carriers = { status: 'NotStarted', transport: false };
-
-      recoveryFacilityDetail = { status: 'NotStarted' };
-    }
-
-    if (isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)) {
-      if (value.status === 'Started') {
-        value.ewcCodes = undefined;
-        value.nationalCode = undefined;
-        value.description = undefined;
-      }
-
-      wasteQuantity = { status: 'NotStarted' };
-
-      carriers = { status: 'NotStarted', transport: true };
-
-      recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
     if (
-      isWasteCodeChangingBulkToBulkDifferentType(
+      this.isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)
+    ) {
+      wasteQuantity = { status: 'NotStarted' };
+    }
+
+    if (
+      this.isWasteCodeChangingBulkToBulkDifferentType(
         submission.wasteDescription,
         value
       )
     ) {
-      if (value.status === 'Started') {
-        value.ewcCodes = undefined;
-        value.nationalCode = undefined;
-        value.description = undefined;
-      }
-
       wasteQuantity = { status: 'NotStarted' };
-
-      carriers = { status: 'NotStarted', transport: true };
-
-      recoveryFacilityDetail = { status: 'NotStarted' };
     }
 
     if (
-      isWasteCodeChangingBulkToBulkSameType(submission.wasteDescription, value)
+      this.isWasteCodeChangingBulkToBulkSameType(
+        submission.wasteDescription,
+        value
+      )
     ) {
-      if (value.status === 'Started') {
-        value.ewcCodes = undefined;
-        value.nationalCode = undefined;
-        value.description = undefined;
-      }
-
       if (
         submission.wasteQuantity.status !== 'CannotStart' &&
         submission.wasteQuantity.status !== 'NotStarted'
@@ -633,35 +535,22 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
           value: submission.wasteQuantity.value,
         };
       }
-
-      if (submission.carriers.status !== 'NotStarted') {
-        carriers = {
-          status: 'Started',
-          transport: true,
-          values: submission.carriers.values,
-        };
-      }
-
-      if (
-        submission.recoveryFacilityDetail.status === 'Started' ||
-        submission.recoveryFacilityDetail.status === 'Complete'
-      ) {
-        recoveryFacilityDetail = {
-          status: 'Started',
-          values: submission.recoveryFacilityDetail.values,
-        };
-      }
     }
 
-    submission.wasteDescription = value;
-    submission.wasteQuantity = wasteQuantity;
-    submission.carriers = carriers;
-    submission.recoveryFacilityDetail = recoveryFacilityDetail;
+    const submissionBase = this.setBaseWasteDescription(
+      submission as dto.SubmissionBase,
+      value
+    );
+    submission.wasteDescription = submissionBase.wasteDescription;
+    submission.carriers = submissionBase.carriers;
+    submission.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
 
+    submission.wasteQuantity = wasteQuantity;
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -763,12 +652,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.exporterDetail = value;
+    submission.exporterDetail = this.setBaseExporterDetail(
+      submission as dto.SubmissionBase,
+      value
+    ).exporterDetail;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -790,12 +683,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.importerDetail = value;
+    submission.importerDetail = this.setBaseImporterDetail(
+      submission as dto.SubmissionBase,
+      value
+    ).importerDetail;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -892,50 +789,30 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    const transport: Carriers['transport'] =
-      submission.wasteDescription.status !== 'NotStarted' &&
-      submission.wasteDescription.wasteCode?.type === 'NotApplicable'
-        ? false
-        : true;
-
-    const carrier = { id: uuidv4() };
-    if (submission.carriers.status === 'NotStarted') {
-      submission.carriers = {
-        status: value.status,
-        transport: transport,
-        values: [carrier],
-      };
-
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-      this.submissions.set(id, submission);
-      return Promise.resolve(submission.carriers);
+    if (submission.carriers.status !== 'NotStarted') {
+      if (submission.carriers.values.length === 5) {
+        return Promise.reject(
+          Boom.badRequest('Cannot add more than 5 carriers')
+        );
+      }
     }
 
-    if (submission.carriers.values.length === 5) {
-      return Promise.reject(Boom.badRequest('Cannot add more than 5 carriers'));
-    }
+    const submissionBasePlusId: SubmissionBasePlusId = this.createBaseCarriers(
+      submission as dto.SubmissionBase,
+      value
+    );
 
-    const carriers: dto.Carrier[] = [];
-    for (const c of submission.carriers.values) {
-      carriers.push(c);
-    }
-    carriers.push(carrier);
-    submission.carriers = {
-      status: value.status,
-      transport: transport,
-      values: carriers,
-    };
+    submission.carriers = submissionBasePlusId.submissionBase.carriers;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve({
       status: value.status,
-      transport: transport,
-      values: [carrier],
+      transport: submission.carriers.transport,
+      values: [{ id: submissionBasePlusId.id }],
     });
   }
 
@@ -981,36 +858,39 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     }
 
     if (value.status === 'NotStarted') {
-      submission.carriers = value;
+      submission.carriers = this.setBaseNoCarriers(
+        submission as dto.SubmissionBase,
+        carrierId,
+        value
+      ).carriers;
+    } else {
+      const carrier = value.values.find((c) => {
+        return c.id === carrierId;
+      });
+      if (carrier === undefined) {
+        return Promise.reject(Boom.badRequest());
+      }
 
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-      this.submissions.set(id, submission);
-      return Promise.resolve();
+      const index = submission.carriers.values.findIndex((c) => {
+        return c.id === carrierId;
+      });
+      if (index === -1) {
+        return Promise.reject(Boom.notFound());
+      }
+      submission.carriers = this.setBaseCarriers(
+        submission as dto.SubmissionBase,
+        carrierId,
+        value,
+        carrier,
+        index
+      ).carriers;
     }
-
-    const carrier = value.values.find((c) => {
-      return c.id === carrierId;
-    });
-    if (carrier === undefined) {
-      return Promise.reject(Boom.badRequest());
-    }
-
-    const index = submission.carriers.values.findIndex((c) => {
-      return c.id === carrierId;
-    });
-    if (index === -1) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.carriers.status = value.status;
-    submission.carriers.values[index] = carrier as dto.Carrier;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1032,24 +912,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.carriers.values.splice(index, 1);
-    if (submission.carriers.values.length === 0) {
-      const transport: Carriers['transport'] =
-        submission.wasteDescription.status !== 'NotStarted' &&
-        submission.wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
-
-      submission.carriers = {
-        status: 'NotStarted',
-        transport: transport,
-      };
-    }
+    submission.carriers = this.deleteBaseCarriers(
+      submission as dto.SubmissionBase,
+      carrierId
+    ).carriers;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1071,12 +943,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.collectionDetail = value;
+    submission.collectionDetail = this.setBaseCollectionDetail(
+      submission as dto.SubmissionBase,
+      value
+    ).collectionDetail;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1095,12 +971,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.ukExitLocation = value;
+    submission.ukExitLocation = this.setBaseExitLocation(
+      submission as dto.SubmissionBase,
+      value
+    ).ukExitLocation;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1122,12 +1002,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.transitCountries = value;
+    submission.transitCountries = this.setBaseTransitCountries(
+      submission as dto.SubmissionBase,
+      value
+    ).transitCountries;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1153,53 +1037,42 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
         )
       );
     }
+
     const submission = this.submissions.get(id);
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    const newRecoveryFacilities = { id: uuidv4() };
     if (
-      submission.recoveryFacilityDetail.status !== 'Started' &&
-      submission.recoveryFacilityDetail.status !== 'Complete'
+      submission.recoveryFacilityDetail.status === 'Started' ||
+      submission.recoveryFacilityDetail.status === 'Complete'
     ) {
-      submission.recoveryFacilityDetail = {
-        status: value.status,
-        values: [newRecoveryFacilities],
-      };
-
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-      this.submissions.set(id, submission);
-      return Promise.resolve(submission.recoveryFacilityDetail);
+      if (submission.recoveryFacilityDetail.values.length === 3) {
+        return Promise.reject(
+          Boom.badRequest(
+            'Cannot add more than 3 facilities(1 InterimSite and 2 RecoveryFacilities)'
+          )
+        );
+      }
     }
 
-    if (submission.recoveryFacilityDetail.values.length === 3) {
-      return Promise.reject(
-        Boom.badRequest(
-          'Cannot add more than 3 facilities(1 InterimSite and 2 RecoveryFacilities)'
-        )
+    const submissionBasePlusId: SubmissionBasePlusId =
+      this.createBaseRecoveryFacilityDetail(
+        submission as dto.SubmissionBase,
+        value
       );
-    }
 
-    const facilities: dto.RecoveryFacility[] = [];
-    for (const rf of submission.recoveryFacilityDetail.values) {
-      facilities.push(rf);
-    }
-    facilities.push(newRecoveryFacilities);
-    submission.recoveryFacilityDetail = {
-      status: value.status,
-      values: facilities,
-    };
+    submission.recoveryFacilityDetail =
+      submissionBasePlusId.submissionBase.recoveryFacilityDetail;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve({
       status: value.status,
-      values: [newRecoveryFacilities],
+      values: [{ id: submissionBasePlusId.id }],
     });
   }
 
@@ -1253,37 +1126,40 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    if (value.status !== 'Started' && value.status !== 'Complete') {
-      submission.recoveryFacilityDetail = value;
+    if (value.status === 'Started' || value.status === 'Complete') {
+      const recoveryFacility = value.values.find((rf) => {
+        return rf.id === rfdId;
+      });
 
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-      this.submissions.set(id, submission);
-      return Promise.resolve();
+      if (recoveryFacility === undefined) {
+        return Promise.reject(Boom.badRequest());
+      }
+      const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
+        return rf.id === rfdId;
+      });
+      if (index === -1) {
+        return Promise.reject(Boom.notFound());
+      }
     }
-    const recoveryFacility = value.values.find((rf) => {
-      return rf.id === rfdId;
-    });
 
-    if (recoveryFacility === undefined) {
-      return Promise.reject(Boom.badRequest());
-    }
-    const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
-      return rf.id === rfdId;
-    });
-    if (index === -1) {
+    submission.recoveryFacilityDetail = this.setBaseRecoveryFacilityDetail(
+      submission as dto.SubmissionBase,
+      rfdId,
+      value
+    ).recoveryFacilityDetail;
+
+    if (
+      submission.recoveryFacilityDetail.status !== 'Started' &&
+      submission.recoveryFacilityDetail.status !== 'Complete'
+    ) {
       return Promise.reject(Boom.notFound());
     }
-
-    submission.recoveryFacilityDetail.status = value.status;
-    submission.recoveryFacilityDetail.values[index] =
-      recoveryFacility as dto.RecoveryFacility;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1295,7 +1171,6 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
-
     if (
       submission.recoveryFacilityDetail.status !== 'Started' &&
       submission.recoveryFacilityDetail.status !== 'Complete'
@@ -1311,15 +1186,16 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
       return Promise.reject(Boom.notFound());
     }
 
-    submission.recoveryFacilityDetail.values.splice(index, 1);
-    if (submission.recoveryFacilityDetail.values.length === 0) {
-      submission.recoveryFacilityDetail = { status: 'NotStarted' };
-    }
+    submission.recoveryFacilityDetail = this.deleteBaseRecoveryFacilityDetail(
+      submission as dto.SubmissionBase,
+      rfdId
+    ).recoveryFacilityDetail;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
     this.submissions.set(id, submission);
+
     return Promise.resolve();
   }
 
@@ -1430,9 +1306,10 @@ export class InMemorySubmissionBackend implements SubmissionBackend {
   }
 }
 
-export class AnnexViiServiceBackend implements SubmissionBackend {
-  constructor(private client: DaprAnnexViiClient, private logger: Logger) {}
-
+export class AnnexViiServiceSubmissionBackend
+  extends AnnexViiServiceSubmissionBaseBackend
+  implements SubmissionBackend
+{
   async createSubmission(
     accountId: string,
     reference: CustomerReference
@@ -1451,14 +1328,21 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
       });
     }
 
-    return response.value;
+    return response.value as Submission;
   }
 
-  async getSubmission({ id, accountId }: SubmissionRef): Promise<Submission> {
-    let response: GetDraftByIdResponse;
+  async createSubmissionFromTemplate(
+    id: string,
+    accountId: string,
+    reference: CustomerReference
+  ): Promise<DraftSubmission> {
+    let response: CreateDraftResponse;
     try {
-      console.log('getSubmission');
-      response = await this.client.getDraftById({ id, accountId });
+      response = await this.client.createDraftFromTemplate({
+        id,
+        accountId,
+        reference,
+      });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1571,14 +1455,14 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
 
   async setCustomerReference(
     { id, accountId }: SubmissionRef,
-    value: CustomerReference
+    reference: CustomerReference
   ): Promise<void> {
     let response: SetDraftCustomerReferenceByIdResponse;
     try {
       response = await this.client.setDraftCustomerReferenceById({
         id,
         accountId,
-        value,
+        reference,
       });
     } catch (err) {
       this.logger.error(err);
@@ -1613,12 +1497,12 @@ export class AnnexViiServiceBackend implements SubmissionBackend {
       });
     }
 
-    return response.value;
+    return response.value as WasteDescription;
   }
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
-    value: WasteDescription
+    value: DraftWasteDescription
   ): Promise<void> {
     let response: SetDraftWasteDescriptionByIdResponse;
     try {

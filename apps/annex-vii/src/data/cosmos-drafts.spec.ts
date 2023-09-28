@@ -56,6 +56,7 @@ describe(CosmosDraftRepository, () => {
       mockCosmosDbName
     ),
     mockCosmosContainerName,
+    mockCosmosContainerName,
     logger
   );
 
@@ -92,7 +93,7 @@ describe(CosmosDraftRepository, () => {
         value: {
           id,
           accountId,
-          reference: null,
+          reference: 'abc',
           wasteDescription: { status: 'NotStarted' },
           wasteQuantity: { status: 'CannotStart' },
           exporterDetail: { status: 'NotStarted' },
@@ -119,7 +120,7 @@ describe(CosmosDraftRepository, () => {
       const result = await subject.getDraft(id, accountId);
       expect(result).toEqual({
         id,
-        reference: null,
+        reference: 'abc',
         carriers: { status: 'NotStarted', transport: true },
         collectionDate: { status: 'NotStarted' },
         collectionDetail: { status: 'NotStarted' },

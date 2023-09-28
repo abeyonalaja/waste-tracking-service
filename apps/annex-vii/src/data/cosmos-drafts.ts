@@ -9,15 +9,20 @@ import {
 } from '../model';
 import { DraftRepository } from './repository';
 import { CosmosAnnexViiClient } from '../clients';
+import { CosmosBaseRepository, DraftSubmissionData } from './cosmos-base';
 
-type DraftSubmissionData = DraftSubmission & { accountId: string };
-
-export default class CosmosDraftRepository implements DraftRepository {
+export default class CosmosDraftRepository
+  extends CosmosBaseRepository
+  implements DraftRepository
+{
   constructor(
-    private cosmosClient: CosmosAnnexViiClient,
-    private cosmosContainerName: string,
-    private logger: Logger
-  ) {}
+    protected cosmosClient: CosmosAnnexViiClient,
+    protected cosmosContainerName: string,
+    protected alternateContainerName: string,
+    protected logger: Logger
+  ) {
+    super(cosmosClient, cosmosContainerName, alternateContainerName, logger);
+  }
 
   async getDrafts(
     accountId: string,

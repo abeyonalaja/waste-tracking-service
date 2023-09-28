@@ -155,7 +155,7 @@ beforeAll(async () => {
   await app.register({
     plugin: submissionPlugin,
     options: {
-      backend: mockBackend as SubmissionBackend,
+      backend: mockBackend as unknown as SubmissionBackend,
       logger: new winston.Logger(),
     },
     routes: {
