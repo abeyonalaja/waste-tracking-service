@@ -100,4 +100,6 @@ ingress:
           pathType: Prefix
         - path: /api/addresses
           pathType: Prefix
+        - path: /api/templates
+          pathType: Prefix
   labels: {}
