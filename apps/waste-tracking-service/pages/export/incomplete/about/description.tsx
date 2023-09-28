@@ -241,18 +241,22 @@ const Description = () => {
                   />
                 )}
                 <form onSubmit={handleSubmit}>
-                  <TextareaCharCount
-                    id="description"
-                    name="description"
-                    hint={t('exportJourney.describeWaste.hint')}
-                    onChange={handleInputChange}
-                    errorMessage={errors?.description}
-                    charCount={100}
-                    rows={3}
-                    value={describeWastePage.data?.description}
-                  >
-                    <Heading />
-                  </TextareaCharCount>
+                  <GovUK.GridRow>
+                    <GovUK.GridCol setWidth="two-thirds">
+                      <TextareaCharCount
+                        id="description"
+                        name="description"
+                        hint={t('exportJourney.describeWaste.hint')}
+                        onChange={handleInputChange}
+                        errorMessage={errors?.description}
+                        charCount={100}
+                        rows={3}
+                        value={describeWastePage.data?.description}
+                      >
+                        <Heading />
+                      </TextareaCharCount>
+                    </GovUK.GridCol>
+                  </GovUK.GridRow>
                   <ButtonGroup>
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}

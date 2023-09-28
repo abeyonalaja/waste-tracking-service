@@ -1,6 +1,12 @@
 import React from 'react';
+import { BreakableString } from './BreakableString';
 
-export const NotificationBanner = ({ type, headingText, id = null }) => {
+export const NotificationBanner = ({
+  type,
+  headingText,
+  id = null,
+  children = null,
+}) => {
   const bannerClasses = `govuk-notification-banner ${
     type === 'important'
       ? 'govuk-notification-banner--important'
@@ -24,8 +30,9 @@ export const NotificationBanner = ({ type, headingText, id = null }) => {
       </div>
       <div className="govuk-notification-banner__content">
         <h3 className="govuk-notification-banner__heading" id={`${id}_body`}>
-          {headingText}
+          <BreakableString>{headingText}</BreakableString>
         </h3>
+        {children && <p>{children}</p>}
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { LoadingBox } from 'govuk-react';
 import styled from 'styled-components';
+import 'i18n/config';
 
 interface Props {
   testId?: string;
@@ -23,12 +25,13 @@ const LoadingStyled = styled(LoadingBox)`
 `;
 
 export const Loading = ({ testId }: Props) => {
+  const { t } = useTranslation();
   return (
     <LoadingStyled
       loading
       data-testid={testId}
       aria-busy="true"
-      title="Loading"
+      title={t('loading')}
     >
       {}
     </LoadingStyled>

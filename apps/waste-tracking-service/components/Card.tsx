@@ -20,7 +20,7 @@ const CardBox = styled.div`
   margin-bottom: 20px;
   @media (min-width: 40.0625em) {
     height: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 `;
 
@@ -48,7 +48,13 @@ const CardTitle = styled.h2`
 const CardContent = styled.div`
   padding: 15px;
   @media (min-width: 40.0625em) {
-    padding: 15px 20px;
+    padding: 10px 20px 15px;
+  }
+  & > ul {
+    margin-bottom: 0;
+    & > li {
+      margin-top: 10px;
+    }
   }
 `;
 

@@ -14,10 +14,12 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   Loading,
+  NotificationBanner,
 } from 'components';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { Submission } from '@wts/api/waste-tracking-gateway';
+import { differenceInSeconds, parseISO } from 'date-fns';
 
 type State = {
   data: Submission;
@@ -133,14 +135,20 @@ const Tasklist = () => {
     tasklistReducer,
     initialWasteDescState
   );
-  const [id, setId] = useState(null);
+  const [id, setId] = useState<string>(null);
+  const [showBanner, setShowBanner] = useState<boolean>(false);
+  const [context, setContext] = useState<string>(null);
+
   const [sectionStatus, setSectionStatus] = useState<number>(0);
 
   useEffect(() => {
     if (router.isReady) {
-      setId(router.query.id);
+      setId(String(router.query.id));
+      if (router.query.context) {
+        setContext(String(router.query.context));
+      }
     }
-  }, [router.isReady, router.query.id]);
+  }, [router.isReady, router.query.id, router.query.context]);
 
   useEffect(() => {
     dispatchTasklistPage({ type: 'DATA_FETCH_INIT' });
@@ -164,6 +172,12 @@ const Tasklist = () => {
                   type: 'DATA_FETCH_SUCCESS',
                   payload: data,
                 });
+                setShowBanner(
+                  differenceInSeconds(
+                    new Date(),
+                    parseISO(data?.submissionState.timestamp)
+                  ) < 5
+                );
               }
             }
           }
@@ -255,6 +269,16 @@ const Tasklist = () => {
           <>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="two-thirds">
+                {showBanner}
+                {showBanner && context === 'createdFromTemplate' && (
+                  <NotificationBanner
+                    headingText={t('templates.use.banner.title')}
+                    type={'important'}
+                  >
+                    {t('templates.use.banner.content')}
+                  </NotificationBanner>
+                )}
+
                 {tasklistPage.data?.reference && (
                   <GovUK.Caption id="my-reference">
                     {t('exportJourney.submitAnExport.yourRef')}:{' '}
@@ -346,10 +370,11 @@ const Tasklist = () => {
                         href={{
                           pathname:
                             tasklistPage.data?.exporterDetail.status ===
-                              'Started' ||
-                            tasklistPage.data?.exporterDetail.status ===
-                              'Complete'
+                            'Complete'
                               ? `/export/incomplete/exporter-importer/exporter-details`
+                              : tasklistPage.data?.exporterDetail.status ===
+                                'Started'
+                              ? `/export/incomplete/exporter-importer/exporter-details-manual`
                               : `/export/incomplete/exporter-importer/exporter-postcode`,
                           query: { id, dashboard: true },
                         }}
@@ -521,8 +546,8 @@ const Tasklist = () => {
                         'Started' ||
                         tasklistPage.data?.wasteDescription.status ===
                           'Complete') &&
-                        (tasklistPage.data?.wasteDescription?.wasteCode.type ===
-                        'NotApplicable' ? (
+                        tasklistPage.data?.wasteDescription?.wasteCode?.type ===
+                          'NotApplicable' && (
                           <AppLink
                             href={{
                               pathname: `/export/incomplete/treatment/laboratory`,
@@ -533,7 +558,15 @@ const Tasklist = () => {
                               'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
                             )}
                           </AppLink>
-                        ) : (
+                        )}
+                      {(tasklistPage.data?.wasteDescription.status ===
+                        'Started' ||
+                        tasklistPage.data?.wasteDescription.status ===
+                          'Complete') &&
+                        tasklistPage.data?.wasteDescription?.wasteCode?.type !==
+                          'NotApplicable' &&
+                        tasklistPage.data?.wasteDescription?.wasteCode?.type !==
+                          undefined && (
                           <AppLink
                             href={{
                               pathname: `/export/incomplete/treatment/interim-site`,
@@ -544,7 +577,7 @@ const Tasklist = () => {
                               'exportJourney.submitAnExport.SectionFour.recoveryDetails'
                             )}
                           </AppLink>
-                        ))}
+                        )}
                     </TaskName>
                     <TaskStatus>
                       <DocumentStatus

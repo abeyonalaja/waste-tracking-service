@@ -244,7 +244,6 @@ const CheckYourReport = () => {
                 <SubmissionSummary data={checkYourReportPage.data} />
               </GovUK.GridCol>
             </GovUK.GridRow>
-            {/* sign-declaration */}
             <ButtonGroup>
               <GovUK.Button id="saveButton" onClick={handleSubmit}>
                 {t('exportJourney.checkAnswers.conformButton')}
@@ -252,7 +251,7 @@ const CheckYourReport = () => {
               <SaveReturnButton
                 onClick={() =>
                   router.push({
-                    pathname: `/export`,
+                    pathname: `/export/incomplete/tasklist`,
                     query: { id },
                   })
                 }

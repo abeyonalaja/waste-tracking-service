@@ -11,6 +11,8 @@ import {
   SaveReturnButton,
   ButtonGroup,
   WasteCarrierHeadingNoCaps,
+  SubmissionNotFound,
+  Loading,
 } from 'components';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -263,8 +265,8 @@ const CarrierDetails = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {isError && !isLoading && <p>No valid record found</p>}
-            {isLoading && <p>Loading</p>}
+            {isError && !isLoading && <SubmissionNotFound />}
+            {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
                 {' '}

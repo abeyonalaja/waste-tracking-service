@@ -9,7 +9,6 @@ import { Card } from './Card';
 import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
-import { DateConverter } from './DateConverter';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { Error404Content } from './Error404Content';
@@ -44,7 +43,6 @@ export {
   CompleteFooter,
   CompleteHeader,
   ConditionalRadioWrap,
-  DateConverter,
   DocumentStatus,
   DownloadPDFLink,
   Error404Content,

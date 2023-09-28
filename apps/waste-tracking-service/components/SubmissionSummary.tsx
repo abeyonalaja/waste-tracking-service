@@ -14,11 +14,13 @@ import { BORDER_COLOUR } from 'govuk-colours';
 import styled from 'styled-components';
 import formatEwcCode from '../utils/formatEwcCode';
 import { EwcCodeType } from '../types/EwcCode';
+import { Tag } from 'govuk-react';
 
 interface Props {
   data: Submission;
   showChangeLinks?: boolean;
   estimate?: boolean;
+  isTemplate?: boolean;
   testId?: string;
 }
 
@@ -99,10 +101,15 @@ const WasteCodeType = styled.div`
   font-weight: bold;
 `;
 
+const NotInTemplate = styled(Tag)`
+  white-space: nowrap;
+`;
+
 export const SubmissionSummary = ({
   data,
   showChangeLinks = true,
   estimate = false,
+  isTemplate = false,
   testId,
 }: Props) => {
   const { t } = useTranslation();
@@ -348,6 +355,13 @@ export const SubmissionSummary = ({
                             <span> {t('weight.kg')}</span>
                           )}
                         </Value>
+                      )}
+                      {isTemplate && (
+                        <Actions>
+                          <NotInTemplate tint="GREY">
+                            {t('templates.notInTemplate')}
+                          </NotInTemplate>
+                        </Actions>
                       )}
                       {showChangeLinks && (
                         <Actions>
@@ -689,6 +703,14 @@ export const SubmissionSummary = ({
                         </AppLink>
                       </Actions>
                     )}
+
+                  {isTemplate && (
+                    <Actions>
+                      <NotInTemplate tint="GREY" id="nit-collection-date">
+                        {t('templates.notInTemplate')}
+                      </NotInTemplate>
+                    </Actions>
+                  )}
                 </Row>
                 <SectionBreak />
               </DefinitionList>
@@ -861,6 +883,16 @@ export const SubmissionSummary = ({
                                   </AppLink>
                                 </Actions>
                               )}
+                              {isTemplate && (
+                                <Actions>
+                                  <NotInTemplate
+                                    tint="GREY"
+                                    id={`nit-shipping-container-number-${index}`}
+                                  >
+                                    {t('templates.notInTemplate')}
+                                  </NotInTemplate>
+                                </Actions>
+                              )}
                             </Row>
                             <Row>
                               <Key
@@ -887,6 +919,16 @@ export const SubmissionSummary = ({
                                   </span>
                                 )}
                               </Value>
+                              {isTemplate && (
+                                <Actions>
+                                  <NotInTemplate
+                                    tint="GREY"
+                                    id={`nit-vehicle-registration-${index}`}
+                                  >
+                                    {t('templates.notInTemplate')}
+                                  </NotInTemplate>
+                                </Actions>
+                              )}
                             </Row>
                             <SectionBreak />
                           </>
@@ -936,6 +978,16 @@ export const SubmissionSummary = ({
                                   </AppLink>
                                 </Actions>
                               )}
+                              {isTemplate && (
+                                <Actions>
+                                  <NotInTemplate
+                                    tint="GREY"
+                                    id={`nit-vehicle-registration-${index}`}
+                                  >
+                                    {t('templates.notInTemplate')}
+                                  </NotInTemplate>
+                                </Actions>
+                              )}
                             </Row>
 
                             <Row>
@@ -956,6 +1008,16 @@ export const SubmissionSummary = ({
                                   </span>
                                 )}
                               </Value>
+                              {isTemplate && (
+                                <Actions>
+                                  <NotInTemplate
+                                    tint="GREY"
+                                    id={`nit-trailer-number-${index}`}
+                                  >
+                                    {t('templates.notInTemplate')}
+                                  </NotInTemplate>
+                                </Actions>
+                              )}
                             </Row>
                             <SectionBreak />
                           </>
@@ -985,6 +1047,16 @@ export const SubmissionSummary = ({
                                   >
                                     {t('actions.change')}
                                   </AppLink>
+                                </Actions>
+                              )}
+                              {isTemplate && (
+                                <Actions>
+                                  <NotInTemplate
+                                    tint="GREY"
+                                    id={`nit-imo-${index}`}
+                                  >
+                                    {t('templates.notInTemplate')}
+                                  </NotInTemplate>
                                 </Actions>
                               )}
                             </Row>

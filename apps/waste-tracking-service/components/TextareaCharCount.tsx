@@ -25,6 +25,12 @@ const StyledHint = styled(HintText)<HintProps>`
   color: ${(props) => (props.error ? '#d4351c' : '#6f777b')};
 `;
 
+const StyledTextArea = styled(TextArea)`
+  textarea {
+    width: 100%;
+  }
+`;
+
 export const TextareaCharCount = ({
   id,
   name,
@@ -57,7 +63,7 @@ export const TextareaCharCount = ({
     <>
       <FormGroup>
         <Label htmlFor={id}>{children}</Label>
-        <TextArea
+        <StyledTextArea
           data-testid={testId}
           hint={hint}
           meta={{
@@ -73,7 +79,7 @@ export const TextareaCharCount = ({
           }}
         >
           {}
-        </TextArea>
+        </StyledTextArea>
         <StyledHint error={error} id={`${id}-character-remaining-text`}>
           {message}
         </StyledHint>

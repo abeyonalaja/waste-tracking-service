@@ -168,9 +168,12 @@ const Carriers = () => {
         })
         .then((data) => {
           if (data !== undefined) {
+            const getEmptyCarrier = data.values.filter(
+              (site) => site.addressDetails === undefined
+            );
             router.push({
               pathname: `/export/incomplete/journey/carrier-details`,
-              query: { id, carrierId: data.values[0].id },
+              query: { id, carrierId: getEmptyCarrier[0].id },
             });
           }
         });

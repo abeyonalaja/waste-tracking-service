@@ -42,12 +42,6 @@ const WasteCarrierContactDetails = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
-    }
-  }, [router.isReady, router.query.id]);
-
-  useEffect(() => {
-    if (router.isReady) {
-      setId(router.query.id);
       setCarrierId(router.query.carrierId);
     }
   }, [router.isReady, router.query.id, router.query.carrierId]);

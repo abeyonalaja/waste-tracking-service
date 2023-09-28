@@ -16,7 +16,6 @@ import {
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
-  DateConverter,
   Paragraph,
   Pagination,
   SubmissionNotFound,
@@ -26,6 +25,7 @@ import {
 import styled from 'styled-components';
 
 import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
+import { formatDate } from 'utils/formatDate';
 
 type State = {
   data: any;
@@ -130,15 +130,8 @@ const IncompleteAnnex7 = () => {
     initialPageState
   );
 
-  // const set3 = "+RID:~wxd5AM+t5WISAAAAAAAAAA==#RT:1#TRC:2#RTD:yekIZmFpDd6fAVpcF/pVBTMxMzQuMTkuNDJVMzE7MTU7MzEvOjo5WwA=#ISV:2#IEO:65567#QCF:8"; // Alphanumeric Characters + Space
-
-  // console.log(set3)
-  // console.log(encodeURIComponent(set3)); // ABC%20abc%20123 (the space gets encoded as %20)
-
   const [item, setItem] = useState(null);
-
   const [confirm, setConfirm] = useState(null);
-
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
 
@@ -151,9 +144,7 @@ const IncompleteAnnex7 = () => {
         setShowNotification(false);
       }
     }
-
     document.addEventListener('click', handleClickOutside);
-
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
@@ -393,9 +384,7 @@ const IncompleteAnnex7 = () => {
                           </TableCell>
 
                           <TableCell id={'date-' + index}>
-                            <DateConverter
-                              dateString={item.submissionState.timestamp}
-                            />
+                            {formatDate(item.submissionState.timestamp)}
                           </TableCell>
 
                           <TableCell id={'waste-code-' + index}>

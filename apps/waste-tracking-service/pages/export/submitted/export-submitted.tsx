@@ -13,6 +13,7 @@ import {
   SaveReturnButton,
   DownloadPDFLink,
   Paragraph,
+  AppLink,
 } from 'components';
 
 import styled from 'styled-components';
@@ -70,6 +71,12 @@ const exportSubmittedReducer = (state: State, action: Action) => {
       throw new Error();
   }
 };
+
+const ActionHeader = styled(GovUK.H2)`
+  border-top: 2px solid #1d70b8;
+  padding-top: 1em;
+  margin-bottom: 0.5em;
+`;
 
 const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
@@ -264,6 +271,21 @@ const ExportSubmitted = () => {
                 </SaveReturnButton>
               </>
             )}
+          </GovUK.GridCol>
+          <GovUK.GridCol setWidth="one-third">
+            <ActionHeader size="S">{t('actions')}</ActionHeader>
+            <GovUK.UnorderedList listStyleType={'none'}>
+              <GovUK.ListItem>
+                <AppLink
+                  href={{
+                    pathname: `/export/templates/create-from-record`,
+                    query: { id, context: 'created' },
+                  }}
+                >
+                  {t('templates.create.fromRecord.link')}
+                </AppLink>
+              </GovUK.ListItem>
+            </GovUK.UnorderedList>
           </GovUK.GridCol>
         </GovUK.GridRow>
       </GovUK.Page>

@@ -458,12 +458,13 @@ const EwcCodes = () => {
     });
   };
 
-  const handleDelete = (ewcCode) => {
+  const handleDelete = (e, ewcCode) => {
     setEwcCodeToRemove(ewcCode);
     dispatchEwcCodePage({
       type: 'SHOW_VIEW',
       payload: VIEWS.CONFIRM,
     });
+    e.preventDefault();
   };
 
   const BreadCrumbs = () => {
@@ -487,7 +488,7 @@ const EwcCodes = () => {
             }
           }}
         >
-          Back
+          {t('back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );
@@ -550,7 +551,7 @@ const EwcCodes = () => {
                                 key={`action-${index}-remove`}
                                 href="#"
                                 id={`action-remove-${index + 1}`}
-                                onClick={() => handleDelete(ewc.code)}
+                                onClick={(e) => handleDelete(e, ewc.code)}
                               >
                                 {t('actions.remove')}
                               </AppLink>

@@ -85,6 +85,13 @@ export const validateWasteDescription: (
     return 'Description must be 100 characters or less';
 };
 
+export const validateWasteDescriptionTemplate: (
+  description?: string
+) => string | undefined = (description) => {
+  if (description?.length > 100)
+    return 'Description must be 100 characters or less';
+};
+
 export const validatePostcode: (postcode?: string) => string = (postcode) => {
   if (postcode?.length === 0) return 'Enter a postcode';
   const regex = new RegExp(
@@ -95,7 +102,13 @@ export const validatePostcode: (postcode?: string) => string = (postcode) => {
   }
 };
 
-export const validateEmail: (email?: string) => string = (email) => {
+export const validateEmail: (email?: string, allowNull?: boolean) => string = (
+  email,
+  allowNull = false
+) => {
+  if (allowNull && (email === undefined || email === '')) {
+    return;
+  }
   if (email?.length === 0) return 'Enter an email address';
   const regex = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
   if (!regex.test(email)) {
@@ -103,7 +116,13 @@ export const validateEmail: (email?: string) => string = (email) => {
   }
 };
 
-export const validatePhone: (phone?: string) => string = (phone) => {
+export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
+  phone,
+  allowNull = false
+) => {
+  if (allowNull && (phone === undefined || phone === '')) {
+    return;
+  }
   if (phone?.length === 0) return 'Enter a phone number';
   const regex = new RegExp(
     '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
@@ -113,9 +132,13 @@ export const validatePhone: (phone?: string) => string = (phone) => {
   }
 };
 
-export const validateInternationalPhone: (phone?: string) => string = (
-  phone
-) => {
+export const validateInternationalPhone: (
+  phone?: string,
+  allowNull?: boolean
+) => string = (phone, allowNull = false) => {
+  if (allowNull && (phone === undefined || phone === '')) {
+    return;
+  }
   if (phone?.length === 0) return 'Enter a phone number';
   const regex = new RegExp('^(\\+|0|00)[1-9][0-9 \\-\\(\\)\\.]{7,32}$');
   if (!regex.test(phone)) {
@@ -418,4 +441,21 @@ export const validateEwcCode: (
   if (result === undefined) {
     return 'Enter a code in the correct format';
   }
+};
+
+export const validateTemplateName: (value?: string) => string | undefined = (
+  value
+) => {
+  if (value?.length === 0 || value === undefined)
+    return `Enter a name for the template`;
+  const regex = new RegExp("^[a-zA-Z0-9\\\\\\-_.')( ]{1,50}$");
+  if (!regex.test(value))
+    return 'The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes';
+};
+
+export const validateTemplateDesc: (
+  description?: string
+) => string | undefined = (description) => {
+  if (description?.length > 100)
+    return 'Description must be 100 characters or less';
 };

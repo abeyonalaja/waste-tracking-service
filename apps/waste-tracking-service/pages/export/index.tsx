@@ -51,9 +51,9 @@ export function Index() {
         beforeChildren={<BreadCrumbs />}
       >
         <UnderlinedH1 size="L">{t('dashboard.title')}</UnderlinedH1>
-        <GovUK.GridRow>
+        <GovUK.GridRow mb={6}>
           <GovUK.GridCol setWidth="one-third">
-            <Card title="Create a new Annex VII record">
+            <Card title="Create a new Annex VII record" id="card-create-annex">
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -63,6 +63,16 @@ export function Index() {
                     id="your-reference"
                   >
                     Create a single Annex VII record
+                  </AppLink>
+                </GovUK.ListItem>
+                <GovUK.ListItem>
+                  <AppLink
+                    href={{
+                      pathname: `/export/templates`,
+                      query: { context: 'use' },
+                    }}
+                  >
+                    Use a template to create a single Annex VII record
                   </AppLink>
                 </GovUK.ListItem>
                 <GovUK.ListItem>
@@ -102,6 +112,33 @@ export function Index() {
                     }}
                   >
                     View all submitted Annex VII records
+                  </AppLink>
+                </GovUK.ListItem>
+              </GovUK.UnorderedList>
+            </Card>
+          </GovUK.GridCol>
+        </GovUK.GridRow>
+        <GovUK.GridRow mb={9}>
+          <GovUK.GridCol setWidth="one-third">
+            <Card title={t('templates')}>
+              <GovUK.UnorderedList listStyleType={'none'}>
+                <GovUK.ListItem>
+                  <AppLink
+                    href={{
+                      pathname: `/export/templates/create`,
+                      query: { context: 'dashboard' },
+                    }}
+                  >
+                    {t('templates.createLink')}
+                  </AppLink>
+                </GovUK.ListItem>
+                <GovUK.ListItem>
+                  <AppLink
+                    href={{
+                      pathname: `/export/templates`,
+                    }}
+                  >
+                    {t('templates.manageLink')}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>

@@ -10,6 +10,8 @@ import {
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
+  SubmissionNotFound,
+  Loading,
 } from 'components';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -80,11 +82,6 @@ const CarrierShippingContainer = () => {
         });
     }
   }, [router.isReady, id, carrierId]);
-  useEffect(() => {
-    if (router.isReady) {
-      setId(router.query.id);
-    }
-  }, [router.isReady, router.query.id]);
 
   const handleLinkSubmit = (e) => {
     handleSubmit(e, true);
@@ -184,8 +181,8 @@ const CarrierShippingContainer = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {isError && !isLoading && <p>No valid record found</p>}
-            {isLoading && <p>Loading</p>}
+            {isError && !isLoading && <SubmissionNotFound />}
+            {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
                 {' '}

@@ -17,7 +17,6 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
   ButtonGroup,
-  DateConverter,
   Paragraph,
   Pagination,
   SubmissionNotFound,
@@ -34,6 +33,7 @@ import {
   validateConfirmCancelDocument,
   isNotEmpty,
 } from 'utils/validators';
+import { formatDate } from '../../../utils/formatDate';
 
 type State = {
   data: any;
@@ -408,9 +408,7 @@ const UpdateAnnex7 = () => {
                               </TableCell>
 
                               <TableCell id={'date-' + index}>
-                                <DateConverter
-                                  dateString={item.submissionState.timestamp}
-                                />
+                                {formatDate(item.submissionState.timestamp)}
                               </TableCell>
 
                               <TableCell id={'waste-code-' + index}>

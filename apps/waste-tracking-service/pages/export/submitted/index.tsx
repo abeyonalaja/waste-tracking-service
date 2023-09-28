@@ -2,9 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
-
 import {
   AppLink,
   CompleteFooter,
@@ -72,6 +70,10 @@ const TableCellActions = styled(GovUK.Table.Cell)`
 
 const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
+`;
+
+const Action = styled.div`
+  margin-bottom: 7px;
 `;
 
 const Index = () => {
@@ -193,7 +195,7 @@ const Index = () => {
                         </TableHeader>
 
                         <TableHeader
-                          setWidth="one-half"
+                          setWidth="40%"
                           id="table-header-waste-code"
                         >
                           {t('exportJourney.updateAnnexSeven.table.wasteCode')}
@@ -208,7 +210,7 @@ const Index = () => {
                           )}
                         </TableHeader>
 
-                        <TableHeader id="table-header-actions">
+                        <TableHeader id="table-header-actions" setWidth="15%">
                           {t('exportJourney.updateAnnexSeven.table.actions')}
                         </TableHeader>
                       </GovUK.Table.Row>
@@ -281,14 +283,25 @@ const Index = () => {
                             )}
                           </TableCell>
                           <TableCellActions>
+                            <Action>
+                              <AppLink
+                                id={'view-link-' + index}
+                                href={{
+                                  pathname: `/export/submitted/view`,
+                                  query: { id: item.id },
+                                }}
+                              >
+                                View record
+                              </AppLink>
+                            </Action>
                             <AppLink
-                              id={'view-link-' + index}
+                              id={'create-from-record-link-' + index}
                               href={{
-                                pathname: `/export/submitted/view`,
-                                query: { id: item.id },
+                                pathname: `/export/templates/create-from-record`,
+                                query: { id: item.id, context: 'index' },
                               }}
                             >
-                              View
+                              {t('templates.create.fromRecord.linkUseShort')}
                             </AppLink>
                           </TableCellActions>
                         </GovUK.Table.Row>

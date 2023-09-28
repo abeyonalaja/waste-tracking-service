@@ -15,6 +15,7 @@ import {
   Loading,
   DownloadPDFLink,
   SubmissionSummary,
+  AppLink,
 } from 'components';
 import styled from 'styled-components';
 import { Submission } from '@wts/api/waste-tracking-gateway';
@@ -153,11 +154,6 @@ const ViewRecord = () => {
                         .transactionId
                     }
                   </GovUK.Heading>
-                  {/*
-                    <Paragraph>
-                      {t('exportJourney.submittedView.intro')}
-                    </Paragraph>
-                  */}
                   <SubmissionSummary
                     data={viewRecordPage.data}
                     showChangeLinks={false}
@@ -190,6 +186,14 @@ const ViewRecord = () => {
                   <Paragraph>
                     {t('exportJourney.submittedView.downloadPDFinfo')}
                   </Paragraph>
+                  <AppLink
+                    href={{
+                      pathname: `/export/templates/create-from-record`,
+                      query: { id, context: 'view' },
+                    }}
+                  >
+                    {t('templates.create.fromRecord.linkUse')}
+                  </AppLink>
                 </GovUK.GridCol>
               </GovUK.GridRow>
             )}

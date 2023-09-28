@@ -91,7 +91,6 @@ describe(InMemorySubmissionBackend, () => {
   });
 
   it('cannot initially start recovery facility section', async () => {
-    const reference = faker.datatype.string(10);
     const { recoveryFacilityDetail } = await subject.createSubmission(
       accountId,
       faker.datatype.string(10)
