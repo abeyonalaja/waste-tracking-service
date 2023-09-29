@@ -25,6 +25,7 @@ import {
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
+import { SubmissionBaseBackend } from '../submissionBase/submissionBase.backend';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
