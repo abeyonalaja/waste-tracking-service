@@ -71,8 +71,16 @@ And(/^I click the update button$/) do
   click_on 'updateButton'
 end
 
+And(/^I click the cancel button$/) do
+  click_on Translations.value 'cancelButton'
+end
+
 And(/^I click Return to export waste from UK button$/) do
   click_on Translations.value 'exportJourney.exportSubmitted.button'
+end
+
+And(/^I click Cancel and return to template button$/) do
+  click_on Translations.value 'templates.cancelReturnButton'
 end
 
 When(/^I click the "([^"]*)" button$/) do |option|

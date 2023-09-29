@@ -44,3 +44,7 @@ end
 Then(/^the who is the second waste carriers page is displayed$/) do
   WhoIsTheWasteCarrierPage.new.check_second_waste_page_displayed
 end
+
+And(/^I complete waste carrier detail with (\d+) waste carrier$/) do |no_of_waste_carrier|
+
+end

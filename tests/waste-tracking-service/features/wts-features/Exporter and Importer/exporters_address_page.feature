@@ -5,16 +5,16 @@ Feature: AS A waste producer
   @translation
   Scenario: Exporter page displayed correctly
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Exporter details" link
     Then the "exporter address" page is displayed
     And I should see Exporter details page correctly translated
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   @translation
   Scenario: User enters postcode on What’s the exporter’s address page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     When I enter valid postcode
@@ -23,7 +23,7 @@ Feature: AS A waste producer
 
   Scenario: User enters postcode and chose an address
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     And I enter valid postcode
@@ -35,7 +35,7 @@ Feature: AS A waste producer
 
   Scenario: User change already entered address from Change address option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "Exporter address" page is displayed
     And I enter valid postcode
@@ -49,7 +49,7 @@ Feature: AS A waste producer
 
   Scenario: User change already entered postcode by using change link
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     When I enter valid postcode
@@ -59,7 +59,7 @@ Feature: AS A waste producer
 
   Scenario: User click on I can not find my address in the list link
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     When I enter valid postcode
@@ -69,7 +69,7 @@ Feature: AS A waste producer
 
   Scenario: User enters invalid postcode on What's the exporter's address page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     When I enter invalid postcode
@@ -78,7 +78,7 @@ Feature: AS A waste producer
 
   Scenario: User does not enter postcode on What's the exporter's address page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "exporter address" page is displayed
     And I click Find Address button
@@ -86,7 +86,7 @@ Feature: AS A waste producer
 
   Scenario: User can't continue without selecting an address from the list
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Exporter details" link
     Then the "Exporter address" page is displayed
     When I enter valid postcode

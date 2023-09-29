@@ -5,16 +5,16 @@ SO THAT the importer can be tracked
   @translation
   Scenario: User navigates to Who is the importer page from Importer details link
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I should see Who is the importer page translated
-    And I click "Back" link should display "submit an export" page
+    And I click "Back" link should display "task list" page
 
     @translation
   Scenario: User navigates to What are the importers contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
@@ -23,9 +23,9 @@ SO THAT the importer can be tracked
     And I should see What are the importers contact details page translated
 
 
-  Scenario: User completes Importer contact details and lands on Submit an export page
+  Scenario: User completes Importer contact details and lands on task list page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
@@ -33,22 +33,22 @@ SO THAT the importer can be tracked
     Then the "Importer contact details" page is displayed
     And I complete Importer contact details page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Importer details" should be "COMPLETED"
 
   Scenario: User completes Who is the importer page and Click save and return to draft link
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Importer details" should be "IN PROGRESS"
 
   Scenario: User can see previously saved details on the Who is the importer page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
@@ -58,18 +58,18 @@ SO THAT the importer can be tracked
 
   Scenario: User click Save and continue without entering any values on Who is the importer page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I click the button Save and continue
     Then I remain on the who is the importer page with an "Enter an organisation name" error message displayed
     And I remain on the who is the importer page with an "Enter a country" error message displayed
     And I remain on the who is the importer page with an "Enter an address" error message displayed
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario: User click Save and continue without entering any values on Importer contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page
@@ -82,7 +82,7 @@ SO THAT the importer can be tracked
 
   Scenario: User can see previously saved details Importer contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the "who is the importer" page is displayed
     And I complete who is the importer page

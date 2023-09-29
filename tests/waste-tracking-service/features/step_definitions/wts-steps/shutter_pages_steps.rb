@@ -13,3 +13,7 @@ end
 Given(/^I login to waste tracking portal with link which leads to shutter page "([^"]*)"$/) do |page_code|
   visit(Env.start_shutter_pages_url(page_code))
 end
+
+Then(/^Shutter page (\d+) is displayed$/) do |arg|
+  ShutterPage.new.check_page_displayed_404
+end

@@ -5,7 +5,7 @@ And(/^I should selected address is displayed with Change address link on the pag
 end
 
 And(/^I navigate to Exporter details page with valid postcode$/) do
-  SubmitAnExportPage.new.exporter_details
+  TaskListPage.new.exporter_details
   ExporterAddressPage.new.enter_postcode 'ng23lp'
   ExporterAddressPage.new.find_address
   ExporterAddressPage.new.select_first_address

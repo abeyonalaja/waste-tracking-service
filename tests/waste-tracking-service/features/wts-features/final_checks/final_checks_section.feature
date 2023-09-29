@@ -2,9 +2,9 @@ Feature: AS A Waste Practitioner
   I NEED to have a final section
   SO THAT I can ensure that all my entry details are correctly
 
-  Scenario: Complete all sections from Submit an export page and verify tasks status
+  Scenario: Complete all sections from task list page and verify tasks status
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -28,7 +28,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: Change details on Quantity of waste task under Waste code and description section
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -54,7 +54,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: Change bulk waste to small waste by choosing Not applicable option on Waste codes and description task
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"

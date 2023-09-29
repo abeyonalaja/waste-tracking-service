@@ -5,7 +5,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
   @translation
   Scenario: User navigates to Location waste leave the UK page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
@@ -13,7 +13,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
 
   Scenario: User enter location and click Save and continue
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
@@ -23,7 +23,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
 
   Scenario: User chose No option and click Save and continue
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "No" radio button
@@ -32,13 +32,13 @@ Feature:  AS A waste producer/broker exporting GLW waste
 
   Scenario: User can see previously entered details displayed
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
     And I enter location
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
@@ -46,13 +46,13 @@ Feature:  AS A waste producer/broker exporting GLW waste
 
   Scenario: User edit already entered details and save them
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
     And I enter location
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And I click the "Location waste leaves the UK" link
     Then I can see previously entered location details pre-populated
@@ -63,7 +63,7 @@ Feature:  AS A waste producer/broker exporting GLW waste
 
   Scenario: Error validations on Location waste leave the UK page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I click the button Save and continue

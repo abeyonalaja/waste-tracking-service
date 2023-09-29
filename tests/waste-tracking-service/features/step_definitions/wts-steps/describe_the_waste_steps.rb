@@ -11,3 +11,7 @@ end
 Then(/^the number of characters decreases on the counter$/) do
   expect(DescribeTheWastePage.new.remaining_characters.text).to eq('You have 0 characters remaining')
 end
+
+Then(/^I should see waste description pre\-populated$/) do
+  expect(DescribeTheWastePage.new).to have_reference TestStatus.test_status(:description_of_the_waste)
+end

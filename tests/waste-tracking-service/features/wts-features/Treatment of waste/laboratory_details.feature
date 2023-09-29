@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can complete Laboratory facility details when enter small waste description
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     Then the task "Waste codes and description" should be "COMPLETED"
     And the task "Laboratory details" should be "NOT STARTED"
@@ -16,12 +16,12 @@ Feature: AS A waste producer/broker
     When I complete laboratory contact details
     Then I should see disposal code page correctly translated
     When I complete disposal code page
-    Then Submit an export page is displayed
+    Then task list page is displayed
     Then the task "Laboratory details" should be "COMPLETED"
 
   Scenario: User can't continue without completing mandatory data in laboratory details pages
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     When I click the "Laboratory details" link
     And I wait for a second
@@ -48,19 +48,19 @@ Feature: AS A waste producer/broker
     And I click the Save and return to draft
     Then I remain on the disposal code page with an "Enter a disposal code" error message displayed
     When I complete disposal code page
-    Then Submit an export page is displayed
+    Then task list page is displayed
     Then the task "Laboratory details" should be "COMPLETED"
 
   Scenario: Partial completed laboratory details, task should set to be IN PROGRESS and Data should be pre-populated
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     And I wait for a second
     When I click the "Laboratory details" link
     And I complete laboratory address details
     And I click "Back" link should display "Laboratory address" page
     Then I should see previously entered Laboratory address details pre-populated
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
     Then the task "Laboratory details" should be "IN PROGRESS"
     When I click the "Laboratory details" link
     And I click the button Save and continue
@@ -76,7 +76,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Laboratory details task should disappear when user change waste code from Small to Bulk
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     Then the task "Waste codes and description" should be "COMPLETED"
     And the task "Laboratory details" should be "NOT STARTED"

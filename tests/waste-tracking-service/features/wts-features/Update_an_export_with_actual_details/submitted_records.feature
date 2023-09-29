@@ -5,7 +5,7 @@ Feature:AS A Waste practitioner
 
   Scenario: Submit an Annex VII with Actual data
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -25,7 +25,7 @@ Feature:AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I click confirm and submit button

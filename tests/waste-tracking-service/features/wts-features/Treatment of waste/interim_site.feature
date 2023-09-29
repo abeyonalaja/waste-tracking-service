@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: Complete Interim site contact details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -23,7 +23,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Complete Interim journey and verify details are saved into the backend
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -54,7 +54,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Complete interim site address page and click save and return to draft
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -68,7 +68,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User click browser back button on Interim recovery code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -86,7 +86,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User click browser back button on Interim contact details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -101,7 +101,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Complete recovery facility section and verify its status is Completed
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -130,12 +130,12 @@ Feature: AS A waste producer/broker
     And I should see first recovery facility details
     When I choose "No" radio button
     And I click the button Save and continue
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Recovery facility" should be "COMPLETED"
 
   Scenario: Error validation on Interim address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -151,7 +151,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validation on Interim address contacts details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -169,7 +169,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validation on Interim recovery code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -188,18 +188,18 @@ Feature: AS A waste producer/broker
     @translation @ignore
   Scenario: User navigates to interim site confirmation page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
     And I see Confirmation interim site page translated
     And I click description link
     Then I see interim site description translated
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario: User select Yes option on interim confirmation page and click save and continue
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -209,12 +209,12 @@ Feature: AS A waste producer/broker
     And I complete the Interim site address page
     And I wait for a second
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     Then the task "Recovery facility" should be "IN PROGRESS"
 
   Scenario: User select No option on interim confirmation page and click save and continue
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -223,12 +223,12 @@ Feature: AS A waste producer/broker
     Then the "Recovery facility address" page is displayed
     And I complete recovery facility address page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     Then the task "Recovery facility" should be "IN PROGRESS"
 
   Scenario: User select Back button on recovery facility address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -239,7 +239,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User select Back button on interim site address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -250,7 +250,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User verifying that entered data is saved on the backend
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -259,7 +259,7 @@ Feature: AS A waste producer/broker
     Then the "Interim site address" page is displayed
     And I complete the Interim site address page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     Then the task "Recovery facility" should be "IN PROGRESS"
     And I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -269,7 +269,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User change selected option on confirmation interim site page from Yes to No
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -278,7 +278,7 @@ Feature: AS A waste producer/broker
     Then the "Interim site address" page is displayed
     And I complete the Interim site address page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     Then the task "Recovery facility" should be "IN PROGRESS"
     And I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -289,7 +289,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validation on Confirmation interim site page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed

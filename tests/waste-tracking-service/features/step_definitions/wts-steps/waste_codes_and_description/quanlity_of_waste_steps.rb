@@ -8,7 +8,7 @@ Then(/^I have options "([^"]*)"$/) do |option|
 end
 
 And(/^I navigate to Quantity of waste page$/) do
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete
   EwcCodeController.complete
   NationalCodeController.complete
@@ -72,7 +72,7 @@ And(/^I should see estimate net weight page is correctly translated$/) do
 end
 
 And(/^I navigate to Quantity of waste page with "([^"]*)" has waste code$/) do |waste_code|
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete waste_code
   EwcCodeController.complete
   NationalCodeController.complete
@@ -80,7 +80,7 @@ And(/^I navigate to Quantity of waste page with "([^"]*)" has waste code$/) do |
 end
 
 And(/^I complete Waste codes and description task with "([^"]*)" has waste code$/) do |waste_code|
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete waste_code
   EwcCodeController.complete
   NationalCodeController.complete

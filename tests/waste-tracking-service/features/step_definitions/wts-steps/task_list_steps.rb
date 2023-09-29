@@ -1,20 +1,21 @@
-Then(/^Submit an export page is displayed$/) do
-  SubmitAnExportPage.new.check_page_displayed
+Then(/^task list page is displayed$/) do
+  TaskListPage.new.check_page_displayed
+  @url = URI.parse(TaskListPage.new.current_url)
+  Log.info("Export url is: #{@url}")
 end
 
 And(/^the reference should be displayed$/) do
-  expect(SubmitAnExportPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:application_reference_number)}")
+  expect(TaskListPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:application_reference_number)}")
 end
 
-When(/^I navigate to the submit an export with reference$/) do
+When(/^I navigate to the task list page with reference$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
 end
 
 Then(/^I have submission incomplete 0 of 5 sections$/) do
-  expect(page).to have_text('You have completed 0 of 5 sections.')
-  expect(page).to have_text("You'll be able to check and submit this record once you've completed all the sections.")
+  TaskListPage.new.check_page_translation
 end
 
 And(/^I see these five sections$/) do
@@ -26,7 +27,7 @@ And(/^I see these five sections$/) do
 end
 
 And(/^the task "([^"]*)" should be "([^"]*)"$/) do |task_name, task_status|
-  expect(SubmitAnExportPage.new).to have_completed_badge_for_task task_name, task_status
+  expect(TaskListPage.new).to have_completed_badge_for_task task_name, task_status
 end
 
 And(/^I click "([^"]*)" from the breadcrumb$/) do |link|
@@ -34,7 +35,7 @@ And(/^I click "([^"]*)" from the breadcrumb$/) do |link|
 end
 
 And(/^the new reference should be displayed$/) do
-  expect(SubmitAnExportPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:new_application_reference_number)}")
+  expect(TaskListPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:new_application_reference_number)}")
 end
 
 And(/^I click the link Return to this draft later$/) do
@@ -42,7 +43,7 @@ And(/^I click the link Return to this draft later$/) do
 end
 
 And(/^I complete Waste codes and description task$/) do
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete
   EwcCodeController.complete
   NationalCodeController.complete

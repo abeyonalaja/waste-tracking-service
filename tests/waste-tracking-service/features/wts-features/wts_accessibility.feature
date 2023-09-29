@@ -11,9 +11,9 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for submit an export page
+  Scenario: Check WTS Accessibility for task list page page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     Then the page should be axe clean within "main"; excluding "aside"
     Then the page should be axe clean within "#exporter-details"; according to: best-practice
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -68,7 +68,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - net weight or volume of the waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Quantity of waste" link
     And I click the button Save and continue
@@ -76,7 +76,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - actual net weight or volume of the waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Quantity of waste" link
     And I choose "Yes, I know the actual amount" radio button
@@ -89,7 +89,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Exporter details page, postcode finder
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Exporter details page with valid postcode
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -107,7 +107,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Exporter details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I navigate to Exporter details page with valid postcode
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -117,7 +117,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Who's the importer page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -126,7 +126,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Who's the importer page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     And I click the button Save and continue
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -136,7 +136,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Importer details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     And I complete who is the importer page
     And I click the button Save and continue
@@ -147,7 +147,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Importer details page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Importer details" link
     And I complete who is the importer page
     And I click the button Save and continue
@@ -161,7 +161,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Collection date page - Yes option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     Then the "collection date" page is displayed
     And I choose "Yes, I’ll enter the actual date" radio button
@@ -172,7 +172,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Collection date page - No option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     Then the "collection date" page is displayed
     And I choose "No, I’ll enter an estimate date" radio button
@@ -183,7 +183,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Collection date page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     Then the "collection date" page is displayed
     And I click the button Save and continue
@@ -194,7 +194,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Who is the waste carrier page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -203,7 +203,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Who is the waste carrier page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I click the button Save and continue
@@ -215,7 +215,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Waste carrier contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
@@ -228,7 +228,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Waste carrier contact details page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
@@ -242,7 +242,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - How will the waste carrier transport the waste page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -256,7 +256,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - How will the waste carrier transport the waste page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -271,7 +271,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Shipping container page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -286,7 +286,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Shipping container page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -303,7 +303,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Trailer page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -318,7 +318,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Trailer page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -335,7 +335,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Bulk vessel page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -352,7 +352,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Bulk vessel page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -367,7 +367,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Your added carriers page - Yes option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "first" waste carrier with "Shipping container"
     And I choose "Yes" radio button
@@ -378,7 +378,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Your added carriers page - No option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "first" waste carrier with "Shipping container"
     And I choose "No" radio button
@@ -389,7 +389,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Waste collection details postcode page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -400,7 +400,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Waste collection details postcode page - with address
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -413,7 +413,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - contact details for collection address page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -427,7 +427,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Enter address manually page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -439,7 +439,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Enter address manually page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -452,7 +452,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Location waste leaves UK page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I choose "Yes" radio button
@@ -464,7 +464,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Location waste leaves UK page - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Location waste leaves the UK" link
     Then the "Location waste leaves the UK" page is displayed
     And I click the button Save and continue
@@ -475,7 +475,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Countries waste will travel through
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -486,7 +486,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Countries waste will travel through - error validation
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I click the button Save and continue
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -496,7 +496,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Countries waste will travel through list page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -509,7 +509,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Confirmation interim site page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -518,7 +518,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Recovery facility address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -531,7 +531,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Recovery facility address page - error validation
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -546,7 +546,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Recovery facility contact details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -561,7 +561,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Recovery facility contact details page - error validation
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -578,7 +578,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - recovery code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -598,7 +598,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - chosen facilities page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -620,7 +620,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -633,7 +633,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site address page - error validation
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -649,7 +649,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site contact details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -665,7 +665,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site contact details page - error validation
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -684,7 +684,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site recovery code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -703,7 +703,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - interim site recovery code page - error validation
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -724,7 +724,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Check your answer page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -739,14 +739,14 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     Then the page should be axe clean according to: wcag2a
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
   Scenario: Check WTS Accessibility for - submitted records page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -766,7 +766,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I click confirm and submit button
@@ -783,7 +783,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Update with actuals page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -803,7 +803,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
@@ -821,7 +821,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Continue a draft export page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -844,7 +844,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - sign declaration page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -864,7 +864,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
@@ -874,7 +874,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - export submitted page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -894,7 +894,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I click confirm and submit button
@@ -914,7 +914,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Update Annex record page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste with estimated bulk waste
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -934,7 +934,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste
@@ -954,8 +954,8 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Cancel export page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
-    Then Submit an export page is displayed
+    And I navigate to the task list page with reference
+    Then task list page is displayed
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -975,7 +975,7 @@ Feature: Automation to check accessibility tool
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     And I click Confirm all answers button
     Then the "sign declaration" page is displayed
     And I can see page translated correctly for bulk waste

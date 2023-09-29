@@ -19,6 +19,10 @@ class DescribeTheWastePage < GenericPage
     find('description-character-remaining-text')
   end
 
+  def has_reference?(description)
+    find(DESCRIPTION).value == description
+  end
+
   def check_description
     find(DESCRIPTION).text
   end

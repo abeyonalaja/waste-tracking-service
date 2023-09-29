@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User should see waste carrier details on the carriers page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "first" waste carrier with "Shipping container"
     Then I should see add carrier correctly translated
@@ -23,7 +23,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can add upto 5 waste carriers
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "First" waste carrier with "Shipping container"
     And I choose "Yes" radio button
@@ -53,7 +53,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can change previously entered waste carrier details
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "first" waste carrier with "Shipping container"
     Then I should see add carrier correctly translated
@@ -72,7 +72,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue from Remove waste carriers page and can remove previously entered waste carrier details
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "First" waste carrier with "Shipping container"
     And I choose "Yes" radio button
@@ -97,7 +97,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can navigate back from change waste carriers flow
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the "First" waste carrier with "Shipping container"
     And I choose "Yes" radio button

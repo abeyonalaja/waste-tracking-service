@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: Collection date page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     Then the "collection date" page is displayed
     And I should see collection date page correctly translated
@@ -16,7 +16,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Enter an estimated date of collection of waste, task should set to complete
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "No, I’ll enter an estimate date" radio button
     And I enter valid Estimate collection date
@@ -31,7 +31,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Enter an Actual date of collection of waste, task should set to complete
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
     And I enter valid Actual collection date
@@ -46,7 +46,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can change Collection date from Estimated to actual
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "No, I’ll enter an estimate date" radio button
     And I enter valid Estimate collection date
@@ -69,7 +69,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without selecting collection date option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I click the button Save and continue
     Then I remain on the collection date page with an "Select yes if you know when the waste will be collected" error message displayed
@@ -79,7 +79,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without entering collection date
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
     And I click the button Save and continue
@@ -89,7 +89,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't enter past date for collection date
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
     When I enter past collection date
@@ -100,7 +100,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't enter 3 days from the current date
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
     When I enter collection date within 3 days

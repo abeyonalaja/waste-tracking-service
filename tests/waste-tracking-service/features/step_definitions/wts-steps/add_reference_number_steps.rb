@@ -51,3 +51,11 @@ end
 Then(/^I should see enter reference page correctly translated$/) do
   AddReferenceNumberPage.new.check_page_translation
 end
+
+And(/^I enter valid reference$/) do
+  unique_reference = "#{Faker::Name.first_name}REF"
+  add_reference_number_page = AddReferenceNumberPage.new
+  add_reference_number_page.enter_reference_number unique_reference
+  add_reference_number_page.save_and_continue
+  TestStatus.set_test_status(:unique_reference, unique_reference)
+end

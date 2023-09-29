@@ -14,7 +14,7 @@ end
 
 And(/^I can view submitted export transaction number$/) do
   sleep 2
-  expect(ViewSubmittedExportPage.new.transaction_number.text).to eq "Transaction number: #{TestStatus.test_status(:export_transaction_number)}"
+  expect(SingleSubmittedExportPage.new.transaction_number.text).to eq "Transaction number: #{TestStatus.test_status(:export_transaction_number)}"
 end
 
 Then(/^I should see view submitted export page correctly translated$/) do

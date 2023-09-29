@@ -3,7 +3,7 @@
 # Provides a way to happy path flow
 module ExporterDetailsController
   def self.complete(_postcode: true)
-    submit_an_export_page = SubmitAnExportPage.new
+    submit_an_export_page = TaskListPage.new
     submit_an_export_page.exporter_details
     exporter_address_page = ExporterAddressPage.new
 

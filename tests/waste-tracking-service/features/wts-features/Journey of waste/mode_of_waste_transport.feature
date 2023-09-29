@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User navigates to mode of transport page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -18,7 +18,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User navigates to mode of transport page and choose Shipping container option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -41,7 +41,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User navigates to mode of transport page and choose Trailer option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -63,7 +63,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User navigates to mode of transport page and choose Bulk vessel option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -83,7 +83,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without entering Shipping container details
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -100,7 +100,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without entering Trailer details
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -115,7 +115,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without entering Bulk vessel details
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
@@ -130,7 +130,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without choosing an mode of transport option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I wait for a second
     And I complete the Who is the waste carrier page

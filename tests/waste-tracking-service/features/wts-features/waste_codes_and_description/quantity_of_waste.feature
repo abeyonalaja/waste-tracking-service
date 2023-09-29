@@ -3,9 +3,9 @@ Feature: AS A waste producer
   SO THAT the weight or volume of the waste can be calculated and recorded
 
   @translation
-  Scenario: Launch quantity of waste page from Submit an export page
+  Scenario: Launch quantity of waste page from task list page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
@@ -14,11 +14,11 @@ Feature: AS A waste producer
     Then I have options "Yes, I know the actual amount"
     And I have options "No, I will enter an estimate"
     And I have options "No, I do not know the amount yet"
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario: Launch quantity of waste page after entering description of the waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I click the button Save and continue
     When the quality of waste page is displayed
@@ -27,7 +27,7 @@ Feature: AS A waste producer
   @translation
   Scenario: Display actual quantity unit options for waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -46,7 +46,7 @@ Feature: AS A waste producer
   @translation
   Scenario: Display estimated quantity unit options for waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "No, I will enter an estimate" radio button
     And I click the button Save and continue
@@ -57,7 +57,7 @@ Feature: AS A waste producer
 
   Scenario: Entering the actual unit amount weight for the waste quantity and About waste section is updated
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -72,7 +72,7 @@ Feature: AS A waste producer
 
   Scenario: Changing the quantity of waste from net to estimate after saving the initial entry
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -95,7 +95,7 @@ Feature: AS A waste producer
 
   Scenario: Unknown waste quantity amount
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "No, I do not know the amount yet" radio button
     And I click the button Save and continue
@@ -103,7 +103,7 @@ Feature: AS A waste producer
 
   Scenario:  Quantity of waste task status when user don't enter weight should be In Progress
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the Save and return to draft
@@ -112,7 +112,7 @@ Feature: AS A waste producer
     #check the error message
   Scenario: User can't continue without selecting quantity of waste option
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I click the button Save and continue
     Then the quality of waste page is displayed
@@ -123,7 +123,7 @@ Feature: AS A waste producer
 
   Scenario: User can't continue without entering quantity of units option
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -145,7 +145,7 @@ Feature: AS A waste producer
 
   Scenario: User can't enter special character in quantity of units option
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -168,7 +168,7 @@ Feature: AS A waste producer
   @translation
   Scenario: Check Small waste quantity page should display correctly
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task with "Not applicable" has waste code
     And I wait for a second
     And the task "Waste codes and description" should be "COMPLETED"
@@ -178,11 +178,11 @@ Feature: AS A waste producer
     Then I have options "Yes, I know the actual amount"
     And I have options "No, I will enter an estimate"
     And I have options "No, I do not know the amount yet"
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario:Launch quantity of waste page after entering description of the waste for small waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
     When the quality of small waste page is displayed
@@ -191,7 +191,7 @@ Feature: AS A waste producer
   @translation
   Scenario:Display actual quantity unit option for small waste
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
     And I choose "Yes, I know the actual amount" radio button
@@ -206,9 +206,9 @@ Feature: AS A waste producer
     And I should see estimate net small weight page is correctly translated
     Then I have options "Weight in kilograms"
 
-  Scenario:User can choose don't know the amount option and navigate to submit an export, status should remain In progress
+  Scenario:User can choose don't know the amount option and navigate to task list page, status should remain In progress
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "No, I do not know the amount yet" radio button
     When I click the button Save and continue
@@ -216,7 +216,7 @@ Feature: AS A waste producer
 
   Scenario:Small weight enter should display correctly
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -237,7 +237,7 @@ Feature: AS A waste producer
 
   Scenario:User didn't enter quantity of small waste, then quantity of waste status should be In Progress
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -251,7 +251,7 @@ Feature: AS A waste producer
 
   Scenario:User can't continue without selecting any option
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     Then the quality of small waste page is displayed
     When I click the button Save and continue
@@ -270,7 +270,7 @@ Feature: AS A waste producer
 
   Scenario: User change the waste code from Not Applicable to other options then quantity of waste should be rest
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -289,7 +289,7 @@ Feature: AS A waste producer
 
   Scenario: User change the waste code from other options to Not applicable then quantity of waste should be rest
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -308,7 +308,7 @@ Feature: AS A waste producer
 
   Scenario: Small weight user can't enter special character in quantity of units option
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue
@@ -324,7 +324,7 @@ Feature: AS A waste producer
 
   Scenario: Small weight user can't enter more than 25kgs
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I choose "Yes, I know the actual amount" radio button
     And I click the button Save and continue

@@ -33,7 +33,7 @@ And(/^I expand About the waste section$/) do
 end
 
 Then(/^I should see quantity of actual waste updated in tonnes$/) do
-  expect(CheckYourReportPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_tonnes)} #{TestStatus.test_status(:weight_units)}"
+  expect(CheckYourRecordPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_tonnes)} #{TestStatus.test_status(:weight_units)}"
 end
 
 Then(/^I should see success message translated correctly$/) do
@@ -42,11 +42,11 @@ Then(/^I should see success message translated correctly$/) do
 end
 
 Then(/^I should see quantity of actual waste updated in cubic meters$/) do
-  expect(CheckYourReportPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_cubic_meters)} m3"
+  expect(CheckYourRecordPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_cubic_meters)} m3"
 end
 
 Then(/^I should see quantity of actual waste updated in kilograms$/) do
-  expect(CheckYourReportPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_kilograms)} kg"
+  expect(CheckYourRecordPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_in_kilograms)} kg"
 end
 
 And(/^I should see the transaction number on update estimate page$/) do
@@ -74,16 +74,12 @@ And(/^I verify Actual needed labels are present on the page$/) do
   expect(UpdateAnnexRecordPage.new.collection_date_label).to eq 'ACTUAL NEEDED'
 end
 
-And(/^I click return to all exports button$/) do
-  UpdateAnnexRecordPage.new.return_to_all_exports_button
-end
-
 And(/^I should see actual collection date correctly translated$/) do
   ActualCollectionDatePage.new.check_translation
 end
 
 And(/^I should see actual collection date correctly displayed$/) do
-  expect(CheckYourReportPage.new.collection_date).to eq HelperMethods.convert_date TestStatus.test_status(:actual_collection_date)
+  expect(CheckYourRecordPage.new.collection_date).to eq HelperMethods.convert_date TestStatus.test_status(:actual_collection_date)
 end
 
 Then(/^Export update submitted page displayed$/) do

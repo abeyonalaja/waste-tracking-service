@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User navigates to Manual address entry waste collection page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -15,7 +15,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User navigates to Manual address entry waste collection page and completes it
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -27,7 +27,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User navigates to Manual address entry waste collection page and completes it and return to draft
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -35,12 +35,12 @@ Feature: AS A waste producer/broker
     And I complete the Manual entry address waste collection page
     And I choose "England" radio button
     And I click the Save and return to draft
-    Then I should see "Submit an export" page is displayed
+    Then I should see "task list" page is displayed
     And the task "Waste collection details" should be "IN PROGRESS"
 
   Scenario: User click Change address link on Collection address details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link
@@ -54,7 +54,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validations on Manual address entry waste collection page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click the "Enter address manually" link

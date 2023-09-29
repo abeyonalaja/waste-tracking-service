@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can see countries the waste travel and countries transit page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     Then I should see Are there any other countries the waste will travel through page correctly translated
@@ -15,7 +15,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't navigate without selecting the country the waste travel
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I click the button Save and continue
     Then I remain on the countries waste will travel page with an "Select yes if there are any other countries the waste will travel through" error message displayed
@@ -26,11 +26,11 @@ Feature: AS A waste producer/broker
     Then I remain on the countries waste will travel page with an "Select or enter country" error message displayed
     When I click the Save and return to draft
     Then I remain on the countries waste will travel page with an "Select or enter country" error message displayed
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario: User can't navigate without selecting waste transit countries yes or no option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -43,7 +43,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can select no on other countries the waste travel
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     When I choose "No" radio button
     And I click the button Save and continue
@@ -51,7 +51,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can select no on country of transit
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -63,7 +63,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can see previously entered countries the waste travel
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I complete Countries waste will travel through with other country
     Then the task "Countries waste will travel through" should be "COMPLETED"
@@ -72,7 +72,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can add multiple countries waste will travel from waste transit
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -86,7 +86,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can change the transit country and new country should be saved and task should be completed
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -103,7 +103,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can remove the transit country and task should be compelted
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -121,7 +121,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without selecting a country on change the transit country page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -135,7 +135,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue from remove the transit country without selecting a remove option
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
     And I choose "Yes" radio button
     When I select other countries of waste
@@ -148,7 +148,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Completed sections need to update when user complete collection
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode

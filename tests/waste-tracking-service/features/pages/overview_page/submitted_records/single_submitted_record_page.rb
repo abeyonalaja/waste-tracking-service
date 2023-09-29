@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class ViewSubmittedExportPage < GenericPage
+class SingleSubmittedExportPage < GenericPage
   include GeneralHelpers
   include ErrorBox
   include CommonComponents
 
-  TITLE = Translations.value 'exportJourney.submittedAnnexSeven.title'
+  TITLE = Translations.value 'exportJourney.updateAnnexSeven.delete.caption'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_css 'h1', text: TITLE + ViewSubmittedExportPage.new.transaction_number.text.to_s, exact_text: true
   end
 
   def check_page_translation
@@ -16,6 +16,6 @@ class ViewSubmittedExportPage < GenericPage
   end
 
   def transaction_number
-    find('transaction-id-0')
+    find('template-heading')
   end
 end

@@ -2,7 +2,7 @@ And(/^I navigate on the Describe the waste$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete
   EwcCodeController.complete
   NationalCodeController.complete

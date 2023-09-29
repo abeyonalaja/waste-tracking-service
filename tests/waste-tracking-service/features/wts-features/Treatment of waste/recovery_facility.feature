@@ -5,7 +5,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: Check recovery facility address, contact and recovery page displayed correctly
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -26,7 +26,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User complete recovery facility address, contact and view details on Recovery facility details page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -47,7 +47,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without completing facility address details
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -66,7 +66,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without completing facility contact details
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -87,7 +87,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without recovery code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -106,7 +106,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can save and return to draft from recovery address page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -125,7 +125,7 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: User can add upto 2 recovery facilities
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -147,7 +147,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can change previously entered recovery details
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
@@ -167,7 +167,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue from Remove Recovery facility page and can remove previously entered recovery facility details
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed

@@ -5,26 +5,26 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: Exporter page displayed correctly
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I should see Waste collection details page correctly translated
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   Scenario: User enters invalid postcode on waste collection details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter invalid postcode
     And I click Find Address button
     Then I remain on the Waste collection details page with an "Enter a real postcode" error message displayed
     When I click Return to draft button
-    Then the "submit an export" page is displayed
+    Then the "task list" page is displayed
 
   Scenario: User does not enter postcode on waste collection details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     And I click Find Address button
@@ -32,7 +32,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User can't continue without selecting an address from the list
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -42,7 +42,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User select address from dropdown and click Save and continue
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -55,7 +55,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User changes already entered postcode
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -66,7 +66,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User navigates back from Contact details collection page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -78,7 +78,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User completes Contact details collection address page and click save and continue
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -94,7 +94,7 @@ Feature: AS A waste producer/broker
   @ignore
   Scenario: User completes Contact details collection address page and click save and return
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
@@ -104,7 +104,7 @@ Feature: AS A waste producer/broker
     Then  I should see "Contact details collection address" page is displayed
     And I complete the Contact details collection page
     And I click the Save and return to draft
-    Then  I should see "Submit an export" page is displayed
+    Then  I should see "task list" page is displayed
     And the task "Waste collection details" should be "COMPLETED"
     And I click the "Waste collection details" link
     Then  I should see "Contact details collection address" page is displayed
@@ -112,19 +112,19 @@ Feature: AS A waste producer/broker
 
   Scenario: User select address from dropdown and click Save and Return to draft
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode
     And I click Find Address button
     And I chose first option from the dropdown list
     And I click the Save and return to draft
-    Then I should see "Submit an export" page is displayed
+    Then I should see "task list" page is displayed
     And the task "Waste collection details" should be "IN PROGRESS"
 
   Scenario: Error validation on Contact details collection address page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     When I click the "Waste collection details" link
     Then the "Waste collection details" page is displayed
     When I enter valid postcode

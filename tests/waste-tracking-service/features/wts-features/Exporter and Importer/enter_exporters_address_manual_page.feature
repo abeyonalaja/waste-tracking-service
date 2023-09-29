@@ -23,7 +23,7 @@ Feature: AS A waste producer
     And I verify Enter exporter address manual page is displayed
     And I complete the Enter exporter address manual page
     When I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Exporter details" should be "IN PROGRESS"
     And I click the "Exporter details" link
     Then the "Exporter details" page is displayed

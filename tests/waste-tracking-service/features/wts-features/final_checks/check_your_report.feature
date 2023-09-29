@@ -4,7 +4,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User should see all the data displayed correctly on check your report page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -19,7 +19,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     #need to check the translation
     And I should see check your report page is correctly translated
     And I should see export reference correctly displayed
@@ -30,7 +30,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can update Waste code from bulk to small from check your report page, all the relevant tasks should be reset
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     And I complete Exporter details with valid postcode
@@ -45,7 +45,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -60,7 +60,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to check your report page with estimated quantity and collections date
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I complete Quantity of waste with estimated bulk waste
     And I complete Exporter details with valid postcode
@@ -81,7 +81,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     When I complete Waste codes and description with Bulk waste and Max EWC codes
     And I click the "Quantity of waste" link
     And I complete Quantity of waste sub-section
@@ -127,7 +127,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to enter your ref pages from check your report page using change link
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -142,16 +142,16 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     #ref change link
     When I click your own reference Change link
     Then I should see reference number pre-populated
     When I click the button Save and continue
-    Then Submit an export page is displayed
+    Then task list page is displayed
 
   Scenario: User can navigate to About the waste page from check your report page using change link
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -166,7 +166,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
    # ewc code change link
     When I click ewc code Change link
     Then I should see ewc code description on EWC list page
@@ -190,7 +190,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to Exporter and Importer from check your report page using change link
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -205,7 +205,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     #exporter change link
     When I click Exporter address Change link
     Then I verify Enter exporter address manual page is displayed
@@ -217,7 +217,7 @@ Feature: AS A Waste Practitioner
     Then the "exporter details" page is displayed
     When I click the Save and return to draft
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     #importer change link
     When I click importer details Change link
     Then the "who is the importer" page is displayed
@@ -229,10 +229,9 @@ Feature: AS A Waste Practitioner
     When I click importer contact details Change link
     Then the "importer contact details" page is displayed
 
-
   Scenario: User can navigate to Journey of waste from check your report page using change link
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -247,7 +246,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click on Collection date Change link
     Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
     When I click the Save and return to draft
@@ -289,7 +288,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: User can navigate to Treatment of waste from check your report page using change link
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -307,7 +306,7 @@ Feature: AS A Waste Practitioner
 
   Scenario: Remove only EWC code from check your export page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -322,7 +321,7 @@ Feature: AS A Waste Practitioner
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
    # ewc code change link
     When I click ewc code Change link
     When I click the "Remove" link

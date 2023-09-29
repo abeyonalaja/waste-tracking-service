@@ -9,7 +9,7 @@ module AddReferenceNumberController
     add_reference_number_page.enter_reference_number reference
     TestStatus.set_test_status(:application_reference_number, reference)
     add_reference_number_page.save_and_continue
-    SubmitAnExportPage.new.check_page_displayed
+    TaskListPage.new.check_page_displayed
     @url = URI.parse(add_reference_number_page.current_url)
     Log.info("Reference: #{reference}")
     Log.info("Export url is: #{@url}")

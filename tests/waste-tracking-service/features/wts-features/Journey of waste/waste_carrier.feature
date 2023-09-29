@@ -5,16 +5,16 @@ Feature: AS A waste producer/broker
   @translation
   Scenario: Navigate to Who is the carrier page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "Who is the waste carrier" page is displayed
     And I should see Who is the waste carrier page translated
-    And I click "Back" link should display "Submit an export" page
+    And I click "Back" link should display "task list" page
 
   @translation
   Scenario: User navigates to Whats are the waste carriers contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
@@ -24,12 +24,12 @@ Feature: AS A waste producer/broker
 
   Scenario: User completes Who is the waste carrier page and click Save and return
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
@@ -37,7 +37,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User navigates to What are the waste carriers contact details page and click Save an return
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
@@ -45,7 +45,7 @@ Feature: AS A waste producer/broker
     Then I should see "what are the waste carriers contact details" page is displayed
     And I complete the Whats is the waste carriers contact details page
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "waste carriers" should be "IN PROGRESS"
     When I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
@@ -55,7 +55,7 @@ Feature: AS A waste producer/broker
 
   Scenario: User completes What are the waste carriers contact details page and click Save and continue
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page
@@ -67,7 +67,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validations on Who is the waste carrier page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I click the button Save and continue
@@ -77,7 +77,7 @@ Feature: AS A waste producer/broker
 
   Scenario: Error validations on What are the waste carriers contact details page
     Given I login to waste tracking portal
-    When I navigate to the submit an export with reference
+    When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     Then the "who is the waste carrier" page is displayed
     And I complete the Who is the waste carrier page

@@ -6,7 +6,7 @@ And(/^I navigate to Add EWC code page$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete
 end
 
@@ -36,15 +36,15 @@ Then(/^the question "Do you need to add another EWC code\? is hidden$/) do
   expect(page).to_not have_text('Do you need to add another EWC code?')
 end
 
-Then(/^I verify that Submit an export page is displayed$/) do
-  SubmitAnExportPage.new.check_page_displayed
+Then(/^I verify that task list page is displayed$/) do
+  TaskListPage.new.check_page_displayed
 end
 
 Given(/^I navigate to ewc code page with selecting Not applicable option on waste code page$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   whats_waste_code_page = WhatIsTheWasteCodePage.new
   whats_waste_code_page.choose_option('Not applicable')
   whats_waste_code_page.save_and_continue

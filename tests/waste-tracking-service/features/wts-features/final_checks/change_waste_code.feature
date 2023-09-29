@@ -5,7 +5,7 @@ Feature: AS A Waste practitioner
   @translation
   Scenario: Change Bulk to Small waste code should reset the task status
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -25,7 +25,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I verify Change waste code page is translated correctly
@@ -33,7 +33,7 @@ Feature: AS A Waste practitioner
     Then the "What is the waste code" page is displayed
     And I choose "Not applicable" as a waste code
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Waste codes and description" should be "IN PROGRESS"
     And the task "Quantity of waste" should be "NOT STARTED"
     And the task "Laboratory details" should be "NOT STARTED"
@@ -41,7 +41,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change Bulk to Small waste code and verify old data is cleared
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -61,7 +61,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -80,7 +80,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change Small to Bulk waste code and verify old data is cleared
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
     When the quality of small waste page is displayed
@@ -107,7 +107,7 @@ Feature: AS A Waste practitioner
     And I complete disposal code page
     Then the task "Laboratory details" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -129,7 +129,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change one Bulk waste code with another bulk waste code should reset the task status
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -149,7 +149,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -157,7 +157,7 @@ Feature: AS A Waste practitioner
     And I choose "OECD" as a waste code
     And I select first OECD code
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Waste codes and description" should be "IN PROGRESS"
     And the task "Quantity of waste" should be "NOT STARTED"
     And the task "Laboratory details" should be "NOT STARTED"
@@ -165,7 +165,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change one Bulk waste code with another bulk waste code and verify data is cleared
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -185,7 +185,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -207,7 +207,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change from one Basel Annex IX code to another Basel Annex IX code should reset the task status to In Progress
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -227,14 +227,14 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
     Then the "What is the waste code" page is displayed
     And I select new Basel Annex IX code
     And I click the Save and return to draft
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
     And the task "Waste codes and description" should be "IN PROGRESS"
     And the task "Quantity of waste" should be "IN PROGRESS"
     And the task "Recovery facility" should be "IN PROGRESS"
@@ -242,7 +242,7 @@ Feature: AS A Waste practitioner
 
   Scenario: Change from one Basel Annex IX code to another Basel Annex IX code and verify data is cleared
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -262,7 +262,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
@@ -282,7 +282,7 @@ Feature: AS A Waste practitioner
 
   Scenario: User click return to draft button on Change waste code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -302,15 +302,15 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Return to draft button
-    Then the "Submit an export" page is displayed
+    Then the "task list" page is displayed
 
   Scenario: User click back button on Change waste code page
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -330,7 +330,7 @@ Feature: AS A Waste practitioner
     And I complete Treatment of waste section
     Then the task "Recovery facility" should be "COMPLETED"
     And I click the "Check your record" link
-    Then the "check your report" page is displayed
+    Then the "check your record" page is displayed
     When I click waste code Change link
     Then the "Change waste code" page is displayed
-    And I click "Back" link should display "check your report" page
+    And I click "Back" link should display "check your record" page

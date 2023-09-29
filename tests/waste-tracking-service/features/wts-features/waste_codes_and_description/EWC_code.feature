@@ -36,7 +36,7 @@ Feature:AS A waste producer
     When I navigate to Add EWC code page
     And I enter valid ewc code
     And I click the Save and return to draft
-    Then I verify that Submit an export page is displayed
+    Then I verify that task list page is displayed
     When I click the "Waste codes and description" link
     Then "Basel Annex IX" is still selected
     And I click the button Save and continue

@@ -2,7 +2,7 @@ Given(/^I navigate to whats the waste code page$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
 end
 
 When(/^I choose Not applicable option$/) do
@@ -41,7 +41,7 @@ When(/^I update Waste codes and description task with Not applicable has waste c
 end
 
 When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$/) do
-  SubmitAnExportPage.new.waste_codes_and_description
+  TaskListPage.new.waste_codes_and_description
   WasteCodeController.complete
   EnterAnEwcCodePage.new.enter_ewc_code TestData.get_ewc_codes 0
   EnterAnEwcCodePage.new.save_and_continue

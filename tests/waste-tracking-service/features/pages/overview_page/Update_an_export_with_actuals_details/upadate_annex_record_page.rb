@@ -19,6 +19,7 @@ class UpdateAnnexRecordPage < GenericPage
   def no_estimate_warning_message
     expect(self).to have_no_text WARNING
   end
+
   def return_to_all_exports_button
     click_button RETURN_TO_ALL_EXPORTS
   end

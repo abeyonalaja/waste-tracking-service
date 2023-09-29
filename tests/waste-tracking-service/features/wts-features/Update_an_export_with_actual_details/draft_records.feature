@@ -12,7 +12,7 @@ Feature: AS A Waste practitioner
   @translation
   Scenario: User can save draft after application reference
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     When I click the link Return to this draft later
     Then the "Export waste from uk" page is displayed
     When I click the "Manage incomplete Annex VII records" link
@@ -21,12 +21,12 @@ Feature: AS A Waste practitioner
     Then I should see my draft application saved on the top
     And  I should see correct date on draft application page
     When I click the first continue link
-    Then Submit an export page is displayed
+    Then task list page is displayed
     And the reference should be displayed
 
   Scenario: User can save draft application after completing all the tasks
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     Then I complete Exporter details with valid postcode
@@ -48,7 +48,7 @@ Feature: AS A Waste practitioner
     And  I should see correct date on draft application page
     And I should see waste code on draft application page
     When I click the first continue link
-    Then Submit an export page is displayed
+    Then task list page is displayed
     And the reference should be displayed
     And the task "Waste codes and description" should be "COMPLETED"
     And the task "Quantity of waste" should be "COMPLETED"
@@ -62,7 +62,7 @@ Feature: AS A Waste practitioner
 
   Scenario: User can use pagination to view incomplete exports
     Given I login to waste tracking portal
-    And I navigate to the submit an export with reference
+    And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I click the Save and return to draft
     When I click the link Return to this draft later
@@ -78,7 +78,7 @@ Feature: AS A Waste practitioner
     And  I should see correct date on draft application page
     And I should see waste code on draft application page
     When I click the first continue link
-    Then Submit an export page is displayed
+    Then task list page is displayed
 
 
 
