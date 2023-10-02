@@ -63,7 +63,6 @@ const NationalCode = () => {
   );
 
   const [id, setId] = useState(null);
-  const [backLink, setBackLink] = useState(`/export/incomplete/about/ewc-code`);
 
   useEffect(() => {
     if (router.isReady) {
@@ -125,7 +124,7 @@ const NationalCode = () => {
 
       if (hasNationalCode === undefined) {
         router.push({
-          pathname: `/export/describe-waste`,
+          pathname: `/export/incomplete/about/description`,
           query: { id },
         });
       }
@@ -180,7 +179,7 @@ const NationalCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: backLink,
+              pathname: `/export/incomplete/about/ewc-code`,
               query: { id },
             });
           }}

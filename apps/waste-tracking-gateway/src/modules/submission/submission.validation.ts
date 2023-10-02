@@ -84,9 +84,11 @@ export const validatePutWasteDescriptionRequest =
       Complete: {
         properties: {
           wasteCode: { ref: 'wasteCode' },
-          nationalCode: { ref: 'nationalCode' },
           ewcCodes: { ref: 'ewcCodes' },
           description: { ref: 'description' },
+        },
+        optionalProperties: {
+          nationalCode: { ref: 'nationalCode' },
         },
       },
     },

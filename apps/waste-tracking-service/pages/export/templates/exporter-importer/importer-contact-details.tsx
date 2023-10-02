@@ -89,7 +89,7 @@ const ImporterContactDetails = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    (e: FormEvent) => {
       const newErrors = {
         email: validateEmail(email, true),
         phone: validateInternationalPhone(phone, true),
@@ -128,9 +128,7 @@ const ImporterContactDetails = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                const path = returnToDraft
-                  ? `/export/templates/tasklist`
-                  : `/export/templates/tasklist`;
+                const path = `/export/templates/tasklist`;
                 router.push({
                   pathname: path,
                   query: { templateId },
@@ -143,7 +141,7 @@ const ImporterContactDetails = () => {
       }
       e.preventDefault();
     },
-    [fullName, email, phone, fax]
+    [fullName, email, phone, fax, data]
   );
   const BreadCrumbs = () => {
     return (

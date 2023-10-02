@@ -381,9 +381,6 @@ const TemplateTasklist = () => {
                                     templatePage.data?.exporterDetail.status ===
                                     'Complete'
                                       ? `/export/templates/exporter-importer/exporter-details`
-                                      : templatePage.data?.exporterDetail
-                                          .status === 'Started'
-                                      ? `/export/templates/exporter-importer/exporter-details-manual`
                                       : `/export/templates/exporter-importer/exporter-postcode`,
                                   query: { templateId, dashboard: true },
                                 }}

@@ -20,14 +20,8 @@ import {
   SaveReturnButton,
   ButtonGroup,
 } from 'components';
-import {
-  isNotEmpty,
-  validateWasteDescription,
-  validateWasteDescriptionTemplate,
-} from 'utils/validators';
+import { isNotEmpty, validateWasteDescriptionTemplate } from 'utils/validators';
 import styled from 'styled-components';
-
-import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 
 type State = {
   data: object;
@@ -147,7 +141,6 @@ const Description = () => {
       if (
         describeWastePage.data.wasteCode !== undefined &&
         describeWastePage.data.ewcCodes !== undefined &&
-        describeWastePage.data.nationalCode !== undefined &&
         description
       ) {
         updatedStatus = 'Complete';
