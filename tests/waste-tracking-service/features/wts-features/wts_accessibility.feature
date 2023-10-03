@@ -993,3 +993,86 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+
+  Scenario: Check WTS Accessibility for - Manage Templates page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Manage your Annex VII record templates" link
+    Then the "Manage templates" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Create Template page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Manage your Annex VII record templates" link
+    Then the "Manage templates" page is displayed
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+
+  Scenario: Check WTS Accessibility for - Template Task list page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    And I complete Create record template page
+    Then the "Template task list" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Update template name page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    And I complete Create record template page
+    Then the "Template task list" page is displayed
+    And I click the "Name and description" link
+    Then the "Update template name" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Name of the new template page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    And I complete Create record template page
+    Then the "Template task list" page is displayed
+    And I click Manage templates link
+    Then the "Manage templates" page is displayed
+    And I click Make a copy link on the first template from the table
+    Then the "Name of the new template" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+
+  Scenario: Check WTS Accessibility for - Delete template page
+    Given I login to waste tracking portal
+    And I navigate to the overview page
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    And I complete Create record template page
+    Then the "Template task list" page is displayed
+    And I click Manage templates link
+    Then the "Manage templates" page is displayed
+    And I click delete link for the first template from the table
+    Then the "Delete template" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
