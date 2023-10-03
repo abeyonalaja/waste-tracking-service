@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { Footer } from 'govuk-react';
 import { BLACK, YELLOW } from 'govuk-colours';
-import { Paragraph } from './index';
+import { useTranslation } from 'react-i18next';
 
 const FooterLink = styled(Link)`
   display: inline-block;
@@ -38,23 +38,22 @@ const FooterLink = styled(Link)`
 `;
 
 export const CompleteFooter = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Footer
         meta={
           <>
             <FooterLink href={{ pathname: '/help/accessibility' }}>
-              Accessibility
+              {t('footer.accessibility')}
             </FooterLink>
             <FooterLink href={{ pathname: '/help/cookies' }}>
-              Cookies
+              {t('footer.cookies')}
             </FooterLink>
             <FooterLink href={{ pathname: '/help/privacy' }}>
-              Privacy
+              {t('footer.privacy')}
             </FooterLink>
-            <Footer.MetaCustom>
-              Built by the Department for Environment Food & Rural Affairs
-            </Footer.MetaCustom>
+            <Footer.MetaCustom>{t('footer.metaCustom')}</Footer.MetaCustom>
           </>
         }
         copyright={{
@@ -64,7 +63,7 @@ export const CompleteFooter = () => {
             width: 125,
           },
           link: 'https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/',
-          text: 'Crown copyright',
+          text: t('footer.crownCopyright'),
         }}
       />
     </>

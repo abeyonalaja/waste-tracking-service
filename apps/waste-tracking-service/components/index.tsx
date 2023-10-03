@@ -20,7 +20,6 @@ import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
 import { RadioList } from './RadioList';
 import { SaveReturnButton } from './SaveReturnButton';
-import { SaveReturnLink } from './SaveReturnLink';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SubmissionSummary } from './SubmissionSummary';
 import { SummaryCard } from './SummaryCard';
@@ -54,7 +53,6 @@ export {
   RadiosDivider,
   RadioList,
   SaveReturnButton,
-  SaveReturnLink,
   SubmissionNotFound,
   SubmissionSummary,
   SummaryCard,

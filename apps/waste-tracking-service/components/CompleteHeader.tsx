@@ -139,7 +139,7 @@ export const CompleteHeader = () => {
           <GovukHeaderLogo>
             <GovukHeaderLogoLink href="https://www.gov.uk/" target="_blank">
               <TopNav.IconTitle icon={<CrownIcon height="32" width="36" />}>
-                GOV.UK
+                {t('header.iconTitle')}
               </TopNav.IconTitle>
             </GovukHeaderLogoLink>
           </GovukHeaderLogo>
@@ -153,7 +153,7 @@ export const CompleteHeader = () => {
       </GovukHeader>
       <Main>
         <PhaseBannerStyled level="Private beta">
-          This is a new service
+          {t('serviceBanner')}
         </PhaseBannerStyled>
       </Main>
     </>
