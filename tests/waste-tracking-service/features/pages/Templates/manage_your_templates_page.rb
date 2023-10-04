@@ -13,7 +13,7 @@ class ManageTemplatesPage < GenericPage
   LAST_UPDATED = Translations.value 'templates.manage.table.col.lastUpdated'
 
   # ISSUE WITH ACTIONS TEXT  IN THE TRANSLATION FILE. NEED TO BE CHECKED
-  # ACTIONS = Translations.value 'actions'
+  ACTIONS = Translations.value 'actions'
 
   NEW_TEMPLATE = Translations.value 'templates.manage.newTitle'
   CREATE_NEW_TEMPLATE_LINK = Translations.value 'templates.createLink'
@@ -36,7 +36,7 @@ class ManageTemplatesPage < GenericPage
     expect(self).to have_text INTRO
     expect(self).to have_text TEMPLATE
     expect(self).to have_text LAST_UPDATED
-    # expect(self).to have_text ACTIONS
+    expect(self).to have_text ACTIONS
     expect(self).to have_text NEW_TEMPLATE
     expect(self).to have_text CREATE_NEW_TEMPLATE_LINK
     expect(self).to have_text CREATE_TEMPLATE_CAPTION
