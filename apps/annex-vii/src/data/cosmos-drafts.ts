@@ -1,4 +1,5 @@
 import { SqlQuerySpec } from '@azure/cosmos';
+import { v4 as uuidv4 } from 'uuid';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
 import {
@@ -6,6 +7,7 @@ import {
   DraftSubmissionPageMetadata,
   DraftSubmissionSummary,
   DraftSubmissionSummaryPage,
+  SubmissionBase,
 } from '../model';
 import { DraftRepository } from './repository';
 import { CosmosAnnexViiClient } from '../clients';
@@ -16,12 +18,12 @@ export default class CosmosDraftRepository
   implements DraftRepository
 {
   constructor(
-    protected cosmosClient: CosmosAnnexViiClient,
-    protected cosmosContainerName: string,
-    protected alternateContainerName: string,
-    protected logger: Logger
+    private cosmosClient: CosmosAnnexViiClient,
+    private draftContainerName: string,
+    private templateContainerName: string,
+    private logger: Logger
   ) {
-    super(cosmosClient, cosmosContainerName, alternateContainerName, logger);
+    super();
   }
 
   async getDrafts(
@@ -88,7 +90,7 @@ export default class CosmosDraftRepository
       };
 
       const response = await this.cosmosClient.queryContainerNext(
-        this.cosmosContainerName,
+        this.draftContainerName,
         querySpec,
         options
       );
@@ -154,7 +156,7 @@ export default class CosmosDraftRepository
 
   async getDraft(id: string, accountId: string): Promise<DraftSubmission> {
     const item = await this.cosmosClient.readItem(
-      this.cosmosContainerName,
+      this.draftContainerName,
       id,
       accountId
     );
@@ -186,7 +188,7 @@ export default class CosmosDraftRepository
     const data: DraftSubmissionData = { ...value, accountId };
     try {
       await this.cosmosClient.createOrReplaceItem(
-        this.cosmosContainerName,
+        this.draftContainerName,
         data.id,
         data.accountId,
         data
@@ -197,5 +199,66 @@ export default class CosmosDraftRepository
       });
       throw Boom.internal();
     }
+  }
+
+  async createDraftFromTemplate(
+    id: string,
+    accountId: string,
+    reference: string
+  ): Promise<DraftSubmission> {
+    const item = await this.cosmosClient.readItem(
+      this.templateContainerName,
+      id,
+      accountId
+    );
+    if (!item) {
+      throw Boom.notFound();
+    }
+
+    const data = item.value as SubmissionBase;
+    const submission: DraftSubmission = {
+      id: uuidv4(),
+      reference,
+      wasteDescription: data.wasteDescription,
+      wasteQuantity:
+        data.wasteDescription.status === 'NotStarted'
+          ? { status: 'CannotStart' }
+          : { status: 'NotStarted' },
+      exporterDetail: data.exporterDetail,
+      importerDetail: data.importerDetail,
+      collectionDate: { status: 'NotStarted' },
+      carriers: this.copyCarriersNoTransport(
+        data.carriers,
+        this.isSmallWaste(data.wasteDescription)
+      ),
+      collectionDetail: data.collectionDetail,
+      ukExitLocation: data.ukExitLocation,
+      transitCountries: data.transitCountries,
+      recoveryFacilityDetail: this.copyRecoveryFacilities(
+        data.recoveryFacilityDetail
+      ),
+      submissionConfirmation: { status: 'CannotStart' },
+      submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+    const submissionData: DraftSubmissionData = { ...submission, accountId };
+
+    try {
+      await this.cosmosClient.createOrReplaceItem(
+        this.draftContainerName,
+        submission.id,
+        accountId,
+        submissionData
+      );
+    } catch (err) {
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
+    return submission;
   }
 }

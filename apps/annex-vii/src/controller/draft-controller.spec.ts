@@ -32,7 +32,7 @@ const mockRepository = {
     jest.fn<(id: string, accountId: string) => Promise<DraftSubmission>>(),
   saveDraft:
     jest.fn<(value: DraftSubmission, accountId: string) => Promise<void>>(),
-  createTemplateFromSubmission:
+  createTemplateFromDraft:
     jest.fn<
       (
         id: string,
@@ -41,7 +41,7 @@ const mockRepository = {
         templateDescription?: string
       ) => Promise<Template>
     >(),
-  createSubmissionFromTemplate:
+  createDraftFromTemplate:
     jest.fn<
       (
         id: string,
@@ -49,7 +49,10 @@ const mockRepository = {
         reference: string
       ) => Promise<DraftSubmission>
     >(),
-  copyCarriers: jest.fn<(sourceCarriers: DraftCarriers) => DraftCarriers>(),
+  copyCarriersNoTransport:
+    jest.fn<
+      (sourceCarriers: DraftCarriers, isSmallWaste: boolean) => DraftCarriers
+    >(),
   copyRecoveryFacilities:
     jest.fn<
       (

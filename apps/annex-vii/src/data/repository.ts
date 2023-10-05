@@ -11,4 +11,9 @@ export interface DraftRepository extends BaseRepository {
   ): Promise<DraftSubmissionSummaryPage>;
   getDraft(id: string, accountId: string): Promise<DraftSubmission>;
   saveDraft(value: DraftSubmission, accountId: string): Promise<void>;
+  createDraftFromTemplate(
+    id: string,
+    accountId: string,
+    reference: string
+  ): Promise<DraftSubmission>;
 }

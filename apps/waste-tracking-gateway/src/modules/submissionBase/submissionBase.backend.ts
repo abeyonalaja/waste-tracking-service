@@ -202,6 +202,13 @@ export abstract class InMemorySubmissionBaseBackend
     id: string
   ): Promise<void>;
 
+  protected isSmallWaste(wasteDescription: DraftWasteDescription): boolean {
+    return (
+      wasteDescription.status === 'Complete' &&
+      wasteDescription.wasteCode.type === 'NotApplicable'
+    );
+  }
+
   protected isWasteCodeChangingBulkToSmall(
     currentWasteDescription: WasteDescription,
     newWasteDescription: DraftWasteDescription
@@ -255,7 +262,10 @@ export abstract class InMemorySubmissionBaseBackend
     );
   }
 
-  protected copyCarriers(sourceCarriers: dto.Carriers): dto.Carriers {
+  protected copyCarriersNoTransport(
+    sourceCarriers: dto.Carriers,
+    isSmallWaste: boolean
+  ): dto.Carriers {
     let targetCarriers: dto.Carriers = {
       status: 'NotStarted',
       transport: true,
@@ -272,7 +282,7 @@ export abstract class InMemorySubmissionBaseBackend
         carriers.push(carrier);
       }
       targetCarriers = {
-        status: 'Started',
+        status: isSmallWaste ? sourceCarriers.status : 'Started',
         transport: true,
         values: carriers,
       };

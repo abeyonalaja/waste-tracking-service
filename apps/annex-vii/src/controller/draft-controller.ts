@@ -183,11 +183,7 @@ export default class DraftController extends BaseController {
       }
 
       return success(
-        await this.repository.createSubmissionFromTemplate(
-          id,
-          accountId,
-          reference
-        )
+        await this.repository.createDraftFromTemplate(id, accountId, reference)
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {

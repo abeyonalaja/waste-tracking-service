@@ -138,7 +138,7 @@ export default class TemplateController extends BaseController {
 
     try {
       return success(
-        await this.repository.createTemplateFromSubmission(
+        await this.repository.createTemplateFromDraft(
           id,
           accountId,
           templateDetails.name,
@@ -188,7 +188,10 @@ export default class TemplateController extends BaseController {
         wasteDescription: template.wasteDescription,
         exporterDetail: template.exporterDetail,
         importerDetail: template.importerDetail,
-        carriers: this.repository.copyCarriers(template.carriers),
+        carriers: this.repository.copyCarriersNoTransport(
+          template.carriers,
+          this.isSmallWaste(template.wasteDescription)
+        ),
         collectionDetail: template.collectionDetail,
         ukExitLocation: template.ukExitLocation,
         transitCountries: template.transitCountries,

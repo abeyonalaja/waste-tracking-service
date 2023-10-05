@@ -265,7 +265,10 @@ export class InMemorySubmissionBackend
       exporterDetail: template.exporterDetail,
       importerDetail: template.importerDetail,
       collectionDate: { status: 'NotStarted' },
-      carriers: this.copyCarriers(template.carriers),
+      carriers: this.copyCarriersNoTransport(
+        template.carriers,
+        this.isSmallWaste(template.wasteDescription)
+      ),
       collectionDetail: template.collectionDetail,
       ukExitLocation: template.ukExitLocation,
       transitCountries: template.transitCountries,

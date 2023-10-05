@@ -217,7 +217,10 @@ export class InMemoryTemplateBackend
       wasteDescription: submission.wasteDescription as DraftWasteDescription,
       exporterDetail: submission.exporterDetail,
       importerDetail: submission.importerDetail,
-      carriers: this.copyCarriers(submission.carriers),
+      carriers: this.copyCarriersNoTransport(
+        submission.carriers,
+        this.isSmallWaste(submission.wasteDescription)
+      ),
       collectionDetail: submission.collectionDetail,
       ukExitLocation: submission.ukExitLocation,
       transitCountries: submission.transitCountries,
@@ -268,7 +271,10 @@ export class InMemoryTemplateBackend
       wasteDescription: template.wasteDescription,
       exporterDetail: template.exporterDetail,
       importerDetail: template.importerDetail,
-      carriers: this.copyCarriers(template.carriers),
+      carriers: this.copyCarriersNoTransport(
+        template.carriers,
+        this.isSmallWaste(template.wasteDescription)
+      ),
       collectionDetail: template.collectionDetail,
       ukExitLocation: template.ukExitLocation,
       transitCountries: template.transitCountries,

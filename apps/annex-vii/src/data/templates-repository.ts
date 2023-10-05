@@ -11,4 +11,10 @@ export interface TemplateRepository extends BaseRepository {
   getTemplate(id: string, accountId: string): Promise<Template>;
   deleteTemplate(id: string, accountId: string): Promise<void>;
   saveTemplate(template: Template, accountId: string): Promise<void>;
+  createTemplateFromDraft(
+    id: string,
+    accountId: string,
+    templateName: string,
+    templateDescription?: string
+  ): Promise<Template>;
 }

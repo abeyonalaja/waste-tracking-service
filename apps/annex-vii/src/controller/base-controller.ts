@@ -131,6 +131,13 @@ export abstract class BaseController {
     return submissionBase;
   }
 
+  protected isSmallWaste(wasteDescription: api.DraftWasteDescription): boolean {
+    return (
+      wasteDescription.status === 'Complete' &&
+      wasteDescription.wasteCode.type === 'NotApplicable'
+    );
+  }
+
   protected setBaseImporterDetail(
     submissionBase: api.SubmissionBase,
     value: api.DraftImporterDetail

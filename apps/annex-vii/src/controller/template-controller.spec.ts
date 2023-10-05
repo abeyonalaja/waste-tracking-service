@@ -45,7 +45,7 @@ const mockRepository = {
     >(),
   getTemplate: jest.fn<(id: string, accountId: string) => Promise<Template>>(),
   deleteTemplate: jest.fn<(id: string) => Promise<void>>(),
-  createTemplateFromSubmission:
+  createTemplateFromDraft:
     jest.fn<
       (
         id: string,
@@ -54,7 +54,7 @@ const mockRepository = {
         templateDescription?: string
       ) => Promise<Template>
     >(),
-  createSubmissionFromTemplate:
+  createDraftFromTemplate:
     jest.fn<
       (
         id: string,
@@ -64,7 +64,10 @@ const mockRepository = {
     >(),
   saveTemplate:
     jest.fn<(template: Template, accountId: string) => Promise<void>>(),
-  copyCarriers: jest.fn<(sourceCarriers: DraftCarriers) => DraftCarriers>(),
+  copyCarriersNoTransport:
+    jest.fn<
+      (sourceCarriers: DraftCarriers, isSmallWaste: boolean) => DraftCarriers
+    >(),
   copyRecoveryFacilities:
     jest.fn<
       (

@@ -1,9 +1,11 @@
 import { SqlQuerySpec } from '@azure/cosmos';
+import { v4 as uuidv4 } from 'uuid';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
 import { CosmosAnnexViiClient } from '../clients';
 import { TemplateRepository } from './templates-repository';
 import {
+  SubmissionBase,
   Template,
   TemplatePageMetadata,
   TemplateSummary,
@@ -18,17 +20,17 @@ export default class CosmosTemplateRepository
   implements TemplateRepository
 {
   constructor(
-    protected cosmosClient: CosmosAnnexViiClient,
-    protected cosmosContainerName: string,
-    protected alternateContainerName: string,
-    protected logger: Logger
+    private cosmosClient: CosmosAnnexViiClient,
+    private templateContainerName: string,
+    private draftContainerName: string,
+    private logger: Logger
   ) {
-    super(cosmosClient, cosmosContainerName, alternateContainerName, logger);
+    super();
   }
 
   async getTemplate(id: string, accountId: string): Promise<Template> {
     const item = await this.cosmosClient.readItem(
-      this.cosmosContainerName,
+      this.templateContainerName,
       id,
       accountId
     );
@@ -91,7 +93,7 @@ export default class CosmosTemplateRepository
       };
 
       const response = await this.cosmosClient.queryContainerNext(
-        this.cosmosContainerName,
+        this.templateContainerName,
         querySpec,
         options
       );
@@ -154,7 +156,7 @@ export default class CosmosTemplateRepository
     const data: TemplateData = { ...template, accountId };
     try {
       await this.cosmosClient.createOrReplaceItem(
-        this.cosmosContainerName,
+        this.templateContainerName,
         data.id,
         data.accountId,
         data
@@ -171,6 +173,66 @@ export default class CosmosTemplateRepository
   }
 
   async deleteTemplate(id: string, accountId: string): Promise<void> {
-    await this.cosmosClient.deleteItem(this.cosmosContainerName, id, accountId);
+    await this.cosmosClient.deleteItem(
+      this.templateContainerName,
+      id,
+      accountId
+    );
+  }
+
+  async createTemplateFromDraft(
+    id: string,
+    accountId: string,
+    templateName: string,
+    templateDescription: string
+  ): Promise<Template> {
+    const item = await this.cosmosClient.readItem(
+      this.draftContainerName,
+      id,
+      accountId
+    );
+    if (!item) {
+      throw Boom.notFound();
+    }
+
+    const data = item.value as SubmissionBase;
+    const template: Template = {
+      id: uuidv4(),
+      templateDetails: {
+        name: templateName,
+        description: templateDescription,
+        created: new Date(),
+        lastModified: new Date(),
+      },
+      wasteDescription: data.wasteDescription,
+      exporterDetail: data.exporterDetail,
+      importerDetail: data.importerDetail,
+      carriers: this.copyCarriersNoTransport(
+        data.carriers,
+        this.isSmallWaste(data.wasteDescription)
+      ),
+      collectionDetail: data.collectionDetail,
+      ukExitLocation: data.ukExitLocation,
+      transitCountries: data.transitCountries,
+      recoveryFacilityDetail: this.copyRecoveryFacilities(
+        data.recoveryFacilityDetail
+      ),
+    };
+    const templateData: TemplateData = { ...template, accountId };
+
+    try {
+      await this.cosmosClient.createOrReplaceItem(
+        this.templateContainerName,
+        template.id,
+        accountId,
+        templateData
+      );
+    } catch (err) {
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
+    return template;
   }
 }
