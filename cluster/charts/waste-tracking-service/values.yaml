@@ -70,6 +70,8 @@ secret:
     NEXTAUTH_SECRET: ''
     NEXTAUTH_URL: ''
     IS_TEMPLATE_ENABLED: 'false'
+    IS_MULTIPLE_UPLOAD_ENABLED: 'false'
+    IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

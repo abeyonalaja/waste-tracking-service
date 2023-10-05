@@ -16,7 +16,6 @@ import {
   SubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
-
 import {
   AnnexViiServiceTemplateBackend,
   InMemoryTemplateBackend,
@@ -107,16 +106,18 @@ await app.register({
   },
 });
 
-await app.register({
-  plugin: templatePlugin,
-  options: {
-    backend: backend.template,
-    logger,
-  },
-  routes: {
-    prefix: '/api/templates',
-  },
-});
+if (JSON.parse(process.env['IS_TEMPLATE_ENABLED'] || 'false')) {
+  await app.register({
+    plugin: templatePlugin,
+    options: {
+      backend: backend.template,
+      logger,
+    },
+    routes: {
+      prefix: '/api/templates',
+    },
+  });
+}
 
 process.on('unhandledRejection', (err) => {
   logger.error(err);

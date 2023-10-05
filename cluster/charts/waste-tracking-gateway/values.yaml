@@ -70,6 +70,9 @@ secret:
     APPINSIGHTS_CONNECTION_STRING: ''
     ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
     ADDRESS_APP_ID: 'address.address'
+    IS_TEMPLATE_ENABLED: 'false'
+    IS_MULTIPLE_UPLOAD_ENABLED: 'false'
+    IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

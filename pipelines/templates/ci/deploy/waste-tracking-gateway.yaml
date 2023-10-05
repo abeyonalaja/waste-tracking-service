@@ -26,6 +26,15 @@ parameters:
   - name: appInsightsConnectionString
     type: string
     default: ''
+  - name: isTemplateEnabled
+    type: string
+    default: 'false'
+  - name: isMultipleUploadEnabled
+    type: string
+    default: 'false'
+  - name: isAutoEmailConfirmationEnabled
+    type: string
+    default: 'false'
   - name: deployChart
     type: string
     default: ''
@@ -60,7 +69,10 @@ steps:
             --set resources.requests.memory=$REQUESTS_MEMORY \
             --set resources.limits.cpu=$LIMITS_CPU \
             --set resources.limits.memory=$LIMITS_MEMORY \
-            --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
+            --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
+            --set-string secret.env.IS_TEMPLATE_ENABLED=$IS_TEMPLATE_ENABLED \
+            --set-string secret.env.IS_MULTIPLE_UPLOAD_ENABLED=$IS_MULTIPLE_UPLOAD_ENABLED \
+            --set-string secret.env.IS_AUTO_EMAIL_CONFIRMATION_ENABLED=$IS_AUTO_EMAIL_CONFIRMATION_ENABLED
         else
           echo "Release: ${PROJECT_NAME} is already up to date"
         fi
@@ -80,5 +92,8 @@ steps:
       LIMITS_CPU: ${{ parameters.limitsCpu }}
       LIMITS_MEMORY: ${{ parameters.limitsMemory }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
+      IS_TEMPLATE_ENABLED: ${{ parameters.isTemplateEnabled }}
+      IS_MULTIPLE_UPLOAD_ENABLED: ${{ parameters.isMultipleUploadEnabled }}
+      IS_AUTO_EMAIL_CONFIRMATION_ENABLED: ${{ parameters.isAutoEmailConfirmationEnabled }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
       AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}

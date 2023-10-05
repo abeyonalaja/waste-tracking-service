@@ -56,6 +56,12 @@ parameters:
   - name: isTemplateEnabled
     type: string
     default: 'false'
+  - name: isMultipleUploadEnabled
+    type: string
+    default: 'false'
+  - name: isAutoEmailConfirmationEnabled
+    type: string
+    default: 'false'
   - name: deployChart
     type: string
     default: ''
@@ -100,7 +106,9 @@ steps:
             --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
             --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
             --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL \
-            --set-string secret.env.IS_TEMPLATE_ENABLED=$IS_TEMPLATE_ENABLED
+            --set-string secret.env.IS_TEMPLATE_ENABLED=$IS_TEMPLATE_ENABLED \
+            --set-string secret.env.IS_MULTIPLE_UPLOAD_ENABLED=$IS_MULTIPLE_UPLOAD_ENABLED \
+            --set-string secret.env.IS_AUTO_EMAIL_CONFIRMATION_ENABLED=$IS_AUTO_EMAIL_CONFIRMATION_ENABLED
         else
           echo "Release: ${PROJECT_NAME} is already up to date"
         fi
@@ -130,5 +138,7 @@ steps:
       NEXTAUTH_SECRET: ${{ parameters.nextAuthSecret }}
       NEXTAUTH_URL: ${{ parameters.nextAuthUrl }}
       IS_TEMPLATE_ENABLED: ${{ parameters.isTemplateEnabled }}
+      IS_MULTIPLE_UPLOAD_ENABLED: ${{ parameters.isMultipleUploadEnabled }}
+      IS_AUTO_EMAIL_CONFIRMATION_ENABLED: ${{ parameters.isAutoEmailConfirmationEnabled }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
       AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}
