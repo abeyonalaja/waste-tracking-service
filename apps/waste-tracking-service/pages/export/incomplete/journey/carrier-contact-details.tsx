@@ -162,7 +162,7 @@ const CarrierContactDetails = () => {
                 if (data.transport === true) {
                   const path = returnToDraft
                     ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/journey/carrier-transport-choice`;
+                    : `/export/incomplete/journey/carrier-transport-means`;
                   router.push({
                     pathname: path,
                     query: { id, carrierId: data.values[0].id },

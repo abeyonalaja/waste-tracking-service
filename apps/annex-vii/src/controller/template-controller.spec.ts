@@ -383,9 +383,7 @@ describe(TemplateController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Road',
               },
               addressDetails: {
                 address: '',
@@ -481,9 +479,8 @@ describe(TemplateController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Road',
+                description: 'hitch-hiking',
               },
               addressDetails: {
                 address: '',
@@ -585,9 +582,8 @@ describe(TemplateController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Air',
+                description: 'flying',
               },
               addressDetails: {
                 address: '',
@@ -691,9 +687,8 @@ describe(TemplateController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Sea',
+                description: 'swimming',
               },
               addressDetails: {
                 address: '',
@@ -710,9 +705,8 @@ describe(TemplateController, () => {
             },
             {
               transportDetails: {
-                vehicleRegistration: '',
-                trailerNumber: '',
-                type: 'Trailer',
+                type: 'Road',
+                description: 'On the one road...',
               },
               addressDetails: {
                 address: '',
@@ -729,8 +723,8 @@ describe(TemplateController, () => {
             },
             {
               transportDetails: {
-                imo: '',
-                type: 'BulkVessel',
+                type: 'Road',
+                description: 'On the one road...',
               },
               addressDetails: {
                 address: '',

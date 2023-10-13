@@ -72,21 +72,10 @@ export type CarrierData = {
     phoneNumber: string;
     faxNumber?: string;
   };
-  transportDetails?:
-    | {
-        type: 'ShippingContainer';
-        shippingContainerNumber: string;
-        vehicleRegistration?: string;
-      }
-    | {
-        type: 'Trailer';
-        vehicleRegistration: string;
-        trailerNumber?: string;
-      }
-    | {
-        type: 'BulkVessel';
-        imo: string;
-      };
+  transportDetails?: {
+    type: 'Road' | 'Air' | 'Sea' | 'Rail' | 'InlandWaterways';
+    description?: string;
+  };
 };
 
 export type Carrier = { id: string } & CarrierData;

@@ -200,9 +200,8 @@ describe(InMemorySubmissionBackend, () => {
               faxNumber: '555-5678',
             },
             transportDetails: {
-              type: 'ShippingContainer',
-              shippingContainerNumber: '2347027',
-              vehicleRegistration: 'TL12 TFL',
+              type: 'Road',
+              description: 'hitch-hiking',
             },
           },
         ],
@@ -435,8 +434,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Air',
+              description: 'RyanAir',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -656,8 +655,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Air',
+              description: 'RyanAir',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -879,8 +878,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Air',
+              description: 'RyanAir',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -1285,8 +1284,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -1415,8 +1414,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -1545,8 +1544,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -1705,8 +1704,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -1876,8 +1875,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -2047,8 +2046,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -2255,8 +2254,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -2432,8 +2431,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -2596,8 +2595,8 @@ describe(InMemorySubmissionBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Road',
+              description: 'On the one road...',
             },
             addressDetails: {
               address: faker.datatype.string(),

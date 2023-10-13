@@ -837,7 +837,7 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-change' + index}
                                 href={{
-                                  pathname: `/export/incomplete/journey/carrier-transport-choice`,
+                                  pathname: `/export/incomplete/journey/carrier-transport-means`,
                                   query: { id: data.id, carrierId: item.id },
                                 }}
                               >
@@ -846,223 +846,14 @@ export const SubmissionSummary = ({
                             </Actions>
                           )}
                         </Row>
-
-                        {item.transportDetails?.type ===
-                          'ShippingContainer' && (
-                          <>
-                            <Row>
-                              <Key
-                                id={
-                                  'carrier-shipping-container-number-header' +
-                                  index
-                                }
-                              >
-                                {t(
-                                  'exportJourney.checkAnswers.shippingContainerNumber'
-                                )}
-                              </Key>
-                              <Value
-                                id={'carrier-shipping-container-number' + index}
-                              >
-                                {item.transportDetails?.shippingContainerNumber}
-                              </Value>
-                              {showChangeLinks && (
-                                <Actions>
-                                  {' '}
-                                  <AppLink
-                                    id={'carrier-details-change' + index}
-                                    href={{
-                                      pathname: `/export/incomplete/journey/carrier-shipping-container`,
-                                      query: {
-                                        id: data.id,
-                                        carrierId: item.id,
-                                      },
-                                    }}
-                                  >
-                                    {t('actions.change')}
-                                  </AppLink>
-                                </Actions>
-                              )}
-                              {isTemplate && (
-                                <Actions>
-                                  <NotInTemplate
-                                    tint="GREY"
-                                    id={`nit-shipping-container-number-${index}`}
-                                  >
-                                    {t('templates.notInTemplate')}
-                                  </NotInTemplate>
-                                </Actions>
-                              )}
-                            </Row>
-                            <Row>
-                              <Key
-                                id={
-                                  'carrier-vehicle-registration-header' + index
-                                }
-                              >
-                                {t('exportJourney.checkAnswers.vehichleRegO')}
-                              </Key>
-                              <Value
-                                id={'carrier-vehicle-registration' + index}
-                              >
-                                {item.transportDetails?.vehicleRegistration && (
-                                  <span>
-                                    {item.transportDetails?.vehicleRegistration}
-                                  </span>
-                                )}
-                                {!item.transportDetails
-                                  ?.vehicleRegistration && (
-                                  <span>
-                                    {t(
-                                      'exportJourney.checkAnswers.notProvided'
-                                    )}
-                                  </span>
-                                )}
-                              </Value>
-                              {isTemplate && (
-                                <Actions>
-                                  <NotInTemplate
-                                    tint="GREY"
-                                    id={`nit-vehicle-registration-${index}`}
-                                  >
-                                    {t('templates.notInTemplate')}
-                                  </NotInTemplate>
-                                </Actions>
-                              )}
-                            </Row>
-                            <SectionBreak />
-                          </>
-                        )}
-
-                        {item.transportDetails?.type === 'Trailer' && (
-                          <>
-                            <Row>
-                              <Key
-                                id={
-                                  'carrier-vehicle-registration-header' + index
-                                }
-                              >
-                                {t('exportJourney.checkAnswers.vehichleReg')}
-                              </Key>
-                              <Value
-                                id={'carrier-vehicle-registration' + index}
-                              >
-                                {item.transportDetails?.vehicleRegistration && (
-                                  <span>
-                                    {item.transportDetails?.vehicleRegistration}
-                                  </span>
-                                )}
-                                {!item.transportDetails
-                                  ?.vehicleRegistration && (
-                                  <span>
-                                    {t(
-                                      'exportJourney.checkAnswers.notProvided'
-                                    )}
-                                  </span>
-                                )}
-                              </Value>
-                              {showChangeLinks && (
-                                <Actions>
-                                  {' '}
-                                  <AppLink
-                                    id={'carrier-details-change' + index}
-                                    href={{
-                                      pathname: `/export/incomplete/journey/carrier-trailer`,
-                                      query: {
-                                        id: data.id,
-                                        carrierId: item.id,
-                                      },
-                                    }}
-                                  >
-                                    {t('actions.change')}
-                                  </AppLink>
-                                </Actions>
-                              )}
-                              {isTemplate && (
-                                <Actions>
-                                  <NotInTemplate
-                                    tint="GREY"
-                                    id={`nit-vehicle-registration-${index}`}
-                                  >
-                                    {t('templates.notInTemplate')}
-                                  </NotInTemplate>
-                                </Actions>
-                              )}
-                            </Row>
-
-                            <Row>
-                              <Key id={'carrier-trailer-number-header' + index}>
-                                {t('exportJourney.checkAnswers.trailerO')}
-                              </Key>
-                              <Value id={'carrier-trailer-number' + index}>
-                                {item.transportDetails?.trailerNumber && (
-                                  <span>
-                                    {item.transportDetails?.trailerNumber}
-                                  </span>
-                                )}
-                                {!item.transportDetails?.trailerNumber && (
-                                  <span>
-                                    {t(
-                                      'exportJourney.checkAnswers.notProvided'
-                                    )}
-                                  </span>
-                                )}
-                              </Value>
-                              {isTemplate && (
-                                <Actions>
-                                  <NotInTemplate
-                                    tint="GREY"
-                                    id={`nit-trailer-number-${index}`}
-                                  >
-                                    {t('templates.notInTemplate')}
-                                  </NotInTemplate>
-                                </Actions>
-                              )}
-                            </Row>
-                            <SectionBreak />
-                          </>
-                        )}
-
-                        {item.transportDetails?.type === 'BulkVessel' && (
-                          <>
-                            <Row>
-                              <Key id={'carrier-imo-header' + index}>
-                                {t('exportJourney.checkAnswers.IMO')}
-                              </Key>
-                              <Value id={'carrier-imo' + index}>
-                                {item.transportDetails?.imo}
-                              </Value>
-                              {showChangeLinks && (
-                                <Actions>
-                                  {' '}
-                                  <AppLink
-                                    id={'carrier-details-change' + index}
-                                    href={{
-                                      pathname: `/export/incomplete/journey/carrier-bulk-vessel`,
-                                      query: {
-                                        id: data.id,
-                                        carrierId: item.id,
-                                      },
-                                    }}
-                                  >
-                                    {t('actions.change')}
-                                  </AppLink>
-                                </Actions>
-                              )}
-                              {isTemplate && (
-                                <Actions>
-                                  <NotInTemplate
-                                    tint="GREY"
-                                    id={`nit-imo-${index}`}
-                                  >
-                                    {t('templates.notInTemplate')}
-                                  </NotInTemplate>
-                                </Actions>
-                              )}
-                            </Row>
-                            <SectionBreak />
-                          </>
-                        )}
+                        <Row>
+                          <Key id={'carrier-type-details-header' + index}>
+                            {t('exportJourney.checkAnswers.transportDetails')}
+                          </Key>
+                          <Value id={'carrier-type-details' + index}>
+                            {item.transportDetails?.description}
+                          </Value>
+                        </Row>
                       </>
                     )}
                   </DefinitionList>
@@ -1072,7 +863,6 @@ export const SubmissionSummary = ({
           )}
           {data.collectionDetail.status === 'Complete' && (
             <>
-              {/* WCD */}
               <GovUK.H3>
                 {t('exportJourney.wasteCollectionDetails.caption')}
               </GovUK.H3>

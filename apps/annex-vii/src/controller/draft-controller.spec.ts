@@ -496,9 +496,8 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Road',
+                description: 'On the one road...',
               },
               addressDetails: {
                 address: '',
@@ -626,9 +625,7 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Road',
               },
               addressDetails: {
                 address: '',
@@ -765,9 +762,7 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Road',
               },
               addressDetails: {
                 address: '',
@@ -906,9 +901,7 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                vehicleRegistration: '',
-                type: 'ShippingContainer',
+                type: 'Air',
               },
               addressDetails: {
                 address: '',
@@ -925,9 +918,8 @@ describe(DraftController, () => {
             },
             {
               transportDetails: {
-                vehicleRegistration: '',
-                trailerNumber: '',
-                type: 'Trailer',
+                type: 'Sea',
+                description: 'Somewhere beyond the sea...',
               },
               addressDetails: {
                 address: '',
@@ -944,8 +936,8 @@ describe(DraftController, () => {
             },
             {
               transportDetails: {
-                imo: '',
-                type: 'BulkVessel',
+                type: 'Sea',
+                description: 'Somewhere beyond the sea...',
               },
               addressDetails: {
                 address: '',
@@ -1040,9 +1032,7 @@ describe(DraftController, () => {
             values: [
               {
                 transportDetails: {
-                  shippingContainerNumber: '',
-                  vehicleRegistration: '',
-                  type: 'ShippingContainer',
+                  type: 'Air',
                 },
                 addressDetails: {
                   address: '',
@@ -1059,9 +1049,8 @@ describe(DraftController, () => {
               },
               {
                 transportDetails: {
-                  vehicleRegistration: '',
-                  trailerNumber: '',
-                  type: 'Trailer',
+                  type: 'Sea',
+                  description: 'Somewhere beyond the sea...',
                 },
                 addressDetails: {
                   address: '',
@@ -1078,8 +1067,8 @@ describe(DraftController, () => {
               },
               {
                 transportDetails: {
-                  imo: '',
-                  type: 'BulkVessel',
+                  type: 'Sea',
+                  description: 'Somewhere beyond the sea...',
                 },
                 addressDetails: {
                   address: '',
@@ -1872,8 +1861,7 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                imo: '',
-                type: 'BulkVessel',
+                type: 'Rail',
               },
               addressDetails: {
                 address: '',
@@ -1907,8 +1895,7 @@ describe(DraftController, () => {
             values: [
               {
                 transportDetails: {
-                  imo: '',
-                  type: 'BulkVessel',
+                  type: 'Rail',
                 },
                 addressDetails: {
                   address: '',
@@ -1962,8 +1949,8 @@ describe(DraftController, () => {
           values: [
             {
               transportDetails: {
-                shippingContainerNumber: '',
-                type: 'ShippingContainer',
+                type: 'Rail',
+                description: 'choo choo...',
               },
               addressDetails: {
                 address: '',
@@ -2552,8 +2539,8 @@ describe(DraftController, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Sea',
+              description: 'Somewhere beyond the sea...',
             },
             addressDetails: {
               address: faker.datatype.string(),
@@ -2855,8 +2842,8 @@ describe(DraftController, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Sea',
+              description: 'Somewhere beyond the sea...',
             },
             addressDetails: {
               address: faker.datatype.string(),

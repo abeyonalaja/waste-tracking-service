@@ -270,6 +270,15 @@ const CarrierDetails = () => {
             {!isError && !isLoading && (
               <>
                 {' '}
+                {errors && !!Object.keys(errors).length && (
+                  <GovUK.ErrorSummary
+                    heading={t('errorSummary.title')}
+                    errors={Object.keys(errors).map((key) => ({
+                      targetName: key,
+                      text: errors[key],
+                    }))}
+                  />
+                )}
                 <SmallHeading size="L">
                   {t('exportJourney.wasteCarrierDetails.title')}
                 </SmallHeading>
@@ -283,15 +292,6 @@ const CarrierDetails = () => {
                 <GovUK.Paragraph>
                   {t('exportJourney.wasteCarrierDetails.YouCanEditMessage')}
                 </GovUK.Paragraph>
-                {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
-                    heading={t('errorSummary.title')}
-                    errors={Object.keys(errors).map((key) => ({
-                      targetName: key,
-                      text: errors[key],
-                    }))}
-                  />
-                )}
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput

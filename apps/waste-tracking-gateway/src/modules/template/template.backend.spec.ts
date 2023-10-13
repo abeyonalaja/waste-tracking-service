@@ -102,8 +102,8 @@ describe(InMemoryTemplateBackend, () => {
         values: [
           {
             transportDetails: {
-              imo: faker.datatype.string(),
-              type: 'BulkVessel',
+              type: 'Sea',
+              description: 'Somewhere beyond the sea...',
             },
             addressDetails: {
               address: faker.datatype.string(),

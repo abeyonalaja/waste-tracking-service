@@ -170,27 +170,6 @@ export const validateAddress: (address?: string) => string = (address) => {
   if (address?.length === 0 || address === undefined) return 'Enter an address';
 };
 
-export const validateShippingContainerNumber: (
-  shippingContainerNumber?: string
-) => string = (shippingContainerNumber) => {
-  if (
-    shippingContainerNumber?.length === 0 ||
-    shippingContainerNumber === undefined
-  )
-    return 'Enter a shipping container number';
-};
-
-export const validateVehicleRegistration: (
-  vehicleRegistration?: string
-) => string = (vehicleRegistration) => {
-  if (vehicleRegistration?.length === 0 || vehicleRegistration === undefined)
-    return 'Enter a vehicle registration number';
-};
-export const validateIMO: (imo?: string) => string = (imo) => {
-  if (imo?.length === 0 || imo === undefined)
-    return 'Enter an international maritime organisation (IMO) number';
-};
-
 export const validateOrganisationName: (organisationName?: string) => string = (
   organisationName
 ) => {
@@ -324,6 +303,13 @@ export const validatePointOfExit: (
     return 'The location must only include letters a to z, numbers, spaces, hyphens and back slashes';
 };
 
+export const validateTransport: (value?: string) => string | undefined = (
+  value
+) => {
+  if (value === null)
+    return 'Select how the first waste carrier will transport the waste';
+};
+
 export const validateTransitCountries: (
   value?: string
 ) => string | undefined = (value) => {
@@ -414,12 +400,6 @@ export const validateFieldNotEmpty: (
   label?: string
 ) => string | undefined = (value, label) => {
   if (value?.length === 0 || value === undefined) return `Enter ${label}`;
-};
-
-export const validateTransport: (value?: string) => string | undefined = (
-  value
-) => {
-  if (value === undefined) return 'Select a method of transport';
 };
 
 export const validateEwcCode: (

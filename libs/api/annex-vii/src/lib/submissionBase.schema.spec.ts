@@ -52,8 +52,8 @@ describe('listDraftCarriersResponse', () => {
               phoneNumber: faker.datatype.string(),
             },
             transportDetails: {
-              type: 'ShippingContainer',
-              shippingContainerNumber: faker.datatype.string(),
+              type: 'Air',
+              description: 'RyanAir',
             },
           },
         ],
@@ -121,8 +121,8 @@ describe('setDraftCarrierRequest', () => {
               phoneNumber: faker.datatype.string(),
             },
             transportDetails: {
-              type: 'ShippingContainer',
-              shippingContainerNumber: faker.datatype.string(),
+              type: 'InlandWaterways',
+              description: 'Barge',
             },
           },
         ],

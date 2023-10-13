@@ -209,25 +209,29 @@ export const draftCarriers: SchemaObject = {
               transportDetails: {
                 discriminator: 'type',
                 mapping: {
-                  ShippingContainer: {
-                    properties: {
-                      shippingContainerNumber: { type: 'string' },
-                    },
+                  Road: {
                     optionalProperties: {
-                      vehicleRegistration: { type: 'string' },
+                      description: { type: 'string' },
                     },
                   },
-                  Trailer: {
-                    properties: {
-                      vehicleRegistration: { type: 'string' },
-                    },
+                  Sea: {
                     optionalProperties: {
-                      trailerNumber: { type: 'string' },
+                      description: { type: 'string' },
                     },
                   },
-                  BulkVessel: {
-                    properties: {
-                      imo: { type: 'string' },
+                  Air: {
+                    optionalProperties: {
+                      description: { type: 'string' },
+                    },
+                  },
+                  Rail: {
+                    optionalProperties: {
+                      description: { type: 'string' },
+                    },
+                  },
+                  InlandWaterways: {
+                    optionalProperties: {
+                      description: { type: 'string' },
                     },
                   },
                 },
@@ -266,25 +270,29 @@ export const draftCarriers: SchemaObject = {
               transportDetails: {
                 discriminator: 'type',
                 mapping: {
-                  ShippingContainer: {
-                    properties: {
-                      shippingContainerNumber: { type: 'string' },
-                    },
+                  Road: {
                     optionalProperties: {
-                      vehicleRegistration: { type: 'string' },
+                      description: { type: 'string' },
                     },
                   },
-                  Trailer: {
-                    properties: {
-                      vehicleRegistration: { type: 'string' },
-                    },
+                  Sea: {
                     optionalProperties: {
-                      trailerNumber: { type: 'string' },
+                      description: { type: 'string' },
                     },
                   },
-                  BulkVessel: {
-                    properties: {
-                      imo: { type: 'string' },
+                  Air: {
+                    optionalProperties: {
+                      description: { type: 'string' },
+                    },
+                  },
+                  Rail: {
+                    optionalProperties: {
+                      description: { type: 'string' },
+                    },
+                  },
+                  InlandWaterways: {
+                    optionalProperties: {
+                      description: { type: 'string' },
                     },
                   },
                 },

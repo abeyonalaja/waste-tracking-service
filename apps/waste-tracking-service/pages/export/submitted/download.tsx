@@ -245,6 +245,15 @@ const Ref = styled.sup`
   font-style: italic;
 `;
 
+const BlockDesc = styled.span`
+  font-weight: normal;
+  font-style: italic;
+  display: block;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+`;
+
 const Download = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -318,6 +327,11 @@ const Download = () => {
       return downloadReport.data[section].status === 'Complete';
     });
     return sections.length === completedSections.length;
+  };
+
+  const formatTransportType = (type) => {
+    if (type === 'InlandWaterways') return 'Inland waterways';
+    return type;
   };
 
   return (
@@ -1508,296 +1522,74 @@ const Download = () => {
                 </SectionTitle>
               </Box>
             </Row>
-            <Row>
-              <Box>Vehicle registration</Box>
-              {downloadReport.data.carriers.status === 'Complete' &&
-                downloadReport.data.wasteDescription.status == 'Complete' && (
-                  <>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values[0].transportDetails
-                          .type !== 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[0]
-                                .transportDetails.vehicleRegistration
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 1 &&
-                        downloadReport.data.carriers.values[1].transportDetails
-                          .type !== 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[1]
-                                .transportDetails.vehicleRegistration
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 2 &&
-                        downloadReport.data.carriers.values[2].transportDetails
-                          .type !== 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[2]
-                                .transportDetails.vehicleRegistration
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 3 &&
-                        downloadReport.data.carriers.values[3].transportDetails
-                          .type !== 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[3]
-                                .transportDetails.vehicleRegistration
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 4 &&
-                        downloadReport.data.carriers.values[4].transportDetails
-                          .type !== 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[4]
-                                .transportDetails.vehicleRegistration
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                  </>
-                )}
-            </Row>
-            <Row>
-              <Box>Trailer / shipping container number</Box>
-              {downloadReport.data.carriers.status === 'Complete' &&
-                downloadReport.data.wasteDescription.status == 'Complete' && (
-                  <>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values[0].transportDetails
-                          .type === 'Trailer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[0]
-                                .transportDetails.trailerNumber
-                            }
-                          </Value>
-                        )}
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values[0].transportDetails
-                          .type === 'ShippingContainer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[0]
-                                .transportDetails.shippingContainerNumber
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 1 &&
-                        downloadReport.data.carriers.values[1].transportDetails
-                          .type === 'Trailer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[1]
-                                .transportDetails.trailerNumber
-                            }
-                          </Value>
-                        )}
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 1 &&
-                        downloadReport.data.carriers.values[1].transportDetails
-                          .type === 'ShippingContainer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[1]
-                                .transportDetails.shippingContainerNumber
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 2 &&
-                        downloadReport.data.carriers.values[2].transportDetails
-                          .type === 'Trailer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[2]
-                                .transportDetails.trailerNumber
-                            }
-                          </Value>
-                        )}
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 2 &&
-                        downloadReport.data.carriers.values[2].transportDetails
-                          .type === 'ShippingContainer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[2]
-                                .transportDetails.shippingContainerNumber
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 3 &&
-                        downloadReport.data.carriers.values[3].transportDetails
-                          .type === 'Trailer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[3]
-                                .transportDetails.trailerNumber
-                            }
-                          </Value>
-                        )}
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 3 &&
-                        downloadReport.data.carriers.values[3].transportDetails
-                          .type === 'ShippingContainer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[3]
-                                .transportDetails.shippingContainerNumber
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 4 &&
-                        downloadReport.data.carriers.values[4].transportDetails
-                          .type === 'Trailer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[4]
-                                .transportDetails.trailerNumber
-                            }
-                          </Value>
-                        )}
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 4 &&
-                        downloadReport.data.carriers.values[4].transportDetails
-                          .type === 'ShippingContainer' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[4]
-                                .transportDetails.shippingContainerNumber
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                  </>
-                )}
-            </Row>
-            <Row>
-              <Box>Bulk vessel IMO number</Box>
-              {downloadReport.data.carriers.status === 'Complete' &&
-                downloadReport.data.wasteDescription.status == 'Complete' && (
-                  <>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values[0].transportDetails
-                          .type === 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[0]
-                                .transportDetails.imo
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 1 &&
-                        downloadReport.data.carriers.values[1].transportDetails
-                          .type === 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[1]
-                                .transportDetails.imo
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 2 &&
-                        downloadReport.data.carriers.values[2].transportDetails
-                          .type === 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[2]
-                                .transportDetails.imo
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 3 &&
-                        downloadReport.data.carriers.values[3].transportDetails
-                          .type === 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[3]
-                                .transportDetails.imo
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                    <Box>
-                      {downloadReport.data.wasteDescription.wasteCode.type !==
-                        'NotApplicable' &&
-                        downloadReport.data.carriers.values.length > 4 &&
-                        downloadReport.data.carriers.values[4].transportDetails
-                          .type === 'BulkVessel' && (
-                          <Value>
-                            {
-                              downloadReport.data.carriers.values[4]
-                                .transportDetails.imo
-                            }
-                          </Value>
-                        )}
-                    </Box>
-                  </>
-                )}
-            </Row>
+            {downloadReport.data.carriers.status === 'Complete' && (
+              <Row>
+                <Box></Box>
+                <Box>
+                  <span>
+                    {formatTransportType(
+                      downloadReport.data.carriers.values[0].transportDetails
+                        .type
+                    )}
+                  </span>
+                  <BlockDesc>
+                    {
+                      downloadReport.data.carriers.values[0].transportDetails
+                        .description
+                    }
+                  </BlockDesc>
+                </Box>
+                <Box>
+                  {formatTransportType(
+                    downloadReport.data.carriers.values[1]?.transportDetails
+                      .type
+                  )}
+                  <BlockDesc>
+                    {
+                      downloadReport.data.carriers.values[1]?.transportDetails
+                        .description
+                    }
+                  </BlockDesc>
+                </Box>
+                <Box>
+                  {formatTransportType(
+                    downloadReport.data.carriers.values[2]?.transportDetails
+                      .type
+                  )}
+                  <BlockDesc>
+                    {
+                      downloadReport.data.carriers.values[2]?.transportDetails
+                        .description
+                    }
+                  </BlockDesc>
+                </Box>
+                <Box>
+                  {formatTransportType(
+                    downloadReport.data.carriers.values[3]?.transportDetails
+                      .type
+                  )}
+                  <BlockDesc>
+                    {
+                      downloadReport.data.carriers.values[3]?.transportDetails
+                        .description
+                    }
+                  </BlockDesc>
+                </Box>
+                <Box>
+                  {formatTransportType(
+                    downloadReport.data.carriers.values[4]?.transportDetails
+                      .type
+                  )}
+                  <BlockDesc>
+                    {
+                      downloadReport.data.carriers.values[4]?.transportDetails
+                        .description
+                    }
+                  </BlockDesc>
+                </Box>
+              </Row>
+            )}
+
             <Row>
               <Box id="pdf-box-7-cont">
                 <SectionTitle id="pdf-box-7-cont-title">
