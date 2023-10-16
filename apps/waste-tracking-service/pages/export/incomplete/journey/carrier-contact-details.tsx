@@ -165,7 +165,7 @@ const CarrierContactDetails = () => {
                     : `/export/incomplete/journey/carrier-transport-means`;
                   router.push({
                     pathname: path,
-                    query: { id, carrierId: data.values[0].id },
+                    query: { id, carrierId: data.values[0].id, carrierIndex },
                   });
                 } else {
                   const path = returnToDraft
@@ -184,7 +184,7 @@ const CarrierContactDetails = () => {
       }
       e.preventDefault();
     },
-    [fullName, email, phone, fax, data, carrierId, id, router]
+    [fullName, email, phone, fax, data, carrierId, id, router, carrierIndex]
   );
 
   useEffect(() => {
@@ -242,6 +242,7 @@ const CarrierContactDetails = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
+        {carrierIndex}
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {isError && !isLoading && <SubmissionNotFound />}

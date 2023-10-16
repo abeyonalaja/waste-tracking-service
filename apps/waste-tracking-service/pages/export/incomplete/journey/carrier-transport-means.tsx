@@ -93,6 +93,7 @@ const CarrierTransportMeans = () => {
   );
   const [id, setId] = useState(null);
   const [carrierId, setCarrierId] = useState(null);
+  const [carrierIndex, setCarrierIndex] = useState(0);
   const [transportType, setTransportType] = useState(null);
   const [transportDescription, setTransportDescription] = useState('');
   const [errors, setErrors] = useState(null);
@@ -101,8 +102,14 @@ const CarrierTransportMeans = () => {
     if (router.isReady) {
       setId(router.query.id);
       setCarrierId(router.query.carrierId);
+      setCarrierIndex(parseInt(router.query.carrierIndex?.toString()) || 0);
     }
-  }, [router.isReady, router.query.id, router.query.carrierId]);
+  }, [
+    router.isReady,
+    router.query.id,
+    router.query.carrierId,
+    router.query.carrierIndex,
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,6 +140,15 @@ const CarrierTransportMeans = () => {
     };
     fetchData();
   }, [router.isReady, id]);
+
+  const printBullets = () => {
+    const bullets = t(
+      `exportJourney.wasteCarrierTransport.${transportType}Bullets`
+    ).split('*');
+    return bullets.map((bullet, index) => {
+      return <GovUK.ListItem key={`bullet${index}`}>{bullet}</GovUK.ListItem>;
+    });
+  };
 
   const handleLinkSubmit = (e: FormEvent) => {
     handleSubmit(e, true);
@@ -257,7 +273,12 @@ const CarrierTransportMeans = () => {
                       <GovUK.Fieldset>
                         <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                           {t(
-                            'exportJourney.wasteCarrierTransport.pageQuestion'
+                            'exportJourney.wasteCarrierTransport.pageQuestion',
+                            {
+                              carrierIndex: t(
+                                `numberAdjective.${carrierIndex + 1}`
+                              ),
+                            }
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.MultiChoice
@@ -335,6 +356,9 @@ const CarrierTransportMeans = () => {
                           type: t(
                             `exportJourney.wasteCarrierTransport.${transportType}`
                           ).toLowerCase(),
+                          carrierIndex: t(
+                            `numberAdjective.${carrierIndex + 1}`
+                          ),
                         }
                       )}
                     </GovUK.Heading>
@@ -343,28 +367,7 @@ const CarrierTransportMeans = () => {
                         'exportJourney.wasteCarrierTransport.descriptionHintIntro'
                       )}
                     </Paragraph>
-                    <GovUK.UnorderedList>
-                      <GovUK.ListItem>
-                        {t(
-                          `exportJourney.wasteCarrierTransport.${transportType}Bullet1`
-                        )}
-                      </GovUK.ListItem>
-                      <GovUK.ListItem>
-                        {t(
-                          `exportJourney.wasteCarrierTransport.${transportType}Bullet2`
-                        )}
-                      </GovUK.ListItem>
-                      <GovUK.ListItem>
-                        {t(
-                          `exportJourney.wasteCarrierTransport.${transportType}Bullet3`
-                        )}
-                      </GovUK.ListItem>
-                      <GovUK.ListItem>
-                        {t(
-                          `exportJourney.wasteCarrierTransport.${transportType}Bullet4`
-                        )}
-                      </GovUK.ListItem>
-                    </GovUK.UnorderedList>
+                    <GovUK.UnorderedList>{printBullets()}</GovUK.UnorderedList>
                     <form onSubmit={handleSubmit}>
                       <TextareaCharCount
                         id="description"
