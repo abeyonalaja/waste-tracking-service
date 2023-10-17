@@ -242,7 +242,6 @@ const CarrierContactDetails = () => {
         footer={<CompleteFooter />}
         beforeChildren={<BreadCrumbs />}
       >
-        {carrierIndex}
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {isError && !isLoading && <SubmissionNotFound />}
