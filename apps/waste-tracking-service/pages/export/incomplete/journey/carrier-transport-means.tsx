@@ -20,7 +20,11 @@ import {
   SaveReturnButton,
   TextareaCharCount,
 } from 'components';
-import { isNotEmpty, validateTransport } from 'utils/validators';
+import {
+  isNotEmpty,
+  validateTransport,
+  validateTransportDescription,
+} from 'utils/validators';
 
 enum VIEWS {
   CHOICE = 1,
@@ -159,6 +163,13 @@ const CarrierTransportMeans = () => {
       e.preventDefault();
       const newErrors = {
         transportTypeError: validateTransport(transportType),
+        transportDescriptionError: validateTransportDescription(
+          t(
+            `exportJourney.wasteCarrierTransport.${transportType}`
+          ).toLowerCase(),
+          t(`numberAdjective.${carrierIndex + 1}`),
+          transportDescription
+        ),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -206,7 +217,7 @@ const CarrierTransportMeans = () => {
         }
       }
     },
-    [router, transportType, transportDescription, carrierPage]
+    [router, transportType, transportDescription, carrierPage, carrierIndex]
   );
 
   const BreadCrumbs = () => {
@@ -375,7 +386,7 @@ const CarrierTransportMeans = () => {
                         onChange={(e) =>
                           setTransportDescription(e.target.value)
                         }
-                        errorMessage={errors?.description}
+                        errorMessage={errors?.transportDescriptionError}
                         charCount={200}
                         rows={4}
                         value={transportDescription}

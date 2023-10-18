@@ -830,7 +830,9 @@ export const SubmissionSummary = ({
                             {t('exportJourney.checkAnswers.transportOfWaste')}
                           </Key>
                           <Value id={'carrier-type' + index}>
-                            {item.transportDetails?.type}
+                            {t(
+                              `exportJourney.wasteCarrierTransport.${item.transportDetails?.type}`
+                            )}
                           </Value>
                           {showChangeLinks && (
                             <Actions>

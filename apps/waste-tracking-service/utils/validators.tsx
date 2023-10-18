@@ -310,6 +310,18 @@ export const validateTransport: (value?: string) => string | undefined = (
     return 'Select how the first waste carrier will transport the waste';
 };
 
+export const validateTransportDescription: (
+  type: string,
+  carrierNumber: string,
+  description?: string
+) => string | undefined = (type, carrierNumber, description) => {
+  if (description) {
+    description = description.trim();
+  }
+  if (description?.length > 200)
+    return `The ${carrierNumber} carrier's ${type} transportation details must be 200 characters or less`;
+};
+
 export const validateTransitCountries: (
   value?: string
 ) => string | undefined = (value) => {
