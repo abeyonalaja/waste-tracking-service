@@ -1528,62 +1528,62 @@ const Download = () => {
                 <Box>
                   <span>
                     {formatTransportType(
-                      downloadReport.data.carriers.values[0].transportDetails
-                        .type
+                      downloadReport.data.carriers.values[0]?.transportDetails
+                        ?.type
                     )}
                   </span>
                   <BlockDesc>
                     {
                       downloadReport.data.carriers.values[0].transportDetails
-                        .description
+                        ?.description
                     }
                   </BlockDesc>
                 </Box>
                 <Box>
                   {formatTransportType(
                     downloadReport.data.carriers.values[1]?.transportDetails
-                      .type
+                      ?.type
                   )}
                   <BlockDesc>
                     {
                       downloadReport.data.carriers.values[1]?.transportDetails
-                        .description
+                        ?.description
                     }
                   </BlockDesc>
                 </Box>
                 <Box>
                   {formatTransportType(
                     downloadReport.data.carriers.values[2]?.transportDetails
-                      .type
+                      ?.type
                   )}
                   <BlockDesc>
                     {
                       downloadReport.data.carriers.values[2]?.transportDetails
-                        .description
+                        ?.description
                     }
                   </BlockDesc>
                 </Box>
                 <Box>
                   {formatTransportType(
                     downloadReport.data.carriers.values[3]?.transportDetails
-                      .type
+                      ?.type
                   )}
                   <BlockDesc>
                     {
                       downloadReport.data.carriers.values[3]?.transportDetails
-                        .description
+                        ?.description
                     }
                   </BlockDesc>
                 </Box>
                 <Box>
                   {formatTransportType(
                     downloadReport.data.carriers.values[4]?.transportDetails
-                      .type
+                      ?.type
                   )}
                   <BlockDesc>
                     {
                       downloadReport.data.carriers.values[4]?.transportDetails
-                        .description
+                        ?.description
                     }
                   </BlockDesc>
                 </Box>

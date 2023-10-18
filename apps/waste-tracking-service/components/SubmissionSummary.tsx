@@ -847,6 +847,13 @@ export const SubmissionSummary = ({
                               </AppLink>
                             </Actions>
                           )}
+                          {isTemplate && (
+                            <Actions>
+                              <NotInTemplate tint="GREY">
+                                {t('templates.notInTemplate')}
+                              </NotInTemplate>
+                            </Actions>
+                          )}
                         </Row>
                         <Row>
                           <Key id={'carrier-type-details-header' + index}>
@@ -855,6 +862,30 @@ export const SubmissionSummary = ({
                           <Value id={'carrier-type-details' + index}>
                             {item.transportDetails?.description}
                           </Value>
+                          {isTemplate && (
+                            <Actions>
+                              <NotInTemplate tint="GREY">
+                                {t('templates.notInTemplate')}
+                              </NotInTemplate>
+                            </Actions>
+                          )}
+                          {showChangeLinks && (
+                            <Actions>
+                              <AppLink
+                                id={'carrier-type-change' + index}
+                                href={{
+                                  pathname: `/export/incomplete/journey/carrier-transport-means`,
+                                  query: {
+                                    id: data.id,
+                                    carrierId: item.id,
+                                    page: 'DETAILS',
+                                  },
+                                }}
+                              >
+                                {t('actions.change')}
+                              </AppLink>
+                            </Actions>
+                          )}
                         </Row>
                       </>
                     )}

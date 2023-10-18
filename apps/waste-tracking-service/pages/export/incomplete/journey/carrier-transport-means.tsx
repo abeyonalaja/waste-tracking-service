@@ -96,6 +96,7 @@ const CarrierTransportMeans = () => {
     initialState
   );
   const [id, setId] = useState(null);
+  const [page, setPage] = useState(null);
   const [carrierId, setCarrierId] = useState(null);
   const [carrierIndex, setCarrierIndex] = useState(0);
   const [transportType, setTransportType] = useState(null);
@@ -105,6 +106,7 @@ const CarrierTransportMeans = () => {
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setPage(router.query.page || null);
       setCarrierId(router.query.carrierId);
       setCarrierIndex(parseInt(router.query.carrierIndex?.toString()) || 0);
     }
@@ -138,12 +140,18 @@ const CarrierTransportMeans = () => {
               setTransportDescription(
                 data.values[0].transportDetails?.description || ''
               );
+              if (page !== null) {
+                dispatchCarrierPage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS[page],
+                });
+              }
             }
           });
       }
     };
     fetchData();
-  }, [router.isReady, id]);
+  }, [router.isReady, id, page]);
 
   const printBullets = () => {
     const bullets = t(
