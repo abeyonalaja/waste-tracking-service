@@ -115,8 +115,6 @@ jobs:
         value: $[ dependencies.build.outputs['publishCharts.affectedCharts'] ]
       - name: deployCharts
         value: $[ replace(eq(dependencies.build.outputs['publishCharts.affected'], 'true'), False, '') ]
-      - name: isTemplateEnabled
-        value: 'true'
       - name: isMultipleUploadEnabled
         value: 'true'
       - name: isAutoEmailConfirmationEnabled
@@ -188,7 +186,6 @@ jobs:
                   appName: ${{ app }}
                   appNameTag: ${{ replace(app, '-', '_') }}
                   appInsightsConnectionString: $(appInsightsConnectionString)
-                  isTemplateEnabled: ${{ variables.isTemplateEnabled }}
                   isMultipleUploadEnabled: ${{ variables.isMultipleUploadEnabled }}
                   isAutoEmailConfirmationEnabled: ${{ variables.isAutoEmailConfirmationEnabled }}
                   deployChart: variables.deployCharts
@@ -211,7 +208,6 @@ jobs:
                   dcidWellKnown: $(dcidWellKnown)
                   nextAuthSecret: $(nextAuthSecret)
                   nextAuthUrl: $(nextAuthUrl)
-                  isTemplateEnabled: ${{ variables.isTemplateEnabled }}
                   isMultipleUploadEnabled: ${{ variables.isMultipleUploadEnabled }}
                   isAutoEmailConfirmationEnabled: ${{ variables.isAutoEmailConfirmationEnabled }}
                   deployChart: variables.deployCharts

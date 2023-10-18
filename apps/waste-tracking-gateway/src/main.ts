@@ -106,18 +106,16 @@ await app.register({
   },
 });
 
-if (JSON.parse(process.env['IS_TEMPLATE_ENABLED'] || 'false')) {
-  await app.register({
-    plugin: templatePlugin,
-    options: {
-      backend: backend.template,
-      logger,
-    },
-    routes: {
-      prefix: '/api/templates',
-    },
-  });
-}
+await app.register({
+  plugin: templatePlugin,
+  options: {
+    backend: backend.template,
+    logger,
+  },
+  routes: {
+    prefix: '/api/templates',
+  },
+});
 
 process.on('unhandledRejection', (err) => {
   logger.error(err);
