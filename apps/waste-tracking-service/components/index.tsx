@@ -13,6 +13,7 @@ import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { Error404Content } from './Error404Content';
 import { InputWithSuffix } from './InputWithSuffix';
+import { LanguageSwitch } from './LanguageSwitch';
 import { Loading } from './Loading';
 import { NotificationBanner } from './NotificationBanner';
 import { Pagination } from './Pagination';
@@ -46,6 +47,7 @@ export {
   DownloadPDFLink,
   Error404Content,
   InputWithSuffix,
+  LanguageSwitch,
   Loading,
   NotificationBanner,
   Pagination,

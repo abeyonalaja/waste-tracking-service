@@ -53,7 +53,10 @@ export function Index() {
         <UnderlinedH1 size="L">{t('dashboard.title')}</UnderlinedH1>
         <GovUK.GridRow mb={6}>
           <GovUK.GridCol setWidth="one-third">
-            <Card title="Create a new Annex VII record" id="card-create-annex">
+            <Card
+              title={t('exportJourney.exportHome.card.createRecord')}
+              id="card-create-annex"
+            >
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -62,7 +65,7 @@ export function Index() {
                     }}
                     id="your-reference"
                   >
-                    Create a single Annex VII record
+                    {t('exportJourney.exportHome.createSingleRecord')}
                   </AppLink>
                 </GovUK.ListItem>
                 <GovUK.ListItem>
@@ -72,7 +75,7 @@ export function Index() {
                       query: { context: 'use' },
                     }}
                   >
-                    Use a template to create a single Annex VII record
+                    {t('exportJourney.exportHome.useTemplateToCreatRecord')}
                   </AppLink>
                 </GovUK.ListItem>
                 <GovUK.ListItem>
@@ -81,14 +84,15 @@ export function Index() {
                       pathname: '/export/incomplete',
                     }}
                   >
-                    Manage incomplete Annex VII records
+                    {' '}
+                    {t('exportJourney.exportHome.manageIncompleteRecords')}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
             </Card>
           </GovUK.GridCol>
           <GovUK.GridCol setWidth="one-third">
-            <Card title="Update an Annex VII record">
+            <Card title={t('exportJourney.exportHome.card.update')}>
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -96,14 +100,14 @@ export function Index() {
                       pathname: `/export/estimated`,
                     }}
                   >
-                    Update an Annex VII record with actual details
+                    {t('exportJourney.exportHome.updateRecordWithActuals')}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
             </Card>
           </GovUK.GridCol>
           <GovUK.GridCol setWidth="one-third">
-            <Card title="Submitted Annex VII records">
+            <Card title={t('exportJourney.exportHome.card.submitted')}>
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -111,7 +115,7 @@ export function Index() {
                       pathname: `/export/submitted`,
                     }}
                   >
-                    View all submitted Annex VII records
+                    {t('exportJourney.exportHome.viewAllRecords')}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
@@ -120,7 +124,7 @@ export function Index() {
         </GovUK.GridRow>
         <GovUK.GridRow mb={9}>
           <GovUK.GridCol setWidth="one-third">
-            <Card title={t('templates')}>
+            <Card title={t('exportJourney.exportHome.card.templates')}>
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
