@@ -9,7 +9,7 @@ module TestStatus
   @waste_carrier_titles = []
   @waste_carrier_addresses = []
   @ewc_codes = []
-  @waste_mode_of_travel = {}
+  @waste_mode_of_travel = []
 
   def self.set_test_status(key, value)
     @test_status[key] = value
@@ -22,7 +22,7 @@ module TestStatus
     @waste_carrier_titles = []
     @waste_carrier_addresses = []
     @ewc_codes = []
-    @waste_mode_of_travel = {}
+    @waste_mode_of_travel = []
   end
 
   def self.test_status(key = 'all')
@@ -39,8 +39,12 @@ module TestStatus
     end
   end
 
-  def self.mode_of_travel_list(key, value)
-    @test_status[key] = value
+  def self.mode_of_travel_list(mode_of_travel)
+    @waste_mode_of_travel.push(mode_of_travel)
+  end
+
+  def self.mode_of_travel_list_details
+    @waste_mode_of_travel
   end
 
   def self.ewc_codes(ewc_code)

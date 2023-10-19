@@ -358,7 +358,7 @@ export const SubmissionSummary = ({
                       )}
                       {isTemplate && (
                         <Actions>
-                          <NotInTemplate tint="GREY">
+                          <NotInTemplate tint="GREY" id={`nit-quantity`}>
                             {t('templates.notInTemplate')}
                           </NotInTemplate>
                         </Actions>
@@ -849,7 +849,10 @@ export const SubmissionSummary = ({
                           )}
                           {isTemplate && (
                             <Actions>
-                              <NotInTemplate tint="GREY">
+                              <NotInTemplate
+                                tint="GREY"
+                                id={`nit-transport-means-${index}`}
+                              >
                                 {t('templates.notInTemplate')}
                               </NotInTemplate>
                             </Actions>
@@ -864,7 +867,10 @@ export const SubmissionSummary = ({
                           </Value>
                           {isTemplate && (
                             <Actions>
-                              <NotInTemplate tint="GREY">
+                              <NotInTemplate
+                                tint="GREY"
+                                id={`nit-transport-details-${index}`}
+                              >
                                 {t('templates.notInTemplate')}
                               </NotInTemplate>
                             </Actions>
@@ -872,7 +878,7 @@ export const SubmissionSummary = ({
                           {showChangeLinks && (
                             <Actions>
                               <AppLink
-                                id={'carrier-type-change' + index}
+                                id={'carrier-type-details-change' + index}
                                 href={{
                                   pathname: `/export/incomplete/journey/carrier-transport-means`,
                                   query: {

@@ -12,8 +12,7 @@ class ManageTemplatesPage < GenericPage
   TEMPLATE = Translations.value 'templates.template'
   LAST_UPDATED = Translations.value 'templates.manage.table.col.lastUpdated'
 
-  # ISSUE WITH ACTIONS TEXT  IN THE TRANSLATION FILE. NEED TO BE CHECKED
-  ACTIONS = Translations.value 'actions'
+  ACTIONS = Translations.value 'exportJourney.updateAnnexSeven.table.actions'
 
   NEW_TEMPLATE = Translations.value 'templates.manage.newTitle'
   CREATE_NEW_TEMPLATE_LINK = Translations.value 'templates.createLink'

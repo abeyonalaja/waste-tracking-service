@@ -63,7 +63,7 @@ Feature: AS A waste producer/broker
     Then I should see "what are the waste carriers contact details" page is displayed
     And I complete the Whats is the waste carriers contact details page
     And I click the button Save and continue
-    #Then the "How will the waste carrier transport the waste" page is displayed
+    Then the "How will the waste carrier transport the waste" page is displayed
 
   Scenario: Error validations on Who is the waste carrier page
     Given I login to waste tracking portal

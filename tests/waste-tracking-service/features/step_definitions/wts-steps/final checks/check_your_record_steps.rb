@@ -2,6 +2,10 @@ And(/^I should see check your report page is correctly translated$/) do
   CheckYourRecordPage.new.check_page_translation
 end
 
+And(/^I should see check your report page is correctly translated for small waste$/) do
+  CheckYourRecordPage.new.check_page_translation_for_small_waste
+end
+
 And(/^I should see export reference correctly displayed$/) do
   CheckYourRecordPage.new.check_export_reference
 end
@@ -24,7 +28,7 @@ And(/^I should see export About the waste section correctly displayed$/) do
 end
 
 And(/^I should see export Exporter and Importer details correctly displayed$/) do
-  expect(CheckYourRecordPage.new.exporter_address_header).to eq 'Address'
+  expect(CheckYourRecordPage.new.exporter_address_header).to eq Translations.value 'address'
   expect(CheckYourRecordPage.new.exporter_country_header).to eq 'Country'
   expect(CheckYourRecordPage.new.exporter_organisation_name_header).to eq 'Organisation name'
   expect(CheckYourRecordPage.new.exporter_full_name_header).to eq 'Full name'
@@ -63,16 +67,16 @@ And(/^I should see export Journey of waste correctly displayed$/) do
 
   expect(CheckYourRecordPage.new.collection_date_header).to eq 'Collection date'
   # Waste carrier
-  # expect(CheckYourRecordPage.new.carrier_organisation_name_header0).to eq 'Organisation name'
+  expect(CheckYourRecordPage.new.carrier_organisation_name_header(0)).to eq 'Organisation name'
   expect(CheckYourRecordPage.new.carrier_address_header(0)).to eq 'Address'
   expect(CheckYourRecordPage.new.carrier_country_header(0)).to eq 'Country'
   expect(CheckYourRecordPage.new.carrier_full_name_header(0)).to eq 'Contact person'
   expect(CheckYourRecordPage.new.carrier_email_header(0)).to eq 'Email address'
   expect(CheckYourRecordPage.new.carrier_phone_header(0)).to eq 'Phone number'
   expect(CheckYourRecordPage.new.carrier_fax_header(0)).to eq 'Fax number (optional)'
-  expect(CheckYourRecordPage.new.carrier_type_header(0)).to eq 'Transport of waste'
-  expect(CheckYourRecordPage.new.carrier_shipping_container_number_header(0)).to eq 'Shipping container number'
-  expect(CheckYourRecordPage.new.carrier_vehicle_registration_header(0)).to eq 'Vehicle registration (optional)'
+  expect(CheckYourRecordPage.new.carrier_type_header(0)).to eq 'Means of transport'
+  expect(CheckYourRecordPage.new.carrier_transport_type(0)).to eq 'Road'
+  expect(CheckYourRecordPage.new.carrier_transport_details(0)).to eq TestStatus.test_status(:road_description)
 
   # waste collection details
   expect(CheckYourRecordPage.new.waste_collection_address_header).to eq 'Address'
@@ -98,18 +102,17 @@ And(/^I should see export Journey of waste correctly displayed$/) do
   expect(CheckYourRecordPage.new.carrier_phone(0)).to eq TestStatus.test_status(:phone_number)
   expect(CheckYourRecordPage.new.carrier_fax(0)).to eq 'Not provided'
   expect(CheckYourRecordPage.new.carrier_type(0)).to eq TestStatus.test_status(:waste_carrier_mode_of_transport)
-  expect(CheckYourRecordPage.new.carrier_shipping_container_number(0)).to eq TestStatus.test_status(:container_number)
-  expect(CheckYourRecordPage.new.carrier_vehicle_registration(0)).to eq 'Not provided'
 
   # collection details
-  # expect(CheckYourRecordPage.new.waste_collection_address).to eq TestStatus.test_status(:waste_collection_address)
-  expect(CheckYourRecordPage.new.waste_collection_country).to eq 'United Kingdom'
+  country, address = HelperMethods.address(TestStatus.test_status(:waste_collection_address))
+  expect(CheckYourRecordPage.new.waste_collection_address.gsub("\n", ', ')).to eq address
+  expect(CheckYourRecordPage.new.waste_collection_country).to eq country
   expect(CheckYourRecordPage.new.waste_collection_organisation).to eq TestStatus.test_status(:waste_contact_organisation_name)
   expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
 
   expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
   expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
-  # expect(CheckYourRecordPage.new.waste_collection_fax).to eq 'Not provided'
+  expect(CheckYourRecordPage.new.waste_collection_fax).to eq 'Not provided'
   expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]
 
@@ -169,16 +172,16 @@ Then(/^I should see (\d+) waste carriers on check your export page$/) do |waste_
     puts "checking for #{i}"
     within(CheckYourRecordPage.new.waste_carriers_list(i)) do
       # Waste carrier
-      # expect(CheckYourRecordPage.new.carrier_organisation_name_headeri).to eq 'Organisation name'
+      expect(CheckYourRecordPage.new.carrier_organisation_name_header(i)).to eq 'Organisation name'
       expect(CheckYourRecordPage.new.carrier_address_header(i)).to eq 'Address'
       expect(CheckYourRecordPage.new.carrier_country_header(i)).to eq 'Country'
       expect(CheckYourRecordPage.new.carrier_full_name_header(i)).to eq 'Contact person'
       expect(CheckYourRecordPage.new.carrier_email_header(i)).to eq 'Email address'
       expect(CheckYourRecordPage.new.carrier_phone_header(i)).to eq 'Phone number'
       expect(CheckYourRecordPage.new.carrier_fax_header(i)).to eq 'Fax number (optional)'
-      expect(CheckYourRecordPage.new.carrier_type_header(i)).to eq 'Transport of waste'
-      expect(CheckYourRecordPage.new.carrier_shipping_container_number_header(i)).to eq 'Shipping container number'
-      expect(CheckYourRecordPage.new.carrier_vehicle_registration_header(i)).to eq 'Vehicle registration (optional)'
+      expect(CheckYourRecordPage.new.carrier_type_header(i)).to eq 'Means of transport'
+      expect(CheckYourRecordPage.new.carrier_transport_header(i)).to eq 'Details (optional)'
+      expect(CheckYourRecordPage.new.carrier_transport_details(i)).to eq TestStatus.test_status(:transport_description)
 
       # waste carrier
       expect(CheckYourRecordPage.new.carrier_organisation_name(i)).to eq TestStatus.waste_carrier_org_detail[i]
@@ -188,9 +191,7 @@ Then(/^I should see (\d+) waste carriers on check your export page$/) do |waste_
       expect(CheckYourRecordPage.new.carrier_email(i)).to eq TestStatus.test_status(:email)
       expect(CheckYourRecordPage.new.carrier_phone(i)).to eq TestStatus.test_status(:phone_number)
       expect(CheckYourRecordPage.new.carrier_fax(i)).to eq '123Fax'
-      expect(CheckYourRecordPage.new.carrier_type(i)).to eq TestStatus.test_status(:First_mode_of_travel).gsub(/(\bcontainer\b)/i) { $1.capitalize }.gsub(' ', '')
-      expect(CheckYourRecordPage.new.carrier_shipping_container_number(i)).to eq TestStatus.test_status(:First_container_number)
-      expect(CheckYourRecordPage.new.carrier_vehicle_registration(i)).to eq TestStatus.test_status(:First_vehicle_number)
+      expect(CheckYourRecordPage.new.carrier_type(i)).to eq TestStatus.mode_of_travel_list_details[i]
     end
   end
 
@@ -320,17 +321,16 @@ end
 And(/^I should see export Journey of waste with estimated collection date correctly displayed$/) do
 
   expect(CheckYourRecordPage.new.collection_date_header).to eq 'Collection date'
-  # Waste carrier
-  # expect(CheckYourRecordPage.new.carrier_organisation_name_header0).to eq 'Organisation name'
+
+  expect(CheckYourRecordPage.new.carrier_organisation_name_header(0)).to eq 'Organisation name'
   expect(CheckYourRecordPage.new.carrier_address_header(0)).to eq 'Address'
   expect(CheckYourRecordPage.new.carrier_country_header(0)).to eq 'Country'
   expect(CheckYourRecordPage.new.carrier_full_name_header(0)).to eq 'Contact person'
   expect(CheckYourRecordPage.new.carrier_email_header(0)).to eq 'Email address'
   expect(CheckYourRecordPage.new.carrier_phone_header(0)).to eq 'Phone number'
   expect(CheckYourRecordPage.new.carrier_fax_header(0)).to eq 'Fax number (optional)'
-  expect(CheckYourRecordPage.new.carrier_type_header(0)).to eq 'Transport of waste'
-  expect(CheckYourRecordPage.new.carrier_shipping_container_number_header(0)).to eq 'Shipping container number'
-  expect(CheckYourRecordPage.new.carrier_vehicle_registration_header(0)).to eq 'Vehicle registration (optional)'
+  expect(CheckYourRecordPage.new.carrier_type_header(0)).to eq 'Means of transport'
+  expect(CheckYourRecordPage.new.carrier_transport_header(0)).to eq 'Details (optional)'
 
   # waste collection details
   expect(CheckYourRecordPage.new.waste_collection_address_header).to eq 'Address'
@@ -357,18 +357,17 @@ And(/^I should see export Journey of waste with estimated collection date correc
   expect(CheckYourRecordPage.new.carrier_phone(0)).to eq TestStatus.test_status(:phone_number)
   expect(CheckYourRecordPage.new.carrier_fax(0)).to eq 'Not provided'
   expect(CheckYourRecordPage.new.carrier_type(0)).to eq TestStatus.test_status(:waste_carrier_mode_of_transport)
-  expect(CheckYourRecordPage.new.carrier_shipping_container_number(0)).to eq TestStatus.test_status(:container_number)
-  expect(CheckYourRecordPage.new.carrier_vehicle_registration(0)).to eq 'Not provided'
 
   # collection details
-  # expect(CheckYourRecordPage.new.waste_collection_address).to eq TestStatus.test_status(:waste_collection_address)
-  expect(CheckYourRecordPage.new.waste_collection_country).to eq 'United Kingdom'
+  country, address = HelperMethods.address(TestStatus.test_status(:waste_collection_address))
+  expect(CheckYourRecordPage.new.waste_collection_address.gsub("\n", ', ')).to eq address
+  expect(CheckYourRecordPage.new.waste_collection_country).to eq country
   expect(CheckYourRecordPage.new.waste_collection_organisation).to eq TestStatus.test_status(:waste_contact_organisation_name)
   expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
 
   expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
   expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
-  # expect(CheckYourRecordPage.new.waste_collection_fax).to eq 'Not provided'
+  expect(CheckYourRecordPage.new.waste_collection_fax).to eq 'Not provided'
   expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]
 end
@@ -381,3 +380,117 @@ When(/^I click importer contact details Change link$/) do
   CheckYourRecordPage.new.importer_contact_details_change
 end
 
+And(/^I should see interim side details on check your export page$/) do
+  expect(CheckYourRecordPage.new.interimsite_org_name_title_0).to eq 'Interim site name'
+  expect(CheckYourRecordPage.new.interimsite_address_title_0).to eq 'Address'
+  expect(CheckYourRecordPage.new.interimsite_country_title_0).to eq 'Country'
+  expect(CheckYourRecordPage.new.interimsite_contact_person_title_0).to eq 'Contact person'
+  expect(CheckYourRecordPage.new.interimsite_email_title_0).to eq 'Email address'
+  expect(CheckYourRecordPage.new.interimsite_phone_title_0).to eq 'Phone number'
+  expect(CheckYourRecordPage.new.interimsite_fax_title_0).to eq 'Fax number (optional)'
+  expect(CheckYourRecordPage.new.interimsite_code_title_0).to eq 'Recovery code'
+
+  expect(CheckYourRecordPage.new.interimsite_org_name_0).to eq TestStatus.test_status(:interim_site_name)
+  expect(CheckYourRecordPage.new.interimsite_address_0).to eq TestStatus.test_status(:interim_site_address)
+  expect(CheckYourRecordPage.new.interimsite_country_0).to eq TestStatus.test_status(:interim_site_country)
+  expect(CheckYourRecordPage.new.interimsite_contact_person_0).to eq TestStatus.test_status(:interim_site_contact_full_name)
+  expect(CheckYourRecordPage.new.interimsite_email_0).to eq TestStatus.test_status(:interim_site_contact_email)
+  expect(CheckYourRecordPage.new.interimsite_phone_0).to eq TestStatus.test_status(:interim_site_contact_phone_number)
+  expect(CheckYourRecordPage.new.interimsite_fax_0).to eq 'Not provided'
+  expect(CheckYourRecordPage.new.interimsite_code_0).to eq 'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11'
+end
+
+When(/^I click mode of transport details Change link$/) do
+  CheckYourRecordPage.new.carrier_transport_details_change 0
+end
+
+And(/^I should see small waste export About the waste section correctly displayed$/) do
+  expect(CheckYourRecordPage.new.waste_code_header).to eq 'Waste code'
+  expect(CheckYourRecordPage.new.ewc_code_header).to eq 'EWC codes'
+  expect(CheckYourRecordPage.new.national_code_header).to eq 'National code'
+  expect(CheckYourRecordPage.new.waste_description_header).to eq 'Waste description'
+  expect(CheckYourRecordPage.new.waste_quantity_header).to eq 'Waste quantity'
+  # need to uncomment this after fixing the space
+  expect(CheckYourRecordPage.new).to have_text TestStatus.test_status(:waste_code)
+  description = TestData.get_ewc_code_description(TestStatus.test_status(:ewc_code))
+  expect(CheckYourRecordPage.new.ewc_codes).to eq "#{TestStatus.test_status(:ewc_code).gsub(/(..)(?=.)/, '\1 ')}: #{description}"
+
+  expect(CheckYourRecordPage.new.national_code).to eq TestStatus.test_status(:national_code_text)
+  expect(CheckYourRecordPage.new.describe_the_waste).to eq TestStatus.test_status(:description_of_the_waste)
+  expect(CheckYourRecordPage.new.waste_quantity).to eq "#{TestStatus.test_status(:weight_quantity_in_kgs)} #{TestStatus.test_status(:weight_units)}"
+end
+
+And(/^I should see Small waste export Journey of waste correctly displayed$/) do
+
+  expect(CheckYourRecordPage.new.collection_date_header).to eq 'Collection date'
+  # Waste carrier
+  expect(CheckYourRecordPage.new.carrier_organisation_name_header(0)).to eq 'Organisation name'
+  expect(CheckYourRecordPage.new.carrier_address_header(0)).to eq 'Address'
+  expect(CheckYourRecordPage.new.carrier_country_header(0)).to eq 'Country'
+  expect(CheckYourRecordPage.new.carrier_full_name_header(0)).to eq 'Contact person'
+  expect(CheckYourRecordPage.new.carrier_email_header(0)).to eq 'Email address'
+  expect(CheckYourRecordPage.new.carrier_phone_header(0)).to eq 'Phone number'
+  expect(CheckYourRecordPage.new.carrier_fax_header(0)).to eq 'Fax number (optional)'
+
+  # waste collection details
+  expect(CheckYourRecordPage.new.waste_collection_address_header).to eq 'Address'
+  expect(CheckYourRecordPage.new.waste_collection_country_header).to eq 'Country'
+  expect(CheckYourRecordPage.new.waste_collection_organisation_header).to eq 'Organisation name'
+  expect(CheckYourRecordPage.new.waste_collection_full_name_header).to eq 'Contact person'
+  expect(CheckYourRecordPage.new.waste_collection_email_header).to eq 'Email address'
+  expect(CheckYourRecordPage.new.waste_collection_phone_header).to eq 'Phone number'
+  # waste leaves uk
+
+  expect(CheckYourRecordPage.new.exit_location_header).to eq 'Location'
+  expect(CheckYourRecordPage.new.transit_countries_header).to eq 'Waste transit countries'
+
+  # data check
+  # collection-date
+  expect(CheckYourRecordPage.new.collection_date).to eq HelperMethods.convert_date TestStatus.test_status(:actual_collection_date)
+  # waste carrier
+  expect(CheckYourRecordPage.new.carrier_organisation_name(0)).to eq TestStatus.test_status(:organisation_name)
+  expect(CheckYourRecordPage.new.carrier_address(0)).to eq TestStatus.test_status(:address)
+  expect(CheckYourRecordPage.new.carrier_country(0)).to eq TestStatus.test_status(:country)
+  expect(CheckYourRecordPage.new.carrier_full_name(0)).to eq TestStatus.test_status(:organisation_contact)
+  expect(CheckYourRecordPage.new.carrier_email(0)).to eq TestStatus.test_status(:email)
+  expect(CheckYourRecordPage.new.carrier_phone(0)).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourRecordPage.new.carrier_fax(0)).to eq 'Not provided'
+
+  # collection details
+  country, address = HelperMethods.address(TestStatus.test_status(:waste_collection_address))
+  expect(CheckYourRecordPage.new.waste_collection_address.gsub("\n", ', ')).to eq address
+  expect(CheckYourRecordPage.new.waste_collection_country).to eq country
+  expect(CheckYourRecordPage.new.waste_collection_organisation).to eq TestStatus.test_status(:waste_contact_organisation_name)
+  expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
+
+  expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
+  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourRecordPage.new.waste_collection_fax).to eq 'Not provided'
+  expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
+  expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]
+end
+
+And(/^I should see small waste export Treatment of waste correctly displayed$/) do
+
+  #Laboratory waste
+  expect(CheckYourRecordPage.new).to have_text 'Laboratory'
+  expect(CheckYourRecordPage.new.laboratory_name).to eq Translations.value 'exportJourney.laboratorySite.name'
+  expect(CheckYourRecordPage.new.laboratory_address_title).to eq Translations.value 'address'
+  expect(CheckYourRecordPage.new.laboratory_country_title).to eq Translations.value 'address.country'
+  expect(CheckYourRecordPage.new.laboratory_contact_person_title).to eq Translations.value 'contact.person'
+  expect(CheckYourRecordPage.new.laboratory_email_title).to eq Translations.value 'contact.emailAddress'
+  expect(CheckYourRecordPage.new.laboratory_phone_title).to eq Translations.value 'contact.phoneNumber'
+  expect(CheckYourRecordPage.new.laboratory_fax_title).to eq Translations.value 'contact.faxNumber'
+  expect(CheckYourRecordPage.new.laboratory_code_title).to eq Translations.value 'exportJourney.checkAnswers.codeLaboratory'
+
+
+  expect(CheckYourRecordPage.new.laboratory_org_name).to eq TestStatus.test_status(:laboratory_address_name)
+  expect(CheckYourRecordPage.new.laboratory_address).to eq TestStatus.test_status(:laboratory_address_address)
+  expect(CheckYourRecordPage.new.laboratory_country).to eq TestStatus.test_status(:laboratory_address_country)
+  expect(CheckYourRecordPage.new.laboratory_contact_person).to eq TestStatus.test_status(:laboratory_contact_details_full_name)
+  expect(CheckYourRecordPage.new.laboratory_email).to eq TestStatus.test_status(:laboratory_contact_details_email)
+  expect(CheckYourRecordPage.new.laboratory_phone).to eq TestStatus.test_status(:laboratory_contact_details_phone_number)
+  expect(CheckYourRecordPage.new.laboratory_fax).to eq TestStatus.test_status(:laboratory_contact_details_fax_number)
+  expect(CheckYourRecordPage.new.laboratory_code).to eq TestStatus.test_status(:laboratory_disposal_code)
+
+end

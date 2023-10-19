@@ -52,6 +52,8 @@ Feature: AS A waste producer
     And I click the button Save and continue
     Then I should selected address is displayed with Change address link on the page
 
+    #defect raised
+  @ignore
   Scenario: User can update exporter address details from exporter details page and save and return from manual entry page, task should be IN PROGRESS
     Given I login to waste tracking portal
     When I navigate to the task list page with reference

@@ -6,10 +6,11 @@ module JourneyOfAWasteController
     location_leaves_uk_page = LocationWasteLeavesTheUkPage.new
     who_is_waste_carrier_page = WhoIsTheWasteCarrierPage.new
     collection_date_page = CollectionDatePage.new
-    mode_of_transport_page = HowWillTheWasteCarrierTransportTheWastePage.new
+    how_will_the_waste_carrier_transport_the_waste_page = HowWillTheWasteCarrierTransportTheWastePage.new
     waste_carriers_list_page = MultiWasteCarriersPage.new
     waste_carrier_contact_details_page = WhatAreTheWasteCarriersContactDetailsPage.new
-    shipping_container_page = ShippingContainerDetailsPage.new
+
+    road_transport_details_page = RoadTransportDetailsPage.new
     waste_collection_details_page = WasteCollectionDetailsPage.new
     contact_details_address_page = ContactDetailsCollectionAddressPage.new
     countries_waste_will_travel_page = CountriesWasteWillTravelPage.new
@@ -33,11 +34,11 @@ module JourneyOfAWasteController
     waste_carrier_contact_details_page.enter_email 'sample@mail.com'
     waste_carrier_contact_details_page.enter_phone_number '+441234567891'
     waste_carrier_contact_details_page.save_and_continue
-    mode_of_transport_page.choose_option 'Shipping container'
-    TestStatus.set_test_status(:waste_carrier_mode_of_transport, 'ShippingContainer')
-    mode_of_transport_page.continue
-    shipping_container_page.enter_container_number 'ABCD1234567'
-    shipping_container_page.save_and_continue
+    how_will_the_waste_carrier_transport_the_waste_page.choose_option 'Road'
+    TestStatus.set_test_status(:waste_carrier_mode_of_transport, 'Road')
+    how_will_the_waste_carrier_transport_the_waste_page.save_and_continue
+    road_transport_details_page.enter_transportation_description 'Trailer number - ABC123, Shipping Container - ANC123'
+    road_transport_details_page.save_and_continue
     waste_carriers_list_page.choose_option 'No'
     waste_carriers_list_page.save_and_continue
     waste_collection_details_page.enter_postcode 'AL3 8QE'

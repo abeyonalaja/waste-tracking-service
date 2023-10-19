@@ -9,7 +9,7 @@ class QuantityOfSmallWasteController
     net_weight_page.enter_weight_in_kilograms '5.25'
     net_weight_page.save_and_continue
     TestStatus.set_test_status(:quantity_of_waste_type, option)
-    TestStatus.set_test_status(:weight_units, 'kilograms')
+    TestStatus.set_test_status(:weight_units, 'kg')
     TestStatus.set_test_status(:weight_quantity_in_kgs, '5.25')
     Log.info("Quantity of waste type #{option}")
     Log.info('Weight in kgs of 5.25')

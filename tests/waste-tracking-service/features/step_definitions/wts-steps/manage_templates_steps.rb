@@ -14,6 +14,8 @@ Then(/^I complete Create record template page$/) do
   CreateNewRecordTemplatePage.new.enter_template_name "#{Faker::Name.first_name} Template"
   CreateNewRecordTemplatePage.new.enter_description Faker::Alphanumeric.alpha(number: 100)
   CreateNewRecordTemplatePage.new.create_template_button
+  expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
+  expect(TemplateTaskListPage.new.find_banner_body.text).to eq "#{TestStatus.test_status(:template_name)} template has been created"
   @url = URI.parse(CreateNewRecordTemplatePage.new.current_url)
   Log.info("Template URL is: #{@url}")
 end
@@ -187,7 +189,8 @@ And(/^I click Create template button$/) do
 end
 
 And(/^I verify NOT IN TEMPLATE labels are present$/) do
-  page.find('nit-collection-date')
-  page.find('nit-shipping-container-number-0')
-  page.find('nit-vehicle-registration-0')
+  expect(CreateNewRecordTemplatePage.new.quantity_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
+  expect(CreateNewRecordTemplatePage.new.collection_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
+  expect(CreateNewRecordTemplatePage.new.mode_of_transport_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
+  expect(CreateNewRecordTemplatePage.new.transport_details_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
 end

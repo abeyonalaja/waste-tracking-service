@@ -17,36 +17,47 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)
   WhatAreTheWasteCarriersContactDetailsPage.new.save_and_continue
   sleep 1
+  transport_description = 'Shipping container-ABC123, vehicle registrations-AB1234, IMO-123456,Freight numbers-AB12ER, trailer numbers-123456,Specialist containers being transported-ABC123,Call signs-XYZ1234567,Container -12345'
+  TestStatus.set_test_status(:transport_description, transport_description)
+
   case mode_of_transport
-  when 'Shipping container'
+  when 'Road'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
-    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    ShippingContainerDetailsPage.new.enter_container_number 'ABCD1234567'
-    ShippingContainerDetailsPage.new.enter_vehicle_number 'AB12CD'
-    ShippingContainerDetailsPage.new.save_and_continue
-    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
-    TestStatus.mode_of_travel_list("#{waste_carrier}_container_number".to_sym, 'ABCD1234567')
-    TestStatus.mode_of_travel_list("#{waste_carrier}_vehicle_number".to_sym, 'AB12CD')
-  when 'Trailer'
+    RoadTransportDetailsPage.new.enter_transportation_description transport_description
+    RoadTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Sea'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
-    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    TrailerDetailsPage.new.enter_vehicle_number 'CU57ABC'
-    TrailerDetailsPage.new.enter_trailer_number 'TRAILER'
-    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
-    TestStatus.mode_of_travel_list("#{waste_carrier}_vehicle_number".to_sym, 'CU57ABC')
-    TestStatus.mode_of_travel_list("#{waste_carrier}_trailer".to_sym, 'TRAILER')
-    ShippingContainerDetailsPage.new.save_and_continue
-  when 'Bulk vessel'
+    RoadTransportDetailsPage.new.enter_transportation_description transport_description
+    SeaTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Air'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
-    HowWillTheWasteCarrierTransportTheWastePage.new.continue
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    BulkVesselDetailsPage.new.enter_imo_number 'IMO Number'
-    TestStatus.mode_of_travel_list("#{waste_carrier}_mode_of_travel".to_sym, mode_of_transport)
-    TestStatus.mode_of_travel_list("#{waste_carrier}_imo_number".to_sym, 'IMO Number')
-    ShippingContainerDetailsPage.new.save_and_continue
+    RoadTransportDetailsPage.new.enter_transportation_description transport_description
+    AirTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Rail'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    RoadTransportDetailsPage.new.enter_transportation_description transport_description
+    RailTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Inland waterways'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    RoadTransportDetailsPage.new.enter_transportation_description transport_description
+    InlandWaterTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
   end
+
 end
 
 And(/^I should see first waste carrier displayed$/) do

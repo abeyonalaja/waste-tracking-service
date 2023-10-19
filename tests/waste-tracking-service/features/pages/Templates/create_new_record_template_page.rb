@@ -42,4 +42,20 @@ class CreateNewRecordTemplatePage < GenericPage
     click_button CREATE_BUTTON
   end
 
+  def quantity_not_in_template
+    find('nit-quantity')
+  end
+
+  def collection_not_in_template
+    find('nit-collection-date')
+  end
+
+  def mode_of_transport_not_in_template
+    page.find('nit-transport-means-0')
+  end
+
+  def transport_details_not_in_template
+    page.find('nit-transport-details-0')
+  end
+
 end

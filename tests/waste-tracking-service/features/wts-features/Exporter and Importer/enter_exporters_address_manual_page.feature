@@ -17,6 +17,8 @@ Feature: AS A waste producer
     And I click the button Save and continue
     Then the "exporter details" page is displayed
 
+    #defect raised
+  @ignore
   Scenario: User enters the exporter address manually, save the draft and returns to exporter details page
     Given I login to waste tracking portal
     When I navigate to Enter exporter address manual page

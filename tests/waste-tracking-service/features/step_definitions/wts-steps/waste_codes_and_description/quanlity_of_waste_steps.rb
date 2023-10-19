@@ -159,3 +159,7 @@ end
 When(/^I complete Quantity of waste with estimated small waste$/) do
   QuantityOfSmallWasteController.complete 'No, I will enter an estimate'
 end
+
+And(/^I complete Quantity of waste with actual small waste$/) do
+  QuantityOfSmallWasteController.complete
+end

@@ -7,7 +7,7 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "first" waste carrier with "Shipping container"
+    And I complete the "first" waste carrier with "Road"
     Then I should see add carrier correctly translated
     And I should see first waste carrier displayed
     And I should see only change link for first waste carrier
@@ -25,19 +25,19 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "First" waste carrier with "Shipping container"
+    And I complete the "First" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Second" waste carrier with "Shipping container"
+    And I complete the "Second" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Third" waste carrier with "Shipping container"
+    And I complete the "Third" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Fourth" waste carrier with "Shipping container"
+    And I complete the "Fourth" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Fifth" waste carrier with "Shipping container"
+    And I complete the "Fifth" waste carrier with "Road"
     Then I should see max waste carrier correctly translated
     And I should see five waste carrier details displayed
     And I should see org nam and country for each waste carries
@@ -55,7 +55,7 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "first" waste carrier with "Shipping container"
+    And I complete the "first" waste carrier with "Road"
     Then I should see add carrier correctly translated
     And I should see first waste carrier displayed
     When I click the "Change" link
@@ -64,9 +64,9 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I see previously entered Waste carrier contact details pre-populated
     And I click the button Save and continue
-    And I choose "Bulk vessel" radio button
-    When I click Continue button
-    And I enter IMO number
+    And I choose "Sea" radio button
+    When I click the button Save and continue
+    And the "Sea transport details" page is displayed
     And I click the button Save and continue
     And I should see org nam and country for each waste carries
 
@@ -74,10 +74,10 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "First" waste carrier with "Shipping container"
+    And I complete the "First" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Second" waste carrier with "Shipping container"
+    And I complete the "Second" waste carrier with "Road"
     Then I should see org nam and country for each waste carries
     And I should see change and remove links for each waste carriers
     And I click the last "Remove" link
@@ -99,10 +99,10 @@ Feature: AS A waste producer/broker
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "First" waste carrier with "Shipping container"
+    And I complete the "First" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Second" waste carrier with "Shipping container"
+    And I complete the "Second" waste carrier with "Road"
     And I wait for a second
     When I click the last "Change" link
     Then the who is the second waste carriers page is displayed

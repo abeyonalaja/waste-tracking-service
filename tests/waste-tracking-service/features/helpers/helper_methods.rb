@@ -10,7 +10,6 @@ module HelperMethods
     Date.strptime(date, '%d %m %Y').strftime('%-d %b %Y')
   end
 
-
   def self.current_date_format(date)
     current_date = date
     day = current_date.day
@@ -31,5 +30,13 @@ module HelperMethods
       else 'th'
       end
     end
+  end
+
+  def self.address(address)
+    parts = address.split(', ')
+    country = parts.pop
+    remaining_data = parts.join(', ')
+
+    [country, remaining_data]
   end
 end

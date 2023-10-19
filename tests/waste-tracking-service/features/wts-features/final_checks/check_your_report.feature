@@ -2,7 +2,7 @@ Feature: AS A Waste Practitioner
   I NEED to have a final section
   SO THAT I can ensure that all my entry details are correctly
 
-  Scenario: User should see all the data displayed correctly on check your report page
+  Scenario: User should see all the data displayed correctly on check your report page for Bulk waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
@@ -27,6 +27,40 @@ Feature: AS A Waste Practitioner
     And I should see export Exporter and Importer details correctly displayed
     And I should see export Journey of waste correctly displayed
     And I should see export Treatment of waste correctly displayed
+
+  Scenario: User should see all the data displayed correctly on check your report page for small waste
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I complete Waste codes and description task with "Not applicable" has waste code
+    And I click the "Quantity of waste" link
+    And I complete Quantity of waste with actual small waste
+    Then the task "Quantity of waste" should be "COMPLETED"
+    And the task "Waste codes and description" should be "COMPLETED"
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    Then the task "Exporter details" should be "COMPLETED"
+    Then the task "Importer details" should be "COMPLETED"
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section with small waste
+    Then I click the "Laboratory details" link
+    And I complete laboratory address details
+    And I complete laboratory contact details
+    And I complete disposal code page
+    Then the task "Laboratory details" should be "COMPLETED"
+    And I click the "Check your record" link
+    Then the "check your record" page is displayed
+    #need to check the translation
+    And I should see check your report page is correctly translated for small waste
+    And I should see export reference correctly displayed
+    And I should see small waste export About the waste section correctly displayed
+    And I should see export Exporter and Importer details correctly displayed
+    And I should see Small waste export Journey of waste correctly displayed
+    And I should see small waste export Treatment of waste correctly displayed
 
   Scenario: User can update Waste code from bulk to small from check your report page, all the relevant tasks should be reset
     Given I login to waste tracking portal
@@ -79,6 +113,7 @@ Feature: AS A Waste Practitioner
     Then I should see Estimate Collection date
     And I should see Estimate Quantity of Waste
 
+    #max export for bulk waste
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -96,24 +131,35 @@ Feature: AS A Waste Practitioner
     And I choose "Yes, I’ll enter the actual date" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
-    And I complete the "First" waste carrier with "Shipping container"
+    And I complete the "First" waste carrier with "Road"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Second" waste carrier with "Shipping container"
+    And I complete the "Second" waste carrier with "Sea"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Third" waste carrier with "Shipping container"
+    And I complete the "Third" waste carrier with "Air"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Fourth" waste carrier with "Shipping container"
+    And I complete the "Fourth" waste carrier with "Rail"
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "Fifth" waste carrier with "Shipping container"
+    And I complete the "Fifth" waste carrier with "Inland waterways"
     And I wait for a second
     And I click the button Save and continue
     And I complete waste carrier location and collection details
     Then I click the "Recovery facility" link
-    And I choose "No" radio button
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    Then the "Interim site address" page is displayed
+    And I complete the Interim site address page
+    And I wait for a second
+    And I click the button Save and continue
+    Then the "Interim site contact details" page is displayed
+    And I complete Interim site contact details page
+    And I click the button Save and continue
+    Then  the "Interim site recovery code" page is displayed
+    And I choose "R12: Exchange of wastes for submission to any of the operations numbered R01 to R11" radio button
     And I click the button Save and continue
     And I complete the "first" recovery facility
     And I choose "Yes" radio button
@@ -123,6 +169,7 @@ Feature: AS A Waste Practitioner
     When I click the "Check your record" link
     Then I should see 5 waste carriers on check your export page
     And I should see 5 ewc codes on check your export page
+    And I should see interim side details on check your export page
     And I should see 2 recovery facilities on check your export page
 
   Scenario: User can navigate to enter your ref pages from check your report page using change link
@@ -263,16 +310,16 @@ Feature: AS A Waste Practitioner
     And I click the "Check your record" link
     When I click the waste carrier transport Change link
     Then the "How Will The Waste Carrier Transport The Waste" page is displayed
-    When I click Continue button
+    When I click the button Save and continue
     And I click the Save and return to draft
     And I click the "Check your record" link
     And I wait for a second
-    When I click waste carrier details Change link
-    Then the "Shipping container details" page is displayed
+    When I click mode of transport details Change link
+    Then the "Road transport details" page is displayed
     When I click the Save and return to draft
     And I click the "Check your record" link
     When I click waste collection address Change link
-#    Then the "Manual Address Entry Waste Collection" page is displayed
+    Then the "Manual Address Entry Waste Collection" page is displayed
     When I click the Save and return to draft
     And I click the "Check your record" link
     When I click waste collection contact change link

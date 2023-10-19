@@ -34,6 +34,21 @@ class CheckYourRecordPage < GenericPage
     expect(self).to have_css 'h3', text: 'Recovery facility', exact_text: true
   end
 
+  def check_page_translation_for_small_waste
+    expect(self).to have_text SUBTEXT
+    expect(self).to have_text 'Your reference'
+    expect(self).to have_text 'About the waste'
+    expect(self).to have_text 'Exporter and importer'
+    expect(self).to have_text 'Journey of waste'
+    expect(self).to have_text 'Treatment of waste'
+    expect(self).to have_css 'h3', text: 'Exporter details', exact_text: true
+    expect(self).to have_css 'h3', text: 'Importer details', exact_text: true
+    expect(self).to have_css 'h3', text: 'Waste collection details', exact_text: true
+    expect(self).to have_css 'h3', text: 'Location waste leaves the UK', exact_text: true
+    expect(self).to have_css 'h3', text: 'Countries waste will travel through', exact_text: true
+    expect(self).to have_css 'h3', text: 'Laboratory', exact_text: true
+  end
+
   def confirm_answers_button
     click_button CONFIRM_ANSWERS_BUTTON
   end
@@ -320,24 +335,24 @@ class CheckYourRecordPage < GenericPage
     click_link("carrier-type-change#{item}")
   end
 
-  def carrier_shipping_container_number_header(item)
-    find("carrier-shipping-container-number-header#{item}").text
-  end
-
-  def carrier_shipping_container_number(item)
-    find("carrier-shipping-container-number#{item}").text
+  def carrier_transport_type(item)
+    find("carrier-type#{item}").text
   end
 
   def carrier_details_change(item)
-    click_link("carrier-details-change#{item}")
+    click_link("carrier-change#{item}")
   end
 
-  def carrier_vehicle_registration_header(item)
-    find("carrier-vehicle-registration-header#{item}").text
+  def carrier_transport_header(item)
+    find("carrier-type-details-header#{item}").text
   end
 
-  def carrier_vehicle_registration(item)
-    find("carrier-vehicle-registration#{item}").text
+  def carrier_transport_details_change item
+    click_link("carrier-type-details-change#{item}")
+  end
+
+  def carrier_transport_details(item)
+    find("carrier-type-details#{item}").text
   end
 
   def waste_collection_address_header
@@ -566,6 +581,74 @@ class CheckYourRecordPage < GenericPage
 
   def waste_description_change
     click_link 'waste-destription-change'
+  end
+
+  def waste_collection_fax
+    find('waste-collection-fax').text
+  end
+
+  def laboratory_name
+    find('laboratory-org-name-title-0').text
+  end
+
+  def laboratory_address_title
+    find('laboratory-address-title-0').text
+  end
+
+  def laboratory_country_title
+    find('laboratory-country-title-0').text
+  end
+
+  def laboratory_contact_person_title
+    find('laboratory-contact-person-title-0').text
+  end
+
+  def laboratory_email_title
+    find('laboratory-email-title-0').text
+  end
+
+  def laboratory_phone_title
+    find('laboratory-phone-title-0').text
+  end
+
+  def laboratory_fax_title
+    find('laboratory-fax-title-0').text
+  end
+
+  def laboratory_code_title
+    find('laboratory-code-title-0').text
+  end
+
+  def laboratory_org_name
+    find('laboratory-org-name-0').text
+  end
+
+  def laboratory_address
+    find('laboratory-address-0').text
+  end
+
+  def laboratory_country
+    find('laboratory-country-0').text
+  end
+
+  def laboratory_contact_person
+    find('laboratory-contact-person-0').text
+  end
+
+  def laboratory_email
+    find('laboratory-email-0').text
+  end
+
+  def laboratory_phone
+    find('laboratory-phone-0').text
+  end
+
+  def laboratory_code
+    find('laboratory-code-0').text
+  end
+
+  def laboratory_fax
+    find('laboratory-fax-0').text
   end
 
 end

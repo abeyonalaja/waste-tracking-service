@@ -16,7 +16,7 @@ Feature: AS A waste producer/broker
     And I click "Back" link should display "what are the waste carriers contact details" page
 
   @translation
-  Scenario: User navigates to mode of transport page and choose Shipping container option
+  Scenario: User navigates to mode of transport page and choose Road option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
@@ -27,11 +27,11 @@ Feature: AS A waste producer/broker
     And I wait for a second
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Shipping container" radio button
-    And I click Continue button
-    Then the "Shipping container details" page is displayed
-    And I should see Shipping container page translated
-    And I enter shipping container number
+    And I choose "Road" radio button
+    And I click the button Save and continue
+    Then the "Road transport details" page is displayed
+    And I should see road transport details page translated
+    And I enter details about the transport
     And I click the button Save and continue
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
@@ -39,7 +39,7 @@ Feature: AS A waste producer/broker
     Then Then the "Waste collection details" page is displayed
 
   @translation
-  Scenario: User navigates to mode of transport page and choose Trailer option
+  Scenario: User navigates to mode of transport page and choose Sea option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
@@ -49,11 +49,11 @@ Feature: AS A waste producer/broker
     And I wait for a second
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Trailer" radio button
-    And I click Continue button
-    Then the "Trailer details" page is displayed
-    And I should see Trailer page translated
-    And I enter vehicle registration number
+    And I choose "Sea" radio button
+    And I click the button Save and continue
+    Then the "Sea transport details" page is displayed
+    And I should see Sea transport details page translated
+    And I enter details about the transport
     And I click the button Save and continue
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
@@ -61,7 +61,7 @@ Feature: AS A waste producer/broker
     Then Then the "Waste collection details" page is displayed
 
   @translation
-  Scenario: User navigates to mode of transport page and choose Bulk vessel option
+  Scenario: User navigates to mode of transport page and choose Air option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
@@ -70,35 +70,40 @@ Feature: AS A waste producer/broker
     And I complete the Whats is the waste carriers contact details page
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Bulk vessel" radio button
-    And I click Continue button
-    Then the "Bulk vessel details" page is displayed
-    And I should see Bulk vessel page translated
-    And I enter IMO number
+    And I choose "Air" radio button
+    And I click the button Save and continue
+    Then the "Air transport details" page is displayed
+    And I should see Air transport details page translated
+    And I enter details about the transport
     And I click the button Save and continue
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
     Then Then the "Waste collection details" page is displayed
 
-  Scenario: User can't continue without entering Shipping container details
+  @translation
+  Scenario: User navigates to mode of transport page and choose Rail option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
-    And I wait for a second
     And I complete the Whats is the waste carriers contact details page
-    And I wait for a second
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Shipping container" radio button
-    And I click Continue button
-    Then the "Shipping container details" page is displayed
+    And I choose "Rail" radio button
     And I click the button Save and continue
-    Then I remain on the Shipping container details page with an "Enter a shipping container number" error message displayed
+    Then the "Rail transport details" page is displayed
+    And I should see Rail transport details page translated
+    And I enter details about the transport
+    And I click the button Save and continue
+    Then Then the "Multi waste carriers" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then Then the "Waste collection details" page is displayed
 
-  Scenario: User can't continue without entering Trailer details
+  @translation
+  Scenario: User navigates to mode of transport page and choose Inland waterways option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
@@ -107,26 +112,16 @@ Feature: AS A waste producer/broker
     And I complete the Whats is the waste carriers contact details page
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Trailer" radio button
-    And I click Continue button
-    Then the "Trailer details" page is displayed
+    And I choose "Inland waterways" radio button
     And I click the button Save and continue
-    Then I remain on the Trailer details page with an "Enter a vehicle registration number" error message displayed
-
-  Scenario: User can't continue without entering Bulk vessel details
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
+    Then the "Inland water transport details" page is displayed
+    And I should see inland waterways transport details page translated
+    And I enter details about the transport
     And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
+    Then Then the "Multi waste carriers" page is displayed
+    And I choose "No" radio button
     And I click the button Save and continue
-    Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I choose "Bulk vessel" radio button
-    And I click Continue button
-    Then the "Bulk vessel details" page is displayed
-    And I click the button Save and continue
-    Then I remain on the Bulk vessel details page with an "Enter an international maritime organisation (IMO) number" error message displayed
+    Then Then the "Waste collection details" page is displayed
 
   Scenario: User can't continue without choosing an mode of transport option
     Given I login to waste tracking portal
@@ -138,5 +133,21 @@ Feature: AS A waste producer/broker
     And I complete the Whats is the waste carriers contact details page
     And I click the button Save and continue
     Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I click Continue button
-    Then I remain on the how will the waste carrier transport the waste page with an "Select a method of transport" error message displayed
+    And I click the button Save and continue
+    Then I remain on the how will the waste carrier transport the waste page with an "Select how the first waste carrier will transport the waste" error message displayed
+
+  Scenario: User can't continue if character limit is exceeded on mode of transport details
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I wait for a second
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Rail" radio button
+    And I click the button Save and continue
+    And I enter more than allowed charaters on details about the transport
+    And I click the button Save and continue
+    Then I remain on the Rail transport details page with an "The first carrier's rail transportation details must be 200 characters or less" error message displayed
