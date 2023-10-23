@@ -2,9 +2,9 @@ When(/^I navigate to Enter exporter address manual page$/) do
   click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
-  click_link('Exporter details')
+  click_link(Translations.value('exportJourney.submitAnExport.SectionTwo.exporterDetails'))
   ExporterAddressPage.new.check_page_displayed
-  click_link('Enter address manually')
+  click_link(Translations.value('postcode.manualAddressLink'))
   EnterExporterAddressManualPage.new.check_page_displayed
 end
 

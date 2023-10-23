@@ -40,7 +40,7 @@ When(/^I enter collection date within 3 days$/) do
 end
 
 And(/^I complete collection date with estimated details$/) do
-  CollectionDatePage.new.choose_option 'No, I’ll enter an estimate date'
+  CollectionDatePage.new.choose_option Translations.value 'exportJourney.wasteCollectionDate.radioNo'
   CollectionDatePage.new.enter_estimate_collection_date DateTime.now.next_day(2).strftime('%d %m %Y')
   CollectionDatePage.new.save_and_return
 end

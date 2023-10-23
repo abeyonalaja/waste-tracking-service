@@ -55,7 +55,9 @@ And(/^I complete Waste codes and description task$/) do
 end
 
 And(/^I have (\d+) of 5 sections completed$/) do |completed|
-  expect(page).to have_text("You have completed #{completed} of 5 sections.")
+  text1 = Translations.value 'exportJourney.submitAnExport.completedSectionsA'
+  text2 = Translations.value 'exportJourney.submitAnExport.completedSectionsB'
+  expect(page).to have_text("#{text1} #{completed} #{text2}")
 end
 
 And(/^I click Export waste from UK breadcrumb$/) do

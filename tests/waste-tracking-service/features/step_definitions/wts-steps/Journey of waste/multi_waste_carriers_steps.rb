@@ -79,8 +79,8 @@ end
 And(/^I should see org nam and country for each waste carries$/) do
   j = 0
   (0...TestStatus.waste_carrier_title.count * 2).step(2).each do |i|
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i].text).to eq 'Organisation name'
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i + 1].text).to eq 'Country'
+    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i].text).to eq Translations.value 'contact.orgName'
+    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i + 1].text).to eq Translations.value 'address.country' # not sure
     expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_values[i].text).to eq TestStatus.waste_carrier_org_detail[j]
     expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_values[i + 1].text).to eq 'England'
     j += 1
@@ -89,12 +89,12 @@ end
 
 And(/^I should see change and remove links for each waste carriers$/) do
   (0...TestStatus.waste_carrier_title.count * 2).step(2).each do |i|
-    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i].text.split("\n").first).to eq 'Change'
-    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i + 1].text.split("\n").first).to eq 'Remove'
+    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i].text.split("\n").first).to eq Translations.value 'actions.change'
+    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i + 1].text.split("\n").first).to eq Translations.value 'actions.remove'
   end
 end
 
 And(/^I should see only change link for first waste carrier$/) do
-  expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[0].text.split("\n").first).to eq 'Change'
-  expect(MultiWasteCarriersPage.new).not_to have_link 'Remove'
+  expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[0].text.split("\n").first).to eq Translations.value 'actions.change'
+  expect(MultiWasteCarriersPage.new).not_to have_link Translations.value 'actions.remove'
 end

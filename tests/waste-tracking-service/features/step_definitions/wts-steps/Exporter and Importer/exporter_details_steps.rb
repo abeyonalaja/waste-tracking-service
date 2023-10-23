@@ -1,7 +1,7 @@
 And(/^I should selected address is displayed with Change address link on the page$/) do
   sleep 0.5
   expect(ExporterAddressPage.new).to have_address TestStatus.test_status(:exporter_address)
-  expect(page).to have_link('Change address')
+  expect(page).to have_link(Translations.value('address.change'))
 end
 
 And(/^I navigate to Exporter details page with valid postcode$/) do

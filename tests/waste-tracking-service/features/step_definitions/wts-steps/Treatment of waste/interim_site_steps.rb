@@ -43,6 +43,6 @@ Then(/^I see interim site description translated$/) do
 end
 
 And(/^I click description link$/) do
-  click_on('What is an interim site?')
+  click_on(Translations.value 'exportJourney.interimSite.summary')
   # page.find(class: 'src__StyledSummary-sc-273hbe-1 gFIgVF').click
 end

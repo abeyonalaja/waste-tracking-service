@@ -138,7 +138,7 @@ And(/^I complete the Journey of a waste section for templates$/) do
 end
 
 And(/^I complete the Waste code and description task with small waste$/) do
-  WasteCodeController.complete('Not applicable')
+  WasteCodeController.complete(Translations.value 'notApplicable')
   EwcCodeController.complete
   NationalCodeController.complete
   DescribeTheWasteController.complete

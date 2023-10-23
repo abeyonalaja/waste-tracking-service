@@ -6,9 +6,10 @@ class DescribeTheWastePage < GenericPage
   include ErrorBox
 
   DESCRIPTION = 'description'
+  TITLE = Translations.value 'exportJourney.describeWaste.title'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: 'Describe the waste', exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
 
   def enter_description(description)

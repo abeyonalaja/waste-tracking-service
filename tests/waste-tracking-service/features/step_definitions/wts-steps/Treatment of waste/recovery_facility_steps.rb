@@ -36,9 +36,9 @@ Then(/^I should see chosen facility page correctly translated$/) do
 end
 
 Then(/^I should first recovery title is displayed with only change link$/) do
-  expect(ChosenFacilitiesPage.new).to have_first_recovery_facility_title 'Recovery facility'
-  expect(ChosenFacilitiesPage.new).to have_link 'Change'
-  expect(ChosenFacilitiesPage.new).not_to have_link 'Remove'
+  expect(ChosenFacilitiesPage.new).to have_first_recovery_facility_title Translations.value 'exportJourney.recoveryFacilities.cardTitle'
+  expect(ChosenFacilitiesPage.new).to have_link Translations.value 'actions.change'
+  expect(ChosenFacilitiesPage.new).not_to have_link Translations.value 'actions.remove'
 end
 
 And(/^I complete the "([^"]*)" recovery facility$/) do |recovery_facility|
@@ -67,8 +67,8 @@ And(/^I should see previously entered recovery facility details pre\-populated$/
 end
 
 And(/^I should see first recovery facility details$/) do
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[0].text).to eq 'Facility name'
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[1].text).to eq 'Country'
+  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[0].text).to eq Translations.value 'exportJourney.recoveryFacilities.name'
+  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[1].text).to eq Translations.value 'address.country' # not sure
   expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[2].text).to eq 'Recovery code'
   expect(ChosenFacilitiesPage.new.first_recovery_facility_values[0].text).to eq TestStatus.test_status(:first_recovery_facility_name)
   expect(ChosenFacilitiesPage.new.first_recovery_facility_values[1].text).to eq TestStatus.test_status(:first_recovery_facility_country)
@@ -76,8 +76,8 @@ And(/^I should see first recovery facility details$/) do
 end
 
 And(/^I should see second recovery facility details$/) do
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[0].text).to eq 'Facility name'
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[1].text).to eq 'Country'
+  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[0].text).to eq Translations.value 'exportJourney.recoveryFacilities.name'
+  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[1].text).to eq Translations.value 'address.country' # not sure
   expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[2].text).to eq 'Recovery code'
   expect(ChosenFacilitiesPage.new.second_recovery_facility_values[0].text).to eq TestStatus.test_status(:second_recovery_facility_name)
   expect(ChosenFacilitiesPage.new.second_recovery_facility_values[1].text).to eq TestStatus.test_status(:second_recovery_facility_country)
@@ -85,10 +85,10 @@ And(/^I should see second recovery facility details$/) do
 end
 
 And(/^I should see both change and remove recovery facility$/) do
-  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq 'Change'
-  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq 'Remove'
-  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq 'Change'
-  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq 'Remove'
+  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.change'
+  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.remove'
+  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.change'
+  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.remove'
 end
 
 When(/^I update the recovery facility country$/) do

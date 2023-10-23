@@ -55,7 +55,7 @@ And(/^I complete the Journey of a waste section$/) do
 end
 
 When(/^I complete the Journey of a waste section with estimated collection date$/) do
-  JourneyOfAWasteController.complete 'No, I’ll enter an estimate date'
+  JourneyOfAWasteController.complete Translations.value 'exportJourney.wasteCollectionDate.radioNo'
 end
 
 And(/^I complete the Journey of a waste section with small waste$/) do
@@ -63,5 +63,5 @@ And(/^I complete the Journey of a waste section with small waste$/) do
 end
 
 And(/^I complete the Journey of a waste section with estimated small waste$/) do
-  JourneyOfAWasteSmallWasteController.complete 'No, I’ll enter an estimate date'
+  JourneyOfAWasteSmallWasteController.complete Translations.value 'exportJourney.wasteCollectionDate.radioNo'
 end

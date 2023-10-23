@@ -323,7 +323,6 @@ Feature: AS A waste practitioner
     And I should see submitted records page is correctly translated
     And I should see correct collection date and waste code and transaction reference
 
-
   Scenario: User can update estimated quantity in kilograms after submission
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

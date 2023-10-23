@@ -38,7 +38,7 @@ end
 
 Then(/^I should see success message translated correctly$/) do
   expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'
-  expect(UpdateWithActualPage.new.success_body.text).to eq 'Your record has been updated'
+  expect(UpdateWithActualPage.new.success_body.text).to eq Translations.value 'exportJourney.updateActualQuantity.success'
 end
 
 Then(/^I should see quantity of actual waste updated in cubic meters$/) do
@@ -50,7 +50,7 @@ Then(/^I should see quantity of actual waste updated in kilograms$/) do
 end
 
 And(/^I should see the transaction number on update estimate page$/) do
-  expect(UpdateWithActualPage.new.transaction_id.text).to eq "Transaction number: #{TestStatus.test_status(:export_transaction_number)}"
+  expect(UpdateWithActualPage.new.transaction_id.text).to eq "#{Translations.value 'exportJourney.updateAnnexSeven.delete.caption'}#{TestStatus.test_status(:export_transaction_number)}"
 end
 
 And(/^I verify update annex record page is correctly translated$/) do
@@ -62,7 +62,7 @@ Then(/^I click show all sections link$/) do
 end
 
 And(/^I verify hide all sections link is now visible$/) do
-  expect(page).to have_text('Hide all sections')
+  expect(page).to have_text('Hide all sections') # no transl value
 end
 
 And(/^I verify that estimated warning message is not present on the page$/) do
@@ -70,8 +70,8 @@ And(/^I verify that estimated warning message is not present on the page$/) do
 end
 
 And(/^I verify Actual needed labels are present on the page$/) do
-  expect(UpdateAnnexRecordPage.new.waste_quantity_label).to eq 'ACTUAL NEEDED'
-  expect(UpdateAnnexRecordPage.new.collection_date_label).to eq 'ACTUAL NEEDED'
+  expect(UpdateAnnexRecordPage.new.waste_quantity_label).to eq (Translations.value 'status.actualNeeded').upcase
+  expect(UpdateAnnexRecordPage.new.collection_date_label).to eq (Translations.value 'status.actualNeeded').upcase
 end
 
 And(/^I should see actual collection date correctly translated$/) do
