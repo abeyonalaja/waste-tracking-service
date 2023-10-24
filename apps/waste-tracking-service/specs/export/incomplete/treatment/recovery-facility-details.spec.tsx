@@ -74,17 +74,16 @@ describe('Recovery facilities pages', () => {
               status: 'Started',
               values: [
                 {
-                  status: 'Started',
-                  values: [
-                    {
-                      id: '123',
-                      addressDetails: {
-                        name: 'site name',
-                        address: 'address',
-                        country: 'England',
-                      },
-                    },
-                  ],
+                  id: '132456689745',
+                  addressDetails: {
+                    name: 'name',
+                    address: 'address',
+                    country: 'country',
+                  },
+                  recoveryFacilityType: {
+                    type: 'RecoveryFacility',
+                    recoveryCode: '',
+                  },
                 },
               ],
             }),

@@ -64,9 +64,9 @@ const Page = styled.div`
   }
   @media screen {
     width: 960px;
-    margin: 0 auto;
+    margin: 20px auto;
     border: 1px solid #ccc;
-    padding: 5px 10px;
+    padding: 20px;
   }
 `;
 
@@ -88,6 +88,7 @@ const H1 = styled.h1`
 
 const H2 = styled.div`
   page-break-before: always;
+  padding-bottom: 1em;
 `;
 
 const Line = styled.span`
@@ -108,6 +109,10 @@ const Row = styled.div`
   grid-auto-columns: 1fr;
 `;
 
+const RowThirdTwoThirds = styled(Row)`
+  grid-template-columns: calc(33% + 2px) auto;
+`;
+
 const GridRow = styled.div`
   display: grid;
   grid-auto-flow: column;
@@ -117,7 +122,7 @@ const GridRow = styled.div`
 const Box = styled.div`
   display: block;
   border-right: 2px solid #000;
-  padding: 5px;
+  padding: 5px 5px 4px;
 `;
 
 const SectionTitle = styled.span`
@@ -142,6 +147,17 @@ const Label = styled.span`
   font-style: italic;
   &:after {
     content: ':';
+  }
+`;
+
+const InlineList = styled.span`
+  & > span {
+    &:after {
+      content: ', ';
+    }
+    &:last-child:after {
+      content: '';
+    }
   }
 `;
 
@@ -190,17 +206,18 @@ const Warning = styled.span`
 `;
 
 const Meta = styled.span`
-  font-size: 11px;
+  font-size: 10px;
   padding: 5px 0;
   display: block;
+  margin-top: 3px;
   ol {
-    font-size: 11px;
+    font-size: 10px;
     margin: 0;
     padding: 0;
     list-style: none;
     counter-reset: list;
     li {
-      font-size: 11px;
+      font-size: 10px;
       padding-left: 15px;
       position: relative;
       margin-bottom: 3px;
@@ -220,7 +237,7 @@ const Table = styled.table`
   border-top: 1px solid #000;
   border-left: 1px solid #000;
   border-collapse: collapse;
-  margin: 0 -6px -6px -6px;
+  margin: 3px -6px -6px -6px;
   th,
   td {
     text-align: center;
@@ -938,71 +955,54 @@ const Download = () => {
                 </SectionTitle>
                 <DataRow>
                   <Value>
-                    {downloadReport.data.recoveryFacilityDetail.status ===
-                      'Complete' && (
-                      <>
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'Laboratory' && (
-                          <span>
-                            Disposal Code:{' '}
-                            {
-                              downloadReport.data.recoveryFacilityDetail.values[0].recoveryFacilityType.disposalCode.split(
-                                ':'
-                              )[0]
+                    <InlineList>
+                      {downloadReport.data.recoveryFacilityDetail.status ===
+                        'Complete' &&
+                        downloadReport.data.recoveryFacilityDetail.values.map(
+                          (facility, index) => {
+                            if (
+                              facility.recoveryFacilityType.type ===
+                              'Laboratory'
+                            ) {
+                              return (
+                                <span key={`facility${index}`}>
+                                  Disposal Code:{' '}
+                                  {
+                                    facility.recoveryFacilityType.disposalCode.split(
+                                      ':'
+                                    )[0]
+                                  }
+                                </span>
+                              );
                             }
-                          </span>
-                        )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'InterimSite' && (
-                          <span>
-                            Recovery Code:{' '}
-                            {
-                              downloadReport.data.recoveryFacilityDetail.values[0].recoveryFacilityType.recoveryCode.split(
-                                ':'
-                              )[0]
+                            if (
+                              facility.recoveryFacilityType.type ===
+                              'InterimSite'
+                            ) {
+                              return (
+                                <span key={`facility${index}`}>
+                                  Recovery Code:{' '}
+                                  {
+                                    facility.recoveryFacilityType.recoveryCode.split(
+                                      ':'
+                                    )[0]
+                                  }{' '}
+                                  (Interim-site)
+                                </span>
+                              );
                             }
-                            (Interim-site)
-                          </span>
+                            return (
+                              <span key={`facility${index}`}>
+                                {
+                                  facility.recoveryFacilityType.recoveryCode.split(
+                                    ':'
+                                  )[0]
+                                }
+                              </span>
+                            );
+                          }
                         )}
-                        {downloadReport.data.recoveryFacilityDetail.values[0]
-                          .recoveryFacilityType.type === 'RecoveryFacility' && (
-                          <span>
-                            Recovery Code:{' '}
-                            {
-                              downloadReport.data.recoveryFacilityDetail.values[0].recoveryFacilityType.recoveryCode.split(
-                                ':'
-                              )[0]
-                            }
-                          </span>
-                        )}
-                        {downloadReport.data.recoveryFacilityDetail.values
-                          .length > 1 &&
-                          downloadReport.data.recoveryFacilityDetail.values[1]
-                            .recoveryFacilityType.type !== 'Laboratory' && (
-                            <span>
-                              ,{' '}
-                              {
-                                downloadReport.data.recoveryFacilityDetail.values[1].recoveryFacilityType.recoveryCode.split(
-                                  ':'
-                                )[0]
-                              }
-                            </span>
-                          )}
-                        {downloadReport.data.recoveryFacilityDetail.values
-                          .length > 2 &&
-                          downloadReport.data.recoveryFacilityDetail.values[2]
-                            .recoveryFacilityType.type !== 'Laboratory' && (
-                            <span>
-                              ,{' '}
-                              {
-                                downloadReport.data.recoveryFacilityDetail.values[2].recoveryFacilityType.recoveryCode.split(
-                                  ':'
-                                )[0]
-                              }
-                            </span>
-                          )}
-                      </>
-                    )}
+                    </InlineList>
                   </Value>
                 </DataRow>
                 <Line></Line>
@@ -1311,6 +1311,8 @@ const Download = () => {
                 </li>
               </ol>
             </Meta>
+          </Page>
+          <Page>
             <H2>Additional information for the Annex VII</H2>
             <Row>
               <Box id="pdf-box-5c-4th-carr">
@@ -1589,10 +1591,9 @@ const Download = () => {
                 </Box>
               </Row>
             )}
-
             <Row>
-              <Box id="pdf-box-7-cont">
-                <SectionTitle id="pdf-box-7-cont-title">
+              <Box>
+                <SectionTitle id="pdf-box-7-cont-rf-3">
                   7. Second recovery site details:
                 </SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
@@ -1611,6 +1612,68 @@ const Download = () => {
                   />
                 )}
               </Box>
+              <Box>
+                <SectionTitle id="pdf-box-7-cont-rf-4">
+                  7. Third recovery site details:
+                </SectionTitle>
+                {downloadReport.data.recoveryFacilityDetail.status ===
+                  'Complete' && (
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type={
+                      downloadReport.data.wasteDescription.status ===
+                        'Complete' &&
+                      downloadReport.data.wasteDescription.wasteCode.type ===
+                        'NotApplicable'
+                        ? 'Laboratory'
+                        : 'RecoveryFacility'
+                    }
+                    index={2}
+                  />
+                )}
+              </Box>
+              <Box>
+                <SectionTitle id="pdf-box-7-cont-rf-5">
+                  7. Fourth recovery site details:
+                </SectionTitle>
+                {downloadReport.data.recoveryFacilityDetail.status ===
+                  'Complete' && (
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type={
+                      downloadReport.data.wasteDescription.status ===
+                        'Complete' &&
+                      downloadReport.data.wasteDescription.wasteCode.type ===
+                        'NotApplicable'
+                        ? 'Laboratory'
+                        : 'RecoveryFacility'
+                    }
+                    index={3}
+                  />
+                )}
+              </Box>
+            </Row>
+            <RowThirdTwoThirds>
+              <Box id="pdf-box-7-cont">
+                <SectionTitle id="pdf-box-7-cont-title">
+                  7. Fifth recovery site details:
+                </SectionTitle>
+                {downloadReport.data.recoveryFacilityDetail.status ===
+                  'Complete' && (
+                  <SiteDetails
+                    data={downloadReport.data.recoveryFacilityDetail}
+                    type={
+                      downloadReport.data.wasteDescription.status ===
+                        'Complete' &&
+                      downloadReport.data.wasteDescription.wasteCode.type ===
+                        'NotApplicable'
+                        ? 'Laboratory'
+                        : 'RecoveryFacility'
+                    }
+                    index={4}
+                  />
+                )}
+              </Box>
               <Box id="pdf-box-7-int">
                 <SectionTitle>Interim site:</SectionTitle>
                 {downloadReport.data.recoveryFacilityDetail.status ===
@@ -1622,7 +1685,8 @@ const Download = () => {
                   />
                 )}
               </Box>
-            </Row>
+            </RowThirdTwoThirds>
+
             <Row>
               <Box id="pdf-box-10-cont">
                 <InlineSectionTitle id="pdf-box-10-cont-title">
@@ -1670,9 +1734,10 @@ const Download = () => {
             <Row>
               <Box id="pdf-box-15-cont">
                 <InlineSectionTitle id="pdf-box-15-cont-title">
-                  15. Location the waste will leave the UK:{' '}
+                  15. Location the waste will leave the UK:
                 </InlineSectionTitle>
                 <span>
+                  {' '}
                   {downloadReport.data.ukExitLocation.status === 'Complete' &&
                     downloadReport.data.ukExitLocation.exitLocation.provided ===
                       'Yes' &&
@@ -1705,6 +1770,18 @@ const SiteDetails = ({ data, type, index, inlineFax = false }) => {
 
   if (index === 1 && facilities.length > 1) {
     facility = facilities[1];
+  }
+
+  if (index === 2 && facilities.length > 2) {
+    facility = facilities[2];
+  }
+
+  if (index === 3 && facilities.length > 3) {
+    facility = facilities[3];
+  }
+
+  if (index === 4 && facilities.length > 4) {
+    facility = facilities[4];
   }
 
   return (

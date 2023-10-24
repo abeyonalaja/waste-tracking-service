@@ -163,7 +163,7 @@ const RecoveryFacilityDetails = () => {
   const [siteId, setSiteId] = useState<string | string[]>(null);
   const [facilityCount, setFacilityCount] = useState<number>(0);
   const [additionalFacility, setAdditionalFacility] = useState<string>(null);
-  const [isSecond, setIsSecond] = useState<boolean>(false);
+  const [facCount, setFacCount] = useState<number>(0);
   const [startPage, setStartPage] = useState<number>(1);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [addressDetails, setAddressDetails] = useState<{
@@ -228,10 +228,13 @@ const RecoveryFacilityDetails = () => {
                   type: 'FACILITY_DATA_UPDATE',
                   payload: getRecord[0],
                 });
-                const index = data.values.findIndex(
-                  (record) => record.id === siteId
-                );
-                setIsSecond(index === 1);
+                const index = data.values
+                  .filter(
+                    (site) =>
+                      site.recoveryFacilityType?.type === 'RecoveryFacility'
+                  )
+                  .findIndex((record) => record.id === siteId);
+                setFacCount(index + 1);
                 setAddressDetails(getRecord[0].addressDetails);
                 setContactDetails(getRecord[0].contactDetails);
                 setRecoveryFacilityType(getRecord[0].recoveryFacilityType);
@@ -275,7 +278,7 @@ const RecoveryFacilityDetails = () => {
                   type: 'FACILITY_DATA_UPDATE',
                   payload: record,
                 });
-                setIsSecond(filteredValues.length === 2);
+                setFacCount(filteredValues.length);
                 setAddressDetails(record?.addressDetails);
                 setContactDetails(record?.contactDetails);
                 setRecoveryFacilityType(record?.recoveryFacilityType);
@@ -524,7 +527,7 @@ const RecoveryFacilityDetails = () => {
           query: { id },
         });
       } else {
-        setIsSecond(true);
+        setFacCount(facilityCount + 1);
         setAddressDetails(null);
         setContactDetails(null);
         setRecoveryFacilityType({ type: 'RecoveryFacility', recoveryCode: '' });
@@ -549,7 +552,8 @@ const RecoveryFacilityDetails = () => {
     e.preventDefault();
   };
 
-  const handleChangeLink = (facilityId) => {
+  const handleChangeLink = (facilityId, e) => {
+    e.preventDefault();
     const getRecord = recoveryPage.data.values.filter(
       (record) => record.id === facilityId
     );
@@ -557,10 +561,12 @@ const RecoveryFacilityDetails = () => {
       type: 'FACILITY_DATA_UPDATE',
       payload: getRecord[0],
     });
-    const index = recoveryPage.data.values.findIndex(
-      (record) => record.id === facilityId
-    );
-    setIsSecond(index === 1);
+    const index = recoveryPage.data.values
+      .filter(
+        (record) => record.recoveryFacilityType?.type === 'RecoveryFacility'
+      )
+      .findIndex((record) => record.id === facilityId);
+    setFacCount(index + 1);
     setAddressDetails(getRecord[0].addressDetails);
     setContactDetails(getRecord[0].contactDetails);
     setRecoveryFacilityType(getRecord[0].recoveryFacilityType);
@@ -570,7 +576,8 @@ const RecoveryFacilityDetails = () => {
     });
   };
 
-  const handleRemoveLink = (facilityId) => {
+  const handleRemoveLink = (facilityId, e) => {
+    e.preventDefault();
     const getRecord = recoveryPage.data.values.filter(
       (record) => record.id === facilityId
     );
@@ -693,7 +700,7 @@ const RecoveryFacilityDetails = () => {
       <Head>
         <title>
           {t('exportJourney.recoveryFacilities.addressTitle', {
-            n: isSecond ? 'second' : '',
+            n: null,
           })}
         </title>
       </Head>
@@ -728,7 +735,11 @@ const RecoveryFacilityDetails = () => {
                   <div id="page-recovery-facilities-address-details">
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.recoveryFacilities.addressTitle', {
-                        n: isSecond ? 'second' : '',
+                        n:
+                          (facCount === 1 && facilityCount === 1) ||
+                          facCount === 0
+                            ? null
+                            : t(`numberAdjective.${facCount}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
                     <form onSubmit={(e) => handleSubmit(e, 'address')}>
@@ -798,7 +809,11 @@ const RecoveryFacilityDetails = () => {
                   <div id="page-recovery-facilities-contact-details">
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.recoveryFacilities.contactTitle', {
-                        n: isSecond ? 'second' : '',
+                        n:
+                          (facCount === 1 && facilityCount === 1) ||
+                          facCount === 0
+                            ? null
+                            : t(`numberAdjective.${facCount}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
                     <form
@@ -912,7 +927,10 @@ const RecoveryFacilityDetails = () => {
                   <div id="page-recovery-facilities-recovery-details">
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.recoveryFacilities.codeTitle', {
-                        n: isSecond ? 'second' : '',
+                        n:
+                          facCount === 1 && facilityCount === 1
+                            ? ''
+                            : t(`numberAdjective.${facCount}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
                     <form
@@ -979,12 +997,9 @@ const RecoveryFacilityDetails = () => {
                                 ? t(
                                     'exportJourney.recoveryFacilities.cardTitle'
                                   )
-                                : index === 0
-                                ? t(
-                                    'exportJourney.recoveryFacilities.firstCardTitle'
-                                  )
                                 : t(
-                                    'exportJourney.recoveryFacilities.secondCardTitle'
+                                    'exportJourney.recoveryFacilities.multipleCardTitle',
+                                    { n: t(`numberAdjective.${index + 1}`) }
                                   )
                             }
                             actions={[
@@ -998,7 +1013,7 @@ const RecoveryFacilityDetails = () => {
                                     </GovUK.VisuallyHidden>
                                   </>
                                 ),
-                                action: () => handleChangeLink(facility.id),
+                                action: (e) => handleChangeLink(facility.id, e),
                               },
                               {
                                 label: (
@@ -1010,7 +1025,7 @@ const RecoveryFacilityDetails = () => {
                                     </GovUK.VisuallyHidden>
                                   </>
                                 ),
-                                action: () => handleRemoveLink(facility.id),
+                                action: (e) => handleRemoveLink(facility.id, e),
                                 hidden: facilityCount === 1,
                               },
                             ]}
@@ -1041,7 +1056,7 @@ const RecoveryFacilityDetails = () => {
                         );
                       }
                     )}
-                    {facilityCount === 1 && (
+                    {facilityCount < 5 && (
                       <form onSubmit={handleSubmitAdditionalFacility}>
                         <GovUK.Fieldset>
                           <GovUK.Fieldset.Legend size="M">
@@ -1049,7 +1064,10 @@ const RecoveryFacilityDetails = () => {
                           </GovUK.Fieldset.Legend>
                           <GovUK.MultiChoice
                             mb={6}
-                            hint={t('exportJourney.recoveryFacilities.addHint')}
+                            hint={t(
+                              'exportJourney.recoveryFacilities.addHint',
+                              { n: 5 - facilityCount }
+                            )}
                             label=""
                             meta={{
                               error: recoveryPage.errors?.additionalFacility,
@@ -1093,7 +1111,7 @@ const RecoveryFacilityDetails = () => {
                         </ButtonGroup>
                       </form>
                     )}
-                    {facilityCount > 1 && (
+                    {facilityCount === 5 && (
                       <>
                         <GovUK.Heading as="p" size={'MEDIUM'}>
                           {t('exportJourney.recoveryFacilities.maxReached')}

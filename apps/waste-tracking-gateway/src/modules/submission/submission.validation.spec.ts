@@ -905,7 +905,7 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
     expect(validateSetRecoveryFacilityDetailRequest(data)).toBe(false);
   });
 
-  it('should return false for a request with a missing mandatopry property', () => {
+  it('should return false for a request with a missing mandatory property', () => {
     const data = {
       status: 'Started',
       values: [

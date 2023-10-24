@@ -175,7 +175,7 @@ const CarrierTransportMeans = () => {
           t(
             `exportJourney.wasteCarrierTransport.${transportType}`
           ).toLowerCase(),
-          t(`numberAdjective.${carrierIndex + 1}`),
+          t(`numberAdjective.${carrierIndex + 1}`).toLowerCase(),
           transportDescription
         ),
       };
@@ -296,7 +296,7 @@ const CarrierTransportMeans = () => {
                             {
                               carrierIndex: t(
                                 `numberAdjective.${carrierIndex + 1}`
-                              ),
+                              ).toLowerCase(),
                             }
                           )}
                         </GovUK.Fieldset.Legend>
@@ -377,7 +377,7 @@ const CarrierTransportMeans = () => {
                           ).toLowerCase(),
                           carrierIndex: t(
                             `numberAdjective.${carrierIndex + 1}`
-                          ),
+                          ).toLowerCase(),
                         }
                       )}
                     </GovUK.Heading>

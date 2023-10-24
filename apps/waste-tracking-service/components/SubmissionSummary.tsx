@@ -1188,9 +1188,9 @@ const SiteDetails = ({
     case 'RecoveryFacility':
       titleKey = !multiple
         ? 'exportJourney.checkAnswers.titleRecoveryFacility'
-        : index === 0
-        ? 'exportJourney.recoveryFacilities.firstCardTitle'
-        : 'exportJourney.recoveryFacilities.secondCardTitle';
+        : t('exportJourney.recoveryFacilities.multipleCardTitle', {
+            n: t(`numberAdjective.${index + 1}`),
+          });
       nameKey = 'exportJourney.recoveryFacilities.name';
       url = '/recovery-facility-details';
       codeKey = 'exportJourney.recoveryFacilities.recoveryCode';

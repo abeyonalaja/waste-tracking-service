@@ -45,6 +45,9 @@ const SumCardTitle = styled.h2`
     line-height: 1.3;
     margin-bottom: 5px;
   }
+  &:first-letter {
+    text-transform: uppercase;
+  }
 `;
 
 const SumCardContent = styled.div`

@@ -1050,10 +1050,10 @@ export class InMemorySubmissionBackend
       submission.recoveryFacilityDetail.status === 'Started' ||
       submission.recoveryFacilityDetail.status === 'Complete'
     ) {
-      if (submission.recoveryFacilityDetail.values.length === 3) {
+      if (submission.recoveryFacilityDetail.values.length === 6) {
         return Promise.reject(
           Boom.badRequest(
-            'Cannot add more than 3 facilities(1 InterimSite and 2 RecoveryFacilities)'
+            'Cannot add more than 6 facilities(1 InterimSite and 5 RecoveryFacilities)'
           )
         );
       }
