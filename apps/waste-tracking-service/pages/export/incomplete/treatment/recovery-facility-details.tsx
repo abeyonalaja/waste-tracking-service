@@ -928,8 +928,9 @@ const RecoveryFacilityDetails = () => {
                     <GovUK.Heading size={'LARGE'}>
                       {t('exportJourney.recoveryFacilities.codeTitle', {
                         n:
-                          facCount === 1 && facilityCount === 1
-                            ? ''
+                          (facCount === 1 && facilityCount === 1) ||
+                          facCount === 0
+                            ? null
                             : t(`numberAdjective.${facCount}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
