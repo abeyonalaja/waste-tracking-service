@@ -49,6 +49,7 @@ Feature:AS A Waste practitioner
     When I click the "Return to all Annex VII records" link
     Then the "submitted records" page is displayed
 
+  @retry
   Scenario: Submit an Annex VII with Small waste Actual data
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

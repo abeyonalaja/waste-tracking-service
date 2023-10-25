@@ -985,7 +985,7 @@ Feature: Automation to check accessibility tool
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click first cancel button
     Then the "cancel the export" page is displayed

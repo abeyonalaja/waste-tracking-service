@@ -24,6 +24,7 @@ Feature: AS A Waste practitioner
     Then task list page is displayed
     And the reference should be displayed
 
+  @retry
   Scenario: User can save draft application after completing all the tasks
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

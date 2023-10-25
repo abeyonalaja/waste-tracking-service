@@ -124,10 +124,10 @@ Feature: AS A waste producer/broker
     Then the "Recovery facility contact details" page is displayed
     When I complete recovery facility contact details
     And I click the button Save and continue
-    Then the "Recovery code" page is displayed
+    Then the recovery code page is displayed and correctly translated
     When I select first recovery code from the recovery facility
     When I click the button Save and continue
-    And I should see first recovery facility details
+    And I should see 1st recovery facility details
     When I choose "No" radio button
     And I click the button Save and continue
     Then the "task list" page is displayed

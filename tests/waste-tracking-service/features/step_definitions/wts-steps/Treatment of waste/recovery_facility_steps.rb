@@ -1,14 +1,14 @@
 And(/^I complete recovery facility address page$/) do
-  RecoveryFacilityAddressPage.new.enter_name('first_recovery_facility')
-  RecoveryFacilityAddressPage.new.enter_address('first_recovery_facility')
-  RecoveryFacilityAddressPage.new.enter_country('first_recovery_facility')
+  RecoveryFacilityAddressPage.new.enter_name('1st_recovery_facility')
+  RecoveryFacilityAddressPage.new.enter_address('1st_recovery_facility')
+  RecoveryFacilityAddressPage.new.enter_country('1st_recovery_facility')
 end
 
 And(/^I complete recovery facility contact details$/) do
-  RecoveryFacilityContactDetailsPage.new.enter_full_name('first_recovery_facility')
-  RecoveryFacilityContactDetailsPage.new.enter_email('first_recovery_facility')
-  RecoveryFacilityContactDetailsPage.new.enter_phone_number('first_recovery_facility')
-  RecoveryFacilityContactDetailsPage.new.enter_fax_number('first_recovery_facility')
+  RecoveryFacilityContactDetailsPage.new.enter_full_name('1st_recovery_facility')
+  RecoveryFacilityContactDetailsPage.new.enter_email('1st_recovery_facility')
+  RecoveryFacilityContactDetailsPage.new.enter_phone_number('1st_recovery_facility')
+  RecoveryFacilityContactDetailsPage.new.enter_fax_number('1st_recovery_facility')
 end
 
 When(/^I select first recovery code from the recovery facility$/) do
@@ -61,34 +61,18 @@ Then(/^I should see max recovery facility text correctly translated$/) do
 end
 
 And(/^I should see previously entered recovery facility details pre\-populated$/) do
-  expect(RecoveryFacilityAddressPage.new).to have_name TestStatus.test_status(:first_recovery_facility_name)
-  expect(RecoveryFacilityAddressPage.new).to have_address TestStatus.test_status(:first_recovery_facility_address)
-  expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status(:first_recovery_facility_country)
+  expect(RecoveryFacilityAddressPage.new).to have_name TestStatus.test_status("1st_recovery_facility_name".to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_address TestStatus.test_status("1st_recovery_facility_address".to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status("1st_recovery_facility_country".to_sym)
 end
 
-And(/^I should see first recovery facility details$/) do
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[0].text).to eq Translations.value 'exportJourney.recoveryFacilities.name'
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[1].text).to eq Translations.value 'address.country' # not sure
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_name_tags[2].text).to eq 'Recovery code'
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_values[0].text).to eq TestStatus.test_status(:first_recovery_facility_name)
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_values[1].text).to eq TestStatus.test_status(:first_recovery_facility_country)
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_values[2].text).to eq TestStatus.test_status(:first_recovery_facility_code)
-end
-
-And(/^I should see second recovery facility details$/) do
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[0].text).to eq Translations.value 'exportJourney.recoveryFacilities.name'
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[1].text).to eq Translations.value 'address.country' # not sure
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_name_tags[2].text).to eq 'Recovery code'
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_values[0].text).to eq TestStatus.test_status(:second_recovery_facility_name)
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_values[1].text).to eq TestStatus.test_status(:second_recovery_facility_country)
-  expect(ChosenFacilitiesPage.new.second_recovery_facility_values[2].text).to eq TestStatus.test_status(:first_recovery_facility_code)
-end
-
-And(/^I should see both change and remove recovery facility$/) do
-  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.change'
-  expect(ChosenFacilitiesPage.new.first_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.remove'
-  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[0].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.change'
-  expect(ChosenFacilitiesPage.new.second_facility_change_and_remove_link[1].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.remove'
+And(/^I should see all change and remove recovery facility$/) do
+  (1..5).each do |i|
+    title = %w[First Second Third Fourth Fifth]
+    expect(ChosenFacilitiesPage.new.facility_title(i)[0].text.gsub(/\n(.*)/, '')).to eq (Translations.value 'exportJourney.recoveryFacilities.multipleCardTitle').gsub('{{n}}', title[i - 1])
+    expect(ChosenFacilitiesPage.new.facility_change_and_remove_link(i)[0].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.change'
+    expect(ChosenFacilitiesPage.new.facility_change_and_remove_link(i)[1].text.gsub(/\n(.*)/, '')).to eq Translations.value 'actions.remove'
+  end
 end
 
 When(/^I update the recovery facility country$/) do
@@ -96,10 +80,10 @@ When(/^I update the recovery facility country$/) do
 end
 
 Then(/^I should see previously entered recovery contact details pre\-populated$/) do
-  expect(RecoveryFacilityContactDetailsPage.new).to have_full_name TestStatus.test_status(:first_recovery_facility_full_name)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status(:first_recovery_facility_email)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status(:first_recovery_facility_phone_number)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_fax TestStatus.test_status(:first_recovery_facility_fax_number)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_full_name TestStatus.test_status("1st_recovery_facility_full_name".to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status("1st_recovery_facility_email".to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status("1st_recovery_facility_phone_number".to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_fax TestStatus.test_status("1st_recovery_facility_fax_number".to_sym)
 end
 
 Then(/^I should see previously entered recovery code details pre\-populated$/) do
@@ -111,7 +95,7 @@ Then(/^I should see updated recovery country$/) do
 end
 
 Then(/^I should see remove recovery facility details page displayed$/) do
-  expect(self).to have_css 'h1', text: "Are you sure you want to remove #{TestStatus.test_status(:second_recovery_facility_name)}?", exact_text: true
+  RemoveRecoveryFacilityPage.new.check_page_displayed(TestStatus.test_status('2nd_recovery_facility_name'.to_sym).to_s)
 end
 
 Then(/^I should see "([^"]*)" error message displayed$/) do |error_message|
@@ -128,4 +112,17 @@ end
 
 And(/^I see previously selected option pre\-selected$/) do
   expect(ConfirmationInterimSitePage.new.option_checked?('Yes')).to eq(true)
+end
+
+And(/^I should see (\d+)(st|nd|rd|th) recovery facility details$/) do |recovery_facility, suffix|
+  expect(ChosenFacilitiesPage.new.recovery_facility_name_tags(recovery_facility)[0].text).to eq Translations.value 'exportJourney.recoveryFacilities.name'
+  expect(ChosenFacilitiesPage.new.recovery_facility_name_tags(recovery_facility)[1].text).to eq Translations.value 'address.country'
+  expect(ChosenFacilitiesPage.new.recovery_facility_name_tags(recovery_facility)[2].text).to eq Translations.value 'exportJourney.recoveryFacilities.recoveryCode'
+  expect(ChosenFacilitiesPage.new.recovery_facility_values(recovery_facility)[0].text).to eq TestStatus.test_status("#{recovery_facility}#{suffix}_recovery_facility_name".to_sym)
+  expect(ChosenFacilitiesPage.new.recovery_facility_values(recovery_facility)[1].text).to eq TestStatus.test_status("#{recovery_facility}#{suffix}_recovery_facility_country".to_sym)
+  expect(ChosenFacilitiesPage.new.recovery_facility_values(recovery_facility)[2].text).to eq TestStatus.test_status(:first_recovery_facility_code)
+end
+
+Then(/^the recovery code page is displayed and correctly translated$/) do
+  RecoveryCodePage.new.check_page_displayed
 end

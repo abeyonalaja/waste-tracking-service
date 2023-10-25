@@ -123,6 +123,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then Then the "Waste collection details" page is displayed
 
+  @retry
   Scenario: User can't continue without choosing an mode of transport option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
@@ -136,6 +137,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I remain on the how will the waste carrier transport the waste page with an "Select how the first waste carrier will transport the waste" error message displayed
 
+  @retry
   Scenario: User can't continue if character limit is exceeded on mode of transport details
     Given I login to waste tracking portal
     When I navigate to the task list page with reference

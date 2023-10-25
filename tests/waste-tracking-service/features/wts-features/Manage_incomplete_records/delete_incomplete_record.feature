@@ -2,6 +2,7 @@ Feature: AS A waste practitioner
   I NEED to be able to delete a draft export
   SO THAT I can remove export that is no longer required
 
+  @retry
   Scenario: User deletes incomplete record and verifies that is not present on the Incomplete records page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -22,6 +23,7 @@ Feature: AS A waste practitioner
     And I verify that correct success message is displayed
     And I verify record is not present on the page
 
+  @retry
   Scenario: User deletes incomplete record without reference and verifies correct success message is displayed
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

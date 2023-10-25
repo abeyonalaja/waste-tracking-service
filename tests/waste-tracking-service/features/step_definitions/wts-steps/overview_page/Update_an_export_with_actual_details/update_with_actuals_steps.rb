@@ -6,7 +6,7 @@ Then(/^I verify that newly created record is on top of the table$/) do
   expect(UpdateWithActualPage.new.application_ref.text).to eq TestStatus.test_status(:application_reference_number)
 end
 
-And(/^I verify reference section is filled with 'Not provided'$/) do
+And(/^I verify reference section is filled with reference$/) do
   expect(UpdateWithActualPage.new.application_ref.text).to eq TestStatus.test_status(:application_reference_number)
 end
 

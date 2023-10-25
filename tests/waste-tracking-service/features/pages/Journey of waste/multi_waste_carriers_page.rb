@@ -25,7 +25,7 @@ class MultiWasteCarriersPage < GenericPage
     expect(self).to have_text MULTI_WASTE_PAGE_ORG_NAME
     expect(self).to have_text MULTI_WASTE_PAGE_COUNTRY
     expect(self).to have_text MULTI_WASTE_PAGE_ADD_MORE_WASTE_CARRIERS
-    expect(self).to have_text MULTI_WASTE_PAGE_ADD_4_WASTE_CARRIERS
+    expect(self).to have_text MULTI_WASTE_PAGE_ADD_4_WASTE_CARRIERS.gsub('{{n}}', '4')
   end
 
   def check_max_carrier_translation

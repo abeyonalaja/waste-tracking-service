@@ -2,6 +2,7 @@ Feature: AS A Waste Practitioner
   I NEED to have a final section
   SO THAT I can ensure that all my entry details are correctly
 
+  @translation
   Scenario: User should see all the data displayed correctly on check your report page for Bulk waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -161,16 +162,25 @@ Feature: AS A Waste Practitioner
     Then  the "Interim site recovery code" page is displayed
     And I choose "R12: Exchange of wastes for submission to any of the operations numbered R01 to R11" radio button
     And I click the button Save and continue
-    And I complete the "first" recovery facility
+    And I complete the "1st" recovery facility
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "second" recovery facility
+    And I complete the "2nd" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "3rd" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "4th" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "5th" recovery facility
     And I click the button Save and continue
     When I click the "Check your record" link
     Then I should see 5 waste carriers on check your export page
     And I should see 5 ewc codes on check your export page
     And I should see interim side details on check your export page
-    And I should see 2 recovery facilities on check your export page
+    And I should see 5 recovery facilities on check your export page
 
   Scenario: User can navigate to enter your ref pages from check your report page using change link
     Given I login to waste tracking portal

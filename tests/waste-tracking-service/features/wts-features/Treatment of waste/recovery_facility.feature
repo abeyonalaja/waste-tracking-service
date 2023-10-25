@@ -22,7 +22,7 @@ Feature: AS A waste producer/broker
     When I select first recovery code from the recovery facility
     When I click the button Save and continue
     Then I should see chosen facility page correctly translated
-    And I should see first recovery facility details
+    And I should see 1st recovery facility details
 
   Scenario: User complete recovery facility address, contact and view details on Recovery facility details page
     Given I login to waste tracking portal
@@ -38,7 +38,7 @@ Feature: AS A waste producer/broker
     Then the "Recovery facility contact details" page is displayed
     When I complete recovery facility contact details
     And I click the button Save and continue
-    Then the "Recovery code" page is displayed
+    Then the recovery code page is displayed and correctly translated
     When I select first recovery code from the recovery facility
     And I click the button Save and continue
     Then the "chosen facilities" page is displayed
@@ -123,7 +123,7 @@ Feature: AS A waste producer/broker
     And I should see previously entered recovery facility details pre-populated
 
   @translation
-  Scenario: User can add upto 2 recovery facilities
+  Scenario: User can add upto 5 recovery facilities
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I complete Waste codes and description task
@@ -132,19 +132,32 @@ Feature: AS A waste producer/broker
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
-    And I complete the "first" recovery facility
+    And I complete the "1st" recovery facility
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "second" recovery facility
+    And I complete the "2nd" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "3rd" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "4th" recovery facility
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    And I complete the "5th" recovery facility
     Then I should see max recovery facility text correctly translated
-    And I should see both change and remove recovery facility
-    And I should see first recovery facility details
-    And I should see second recovery facility details
+    And I should see all change and remove recovery facility
+    And I should see 1st recovery facility details
+    And I should see 2nd recovery facility details
+    And I should see 3rd recovery facility details
+    And I should see 4th recovery facility details
+    And I should see 5th recovery facility details
     When I click the button Save and continue
     Then the task "Recovery facility" should be "COMPLETED"
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
 
+  @retry
   Scenario: User can change previously entered recovery details
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -154,7 +167,7 @@ Feature: AS A waste producer/broker
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
-    And I complete the "first" recovery facility
+    And I complete the "1st" recovery facility
     When I click the "Change" link
     Then I should see previously entered recovery facility details pre-populated
     When I update the recovery facility country
@@ -174,10 +187,10 @@ Feature: AS A waste producer/broker
     And I choose "No" radio button
     And I click the button Save and continue
     Then the "Recovery facility address" page is displayed
-    And I complete the "first" recovery facility
+    And I complete the "1st" recovery facility
     And I choose "Yes" radio button
     And I click the button Save and continue
-    And I complete the "second" recovery facility
+    And I complete the "2nd" recovery facility
     And I wait for a second
     And I click the last "Remove" link
     Then I should see remove recovery facility details page displayed
@@ -185,12 +198,12 @@ Feature: AS A waste producer/broker
     Then I should see "Select yes if you want to remove this recovery facility" error message displayed
     When I choose "No" radio button
     When I click the button Save and continue
-    Then I should see first recovery facility details
-    And I should see second recovery facility details
+    Then I should see 1st recovery facility details
+    And I should see 2nd recovery facility details
     And I wait for a second
     When I click the last "Remove" link
     When I choose "Yes" radio button
     When I click the button Save and continue
     Then the chosen facility page is displayed
-    And I should see first recovery facility details
+    And I should see 1st recovery facility details
 

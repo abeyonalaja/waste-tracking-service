@@ -140,7 +140,7 @@ end
 
 And(/^I should see section 8 bulk waste recovery details correctly displayed$/) do
   within 'pdf-box-8' do
-    expect(SignDeclarationPage.new).to have_text 'R12(Interim-site), R1'
+    expect(SignDeclarationPage.new).to have_text 'Recovery Code: R12 (Interim-site)R1'
   end
 end
 

@@ -19,6 +19,8 @@ class ChosenFacilitiesPage < GenericPage
   COUNTRY = Translations.value 'exportJourney.importerDetails.country'
   RECOVERY_CODE = Translations.value 'exportJourney.recoveryFacilities.recoveryCode'
   MAX_RECOVERY_TEXT = Translations.value 'exportJourney.recoveryFacilities.maxReached'
+  MAX_PAGE_TITLE = Translations.value 'exportJourney.recoveryFacilities.listTitleMultiple'
+  ADD_MORE_TEXT = Translations.value 'exportJourney.recoveryFacilities.addHint'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: YOUR_CHOSEN_SINGLE_TITLE, exact_text: true
@@ -29,9 +31,11 @@ class ChosenFacilitiesPage < GenericPage
     expect(self).to have_text FACILITY_NAME
     expect(self).to have_text COUNTRY
     expect(self).to have_text RECOVERY_CODE
+    expect(self).to have_text ADD_MORE_TEXT.gsub('{{n}}', '4')
   end
 
   def max_facility_translation
+    expect(self).to have_text MAX_PAGE_TITLE
     expect(self).to have_text MAX_RECOVERY_TEXT
   end
 
@@ -39,12 +43,8 @@ class ChosenFacilitiesPage < GenericPage
     facility_titles.first == facility
   end
 
-  def first_facility_change_and_remove_link
-    all(:css, '#facility-list-item-1-header > ul > li > a')
-  end
-
-  def second_facility_change_and_remove_link
-    all(:css, '#facility-list-item-2-header > ul > li > a')
+  def facility_change_and_remove_link(item)
+    all(:css, "#facility-list-item-#{item}-header > ul > li > a")
   end
 
   def facility_titles
@@ -63,12 +63,15 @@ class ChosenFacilitiesPage < GenericPage
     all(:css, '#facility-list-item-1-content > dl >div >dd')
   end
 
-  def second_recovery_facility_name_tags
-    all(:css, '#facility-list-item-2-content > dl >div >dt')
+  def recovery_facility_name_tags(item)
+    all(:css, "#facility-list-item-#{item}-content > dl >div >dt")
   end
 
-  def second_recovery_facility_values
-    all(:css, '#facility-list-item-2-content > dl >div >dd')
+  def recovery_facility_values(item)
+    all(:css, "#facility-list-item-#{item}-content > dl >div >dd")
   end
 
+  def facility_title(title)
+    all(:css, "#facility-list-item-#{title}-title")
+  end
 end

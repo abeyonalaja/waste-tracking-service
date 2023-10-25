@@ -124,8 +124,6 @@ Feature: AS A waste practitioner
     And I should see export Exporter and Importer details correctly displayed
     And I should see export Journey of waste with estimated collection date correctly displayed
     And I should see export Treatment of waste correctly displayed
-    # And I click return to all exports button
-    # needs to be checked
     And I click the "Return to all Annex VII records" link
     Then the "Update with actual" page is displayed
 
@@ -170,7 +168,7 @@ Feature: AS A waste practitioner
     And I navigate to the task list page with reference
     Then task list page is displayed
     And I navigate to Quantity of waste page
-    And I complete Quantity of waste sub-section
+    And I complete Quantity of waste with estimated bulk waste
     Then the task "Quantity of waste" should be "COMPLETED"
     And the task "Waste codes and description" should be "COMPLETED"
     Then I complete Exporter details with valid postcode
@@ -198,7 +196,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
 
   Scenario: User can update estimated quantity in tonnes and collection date but didn't not confirm the changes
@@ -234,7 +232,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click the first update link
     And I expand About the waste section
@@ -254,9 +252,8 @@ Feature: AS A waste practitioner
     Then I click show all sections link
     And I should see actual collection date correctly displayed
     When I click "Back" link should display "Update with actual" page
-    #need to fix
-#    And I verify reference section is filled with 'Not provided'
-#    And I should see correct date and waste code and transaction reference
+    And I verify reference section is filled with reference
+    And I should see correct date and waste code and transaction reference
 
   Scenario: User can update estimated quantity in cubic meters and collection date and confirm the changes, export should be in submitted lists
     Given I login to waste tracking portal
@@ -291,7 +288,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click the first update link
     And I expand About the waste section
@@ -358,7 +355,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click the first update link
     And I expand About the waste section
@@ -450,7 +447,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click the first update link
     And I expand About the waste section
@@ -497,7 +494,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click first cancel button
     Then the "cancel the export" page is displayed
@@ -538,7 +535,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click first cancel button
     Then the "cancel the export" page is displayed
@@ -582,7 +579,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     When I click first cancel button
     Then the "cancel the export" page is displayed
@@ -626,7 +623,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
     And I click the "Update an Annex VII record with actual details" link
     Then the "Update with actual" page is displayed
-    And I verify reference section is filled with 'Not provided'
+    And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
     And I wait for a second
     When I click first cancel button
