@@ -240,136 +240,11 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for - How will the waste carrier transport the waste page
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Shipping container" radio button
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - How will the waste carrier transport the waste page - error validation
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    Then I should see "how will the waste carrier transport the waste" page is displayed
-    And I click Continue button
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Shipping container page
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Shipping container" radio button
-    And I click Continue button
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Shipping container page - error validation
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Shipping container" radio button
-    And I click Continue button
-    Then the "Shipping container details" page is displayed
-    And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Trailer page
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Trailer" radio button
-    And I click Continue button
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Trailer page - error validation
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Trailer" radio button
-    And I click Continue button
-    Then the "Trailer details" page is displayed
-    And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Bulk vessel page - error validation
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Bulk vessel" radio button
-    And I click Continue button
-    Then the "Bulk vessel" page is displayed
-    And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
-  Scenario: Check WTS Accessibility for - Bulk vessel page
-    Given I login to waste tracking portal
-    When I navigate to the task list page with reference
-    And I click the "Waste carriers" link
-    And I complete the Who is the waste carrier page
-    And I click the button Save and continue
-    And I complete the Whats is the waste carriers contact details page
-    And I click the button Save and continue
-    And I choose "Bulk vessel" radio button
-    And I click Continue button
-    Then the page should be axe clean according to: wcag2a; checking: color-contrast
-    Then the page should be axe clean within "main, header" but excluding "footer"
-    Then the page should be axe clean checking only: document-title, label
-    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
-
   Scenario: Check WTS Accessibility for - Your added carriers page - Yes option
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "first" waste carrier with "Shipping container"
+    And I complete the "first" waste carrier with "Road"
     And I choose "Yes" radio button
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -380,7 +255,7 @@ Feature: Automation to check accessibility tool
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
-    And I complete the "first" waste carrier with "Shipping container"
+    And I complete the "first" waste carrier with "Road"
     And I choose "No" radio button
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -1072,6 +947,108 @@ Feature: Automation to check accessibility tool
     Then the "Manage templates" page is displayed
     And I click delete link for the first template from the table
     Then the "Delete template" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - How will the waste carrier transport the waste page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then the "how will the waste carrier transport the waste" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Road page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I wait for a second
+    And I complete the Whats is the waste carriers contact details page
+    And I wait for a second
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Road" radio button
+    And I click the button Save and continue
+    Then the "Road transport details" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Sea page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I wait for a second
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Sea" radio button
+    And I click the button Save and continue
+    Then the "Sea transport details" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Air page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Air" radio button
+    And I click the button Save and continue
+    Then the "Air transport details" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Rail page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Rail" radio button
+    And I click the button Save and continue
+    Then the "Rail transport details" page is displayed
+    Then the page should be axe clean according to: wcag2a; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Inland waterways page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    And I complete the Whats is the waste carriers contact details page
+    And I click the button Save and continue
+    Then I should see "how will the waste carrier transport the waste" page is displayed
+    And I choose "Inland waterways" radio button
+    And I click the button Save and continue
+    Then the "Inland water transport details" page is displayed
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
