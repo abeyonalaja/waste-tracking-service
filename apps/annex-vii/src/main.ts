@@ -7,6 +7,7 @@ import * as winston from 'winston';
 import {
   DraftController,
   TemplateController,
+  WTSInfoController,
   parse,
   validate,
 } from './controller';
@@ -19,6 +20,7 @@ import {
   WorkloadIdentityCredential,
 } from '@azure/identity';
 import CosmosTemplateRepository from './data/cosmos-templates';
+import CosmosWTSInfoRepository from './data/cosmos-wts-info';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration');
@@ -74,6 +76,21 @@ const templateController = new TemplateController(
     ),
     process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+    logger
+  ),
+  logger
+);
+
+const wtsInfoController = new WTSInfoController(
+  new CosmosWTSInfoRepository(
+    new CosmosAnnexViiClient(
+      new CosmosClient({
+        endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
+        aadCredentials,
+      }),
+      process.env['COSMOS_DATABASE_NAME_WASTE_INFORMATION'] ||
+        'waste-information'
+    ),
     logger
   ),
   logger
@@ -1234,6 +1251,89 @@ await server.invoker.listen(
     return await templateController.deleteTemplateRecoveryFacilityDetails(
       request
     );
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getWasteCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+    const request = parse.getWasteCodesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+    return await wtsInfoController.getWasteCodes(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getEWCCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getEWCCodesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await wtsInfoController.getEWCCodes(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getCountries.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getCountriesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await wtsInfoController.getCountries(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getRecoveryCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getRecoveryCodesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await wtsInfoController.getRecoveryCodes(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDisposalCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getDisposalCodesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await wtsInfoController.getDisposalCodes(request);
   },
   { method: HttpMethod.POST }
 );

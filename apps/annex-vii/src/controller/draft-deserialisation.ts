@@ -29,6 +29,12 @@ import {
   DeleteTemplateRequest,
   CreateTemplateFromSubmissionRequest,
   CreateTemplateFromTemplateRequest,
+  GetWasteCodesRequest,
+  wtsInfoSchema,
+  GetEWCCodesRequest,
+  GetCountriesRequest,
+  GetRecoveryCodesRequest,
+  GetDisposalCodesRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -160,3 +166,21 @@ export const createTemplateFromTemplateRequest =
 export const deleteTemplateRequest = ajv.compileParser<DeleteTemplateRequest>(
   templateSchema.deleteTemplateRequest
 );
+
+export const getWasteCodesRequest = ajv.compileParser<GetWasteCodesRequest>(
+  wtsInfoSchema.getWasteCodesRequest
+);
+export const getEWCCodesRequest = ajv.compileParser<GetEWCCodesRequest>(
+  wtsInfoSchema.getEWCCodesRequest
+);
+export const getCountriesRequest = ajv.compileParser<GetCountriesRequest>(
+  wtsInfoSchema.getCountriesRequest
+);
+export const getRecoveryCodesRequest =
+  ajv.compileParser<GetRecoveryCodesRequest>(
+    wtsInfoSchema.getRecoveryCodesRequest
+  );
+export const getDisposalCodesRequest =
+  ajv.compileParser<GetDisposalCodesRequest>(
+    wtsInfoSchema.getDisposalCodesRequest
+  );

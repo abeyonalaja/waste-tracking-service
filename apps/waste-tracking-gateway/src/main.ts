@@ -23,6 +23,12 @@ import {
   templatePlugin,
 } from './modules/template';
 import { Template } from '@wts/api/annex-vii';
+import {
+  WTSInfoBackend,
+  WTSInfoServiceBackend,
+  WTSInfoStub,
+} from './modules/wts-info/wts-info.backend';
+import { wtsInfoPlugin } from './modules/wts-info';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -43,6 +49,7 @@ let backend: {
   submission: SubmissionBackend;
   address: AddressBackend;
   template: TemplateBackend;
+  wtsInfo: WTSInfoBackend;
 };
 if (process.env['NODE_ENV'] === 'development') {
   logger.warn('service is using mock-backends; not for production use');
@@ -53,10 +60,12 @@ if (process.env['NODE_ENV'] === 'development') {
     templates
   );
   const templateBackend = new InMemoryTemplateBackend(submissions, templates);
+  const wtsInfoBackend = new WTSInfoStub();
   backend = {
     address: new AddressStub(),
     submission: submissionBackend,
     template: templateBackend,
+    wtsInfo: wtsInfoBackend,
   };
 } else {
   const client = new DaprClient();
@@ -74,6 +83,13 @@ if (process.env['NODE_ENV'] === 'development') {
     ),
     logger
   );
+  const wtsInfoBackend = new WTSInfoServiceBackend(
+    new DaprAnnexViiClient(
+      client,
+      process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+    ),
+    logger
+  );
   backend = {
     address: new AddressServiceBackend(
       new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
@@ -81,6 +97,7 @@ if (process.env['NODE_ENV'] === 'development') {
     ),
     submission: submissionBackend,
     template: templateBackend,
+    wtsInfo: wtsInfoBackend,
   };
 }
 
@@ -103,6 +120,17 @@ await app.register({
   },
   routes: {
     prefix: '/api/addresses',
+  },
+});
+
+await app.register({
+  plugin: wtsInfoPlugin,
+  options: {
+    backend: backend.wtsInfo,
+    logger,
+  },
+  routes: {
+    prefix: '/api/wts-info',
   },
 });
 

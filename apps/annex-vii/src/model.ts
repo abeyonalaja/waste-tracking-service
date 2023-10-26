@@ -11,3 +11,7 @@ export type Template = api.Template;
 export type TemplateSummary = api.TemplateSummary;
 export type TemplateSummaryPage = api.TemplateSummaryPage;
 export type TemplatePageMetadata = api.TemplatePageMetadata;
+export type WasteCode = api.WasteCode;
+export type WasteCodeType = api.WasteCodeType;
+export type Country = api.Country;
+export type RecoveryCode = api.RecoveryCode;
