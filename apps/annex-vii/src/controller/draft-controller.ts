@@ -1073,10 +1073,10 @@ export default class DraftController extends BaseController {
         draft.recoveryFacilityDetail.status === 'Started' ||
         draft.recoveryFacilityDetail.status === 'Complete'
       ) {
-        if (draft.recoveryFacilityDetail.values.length === 3) {
+        if (draft.recoveryFacilityDetail.values.length === 6) {
           return fromBoom(
             Boom.badRequest(
-              'Cannot add more than 3 recovery facilities (Maximum: 1 InterimSite & 2 Recovery Facilities )'
+              'Cannot add more than 3 recovery facilities (Maximum: 1 InterimSite & 5 Recovery Facilities )'
             )
           );
         }

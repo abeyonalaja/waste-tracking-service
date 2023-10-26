@@ -2207,7 +2207,7 @@ describe(DraftController, () => {
   });
 
   describe('createDraftRecoveryFacilities', () => {
-    it('successfully creates up to 3 recovery facilities', async () => {
+    it('successfully creates up to 6 recovery facilities', async () => {
       const id = faker.datatype.uuid();
       mockRepository.getDraft.mockResolvedValue({
         id,
@@ -2235,6 +2235,33 @@ describe(DraftController, () => {
 
       const accountId = faker.datatype.uuid();
       let response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        value: { status: 'Started' },
+      });
+
+      expect(mockRepository.saveDraft).toBeCalled();
+      expect(response.success).toBe(true);
+
+      response = await subject.createDraftRecoveryFacilityDetails({
         id,
         accountId,
         value: { status: 'Started' },
