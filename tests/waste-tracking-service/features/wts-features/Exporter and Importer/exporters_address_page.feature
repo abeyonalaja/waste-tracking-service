@@ -28,7 +28,8 @@ Feature: AS A waste producer
     Then the "exporter address" page is displayed
     And I enter valid postcode
     And I click Find Address button
-    And I select first address from the lookup
+    Then then "choose exporter address details" page is displayed
+    And I choose first address from the list
     And I click the button Save and continue
     Then the "exporter address" page is displayed
     And I should selected address is displayed with Change address link on the page
@@ -40,7 +41,7 @@ Feature: AS A waste producer
     Then the "Exporter address" page is displayed
     And I enter valid postcode
     And I click Find Address button
-    And I select first address from the lookup
+    And I choose first address from the list
     And I click the button Save and continue
     Then the "Exporter details" page is displayed
     And I should selected address is displayed with Change address link on the page

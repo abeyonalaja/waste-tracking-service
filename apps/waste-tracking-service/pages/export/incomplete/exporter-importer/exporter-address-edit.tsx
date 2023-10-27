@@ -39,7 +39,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterManual = () => {
+const ExporterAddressEdit = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -139,7 +139,7 @@ const ExporterManual = () => {
               if (data !== undefined) {
                 const path = returnToDraft
                   ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/exporter-importer/exporter-address`;
+                  : `/export/incomplete/exporter-importer/exporter-details`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -173,7 +173,7 @@ const ExporterManual = () => {
   return (
     <>
       <Head>
-        <title>{t('exportJourney.exporterPostcode.title')}</title>
+        <title>{t('exportJourney.exporterPostcodeEdit.title')}</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -201,13 +201,12 @@ const ExporterManual = () => {
                   {t('exportJourney.exporterDetails.caption')}
                 </GovUK.Caption>
                 <GovUK.Heading size={'LARGE'}>
-                  {t('exportJourney.exporterPostcode.title')}
+                  {t('exportJourney.exporterPostcodeEdit.title')}
                 </GovUK.Heading>
 
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput
-                      hint={t('address.addressLine.hint')}
                       input={{
                         name: 'address',
                         id: 'address',
@@ -223,7 +222,6 @@ const ExporterManual = () => {
                       {t('address.addressLine1')}
                     </AddressInput>
                     <AddressInput
-                      hint={t('address.addressLine.hint')}
                       input={{
                         name: 'address2',
                         id: 'address2',
@@ -258,7 +256,7 @@ const ExporterManual = () => {
                         onChange: (e) => setPostcode(e.target.value),
                       }}
                     >
-                      {t('address.postcodeOptional')}
+                      {t('address.postcode')}
                     </PostcodeInput>
                     <RadioList
                       value={country}
@@ -289,4 +287,4 @@ const ExporterManual = () => {
   );
 };
 
-export default ExporterManual;
+export default ExporterAddressEdit;

@@ -5,16 +5,13 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  AppLink,
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
   Loading,
-  Paragraph,
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
-  Address,
 } from 'components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -206,19 +203,7 @@ const ExporterDetails = () => {
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.exporterDetails.title')}
                 </GovUK.Heading>
-                {data.status !== 'NotStarted' && (
-                  <Address address={data.exporterAddress} />
-                )}
-                <Paragraph mb={8}>
-                  <AppLink
-                    href={{
-                      pathname: `/export/incomplete/exporter-importer/exporter-details-manual`,
-                      query: { id },
-                    }}
-                  >
-                    {t('address.change')}
-                  </AppLink>
-                </Paragraph>
+
                 <form onSubmit={handleSubmit}>
                   <GovUK.FormGroup>
                     <AddressInput

@@ -371,7 +371,7 @@ const Tasklist = () => {
                           pathname:
                             tasklistPage.data?.exporterDetail.status ===
                             'Complete'
-                              ? `/export/incomplete/exporter-importer/exporter-details`
+                              ? `/export/incomplete/exporter-importer/exporter-address`
                               : tasklistPage.data?.exporterDetail.status ===
                                 'Started'
                               ? `/export/incomplete/exporter-importer/exporter-details-manual`

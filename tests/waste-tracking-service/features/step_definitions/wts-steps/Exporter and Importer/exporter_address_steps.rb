@@ -9,8 +9,8 @@ And(/^I click Find Address button$/) do
   ExporterAddressPage.new.find_address
 end
 
-And(/^I select first address from the lookup$/) do
-  ExporterAddressPage.new.select_first_address
+And(/^I choose first address from the list$/) do
+  ExporterAddressPage.new.choose_first_address
 end
 
 Then(/^I verify the postcode field is displayed with the initial postcode pre\-populated$/) do

@@ -6,6 +6,7 @@ module ExporterDetailsController
     submit_an_export_page = TaskListPage.new
     submit_an_export_page.exporter_details
     exporter_address_page = ExporterAddressPage.new
+    exporter_address_page.check_page_displayed
 
     sleep 1
     if _postcode

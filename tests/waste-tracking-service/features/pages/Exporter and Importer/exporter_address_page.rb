@@ -2,12 +2,15 @@
 
 require_relative '../shared_components/general_helpers'
 require_relative '../shared_components/error_box'
+require_relative '../shared_components/page_helper'
 # this page is for Exporter details page details
 class ExporterAddressPage < GenericPage
   include GeneralHelpers
   include ErrorBox
+  include PageHelper
 
   POSTCODE_FIELD_ID = 'postcode'
+  BUILDING_NAME_NUMBER = 'buildingNameOrNumber'
   TITLE = Translations.value 'exportJourney.exporterPostcode.title'
 
   def check_page_displayed
@@ -18,8 +21,12 @@ class ExporterAddressPage < GenericPage
     fill_in POSTCODE_FIELD_ID, with: input_value, visible: false
   end
 
-  def has_postcode?(postocde)
-    find(POSTCODE_FIELD_ID).value == postocde
+  def enter_building_name(input_value)
+    fill_in BUILDING_NAME_NUMBER, with: input_value, visible: false
+  end
+
+  def has_postcode?(postcode)
+    find(POSTCODE_FIELD_ID).value == postcode
   end
 
   def has_address?(address)
@@ -76,6 +83,12 @@ class ExporterAddressPage < GenericPage
   def exporter_postcode(postcode)
     fill_in 'postcode', with: '', visible: false
     fill_in 'postcode', with: postcode, visible: false
+  end
+
+  def choose_first_address
+    TestStatus.set_test_status(:exporter_address, first(:css, "[type='radio']", visible: false).text)
+    Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
+    first(:css, "[type='radio']", visible: false).click
   end
 
   def actual_address

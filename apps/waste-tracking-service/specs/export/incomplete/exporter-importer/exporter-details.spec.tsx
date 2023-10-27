@@ -33,13 +33,6 @@ describe('Exporter details page', () => {
     });
   });
 
-  it('should display address details from the API', async () => {
-    await act(async () => {
-      render(<ExporterDetails />);
-    });
-    expect(await screen.findByText('EC2N 4AY')).toBeTruthy();
-  });
-
   it('should show validation messages if nothing entered', async () => {
     await act(async () => {
       render(<ExporterDetails />);

@@ -18,6 +18,20 @@ const addressResponse = [
     postcode: 'EC2N 4AY',
     country: 'United Kingdom',
   },
+  {
+    addressLine1: 'Autonomy Capital Research LLP',
+    addressLine2: '110 Bishopsgate',
+    townCity: 'LONDON',
+    postcode: 'EC2N 4AY',
+    country: 'United Kingdom',
+  },
+  {
+    addressLine1: 'B A S F Metals',
+    addressLine2: '110 Bishopsgate',
+    townCity: 'LONDON',
+    postcode: 'EC2N 4AY',
+    country: 'United Kingdom',
+  },
 ];
 
 function setupFetchStub(data) {
@@ -75,7 +89,7 @@ describe('Exporter postcode page', () => {
     expect(errorMessage).toBeTruthy();
   });
 
-  it('should show address drop down and validation if no option is selected', async () => {
+  it('should show radio buttons and validation if no option is selected', async () => {
     await act(async () => {
       render(<ExporterPostcode />);
     });
@@ -88,11 +102,12 @@ describe('Exporter postcode page', () => {
       .mockImplementation(setupFetchStub(addressResponse));
 
     const submitButton = screen.getByText('Find address');
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
 
-    expect(await screen.findByText('Save and continue')).toBeTruthy();
-
-    const submitButtonSave = screen.getByText('Save and continue');
+    const submitButtonSave = await screen.getByText('Save and continue');
+    expect(submitButtonSave).toBeTruthy();
     fireEvent.click(submitButtonSave);
 
     const errorMessage = screen.getAllByText('Select an address')[0];

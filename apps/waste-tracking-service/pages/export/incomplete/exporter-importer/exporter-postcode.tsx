@@ -23,7 +23,7 @@ const PostcodeInput = styled(GovUK.Input)`
   max-width: 23ex;
 `;
 
-const Paragraph = styled.p`
+const Paragraph = styled.div`
   margin-bottom: 20px;
   font-size: 19px;
 `;
@@ -33,6 +33,7 @@ const ExporterPostcode = () => {
   const router = useRouter();
   const [id, setId] = useState(null);
   const [postcode, setPostcode] = useState<string>('');
+  const [buildingNameOrNumber, setNumber] = useState<string>('');
   const [addresses, setAddresses] = useState<[]>();
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [errors, setErrors] = useState<{
@@ -57,7 +58,7 @@ const ExporterPostcode = () => {
         setErrors(null);
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/addresses?postcode=${postcode}`,
+            `${process.env.NX_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
             {
               method: 'GET',
               headers: {
@@ -70,7 +71,14 @@ const ExporterPostcode = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                setAddresses(data);
+                if (data.length === 1) {
+                  putAddress(
+                    JSON.stringify(data[0]),
+                    '/export/incomplete/exporter-importer/exporter-address-edit'
+                  );
+                } else {
+                  setAddresses(data);
+                }
               }
             });
         } catch (e) {
@@ -79,7 +87,7 @@ const ExporterPostcode = () => {
       }
       e.preventDefault();
     },
-    [postcode]
+    [buildingNameOrNumber, postcode]
   );
 
   const handleLinkSubmit = (e) => {
@@ -87,7 +95,7 @@ const ExporterPostcode = () => {
   };
 
   const handleSubmitAddress = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    (e, returnToDraft = false) => {
       const newErrors = {
         selectedAddress: validateSelectAddress(selectedAddress),
       };
@@ -95,12 +103,27 @@ const ExporterPostcode = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
+        putAddress(
+          selectedAddress,
+          returnToDraft
+            ? `/export/incomplete/tasklist`
+            : `/export/incomplete/exporter-importer/exporter-address`
+        );
+      }
+      e.preventDefault();
+    },
+    [id, router, selectedAddress]
+  );
+
+  const putAddress = useCallback(
+    async (address, path) => {
+      if (address) {
         const body = {
           status: 'Started',
-          exporterAddress: JSON.parse(selectedAddress),
+          exporterAddress: JSON.parse(address),
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
@@ -116,9 +139,7 @@ const ExporterPostcode = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/exporter-importer/exporter-details`,
+                  pathname: path,
                   query: { id },
                 });
               }
@@ -127,9 +148,8 @@ const ExporterPostcode = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
-    [selectedAddress]
+    [id, router]
   );
 
   const BreadCrumbs = () => {
@@ -180,57 +200,43 @@ const ExporterPostcode = () => {
             <GovUK.Caption size="L">
               {t('exportJourney.exporterDetails.caption')}
             </GovUK.Caption>
+
             <GovUK.Heading size={'LARGE'}>
               {t('exportJourney.exporterPostcode.title')}
             </GovUK.Heading>
 
             {addresses && (
               <div id="page-exporter-postcode-search-results">
-                <Paragraph>
-                  {postcode.toUpperCase()}
-                  <span> </span>
-                  <AppLink href="#" onClick={() => setAddresses(null)}>
-                    Change{' '}
-                    <GovUK.VisuallyHidden>the postcode</GovUK.VisuallyHidden>
-                  </AppLink>
-                </Paragraph>
                 <form onSubmit={handleSubmitAddress}>
-                  <GovUK.FormGroup error={!!errors?.selectedAddress}>
-                    <GovUK.Label htmlFor={'selectedAddress'}>
-                      <GovUK.LabelText>
-                        {t('postcode.selectLabel')}
-                      </GovUK.LabelText>
-                    </GovUK.Label>
-                    <GovUK.ErrorText>{errors?.selectedAddress}</GovUK.ErrorText>
-                    <GovUK.Select
-                      label={''}
-                      input={{
-                        id: 'selectedAddress',
-                        name: 'selectedAddress',
-                        onChange: (e) => setSelectedAddress(e.target.value),
+                  <GovUK.Fieldset>
+                    <GovUK.MultiChoice
+                      mb={6}
+                      label=""
+                      meta={{
+                        error: errors?.selectedAddress,
+                        touched: !!errors?.selectedAddress,
                       }}
                     >
-                      <option value="">
-                        {addresses.length > 1
-                          ? t('postcode.addressesFound', {
-                              n: addresses.length,
-                            })
-                          : t('postcode.addressFound', { n: addresses.length })}
-                      </option>
                       {addresses.map((address, key) => {
                         return (
-                          <option
-                            key={`address${key}`}
+                          <GovUK.Radio
+                            key={key}
+                            name="addressSelection"
+                            id={JSON.stringify(address)}
+                            checked={
+                              selectedAddress === JSON.stringify(address)
+                            }
+                            onChange={(e) => setSelectedAddress(e.target.value)}
                             value={JSON.stringify(address)}
                           >
                             {Object.keys(address)
                               .map((line) => address[line])
                               .join(', ')}
-                          </option>
+                          </GovUK.Radio>
                         );
                       })}
-                    </GovUK.Select>
-                  </GovUK.FormGroup>
+                    </GovUK.MultiChoice>
+                  </GovUK.Fieldset>
                   <Paragraph>
                     <AppLink
                       href={{
@@ -238,7 +244,7 @@ const ExporterPostcode = () => {
                         query: { id },
                       }}
                     >
-                      {t('postcode.notFoundLink')}
+                      {t('postcode.enterManualy')}
                     </AppLink>
                   </Paragraph>
                   <ButtonGroup>
@@ -271,33 +277,46 @@ const ExporterPostcode = () => {
                       onChange={(e) => setPostcode(e.target.value)}
                     />
                   </GovUK.FormGroup>
-
-                  <ButtonGroup>
-                    <GovUK.Button id="saveButton">
-                      {t('postcode.findButton')}
-                    </GovUK.Button>
-                    <SaveReturnButton
-                      onClick={() =>
-                        router.push({
-                          pathname: `/export/incomplete/tasklist`,
-                          query: { id },
-                        })
-                      }
+                  <GovUK.FormGroup>
+                    <GovUK.Label htmlFor={'buildingNameOrNumber'}>
+                      <GovUK.LabelText>
+                        {t('buildingNameNumber.label')}
+                      </GovUK.LabelText>
+                    </GovUK.Label>
+                    <GovUK.ErrorText />
+                    <PostcodeInput
+                      name="buildingNameOrNumber"
+                      id="buildingNameOrNumber"
+                      value={buildingNameOrNumber}
+                      maxLength={50}
+                      autoComplete="street-address"
+                      onChange={(e) => setNumber(e.target.value)}
+                    />
+                  </GovUK.FormGroup>
+                  <GovUK.Button id="saveButton">
+                    {t('postcode.findButton')}
+                  </GovUK.Button>
+                  <Paragraph>
+                    <AppLink
+                      href={{
+                        pathname: 'exporter-details-manual',
+                        query: { id },
+                      }}
                     >
-                      {t('returnToDraft')}
-                    </SaveReturnButton>
-                  </ButtonGroup>
-                </form>
-                <Paragraph>
-                  <AppLink
-                    href={{
-                      pathname: 'exporter-details-manual',
-                      query: { id },
-                    }}
+                      {t('postcode.manualAddressLink')}
+                    </AppLink>
+                  </Paragraph>
+                  <SaveReturnButton
+                    onClick={() =>
+                      router.push({
+                        pathname: `/export/incomplete/tasklist`,
+                        query: { id },
+                      })
+                    }
                   >
-                    {t('postcode.manualAddressLink')}
-                  </AppLink>
-                </Paragraph>
+                    {t('saveReturnButton')}
+                  </SaveReturnButton>
+                </form>
               </div>
             )}
           </GovUK.GridCol>
