@@ -218,6 +218,9 @@ const NationalCode = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.wasteCodesAndDesc.caption')}
+                </GovUK.Caption>
                 <form onSubmit={handleSubmit}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">

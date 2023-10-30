@@ -201,6 +201,9 @@ const Quantity = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.quantity.caption')}
+                </GovUK.Caption>
                 <form onSubmit={handleSubmit}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">

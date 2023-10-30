@@ -243,6 +243,9 @@ const WasteCode = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.wasteCodesAndDesc.caption')}
+                </GovUK.Caption>
                 <form onSubmit={(e) => handleSubmit(e)}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">

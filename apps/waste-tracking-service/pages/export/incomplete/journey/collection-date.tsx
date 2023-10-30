@@ -201,6 +201,9 @@ const CollectionDate = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.wasteCollectionDate.caption')}
+                </GovUK.Caption>
                 <form onSubmit={handleSubmit}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">

@@ -544,7 +544,7 @@ const EwcCodes = () => {
                     />
                   )}
                 <GovUK.Caption size="L">
-                  {t('exportJourney.ewc.caption')}
+                  {t('exportJourney.wasteCodesAndDesc.caption')}
                 </GovUK.Caption>
                 {ewcCodePage.showView === VIEWS.LIST && (
                   <>

@@ -222,6 +222,9 @@ const QuantityEntry = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.quantity.caption')}
+                </GovUK.Caption>
                 {bulkWaste && (
                   <form onSubmit={handleSubmit}>
                     <GovUK.Fieldset>

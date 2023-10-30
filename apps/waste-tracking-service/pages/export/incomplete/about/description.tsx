@@ -240,6 +240,9 @@ const Description = () => {
                     }))}
                   />
                 )}
+                <GovUK.Caption size="L">
+                  {t('exportJourney.wasteCodesAndDesc.caption')}
+                </GovUK.Caption>
                 <form onSubmit={handleSubmit}>
                   <GovUK.GridRow>
                     <GovUK.GridCol setWidth="two-thirds">
