@@ -252,8 +252,12 @@ Feature: AS A waste practitioner
     Then I click show all sections link
     And I should see actual collection date correctly displayed
     When I click "Back" link should display "Update with actual" page
+    Then I should not see updated with actual exports on update with actual page
+    When I click Export waste from the UK from the breadcrumb
+    And I click the "View all submitted Annex VII records" link
+    Then the "Submitted records" page is displayed
     And I verify reference section is filled with reference
-    And I should see correct date and waste code and transaction reference
+    And I should see update collection date and waste code and transaction reference
 
   Scenario: User can update estimated quantity in cubic meters and collection date and confirm the changes, export should be in submitted lists
     Given I login to waste tracking portal

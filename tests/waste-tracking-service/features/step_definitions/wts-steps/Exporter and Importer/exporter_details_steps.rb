@@ -1,14 +1,14 @@
-And(/^I should selected address is displayed with Change address link on the page$/) do
+And(/^I should check exporter address is displayed with Change address link on the page$/) do
   sleep 0.5
-  expect(ExporterAddressPage.new).to have_address TestStatus.test_status(:exporter_address)
-  expect(page).to have_link(Translations.value('address.change'))
+  expect(CheckExporterAddressPage.new).to have_address TestStatus.test_status(:exporter_address)
+  expect(CheckExporterAddressPage.new).to have_link(Translations.value('change'))
 end
 
-And(/^I navigate to Exporter details page with valid postcode$/) do
+And(/^I navigate to Check Exporter address details page with valid postcode$/) do
   TaskListPage.new.exporter_details
   ExporterAddressPage.new.enter_postcode 'ng23lp'
   ExporterAddressPage.new.find_address
-  ExporterAddressPage.new.select_first_address
+  ExporterAddressPage.new.choose_first_address
   ExporterAddressPage.new.save_and_continue
 end
 

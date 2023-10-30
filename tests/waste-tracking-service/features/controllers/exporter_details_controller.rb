@@ -14,9 +14,12 @@ module ExporterDetailsController
       exporter_address_page.enter_postcode postcode
       TestStatus.set_test_status(:exporter_post_code, postcode)
       exporter_address_page.find_address
-      exporter_address_page.select_first_address
+      exporter_address_page.choose_first_address
       TestStatus.set_test_status(:exporter_country, 'United Kingdom')
       exporter_address_page.save_and_continue
+      check_exporter_address_page = CheckExporterAddressPage.new
+      check_exporter_address_page.check_page_displayed
+      check_exporter_address_page.save_and_continue
     else
       exporter_address_page.enter_address_manually
       # need to enter manual details

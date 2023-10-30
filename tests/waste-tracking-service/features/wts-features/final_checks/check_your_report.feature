@@ -268,7 +268,11 @@ Feature: AS A Waste Practitioner
     Then I verify Enter exporter address manual page is displayed
     When I click the button Save and continue
     When I wait for a second
-    When I click the Save and return to draft
+    When I click the button Save and continue
+    Then the "Check exporter address" page is displayed
+    When I click the button Save and continue
+    Then the "exporter details" page is displayed
+    And I click the Save and return to draft
     When I click the "Check your record" link
     And I click Exporter details Change link
     Then the "exporter details" page is displayed

@@ -8,6 +8,7 @@ class ExporterDetailsPage < GenericPage
   include ErrorBox
 
   TITLE = Translations.value 'exportJourney.exporterDetails.title'
+  HINT_TEXT = Translations.value 'exportJourney.submitAnExport.SectionTwo.exporterDetails'
   ORGANISATION_NAME = 'organisationName'
   FULL_NAME = 'fullName'
   EMAIL = 'email'

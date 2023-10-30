@@ -30,7 +30,7 @@ class EnterExporterAddressManualPage < GenericPage
     fill_in POSTCODE, with: postcode, visible: false
   end
 
-  #Always pick England
+  # Always pick England
   def select_first_country_option
     find(COUNTRY, visible: false).click
   end
@@ -48,7 +48,7 @@ class EnterExporterAddressManualPage < GenericPage
   end
 
   def has_reference_country?(country)
-    find(COUNTRY).value == country
+    find(COUNTRY, visible: false).value == country
   end
 
   def check_page_translation

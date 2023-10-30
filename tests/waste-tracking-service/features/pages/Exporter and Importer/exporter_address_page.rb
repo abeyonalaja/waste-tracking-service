@@ -12,7 +12,11 @@ class ExporterAddressPage < GenericPage
   POSTCODE_FIELD_ID = 'postcode'
   BUILDING_NAME_NUMBER = 'buildingNameOrNumber'
   TITLE = Translations.value 'exportJourney.exporterPostcode.title'
-
+  BACK = Translations.value 'back'
+  TITLE = Translations.value 'exportJourney.exporterPostcode.title'
+  HINT_TEXT = Translations.value 'exportJourney.exporterPostcode.hint'
+  POSTCODE_TEXT = Translations.value 'postcode.label'
+  MANUAL_ENTRY_LINK = Translations.value 'postcode.manualAddressLink'
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
@@ -34,20 +38,14 @@ class ExporterAddressPage < GenericPage
   end
 
   def check_page_translation
-    title = Translations.value 'exportJourney.exporterPostcode.title'
-    hint_text = Translations.value 'exportJourney.exporterPostcode.hint'
-    postcode_text = Translations.value 'postcode.label'
-    manual_entry_link = Translations.value 'postcode.manualAddressLink'
-    expect(self).to have_css 'h1', text: title, exact_text: true
-    expect(self).to have_text hint_text
-    expect(page).to have_text postcode_text
-    expect(page).to have_link manual_entry_link, match: :prefer_exact
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_text HINT_TEXT
+    expect(page).to have_text POSTCODE_TEXT
+    expect(page).to have_link MANUAL_ENTRY_LINK, match: :prefer_exact
   end
 
   def check_postcode_translation
-    select_an_address = Translations.value 'postcode.selectLabel'
-    expect(page).to have_text select_an_address
-    expect(page).to have_link 'Change', match: :prefer_exact
+    expect(page).to have_link Translations.value'postcode.enterManualy'
   end
 
   def select_first_address
@@ -86,7 +84,7 @@ class ExporterAddressPage < GenericPage
   end
 
   def choose_first_address
-    TestStatus.set_test_status(:exporter_address, first(:css, "[type='radio']", visible: false).text)
+    TestStatus.set_test_status(:exporter_address, first(:css, "[type='radio']+span", visible: false).text)
     Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
     first(:css, "[type='radio']", visible: false).click
   end

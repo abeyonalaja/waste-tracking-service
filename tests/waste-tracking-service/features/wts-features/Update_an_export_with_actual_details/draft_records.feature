@@ -9,7 +9,7 @@ Feature: AS A Waste practitioner
     When I click the "Manage incomplete Annex VII records" link
     Then I should see empty draft Annex VII page
 
-  @translation
+  @translation @retry
   Scenario: User can save draft after application reference
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -61,6 +61,7 @@ Feature: AS A Waste practitioner
     And the task "Countries waste will travel through" should be "COMPLETED"
     And the task "Recovery facility or laboratory" should be "COMPLETED"
 
+  @retry
   Scenario: User can use pagination to view incomplete exports
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

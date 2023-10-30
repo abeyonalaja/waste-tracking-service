@@ -39,4 +39,17 @@ When(/^I change exporter address with new address$/) do
   EnterExporterAddressManualPage.new.select_first_country_option
   ExporterAddressPage.new.exporter_postcode 'SW1P 4DF'
   TestStatus.set_test_status(:exporter_address, 'Seacole Building,2 Marsham St,London,SW1P 4DF,England')
+  TestStatus.set_test_status(:address1, 'Seacole Building')
+  TestStatus.set_test_status(:address2, '2 Marsham St')
+  TestStatus.set_test_status(:town, 'London')
+  TestStatus.set_test_status(:postcode, 'SW1P 4DF')
+  TestStatus.set_test_status(:country, 'England')
+end
+
+And(/^I enter building number or building name$/) do
+  ExporterAddressPage.new.enter_building_name 12
+end
+
+And(/^I should see edit exporter address page is correctly translated$/) do
+  EditExporterAddressPage.new.check_page_translation
 end

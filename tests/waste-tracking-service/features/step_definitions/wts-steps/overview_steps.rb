@@ -26,4 +26,3 @@ end
 Then(/^Export waste from UK page is displayed$/) do
   ExportWasteFromUkPage.new.check_page_displayed
 end
-

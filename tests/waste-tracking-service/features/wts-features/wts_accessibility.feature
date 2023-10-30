@@ -90,7 +90,7 @@ Feature: Automation to check accessibility tool
   Scenario: Check WTS Accessibility for - Exporter details page, postcode finder
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
-    And I navigate to Exporter details page with valid postcode
+    And I navigate to Check Exporter address details page with valid postcode
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
@@ -108,7 +108,7 @@ Feature: Automation to check accessibility tool
   Scenario: Check WTS Accessibility for - Exporter details page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
-    And I navigate to Exporter details page with valid postcode
+    And I navigate to Check Exporter address details page with valid postcode
     Then the page should be axe clean according to: wcag2a; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
