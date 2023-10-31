@@ -705,6 +705,9 @@ const TransitCountries = () => {
                             showAllValues={true}
                             onConfirm={(option) => setChangeCountry(option)}
                             confirmOnBlur={false}
+                            dropdownArrow={() => {
+                              return;
+                            }}
                           />
                         </GovUK.FormGroup>
                       </GovUK.Fieldset>

@@ -18,20 +18,17 @@ import {
   Loading,
   ButtonGroup,
   SaveReturnButton,
+  CountrySelector,
 } from 'components';
 import styled from 'styled-components';
 import {
   isNotEmpty,
   validateAddress,
   validateCountry,
-  validateCountrySelect,
   validateEmail,
   validateFieldNotEmpty,
   validateFullName,
-  validateOrganisationName,
   validatePhone,
-  validatePostcode,
-  validateTownCity,
 } from 'utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
 import { recoveryData } from 'utils/recoveryData';
@@ -388,6 +385,13 @@ const Laboratory = () => {
     }));
   };
 
+  const onCountryChange = (option) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      ['country']: option,
+    }));
+  };
+
   const onContactDetailsChange = (e) => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
@@ -535,18 +539,15 @@ const Laboratory = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country,
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                      <CountrySelector
+                        id={'country'}
+                        name={'country'}
+                        label={t('address.country')}
+                        value={addressDetails?.country || ''}
+                        onChange={onCountryChange}
+                        error={laboratoryPage.errors?.country}
+                        size={75}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}

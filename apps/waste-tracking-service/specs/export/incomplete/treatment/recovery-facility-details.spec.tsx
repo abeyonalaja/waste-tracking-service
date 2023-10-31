@@ -12,8 +12,26 @@ jest.mock('next/router', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     json: () =>
-      Promise.resolve({ status: 'Started', values: [{ id: '987654321' }] }),
+      Promise.resolve({
+        status: 'Started',
+        values: [
+          {
+            id: '12345',
+            addressDetails: {
+              country: 'Afghanistan',
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: '',
+            },
+          },
+        ],
+      }),
   })
 );
 
@@ -48,14 +66,10 @@ describe('Recovery facilities pages', () => {
 
     const siteName = screen.getByLabelText('Facility name');
     const address = screen.getByLabelText('Address');
-    const country = screen.getByLabelText(
-      "CountryWe'll use this as the importing country. This cannot be the UK."
-    );
 
     await act(async () => {
       fireEvent.change(siteName, { target: { value: 'site name' } });
       fireEvent.change(address, { target: { value: 'address' } });
-      fireEvent.change(country, { target: { value: 'England' } });
     });
 
     const submitButton = screen.getByText('Save and continue');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { render, act, screen, fireEvent } from 'jest-utils';
 import InterimSiteDetails from 'pages/export/incomplete/treatment/interim-site-details';
 
@@ -19,10 +19,41 @@ global.fetch = jest.fn(() =>
     json: () =>
       Promise.resolve({
         status: 'Started',
-        values: [{ id: '123' }],
+        values: [
+          {
+            id: '12345',
+            addressDetails: {
+              country: 'Afghanistan',
+            },
+            recoveryFacilityType: {
+              type: 'InterimSite',
+              recoveryCode: '',
+            },
+          },
+        ],
       }),
   })
 );
+
+const CountrySelectorMock = ({ id, name, label, value, error, onChange }) => {
+  return (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      {error && <span>{error}</span>}
+      <input
+        id={id}
+        name={name}
+        type="text"
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
+jest.mock('components/CountrySelector', () => ({
+  CountrySelector: CountrySelectorMock,
+}));
 
 describe('Interim site pages', () => {
   it('should render the page', async () => {
@@ -54,12 +85,10 @@ describe('Interim site pages', () => {
 
     const siteName = screen.getByLabelText('Interim site name');
     const address = screen.getByLabelText('Address');
-    const country = screen.getByLabelText('Country');
 
     await act(async () => {
       fireEvent.change(siteName, { target: { value: 'site name' } });
       fireEvent.change(address, { target: { value: 'address' } });
-      fireEvent.change(country, { target: { value: 'England' } });
     });
 
     const submitButton = screen.getByText('Save and continue');
@@ -78,17 +107,12 @@ describe('Interim site pages', () => {
               status: 'Started',
               values: [
                 {
-                  status: 'Started',
-                  values: [
-                    {
-                      id: '123',
-                      addressDetails: {
-                        name: 'site name',
-                        address: 'address',
-                        country: 'England',
-                      },
-                    },
-                  ],
+                  id: '123',
+                  addressDetails: {
+                    name: 'site name',
+                    address: 'address',
+                    country: 'England',
+                  },
                 },
               ],
             }),

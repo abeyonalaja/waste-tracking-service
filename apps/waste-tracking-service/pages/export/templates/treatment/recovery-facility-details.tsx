@@ -20,6 +20,7 @@ import {
   Loading,
   SummaryCard,
   SummaryList,
+  CountrySelector,
 } from 'components';
 import {
   isNotEmpty,
@@ -498,6 +499,13 @@ const RecoveryFacilityDetails = () => {
     }));
   };
 
+  const onCountryChange = (option) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      ['country']: option,
+    }));
+  };
+
   const onContactDetailsChange = (e) => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
@@ -785,19 +793,16 @@ const RecoveryFacilityDetails = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
+                      <CountrySelector
+                        id={'country'}
+                        name={'country'}
+                        label={t('address.country')}
+                        value={addressDetails?.country || ''}
+                        onChange={onCountryChange}
+                        error={recoveryPage.errors?.country}
                         hint={t('exportJourney.recoveryFacilities.countryHint')}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country || '',
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                        size={75}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}

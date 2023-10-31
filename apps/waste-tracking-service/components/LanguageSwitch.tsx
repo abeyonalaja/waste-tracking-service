@@ -114,7 +114,7 @@ export const LanguageSwitch = ({ showAll = false }: Props) => {
           <LanguageList>
             <LanguageListItem>
               <StyledLink
-                href="#"
+                href="/"
                 rel="alternate"
                 onClick={(e) => changeLanguage(e, 'en')}
               >
@@ -138,7 +138,7 @@ export const LanguageSwitch = ({ showAll = false }: Props) => {
             </LanguageListItemCurrent>
             <LanguageListItem>
               <StyledLink
-                href="#"
+                href="/"
                 rel="alternate"
                 onClick={(e) => changeLanguage(e, 'cy')}
               >

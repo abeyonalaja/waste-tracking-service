@@ -18,6 +18,7 @@ import {
   Loading,
   ButtonGroup,
   SaveReturnButton,
+  CountrySelector,
 } from 'components';
 import styled from 'styled-components';
 import {
@@ -388,6 +389,13 @@ const Laboratory = () => {
     }));
   };
 
+  const onCountryChange = (option) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      ['country']: option,
+    }));
+  };
+
   const onContactDetailsChange = (e) => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
@@ -535,22 +543,15 @@ const Laboratory = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country,
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                        meta={{
-                          error: laboratoryPage.errors?.country,
-                          touched: !!laboratoryPage.errors?.country,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                      <CountrySelector
+                        id={'country'}
+                        name={'country'}
+                        label={t('address.country')}
+                        value={addressDetails?.country || ''}
+                        onChange={onCountryChange}
+                        error={laboratoryPage.errors?.country}
+                        size={75}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}
@@ -709,6 +710,9 @@ const Laboratory = () => {
                           }
                           confirmOnBlur={false}
                           defaultValue={recoveryFacilityType?.disposalCode}
+                          dropdownArrow={() => {
+                            return;
+                          }}
                         />
                       </GovUK.FormGroup>
                       <ButtonGroup>

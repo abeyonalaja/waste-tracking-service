@@ -20,6 +20,7 @@ import {
   SaveReturnButton,
   RadioList,
   Paragraph,
+  CountrySelector,
 } from 'components';
 import styled from 'styled-components';
 
@@ -396,6 +397,13 @@ const InterimSiteDetails = () => {
     }));
   };
 
+  const onCountryChange = (option) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      ['country']: option,
+    }));
+  };
+
   const onContactDetailsChange = (e) => {
     const { name, value } = e.target;
     setContactDetails((contactDetails) => ({
@@ -536,22 +544,15 @@ const InterimSiteDetails = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country,
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                        meta={{
-                          error: interimPage.errors?.country,
-                          touched: !!interimPage.errors?.country,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                      <CountrySelector
+                        id="country"
+                        name="country"
+                        label={t('address.country')}
+                        error={interimPage.errors?.country}
+                        value={addressDetails?.country}
+                        onChange={onCountryChange}
+                        size={75}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}
