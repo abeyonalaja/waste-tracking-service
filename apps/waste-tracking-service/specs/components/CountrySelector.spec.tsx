@@ -7,34 +7,13 @@ global.fetch = jest.fn(() =>
     ok: true,
     json: () =>
       Promise.resolve([
-        {
-          isoCode: 'AF',
-          description: 'Afghanistan',
-        },
-        {
-          isoCode: 'AX',
-          description: 'Åland Islands',
-        },
-        {
-          isoCode: 'AL',
-          description: 'Albania',
-        },
-        {
-          isoCode: 'DZ',
-          description: 'Algeria',
-        },
-        {
-          isoCode: 'AS',
-          description: 'American Samoa',
-        },
-        {
-          isoCode: 'AD',
-          description: 'Andorra',
-        },
-        {
-          isoCode: 'AO',
-          description: 'Angola',
-        },
+        { name: 'Afghanistan(AF)' },
+        { name: 'Åland Islands(AX)' },
+        { name: 'Albania(AL)' },
+        { name: 'Algeria(DZ)' },
+        { name: 'American Samoa(AS)' },
+        { name: 'Andorra(AD)' },
+        { name: 'Angola(AO)' },
       ]),
   })
 );
@@ -74,7 +53,7 @@ describe('Country selector component', () => {
     expect(hintElement).toBeTruthy();
   });
 
-  it('should display the list of countries when input is sfocused', async () => {
+  it('should display the list of countries when input is focused', async () => {
     await act(async () => {
       render(<CountrySelector {...defaultProps} />);
     });
@@ -83,7 +62,7 @@ describe('Country selector component', () => {
       fireEvent.click(labelElement);
     });
 
-    const hintElement = screen.getByText('Afghanistan');
+    const hintElement = screen.getByText('Afghanistan(AF)');
     expect(hintElement).toBeTruthy();
   });
 });

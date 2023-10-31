@@ -1289,17 +1289,8 @@ await server.invoker.listen(
 
 await server.invoker.listen(
   api.getCountries.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-
-    const request = parse.getCountriesRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-
-    return await wtsInfoController.getCountries(request);
+  async () => {
+    return await wtsInfoController.getCountries(null);
   },
   { method: HttpMethod.POST }
 );

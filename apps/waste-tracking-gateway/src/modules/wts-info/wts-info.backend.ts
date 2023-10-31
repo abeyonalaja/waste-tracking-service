@@ -13,7 +13,7 @@ import { Logger } from 'winston';
 export interface WTSInfoBackend {
   listWasteCodes(language: string): Promise<api.ListWasteCodesResponse>;
   listEWCCodes(language: string): Promise<api.ListEWCCodesResponse>;
-  listCountries(language: string): Promise<api.ListCountriesResponse>;
+  listCountries(): Promise<api.ListCountriesResponse>;
   listRecoveryCodes(language: string): Promise<api.ListRecoveryCodesResponse>;
   listDisposalCodes(language: string): Promise<api.ListDisposalCodesResponse>;
 }
@@ -317,72 +317,30 @@ export class WTSInfoStub implements WTSInfoBackend {
     }
   }
 
-  async listCountries(language: string): Promise<api.ListCountriesResponse> {
-    if (language === 'en') {
-      return [
-        {
-          isoCode: 'AF',
-          description: 'Afghanistan',
-        },
-        {
-          isoCode: 'AX',
-          description: 'Åland Islands',
-        },
-        {
-          isoCode: 'AL',
-          description: 'Albania',
-        },
-        {
-          isoCode: 'DZ',
-          description: 'Algeria',
-        },
-        {
-          isoCode: 'AS',
-          description: 'American Samoa',
-        },
-        {
-          isoCode: 'AD',
-          description: 'Andorra',
-        },
-        {
-          isoCode: 'AO',
-          description: 'Angola',
-        },
-      ];
-    } else if (language === 'cy') {
-      return [
-        {
-          isoCode: 'AF',
-          description: 'Afghanistan',
-        },
-        {
-          isoCode: 'AX',
-          description: 'Åland Ynysoedd',
-        },
-        {
-          isoCode: 'AL',
-          description: 'Albania',
-        },
-        {
-          isoCode: 'DZ',
-          description: 'Algeria',
-        },
-        {
-          isoCode: 'AS',
-          description: 'Samoa Americanaidd',
-        },
-        {
-          isoCode: 'AD',
-          description: 'Andorra',
-        },
-        {
-          isoCode: 'AO',
-          description: 'Angola',
-        },
-      ];
-    } else {
-      throw Boom.badRequest('Language ' + language + ' is not supported');
-    }
+  async listCountries(): Promise<api.ListCountriesResponse> {
+    return [
+      {
+        name: 'Afghanistan(AF)',
+      },
+      {
+        name: 'Åland Islands(AX)',
+      },
+      {
+        name: 'Albania(AL)',
+      },
+      {
+        name: 'Algeria(DZ)',
+      },
+      {
+        name: 'American Samoa(AS)',
+      },
+      {
+        name: 'Andorra(AD)',
+      },
+      {
+        name: 'Angola(AO)',
+      },
+    ];
   }
 
   async listRecoveryCodes(
@@ -571,10 +529,10 @@ export class WTSInfoServiceBackend implements WTSInfoBackend {
     return response.value;
   }
 
-  async listCountries(language: string): Promise<api.ListCountriesResponse> {
+  async listCountries(): Promise<api.ListCountriesResponse> {
     let response: GetCountriesResponse;
     try {
-      response = await this.client.getCountries({ language });
+      response = await this.client.getCountries();
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();

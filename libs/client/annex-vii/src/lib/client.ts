@@ -160,7 +160,6 @@ import {
   GetRecoveryCodesResponse,
   GetWasteCodesRequest,
   GetWasteCodesResponse,
-  GetCountriesRequest,
   GetDisposalCodesRequest,
   GetEWCCodesRequest,
   GetRecoveryCodesRequest,
@@ -916,12 +915,11 @@ export class DaprAnnexViiClient {
     )) as GetEWCCodesResponse;
   }
 
-  async getCountries(req: GetCountriesRequest): Promise<GetCountriesResponse> {
+  async getCountries(): Promise<GetCountriesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiAppId,
       this.getCountries.name,
-      HttpMethod.POST,
-      req
+      HttpMethod.POST
     )) as GetCountriesResponse;
   }
 

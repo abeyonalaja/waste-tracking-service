@@ -71,21 +71,9 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/countries',
-      handler: async function ({ query }) {
-        let language = query['language'] as string | undefined;
-        if (!language) {
-          language = 'en';
-        }
-
-        language = language.toLowerCase();
-        if (language !== 'en' && language !== 'cy') {
-          return Boom.badRequest(
-            "Language '" + language + "' is not supported"
-          );
-        }
-
+      handler: async function () {
         try {
-          return await backend.listCountries(language);
+          return await backend.listCountries();
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

@@ -32,7 +32,6 @@ import {
   GetWasteCodesRequest,
   wtsInfoSchema,
   GetEWCCodesRequest,
-  GetCountriesRequest,
   GetRecoveryCodesRequest,
   GetDisposalCodesRequest,
 } from '@wts/api/annex-vii';
@@ -172,9 +171,6 @@ export const getWasteCodesRequest = ajv.compileParser<GetWasteCodesRequest>(
 );
 export const getEWCCodesRequest = ajv.compileParser<GetEWCCodesRequest>(
   wtsInfoSchema.getEWCCodesRequest
-);
-export const getCountriesRequest = ajv.compileParser<GetCountriesRequest>(
-  wtsInfoSchema.getCountriesRequest
 );
 export const getRecoveryCodesRequest =
   ajv.compileParser<GetRecoveryCodesRequest>(

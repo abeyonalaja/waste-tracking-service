@@ -49,7 +49,7 @@ export const CountrySelector = ({
         .then((data) => {
           if (data !== undefined) {
             if (data.length > 0) {
-              const filteredData = data.map((c) => c.description);
+              const filteredData = data.map((c) => c.name);
               setCountryList(filteredData);
             } else {
               setCountryList([]);

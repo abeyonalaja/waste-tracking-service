@@ -90,8 +90,7 @@ describe('WTS-Info tests', () => {
         success: true,
         value: [
           {
-            isoCode: 'AF',
-            description: 'English description',
+            name: 'Germany(DE)',
           },
         ],
       };

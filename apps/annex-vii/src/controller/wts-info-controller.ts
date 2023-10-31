@@ -5,7 +5,6 @@ import { Logger } from 'winston';
 import { WTSInfoRepository } from '../data/wts-info-repository';
 import { Handler } from './base-controller';
 import {
-  GetCountriesRequest,
   GetDisposalCodesRequest,
   GetEWCCodesRequest,
   GetRecoveryCodesRequest,
@@ -43,19 +42,18 @@ export default class WTSInfoController {
     }
   };
 
-  getCountries: Handler<GetCountriesRequest, api.GetCountriesResponse> =
-    async ({ language }) => {
-      try {
-        return success(await this.repository.listCountries(language));
-      } catch (err) {
-        if (err instanceof Boom.Boom) {
-          return fromBoom(err);
-        }
-
-        this.logger.error('Unknown error', { error: err });
-        return fromBoom(Boom.internal());
+  getCountries: Handler<null, api.GetCountriesResponse> = async () => {
+    try {
+      return success(await this.repository.listCountries());
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
       }
-    };
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 
   getRecoveryCodes: Handler<
     GetRecoveryCodesRequest,

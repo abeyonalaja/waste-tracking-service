@@ -4,8 +4,7 @@ type WasteCode = {
 };
 
 type Country = {
-  isoCode: string;
-  description: string;
+  name: string;
 };
 
 type RecoveryCode = WasteCode & {
@@ -28,9 +27,6 @@ export type ListWasteCodesRequest = {
   type: string;
 };
 export type ListEWCCodesRequest = {
-  language: string;
-};
-export type ListCountriesRequest = {
   language: string;
 };
 export type ListRecoveryCodesRequest = {

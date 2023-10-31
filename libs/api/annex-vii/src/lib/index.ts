@@ -204,7 +204,6 @@ export type {
   RecoveryCode,
   GetWasteCodesRequest,
   GetEWCCodesRequest,
-  GetCountriesRequest,
   GetRecoveryCodesRequest,
   GetDisposalCodesRequest,
   GetWasteCodesResponse,

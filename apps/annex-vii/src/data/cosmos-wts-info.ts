@@ -86,26 +86,6 @@ function getRecoveryCodesInLanguage(
   return recoveryCodes;
 }
 
-function getCountriesInLanguage(
-  source: dbValues[],
-  language: string
-): Country[] {
-  const countryCodes: Country[] = [];
-  if (language === 'en') {
-    for (const isoCode in source) {
-      const item = source[isoCode];
-      countryCodes.push({ isoCode: item.isoCode, description: item.en });
-    }
-  } else {
-    for (const isoCode in source) {
-      const item = source[isoCode];
-      countryCodes.push({ isoCode: item.isoCode, description: item.cy });
-    }
-  }
-
-  return countryCodes;
-}
-
 export default class CosmosWTSInfoRepository implements WTSInfoRepository {
   constructor(
     private cosmosClient: CosmosAnnexViiClient,
@@ -140,7 +120,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
     return getWasteCodesInLanguage(results.results[0].values, language);
   }
 
-  async listCountries(language: string): Promise<Country[]> {
+  async listCountries(): Promise<Country[]> {
     const results = await this.cosmosClient.queryContainerNext(
       'countries',
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
@@ -151,7 +131,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
       throw Boom.notFound('Country list does not exist in db !');
     }
 
-    return getCountriesInLanguage(results.results[0].values, language);
+    return results.results[0].values;
   }
 
   async listRecoveryCodes(language: string): Promise<RecoveryCode[]> {

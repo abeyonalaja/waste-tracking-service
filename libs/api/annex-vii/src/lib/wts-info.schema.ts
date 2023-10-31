@@ -13,12 +13,6 @@ export const getEWCCodesRequest: SchemaObject = {
   },
 };
 
-export const getCountriesRequest: SchemaObject = {
-  properties: {
-    language: { type: 'string' },
-  },
-};
-
 export const getRecoveryCodesRequest: SchemaObject = {
   properties: {
     language: { type: 'string' },
@@ -132,8 +126,7 @@ export const getCountries: SchemaObject = {
     value: {
       elements: {
         properties: {
-          isoCode: { type: 'string' },
-          description: { type: 'string' },
+          name: { type: 'string' },
         },
       },
     },
@@ -151,8 +144,7 @@ export const GetCountriesResponse: SchemaObject = {
     value: {
       elements: {
         properties: {
-          isoCode: { type: 'string' },
-          description: { type: 'string' },
+          name: { type: 'string' },
         },
       },
     },
