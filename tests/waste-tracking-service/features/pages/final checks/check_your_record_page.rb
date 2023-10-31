@@ -11,6 +11,7 @@ class CheckYourRecordPage < GenericPage
   TITLE = Translations.value 'exportJourney.checkAnswers.heading'
   SUBTEXT = Translations.value 'exportJourney.checkAnswers.paragraph'
   CONFIRM_ANSWERS_BUTTON = Translations.value 'exportJourney.checkAnswers.conformButton'
+  CAPTION = Translations.value 'exportJourney.checkAnswers.caption'
 
   EXPORT_REFERENCE = '#your-reference > span'
 
@@ -32,6 +33,7 @@ class CheckYourRecordPage < GenericPage
     expect(self).to have_css 'h3', text: 'Countries waste will travel through', exact_text: true
     expect(self).to have_css 'h3', text: 'Interim site', exact_text: true
     expect(self).to have_css 'h3', text: 'Recovery facility', exact_text: true
+    expect(self).to have_text CAPTION
   end
 
   def check_page_translation_for_small_waste

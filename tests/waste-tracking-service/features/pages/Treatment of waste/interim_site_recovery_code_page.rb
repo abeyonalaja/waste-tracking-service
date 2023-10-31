@@ -11,11 +11,14 @@ class InterimSiteRecoveryCodePage < GenericPage
   include GeneralHelpers
   include PageHelper
 
-
   TITLE = Translations.value 'exportJourney.interimSite.codeTitle'
+  CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
+  end
+  def check_page_translation
+    expect(page).to have_text CAPTION
   end
 
   def option_checked?(selected_option)

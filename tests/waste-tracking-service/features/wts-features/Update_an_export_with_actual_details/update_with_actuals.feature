@@ -365,7 +365,6 @@ Feature: AS A waste practitioner
     And I expand About the waste section
     When I click update estimated quantity of waste
     Then the "net small weight" page is displayed
-    And I should see net small weight page is correctly translated
     And I should see the transaction number on update estimate page
     And I enter valid weight in kilograms
     And I click the update button

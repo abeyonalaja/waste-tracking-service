@@ -16,6 +16,7 @@ class MultiWasteCarriersPage < GenericPage
   MULTI_WASTE_PAGE_ADD_MORE_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.question'
   MULTI_WASTE_PAGE_ADD_4_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.hint'
   MULTI_WASTE_PAGE_MAX_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'
+  CAPTION = Translations.value 'exportJourney.wasteCarrierDetails.title'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: MULTI_WASTE_PAGE_TITLE, exact_text: true
@@ -26,6 +27,7 @@ class MultiWasteCarriersPage < GenericPage
     expect(self).to have_text MULTI_WASTE_PAGE_COUNTRY
     expect(self).to have_text MULTI_WASTE_PAGE_ADD_MORE_WASTE_CARRIERS
     expect(self).to have_text MULTI_WASTE_PAGE_ADD_4_WASTE_CARRIERS.gsub('{{n}}', '4')
+    expect(self).to have_text CAPTION
   end
 
   def check_max_carrier_translation

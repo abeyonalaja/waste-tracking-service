@@ -14,6 +14,7 @@ class HowWillTheWasteCarrierTransportTheWastePage < GenericPage
   AIR_OPTION = Translations.value 'exportJourney.wasteCarrierTransport.Air'
   RAIL_OPTION = Translations.value 'exportJourney.wasteCarrierTransport.Rail'
   WATER_OPTION = Translations.value 'exportJourney.wasteCarrierTransport.InlandWaterways'
+  CAPTION = Translations.value 'exportJourney.wasteCarrierDetails.title'
 
   def check_page_displayed(carrier = 'first')
     expect(self).to have_css 'h1', text: TITLE.gsub!('{{carrierIndex}}', carrier), exact_text: true
@@ -26,6 +27,7 @@ class HowWillTheWasteCarrierTransportTheWastePage < GenericPage
     expect(self).to have_text RAIL_OPTION
     expect(self).to have_text ROAD_OPTION
     expect(self).to have_text WATER_OPTION
+    expect(self).to have_text CAPTION
   end
 
   def option_checked?(selected_option)

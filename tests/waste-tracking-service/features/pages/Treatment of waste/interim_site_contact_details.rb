@@ -18,6 +18,7 @@ class InterimSiteContactDetailsPage < GenericPage
   PHONE_HINT = Translations.value 'contact.numberHint'
   FAX = Translations.value 'contact.faxNumber'
   FAX_HINT = Translations.value 'contact.numberHint'
+  CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -32,5 +33,6 @@ class InterimSiteContactDetailsPage < GenericPage
     expect(page).to have_text PHONE_HINT
     expect(page).to have_text FAX
     expect(page).to have_text FAX_HINT
+    expect(page).to have_text CAPTION
   end
 end

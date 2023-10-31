@@ -13,9 +13,14 @@ class CountriesWasteWillTravelPage < GenericPage
   OTHER_COUNTRIES_OF_WASTE_HEADER = Translations.value 'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel'
   OTHER_COUNTRIES_OF_WASTE_LABEL = Translations.value 'autocompleteHint'
   OTHER_COUNTRIES_OF_WASTE_HINT = Translations.value 'exportJourney.wasteTransitCountries.hint'
+  CAPTION = Translations.value 'exportJourney.wasteTransitCountries.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: OTHER_COUNTRIES_OF_WASTE_TITLE, exact_text: true
+  end
+
+  def check_translation
+    expect(self).to have_text CAPTION
   end
 
   def other_countries_of_waste_translation

@@ -286,7 +286,7 @@
   "exportJourney.laboratorySite.codeTitle": "What is the disposal code?",
   "exportJourney.submitAnExport.SectionFive.checkYourReport": "Check your record",
   "exportJourney.checkAnswers.heading": "Check your answers before submitting this record",
-  "exportJourney.checkAnswers.caption": "Check this export",
+  "exportJourney.checkAnswers.caption": "Check this record",
   "exportJourney.checkAnswers.paragraph": "Changing an answer could affect other responses you’ve given. Check your responses to make sure they’re still correct",
   "exportJourney.checkAnswers.warning": "You'll need to update any estimated details with actual details as soon as possible after submitting this record.",
   "exportJourney.checkAnswers.titleLaboratory": "Laboratory",
@@ -484,5 +484,9 @@
   "exportJourney.wasteCarrierTransport.enterDetails": "Enter details (optional)",
   "exportJourney.wasteCarrier.carriersPage.removeQuestion": "Are you sure you want to remove this waste carrier?",
   "exportJourney.recoveryFacilities.confirmRemoveTitle": "Are you sure you want to remove {{name}}?",
-  "templates.notInTemplate": "Not in template"
+  "templates.notInTemplate": "Not in template",
+  "exportJourney.wasteCodesAndDesc.caption": "Waste codes and description",
+  "exportJourney.wasteCollectionDate.caption": "Collection date",
+  "exportJourney.wasteCollectionDetails.caption": "Waste collection details",
+  "exportJourney.quantity.caption": "Quantity of waste"
 }

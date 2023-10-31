@@ -13,8 +13,17 @@ class WhatIsTheWasteCodePage < GenericPage
   WASTE_CODE_BASEL_ANNEX_IIIA = 'AnnexIIIACode'
   WASTE_CODE_BASEL_ANNEX_IIIB = 'AnnexIIIBCode'
 
+  TITLE = Translations.value 'exportJourney.whatsTheWasteCode.title'
+  HINT = Translations.value 'exportJourney.whatsTheWasteCode.naHint'
+  CAPTION = Translations.value 'exportJourney.wasteCodesAndDesc.caption'
+
   def check_page_displayed
-    expect(self).to have_css 'h1', text: "What's the waste code?", exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+  end
+
+  def check_translation
+    expect(self).to have_text HINT
+    expect(self).to have_text CAPTION
   end
 
   def waste_code_option(option)

@@ -15,6 +15,7 @@ class RoadTransportDetailsPage < GenericPage
   BULLET3 = Translations.value 'exportJourney.wasteCarrierTransport.RoadBullet3'
   BULLET4 = Translations.value 'exportJourney.wasteCarrierTransport.RoadBullet4'
   DETAILS = Translations.value 'exportJourney.wasteCarrierTransport.enterDetails'
+  CAPTION = Translations.value 'exportJourney.wasteCarrierDetails.title'
 
   def check_page_displayed(carrier = 'first', type = 'road')
     expect(self).to have_css 'h1', text: TITLE.gsub!('{{carrierIndex}}', carrier).gsub!('{{type}}', type), exact_text: true
@@ -26,6 +27,7 @@ class RoadTransportDetailsPage < GenericPage
     expect(self).to have_text BULLET2
     expect(self).to have_text BULLET3
     expect(self).to have_text BULLET4
+    expect(self).to have_text CAPTION
   end
 
   DESCRIPTION_FILED_ID = 'description'

@@ -11,6 +11,7 @@ class WasteCollectionDetailsPage < GenericPage
   WASTE_COLLECTION_DETAILS_TITLE = Translations.value 'exportJourney.wasteCollectionDetails.postcodeTitle'
   WASTE_COLLECTION_DETAILS_INTRO = Translations.value 'exportJourney.wasteCollectionDetails.intro'
   WASTE_COLLECTION_DETAILS_POSTCODE_LABEL = Translations.value 'postcode.label'
+  CAPTION = Translations.value 'exportJourney.wasteCollectionDetails.caption'
 
   COUNTRIES_LIST = '#waste-transit-country-list > div > dt'
   POSTCODE_FIELD_ID = 'postcode'
@@ -26,6 +27,7 @@ class WasteCollectionDetailsPage < GenericPage
   def check_translation
     expect(self).to have_text WASTE_COLLECTION_DETAILS_INTRO
     expect(self).to have_text WASTE_COLLECTION_DETAILS_POSTCODE_LABEL
+    expect(self).to have_text CAPTION
   end
 
   def select_first_address

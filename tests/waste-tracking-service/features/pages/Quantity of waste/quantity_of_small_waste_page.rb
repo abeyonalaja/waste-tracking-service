@@ -10,6 +10,7 @@ class QuantityOfSmallWastePage < GenericPage
 
   TITLE = Translations.value 'exportJourney.quantity.small.title'
   HELP_TEXT = Translations.value 'exportJourney.quantity.intro'
+  CAPTION = Translations.value 'exportJourney.quantity.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -17,6 +18,7 @@ class QuantityOfSmallWastePage < GenericPage
 
   def check_page_translated
     expect(self).to have_text HELP_TEXT
+    expect(self).to have_text CAPTION
   end
 
 end

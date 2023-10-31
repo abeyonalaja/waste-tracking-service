@@ -13,6 +13,7 @@ class CollectionDatePage < GenericPage
   SUB_TEXT = Translations.value 'exportJourney.wasteCollectionDate.intro'
   ACTUAL_DATE = Translations.value 'exportJourney.wasteCollectionDate.radioYesHint'
   ESTIMATE_DATE = Translations.value 'exportJourney.wasteCollectionDate.radioNo'
+  CAPTION = Translations.value 'exportJourney.wasteCollectionDate.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -20,6 +21,7 @@ class CollectionDatePage < GenericPage
 
   def check_translation
     expect(self).to have_text SUB_TEXT
+    expect(self).to have_text CAPTION
   end
 
   def check_actual_collection_translation

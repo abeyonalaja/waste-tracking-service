@@ -14,6 +14,7 @@ class AirTransportDetailsPage < GenericPage
   BULLET3 = Translations.value 'exportJourney.wasteCarrierTransport.AirBullet3'
   BULLET4 = Translations.value 'exportJourney.wasteCarrierTransport.AirBullet4'
   DETAILS = Translations.value 'exportJourney.wasteCarrierTransport.enterDetails'
+  CAPTION = Translations.value 'exportJourney.wasteCarrierDetails.title'
 
   def check_page_displayed(carrier = 'first', type = 'air')
     expect(self).to have_css 'h1', text: TITLE.gsub!('{{carrierIndex}}', carrier).gsub!('{{type}}', type), exact_text: true
@@ -26,5 +27,6 @@ class AirTransportDetailsPage < GenericPage
     expect(self).to have_text BULLET4
     expect(self).to have_text INTRO
     expect(self).to have_text DETAILS
+    expect(self).to have_text CAPTION
   end
 end

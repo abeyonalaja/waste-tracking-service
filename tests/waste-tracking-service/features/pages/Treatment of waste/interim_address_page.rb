@@ -15,6 +15,7 @@ class InterimSiteAddressPage < GenericPage
   ADDRESS = Translations.value 'address'
   COUNTRY = Translations.value 'address.country'
   COUNTRY_FIELD_ID = 'country'
+  CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -24,6 +25,7 @@ class InterimSiteAddressPage < GenericPage
     expect(page).to have_text TITLE
     expect(page).to have_text ADDRESS
     expect(page).to have_text COUNTRY
+    expect(page).to have_text CAPTION
   end
 
   def select_interim_site_country
