@@ -28,7 +28,7 @@ end
 Then(/^I should see previously entered Laboratory address details pre\-populated$/) do
   expect(LaboratoryAddressPage.new).to have_name TestStatus.test_status(:laboratory_address_name)
   expect(LaboratoryAddressPage.new).to have_address TestStatus.test_status(:laboratory_address_address)
-  expect(LaboratoryAddressPage.new).to have_country TestStatus.test_status(:laboratory_address_country)
+  expect(LaboratoryAddressPage.new).to have_country TestStatus.test_status(:laboratory_country)
 end
 
 Then(/^I should see previously entered laboratory contact details pre\-populated$/) do

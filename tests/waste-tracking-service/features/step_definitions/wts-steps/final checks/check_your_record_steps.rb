@@ -129,7 +129,7 @@ And(/^I should see export Treatment of waste correctly displayed$/) do
 
   expect(CheckYourRecordPage.new.interimsite_org_name_0).to eq TestStatus.test_status(:interim_site_name_name)
   expect(CheckYourRecordPage.new.interimsite_address_0).to eq TestStatus.test_status(:interim_site_name_address)
-  expect(CheckYourRecordPage.new.interimsite_country_0).to eq TestStatus.test_status(:interim_site_name_country)
+  expect(CheckYourRecordPage.new.interimsite_country_0).to eq TestStatus.test_status(:interim_site_country)
   expect(CheckYourRecordPage.new.interimsite_contact_person_0).to eq TestStatus.test_status(:interim_site_contact_name_full_name)
   expect(CheckYourRecordPage.new.interimsite_email_0).to eq TestStatus.test_status(:interim_site_contact_name_email)
   expect(CheckYourRecordPage.new.interimsite_phone_0).to eq TestStatus.test_status(:interim_site_contact_name_phone_number)
@@ -148,7 +148,7 @@ And(/^I should see export Treatment of waste correctly displayed$/) do
 
   expect(CheckYourRecordPage.new.recoveryfacility_org_name(0)).to eq TestStatus.test_status(:recovery_facility_name)
   expect(CheckYourRecordPage.new.recoveryfacility_address(0)).to eq TestStatus.test_status(:recovery_facility_address)
-  expect(CheckYourRecordPage.new.recoveryfacility_country(0)).to eq TestStatus.test_status(:recovery_facility_country)
+  expect(CheckYourRecordPage.new.recoveryfacility_country(0)).to eq TestStatus.test_status(:rec_country)
   expect(CheckYourRecordPage.new.recoveryfacility_contact_person(0)).to eq TestStatus.test_status(:recovery_facility_full_name)
 
   expect(CheckYourRecordPage.new.recoveryfacility_email(0)).to eq TestStatus.test_status(:recovery_facility_email)
@@ -483,7 +483,7 @@ And(/^I should see small waste export Treatment of waste correctly displayed$/) 
 
   expect(CheckYourRecordPage.new.laboratory_org_name).to eq TestStatus.test_status(:laboratory_address_name)
   expect(CheckYourRecordPage.new.laboratory_address).to eq TestStatus.test_status(:laboratory_address_address)
-  expect(CheckYourRecordPage.new.laboratory_country).to eq TestStatus.test_status(:laboratory_address_country)
+  expect(CheckYourRecordPage.new.laboratory_country).to eq TestStatus.test_status(:laboratory_country)
   expect(CheckYourRecordPage.new.laboratory_contact_person).to eq TestStatus.test_status(:laboratory_contact_details_full_name)
   expect(CheckYourRecordPage.new.laboratory_email).to eq TestStatus.test_status(:laboratory_contact_details_email)
   expect(CheckYourRecordPage.new.laboratory_phone).to eq TestStatus.test_status(:laboratory_contact_details_phone_number)

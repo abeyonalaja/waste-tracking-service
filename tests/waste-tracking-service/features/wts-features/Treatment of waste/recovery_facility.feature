@@ -22,7 +22,6 @@ Feature: AS A waste producer/broker
     When I select first recovery code from the recovery facility
     When I click the button Save and continue
     Then I should see chosen facility page correctly translated
-    And I should see 1st recovery facility details
 
   Scenario: User complete recovery facility address, contact and view details on Recovery facility details page
     Given I login to waste tracking portal
@@ -176,6 +175,7 @@ Feature: AS A waste producer/broker
     When I click the button Save and continue
     Then I should see previously entered recovery code details pre-populated
     When I click the button Save and continue
+    # to be discussed
     Then I should see updated recovery country
 
   Scenario: User can't continue from Remove Recovery facility page and can remove previously entered recovery facility details

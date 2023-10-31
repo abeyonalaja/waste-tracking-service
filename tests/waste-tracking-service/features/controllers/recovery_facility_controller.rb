@@ -17,7 +17,7 @@ module RecoveryFacilityController
 
     interim_address_page.enter_name 'interim_site_name'
     interim_address_page.enter_address 'interim_site_name'
-    interim_address_page.enter_country 'interim_site_name'
+    interim_address_page.select_interim_site_country
     interim_address_page.save_and_continue
 
     interim_site_contact_details_page.enter_full_name 'interim_site_contact_name'
@@ -31,7 +31,7 @@ module RecoveryFacilityController
 
     facility_address_page.enter_name 'recovery_facility'
     facility_address_page.enter_address 'recovery_facility'
-    facility_address_page.enter_country 'recovery_facility'
+    facility_address_page.select_recovery_facility_country '1st_recovery_facility_country'
     facility_address_page.save_and_continue
 
     facility_contact_details_page.enter_full_name 'recovery_facility'

@@ -28,4 +28,13 @@ class RecoveryFacilityAddressPage < GenericPage
     expect(page).to have_text CAPTION
   end
 
+  def select_recovery_facility_country(recovery_country)
+    index = rand(0..6)
+    country = "country__option--#{index}"
+    first('country', minimum: 1).click
+    first(country, minimum: 1).select_option
+    recovery_facility_country = find('country').value
+    TestStatus.set_test_status("#{recovery_country}_country".to_sym, recovery_facility_country)
+    TestStatus.set_test_status(:rec_country, recovery_facility_country)
+  end
 end

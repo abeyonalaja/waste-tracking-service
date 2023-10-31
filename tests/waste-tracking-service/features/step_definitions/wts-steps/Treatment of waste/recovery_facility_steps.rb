@@ -1,7 +1,7 @@
 And(/^I complete recovery facility address page$/) do
   RecoveryFacilityAddressPage.new.enter_name('1st_recovery_facility')
   RecoveryFacilityAddressPage.new.enter_address('1st_recovery_facility')
-  RecoveryFacilityAddressPage.new.enter_country('1st_recovery_facility')
+  RecoveryFacilityAddressPage.new.select_recovery_facility_country('1st_recovery_facility')
 end
 
 And(/^I complete recovery facility contact details$/) do
@@ -45,7 +45,7 @@ And(/^I complete the "([^"]*)" recovery facility$/) do |recovery_facility|
   recovery_facility += '_recovery_facility'
   RecoveryFacilityAddressPage.new.enter_name(recovery_facility)
   RecoveryFacilityAddressPage.new.enter_address(recovery_facility)
-  RecoveryFacilityAddressPage.new.enter_country(recovery_facility)
+  RecoveryFacilityAddressPage.new.select_recovery_facility_country(recovery_facility)
   RecoveryFacilityAddressPage.new.save_and_continue
   RecoveryFacilityContactDetailsPage.new.enter_full_name(recovery_facility)
   RecoveryFacilityContactDetailsPage.new.enter_email(recovery_facility)
@@ -61,9 +61,9 @@ Then(/^I should see max recovery facility text correctly translated$/) do
 end
 
 And(/^I should see previously entered recovery facility details pre\-populated$/) do
-  expect(RecoveryFacilityAddressPage.new).to have_name TestStatus.test_status("1st_recovery_facility_name".to_sym)
-  expect(RecoveryFacilityAddressPage.new).to have_address TestStatus.test_status("1st_recovery_facility_address".to_sym)
-  expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status("1st_recovery_facility_country".to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_name TestStatus.test_status('1st_recovery_facility_name'.to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_address TestStatus.test_status('1st_recovery_facility_address'.to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status('1st_recovery_facility_country'.to_sym)
 end
 
 And(/^I should see all change and remove recovery facility$/) do
@@ -76,14 +76,15 @@ And(/^I should see all change and remove recovery facility$/) do
 end
 
 When(/^I update the recovery facility country$/) do
-  RecoveryFacilityAddressPage.new.update_country('update_country_recovery_facility')
+  fill_in 'Country', with: ''
+  RecoveryFacilityAddressPage.new.select_recovery_facility_country('1st_recovery_facility_country')
 end
 
 Then(/^I should see previously entered recovery contact details pre\-populated$/) do
-  expect(RecoveryFacilityContactDetailsPage.new).to have_full_name TestStatus.test_status("1st_recovery_facility_full_name".to_sym)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status("1st_recovery_facility_email".to_sym)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status("1st_recovery_facility_phone_number".to_sym)
-  expect(RecoveryFacilityContactDetailsPage.new).to have_fax TestStatus.test_status("1st_recovery_facility_fax_number".to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_full_name TestStatus.test_status('1st_recovery_facility_full_name'.to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status('1st_recovery_facility_email'.to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status('1st_recovery_facility_phone_number'.to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_fax TestStatus.test_status('1st_recovery_facility_fax_number'.to_sym)
 end
 
 Then(/^I should see previously entered recovery code details pre\-populated$/) do
@@ -91,7 +92,8 @@ Then(/^I should see previously entered recovery code details pre\-populated$/) d
 end
 
 Then(/^I should see updated recovery country$/) do
-  expect(ChosenFacilitiesPage.new.first_recovery_facility_values[1].text).to eq 'WALES'
+  expect(ChosenFacilitiesPage.new.first_recovery_facility_values[1].text).to eq TestStatus.test_status(:rec_country)
+  # expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status('1st_recovery_facility_country'.to_sym)
 end
 
 Then(/^I should see remove recovery facility details page displayed$/) do

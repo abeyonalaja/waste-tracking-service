@@ -1,7 +1,7 @@
 And(/^I complete the Interim site address page$/) do
   InterimSiteAddressPage.new.enter_name 'interim_site'
   InterimSiteAddressPage.new.enter_address 'interim_site'
-  InterimSiteAddressPage.new.enter_country 'interim_site'
+  InterimSiteAddressPage.new.select_interim_site_country
 end
 
 And(/^I complete Interim site contact details page$/) do

@@ -27,4 +27,12 @@ class LaboratoryAddressPage < GenericPage
     expect(self).to have_text COUNTRY
   end
 
+  def select_laboratory_country
+    index = rand(0..6)
+    country = "country__option--#{index}"
+    first('country', minimum: 1).click
+    first(country, minimum: 1).select_option
+    laboratory_country = find('country').value
+    TestStatus.set_test_status(:laboratory_country, laboratory_country)
+  end
 end
