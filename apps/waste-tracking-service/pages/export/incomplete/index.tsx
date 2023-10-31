@@ -21,7 +21,7 @@ import {
   SubmissionNotFound,
   Loading,
   NotificationBanner,
-} from '../../../components';
+} from 'components';
 import styled from 'styled-components';
 
 import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
@@ -95,11 +95,6 @@ const incompleteAnnex7Reducer = (state: State, action: Action) => {
       return {
         ...state,
         errors: action.payload,
-      };
-    case 'REMOVE_WASTE_CARRIER':
-      return {
-        ...state,
-        data: action.payload,
       };
     default:
       throw new Error();
@@ -329,9 +324,8 @@ const IncompleteAnnex7 = () => {
                     </Paragraph>
                   </GovUK.GridCol>
                 </GovUK.GridRow>
-
                 {incompleteAnnex7Page.data === undefined ||
-                incompleteAnnex7Page.data.length === 0 ? (
+                incompleteAnnex7Page.data.values.length === 0 ? (
                   <>
                     <GovUK.Heading size="SMALL">
                       {t(

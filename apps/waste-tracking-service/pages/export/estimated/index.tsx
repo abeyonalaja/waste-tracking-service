@@ -335,7 +335,7 @@ const UpdateAnnex7 = () => {
                 <GovUK.GridRow>
                   <GovUK.GridCol>
                     {updateAnnex7Page.data === undefined ||
-                    updateAnnex7Page.data.length === 0 ? (
+                    updateAnnex7Page.data.values.length === 0 ? (
                       <>
                         <GovUK.Heading size="SMALL">
                           {t(
