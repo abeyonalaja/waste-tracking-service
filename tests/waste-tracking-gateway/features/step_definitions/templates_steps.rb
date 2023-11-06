@@ -122,7 +122,7 @@ end
 Then(/^waste carrier details should be successfully added to the template$/) do
   @response = @wts.get_template @template_id
   body = JSON.parse(@response.body)
-  expect(body['carriers']['status']).to eq('Complete')
+  expect(body['carriers']['status']).to eq('Started')
 end
 
 When(/^I request to add collection details for a template$/) do

@@ -27,9 +27,10 @@ module Operations
   end
 
   def create_request_details
-    uri = URI.parse Env.service.to_s
+    uri = URI.parse Env.host_url.to_s
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true if uri.instance_of? URI::HTTPS
+    http.set_debug_output($stdout)
     http
   end
 

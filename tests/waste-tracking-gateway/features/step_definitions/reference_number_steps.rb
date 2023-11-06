@@ -1,5 +1,5 @@
 Given(/^I POST reference number "([^"]*)" for waste export$/) do |ref_number|
-  uri = URI.parse Env.service.to_s
+  uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
   headers = { 'Content-Type': 'application/json' }
@@ -29,7 +29,7 @@ Then(/^reference number should not be created$/) do
 end
 
 Given(/^I POST long reference number "([^"]*)" for waste export$/) do |reference|
-  uri = URI.parse Env.service.to_s
+  uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
   headers = { 'Content-Length': 'multipart/form-data' }
@@ -46,7 +46,7 @@ Given(/^I POST long reference number "([^"]*)" for waste export$/) do |reference
 end
 
 When(/^I amend the reference number to "([^"]*)" for waste export$/) do |reference|
-  uri = URI.parse Env.service.to_s
+  uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
   headers = { 'Content-Length': 'text/plain', 'Content-Type': 'text/plain' }
