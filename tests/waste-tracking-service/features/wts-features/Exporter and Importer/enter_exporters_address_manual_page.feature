@@ -34,7 +34,7 @@ Feature: AS A waste producer
     And I verify Enter exporter address manual page is displayed
     And I complete the Enter exporter address manual page
     When I click the button Save and continue
-    And the "Exporter details" page is displayed
+    And the "Check exporter address" page is displayed
     And I click the "Change" link
     Then the "exporter address" page is displayed
     Then I should see manually entered exporter details pre-populated
@@ -45,7 +45,7 @@ Feature: AS A waste producer
     And I verify Enter exporter address manual page is displayed
     And I enter valid input for all the fields on the manual address entry page
     And I click the button Save and continue
-    Then the "Exporter details" page is displayed
+    Then the "Check exporter address" page is displayed
 
   Scenario: User not entering any input on the mandatory fields and click save and continue button
     Given I login to waste tracking portal
