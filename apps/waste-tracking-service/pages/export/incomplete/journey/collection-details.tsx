@@ -860,7 +860,7 @@ const CollectionDetails = () => {
                         input={{
                           name: 'organisationName',
                           id: 'organisationName',
-                          value: contactDetails?.organisationName,
+                          value: contactDetails?.organisationName || '',
                           maxLength: 250,
                           onChange: onContactDetailsChange,
                         }}
@@ -880,7 +880,7 @@ const CollectionDetails = () => {
                             input={{
                               name: 'fullName',
                               id: 'fullName',
-                              value: contactDetails?.fullName,
+                              value: contactDetails?.fullName || '',
                               maxLength: 250,
                               onChange: onContactDetailsChange,
                             }}
@@ -897,7 +897,7 @@ const CollectionDetails = () => {
                             input={{
                               name: 'emailAddress',
                               id: 'emailAddress',
-                              value: contactDetails?.emailAddress,
+                              value: contactDetails?.emailAddress || '',
                               type: 'emailAddress',
                               maxLength: 250,
                               onChange: onContactDetailsChange,
@@ -927,7 +927,7 @@ const CollectionDetails = () => {
                             <TelephoneInput
                               name="phoneNumber"
                               id="phoneNumber"
-                              value={contactDetails?.phoneNumber}
+                              value={contactDetails?.phoneNumber || ''}
                               maxLength={50}
                               type="tel"
                               error={addressPage.errors?.phoneNumber}
@@ -952,7 +952,7 @@ const CollectionDetails = () => {
                             <TelephoneInput
                               name="faxNumber"
                               id="faxNumber"
-                              value={contactDetails?.faxNumber}
+                              value={contactDetails?.faxNumber || ''}
                               maxLength={50}
                               type="tel"
                               onChange={onContactDetailsChange}

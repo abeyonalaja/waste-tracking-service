@@ -28,8 +28,6 @@ import { SummaryCard } from './SummaryCard';
 import { SummaryList } from './SummaryList';
 import { SummaryListWithActions } from './SummaryListWithActions';
 import { TextareaCharCount } from './TextareaCharCount';
-import { WasteCarrierHeading } from './WasteCarrierHeading';
-import { WasteCarrierHeadingNoCaps } from './WasteCarrierHeadingNoCaps';
 import { UnitDisplay } from './UnitDisplay';
 
 export {
@@ -63,7 +61,5 @@ export {
   SummaryList,
   SummaryListWithActions,
   TextareaCharCount,
-  WasteCarrierHeading,
-  WasteCarrierHeadingNoCaps,
   UnitDisplay,
 };

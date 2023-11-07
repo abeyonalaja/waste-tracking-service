@@ -8,7 +8,6 @@ import * as GovUK from 'govuk-react';
 import { BreakableString } from './BreakableString';
 import { UnitDisplay } from './UnitDisplay';
 import { format } from 'date-fns';
-import { WasteCarrierHeading } from './WasteCarrierHeading';
 import { useTranslation } from 'react-i18next';
 import { BORDER_COLOUR } from 'govuk-colours';
 import styled from 'styled-components';
@@ -721,14 +720,9 @@ export const SubmissionSummary = ({
               {data.carriers.values?.map((item, index) => (
                 <div id={'carrier-' + index} key={index}>
                   <GovUK.H3>
-                    {data.carriers.status === 'Complete' && (
-                      <>
-                        <WasteCarrierHeading
-                          index={index}
-                          noOfCarriers={data.carriers.values.length}
-                        />
-                      </>
-                    )}
+                    {t('exportJourney.wasteCarrier.carriersPage.cardTitle', {
+                      n: t(`numberAdjective.${index + 1}`),
+                    })}
                   </GovUK.H3>
                   <DefinitionList>
                     <Row>
@@ -743,7 +737,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-change' + index}
                             href={{
-                              pathname: `/export/incomplete/journey/carrier-details`,
+                              pathname: `/export/incomplete/journey/waste-carriers`,
                               query: { id: data.id, carrierId: item.id },
                             }}
                           >
@@ -781,8 +775,12 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-contact-details-change' + index}
                             href={{
-                              pathname: `/export/incomplete/journey/carrier-contact-details`,
-                              query: { id: data.id, carrierId: item.id },
+                              pathname: `/export/incomplete/journey/waste-carriers`,
+                              query: {
+                                id: data.id,
+                                carrierId: item.id,
+                                page: 'CONTACT_DETAILS',
+                              },
                             }}
                           >
                             {t('actions.change')}
@@ -839,8 +837,12 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-change' + index}
                                 href={{
-                                  pathname: `/export/incomplete/journey/carrier-transport-means`,
-                                  query: { id: data.id, carrierId: item.id },
+                                  pathname: `/export/incomplete/journey/waste-carriers`,
+                                  query: {
+                                    id: data.id,
+                                    carrierId: item.id,
+                                    page: 'TRANSPORT_CHOICE',
+                                  },
                                 }}
                               >
                                 {t('actions.change')}
@@ -863,7 +865,9 @@ export const SubmissionSummary = ({
                             {t('exportJourney.checkAnswers.transportDetails')}
                           </Key>
                           <Value id={'carrier-type-details' + index}>
-                            {item.transportDetails?.description}
+                            {item.transportDetails?.description !== undefined
+                              ? item.transportDetails?.description
+                              : t('exportJourney.checkAnswers.notProvided')}
                           </Value>
                           {isTemplate && (
                             <Actions>
@@ -880,11 +884,11 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-details-change' + index}
                                 href={{
-                                  pathname: `/export/incomplete/journey/carrier-transport-means`,
+                                  pathname: `/export/incomplete/journey/waste-carriers`,
                                   query: {
                                     id: data.id,
                                     carrierId: item.id,
-                                    page: 'DETAILS',
+                                    page: 'TRANSPORT_DETAILS',
                                   },
                                 }}
                               >

@@ -98,3 +98,57 @@ And(/^I should see only change link for first waste carrier$/) do
   expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[0].text.split("\n").first).to eq Translations.value 'actions.change'
   expect(MultiWasteCarriersPage.new).not_to have_link Translations.value 'actions.remove'
 end
+
+And(/^I complete the "([^"]*)" waste carrier with "([^"]*)" without transportation details$/) do |waste_carrier, mode_of_transport|
+  waste_carrier_org_name = "#{waste_carrier} WTS Organisation"
+  waste_carrier_title = "#{waste_carrier} waste carrier"
+  waste_carrier_address = "#{waste_carrier} waste carrier address"
+  sleep 1
+  WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
+  WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address
+  WhoIsTheWasteCarrierPage.new.enter_country 'England'
+  WhoIsTheWasteCarrierPage.new.save_and_continue
+  sleep 1
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
+  TestStatus.waste_carrier_titles(waste_carrier_title)
+  TestStatus.waste_carrier_addresses(waste_carrier_address)
+  TestStatus.waste_carrier_org_details(waste_carrier_org_name)
+  WhatAreTheWasteCarriersContactDetailsPage.new.save_and_continue
+  sleep 1
+
+  case mode_of_transport
+  when 'Road'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    RoadTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Sea'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    SeaTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Air'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    AirTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Rail'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    RailTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  when 'Inland waterways'
+    HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
+    HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
+    sleep 0.5
+    InlandWaterTransportDetailsPage.new.save_and_continue
+    TestStatus.mode_of_travel_list(mode_of_transport)
+  end
+end

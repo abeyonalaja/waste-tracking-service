@@ -491,3 +491,7 @@ And(/^I should see small waste export Treatment of waste correctly displayed$/) 
   expect(CheckYourRecordPage.new.laboratory_code).to eq TestStatus.test_status(:laboratory_disposal_code)
 
 end
+
+Then(/^I should se Not provided label on Check your record page$/) do
+  expect(CheckYourRecordPage.new.carrier_transport_details(0)).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
+end

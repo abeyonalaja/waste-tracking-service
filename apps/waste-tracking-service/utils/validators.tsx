@@ -306,7 +306,7 @@ export const validatePointOfExit: (
 export const validateTransport: (value?: string) => string | undefined = (
   value
 ) => {
-  if (value === null)
+  if (value === undefined)
     return 'Select how the first waste carrier will transport the waste';
 };
 

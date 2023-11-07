@@ -139,7 +139,7 @@ const CollectionDate = () => {
               if (data !== undefined) {
                 const path = returnToDraft
                   ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/journey/carrier-details`;
+                  : `/export/incomplete/journey/waste-carriers`;
                 router.push({
                   pathname: path,
                   query: { id },

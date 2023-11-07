@@ -436,11 +436,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname:
-                                    templatePage.data?.carriers.status ===
-                                    'Complete'
-                                      ? `/export/templates/journey/carriers`
-                                      : `/export/templates/journey/carrier-details`,
+                                  pathname: `/export/templates/journey/waste-carriers`,
                                   query: { templateId },
                                 }}
                                 id="waste-carriers"

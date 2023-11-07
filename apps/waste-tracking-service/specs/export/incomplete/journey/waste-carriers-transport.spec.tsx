@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, act, screen, fireEvent } from 'jest-utils';
-import CarrierTransportMeans from 'pages/export/incomplete/journey/carrier-transport-means';
+import WasteCarriers from 'pages/export/incomplete/journey/waste-carriers';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,
-    query: { id: '12345', carrierId: '54321' },
+    query: { id: '12345' },
   })),
 }));
 
@@ -40,16 +40,28 @@ global.fetch = jest.fn(() =>
 describe('Waste carrier transport means page', () => {
   it('should render the page', async () => {
     await act(async () => {
-      render(<CarrierTransportMeans />);
+      render(<WasteCarriers />);
     });
   });
 
   it('should show validation messages if none radio is selected', async () => {
     await act(async () => {
-      render(<CarrierTransportMeans />);
+      render(<WasteCarriers />);
     });
     const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
+
+    const submitButton2 = screen.getByText('Save and continue');
+    await act(async () => {
+      fireEvent.click(submitButton2);
+    });
+
+    const submitButton3 = screen.getByText('Save and continue');
+    await act(async () => {
+      fireEvent.click(submitButton3);
+    });
 
     const errorMessage = screen.getAllByText(
       'Select how the first waste carrier will transport the waste'
@@ -59,22 +71,26 @@ describe('Waste carrier transport means page', () => {
 
   it('should show the description page if radio is selected and form submitted', async () => {
     await act(async () => {
-      render(<CarrierTransportMeans />);
+      render(<WasteCarriers />);
     });
-    const railRadio = screen.getByLabelText('Rail');
-    fireEvent.click(railRadio);
-
     const submitButton = screen.getByText('Save and continue');
     await act(async () => {
       fireEvent.click(submitButton);
     });
 
+    const submitButton2 = screen.getByText('Save and continue');
+    await act(async () => {
+      fireEvent.click(submitButton2);
+    });
+    const railRadio = screen.getByLabelText('Rail');
+    fireEvent.click(railRadio);
+
+    const submitButton3 = screen.getByText('Save and continue');
+    await act(async () => {
+      fireEvent.click(submitButton3);
+    });
+
     const description = screen.getByLabelText('Enter details (optional)');
     expect(description).toBeTruthy();
-
-    const pageTitle = screen.getByText(
-      "What are the first waste carrier's rail transportation details?"
-    );
-    expect(pageTitle).toBeTruthy();
   });
 });

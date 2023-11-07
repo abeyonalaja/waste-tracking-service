@@ -149,15 +149,14 @@ export const CompleteHeader = () => {
               {t('app.title')}
             </GovukHeaderLink>
           </GovukHeaderContent>
-          <GovukHeaderUserContent></GovukHeaderUserContent>
+          <GovukHeaderUserContent />
         </GovukHeaderInner>
       </GovukHeader>
       <Main>
         <PhaseBannerStyled level={t('tag')}>
           {t('header.serviceBanner')}
         </PhaseBannerStyled>
-
-        <LanguageSwitch></LanguageSwitch>
+        <LanguageSwitch />
       </Main>
     </>
   );

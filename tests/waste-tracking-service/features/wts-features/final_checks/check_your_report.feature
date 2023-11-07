@@ -182,6 +182,48 @@ Feature: AS A Waste Practitioner
     And I should see interim side details on check your export page
     And I should see 5 recovery facilities on check your export page
 
+  Scenario: User complete export journey without transport details, and verifies Not provided label present on the check your record page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    When I complete Waste codes and description with Bulk waste and Max EWC codes
+    And I click the "Quantity of waste" link
+    And I complete Quantity of waste sub-section
+    And I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    And I click the "Collection date" link
+    And I choose "Yes, I’ll enter the actual date" radio button
+    And I enter valid Actual collection date
+    And I click the button Save and continue
+    And I complete the "First" waste carrier with "Road" without transportation details
+    And I choose "No" radio button
+    And I click the button Save and continue
+    And I complete waste carrier location and collection details
+    Then I click the "Recovery facility" link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    Then the "Interim site address" page is displayed
+    And I complete the Interim site address page
+    And I wait for a second
+    And I click the button Save and continue
+    Then the "Interim site contact details" page is displayed
+    And I complete Interim site contact details page
+    And I click the button Save and continue
+    Then  the "Interim site recovery code" page is displayed
+    And I choose "R12: Exchange of wastes for submission to any of the operations numbered R01 to R11" radio button
+    And I click the button Save and continue
+    And I complete the "1st" recovery facility
+    And I choose "No" radio button
+    And I click the button Save and continue
+    When I click the "Check your record" link
+    # Then I should see 5 waste carriers on check your export page
+    Then I should se Not provided label on Check your record page
+
   Scenario: User can navigate to enter your ref pages from check your report page using change link
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

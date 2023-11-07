@@ -445,10 +445,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname:
-                            tasklistPage.data?.carriers.status === 'Complete'
-                              ? `/export/incomplete/journey/carriers`
-                              : `/export/incomplete/journey/carrier-details`,
+                          pathname: `/export/incomplete/journey/waste-carriers`,
                           query: { id },
                         }}
                         id="waste-carriers"

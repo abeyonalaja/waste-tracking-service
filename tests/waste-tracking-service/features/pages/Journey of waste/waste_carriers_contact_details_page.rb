@@ -19,9 +19,9 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   FAX_HINT = Translations.value 'contact.numberHint'
 
   ORGANISATION_CONTACT_FIELD_ID = 'fullName'
-  EMAIL_FILED_ID = 'email'
-  PHONE_NUMBER_FIELD_ID = 'phone'
-  FAX_NUMBER_FIELD_ID = 'fax'
+  EMAIL_FILED_ID = 'emailAddress'
+  PHONE_NUMBER_FIELD_ID = 'phoneNumber'
+  FAX_NUMBER_FIELD_ID = 'faxNumber'
 
   def check_page_displayed
     # expect(self).to have_css 'h1', text: TITLE, exact_text: true
