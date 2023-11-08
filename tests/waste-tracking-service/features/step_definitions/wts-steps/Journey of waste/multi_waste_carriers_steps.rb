@@ -3,11 +3,13 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   waste_carrier_title = "#{waste_carrier} waste carrier"
   waste_carrier_address = "#{waste_carrier} waste carrier address"
   sleep 1
+  WhoIsTheWasteCarrierPage.new.check_page_title(waste_carrier)
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
   WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
   WhoIsTheWasteCarrierPage.new.save_and_continue
   sleep 1
+  WhatAreTheWasteCarriersContactDetailsPage.new.check_page_title(waste_carrier)
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
@@ -22,37 +24,47 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
 
   case mode_of_transport
   when 'Road'
+    HowWillTheWasteCarrierTransportTheWastePage.new.check_page_displayed waste_carrier.downcase
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
+    RoadTransportDetailsPage.new.check_page_displayed waste_carrier.downcase, mode_of_transport.downcase
     RoadTransportDetailsPage.new.enter_transportation_description transport_description
     RoadTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Sea'
+    HowWillTheWasteCarrierTransportTheWastePage.new.check_page_displayed waste_carrier.downcase
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
+    RoadTransportDetailsPage.new.check_page_displayed waste_carrier.downcase, mode_of_transport.downcase
     RoadTransportDetailsPage.new.enter_transportation_description transport_description
     SeaTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Air'
+    HowWillTheWasteCarrierTransportTheWastePage.new.check_page_displayed waste_carrier.downcase
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
+    RoadTransportDetailsPage.new.check_page_displayed waste_carrier.downcase, mode_of_transport.downcase
     RoadTransportDetailsPage.new.enter_transportation_description transport_description
     AirTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Rail'
+    HowWillTheWasteCarrierTransportTheWastePage.new.check_page_displayed waste_carrier.downcase
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
+    RoadTransportDetailsPage.new.check_page_displayed waste_carrier.downcase, mode_of_transport.downcase
     RoadTransportDetailsPage.new.enter_transportation_description transport_description
     RailTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Inland waterways'
+    HowWillTheWasteCarrierTransportTheWastePage.new.check_page_displayed waste_carrier.downcase
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
+    RoadTransportDetailsPage.new.check_page_displayed waste_carrier.downcase, mode_of_transport.downcase
     RoadTransportDetailsPage.new.enter_transportation_description transport_description
     InlandWaterTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
@@ -61,7 +73,8 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
 end
 
 And(/^I should see first waste carrier displayed$/) do
-  expect(MultiWasteCarriersPage.new).to have_first_multi_waste_title 'Waste carrier'
+  first_title = Translations.value 'exportJourney.wasteCarrier.carriersPage.cardTitle'
+  expect(MultiWasteCarriersPage.new).to have_first_multi_waste_title first_title.gsub!('{{n}}', 'First')
 end
 
 And(/^I should see five waste carrier details displayed$/) do
@@ -78,24 +91,24 @@ end
 
 And(/^I should see org nam and country for each waste carries$/) do
   j = 0
-  (0...TestStatus.waste_carrier_title.count * 2).step(2).each do |i|
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i].text).to eq Translations.value 'contact.orgName'
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_keys[i + 1].text).to eq Translations.value 'address.country' # not sure
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_values[i].text).to eq TestStatus.waste_carrier_org_detail[j]
-    expect(MultiWasteCarriersPage.new.waste_carrier_org_country_name_values[i + 1].text).to eq 'England'
+  (0...TestStatus.waste_carrier_title.count).each do |i|
+    expect(MultiWasteCarriersPage.new.waste_carrier_org_name_keys(i).text).to eq Translations.value 'contact.orgName'
+    expect(MultiWasteCarriersPage.new.waste_carrier_country_name_keys(i).text).to eq Translations.value 'address.country'
+    expect(MultiWasteCarriersPage.new.waste_carrier_org_name_value(i).text).to eq TestStatus.waste_carrier_org_detail[j]
+    expect(MultiWasteCarriersPage.new.waste_carrier_country_name_value(i).text).to eq 'England'
     j += 1
   end
 end
 
 And(/^I should see change and remove links for each waste carriers$/) do
-  (0...TestStatus.waste_carrier_title.count * 2).step(2).each do |i|
-    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i].text.split("\n").first).to eq Translations.value 'actions.change'
-    expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[i + 1].text.split("\n").first).to eq Translations.value 'actions.remove'
+  (1...TestStatus.waste_carrier_title.count).each do |i|
+    expect(MultiWasteCarriersPage.new.waste_carrier_change_link(i).text.split("\n").first).to eq Translations.value 'actions.change'
+    expect(MultiWasteCarriersPage.new.waste_carrier_remove_link(i).text.split("\n").first).to eq Translations.value 'actions.remove'
   end
 end
 
 And(/^I should see only change link for first waste carrier$/) do
-  expect(MultiWasteCarriersPage.new.waste_carrier_change_remove_link[0].text.split("\n").first).to eq Translations.value 'actions.change'
+  expect(MultiWasteCarriersPage.new.waste_carrier_change_link(1).text.split("\n").first).to eq Translations.value 'actions.change'
   expect(MultiWasteCarriersPage.new).not_to have_link Translations.value 'actions.remove'
 end
 

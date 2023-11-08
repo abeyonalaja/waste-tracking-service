@@ -18,7 +18,6 @@ class HowWillTheWasteCarrierTransportTheWastePage < GenericPage
 
   def check_page_displayed(carrier = 'first')
     expect(self).to have_css 'h1', text: TITLE.gsub!('{{carrierIndex}}', carrier), exact_text: true
-    # expect(self).to have_css 'h1', text: 'How will the waste carrier transport the waste?', exact_text: true
   end
 
   def check_translation

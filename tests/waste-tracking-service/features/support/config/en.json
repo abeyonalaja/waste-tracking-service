@@ -212,6 +212,7 @@
   "exportJourney.wasteCarrierDetails.firstPageQuestion3": "Who is the third waste carrier?",
   "exportJourney.wasteCarrierDetails.firstPageQuestion4": "Who is the fourth waste carrier?",
   "exportJourney.wasteCarrierDetails.firstPageQuestion5": "Who is the fifth waste carrier?",
+  "exportJourney.wasteCarrier.carriersPage.cardTitle": "{{n}} waste carrier",
   "exportJourney.wasteCarrierDetails.YouCanEditMessage": "You'll be able to update these details after submitting the record.",
   "exportJourney.wasteCarrierDetails.organisationName": "Organisation name",
   "exportJourney.wasteCarrierDetails.address": "Address",

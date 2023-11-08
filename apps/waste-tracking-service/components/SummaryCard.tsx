@@ -101,7 +101,12 @@ export const SummaryCard = ({ title, children, id, actions }: Props) => {
               return (
                 !action.hidden && (
                   <ActionsListItem key={index}>
-                    <AppLink href="#" isBold={true} onClick={action.action}>
+                    <AppLink
+                      href="#"
+                      isBold={true}
+                      onClick={action.action}
+                      id={`${id}-link-${index}`}
+                    >
                       {action.label}
                     </AppLink>
                   </ActionsListItem>

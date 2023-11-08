@@ -192,7 +192,7 @@ const WasteCarriers = () => {
     if (router.isReady) {
       setId(router.query.id);
       setPage(router.query.page || null);
-      setCarrierId(router.query.carrierId);
+      setCarrierId(router.query.carrierId || null);
       setCarrierIndex(parseInt(router.query.carrierIndex?.toString()) || 0);
     }
   }, [
@@ -241,7 +241,7 @@ const WasteCarriers = () => {
                 payload: data,
               });
               if (data.status === 'Complete') {
-                if (carrierId !== undefined) {
+                if (carrierId !== null) {
                   const record = data.values
                     ?.filter((site) => site.id === carrierId)
                     .at(-1);
@@ -306,7 +306,7 @@ const WasteCarriers = () => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status: 'Started',
+            status: carrierId ? 'Complete' : 'Started',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -325,7 +325,11 @@ const WasteCarriers = () => {
             ),
           };
           body = {
-            status: showTransport ? 'Started' : 'Complete',
+            status: carrierId
+              ? 'Complete'
+              : showTransport
+              ? 'Started'
+              : 'Complete',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -350,10 +354,7 @@ const WasteCarriers = () => {
             ),
           };
           body = {
-            status:
-              carrierPage.showView === VIEWS.TRANSPORT_CHOICE
-                ? 'Started'
-                : 'Complete',
+            status: 'Complete',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -430,7 +431,13 @@ const WasteCarriers = () => {
         }
       }
     },
-    [addressDetails, contactDetails, transportDetails, carrierPage.data]
+    [
+      addressDetails,
+      contactDetails,
+      transportDetails,
+      carrierPage.data,
+      carrierId,
+    ]
   );
 
   const handleChangeLink = (carrierId, e) => {
@@ -647,7 +654,7 @@ const WasteCarriers = () => {
 
   const printBullets = () => {
     const bullets = t(
-      `exportJourney.wasteCarrierTransport.${transportDetails.type}Bullets`
+      `exportJourney.wasteCarrierTransport.${transportDetails?.type}Bullets`
     ).split('*');
     return bullets.map((bullet, index) => {
       return <GovUK.ListItem key={`bullet${index}`}>{bullet}</GovUK.ListItem>;
@@ -1000,7 +1007,7 @@ const WasteCarriers = () => {
                         'exportJourney.wasteCarrierTransport.descriptionTitle',
                         {
                           type: t(
-                            `exportJourney.wasteCarrierTransport.${transportDetails.type}`
+                            `exportJourney.wasteCarrierTransport.${transportDetails?.type}`
                           ).toLowerCase(),
                           carrierIndex: t(
                             `numberAdjective.${carrierIndex}`
@@ -1093,6 +1100,7 @@ const WasteCarriers = () => {
                             ]}
                           >
                             <SummaryList
+                              id={`waste-carrier-${index}-content`}
                               content={[
                                 {
                                   title: t('contact.orgName'),

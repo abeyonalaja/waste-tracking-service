@@ -64,14 +64,22 @@ const Definition = styled('dd')`
   }
 `;
 
+const idify = (value) => {
+  return value.replace(/\W/g, '-').toLowerCase();
+};
+
 export const SummaryList = ({ content, id }: Props) => {
   return (
     <DefinitionList id={id}>
       {content.map((listItem, index) => {
         return (
           <Row key={index}>
-            <Title>{listItem.title}</Title>
-            <Definition>{listItem.definition}</Definition>
+            <Title id={`${id}-${index}-${idify(listItem.title)}`}>
+              {listItem.title}
+            </Title>
+            <Definition id={`${id}-${index}-definition`}>
+              {listItem.definition}
+            </Definition>
           </Row>
         );
       })}

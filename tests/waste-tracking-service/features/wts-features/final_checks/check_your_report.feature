@@ -362,6 +362,7 @@ Feature: AS A Waste Practitioner
     When I click on Waste carrier contact Change link
     And I wait for a second
     Then the "What Are The Waste Carriers Contact Details" page is displayed
+    And I wait for a second
     When I click the Save and return to draft
     And I click the "Check your record" link
     When I click the waste carrier transport Change link

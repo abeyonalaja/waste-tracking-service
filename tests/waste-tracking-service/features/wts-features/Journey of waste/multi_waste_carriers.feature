@@ -83,7 +83,7 @@ Feature: AS A waste producer/broker
     And I click the last "Remove" link
     Then the "remove this waste carrier" page is displayed
     When I click the button Save and continue
-    Then I remain on the remove this waste carrier page with an "Select yes if you want to remove this carrier" error message displayed
+    Then I remain on the remove this waste carrier page with an "Select yes if you want to remove this waste carrier" error message displayed
     When I choose "No" radio button
     When I click the button Save and continue
     Then I should see org nam and country for each waste carries

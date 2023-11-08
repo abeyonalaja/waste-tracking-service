@@ -8,7 +8,6 @@ class RoadTransportDetailsPage < GenericPage
   include ErrorBox
 
 
-  TITLE = Translations.value 'exportJourney.wasteCarrierTransport.descriptionTitle'
   INTRO = Translations.value 'exportJourney.wasteCarrierTransport.descriptionHintIntro'
   BULLET1 = Translations.value 'exportJourney.wasteCarrierTransport.RoadBullet1'
   BULLET2 = Translations.value 'exportJourney.wasteCarrierTransport.RoadBullet2'
@@ -18,7 +17,8 @@ class RoadTransportDetailsPage < GenericPage
   CAPTION = Translations.value 'exportJourney.wasteCarrierDetails.title'
 
   def check_page_displayed(carrier = 'first', type = 'road')
-    expect(self).to have_css 'h1', text: TITLE.gsub!('{{carrierIndex}}', carrier).gsub!('{{type}}', type), exact_text: true
+    title = Translations.value 'exportJourney.wasteCarrierTransport.descriptionTitle'
+    expect(self).to have_css 'h1', text: title.gsub!('{{carrierIndex}}', carrier).gsub!('{{type}}', type), exact_text: true
   end
 
   def check_translation

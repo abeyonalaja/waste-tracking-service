@@ -10,11 +10,11 @@ class WhoIsTheWasteCarrierPage < GenericPage
   include CommonComponents
 
   TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion'
-  FIRST_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion1'
+  FIRST_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion1'
   SECOND_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion2'
-  THIRD_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion3'
-  FOURTH_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion4'
-  FIFTH_TITLE = Translations.value '"exportJourney.wasteCarrierDetails.firstPageQuestion5'
+  THIRD_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion3'
+  FOURTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion4'
+  FIFTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion5'
   SUB_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.title'
   COPY_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.YouCanEditMessage'
   ORGANISATION_NAME = Translations.value 'exportJourney.wasteCarrierDetails.organisationName'
@@ -26,7 +26,22 @@ class WhoIsTheWasteCarrierPage < GenericPage
   COUNTRY_FIELD_ID = 'country'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_css 'h1', text: FIRST_TITLE, exact_text: true
+  end
+
+  def check_page_title(title)
+    case title
+    when 'First'
+      expect(self).to have_css 'h1', text: FIRST_TITLE, exact_text: true
+    when 'Second'
+      expect(self).to have_css 'h1', text: SECOND_TITLE, exact_text: true
+    when 'Third'
+      expect(self).to have_css 'h1', text: THIRD_TITLE, exact_text: true
+    when 'Fourth'
+      expect(self).to have_css 'h1', text: FOURTH_TITLE, exact_text: true
+    when 'Fifth'
+      expect(self).to have_css 'h1', text: FIFTH_TITLE, exact_text: true
+    end
   end
 
   def check_second_waste_page_displayed

@@ -8,6 +8,11 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   include ErrorBox
 
   TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion'
+  FIRST_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion1'
+  SECOND_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion2'
+  THIRD_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion3'
+  FOURTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion4'
+  FIFTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion5'
   COPY_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.YouCanEditMessage'
   SUB_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.title'
   ORGANISATION_CONTACT = Translations.value 'exportJourney.wasteCarrierDetails.contactPerson'
@@ -24,8 +29,7 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   FAX_NUMBER_FIELD_ID = 'faxNumber'
 
   def check_page_displayed
-    # expect(self).to have_css 'h1', text: TITLE, exact_text: true
-    expect(self).to have_css 'h1', text: "What are the waste carrier's contact details?", exact_text: true
+    expect(self).to have_css 'h1', text: FIRST_TITLE, exact_text: true
   end
 
   def check_translation
@@ -38,6 +42,21 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
     expect(self).to have_text PHONE_HINT
     expect(self).to have_text FAX_NUMBER
     expect(self).to have_text FAX_HINT
+  end
+
+  def check_page_title(title)
+    case title
+    when 'First'
+      expect(self).to have_css 'h1', text: FIRST_TITLE, exact_text: true
+    when 'Second'
+      expect(self).to have_css 'h1', text: SECOND_TITLE, exact_text: true
+    when 'Third'
+      expect(self).to have_css 'h1', text: THIRD_TITLE, exact_text: true
+    when 'Fourth'
+      expect(self).to have_css 'h1', text: FOURTH_TITLE, exact_text: true
+    when 'Fifth'
+      expect(self).to have_css 'h1', text: FIFTH_TITLE, exact_text: true
+    end
   end
 
   def enter_organisation_contact(organisation_contact)

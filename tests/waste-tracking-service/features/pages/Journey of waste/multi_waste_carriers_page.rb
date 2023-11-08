@@ -8,7 +8,7 @@ class MultiWasteCarriersPage < GenericPage
   include ErrorBox
   include PageHelper
 
-  MULTI_WASTE_TITLE = 'h2 > div'
+  MULTI_WASTE_TITLE = 'h2'
 
   MULTI_WASTE_PAGE_TITLE = Translations.value 'exportJourney.wasteCarrier.carriersPage.title'
   MULTI_WASTE_PAGE_ORG_NAME = Translations.value 'exportJourney.exporterDetails.organisationName'
@@ -50,16 +50,28 @@ class MultiWasteCarriersPage < GenericPage
     waste_carrier_title.map(&:text)
   end
 
-  def waste_carrier_org_country_name_keys
-    all(:css, '.govuk-summary-list__row > dt')
+  def waste_carrier_org_name_keys(id = 0)
+    find("waste-carrier-#{id}-content-0-organisation-name")
   end
 
-  def waste_carrier_org_country_name_values
-    all(:css, '.govuk-summary-list__row > dd')
+  def waste_carrier_country_name_keys(id = 0)
+    find("waste-carrier-#{id}-content-1-country")
   end
 
-  def waste_carrier_change_remove_link
-    all(:css, '.govuk-summary-card__title-wrapper ul > li > a')
+  def waste_carrier_org_name_value(id = 0)
+    find("waste-carrier-#{id}-content-0-definition")
+  end
+
+  def waste_carrier_country_name_value(id = 0)
+    find("waste-carrier-#{id}-content-1-definition")
+  end
+
+  def waste_carrier_change_link(id)
+    find("carrier-list-item-#{id}-link-0")
+  end
+
+  def waste_carrier_remove_link(id)
+    find("carrier-list-item-#{id}-link-1")
   end
 
 end
