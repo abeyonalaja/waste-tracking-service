@@ -9,6 +9,7 @@ import { Card } from './Card';
 import { CompleteFooter } from './CompleteFooter';
 import { CompleteHeader } from './CompleteHeader';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
+import { CookieBanner } from './CookieBanner';
 import { CountrySelector } from './CountrySelector';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
@@ -42,6 +43,7 @@ export {
   CompleteFooter,
   CompleteHeader,
   ConditionalRadioWrap,
+  CookieBanner,
   CountrySelector,
   DocumentStatus,
   DownloadPDFLink,

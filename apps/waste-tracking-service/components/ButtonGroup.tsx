@@ -24,6 +24,9 @@ const Group = styled('div')`
       margin-right: 15px;
       margin-bottom: 15px;
     }
+    a {
+      line-height: 1;
+    }
   }
 `;
 

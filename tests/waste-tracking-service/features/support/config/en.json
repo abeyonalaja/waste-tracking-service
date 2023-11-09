@@ -489,5 +489,22 @@
   "exportJourney.wasteCodesAndDesc.caption": "Waste codes and description",
   "exportJourney.wasteCollectionDate.caption": "Collection date",
   "exportJourney.wasteCollectionDetails.caption": "Waste collection details",
-  "exportJourney.quantity.caption": "Quantity of waste"
+  "exportJourney.quantity.caption": "Quantity of waste",
+  "cookie.banner.title": "Cookies on Export waste from the UK",
+  "cookie.banner.p1": "We use some essential cookies to make this service work.",
+  "cookie.banner.p2": "We’d also like to use analytics cookies so we can understand how you use the service and make improvements.",
+  "cookie.banner.button.accept": "Accept analytics cookies",
+  "cookie.banner.button.reject": "Reject analytics cookies",
+  "cookie.banner.button.link": "View cookies",
+  "cookie.banner.button.hide": "Hide cookie message",
+  "cookie.banner.confirmation_accepted": "You have accepted analytics cookies. You can <2>change your cookie settings</2> at any time.",
+  "cookie.banner.confirmation_rejected": "You have rejected analytics cookies. You can <2>change your cookie settings</2> at any time.",
+  "cookie.page.title": "Cookies",
+  "cookie.page.saved": "Your cookie settings were saved",
+  "cookie.page.p1": "Cookies are small files save on your phone, tablet or computer when you visit a website.",
+  "cookie.page.p2": "We use cookies to make this site work and collect information about how you use our service.",
+  "cookie.page.p3": "Essential cookies keep your information secure whilst you use this service. We do not need to ask permission to use them.",
+  "cookie.page.essentialHeading": "Essential cookies",
+  "cookie.page.analyticHeading": "Analytics cookies (optional)",
+  "cookie.banner.change.link": "change your cookie settings"
 }

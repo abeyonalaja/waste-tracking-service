@@ -5,7 +5,7 @@ import { GlobalStyle, Main, TopNav, PhaseBanner } from 'govuk-react';
 import Link from 'next/link';
 import { BLUE, BLACK, YELLOW } from 'govuk-colours';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitch } from '../components';
+import { CookieBanner, LanguageSwitch } from 'components';
 
 const GovukHeader = styled.header`
   background: ${BLACK};
@@ -135,6 +135,7 @@ export const CompleteHeader = () => {
   return (
     <>
       <GlobalStyle />
+      <CookieBanner />
       <GovukHeader>
         <GovukHeaderInner>
           <GovukHeaderLogo>

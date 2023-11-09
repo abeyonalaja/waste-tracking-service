@@ -5,6 +5,7 @@ interface Props {
   children: ReactNode;
   mb?: number;
   testId?: string;
+  id?: string;
 }
 
 const P = styled('p')<{ mb?: number }>`
@@ -23,9 +24,9 @@ const P = styled('p')<{ mb?: number }>`
   }
 `;
 
-export const Paragraph = ({ children, mb = 4, testId }: Props) => {
+export const Paragraph = ({ children, mb = 4, testId, id }: Props) => {
   return (
-    <P data-testid={testId} mb={mb}>
+    <P data-testid={testId} mb={mb} id={id}>
       {children}
     </P>
   );

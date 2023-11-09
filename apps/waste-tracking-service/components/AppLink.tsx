@@ -21,7 +21,7 @@ const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
   -moz-osx-font-smoothing: grayscale;
   text-decoration: underline;
   text-decoration-thickness: max(1px, 0.0625rem);
-  text-underline-offset: 0.1em;
+  text-underline-offset: 0.15em;
   color: ${LINK_COLOUR};
   font-weight: ${(props) => (props.$isBold ? '700' : '400')};
   font-size: 16px;
