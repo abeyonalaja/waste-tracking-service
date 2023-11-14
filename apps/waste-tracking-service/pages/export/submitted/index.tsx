@@ -160,7 +160,6 @@ const Index = () => {
                 <GovUK.Heading size="LARGE" id="template-heading">
                   {t('exportJourney.submittedAnnexSeven.title')}
                 </GovUK.Heading>
-
                 <Paragraph>
                   {t('exportJourney.submittedAnnexSeven.paragraph')}
                 </Paragraph>
@@ -255,11 +254,9 @@ const Index = () => {
                                 {item.wasteDescription?.wasteCode.type !==
                                   'NotApplicable' && (
                                   <>
-                                    {item.wasteDescription?.wasteCode.value && (
-                                      <span>
-                                        {item.wasteDescription?.wasteCode.value}
-                                      </span>
-                                    )}
+                                    <span>
+                                      {item.wasteDescription?.wasteCode.code}
+                                    </span>
                                   </>
                                 )}
                                 {item.wasteDescription?.wasteCode.type ===

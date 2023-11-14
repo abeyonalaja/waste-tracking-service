@@ -107,7 +107,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
       }
     );
 
@@ -361,12 +361,11 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -582,12 +581,11 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -805,12 +803,11 @@ describe(InMemorySubmissionBackend, () => {
       wasteDescription: {
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1044,7 +1041,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
       }
     );
 
@@ -1101,7 +1098,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
       }
     );
 
@@ -1129,7 +1126,6 @@ describe(InMemorySubmissionBackend, () => {
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1218,7 +1214,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
       }
     );
 
@@ -1251,11 +1247,10 @@ describe(InMemorySubmissionBackend, () => {
       reference: 'mock',
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1381,11 +1376,10 @@ describe(InMemorySubmissionBackend, () => {
       reference: 'mock',
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1478,7 +1472,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIB', value: 'X' },
+        wasteCode: { type: 'AnnexIIIB', code: 'X' },
       }
     );
 
@@ -1511,11 +1505,10 @@ describe(InMemorySubmissionBackend, () => {
       reference: 'mock',
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1608,7 +1601,7 @@ describe(InMemorySubmissionBackend, () => {
       { id, accountId },
       {
         status: 'Started',
-        wasteCode: { type: 'AnnexIIIA', value: 'Z' },
+        wasteCode: { type: 'AnnexIIIA', code: 'Z' },
       }
     );
 
@@ -1634,11 +1627,10 @@ describe(InMemorySubmissionBackend, () => {
       reference,
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1805,11 +1797,10 @@ describe(InMemorySubmissionBackend, () => {
       reference,
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -1976,11 +1967,10 @@ describe(InMemorySubmissionBackend, () => {
       reference,
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -2184,11 +2174,10 @@ describe(InMemorySubmissionBackend, () => {
       reference,
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -2361,11 +2350,10 @@ describe(InMemorySubmissionBackend, () => {
       reference,
       wasteDescription: {
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: 'X' },
+        wasteCode: { type: 'AnnexIIIA', code: 'X' },
         ewcCodes: [
           {
             code: '010101',
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -2546,12 +2534,11 @@ describe(InMemorySubmissionBackend, () => {
         status: 'Complete',
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: faker.datatype.string(),
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {

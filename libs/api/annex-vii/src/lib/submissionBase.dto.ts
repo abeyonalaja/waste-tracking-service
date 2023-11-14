@@ -18,8 +18,8 @@ type DraftWasteDescriptionData = {
   wasteCode:
     | { type: 'NotApplicable' }
     | {
-        type: 'BaselAnnexIX' | 'Oecd' | 'AnnexIIIA' | 'AnnexIIIB';
-        value: string;
+        type: 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB';
+        code: string;
       };
   ewcCodes: object[];
   nationalCode: { provided: 'Yes'; value: string } | { provided: 'No' };

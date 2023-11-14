@@ -61,21 +61,21 @@ describe('validatePutWasteDescriptionRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteCode: { type: 'NotApplicable', value: faker.datatype.string(10) },
+        wasteCode: { type: 'NotApplicable', code: faker.datatype.string(10) },
       })
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
-        nationalCode: { provided: 'No', value: faker.datatype.string(10) },
+        nationalCode: { provided: 'No', code: faker.datatype.string(10) },
       })
     ).toBe(false);
 
     expect(
       validate({
         status: 'Complete',
-        wasteCode: { type: 'BaselAnnexIX', value: faker.datatype.string(10) },
+        wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
       })
     ).toBe(false);
   });
@@ -97,18 +97,17 @@ describe('validatePutWasteDescriptionRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteCode: { type: 'BaselAnnexIX', value: faker.datatype.string(10) },
+        wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
       })
     ).toBe(true);
 
     expect(
       validate({
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', value: faker.datatype.string(10) },
+        wasteCode: { type: 'AnnexIIIA', code: faker.datatype.string(10) },
         ewcCodes: [
           {
             code: '010101',
-            description: 'wastes from mineral metalliferous excavation',
           },
         ],
         nationalCode: { provided: 'No' },

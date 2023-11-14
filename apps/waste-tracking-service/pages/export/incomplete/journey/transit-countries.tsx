@@ -640,6 +640,9 @@ const TransitCountries = () => {
                                       ? wasteTransitPage.data.values[0]
                                       : ''
                                   }
+                                  dropdownArrow={() => {
+                                    return;
+                                  }}
                                 />
                               </GovUK.FormGroup>
                             </ConditionalRadioWrap>

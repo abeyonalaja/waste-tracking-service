@@ -17,13 +17,22 @@ import {
 } from 'components';
 import { isNotEmpty, validateWasteCode } from 'utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
-import { wasteCodeData } from 'utils/wasteCodesData';
+import i18n from 'i18next';
+
+type codeType = {
+  type: string;
+  values: Array<{
+    code: string;
+    description: string;
+  }>;
+};
 
 const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string>(null);
   const [data, setData] = useState<object>();
+  const [refData, setRefData] = useState<Array<codeType>>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasValidId, setHasValidId] = useState<boolean>(false);
   const [wasteCodeCategory, setWasteCodeCategory] = useState<string>();
@@ -33,23 +42,32 @@ const WasteCode = () => {
   const [annexIIIBCode, setAnnexIIIBCode] = useState<string>();
 
   const url = `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`;
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setRefData(data);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   const setWasteCode = (category, code) => {
     if (category === 'BaselAnnexIX') setBaselAnnexIXCode(code);
     if (category === 'Oecd') setOecdCode(code);
     if (category === 'AnnexIIIA') setAnnexIIIACode(code);
     if (category === 'AnnexIIIB') setAnnexIIIBCode(code);
-  };
-
-  const getWasteCodeType = (category) => {
-    if (category !== undefined) {
-      if (category === 'NotApplicable') {
-        return 'Small';
-      } else {
-        return 'Bulk';
-      }
-    }
-    return null;
   };
 
   useEffect(() => {
@@ -97,12 +115,26 @@ const WasteCode = () => {
   }>({});
 
   function suggest(query, populateResults) {
-    const results = wasteCodeData[wasteCodeCategory];
-    const filteredResults = results.filter(
-      (result) => result.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+    const results = refData.find((codeTypes: codeType) => {
+      return codeTypes.type === wasteCodeCategory;
+    });
+    const filterResults = (result) => {
+      const tempString = `${result.code}: ${result.description}`;
+      return tempString.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    };
+    const filteredResults = results.values.filter(filterResults);
     populateResults(filteredResults);
   }
+
+  const suggestionTemplate = (suggestion) => {
+    return typeof suggestion !== 'string'
+      ? `${suggestion?.code}: ${suggestion?.description}`
+      : suggestion;
+  };
+
+  const inputValueTemplate = (suggestion) => {
+    return `${suggestion?.code}`;
+  };
 
   const handleCancelReturn = (e) => {
     e.preventDefault();
@@ -116,7 +148,7 @@ const WasteCode = () => {
     (e: FormEvent) => {
       const getWasteCode = () => {
         if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode;
-        if (wasteCodeCategory === 'Oecd') return oecdCode;
+        if (wasteCodeCategory === 'OECD') return oecdCode;
         if (wasteCodeCategory === 'AnnexIIIA') return annexIIIACode;
         if (wasteCodeCategory === 'AnnexIIIB') return annexIIIBCode;
         return undefined;
@@ -151,7 +183,7 @@ const WasteCode = () => {
             status: 'Started',
             wasteCode: {
               type: wasteCodeCategory,
-              value: getWasteCode(),
+              code: getWasteCode(),
             },
           };
 
@@ -286,10 +318,17 @@ const WasteCode = () => {
                               source={suggest}
                               showAllValues={true}
                               onConfirm={(option) =>
-                                setBaselAnnexIXCode(option)
+                                setBaselAnnexIXCode(option.code)
                               }
                               confirmOnBlur={false}
                               defaultValue={baselAnnexIXCode}
+                              templates={{
+                                inputValue: inputValueTemplate,
+                                suggestion: suggestionTemplate,
+                              }}
+                              dropdownArrow={() => {
+                                return;
+                              }}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -297,12 +336,12 @@ const WasteCode = () => {
                       <GovUK.Radio
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryBaselOECD"
-                        checked={wasteCodeCategory === 'Oecd'}
-                        onChange={() => setWasteCodeCategory('Oecd')}
+                        checked={wasteCodeCategory === 'OECD'}
+                        onChange={() => setWasteCodeCategory('OECD')}
                       >
                         OECD
                       </GovUK.Radio>
-                      {wasteCodeCategory === 'Oecd' && (
+                      {wasteCodeCategory === 'OECD' && (
                         <ConditionalRadioWrap>
                           <GovUK.FormGroup error={!!errors?.oecdCode}>
                             <GovUK.VisuallyHidden>
@@ -320,9 +359,16 @@ const WasteCode = () => {
                               id="OecdCode"
                               source={suggest}
                               showAllValues={true}
-                              onConfirm={(option) => setOecdCode(option)}
+                              onConfirm={(option) => setOecdCode(option.code)}
                               confirmOnBlur={false}
                               defaultValue={oecdCode}
+                              templates={{
+                                inputValue: inputValueTemplate,
+                                suggestion: suggestionTemplate,
+                              }}
+                              dropdownArrow={() => {
+                                return;
+                              }}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -353,9 +399,18 @@ const WasteCode = () => {
                               id="AnnexIIIACode"
                               source={suggest}
                               showAllValues={true}
-                              onConfirm={(option) => setAnnexIIIACode(option)}
+                              onConfirm={(option) =>
+                                setAnnexIIIACode(option.code)
+                              }
                               confirmOnBlur={false}
                               defaultValue={annexIIIACode}
+                              templates={{
+                                inputValue: inputValueTemplate,
+                                suggestion: suggestionTemplate,
+                              }}
+                              dropdownArrow={() => {
+                                return;
+                              }}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -386,9 +441,18 @@ const WasteCode = () => {
                               id="AnnexIIIBCode"
                               source={suggest}
                               showAllValues={true}
-                              onConfirm={(option) => setAnnexIIIBCode(option)}
+                              onConfirm={(option) =>
+                                setAnnexIIIBCode(option.code)
+                              }
                               confirmOnBlur={false}
                               defaultValue={annexIIIBCode}
+                              templates={{
+                                inputValue: inputValueTemplate,
+                                suggestion: suggestionTemplate,
+                              }}
+                              dropdownArrow={() => {
+                                return;
+                              }}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>

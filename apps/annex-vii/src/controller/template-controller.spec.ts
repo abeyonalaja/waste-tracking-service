@@ -342,7 +342,7 @@ describe(TemplateController, () => {
         accountId,
         value: {
           status: 'Started',
-          wasteCode: { type: 'AnnexIIIA', value: 'X' },
+          wasteCode: { type: 'AnnexIIIA', code: 'X' },
         },
       });
 
@@ -369,7 +369,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -533,7 +533,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
         },
       });
@@ -568,7 +568,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -636,7 +636,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIB',
-            value: 'A',
+            code: 'A',
           },
         },
       });
@@ -673,7 +673,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -777,7 +777,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'Z',
+            code: 'Z',
           },
         },
       });

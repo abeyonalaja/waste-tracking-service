@@ -257,8 +257,8 @@ export abstract class InMemorySubmissionBaseBackend
       newWasteDescription.status !== 'NotStarted' &&
       currentWasteDescription.wasteCode?.type ===
         newWasteDescription.wasteCode?.type &&
-      currentWasteDescription.wasteCode?.value !==
-        newWasteDescription.wasteCode?.value
+      currentWasteDescription.wasteCode?.code !==
+        newWasteDescription.wasteCode?.code
     );
   }
 

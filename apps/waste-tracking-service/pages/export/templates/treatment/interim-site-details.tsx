@@ -30,7 +30,7 @@ import {
   validateInternationalPhone,
 } from 'utils/validators';
 
-import { recoveryData } from 'utils/recoveryData';
+import i18n from 'i18next';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -127,6 +127,11 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
+type codeType = Array<{
+  code: string;
+  description: string;
+}>;
+
 const InterimSiteDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -134,6 +139,7 @@ const InterimSiteDetails = () => {
     interimReducer,
     initialState
   );
+  const [refData, setRefData] = useState<codeType>();
   const [templateId, setTemplateId] = useState<string>(null);
   const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
@@ -170,6 +176,28 @@ const InterimSiteDetails = () => {
       setPage(router.query.page);
     }
   }, [router.isReady, router.query.templateId]);
+
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            const filterInterimCodes = data.filter((code) => code.interim);
+            setRefData(filterInterimCodes);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   useEffect(() => {
     dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
@@ -687,7 +715,7 @@ const InterimSiteDetails = () => {
                           </GovUK.VisuallyHidden>
                         }
                         errorMessage={interimPage.errors?.recoveryCode}
-                        options={recoveryData.interimRecoveryCodes}
+                        options={refData}
                         onChange={(e) =>
                           setRecoveryFacilityType({
                             type: 'InterimSite',

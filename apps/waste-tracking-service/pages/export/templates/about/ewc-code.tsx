@@ -28,9 +28,9 @@ import {
 } from 'utils/validators';
 import { getStatus } from 'utils/statuses/getStatus';
 import formatEwcCode from 'utils/formatEwcCode';
-import { ewcCodeData } from 'utils/ewcCodes';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
+import i18n from 'i18next';
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -198,6 +198,11 @@ const Actions = styled('dd')`
   }
 `;
 
+type codeType = {
+  code: string;
+  description: string;
+};
+
 const EwcCodes = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -206,6 +211,7 @@ const EwcCodes = () => {
     initialState
   );
   const [templateId, setTemplateId] = useState(null);
+  const [refData, setRefData] = useState<Array<codeType>>();
   const [ewcCode, setEwcCode] = useState('');
   const [ewcCodeToRemove, setEwcCodeToRemove] = useState<string>(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
@@ -215,6 +221,27 @@ const EwcCodes = () => {
       setTemplateId(router.query.templateId);
     }
   }, [router.isReady, router.query.templateId]);
+
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setRefData(data);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   useEffect(() => {
     dispatchEwcCodePage({ type: 'DATA_FETCH_INIT' });
@@ -247,8 +274,10 @@ const EwcCodes = () => {
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
+      const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
       const newErrors = {
-        ewcCode: validateEwcCode('Yes', ewcCode),
+        ewcCode:
+          validateEwcCode('Yes', newEwcCode) || checkValidEWC(newEwcCode),
       };
 
       if (isNotEmpty(newErrors) && ewcCode) {
@@ -257,10 +286,7 @@ const EwcCodes = () => {
         dispatchEwcCodePage({ type: 'ERRORS_UPDATE', payload: null });
 
         if (ewcCode) {
-          const result = ewcCodeData.find(
-            ({ code }) =>
-              code.slice(0, 6) === ewcCode.replace(/[A-Z-_|.* ]/gi, '')
-          );
+          const result = { code: newEwcCode };
           ewcCodePage.data.status = getStatus(
             ewcCodePage.data?.wasteCode,
             [result],
@@ -321,6 +347,23 @@ const EwcCodes = () => {
     }
   };
 
+  const checkValidEWC = (ewcCode) => {
+    if (ewcCode === '') {
+      return null;
+    }
+    const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
+    if (result === undefined) {
+      return 'Enter a code in the correct format';
+    }
+  };
+
+  const getEWCDesc = (ewcCode) => {
+    const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
+    if (result) {
+      return result.description;
+    }
+  };
+
   const handleSubmitAdditionalEwcCode = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
@@ -330,7 +373,8 @@ const EwcCodes = () => {
         ewcCode:
           hasEWCCode &&
           (validateEwcCode(hasEWCCode, newEwcCode) ||
-            checkDuplicate(newEwcCode)),
+            checkDuplicate(newEwcCode) ||
+            checkValidEWC(newEwcCode)),
       };
 
       if (isNotEmpty(newErrors)) {
@@ -345,9 +389,9 @@ const EwcCodes = () => {
           });
         } else if (hasEWCCode === 'Yes') {
           const ewcCodes = ewcCodePage.data.ewcCodes;
-          const additionalEwc = ewcCodeData.find(
-            ({ code }) => code.slice(0, 6) === newEwcCode
-          );
+          const additionalEwc = {
+            code: newEwcCode,
+          };
           ewcCodes.push(additionalEwc);
           updateEwcData(ewcCodes, false);
         } else {
@@ -564,7 +608,7 @@ const EwcCodes = () => {
                               {formatEwcCode(ewc.code)}
                             </Title>
                             <Definition id={`ewc-desc-${index + 1}`}>
-                              {ewc.description}
+                              {getEWCDesc(ewc.code)}
                             </Definition>
                             <Actions>
                               <AppLink

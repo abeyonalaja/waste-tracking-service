@@ -334,7 +334,7 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Started',
-          wasteCode: { type: 'AnnexIIIA', value: 'X' },
+          wasteCode: { type: 'AnnexIIIA', code: 'X' },
         },
       });
 
@@ -344,7 +344,7 @@ describe(DraftController, () => {
           reference: 'abc',
           wasteDescription: {
             status: 'Started',
-            wasteCode: { type: 'AnnexIIIA', value: 'X' },
+            wasteCode: { type: 'AnnexIIIA', code: 'X' },
           },
           wasteQuantity: { status: 'NotStarted' },
           exporterDetail: { status: 'NotStarted' },
@@ -380,7 +380,7 @@ describe(DraftController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -470,7 +470,7 @@ describe(DraftController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -684,7 +684,7 @@ describe(DraftController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
         },
       });
@@ -697,7 +697,7 @@ describe(DraftController, () => {
             status: 'Started',
             wasteCode: {
               type: 'AnnexIIIA',
-              value: 'A',
+              code: 'A',
             },
           },
           wasteQuantity: { status: 'NotStarted' },
@@ -736,7 +736,7 @@ describe(DraftController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -821,7 +821,7 @@ describe(DraftController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIB',
-            value: 'A',
+            code: 'A',
           },
         },
       });
@@ -834,7 +834,7 @@ describe(DraftController, () => {
             status: 'Started',
             wasteCode: {
               type: 'AnnexIIIB',
-              value: 'A',
+              code: 'A',
             },
           },
           wasteQuantity: { status: 'NotStarted' },
@@ -875,7 +875,7 @@ describe(DraftController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'A',
+            code: 'A',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -996,7 +996,7 @@ describe(DraftController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            value: 'Z',
+            code: 'Z',
           },
         },
       });
@@ -1009,7 +1009,7 @@ describe(DraftController, () => {
             status: 'Started',
             wasteCode: {
               type: 'AnnexIIIA',
-              value: 'Z',
+              code: 'Z',
             },
           },
           wasteQuantity: {
@@ -2493,12 +2493,11 @@ describe(DraftController, () => {
       wasteDescription: {
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: faker.datatype.string(),
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {
@@ -2796,12 +2795,11 @@ describe(DraftController, () => {
       wasteDescription: {
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [
           {
             code: faker.datatype.string(),
-            description: faker.datatype.string(),
           },
         ],
         nationalCode: {

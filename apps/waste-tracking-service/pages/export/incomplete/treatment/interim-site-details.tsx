@@ -35,7 +35,7 @@ import {
   validateFieldNotEmpty,
 } from 'utils/validators';
 
-import { recoveryData } from 'utils/recoveryData';
+import i18n from 'i18next';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -132,6 +132,11 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
+type codeType = Array<{
+  code: string;
+  description: string;
+}>;
+
 const InterimSiteDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -139,6 +144,7 @@ const InterimSiteDetails = () => {
     interimReducer,
     initialState
   );
+  const [refData, setRefData] = useState<codeType>();
   const [id, setId] = useState(null);
   const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
@@ -175,6 +181,28 @@ const InterimSiteDetails = () => {
       setPage(router.query.page);
     }
   }, [router.isReady, router.query.id]);
+
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            const filterInterimCodes = data.filter((code) => code.interim);
+            setRefData(filterInterimCodes);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   useEffect(() => {
     dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
@@ -518,7 +546,7 @@ const InterimSiteDetails = () => {
                         input={{
                           name: 'name',
                           id: 'name',
-                          value: addressDetails?.name,
+                          value: addressDetails?.name || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -534,7 +562,7 @@ const InterimSiteDetails = () => {
                         input={{
                           name: 'address',
                           id: 'address',
-                          value: addressDetails?.address,
+                          value: addressDetails?.address || '',
                           onChange: onAddressDetailsChange,
                         }}
                         meta={{
@@ -549,7 +577,7 @@ const InterimSiteDetails = () => {
                         name="country"
                         label={t('address.country')}
                         error={interimPage.errors?.country}
-                        value={addressDetails?.country}
+                        value={addressDetails?.country || ''}
                         onChange={onCountryChange}
                         size={75}
                       />
@@ -582,7 +610,7 @@ const InterimSiteDetails = () => {
                         input={{
                           name: 'fullName',
                           id: 'fullName',
-                          value: contactDetails?.fullName,
+                          value: contactDetails?.fullName || '',
                           maxLength: 250,
                           onChange: onContactDetailsChange,
                         }}
@@ -599,7 +627,7 @@ const InterimSiteDetails = () => {
                           name: 'emailAddress',
                           id: 'emailAddress',
                           type: 'email',
-                          value: contactDetails?.emailAddress,
+                          value: contactDetails?.emailAddress || '',
                           maxLength: 250,
                           onChange: onContactDetailsChange,
                         }}
@@ -630,7 +658,7 @@ const InterimSiteDetails = () => {
                           <TelephoneInput
                             name="phoneNumber"
                             id="phoneNumber"
-                            value={contactDetails?.phoneNumber}
+                            value={contactDetails?.phoneNumber || ''}
                             maxLength={50}
                             type="tel"
                             error={interimPage.errors?.phoneNumber}
@@ -658,7 +686,7 @@ const InterimSiteDetails = () => {
                           <TelephoneInput
                             name="faxNumber"
                             id="faxNumber"
-                            value={contactDetails?.faxNumber}
+                            value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
                             onChange={onContactDetailsChange}
@@ -699,7 +727,7 @@ const InterimSiteDetails = () => {
                           </GovUK.VisuallyHidden>
                         }
                         errorMessage={interimPage.errors?.recoveryCode}
-                        options={recoveryData.interimRecoveryCodes}
+                        options={refData}
                         onChange={(e) =>
                           setRecoveryFacilityType({
                             type: 'InterimSite',

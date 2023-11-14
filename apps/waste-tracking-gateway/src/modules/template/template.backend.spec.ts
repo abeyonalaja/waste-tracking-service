@@ -35,7 +35,7 @@ describe(InMemoryTemplateBackend, () => {
         status: 'Complete',
         wasteCode: {
           type: faker.datatype.string(),
-          value: faker.datatype.string(),
+          code: faker.datatype.string(),
         },
         ewcCodes: [faker.datatype.string()],
         nationalCode: {

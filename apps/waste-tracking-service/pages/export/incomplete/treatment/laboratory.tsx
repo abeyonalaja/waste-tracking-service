@@ -31,7 +31,7 @@ import {
   validatePhone,
 } from 'utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
-import { recoveryData } from 'utils/recoveryData';
+import i18n from 'i18next';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -128,6 +128,14 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
+type codeType = {
+  type: string;
+  values: Array<{
+    code: string;
+    description: string;
+  }>;
+};
+
 const Laboratory = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -135,6 +143,7 @@ const Laboratory = () => {
     laboratoryReducer,
     initialState
   );
+  const [refData, setRefData] = useState<Array<codeType>>();
   const [id, setId] = useState(null);
   const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
@@ -171,6 +180,27 @@ const Laboratory = () => {
       setPage(router.query.page);
     }
   }, [router.isReady, router.query.id]);
+
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setRefData(data);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   useEffect(() => {
     dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
@@ -441,12 +471,23 @@ const Laboratory = () => {
     }
   };
 
-  const suggest = (query, populateResults) => {
-    const results = recoveryData['disposalCodes'];
-    const filteredResults = results.filter(
-      (result) => result.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+  function suggest(query, populateResults) {
+    const filterResults = (result) => {
+      const tempString = `${result.code}: ${result.description}`;
+      return tempString.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    };
+    const filteredResults = refData.filter(filterResults);
     populateResults(filteredResults);
+  }
+
+  const suggestionTemplate = (suggestion) => {
+    return typeof suggestion !== 'string'
+      ? `${suggestion?.code}: ${suggestion?.description}`
+      : suggestion;
+  };
+
+  const inputValueTemplate = (suggestion) => {
+    return `${suggestion?.code}`;
   };
 
   const BreadCrumbs = () => {
@@ -705,11 +746,15 @@ const Laboratory = () => {
                           onConfirm={(option) =>
                             setRecoveryFacilityType({
                               type: 'Laboratory',
-                              disposalCode: option,
+                              disposalCode: option.code,
                             })
                           }
                           confirmOnBlur={false}
                           defaultValue={recoveryFacilityType?.disposalCode}
+                          templates={{
+                            inputValue: inputValueTemplate,
+                            suggestion: suggestionTemplate,
+                          }}
                           dropdownArrow={() => {
                             return;
                           }}

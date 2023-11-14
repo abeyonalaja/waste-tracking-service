@@ -4,6 +4,11 @@ import { Fieldset, HintText, ErrorText, Radio } from 'govuk-react';
 import styled from 'styled-components';
 import boldUpToFirstColon from '../utils/boldUpToFirstColon';
 
+type codeType = Array<{
+  code: string;
+  description: string;
+}>;
+
 interface Props {
   id?: string;
   name: string;
@@ -11,7 +16,7 @@ interface Props {
   size?: string;
   hint?: string;
   value?: string | number;
-  options: Array<string>;
+  options: Array<string> | codeType;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: string;
   testId?: string;
@@ -85,31 +90,44 @@ export const RadioList = ({
         {errorMessage !== undefined && (
           <ErrorText mb={2}>{errorMessage}</ErrorText>
         )}
-        {options.map((option, index) =>
-          size === ('S' || 'Small') ? (
+        {options.map((option, index) => {
+          const radioSavedVal = value;
+          let radioVal;
+          let radioId;
+          let radioLabel;
+          if (typeof option === 'object') {
+            radioVal = option.code;
+            radioId = `${id}-${option.code}`;
+            radioLabel = `${option.code}: ${option.description}`;
+          } else {
+            radioVal = option;
+            radioId = `${id}-${idify(option)}`;
+            radioLabel = option;
+          }
+          return size === ('S' || 'Small') ? (
             <SmallRadio
               key={index}
               name={name}
               onChange={onChange}
-              value={option}
-              checked={option === value}
-              id={`${id}-${idify(option)}`}
+              value={radioVal}
+              checked={radioVal === radioSavedVal}
+              id={radioId}
             >
-              {boldUpToFirstColon(option)}
+              {boldUpToFirstColon(radioLabel)}
             </SmallRadio>
           ) : (
             <Radio
               key={index}
               name={name}
               onChange={onChange}
-              value={option}
-              checked={option === value}
-              id={`${id}-${idify(option)}`}
+              value={radioVal}
+              checked={radioVal === radioSavedVal}
+              id={radioId}
             >
-              {boldUpToFirstColon(option)}
+              {boldUpToFirstColon(radioLabel)}
             </Radio>
-          )
-        )}
+          );
+        })}
       </Fieldset>
     </RadioFormGroup>
   );

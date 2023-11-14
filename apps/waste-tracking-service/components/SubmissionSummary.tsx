@@ -96,7 +96,6 @@ const SectionBreak = styled.span`
 `;
 
 const WasteCodeType = styled.div`
-  padding-bottom: 1em;
   font-weight: bold;
 `;
 
@@ -202,11 +201,7 @@ export const SubmissionSummary = ({
                         <WasteCodeType id="waste-code-type">
                           {data.wasteDescription?.wasteCode.type}
                         </WasteCodeType>
-                        <span>
-                          {boldUpToFirstColon(
-                            data.wasteDescription?.wasteCode.value
-                          )}
-                        </span>
+                        <span>{data.wasteDescription?.wasteCode.code}</span>
                       </>
                     )}
                   </Value>
@@ -237,8 +232,7 @@ export const SubmissionSummary = ({
                       {data.wasteDescription?.ewcCodes?.map(
                         (item: EwcCodeType, index) => (
                           <GovUK.ListItem key={index}>
-                            <strong>{formatEwcCode(item.code)}</strong>
-                            <span>: {item.description}</span>
+                            <span>{formatEwcCode(item.code)}</span>
                           </GovUK.ListItem>
                         )
                       )}

@@ -1077,9 +1077,8 @@ const Download = () => {
                           </Label>
                           <Value>
                             {
-                              downloadReport.data.wasteDescription.wasteCode.value.split(
-                                ':'
-                              )[0]
+                              downloadReport.data.wasteDescription.wasteCode
+                                .code
                             }
                           </Value>
                         </>

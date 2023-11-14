@@ -256,11 +256,11 @@ export class WTSInfoStub implements WTSInfoBackend {
     if (language === 'en') {
       return [
         {
-          code: '10101',
+          code: '010101',
           description: 'wastes from mineral metalliferous excavation',
         },
         {
-          code: '10102',
+          code: '010102',
           description: 'wastes from mineral non-metalliferous excavation',
         },
         {
@@ -273,7 +273,7 @@ export class WTSInfoStub implements WTSInfoBackend {
           description: 'other tailings containing hazardous substances',
         },
         {
-          code: '10306',
+          code: '010306',
           description:
             'tailings other than those mentioned in 01 03 04 and 01 03 05',
         },
@@ -286,11 +286,11 @@ export class WTSInfoStub implements WTSInfoBackend {
     } else if (language === 'cy') {
       return [
         {
-          code: '10101',
+          code: '010101',
           description: 'gwastraff o gloddio metelaidd mwynol',
         },
         {
-          code: '10102',
+          code: '010102',
           description: 'gwastraff o gloddio anfetelaidd mwynol',
         },
         {
@@ -302,7 +302,7 @@ export class WTSInfoStub implements WTSInfoBackend {
           description: "Tails eraill sy'n cynnwys sylweddau peryglus",
         },
         {
-          code: '10306',
+          code: '010306',
           description:
             "Cynffonnau heblaw'r rhai a grybwyllir yn 01 03 04 a 01 03 05",
         },

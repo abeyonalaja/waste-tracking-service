@@ -33,8 +33,8 @@ import {
 import styled from 'styled-components';
 import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gateway';
 import Autocomplete from 'accessible-autocomplete/react';
-import { recoveryData } from 'utils/recoveryData';
 import boldUpToFirstColon from 'utils/boldUpToFirstColon';
+import i18n from 'i18next';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -147,6 +147,14 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
+type codeType = {
+  type: string;
+  values: Array<{
+    code: string;
+    description: string;
+  }>;
+};
+
 const RecoveryFacilityDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -154,6 +162,7 @@ const RecoveryFacilityDetails = () => {
     recoveryReducer,
     initialState
   );
+  const [refData, setRefData] = useState<Array<codeType>>();
   const [templateId, setTemplateId] = useState<string>(null);
   const [page, setPage] = useState<string>(null);
   const [siteId, setSiteId] = useState<string | string[]>(null);
@@ -196,6 +205,27 @@ const RecoveryFacilityDetails = () => {
       setSiteId(router.query.site);
     }
   }, [router.isReady, router.query.templateId]);
+
+  const currentLanguage = i18n.language;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(
+        `${process.env.NX_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            setRefData(data);
+          }
+        });
+    };
+    if (currentLanguage) {
+      fetchData();
+    }
+  }, [currentLanguage]);
 
   useEffect(() => {
     if (recoveryPage.data?.values !== undefined) {
@@ -514,12 +544,23 @@ const RecoveryFacilityDetails = () => {
     }));
   };
 
-  const suggest = (query, populateResults) => {
-    const results = recoveryData['labRecoveryCodes'];
-    const filteredResults = results.filter(
-      (result) => result.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
+  function suggest(query, populateResults) {
+    const filterResults = (result) => {
+      const tempString = `${result.code}: ${result.description}`;
+      return tempString.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    };
+    const filteredResults = refData.filter(filterResults);
     populateResults(filteredResults);
+  }
+
+  const suggestionTemplate = (suggestion) => {
+    return typeof suggestion !== 'string'
+      ? `${suggestion?.code}: ${suggestion?.description}`
+      : suggestion;
+  };
+
+  const inputValueTemplate = (suggestion) => {
+    return `${suggestion?.code}`;
   };
 
   const handleSubmitAdditionalFacility = (e) => {
@@ -957,10 +998,14 @@ const RecoveryFacilityDetails = () => {
                           onConfirm={(option) =>
                             setRecoveryFacilityType({
                               type: 'RecoveryFacility',
-                              recoveryCode: option,
+                              recoveryCode: option.code,
                             })
                           }
                           confirmOnBlur={false}
+                          templates={{
+                            inputValue: inputValueTemplate,
+                            suggestion: suggestionTemplate,
+                          }}
                           defaultValue={recoveryFacilityType?.recoveryCode}
                         />
                       </GovUK.FormGroup>

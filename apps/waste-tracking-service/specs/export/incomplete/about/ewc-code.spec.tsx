@@ -9,12 +9,69 @@ jest.mock('next/router', () => ({
   })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ status: 'NotStarted' }),
-  })
-);
+const defaultJsonResponse = { status: 'NotStarted' };
+const startedJsonResponse = {
+  status: 'Started',
+  wasteCode: {
+    type: 'AnnexIIIA',
+    code: 'B1010 and B1050',
+  },
+  ewcCodes: [
+    {
+      code: '010101',
+    },
+  ],
+};
+const refDataResponse = [
+  {
+    code: '010101',
+    description: 'wastes from mineral metalliferous excavation',
+  },
+  {
+    code: '010102',
+    description: 'wastes from mineral non-metalliferous excavation',
+  },
+  {
+    code: '010304*',
+    description: 'acid-generating tailings from processing of sulphide ore',
+  },
+  {
+    code: '010305*',
+    description: 'other tailings containing hazardous substances',
+  },
+  {
+    code: '010306',
+    description: 'tailings other than those mentioned in 01 03 04 and 01 03 05',
+  },
+  {
+    code: '010307*',
+    description:
+      'other wastes containing hazardous substances from physical and chemical processing of metalliferous minerals',
+  },
+];
+
+function setupFetchStub(started = false) {
+  return function fetchStub(_url) {
+    let data = {};
+    if (_url.includes('/wts-info/ewc-codes?language=en')) {
+      data = refDataResponse;
+    }
+    if (_url.includes('/submissions/123/waste-description')) {
+      data = defaultJsonResponse;
+    }
+    if (_url.includes('/submissions/123/waste-description') && started) {
+      data = startedJsonResponse;
+    }
+    return new Promise((resolve) => {
+      resolve({
+        ok: true,
+        json: () => Promise.resolve(data),
+      });
+    });
+  };
+}
+
+global.fetch = jest.fn().mockImplementation(setupFetchStub());
 
 describe('EWC code page', () => {
   it('should display the page', async () => {
@@ -24,13 +81,6 @@ describe('EWC code page', () => {
   });
 
   it('should show validation message if no radio is selected', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ status: 'NotStarted' }),
-      })
-    );
-
     await act(async () => {
       render(<EwcCodes />);
     });
@@ -78,28 +128,14 @@ describe('EWC code page', () => {
   });
 
   it('should show list page if EWC codes are returned from the API', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            status: 'Started',
-            ewcCodes: [
-              {
-                code: '010101',
-                description: 'wastes from mineral metalliferous excavation',
-              },
-            ],
-          }),
-      })
-    );
+    global.fetch = jest.fn().mockImplementation(setupFetchStub(true));
 
     await act(async () => {
       render(<EwcCodes />);
     });
 
-    const country = screen.getByText('01 01 01');
-    expect(country).toBeTruthy();
+    const ewcCode = screen.getByText('01 01 01');
+    expect(ewcCode).toBeTruthy();
 
     const pageTitle = screen.getByText(
       'You have added 1 European Waste Catalogue (EWC) code'

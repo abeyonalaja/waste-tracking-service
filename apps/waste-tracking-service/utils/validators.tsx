@@ -1,5 +1,4 @@
 import aOrAn from './aOrAn';
-import { ewcCodeData } from './ewcCodes';
 import { isPast, isValid, addBusinessDays, differenceInDays } from 'date-fns';
 
 export function isNotEmpty(obj) {
@@ -427,11 +426,6 @@ export const validateEwcCode: (
 
   if (ewcCode.length != 6) {
     return 'Enter a code with 6 digits';
-  }
-
-  const result = ewcCodeData.find(({ code }) => code.slice(0, 6) === ewcCode);
-  if (result === undefined) {
-    return 'Enter a code in the correct format';
   }
 };
 
