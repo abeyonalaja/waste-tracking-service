@@ -23,7 +23,7 @@ import CosmosTemplateRepository from './data/cosmos-templates';
 import CosmosWTSInfoRepository from './data/cosmos-wts-info';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
-  throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration');
+  throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
 }
 
 const logger = winston.createLogger({

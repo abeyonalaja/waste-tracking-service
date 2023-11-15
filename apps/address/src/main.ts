@@ -10,15 +10,15 @@ import { AddressController, parse } from './controller';
 import BoomiAddressClient from './clients/address-client';
 
 if (!process.env['ADDRESS_LOOKUP_URL']) {
-  throw new Error('Missing ADDRESS_LOOKUP_URL configuration');
+  throw new Error('Missing ADDRESS_LOOKUP_URL configuration.');
 }
 
 if (!process.env['CERT_FOLDER']) {
-  throw new Error('Missing CERT_FOLDER configuration');
+  throw new Error('Missing CERT_FOLDER configuration.');
 }
 
 if (!process.env['CERT_NAME']) {
-  throw new Error('Missing CERT_NAME configuration');
+  throw new Error('Missing CERT_NAME configuration.');
 }
 
 const logger = winston.createLogger({

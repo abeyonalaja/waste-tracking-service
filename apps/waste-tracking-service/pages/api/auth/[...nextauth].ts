@@ -1,4 +1,5 @@
 import NextAuth, { NextAuthOptions, Profile } from 'next-auth';
+
 import AzureADB2CProvider from 'next-auth/providers/azure-ad-b2c';
 
 interface DCIDProfile extends Profile {

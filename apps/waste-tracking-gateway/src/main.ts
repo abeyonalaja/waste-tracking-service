@@ -52,7 +52,7 @@ let backend: {
   wtsInfo: WTSInfoBackend;
 };
 if (process.env['NODE_ENV'] === 'development') {
-  logger.warn('service is using mock-backends; not for production use');
+  logger.warn('service is using mock-backends; NOT for production use');
   const submissions = new Map<string, Submission>();
   const templates = new Map<string, Template>();
   const submissionBackend = new InMemorySubmissionBackend(
