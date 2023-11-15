@@ -6,10 +6,10 @@ pool: DEFRA-COMMON-ubuntu2004-SSV3
 parameters:
   - name: acrServiceConnection
     type: string
-    value: 'AZR-WTS-SSV5'
+    default: 'AZR-WTS-SSV5'
   - name: containerRegistryName
     type: string
-    value: 'SSVWTSINFCR5401'
+    default: 'SSVWTSINFCR5401'
   - name: environments
     type: object
     default:
