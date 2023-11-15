@@ -1,11 +1,11 @@
-require 'allure-cucumber'
-
-$report_path = 'allure_screenshots'
-
 Before do |scenario|
   TestStatus.reset_test_status
   @feature_name = File.basename(scenario.location.file, '.feature').to_s
   Log.info("Started: #{scenario.name} - #{@feature_name} feature")
+end
+
+Before('not @cookies') do
+  @reset_cookies = true
 end
 
 After do |scenario|

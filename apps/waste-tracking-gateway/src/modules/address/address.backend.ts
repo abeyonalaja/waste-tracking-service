@@ -15,28 +15,39 @@ export interface AddressBackend {
  * This is a stub backend and should not be used in production.
  */
 export class AddressStub implements AddressBackend {
-  async listAddresses(): Promise<api.ListAddressesResponse> {
+  async listAddresses(postcode?: string): Promise<api.ListAddressesResponse> {
+    if (postcode === 'AA11AA') {
+      return [
+        {
+          addressLine1: 'Single Address Result',
+          addressLine2: '110 Bishopsgate',
+          townCity: 'LONDON',
+          postcode: 'EC2N 4AY',
+          country: 'England',
+        },
+      ];
+    }
     return [
       {
         addressLine1: 'Armira Capital Ltd',
         addressLine2: '110 Bishopsgate',
         townCity: 'LONDON',
         postcode: 'EC2N 4AY',
-        country: 'United Kingdom',
+        country: 'England',
       },
       {
         addressLine1: 'Autonomy Capital Research LLP',
         addressLine2: '110 Bishopsgate',
         townCity: 'LONDON',
         postcode: 'EC2N 4AY',
-        country: 'United Kingdom',
+        country: 'England',
       },
       {
         addressLine1: 'B A S F Metals',
         addressLine2: '110 Bishopsgate',
         townCity: 'LONDON',
         postcode: 'EC2N 4AY',
-        country: 'United Kingdom',
+        country: 'England',
       },
     ] as unknown as api.ListAddressesResponse;
   }

@@ -15,7 +15,7 @@ module ExporterDetailsController
       TestStatus.set_test_status(:exporter_post_code, postcode)
       exporter_address_page.find_address
       exporter_address_page.choose_first_address
-      TestStatus.set_test_status(:exporter_country, 'United Kingdom')
+      TestStatus.set_test_status(:exporter_country, 'England')
       exporter_address_page.save_and_continue
       check_exporter_address_page = CheckExporterAddressPage.new
       check_exporter_address_page.check_page_displayed

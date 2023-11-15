@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../shared_components/general_helpers'
-require_relative '../shared_components/error_box'
+require_relative '../../shared_components/general_helpers'
+require_relative '../../shared_components/error_box'
 # this page is for What are the waste carriers contact details page details
 class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   include GeneralHelpers

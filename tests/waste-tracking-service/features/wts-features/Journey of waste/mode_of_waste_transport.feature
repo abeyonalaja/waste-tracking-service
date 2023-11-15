@@ -36,7 +36,7 @@ Feature: AS A waste producer/broker
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    Then Then the "Waste collection details" page is displayed
+    Then Then the "Waste collection address" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Sea option
@@ -58,7 +58,7 @@ Feature: AS A waste producer/broker
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    Then Then the "Waste collection details" page is displayed
+    Then Then the "Waste collection address" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Air option
@@ -79,7 +79,7 @@ Feature: AS A waste producer/broker
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    Then Then the "Waste collection details" page is displayed
+    Then Then the "Waste collection address" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Rail option
@@ -100,7 +100,7 @@ Feature: AS A waste producer/broker
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    Then Then the "Waste collection details" page is displayed
+    Then Then the "Waste collection address" page is displayed
 
   @translation
   Scenario: User navigates to mode of transport page and choose Inland waterways option
@@ -121,7 +121,7 @@ Feature: AS A waste producer/broker
     Then Then the "Multi waste carriers" page is displayed
     And I choose "No" radio button
     And I click the button Save and continue
-    Then Then the "Waste collection details" page is displayed
+    Then Then the "Waste collection address" page is displayed
 
   @retry
   Scenario: User can't continue without choosing an mode of transport option

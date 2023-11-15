@@ -380,6 +380,10 @@ Feature: AS A Waste Practitioner
     When I click the Save and return to draft
     And I click the "Check your record" link
     When I click waste collection contact change link
+    Then the "Manual Address Entry Waste Collection" page is displayed
+    And I click the button Save and continue
+    Then the "check the collection address" page is displayed
+    When I click the button Save and continue
     Then the "Contact Details Collection Address" page is displayed
     When I click the Save and return to draft
     And I click the "Check your record" link

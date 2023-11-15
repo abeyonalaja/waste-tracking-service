@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-require_relative '../shared_components/general_helpers'
-require_relative '../shared_components/error_box'
+require_relative '../../shared_components/general_helpers'
+require_relative '../../shared_components/error_box'
 # this page is for manual address entry for waste collection details page details
 class ManualAddressEntryWasteCollectionPage < GenericPage
   include GeneralHelpers
   include ErrorBox
 
   ADDRESS1 = 'addressLine1'
+  ADDRESS2 = 'addressLine2'
   TOWN = 'townCity'
   POSTCODE = 'postcode'
   COUNTRY = 'country'
@@ -77,6 +78,11 @@ class ManualAddressEntryWasteCollectionPage < GenericPage
       'Wales' => 'country-wales',
       'Northern Ireland' => 'country-northern-ireland'
     }
+  end
+
+  def enter_address2(address2)
+    fill_in ADDRESS2, with: address2, visible: false
+    TestStatus.set_test_status(:address2, address2)
   end
 
 end

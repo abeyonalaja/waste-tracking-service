@@ -17,6 +17,7 @@ class ExporterAddressPage < GenericPage
   HINT_TEXT = Translations.value 'exportJourney.exporterPostcode.hint'
   POSTCODE_TEXT = Translations.value 'postcode.label'
   MANUAL_ENTRY_LINK = Translations.value 'postcode.manualAddressLink'
+
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
@@ -45,14 +46,7 @@ class ExporterAddressPage < GenericPage
   end
 
   def check_postcode_translation
-    expect(page).to have_link Translations.value'postcode.enterManualy'
-  end
-
-  def select_first_address
-    first('selectedAddress', minimum: 1)
-    find(:css, '#selectedAddress>option:nth-child(2)').select_option
-    TestStatus.set_test_status(:exporter_address, find(:css, '#selectedAddress>option:nth-child(2)').text)
-    Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
+    expect(page).to have_link Translations.value 'postcode.enterManualy'
   end
 
   def find_address

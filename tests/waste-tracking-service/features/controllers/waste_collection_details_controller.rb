@@ -4,11 +4,13 @@
 module WasteCollectionDetailsController
   def self.complete
     sleep 1
-    waste_collection_details_page = WasteCollectionDetailsPage.new
+    waste_collection_details_page = WasteCollectionAddressPage.new
     waste_collection_details_page.enter_postcode 'AL3 8QE'
     waste_collection_details_page.find_address
-    waste_collection_details_page.select_first_address
+    waste_collection_details_page.choose_first_address
     waste_collection_details_page.save_and_continue
+    CheckTheCollectionAddressPage.new.check_page_displayed
+    CheckTheCollectionAddressPage.new.save_and_continue
     sleep 1
     contact_details_address_page = ContactDetailsCollectionAddressPage.new
     contact_details_address_page.enter_organisation_name 'OrgName LTD'

@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
-require_relative '../shared_components/general_helpers'
-require_relative '../shared_components/error_box'
-require_relative '../shared_components/page_helper'
+require_relative '../../shared_components/general_helpers'
+require_relative '../../shared_components/error_box'
+require_relative '../../shared_components/page_helper'
 # this page is for Exporter details page details
-class CheckExporterAddressPage < GenericPage
+class CheckTheCollectionAddressPage < GenericPage
   include GeneralHelpers
   include ErrorBox
   include PageHelper
 
-  TITLE = Translations.value 'exportJourney.exporterAddress.title'
-  EXPORTER_DETAILS = Translations.value 'postcode.checkAddress.address'
-  SUB_TITLE1 = Translations.value 'postcode.checkAddress.exportingCountryStart'
-  SUB_TITLE2 = Translations.value 'postcode.checkAddress.exportingCountryEnd'
+  TITLE = Translations.value 'exportJourney.wasteCollectionDetails.singleAddressTitle'
+  COLLECTION_ADDRESS = Translations.value 'postcode.checkAddress.collectionAddress'
   CHANGE_LINK = Translations.value 'change'
 
   def check_page_displayed
@@ -20,9 +18,7 @@ class CheckExporterAddressPage < GenericPage
   end
 
   def check_page_translation
-    country, address = HelperMethods.address(TestStatus.test_status(:exporter_address))
-    expect(page).to have_text EXPORTER_DETAILS
-    expect(page).to have_text SUB_TITLE1 + country + SUB_TITLE2
+    expect(page).to have_text COLLECTION_ADDRESS
     expect(page).to have_link CHANGE_LINK
   end
 

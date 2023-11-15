@@ -13,7 +13,6 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
-  Paragraph,
   Address,
 } from 'components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
@@ -93,7 +92,7 @@ const Actions = styled('dd')`
 const ExporterAddress = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [id, setId] = useState(null);
+  const [templateId, setTemplateId] = useState(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -108,16 +107,15 @@ const ExporterAddress = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      setId(router.query.id);
+      setTemplateId(router.query.templateId);
     }
-  }, [router.isReady, router.query.id]);
-
+  }, [router.isReady, router.query.templateId]);
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
+    if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exporter-detail`
+        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -135,7 +133,7 @@ const ExporterAddress = () => {
           }
         });
     }
-  }, [router.isReady, id]);
+  }, [router.isReady, templateId]);
 
   const handleLinkSubmit = (e) => {
     handleSubmit(e, true);
@@ -144,16 +142,16 @@ const ExporterAddress = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const path = returnToDraft
-        ? `/export/incomplete/tasklist`
-        : `/export/incomplete/exporter-importer/exporter-details`;
+        ? `/export/templates/tasklist`
+        : `/export/templates/exporter-importer/exporter-details`;
       router.push({
         pathname: path,
-        query: { id },
+        query: { templateId },
       });
 
       e.preventDefault();
     },
-    [id, router]
+    [templateId, router]
   );
 
   const BreadCrumbs = () => {
@@ -204,13 +202,11 @@ const ExporterAddress = () => {
                   {t('exportJourney.exporterAddress.title')}
                 </GovUK.Heading>
                 {data.status === 'Started' && (
-                  <Paragraph>
-                    <>
-                      {t('postcode.checkAddress.exportingCountryStart')}
-                      <strong>{data.exporterAddress.country}</strong>
-                      {t('postcode.checkAddress.exportingCountryEnd')}
-                    </>
-                  </Paragraph>
+                  <div>
+                    {t('postcode.checkAddress.exportingCountryStart')}
+                    <b>{data.exporterAddress.country}</b>
+                    {t('postcode.checkAddress.exportingCountryEnd')}
+                  </div>
                 )}
                 <DefinitionList id="address-list">
                   <Row>
@@ -225,8 +221,8 @@ const ExporterAddress = () => {
                       <AppLink
                         id="address-change-link"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/exporter-details-manual`,
-                          query: { id },
+                          pathname: `/export/templates/exporter-importer/exporter-details-manual`,
+                          query: { templateId },
                         }}
                       >
                         {t('address.justChange')}

@@ -29,7 +29,7 @@ Feature: AS A waste producer
     Then the "exporter address" page is displayed
     And I enter valid postcode
     And I click Find Address button
-    Then then "choose exporter address details" page is displayed
+    Then the "choose exporter address details" page is displayed
     And I choose first address from the list
     And I click the button Save and continue
     Then the "exporter address" page is displayed

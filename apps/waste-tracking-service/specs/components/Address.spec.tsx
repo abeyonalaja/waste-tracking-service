@@ -8,7 +8,7 @@ describe('Address component', () => {
     addressLine2: '110 Bishopsgate',
     townCity: 'LONDON',
     postcode: 'EC2N 4AY',
-    country: 'United Kingdom',
+    country: 'England',
   };
 
   it('renders the address correctly', () => {

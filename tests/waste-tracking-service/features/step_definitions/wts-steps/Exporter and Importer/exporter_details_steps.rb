@@ -1,5 +1,6 @@
 And(/^I should check exporter address is displayed with Change address link on the page$/) do
   sleep 0.5
+  CheckExporterAddressPage.new.check_page_translation
   expect(CheckExporterAddressPage.new).to have_address TestStatus.test_status(:exporter_address)
   expect(CheckExporterAddressPage.new).to have_link(Translations.value('change'))
 end

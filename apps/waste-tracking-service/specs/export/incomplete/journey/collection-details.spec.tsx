@@ -16,7 +16,14 @@ const addressResponse = [
     addressLine2: '110 Bishopsgate',
     townCity: 'LONDON',
     postcode: 'EC2N 4AY',
-    country: 'United Kingdom',
+    country: 'England',
+  },
+  {
+    addressLine1: 'Another address',
+    addressLine2: '110 Bishopsgate',
+    townCity: 'LONDON',
+    postcode: 'EC2N 4AY',
+    country: 'England',
   },
 ];
 const selectedAddressResponse = {
@@ -27,7 +34,7 @@ const selectedAddressResponse = {
       addressLine2: '110 Bishopsgate',
       townCity: 'LONDON',
       postcode: 'EC2N 4AY',
-      country: 'United Kingdom',
+      country: 'England',
     },
   },
 };
@@ -87,7 +94,7 @@ describe('Collection details page', () => {
     expect(errorMessage).toBeTruthy();
   });
 
-  it('should show address drop down and validation if no option is selected', async () => {
+  it('should show radio list and validation if no option is selected', async () => {
     await act(async () => {
       render(<CollectionDetails />);
     });
@@ -111,13 +118,19 @@ describe('Collection details page', () => {
     expect(errorMessage).toBeTruthy();
   });
 
-  it('selected an address and now reach the contact details', async () => {
+  it('selected an address and now reach the single address details', async () => {
     global.fetch = jest
       .fn()
       .mockImplementation(setupFetchStub(selectedAddressResponse));
     await act(async () => {
       render(<CollectionDetails />);
     });
+
+    // Shows the manual address form, so need to click to continue
+    const submitButtonSave = screen.getByText('Save and continue');
+    fireEvent.click(submitButtonSave);
+
+    // Find the first line of the address on the single address view
     expect(await screen.findByText('Hitachi Solutions')).toBeTruthy();
   });
 
@@ -128,11 +141,21 @@ describe('Collection details page', () => {
     await act(async () => {
       render(<CollectionDetails />);
     });
-    expect(await screen.findByText('Hitachi Solutions')).toBeTruthy();
 
+    // Shows the manual address form, so need to click to continue
     const submitButtonSave = screen.getByText('Save and continue');
     fireEvent.click(submitButtonSave);
 
+    // Find the first line of the address on the single address view
+    expect(await screen.findByText('Hitachi Solutions')).toBeTruthy();
+
+    // Find the continue button to carry on to contact details page
+    const submitButtonSaveSingleAddress = screen.getByText('Save and continue');
+    fireEvent.click(submitButtonSaveSingleAddress);
+
+    // Find the continue button to carry on to trigger validation
+    const submitButtonSaveContact = screen.getByText('Save and continue');
+    fireEvent.click(submitButtonSaveContact);
     const errorMessage = screen.getAllByText('Enter an organisation name')[0];
     expect(errorMessage).toBeTruthy();
   });

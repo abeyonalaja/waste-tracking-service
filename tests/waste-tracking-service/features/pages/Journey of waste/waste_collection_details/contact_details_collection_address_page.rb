@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../shared_components/general_helpers'
-require_relative '../shared_components/error_box'
+require_relative '../../shared_components/general_helpers'
+require_relative '../../shared_components/error_box'
 # this page is for contact details for collection address page details
 class ContactDetailsCollectionAddressPage < GenericPage
   include GeneralHelpers

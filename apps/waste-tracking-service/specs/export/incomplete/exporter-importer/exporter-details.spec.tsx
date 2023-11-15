@@ -20,7 +20,7 @@ global.fetch = jest.fn(() =>
           addressLine2: '110 Bishopsgate',
           townCity: 'LONDON',
           postcode: 'EC2N 4AY',
-          country: 'United Kingdom',
+          country: 'England',
         },
       }),
   })

@@ -120,7 +120,7 @@ const ExporterManual = () => {
           .then((data) => {
             if (data !== undefined) {
               router.push({
-                pathname: `/export/templates/exporter-importer/exporter-details`,
+                pathname: `/export/templates/exporter-importer/exporter-address`,
                 query: { templateId },
               });
             }

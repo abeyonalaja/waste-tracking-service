@@ -70,4 +70,9 @@ class EnterExporterAddressManualPage < GenericPage
   def enter_description(description)
     fill_in DESCRIPTION, with: description, visible: false
   end
+
+  def country_checked(country)
+    country = country.downcase
+    find("country-#{country}", visible: false)
+  end
 end

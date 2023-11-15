@@ -3,6 +3,7 @@ Given(/^I login to waste tracking portal$/) do
   Log.info("Start url: #{Env.start_page_url}")
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
 end
 
 And(/^I navigate to the overview page$/) do

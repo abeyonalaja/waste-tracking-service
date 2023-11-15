@@ -69,7 +69,6 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
     InlandWaterTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   end
-
 end
 
 And(/^I should see first waste carrier displayed$/) do

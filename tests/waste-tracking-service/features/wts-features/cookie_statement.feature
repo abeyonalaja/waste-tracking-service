@@ -1,3 +1,4 @@
+@cookies
 Feature:AS A Waste Practitioner
   I NEED to see the WT service cookie banner on accessing the service
   SO THAT I know what cookies are been tracked while using the service

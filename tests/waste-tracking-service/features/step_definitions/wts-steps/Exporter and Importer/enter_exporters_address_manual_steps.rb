@@ -21,7 +21,7 @@ Then(/^I should see manually entered exporter details pre-populated$/) do
   expect(EnterExporterAddressManualPage.new).to have_reference_address TestStatus.test_status(:address1)
   expect(EnterExporterAddressManualPage.new).to have_reference_town TestStatus.test_status(:town)
   expect(EnterExporterAddressManualPage.new).to have_reference_postcode TestStatus.test_status(:postcode)
-  expect(ManualAddressEntryWasteCollectionPage.new.option_checked?('England')).to eq(true)
+  expect(EnterExporterAddressManualPage.new.country_checked('England')).to be_checked
   expect(EnterExporterAddressManualPage.new).to have_reference_country TestStatus.test_status(:country)
 end
 

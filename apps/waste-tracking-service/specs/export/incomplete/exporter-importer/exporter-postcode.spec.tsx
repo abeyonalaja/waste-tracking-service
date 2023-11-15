@@ -16,21 +16,21 @@ const addressResponse = [
     addressLine2: '110 Bishopsgate',
     townCity: 'LONDON',
     postcode: 'EC2N 4AY',
-    country: 'United Kingdom',
+    country: 'England',
   },
   {
     addressLine1: 'Autonomy Capital Research LLP',
     addressLine2: '110 Bishopsgate',
     townCity: 'LONDON',
     postcode: 'EC2N 4AY',
-    country: 'United Kingdom',
+    country: 'England',
   },
   {
     addressLine1: 'B A S F Metals',
     addressLine2: '110 Bishopsgate',
     townCity: 'LONDON',
     postcode: 'EC2N 4AY',
-    country: 'United Kingdom',
+    country: 'England',
   },
 ];
 
