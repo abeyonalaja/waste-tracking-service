@@ -92,9 +92,11 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
     private logger: Logger
   ) {}
 
+  containerName = 'reference-data';
+
   async listWasteCodes(language: string): Promise<WasteCodeType[]> {
     const results = await this.cosmosClient.queryContainerNext(
-      'waste-codes',
+      this.containerName,
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
       { partitionKey: 'waste-codes' }
     );
@@ -108,7 +110,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
 
   async listEWCCodes(language: string): Promise<WasteCode[]> {
     const results = await this.cosmosClient.queryContainerNext(
-      'ewc-codes',
+      this.containerName,
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
       { partitionKey: 'ewc-codes' }
     );
@@ -122,7 +124,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
 
   async listCountries(): Promise<Country[]> {
     const results = await this.cosmosClient.queryContainerNext(
-      'countries',
+      this.containerName,
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
       { partitionKey: 'countries' }
     );
@@ -136,7 +138,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
 
   async listRecoveryCodes(language: string): Promise<RecoveryCode[]> {
     const results = await this.cosmosClient.queryContainerNext(
-      'recovery-codes',
+      this.containerName,
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
       { partitionKey: 'recovery-codes' }
     );
@@ -150,7 +152,7 @@ export default class CosmosWTSInfoRepository implements WTSInfoRepository {
 
   async listDisposalCodes(language: string): Promise<WasteCode[]> {
     const results = await this.cosmosClient.queryContainerNext(
-      'disposal-codes',
+      this.containerName,
       { query: `SELECT * FROM c OFFSET 0 LIMIT 1` },
       { partitionKey: 'disposal-codes' }
     );
