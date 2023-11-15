@@ -11,18 +11,9 @@ parameters:
   - name: appNameTag
     type: string
     default: 'waste_tracking_service'
-  - name: requestsCpu
+  - name: valuesFilePath
     type: string
-    default: '25m'
-  - name: requestsMemory
-    type: string
-    default: '128Mi'
-  - name: limitsCpu
-    type: string
-    default: '50m'
-  - name: limitsMemory
-    type: string
-    default: '256Mi'
+    default: ''
   - name: appInsightsConnectionString
     type: string
     default: ''
@@ -53,18 +44,6 @@ parameters:
   - name: nextAuthUrl
     type: string
     default: ''
-  - name: isMultipleUploadEnabled
-    type: string
-    default: 'false'
-  - name: isAutoEmailConfirmationEnabled
-    type: string
-    default: 'false'
-  - name: deployChart
-    type: string
-    default: ''
-  - name: affectedCharts
-    type: string
-    default: ''
 
 steps:
   - template: release.yaml
@@ -73,56 +52,40 @@ steps:
       containerRegistryName: ${{ parameters.containerRegistryName }}
       appName: ${{ parameters.appName }}
       appNameTag: ${{ parameters.appNameTag }}
-      deployChart: ${{ parameters.deployChart }}
 
   - bash: |
-      if ($([[ $AFFECTED_CHARTS_VALUES =~ (^|,)$PROJECT_NAME($|,) ]] && echo true || echo false))
+      if [ $CHART_EXISTS == 'false' ]
       then
-        echo "Chart: ${PROJECT_NAME} is in deployment list"
-        if [ $CHART_EXISTS == 'false' ]
-        then
-          echo "Installing release: ${PROJECT_NAME}"
-          chartFullName="${HOST}/${PROJECT_NAME}"
-          helm upgrade \
-            --install $PROJECT_NAME \
-            $chartFullName \
-            --version $CHART_TAG \
-            --create-namespace \
-            -n $PROJECT_NAME \
-            --set resources.requests.cpu=$REQUESTS_CPU \
-            --set resources.requests.memory=$REQUESTS_MEMORY \
-            --set resources.limits.cpu=$LIMITS_CPU \
-            --set resources.limits.memory=$LIMITS_MEMORY \
-            --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
-            --set secret.env.DCID_CLIENT_ID=$DCID_CLIENT_ID \
-            --set secret.env.DCID_CLIENT_SECRET=$DCID_CLIENT_SECRET \
-            --set secret.env.DCID_POLICY=$DCID_POLICY \
-            --set secret.env.DCID_REDIRECT=$DCID_REDIRECT \
-            --set secret.env.DCID_SERVICE_ID=$DCID_SERVICE_ID \
-            --set secret.env.DCID_TENANT=$DCID_TENANT \
-            --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
-            --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
-            --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL \
-            --set-string secret.env.IS_MULTIPLE_UPLOAD_ENABLED=$IS_MULTIPLE_UPLOAD_ENABLED \
-            --set-string secret.env.IS_AUTO_EMAIL_CONFIRMATION_ENABLED=$IS_AUTO_EMAIL_CONFIRMATION_ENABLED
-        else
-          echo "Release: ${PROJECT_NAME} is already up to date"
-        fi
+        echo "Installing release: ${PROJECT_NAME}"
+        chartFullName="${HOST}/${PROJECT_NAME}"
+        helm upgrade \
+          --install $PROJECT_NAME \
+          $chartFullName \
+          --version $CHART_TAG \
+          --create-namespace \
+          -n $PROJECT_NAME \
+          -f $VALUES_FILE_PATH \
+          --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
+          --set secret.env.DCID_CLIENT_ID=$DCID_CLIENT_ID \
+          --set secret.env.DCID_CLIENT_SECRET=$DCID_CLIENT_SECRET \
+          --set secret.env.DCID_POLICY=$DCID_POLICY \
+          --set secret.env.DCID_REDIRECT=$DCID_REDIRECT \
+          --set secret.env.DCID_SERVICE_ID=$DCID_SERVICE_ID \
+          --set secret.env.DCID_TENANT=$DCID_TENANT \
+          --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
+          --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
+          --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL
       else
-        echo "Chart: ${PROJECT_NAME} is not in deployment list"
+        echo "Release: ${PROJECT_NAME} is already up to date"
       fi
     displayName: AKS Deploy ${{ parameters.appName }}
-    condition: ${{ parameters.deployChart }}
     env:
       AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
       AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
       HOST: oci://$(acr.loginServer)/charts/wts
       PROJECT_NAME: ${{ parameters.appName }}
       CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
-      REQUESTS_CPU: ${{ parameters.requestsCpu }}
-      REQUESTS_MEMORY: ${{ parameters.requestsMemory }}
-      LIMITS_CPU: ${{ parameters.limitsCpu }}
-      LIMITS_MEMORY: ${{ parameters.limitsMemory }}
+      VALUES_FILE_PATH: ${{ parameters.valuesFilePath }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
       DCID_CLIENT_ID: ${{ parameters.dcidClientId }}
       DCID_CLIENT_SECRET: ${{ parameters.dcidClientSecret }}
@@ -133,7 +96,4 @@ steps:
       DCID_WELLKNOWN: ${{ parameters.dcidWellKnown }}
       NEXTAUTH_SECRET: ${{ parameters.nextAuthSecret }}
       NEXTAUTH_URL: ${{ parameters.nextAuthUrl }}
-      IS_MULTIPLE_UPLOAD_ENABLED: ${{ parameters.isMultipleUploadEnabled }}
-      IS_AUTO_EMAIL_CONFIRMATION_ENABLED: ${{ parameters.isAutoEmailConfirmationEnabled }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
-      AFFECTED_CHARTS_VALUES: ${{ parameters.affectedCharts }}

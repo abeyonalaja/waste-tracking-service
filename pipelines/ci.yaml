@@ -1,250 +1,269 @@
 trigger:
   - main
 
-jobs:
-  - job: build
-    displayName: Create artifacts
+pool: DEFRA-COMMON-ubuntu2004-SSV3
 
+parameters:
+  - name: acrServiceConnection
+    type: string
+    value: 'AZR-WTS-SSV5'
+  - name: containerRegistryName
+    type: string
+    value: 'SSVWTSINFCR5401'
+  - name: environments
+    type: object
+    default:
+      - name: 'SND'
+        dependsOn:
+          - 'build'
+        serviceConnection: 'AZD-WTS-SND1'
+        aksName: 'SNDWTSINFAKS1401'
+        resourceGroupName: 'SNDWTSINFRGP1401'
+        manualDeployment: False
+      - name: 'DEV'
+        dependsOn:
+          - 'build'
+          - 'SND'
+        serviceConnection: 'AZD-WTS-DEV1'
+        aksName: 'DEVWTSINFAKS1401'
+        resourceGroupName: 'DEVWTSINFRGP1401'
+        manualDeployment: False
+      - name: 'TST'
+        dependsOn:
+          - 'build'
+          - 'DEV'
+        serviceConnection: 'AZD-WTS-TST1'
+        aksName: 'TSTWTSINFAKS1401'
+        resourceGroupName: 'TSTWTSINFRGP1401'
+        manualDeployment: False
+      - name: 'PRE'
+        dependsOn:
+          - 'build'
+          - 'TST'
+        serviceConnection: 'AZR-WTS-PRE1'
+        aksName: 'PREWTSINFAKS1401'
+        resourceGroupName: 'PREWTSINFRGP1401'
+        manualDeployment: False
+      - name: 'PRD'
+        dependsOn:
+          - 'build'
+          - 'PRE'
+        serviceConnection: 'AZR-WTS-PRD1'
+        aksName: 'PRDWTSINFAKS1401'
+        resourceGroupName: 'PRDWTSINFRGP1401'
+        manualDeployment: False
+
+stages:
+  - stage: build
+    displayName: Build
     variables:
-      - name: serviceConnection
-        value: AZD-WTS-SND1
       - name: branch
         value: origin/main
-      - name: containerRegistryName
-        value: SNDWTSHUBCR3401
 
-    steps:
-      - checkout: self
-        fetchDepth: 0
+    jobs:
+      - job: push_artifacts
+        displayName: Build and Push Artifacts
 
-      - template: templates/ci/auth/acr.yaml
-        parameters:
-          serviceConnection: ${{ variables.serviceConnection }}
-          containerRegistryName: ${{ variables.containerRegistryName }}
+        steps:
+          - template: templates/ci/auth/acr.yaml
+            parameters:
+              serviceConnection: ${{ parameters.acrServiceConnection }}
+              containerRegistryName: ${{ parameters.containerRegistryName }}
 
-      - task: Npm@1
-        displayName: Install packages
-        inputs:
-          command: ci
+          - checkout: self
+            fetchDepth: 0
 
-      - bash: |
-          echo $PASSWORD \
-            | docker login $LOGIN_SERVER \
-              --username $USERNAME \
-              --password-stdin
-        displayName: Docker login
-        env:
-          USERNAME: 00000000-0000-0000-0000-000000000000
-          PASSWORD: $(acr.accessToken)
-          LOGIN_SERVER: $(acr.loginServer)
+          - task: Npm@1
+            displayName: Install packages
+            inputs:
+              command: ci
 
-      - bash: |
-          echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
-          affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*')
-          echo "##vso[task.setvariable variable=affectedProjects;isoutput=true]$( \
-            echo $affected | tr ' ' ',' \
-          )"
-          export INPUT_PUSH=true
-          for project in ${affected}
-          do
-            export INPUT_IMAGES="${REGISTRY}/wts/${project}"
-            npx nx container $project
-          done
-        name: publishContainers
-        displayName: Publish containers
-        failOnStderr: true
-        env:
-          NX_BASE: $(branch)~1
-          NX_HEAD: $(branch)
-          REGISTRY: $(acr.loginServer)
+          - bash: |
+              echo $PASSWORD \
+                | docker login $LOGIN_SERVER \
+                  --username $USERNAME \
+                  --password-stdin
+            displayName: Docker login
+            env:
+              USERNAME: 00000000-0000-0000-0000-000000000000
+              PASSWORD: $(acr.accessToken)
+              LOGIN_SERVER: $(acr.loginServer)
 
-      - template: templates/ci/auth/helm.yaml
-        parameters:
-          accessToken: $(acr.accessToken)
-          loginServer: $(acr.loginServer)
+          - bash: |
+              echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
+              affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*')
+              if [ -z "$affected" ]
+              then
+                echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+              else
+                echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+              fi
+              affectedProjects=$(echo $affected | tr ' ' ',')
+              mkdir -p $(Build.ArtifactStagingDirectory)/runtimeVariables
+              echo "$affectedProjects" > $(Build.ArtifactStagingDirectory)/runtimeVariables/affectedProjects
+              export INPUT_PUSH=true
+              for project in ${affected}
+              do
+                export INPUT_IMAGES="${REGISTRY}/wts/${project}"
+                npx nx container $project
+              done
+            name: publishContainers
+            displayName: Publish containers
+            failOnStderr: true
+            env:
+              NX_BASE: $(branch)~1
+              NX_HEAD: $(branch)
+              REGISTRY: $(acr.loginServer)
 
-      - bash: |
-          affected=$(
-            git diff --name-only $(branch) $(branch)~1 \
-              | grep -Po "(?<=^cluster\/charts\/)[a-z-]+(?=\/)" \
-              | uniq
-          )
-          echo "##vso[task.setvariable variable=affectedCharts;isoutput=true]$( \
-            echo $affected | tr ' ' ',' \
-          )"
-          if [ -z "$affected" ]
-          then
-            echo "##vso[task.setvariable variable=affected;isoutput=true]false"
-          else
-            echo "##vso[task.setvariable variable=affected;isoutput=true]true"
-          fi
-          version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
-          for project in ${affected}
-          do
-            helm package ./cluster/charts/${project} \
-              --version ${version} \
-              --destination $(Build.StagingDirectory)
-            helm push \
-              $(Build.StagingDirectory)/${project}-${version}.tgz \
-              $HOST
-          done
-        name: publishCharts
-        displayName: Publish charts
-        env:
-          HOST: oci://$(acr.loginServer)/charts/wts
+          - publish: $(Build.ArtifactStagingDirectory)/runtimeVariables
+            artifact: runtimeVariables
+            displayName: Publish runtime variables
 
-  - job: deploy
-    dependsOn: build
-    displayName: Deploy artifacts
+          - template: templates/ci/auth/helm.yaml
+            parameters:
+              accessToken: $(acr.accessToken)
+              loginServer: $(acr.loginServer)
 
-    variables:
-      - group: VG_SND_APPS_PARAMS
-      - name: serviceConnection
-        value: AZD-WTS-SND1
-      - name: containerRegistryName
-        value: SNDWTSHUBCR3401
-      - name: aksName
-        value: SNDWTSSPKKS2401
-      - name: resourceGroupName
-        value: SNDWTSAKSRG2401
-      - name: appList
-        value: address,annex-vii,waste-tracking-service,waste-tracking-gateway
-      - name: affectedProjects
-        value: $[ dependencies.build.outputs['publishContainers.affectedProjects'] ]
-      - name: affectedCharts
-        value: $[ dependencies.build.outputs['publishCharts.affectedCharts'] ]
-      - name: deployCharts
-        value: $[ replace(eq(dependencies.build.outputs['publishCharts.affected'], 'true'), False, '') ]
-      - name: isMultipleUploadEnabled
-        value: 'true'
-      - name: isAutoEmailConfirmationEnabled
-        value: 'true'
+          - bash: |
+              affected=$(
+                git diff --name-only $(branch) $(branch)~1 \
+                  | grep -Po "(?<=^cluster\/charts\/)[a-z-]+(?=\/)" \
+                  | uniq
+              )
+              if [ -z "$affected" ]
+              then
+                echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+              else
+                echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+              fi
+              version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
+              for project in ${affected}
+              do
+                helm package ./cluster/charts/${project} \
+                  --version ${version} \
+                  --destination $(Build.StagingDirectory)
+                helm push \
+                  $(Build.StagingDirectory)/${project}-${version}.tgz \
+                  $HOST
+              done
+            name: publishCharts
+            displayName: Publish charts
+            env:
+              HOST: oci://$(acr.loginServer)/charts/wts
 
-    continueOnError: false
-    steps:
-      - checkout: self
-        fetchDepth: 0
+  - ${{ each environment in parameters.environments }}:
+      - stage: ${{ environment.name }}
+        displayName: ${{ environment.name }}
+        ${{ if ne(environment.dependsOn, '') }}:
+          dependsOn: ${{ environment.dependsOn }}
 
-      - template: templates/ci/deploy/login.yaml
-        parameters:
-          serviceConnection: ${{ variables.serviceConnection }}
-          containerRegistryName: ${{ variables.containerRegistryName }}
-          aksName: ${{ variables.aksName }}
-          resourceGroupName: ${{ variables.resourceGroupName }}
+        ${{ if eq(environment.manualDeployment, False) }}:
+          condition: and(succeeded(), or(eq(stageDependencies.build.outputs['push_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['push_artifacts.publishCharts.affected'], 'true')))
 
-      - bash: |
-          affected=$(affectedProjects)
-          for project in ${affected//,/ }
-          do
-            echo "Restarting deployment: $project"
-            kubectl rollout restart deployment \
-              $project \
-              -n $project
-          done
-        displayName: AKS Restart Deployments
-        env:
-          AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
-          AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+        variables:
+          - group: VG_${{ environment.name }}_APPS_PARAMS
+          - name: appList
+            value: address,annex-vii,waste-tracking-service,waste-tracking-gateway
 
-      - ${{ each app in split(variables.appList, ',') }}:
-          - ${{ if eq(app, 'address') }}:
-              - template: templates/ci/deploy/address.yaml
+        jobs:
+          - job: restart_deployments
+            displayName: Restart AKS Deployments
+            continueOnError: false
+
+            condition: and(succeeded(), eq(stageDependencies.build.push_artifacts.outputs['publishContainers.affected'], 'true'))
+
+            steps:
+              - template: templates/ci/auth/aks.yaml
                 parameters:
-                  serviceConnection: ${{ variables.serviceConnection }}
-                  containerRegistryName: ${{ variables.containerRegistryName }}
-                  appName: ${{ app }}
-                  appNameTag: ${{ replace(app, '-', '_') }}
-                  appInsightsConnectionString: $(appInsightsConnectionString)
-                  keyVaultName: $(keyVaultName)
-                  keyVaultTenantId: $(keyVaultTenantId)
-                  msiClientId: $(addressMsiClientId)
-                  msiTenantId: $(addressMsiTenantId)
-                  addressLookupUrl: $(addressLookupUrl)
-                  addressLookupKeyVaultCertName: $(addressLookupKeyVaultCertName)
-                  deployChart: variables.deployCharts
-                  affectedCharts: $(affectedCharts)
+                  serviceConnection: ${{ environment.serviceConnection }}
+                  aksName: ${{ environment.aksName }}
+                  resourceGroupName: ${{ environment.resourceGroupName }}
 
-          - ${{ elseif eq(app, 'annex-vii') }}:
-              - template: templates/ci/deploy/annex-vii.yaml
-                parameters:
-                  serviceConnection: ${{ variables.serviceConnection }}
-                  containerRegistryName: ${{ variables.containerRegistryName }}
-                  appName: ${{ app }}
-                  appNameTag: ${{ replace(app, '-', '_') }}
-                  appInsightsConnectionString: $(appInsightsConnectionString)
-                  cosmosDbAccountUri: $(cosmosDbAccountUri)
-                  msiClientId: $(annexViiMsiClientId)
-                  msiTenantId: $(annexViiMsiTenantId)
-                  deployChart: variables.deployCharts
-                  affectedCharts: $(affectedCharts)
+              - download: current
+                artifact: runtimeVariables
+                displayName: Download runtime variables
 
-          - ${{ elseif eq(app, 'waste-tracking-gateway')}}:
-              - template: templates/ci/deploy/waste-tracking-gateway.yaml
-                parameters:
-                  serviceConnection: ${{ variables.serviceConnection }}
-                  containerRegistryName: ${{ variables.containerRegistryName }}
-                  appName: ${{ app }}
-                  appNameTag: ${{ replace(app, '-', '_') }}
-                  appInsightsConnectionString: $(appInsightsConnectionString)
-                  isMultipleUploadEnabled: ${{ variables.isMultipleUploadEnabled }}
-                  isAutoEmailConfirmationEnabled: ${{ variables.isAutoEmailConfirmationEnabled }}
-                  deployChart: variables.deployCharts
-                  affectedCharts: $(affectedCharts)
-
-          - ${{ elseif eq(app, 'waste-tracking-service')}}:
-              - template: templates/ci/deploy/waste-tracking-service.yaml
-                parameters:
-                  serviceConnection: ${{ variables.serviceConnection }}
-                  containerRegistryName: ${{ variables.containerRegistryName }}
-                  appName: ${{ app }}
-                  appNameTag: ${{ replace(app, '-', '_') }}
-                  appInsightsConnectionString: $(appInsightsConnectionString)
-                  dcidClientId: $(dcidClientId)
-                  dcidClientSecret: $(dcidClientSecret)
-                  dcidPolicy: $(dcidPolicy)
-                  dcidRedirect: $(dcidRedirect)
-                  dcidServiceId: $(dcidServiceId)
-                  dcidTenant: $(dcidTenant)
-                  dcidWellKnown: $(dcidWellKnown)
-                  nextAuthSecret: $(nextAuthSecret)
-                  nextAuthUrl: $(nextAuthUrl)
-                  isMultipleUploadEnabled: ${{ variables.isMultipleUploadEnabled }}
-                  isAutoEmailConfirmationEnabled: ${{ variables.isAutoEmailConfirmationEnabled }}
-                  deployChart: variables.deployCharts
-                  affectedCharts: $(affectedCharts)
-
-          - ${{ else }}:
               - bash: |
-                  echo "Specify deployment template for: ${{ app }}"
-                displayName: Specify deployment template
+                  affected=$(cat $(Pipeline.Workspace)/runtimeVariables/affectedProjects)
+                  for project in ${affected//,/ }
+                  do
+                    echo "Restarting deployment: $project"
+                    kubectl rollout restart deployment \
+                      $project \
+                      -n $project
+                  done
+                displayName: AKS Restart Deployments
+                env:
+                  AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+                  AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
 
-  # - job: test
-  #   displayName: Acceptance tests
+          - job: deploy_charts
+            displayName: Deploy Helm Charts
+            continueOnError: false
 
-  #   variables:
-  #     - name: wasteTrackingServiceRootUrl
-  #       value: 'http://52.151.120.75/'
+            ${{ if eq(environment.manualDeployment, False) }}:
+              condition: and(succeeded(), eq(stageDependencies.build.push_artifacts.outputs['publishCharts.affected'], 'true'))
 
-  #   steps:
-  #     - task: UseRubyVersion@0
-  #       inputs:
-  #         versionSpec: '>= 3.0'
+            steps:
+              - template: templates/ci/deploy/login.yaml
+                parameters:
+                  acrServiceConnection: ${{ parameters.acrServiceConnection }}
+                  serviceConnection: ${{ environment.serviceConnection }}
+                  containerRegistryName: ${{ parameters.containerRegistryName }}
+                  aksName: ${{ environment.aksName }}
+                  resourceGroupName: ${{ environment.resourceGroupName }}
 
-  #     - bash: |
-  #         mkdir -p report
-  #         mkdir -p screen
-  #         gem install bundler
-  #         bundle install
-  #         bundle exec cucumber --color --format pretty --format html --out ./report/cucumber-report.html --format json --out test-report.json --tags 'not @ignore'
-  #         allure generate ./Allure_results --clean -o ./allure-report
-  #       displayName: Run tests
-  #       env:
-  #         START_PAGE_URL: $(wasteTrackingServiceRootUrl)
-  #         DRIVER: remote_driver
-  #       workingDirectory: tests/waste-tracking-service
+              - ${{ each app in split(variables.appList, ',') }}:
+                  - ${{ if eq(app, 'address') }}:
+                      - template: templates/ci/deploy/${{ app }}.yaml
+                        parameters:
+                          serviceConnection: ${{ parameters.acrServiceConnection }}
+                          containerRegistryName: ${{ parameters.containerRegistryName }}
+                          appName: ${{ app }}
+                          appNameTag: ${{ replace(app, '-', '_') }}
+                          valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(environment.name) }}.yaml
+                          appInsightsConnectionString: $(appInsightsConnectionString)
 
-  #     - task: PublishTestResults@2
-  #       inputs:
-  #         testResultsFormat: JUnit
-  #         testResultsFiles: tests/waste-tracking-service/junit/*.xml
-  #       condition: always()
+                  - ${{ elseif eq(app, 'annex-vii') }}:
+                      - template: templates/ci/deploy/${{ app }}.yaml
+                        parameters:
+                          serviceConnection: ${{ parameters.acrServiceConnection }}
+                          containerRegistryName: ${{ parameters.containerRegistryName }}
+                          appName: ${{ app }}
+                          appNameTag: ${{ replace(app, '-', '_') }}
+                          valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(environment.name) }}.yaml
+                          appInsightsConnectionString: $(appInsightsConnectionString)
+
+                  - ${{ elseif eq(app, 'waste-tracking-gateway')}}:
+                      - template: templates/ci/deploy/${{ app }}.yaml
+                        parameters:
+                          serviceConnection: ${{ parameters.acrServiceConnection }}
+                          containerRegistryName: ${{ parameters.containerRegistryName }}
+                          appName: ${{ app }}
+                          appNameTag: ${{ replace(app, '-', '_') }}
+                          valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(environment.name) }}.yaml
+                          appInsightsConnectionString: $(appInsightsConnectionString)
+
+                  - ${{ elseif eq(app, 'waste-tracking-service')}}:
+                      - template: templates/ci/deploy/${{ app }}.yaml
+                        parameters:
+                          serviceConnection: ${{ parameters.acrServiceConnection }}
+                          containerRegistryName: ${{ parameters.containerRegistryName }}
+                          appName: ${{ app }}
+                          appNameTag: ${{ replace(app, '-', '_') }}
+                          valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(environment.name) }}.yaml
+                          appInsightsConnectionString: $(appInsightsConnectionString)
+                          dcidClientId: $(dcidClientId)
+                          dcidClientSecret: $(dcidClientSecret)
+                          dcidPolicy: $(dcidPolicy)
+                          dcidRedirect: $(dcidRedirect)
+                          dcidServiceId: $(dcidServiceId)
+                          dcidTenant: $(dcidTenant)
+                          dcidWellKnown: $(dcidWellKnown)
+                          nextAuthSecret: $(nextAuthSecret)
+                          nextAuthUrl: $(nextAuthUrl)
+
+                  - ${{ else }}:
+                      - bash: |
+                          echo "Specify deployment template for: ${{ app }}"
+                        displayName: Specify deployment template

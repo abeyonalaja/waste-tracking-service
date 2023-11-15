@@ -10,7 +10,7 @@ replicaCount: 1
 
 # Profile of the image used to create the pod containers
 image:
-  repository: sndwtshubcr3401.azurecr.io/wts/address
+  repository: SSVWTSINFCR5401.azurecr.io/wts/address
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 'main'

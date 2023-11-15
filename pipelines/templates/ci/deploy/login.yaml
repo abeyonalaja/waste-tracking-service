@@ -1,4 +1,7 @@
 parameters:
+  - name: acrServiceConnection
+    type: string
+    default: ''
   - name: serviceConnection
     type: string
     default: ''
@@ -15,7 +18,7 @@ parameters:
 steps:
   - template: ../auth/acr.yaml
     parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
+      serviceConnection: ${{ parameters.acrServiceConnection }}
       containerRegistryName: ${{ parameters.containerRegistryName }}
 
   - template: ../auth/helm.yaml

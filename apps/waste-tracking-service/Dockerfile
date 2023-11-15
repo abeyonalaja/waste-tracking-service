@@ -5,7 +5,8 @@ ENV NODE_ENV production
 ENV PORT 3000
 
 ENV CHROME_BIN="/usr/bin/chromium-browser" \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true" \
+    NODE_TLS_REJECT_UNAUTHORIZED=0
 
 RUN set -x \
     && apk update \

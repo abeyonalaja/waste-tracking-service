@@ -10,7 +10,7 @@ replicaCount: 2
 
 # Profile of the image used to create the pod containers
 image:
-  repository: sndwtshubcr3401.azurecr.io/wts/waste-tracking-service
+  repository: SSVWTSINFCR5401.azurecr.io/wts/waste-tracking-service
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 'main'
@@ -94,9 +94,11 @@ ingress:
   enabled: true
   className: 'nginx'
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   hosts:
-    - paths:
+    - host: 'wts-uksbe-snd.azure.defra.cloud'
+      paths:
         - path: /
           pathType: Prefix
   labels: {}

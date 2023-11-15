@@ -1,0 +1,22 @@
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 100m
+    memory: 512Mi
+secret:
+  env:
+    IS_MULTIPLE_UPLOAD_ENABLED: 'false'
+    IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
+ingress:
+  enabled: true
+  className: 'nginx'
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  hosts:
+    - host: 'wts-uksbe-prd.azure.defra.cloud'
+      paths:
+        - path: /
+          pathType: Prefix
