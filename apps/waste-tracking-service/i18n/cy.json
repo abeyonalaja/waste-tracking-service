@@ -1,5 +1,5 @@
 {
-  "tag": "PROTOTEIAID",
+  "tag": "BETA PREIFAT",
   "app.title": "Allforio gwastraff o'r DU",
   "app.parentTitle": "Symud, allforio neu fewnforio gwastraff",
   "404.title": "Page not found",
@@ -24,7 +24,7 @@
   "charsCount.negative": "You have {{n}} characters too many",
   "dashboard.title": "Export waste from the UK",
   "header.iconTitle": "GOV.UK",
-  "header.serviceBanner": "This is a new service",
+  "header.serviceBanner": "Mae hwn yn wasanaeth newydd",
   "footer.crownCopyright": "Crown copyright",
   "footer.accessibility": "Accessibility",
   "footer.cookies": "Cookies",
