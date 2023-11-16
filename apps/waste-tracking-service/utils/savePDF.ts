@@ -1,5 +1,5 @@
-export const savePDF = (id, transactionId = null) => {
-  return fetch(`/api/pdf?id=${id}`)
+export const savePDF = async (id, transactionId = null) => {
+  return await fetch(`/api/pdf?id=${id}`)
     .then((res) => res.blob())
     .then((readableStream) => {
       const blob = new Blob([readableStream], { type: 'application/pdf' });

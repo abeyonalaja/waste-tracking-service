@@ -18,15 +18,15 @@ export const DownloadPDFLink = ({
 }: Props) => {
   const { t } = useTranslation();
   const [loading, setLoading] = React.useState(false);
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
+    e.preventDefault();
     if (loading) {
       return;
     }
     setLoading(true);
-    savePDF(submissionId, transactionId).then(() => {
+    await savePDF(submissionId, transactionId).then(() => {
       setLoading(false);
     });
-    e.preventDefault();
   };
   return (
     <AppLink
