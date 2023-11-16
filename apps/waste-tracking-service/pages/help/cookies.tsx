@@ -34,7 +34,6 @@ const Cookies = () => {
     e.preventDefault();
     const cookieValue: string = JSON.stringify({
       analytics: analyticsConsent,
-      version: 1,
     });
     setCookie(cookieName, cookieValue, {
       path: '/',
