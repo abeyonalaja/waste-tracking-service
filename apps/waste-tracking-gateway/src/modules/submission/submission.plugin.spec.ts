@@ -268,7 +268,7 @@ describe('SubmissionPlugin', () => {
   });
 
   describe('PUT /submissions/{id}/reference', () => {
-    it('Supports null values', async () => {
+    it('Does NOT support null values', async () => {
       const id = faker.datatype.uuid();
       mockBackend.setCustomerReference.mockResolvedValue();
       const response = await app.inject({
@@ -277,13 +277,7 @@ describe('SubmissionPlugin', () => {
         payload: JSON.stringify(null),
       });
 
-      expect(response.result).toBeNull();
-      expect(response.statusCode).toBe(204);
-      expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
-      expect(mockBackend.setCustomerReference).toBeCalledWith(
-        { id, accountId },
-        null
-      );
+      expect(response.statusCode).toBe(400);
     });
 
     it('Supports string values', async () => {

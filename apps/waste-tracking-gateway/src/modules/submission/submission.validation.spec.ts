@@ -48,7 +48,6 @@ describe('validatePutReferenceRequest', () => {
 
   it('Accepts valid values', () => {
     expect(validate(faker.datatype.string(10))).toBe(true);
-    expect(validate(null)).toBe(true);
   });
 });
 

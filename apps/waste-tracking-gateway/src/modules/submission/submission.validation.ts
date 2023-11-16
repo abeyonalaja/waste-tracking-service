@@ -30,7 +30,6 @@ export const validateCreateSubmissionRequest =
 
 export const validatePutReferenceRequest = ajv.compile<PutReferenceRequest>({
   type: 'string',
-  nullable: true,
 });
 
 export const validatePutWasteDescriptionRequest =

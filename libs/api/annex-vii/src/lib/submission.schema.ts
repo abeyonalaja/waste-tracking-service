@@ -406,7 +406,7 @@ export const setDraftCustomerReferenceByIdRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
-    value: customerReference,
+    reference: customerReference,
   },
 };
 
