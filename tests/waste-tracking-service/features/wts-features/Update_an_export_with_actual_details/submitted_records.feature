@@ -3,6 +3,7 @@ Feature:AS A Waste practitioner
   I NEED to be able to see all submitted Annex VII document
   SO THAT I can check any required details
 
+  @code_display_issue
   Scenario: Submit an Annex VII with Bulk waste Actual data
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

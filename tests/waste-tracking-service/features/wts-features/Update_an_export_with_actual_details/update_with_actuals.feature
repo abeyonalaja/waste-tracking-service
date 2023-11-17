@@ -39,6 +39,7 @@ Feature: AS A waste practitioner
     And I see message that there are no exports with estimates
 
   @translation
+  @code_display_issue
   Scenario: User completes an export with estimate date and verify record is saved on Update with actual section
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -81,6 +82,7 @@ Feature: AS A waste practitioner
     Then the "Export waste from uk" page is displayed
 
   @translation
+  @code_display_issue
   Scenario: User creates an export record, navigates to update annex record page and verify that entered information is correct
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -163,6 +165,7 @@ Feature: AS A waste practitioner
     Then the "Update annex record" page is displayed
     And I verify Actual needed labels are present on the page
 
+  @code_display_issue
   Scenario: User verifies that Not provided label is showing under the reference column on Update with actual page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -199,6 +202,7 @@ Feature: AS A waste practitioner
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
 
+  @code_display_issue
   Scenario: User can update estimated quantity in tonnes and collection date but didn't not confirm the changes
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -259,6 +263,7 @@ Feature: AS A waste practitioner
     And I verify reference section is filled with reference
     And I should see update collection date and waste code and transaction reference
 
+  @code_display_issue
   Scenario: User can update estimated quantity in cubic meters and collection date and confirm the changes, export should be in submitted lists
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -417,6 +422,7 @@ Feature: AS A waste practitioner
     Then the "actual collection date" page is displayed
     When I click "Back" link should display "update with actual" page
 
+  @code_display_issue
   Scenario: Check the back link from estimated collection date and estimated bulk quantity of waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -464,6 +470,7 @@ Feature: AS A waste practitioner
     Then the "Actual volume" page is displayed
     When I click "Back" link should display "update with actual" page
 
+  @code_display_issue
   Scenario: User can't Cancel estimated export without selecting any reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -505,6 +512,7 @@ Feature: AS A waste practitioner
     When I click the "Cancel this record" button
     Then I remain on the cancel the export page with an "Select a reason if you want to cancel this document" error message displayed
 
+  @code_display_issue
   Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -549,6 +557,7 @@ Feature: AS A waste practitioner
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
 
+  @code_display_issue
   Scenario: User can Cancel estimated export with No longer exporting this waste reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -593,6 +602,7 @@ Feature: AS A waste practitioner
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
 
+  @code_display_issue
   Scenario: User can Cancel estimated export with other reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

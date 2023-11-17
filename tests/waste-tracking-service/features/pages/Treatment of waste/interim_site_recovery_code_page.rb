@@ -27,8 +27,8 @@ class InterimSiteRecoveryCodePage < GenericPage
 
   def r12_or_r13
     {
-      'R12' => 'recoveryCode-r12--exchange-of-wastes-for-submission-to-any-of-the-operations-numbered-r01-to-r11',
-      'R13' => 'recoveryCode-r13--storage-of-wastes-pending-any-of-the-operations-numbered-r01-to-r12--excluding-temporary-storage--pending-collection--on-the-site-where-it-is-produced--'
+      'R12' => 'recoveryCode-R12',
+      'R13' => 'recoveryCode-R13'
     }
   end
 end

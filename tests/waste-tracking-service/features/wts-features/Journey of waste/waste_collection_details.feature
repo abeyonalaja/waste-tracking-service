@@ -122,7 +122,7 @@ Feature: AS A waste producer/broker
     Then  I should see "Contact details collection address" page is displayed
     And I should see previously entered waste collection details pre-populated
     When I click the Save and return to draft
-    Then the task "Waste collection details" should be "IN PROGRESS"
+    Then the task "Waste collection details" should be "COMPLETED"
 
   Scenario: User select address from dropdown and click Save and Return to draft
     Given I login to waste tracking portal
