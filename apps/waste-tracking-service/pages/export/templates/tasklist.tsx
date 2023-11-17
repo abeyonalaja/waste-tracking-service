@@ -384,7 +384,7 @@ const TemplateTasklist = () => {
                                       : templatePage.data?.exporterDetail
                                           .status === 'Started'
                                       ? `/export/templates/exporter-importer/exporter-details-manual`
-                                      : `/export/incomplete/exporter-importer/exporter-postcode`,
+                                      : `/export/templates/exporter-importer/exporter-postcode`,
                                   query: { templateId, templates: true },
                                 }}
                                 id="exporter-details"
