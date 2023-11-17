@@ -211,7 +211,7 @@ const EwcCodes = () => {
     initialState
   );
   const [templateId, setTemplateId] = useState(null);
-  const [refData, setRefData] = useState<Array<codeType>>();
+  const [refData, setRefData] = useState<Array<codeType>>([]);
   const [ewcCode, setEwcCode] = useState('');
   const [ewcCodeToRemove, setEwcCodeToRemove] = useState<string>(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
