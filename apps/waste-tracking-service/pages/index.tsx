@@ -25,6 +25,7 @@ const BreadCrumbs = () => {
 
 export function Index() {
   const { t } = useTranslation();
+
   return (
     <>
       <Head>
