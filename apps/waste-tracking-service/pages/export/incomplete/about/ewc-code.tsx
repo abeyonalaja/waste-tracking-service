@@ -233,7 +233,7 @@ const EwcCodes = () => {
         .then((response) => {
           if (response.ok) return response.json();
         })
-        .then((data) => {
+        .then(async (data) => {
           if (data !== undefined) {
             setRefData(data);
           }
@@ -455,10 +455,7 @@ const EwcCodes = () => {
       ewcCodePage.data?.nationalCode,
       ewcCodePage.data?.description
     );
-    let body = ewcCodePage.data;
-    if (ewcCodes.length > 0) {
-      body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
-    }
+    const body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
     try {
       fetch(
         `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`,
@@ -568,138 +565,238 @@ const EwcCodes = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {ewcCodePage.isError && !ewcCodePage.isLoading && (
+            {refData.length === 0 && 'DEFO 0'}
+            {ewcCodePage.isLoading && 'DEFO 0'}
+            {ewcCodePage.isError && ewcCodePage.isLoading && (
               <SubmissionNotFound />
             )}
-            {ewcCodePage.isLoading && <Loading />}
-            {!ewcCodePage.isError && !ewcCodePage.isLoading && (
-              <>
-                {ewcCodePage.errors &&
-                  !!Object.keys(ewcCodePage.errors).length && (
-                    <GovUK.ErrorSummary
-                      heading={t('errorSummary.title')}
-                      errors={Object.keys(ewcCodePage.errors).map((key) => ({
-                        targetName: key,
-                        text: ewcCodePage.errors[key],
-                      }))}
-                    />
-                  )}
-                <GovUK.Caption size="L">
-                  {t('exportJourney.wasteCodesAndDesc.caption')}
-                </GovUK.Caption>
-                {ewcCodePage.showView === VIEWS.LIST && (
-                  <>
-                    <GovUK.Heading size="L">
-                      {ewcCodePage.data.ewcCodes.length === 1
-                        ? t('exportJourney.ewc.listTitleSingle')
-                        : t('exportJourney.ewc.listTitleMultiple', {
-                            count: ewcCodePage.data.ewcCodes.length,
-                          })}
-                    </GovUK.Heading>
+            {(ewcCodePage.isLoading || refData.length === 0) && <Loading />}
+            {!ewcCodePage.isError &&
+              !ewcCodePage.isLoading &&
+              refData.length > 0 && (
+                <>
+                  {ewcCodePage.errors &&
+                    !!Object.keys(ewcCodePage.errors).length && (
+                      <GovUK.ErrorSummary
+                        heading={t('errorSummary.title')}
+                        errors={Object.keys(ewcCodePage.errors).map((key) => ({
+                          targetName: key,
+                          text: ewcCodePage.errors[key],
+                        }))}
+                      />
+                    )}
+                  <GovUK.Caption size="L">
+                    {t('exportJourney.wasteCodesAndDesc.caption')}
+                  </GovUK.Caption>
+                  {ewcCodePage.showView === VIEWS.LIST && (
+                    <>
+                      <GovUK.Heading size="L">
+                        {ewcCodePage.data.ewcCodes.length === 1
+                          ? t('exportJourney.ewc.listTitleSingle')
+                          : t('exportJourney.ewc.listTitleMultiple', {
+                              count: ewcCodePage.data.ewcCodes.length,
+                            })}
+                      </GovUK.Heading>
 
-                    <DefinitionList id="ewc-code-list">
-                      {ewcCodePage.data.ewcCodes.map((ewc, index) => {
-                        return (
-                          <Row key={index}>
-                            <Title id={`ewc-code-${index + 1}`}>
-                              {formatEwcCode(ewc.code)}
-                            </Title>
-                            <Definition id={`ewc-desc-${index + 1}`}>
-                              {getEWCDesc(ewc.code)}
-                            </Definition>
-                            <Actions>
-                              <AppLink
-                                key={`action-${index}-remove`}
-                                href="#"
-                                id={`action-remove-${index + 1}`}
-                                onClick={(e) => handleDelete(e, ewc.code)}
+                      <DefinitionList id="ewc-code-list">
+                        {ewcCodePage.data.ewcCodes.map((ewc, index) => {
+                          return (
+                            <Row key={index}>
+                              <Title id={`ewc-code-${index + 1}`}>
+                                {formatEwcCode(ewc.code)}
+                              </Title>
+                              <Definition id={`ewc-desc-${index + 1}`}>
+                                {getEWCDesc(ewc.code)}
+                              </Definition>
+                              <Actions>
+                                <AppLink
+                                  key={`action-${index}-remove`}
+                                  href="#"
+                                  id={`action-remove-${index + 1}`}
+                                  onClick={(e) => handleDelete(e, ewc.code)}
+                                >
+                                  {t('actions.remove')}
+                                </AppLink>
+                              </Actions>
+                            </Row>
+                          );
+                        })}
+                      </DefinitionList>
+                      {ewcCodePage.data.ewcCodes.length > 4 ? (
+                        <>
+                          <GovUK.Heading as="p" size={'MEDIUM'}>
+                            {t('exportJourney.ewc.maxReached')}
+                          </GovUK.Heading>
+                          <ButtonGroup>
+                            <GovUK.Button
+                              id="saveButton"
+                              onClick={() =>
+                                router.push({
+                                  pathname: `/export/incomplete/about/national-code`,
+                                  query: { id },
+                                })
+                              }
+                            >
+                              {t('saveButton')}
+                            </GovUK.Button>
+                            <SaveReturnButton
+                              onClick={() =>
+                                router.push({
+                                  pathname: `/export/incomplete/tasklist`,
+                                  query: { id },
+                                })
+                              }
+                            />
+                          </ButtonGroup>
+                        </>
+                      ) : (
+                        <form onSubmit={handleSubmitAdditionalEwcCode}>
+                          <GovUK.Fieldset>
+                            <GovUK.Fieldset.Legend size="M">
+                              {t('exportJourney.ewc.addAnotherTitle')}
+                            </GovUK.Fieldset.Legend>
+                            <GovUK.MultiChoice
+                              mb={6}
+                              label=""
+                              meta={{
+                                error: ewcCodePage.errors?.hasEWCCode,
+                                touched: !!ewcCodePage.errors?.hasEWCCode,
+                              }}
+                            >
+                              <GovUK.Radio
+                                name="hasEWCCode"
+                                id="hasEWCCodeYes"
+                                checked={ewcCodePage.provided === 'Yes'}
+                                onChange={(e) => handleRadioChange(e)}
+                                value="Yes"
                               >
-                                {t('actions.remove')}
-                              </AppLink>
-                            </Actions>
-                          </Row>
-                        );
-                      })}
-                    </DefinitionList>
-                    {ewcCodePage.data.ewcCodes.length > 4 ? (
-                      <>
-                        <GovUK.Heading as="p" size={'MEDIUM'}>
-                          {t('exportJourney.ewc.maxReached')}
-                        </GovUK.Heading>
+                                {t('radio.yes')}
+                              </GovUK.Radio>
+                              {ewcCodePage.provided === 'Yes' && (
+                                <ConditionalRadioWrap>
+                                  <GovUK.FormGroup>
+                                    <EwcCodeInput
+                                      input={{
+                                        name: 'ewc-code',
+                                        id: 'ewc-code',
+                                        maxLength: 8,
+                                        type: 'text',
+                                        inputMode: 'numeric',
+                                        value: ewcCode,
+                                        onChange: (e) =>
+                                          setEwcCode(e.target.value),
+                                      }}
+                                      meta={{
+                                        error: ewcCodePage.errors?.ewcCode,
+                                        touched: !!ewcCodePage.errors?.ewcCode,
+                                      }}
+                                    >
+                                      {t('exportJourney.ewc.label')}
+                                    </EwcCodeInput>
+                                  </GovUK.FormGroup>
+                                </ConditionalRadioWrap>
+                              )}
+                              <GovUK.Radio
+                                name="hasEWCCode"
+                                id="hasEWCCodeNo"
+                                checked={ewcCodePage.provided === 'No'}
+                                onChange={(e) => handleRadioChange(e)}
+                                value="No"
+                              >
+                                {t('radio.no')}
+                              </GovUK.Radio>
+                            </GovUK.MultiChoice>
+                          </GovUK.Fieldset>
+                          <ButtonGroup>
+                            <GovUK.Button id="saveButton">
+                              {t('saveButton')}
+                            </GovUK.Button>
+                            <SaveReturnButton
+                              onClick={handleReturnSubmitAdditionalEwcCode}
+                            />
+                          </ButtonGroup>
+                        </form>
+                      )}
+                    </>
+                  )}
+                  {ewcCodePage.showView === VIEWS.ADD_FORM && (
+                    <>
+                      <form onSubmit={handleSubmit}>
+                        <GovUK.Fieldset>
+                          <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                            {t('exportJourney.ewc.title')}
+                          </GovUK.Fieldset.Legend>
+                          <Paragraph>
+                            This can also be called a list of waste (LoW) code.
+                            For more help with these codes,{' '}
+                            <AppLink
+                              href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1021051/Waste_classification_technical_guidance_WM3.pdf"
+                              target="_blank"
+                            >
+                              see the waste classification guidance (opens in
+                              new tab)
+                            </AppLink>
+                            .
+                          </Paragraph>
+                          <GovUK.FormGroup>
+                            <EwcCodeInput
+                              input={{
+                                name: 'ewc-code',
+                                id: 'ewc-code',
+                                maxLength: 8,
+                                type: 'text',
+                                inputMode: 'numeric',
+                                onChange: (e) => setEwcCode(e.target.value),
+                              }}
+                              meta={{
+                                error: ewcCodePage.errors?.ewcCode,
+                                touched: !!ewcCodePage.errors?.ewcCode,
+                              }}
+                            >
+                              {t('exportJourney.ewc.label')}
+                            </EwcCodeInput>
+                          </GovUK.FormGroup>
+                        </GovUK.Fieldset>
                         <ButtonGroup>
-                          <GovUK.Button
-                            id="saveButton"
-                            onClick={() =>
-                              router.push({
-                                pathname: `/export/incomplete/about/national-code`,
-                                query: { id },
-                              })
-                            }
-                          >
+                          <GovUK.Button id="saveButton">
                             {t('saveButton')}
                           </GovUK.Button>
-                          <SaveReturnButton
-                            onClick={() =>
-                              router.push({
-                                pathname: `/export/incomplete/tasklist`,
-                                query: { id },
-                              })
-                            }
-                          />
+                          <SaveReturnButton onClick={handleReturnSubmit} />
                         </ButtonGroup>
-                      </>
-                    ) : (
-                      <form onSubmit={handleSubmitAdditionalEwcCode}>
+                      </form>
+                    </>
+                  )}
+                  {ewcCodePage.showView === VIEWS.CONFIRM && (
+                    <>
+                      <form onSubmit={handleConfirmRemove}>
                         <GovUK.Fieldset>
-                          <GovUK.Fieldset.Legend size="M">
-                            {t('exportJourney.ewc.addAnotherTitle')}
+                          <GovUK.Fieldset.Legend isPageHeading size="LARGE">
+                            {t('exportJourney.ewc.confirmRemoveTitle', {
+                              code: formatEwcCode(ewcCodeToRemove),
+                            })}
                           </GovUK.Fieldset.Legend>
                           <GovUK.MultiChoice
                             mb={6}
                             label=""
                             meta={{
-                              error: ewcCodePage.errors?.hasEWCCode,
-                              touched: !!ewcCodePage.errors?.hasEWCCode,
+                              error: ewcCodePage.errors?.confirmRemove,
+                              touched: !!ewcCodePage.errors?.confirmRemove,
                             }}
                           >
                             <GovUK.Radio
-                              name="hasEWCCode"
-                              id="hasEWCCodeYes"
-                              checked={ewcCodePage.provided === 'Yes'}
-                              onChange={(e) => handleRadioChange(e)}
+                              name="removeEwcCode"
+                              id="removeEwcCodeYes"
+                              checked={confirmRemove === 'Yes'}
+                              onChange={(e) => setConfirmRemove(e.target.value)}
                               value="Yes"
                             >
                               {t('radio.yes')}
                             </GovUK.Radio>
-                            {ewcCodePage.provided === 'Yes' && (
-                              <ConditionalRadioWrap>
-                                <GovUK.FormGroup>
-                                  <EwcCodeInput
-                                    input={{
-                                      name: 'ewc-code',
-                                      id: 'ewc-code',
-                                      maxLength: 8,
-                                      type: 'text',
-                                      inputMode: 'numeric',
-                                      value: ewcCode,
-                                      onChange: (e) =>
-                                        setEwcCode(e.target.value),
-                                    }}
-                                    meta={{
-                                      error: ewcCodePage.errors?.ewcCode,
-                                      touched: !!ewcCodePage.errors?.ewcCode,
-                                    }}
-                                  >
-                                    {t('exportJourney.ewc.label')}
-                                  </EwcCodeInput>
-                                </GovUK.FormGroup>
-                              </ConditionalRadioWrap>
-                            )}
                             <GovUK.Radio
-                              name="hasEWCCode"
-                              id="hasEWCCodeNo"
-                              checked={ewcCodePage.provided === 'No'}
-                              onChange={(e) => handleRadioChange(e)}
+                              name="removeEwcCode"
+                              id="removeEwcCodeNo"
+                              checked={confirmRemove === 'No'}
+                              onChange={(e) => setConfirmRemove(e.target.value)}
                               value="No"
                             >
                               {t('radio.no')}
@@ -711,110 +808,14 @@ const EwcCodes = () => {
                             {t('saveButton')}
                           </GovUK.Button>
                           <SaveReturnButton
-                            onClick={handleReturnSubmitAdditionalEwcCode}
+                            onClick={(e) => handleReturnConfirmRemove(e)}
                           />
                         </ButtonGroup>
                       </form>
-                    )}
-                  </>
-                )}
-                {ewcCodePage.showView === VIEWS.ADD_FORM && (
-                  <>
-                    <form onSubmit={handleSubmit}>
-                      <GovUK.Fieldset>
-                        <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                          {t('exportJourney.ewc.title')}
-                        </GovUK.Fieldset.Legend>
-                        <Paragraph>
-                          This can also be called a list of waste (LoW) code.
-                          For more help with these codes,{' '}
-                          <AppLink
-                            href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1021051/Waste_classification_technical_guidance_WM3.pdf"
-                            target="_blank"
-                          >
-                            see the waste classification guidance (opens in new
-                            tab)
-                          </AppLink>
-                          .
-                        </Paragraph>
-                        <GovUK.FormGroup>
-                          <EwcCodeInput
-                            input={{
-                              name: 'ewc-code',
-                              id: 'ewc-code',
-                              maxLength: 8,
-                              type: 'text',
-                              inputMode: 'numeric',
-                              onChange: (e) => setEwcCode(e.target.value),
-                            }}
-                            meta={{
-                              error: ewcCodePage.errors?.ewcCode,
-                              touched: !!ewcCodePage.errors?.ewcCode,
-                            }}
-                          >
-                            {t('exportJourney.ewc.label')}
-                          </EwcCodeInput>
-                        </GovUK.FormGroup>
-                      </GovUK.Fieldset>
-                      <ButtonGroup>
-                        <GovUK.Button id="saveButton">
-                          {t('saveButton')}
-                        </GovUK.Button>
-                        <SaveReturnButton onClick={handleReturnSubmit} />
-                      </ButtonGroup>
-                    </form>
-                  </>
-                )}
-                {ewcCodePage.showView === VIEWS.CONFIRM && (
-                  <>
-                    <form onSubmit={handleConfirmRemove}>
-                      <GovUK.Fieldset>
-                        <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                          {t('exportJourney.ewc.confirmRemoveTitle', {
-                            code: formatEwcCode(ewcCodeToRemove),
-                          })}
-                        </GovUK.Fieldset.Legend>
-                        <GovUK.MultiChoice
-                          mb={6}
-                          label=""
-                          meta={{
-                            error: ewcCodePage.errors?.confirmRemove,
-                            touched: !!ewcCodePage.errors?.confirmRemove,
-                          }}
-                        >
-                          <GovUK.Radio
-                            name="removeEwcCode"
-                            id="removeEwcCodeYes"
-                            checked={confirmRemove === 'Yes'}
-                            onChange={(e) => setConfirmRemove(e.target.value)}
-                            value="Yes"
-                          >
-                            {t('radio.yes')}
-                          </GovUK.Radio>
-                          <GovUK.Radio
-                            name="removeEwcCode"
-                            id="removeEwcCodeNo"
-                            checked={confirmRemove === 'No'}
-                            onChange={(e) => setConfirmRemove(e.target.value)}
-                            value="No"
-                          >
-                            {t('radio.no')}
-                          </GovUK.Radio>
-                        </GovUK.MultiChoice>
-                      </GovUK.Fieldset>
-                      <ButtonGroup>
-                        <GovUK.Button id="saveButton">
-                          {t('saveButton')}
-                        </GovUK.Button>
-                        <SaveReturnButton
-                          onClick={(e) => handleReturnConfirmRemove(e)}
-                        />
-                      </ButtonGroup>
-                    </form>
-                  </>
-                )}
-              </>
-            )}
+                    </>
+                  )}
+                </>
+              )}
           </GovUK.GridCol>
         </GovUK.GridRow>
       </GovUK.Page>
