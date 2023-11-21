@@ -2,7 +2,7 @@ import ReactGA from 'react-ga';
 import { useCookies } from 'react-cookie';
 
 export const initGA = () => {
-  ReactGA.initialize('${process.env.NX_GOOGLE_ANALYTICS_ACCOUNT}');
+  ReactGA.initialize(process.env.NX_GOOGLE_ANALYTICS_ACCOUNT);
 };
 
 export const logPageView = () => {
