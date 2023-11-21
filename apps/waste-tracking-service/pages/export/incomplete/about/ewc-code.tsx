@@ -565,8 +565,6 @@ const EwcCodes = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {refData.length === 0 && 'DEFO 0'}
-            {ewcCodePage.isLoading && 'DEFO 0'}
             {ewcCodePage.isError && ewcCodePage.isLoading && (
               <SubmissionNotFound />
             )}
