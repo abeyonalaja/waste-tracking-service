@@ -2,8 +2,7 @@ import { AppProps } from 'next/app';
 import Layout from '../components/Layout';
 import './styles.css';
 import 'i18n/config';
-import { CookiesProvider } from 'react-cookie';
-import { useGoogleAnalytics } from '../utils/GoogleAnalytics';
+import { useGoogleTagManager } from '../utils/GoogleTagManager';
 
 type AppPropsWithLayout = AppProps & {
   Component;
@@ -11,10 +10,6 @@ type AppPropsWithLayout = AppProps & {
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
-  useGoogleAnalytics();
-  return getLayout(
-    <CookiesProvider>
-      <Component {...pageProps} />
-    </CookiesProvider>
-  );
+  useGoogleTagManager();
+  return getLayout(<Component {...pageProps} />);
 }
