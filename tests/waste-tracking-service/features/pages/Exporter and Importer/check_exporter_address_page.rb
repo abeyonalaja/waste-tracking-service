@@ -20,9 +20,8 @@ class CheckExporterAddressPage < GenericPage
   end
 
   def check_page_translation
-    country, address = HelperMethods.address(TestStatus.test_status(:exporter_address))
     expect(page).to have_text EXPORTER_DETAILS
-    expect(page).to have_text SUB_TITLE1 + country + SUB_TITLE2
+    expect(page).to have_text SUB_TITLE1 + TestStatus.test_status(:exporter_country) + SUB_TITLE2
     expect(page).to have_link CHANGE_LINK
   end
 

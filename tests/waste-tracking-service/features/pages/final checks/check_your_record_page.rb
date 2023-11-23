@@ -92,7 +92,6 @@ class CheckYourRecordPage < GenericPage
   end
 
   def waste_code_description
-    puts find(:xpath, '//*[@id="waste-code-type"]//parent::dd').text.sub(/.*?\n/, '')
     find(:xpath, '//*[@id="waste-code-type"]//parent::dd').text.sub(/.*?\n/, '')
   end
 

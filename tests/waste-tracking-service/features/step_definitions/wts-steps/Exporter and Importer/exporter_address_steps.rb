@@ -1,5 +1,5 @@
 And(/^I enter valid postcode$/) do
-  postcode = 'ng23lp'
+  postcode = 'NG2 3LP'
   ExporterAddressPage.new.enter_postcode postcode
   TestStatus.set_test_status(:postcode, postcode)
   Log.info("Exporter postcode is #{postcode}")

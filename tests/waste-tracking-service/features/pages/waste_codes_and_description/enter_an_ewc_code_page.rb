@@ -27,6 +27,7 @@ class EnterAnEwcCodePage < GenericPage
 
   def enter_multiple_ewc_code no_of_ewc_codes
     (1..no_of_ewc_codes).each do |i|
+      HelperMethods.wait_for_a_sec
       choose_option('Yes')
       save_and_continue
       code = TestData.get_ewc_codes i

@@ -39,4 +39,8 @@ module HelperMethods
 
     [country, remaining_data]
   end
+
+  def self.wait_for_a_sec
+    sleep 0.5
+  end
 end

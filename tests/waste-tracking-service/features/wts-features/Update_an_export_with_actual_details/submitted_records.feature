@@ -51,6 +51,7 @@ Feature:AS A Waste practitioner
     Then the "submitted records" page is displayed
 
   @retry
+  @code_display_issue
   Scenario: Submit an Annex VII with Small waste Actual data
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

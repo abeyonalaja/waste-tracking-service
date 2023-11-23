@@ -136,31 +136,28 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)" without transportati
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    RoadTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Sea'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    SeaTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Air'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    AirTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Rail'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    RailTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   when 'Inland waterways'
     HowWillTheWasteCarrierTransportTheWastePage.new.choose_option mode_of_transport
     HowWillTheWasteCarrierTransportTheWastePage.new.save_and_continue
     sleep 0.5
-    InlandWaterTransportDetailsPage.new.save_and_continue
     TestStatus.mode_of_travel_list(mode_of_transport)
   end
+  TestStatus.set_test_status(:transport_description, 'Not provided')
+  RoadTransportDetailsPage.new.save_and_continue
 end

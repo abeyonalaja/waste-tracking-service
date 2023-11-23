@@ -224,8 +224,8 @@ Feature: AS A Waste Practitioner
     And I choose "No" radio button
     And I click the button Save and continue
     When I click the "Check your record" link
-    # Then I should see 5 waste carriers on check your export page
-    Then I should se Not provided label on Check your record page
+    Then I should see 1 waste carriers on check your export page
+    Then I should see Not provided label on Check your record page
 
   Scenario: User can navigate to enter your ref pages from check your report page using change link
     Given I login to waste tracking portal
@@ -273,7 +273,7 @@ Feature: AS A Waste Practitioner
     When I click ewc code Change link
     Then I should see ewc code description on EWC list page
     And I choose "No" radio button
-#    Then I should see selected EWC code on EWC codes page
+    Then I should see selected EWC code on EWC codes page
     When I click the Save and return to draft
     When I click the "Check your record" link
     #national code
@@ -312,10 +312,9 @@ Feature: AS A Waste Practitioner
     When I click Exporter address Change link
     Then I verify Enter exporter address manual page is displayed
     When I click the button Save and continue
-    When I wait for a second
-    When I click the button Save and continue
     Then the "Check exporter address" page is displayed
     When I click the button Save and continue
+    When I wait for a second
     Then the "exporter details" page is displayed
     And I click the Save and return to draft
     When I click the "Check your record" link

@@ -10,7 +10,6 @@ class RecoveryFacilityAddressPage < GenericPage
   include CommonComponents
   include GeneralHelpers
 
-
   TITLE = Translations.value 'exportJourney.recoveryFacilities.addressTitle'
   FACILITY_NAME = Translations.value 'exportJourney.recoveryFacilities.name'
   ADDRESS = Translations.value 'exportJourney.importerDetails.address'
@@ -29,7 +28,9 @@ class RecoveryFacilityAddressPage < GenericPage
   end
 
   def select_recovery_facility_country(recovery_country)
-    index = rand(0..6)
+    index = rand(0..25)
+    find('country', visible: false).click
+    HelperMethods.wait_for_a_sec
     country = "country__option--#{index}"
     first('country', minimum: 1).click
     first(country, minimum: 1).select_option

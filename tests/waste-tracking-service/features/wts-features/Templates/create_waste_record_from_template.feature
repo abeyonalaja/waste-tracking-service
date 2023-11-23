@@ -194,8 +194,6 @@ Feature: AS A waste producer/broker
     Then I click Manage templates link
     And I verify that newly created template is on top of the table
 
-  #need to revisit this and fix after waste transport stories
-  @ignore
   Scenario: Export data should match what is in the template
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -258,8 +256,22 @@ Feature: AS A waste producer/broker
     When I click the "Quantity of waste" link
     And I complete Quantity of waste sub-section
     And the task "Quantity of waste" should be "COMPLETED"
+    When I click the "Collection date" link
     And I complete collection date with estimated details
+    When I click the "Waste carriers" link
     And I complete waste carrier detail with 1 waste carrier
+    And the task "Waste codes and description" should be "COMPLETED"
+    And the task "Quantity of waste" should be "COMPLETED"
+    And the task "Exporter details" should be "COMPLETED"
+    And the task "Importer details" should be "COMPLETED"
+    Then the task "Collection date" should be "COMPLETED"
+    And the task "Waste carriers" should be "COMPLETED"
+    And the task "Waste collection details" should be "COMPLETED"
+    And the task "Location waste leaves the UK" should be "COMPLETED"
+    And the task "Countries waste will travel through" should be "COMPLETED"
+    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Check your report" should be "CANNOT START YET"
+    And the task "Sign declaration" should be "CANNOT START YET"
 
 
   @translation

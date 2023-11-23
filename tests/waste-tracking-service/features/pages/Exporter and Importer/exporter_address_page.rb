@@ -13,7 +13,6 @@ class ExporterAddressPage < GenericPage
   BUILDING_NAME_NUMBER = 'buildingNameOrNumber'
   TITLE = Translations.value 'exportJourney.exporterPostcode.title'
   BACK = Translations.value 'back'
-  TITLE = Translations.value 'exportJourney.exporterPostcode.title'
   HINT_TEXT = Translations.value 'exportJourney.exporterPostcode.hint'
   POSTCODE_TEXT = Translations.value 'postcode.label'
   MANUAL_ENTRY_LINK = Translations.value 'postcode.manualAddressLink'
@@ -79,6 +78,8 @@ class ExporterAddressPage < GenericPage
 
   def choose_first_address
     TestStatus.set_test_status(:exporter_address, first(:css, "[type='radio']+span", visible: false).text)
+    country, address = HelperMethods.address TestStatus.test_status(:exporter_address)
+    TestStatus.set_test_status(:exporter_country, country)
     Log.info("Exporter address is: #{TestStatus.test_status(:exporter_address)}")
     first(:css, "[type='radio']", visible: false).click
   end

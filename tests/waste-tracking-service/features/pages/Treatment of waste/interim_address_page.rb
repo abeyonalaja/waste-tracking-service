@@ -29,7 +29,9 @@ class InterimSiteAddressPage < GenericPage
   end
 
   def select_interim_site_country
-    index = rand(0..6)
+    index = rand(0..25)
+    find('country', visible: false).click
+    HelperMethods.wait_for_a_sec
     country = "country__option--#{index}"
     first('country', minimum: 1).click
     first(country, minimum: 1).select_option

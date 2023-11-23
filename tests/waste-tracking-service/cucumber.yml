@@ -1,7 +1,1 @@
-#default: --publish --format pretty --format html --out  reports1.html
-#ci: --format junit --out junit --tags 'not (@future or @ignore)'
-#html_report: --format progress --format html --out html_report/report.html
-#
-default: --format pretty --publish-quiet --color --format AllureCucumber::CucumberFormatter --out Allure_results/
-#default: --format AllureCucumber::Formatter --out allure-results
-
+parallel: --format json -o 'reports/parallel/<%= ENV['TEST_ENV_NUMBER'].to_i + 1 %>.json'

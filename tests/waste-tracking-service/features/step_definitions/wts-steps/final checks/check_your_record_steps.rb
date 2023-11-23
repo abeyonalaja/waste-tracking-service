@@ -262,7 +262,7 @@ When(/^I click Exporter details Change link$/) do
 end
 
 Then(/^I should see selected EWC code on EWC codes page$/) do
-  expect(EnterAnEwcCodePage.new).to have_text(TestStatus.test_status(:ewc_code).gsub(/\s+/, ' '))
+  expect(EnterAnEwcCodePage.new).to have_text(TestStatus.test_status(:ewc_code).scan(/.{2}/).join(' '))
 end
 
 When(/^I click on Collection date Change link$/) do
@@ -492,6 +492,6 @@ And(/^I should see small waste export Treatment of waste correctly displayed$/) 
 
 end
 
-Then(/^I should se Not provided label on Check your record page$/) do
+Then(/^I should see Not provided label on Check your record page$/) do
   expect(CheckYourRecordPage.new.carrier_transport_details(0)).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
 end

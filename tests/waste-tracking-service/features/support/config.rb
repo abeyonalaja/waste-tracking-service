@@ -101,13 +101,3 @@ Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new(app, **{ :browser => :firefox, desired_capabilities: capabilities, options: browser_options })
 end
 
-
-
-# configure `AxeCapybara`
-# driver = AxeCapybara.configure(:chrome) do |c|
-#   # see below for a full list of configuration
-#   c.jslib_path = "next-version/axe.js"
-# end
-
-# Should prevent error - Text file busy - /home/jenkins/.webdrivers/chromedriver (Errno::ETXTBSY)
-# Webdrivers.install_dir = File.expand_path('~/.webdrivers/' + ENV['TEST_ENV_NUMBER'].to_s)

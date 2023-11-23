@@ -18,6 +18,7 @@ And(/^I have entered my reference$/) do
 end
 
 Then(/^I should see reference number pre\-populated$/) do
+  HelperMethods.wait_for_a_sec
   expect(AddReferenceNumberPage.new).to have_reference TestStatus.test_status(:application_reference_number)
 end
 
