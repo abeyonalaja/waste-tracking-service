@@ -20,21 +20,13 @@ import {
   Loading,
   SummaryCard,
   SummaryList,
-  Paragraph,
-  TextareaCharCount,
 } from 'components';
 import {
   isNotEmpty,
-  validateAddress,
   validateConfirmRemove,
-  validateCountry,
   validateEmail,
-  validateFullName,
   validateInternationalPhone,
-  validateOrganisationName,
   validateSelection,
-  validateTransport,
-  validateTransportDescription,
 } from 'utils/validators';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
