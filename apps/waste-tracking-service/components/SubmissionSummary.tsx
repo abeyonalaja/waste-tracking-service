@@ -263,10 +263,15 @@ export const SubmissionSummary = ({
                     {t('exportJourney.checkAnswers.nationalCode')}
                   </Key>
                   <Value id="national-code">
-                    {data.wasteDescription?.nationalCode.provided === 'Yes' && (
+                    {data.wasteDescription?.nationalCode?.provided ===
+                      'Yes' && (
                       <span>{data.wasteDescription?.nationalCode.value}</span>
                     )}
-                    {data.wasteDescription?.nationalCode.provided === 'No' && (
+                    {data.wasteDescription?.nationalCode?.provided === 'No' && (
+                      <span>{t('exportJourney.checkAnswers.notProvided')}</span>
+                    )}
+                    {data.wasteDescription?.nationalCode?.provided ===
+                      undefined && (
                       <span>{t('exportJourney.checkAnswers.notProvided')}</span>
                     )}
                   </Value>
@@ -859,9 +864,10 @@ export const SubmissionSummary = ({
                             {t('exportJourney.checkAnswers.transportDetails')}
                           </Key>
                           <Value id={'carrier-type-details' + index}>
-                            {item.transportDetails?.description !== undefined
-                              ? item.transportDetails?.description
-                              : t('exportJourney.checkAnswers.notProvided')}
+                            {item.transportDetails?.description === undefined ||
+                            item.transportDetails?.description === ''
+                              ? t('exportJourney.checkAnswers.notProvided')
+                              : item.transportDetails?.description}
                           </Value>
                           {isTemplate && (
                             <Actions>
