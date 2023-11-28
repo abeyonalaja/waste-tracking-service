@@ -15,7 +15,7 @@ export const useGoogleTagManager = () => {
 
   const loadGTM = () => {
     const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${process.env.NX_GOOGLE_ANALYTICS_ACCOUNT}`;
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${process.env['NX_GOOGLE_ANALYTICS_ACCOUNT']}`;
     script.async = true;
     document.head.appendChild(script);
   };
@@ -25,7 +25,7 @@ export const useGoogleTagManager = () => {
     script2.innerHTML = `  window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '${process.env.NX_GOOGLE_ANALYTICS_ACCOUNT}');`;
+    gtag('config', '${process.env['NX_GOOGLE_ANALYTICS_ACCOUNT']}');`;
     document.head.appendChild(script2);
   };
 
