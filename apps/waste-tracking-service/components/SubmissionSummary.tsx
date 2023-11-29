@@ -375,6 +375,7 @@ export const SubmissionSummary = ({
                         </Actions>
                       )}
                       {!showChangeLinks &&
+                        !isTemplate &&
                         data?.wasteQuantity.value.type === 'EstimateData' && (
                           <Actions>
                             <AppLink
@@ -688,6 +689,7 @@ export const SubmissionSummary = ({
                   )}
 
                   {!showChangeLinks &&
+                    !isTemplate &&
                     data.collectionDate.value.type === 'EstimateDate' && (
                       <Actions>
                         <AppLink

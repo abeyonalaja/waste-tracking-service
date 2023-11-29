@@ -203,7 +203,7 @@ const ExporterAddress = () => {
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.exporterAddress.title')}
                 </GovUK.Heading>
-                {data.status === 'Started' && (
+                {data.status !== 'NotStarted' && (
                   <Paragraph>
                     <>
                       {t('postcode.checkAddress.exportingCountryStart')}
