@@ -1,20 +1,18 @@
-import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import { CompleteFooter, CompleteHeader } from '../../components';
 import React from 'react';
 import Head from 'next/head';
 
-export const getServerSideProps = () => {
+export const getStaticProps = () => {
   const dcidRedirect = process.env.NX_DCID_REDIRECT;
   return { props: { dcidRedirect } };
 };
 
 export const Envtest = ({ dcidRedirect }) => {
-  const { t } = useTranslation();
   return (
     <>
       <Head>
-        <title>{t('app.title')}</title>
+        <title>Title</title>
       </Head>
       <GovUK.Page
         id="content"
