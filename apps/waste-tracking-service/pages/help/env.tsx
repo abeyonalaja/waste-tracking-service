@@ -5,16 +5,16 @@ import React from 'react';
 import Head from 'next/head';
 
 export const getServerSideProps = () => {
-  const dcidRedirect = process.env.NX_DCID_REDIRECT;
-  return { props: { dcidRedirect } };
+  const nextGA = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT || null;
+  return { props: { nextGA } };
 };
 
-export const Envtest = ({ dcidRedirect }) => {
-  const { t } = useTranslation();
+export const Envtest = ({ nextGA }) => {
+  const nextGASaved = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT;
   return (
     <>
       <Head>
-        <title>{t('app.title')}</title>
+        <title>Title</title>
       </Head>
       <GovUK.Page
         id="content"
@@ -25,13 +25,11 @@ export const Envtest = ({ dcidRedirect }) => {
         <GovUK.OrderedList>
           <GovUK.ListItem>NODE_ENV - {process.env.NODE_ENV}</GovUK.ListItem>
           <GovUK.ListItem>
-            DCID_REDIRECT - {process.env.DCID_REDIRECT}
+            NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT (alias) - {nextGASaved}
           </GovUK.ListItem>
           <GovUK.ListItem>
-            NX_DCID_REDIRECT (alias) - {process.env.NX_DCID_REDIRECT}
-          </GovUK.ListItem>
-          <GovUK.ListItem>
-            DCID_REDIRECT from serverside props - {dcidRedirect}
+            NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT from serverside props -{' '}
+            {nextGA}
           </GovUK.ListItem>
           <GovUK.ListItem>
             NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT -{' '}
