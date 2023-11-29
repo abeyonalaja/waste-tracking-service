@@ -5,7 +5,6 @@ export const useGoogleTagManager = () => {
   const [cookies] = useCookies(['cookieConsent']);
   const consentCookie = cookies.cookieConsent;
   const isConsentGiven = consentCookie?.analytics === true;
-  const googleAnalyticsID = process.env['NX_GOOGLE_ANALYTICS_ACCOUNT'];
 
   useEffect(() => {
     if (isConsentGiven) {
@@ -16,7 +15,7 @@ export const useGoogleTagManager = () => {
 
   const loadGTM = () => {
     const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${googleAnalyticsID}`;
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT}`;
     script.async = true;
     document.head.appendChild(script);
   };
@@ -26,7 +25,7 @@ export const useGoogleTagManager = () => {
     script2.innerHTML = `  window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '${googleAnalyticsID}');`;
+    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT}');`;
     document.head.appendChild(script2);
   };
 

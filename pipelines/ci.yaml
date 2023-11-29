@@ -262,7 +262,7 @@ stages:
                           dcidWellKnown: $(dcidWellKnown)
                           nextAuthSecret: $(nextAuthSecret)
                           nextAuthUrl: $(nextAuthUrl)
-                          nxGoogleAnalyticsAccount: $(nxGoogleAnalyticsAccount)
+                          nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
 
                   - ${{ else }}:
                       - bash: |

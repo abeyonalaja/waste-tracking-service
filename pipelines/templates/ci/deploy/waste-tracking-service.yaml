@@ -44,7 +44,7 @@ parameters:
   - name: nextAuthUrl
     type: string
     default: ''
-  - name: nxGoogleAnalyticsAccount
+  - name: nextPublicGoogleAnalyticsAccount
     type: string
     default: ''
 
@@ -78,7 +78,7 @@ steps:
           --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
           --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
           --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL \
-          --set secret.env.NX_GOOGLE_ANALYTICS_ACCOUNT=$NX_GOOGLE_ANALYTICS_ACCOUNT
+          --set secret.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT=$NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT
       else
         echo "Release: ${PROJECT_NAME} is already up to date"
       fi
@@ -100,5 +100,5 @@ steps:
       DCID_WELLKNOWN: ${{ parameters.dcidWellKnown }}
       NEXTAUTH_SECRET: ${{ parameters.nextAuthSecret }}
       NEXTAUTH_URL: ${{ parameters.nextAuthUrl }}
-      NX_GOOGLE_ANALYTICS_ACCOUNT: ${{ parameters.nxGoogleAnalyticsAccount }}
+      NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT: ${{ parameters.nextPublicGoogleAnalyticsAccount }}
       CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)
