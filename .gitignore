@@ -51,3 +51,4 @@ apps/address/mnt/
 
 reports/
 .env.local
+/.nx
