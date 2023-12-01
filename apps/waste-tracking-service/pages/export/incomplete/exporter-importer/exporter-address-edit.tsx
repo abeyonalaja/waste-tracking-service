@@ -65,7 +65,7 @@ const ExporterAddressEdit = () => {
     setIsError(false);
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exporter-detail`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -123,7 +123,7 @@ const ExporterAddressEdit = () => {
         };
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
               headers: {

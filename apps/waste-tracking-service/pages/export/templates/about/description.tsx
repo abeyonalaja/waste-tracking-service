@@ -105,7 +105,7 @@ const Description = () => {
     dispatchDescribeWastePage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -162,7 +162,7 @@ const Description = () => {
         setErrors(null);
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
             {
               method: 'PUT',
               headers: {

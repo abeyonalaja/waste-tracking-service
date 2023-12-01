@@ -38,7 +38,7 @@ const TemplateCreate = () => {
         setErrors(newErrors);
       } else {
         setErrors(null);
-        const url = `${process.env.NX_API_GATEWAY_URL}/templates`;
+        const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates`;
         const body = JSON.stringify({
           templateDetails: {
             name: templateName,

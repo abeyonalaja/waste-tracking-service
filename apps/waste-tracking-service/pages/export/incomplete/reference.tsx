@@ -30,7 +30,7 @@ export function Reference() {
       const { id } = router.query;
       if (id !== undefined) {
         try {
-          fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+          fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
             .then((response) => response.json())
             .then((data) => {
               const { id, reference } = data;
@@ -47,7 +47,7 @@ export function Reference() {
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       const updateData = () => {
-        const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/reference`;
+        const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/reference`;
         try {
           fetch(url, {
             method: 'PUT',
@@ -67,7 +67,7 @@ export function Reference() {
       };
 
       const postData = () => {
-        const url = `${process.env.NX_API_GATEWAY_URL}/submissions`;
+        const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions`;
         const body = JSON.stringify({ reference });
         try {
           fetch(url, {

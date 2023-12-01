@@ -50,7 +50,7 @@ const CollectionDate = () => {
     setIsError(false);
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-date`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -123,7 +123,7 @@ const CollectionDate = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-date`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
             {
               method: 'PUT',
               headers: {

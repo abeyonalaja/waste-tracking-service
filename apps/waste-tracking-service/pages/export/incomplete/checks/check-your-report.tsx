@@ -86,7 +86,7 @@ const CheckYourReport = () => {
   useEffect(() => {
     dispatchCheckYourReportPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -150,7 +150,7 @@ const CheckYourReport = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/submission-confirmation`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/submission-confirmation`,
         {
           method: 'PUT',
           headers: {

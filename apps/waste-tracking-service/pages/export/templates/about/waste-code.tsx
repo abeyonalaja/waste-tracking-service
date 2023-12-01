@@ -49,14 +49,14 @@ const WasteCode = () => {
   const [annexIIIACode, setAnnexIIIACode] = useState<singleCodeType>();
   const [annexIIIBCode, setAnnexIIIBCode] = useState<singleCodeType>();
 
-  const url = `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`;
+  const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`;
   const currentLanguage = i18n.language;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await fetch(
-          `${process.env.NX_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -121,7 +121,7 @@ const WasteCode = () => {
       if (templateId !== null) {
         try {
           await fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`
           )
             .then((response) => {
               if (response.ok) return response.json();

@@ -148,7 +148,7 @@ const TransitCountries = () => {
     dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/transit-countries`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -201,7 +201,7 @@ const TransitCountries = () => {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
             {
               method: 'PUT',
               headers: {
@@ -331,7 +331,7 @@ const TransitCountries = () => {
     });
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
         {
           method: 'PUT',
           headers: {

@@ -58,7 +58,7 @@ const ExporterPostcode = () => {
         setErrors(null);
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
             {
               method: 'GET',
               headers: {
@@ -124,7 +124,7 @@ const ExporterPostcode = () => {
         };
         try {
           await fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
               headers: {

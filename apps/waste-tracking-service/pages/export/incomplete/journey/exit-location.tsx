@@ -82,7 +82,9 @@ const ExitLocation = () => {
   useEffect(() => {
     dispatchPointOfExitPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exit-location`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`
+      )
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -142,7 +144,7 @@ const ExitLocation = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/exit-location`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`,
             {
               method: 'PUT',
               headers: {

@@ -87,7 +87,7 @@ const ViewRecord = () => {
   useEffect(() => {
     dispatchViewRecordPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {

@@ -207,7 +207,7 @@ const RecoveryFacilityDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -236,7 +236,7 @@ const RecoveryFacilityDetails = () => {
     dispatchRecoveryPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -328,7 +328,7 @@ const RecoveryFacilityDetails = () => {
   const createRecoveryFacility = () => {
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
         {
           method: 'POST',
           headers: {
@@ -448,7 +448,7 @@ const RecoveryFacilityDetails = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${recoveryPage.facilityData.id}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${recoveryPage.facilityData.id}`,
             {
               method: 'PUT',
               headers: {
@@ -674,7 +674,7 @@ const RecoveryFacilityDetails = () => {
           dispatchRecoveryPage({ type: 'DATA_DELETE_INIT' });
           try {
             fetch(
-              `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${recoveryPage.facilityData.id}`,
+              `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${recoveryPage.facilityData.id}`,
               {
                 method: 'DELETE',
                 headers: {

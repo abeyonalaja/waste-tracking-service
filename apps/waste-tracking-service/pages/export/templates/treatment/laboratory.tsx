@@ -186,7 +186,7 @@ const Laboratory = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -206,7 +206,7 @@ const Laboratory = () => {
     dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -343,7 +343,7 @@ const Laboratory = () => {
         dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${laboratoryPage.facilityData.id}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${laboratoryPage.facilityData.id}`,
             {
               method: 'PUT',
               headers: {
@@ -433,7 +433,7 @@ const Laboratory = () => {
   const createLaboratoryDetails = () => {
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
         {
           method: 'POST',
           headers: {

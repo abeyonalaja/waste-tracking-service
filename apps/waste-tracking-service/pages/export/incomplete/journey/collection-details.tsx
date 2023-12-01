@@ -259,7 +259,7 @@ const CollectionDetails = () => {
   useEffect(() => {
     dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -308,7 +308,7 @@ const CollectionDetails = () => {
         dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
             {
               method: 'GET',
               headers: {
@@ -377,7 +377,7 @@ const CollectionDetails = () => {
         };
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
               headers: {
@@ -452,7 +452,7 @@ const CollectionDetails = () => {
         };
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
               headers: {
@@ -506,7 +506,7 @@ const CollectionDetails = () => {
         };
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
               headers: {

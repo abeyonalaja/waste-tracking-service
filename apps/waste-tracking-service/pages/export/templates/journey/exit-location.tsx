@@ -83,7 +83,7 @@ const ExitLocation = () => {
     dispatchPointOfExitPage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/exit-location`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exit-location`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -140,7 +140,7 @@ const ExitLocation = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/exit-location`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exit-location`,
             {
               method: 'PUT',
               headers: {

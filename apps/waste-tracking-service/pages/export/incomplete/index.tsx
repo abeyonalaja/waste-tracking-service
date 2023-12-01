@@ -157,7 +157,7 @@ const IncompleteAnnex7 = () => {
     if (router.isReady) {
       dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=InProgress&order=desc`;
+      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=InProgress&order=desc`;
       if (token) {
         url = `${url}&token=${token}`;
       }
@@ -214,7 +214,7 @@ const IncompleteAnnex7 = () => {
         dispatchIncompleteAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${item.id}?action=DELETE`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${item.id}?action=DELETE`,
             {
               method: 'DELETE',
               headers: {

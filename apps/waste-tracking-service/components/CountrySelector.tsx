@@ -41,7 +41,7 @@ export const CountrySelector = ({
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/wts-info/countries?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/countries?language=${currentLanguage}`
       )
         .then((response) => {
           if (response.ok) return response.json();

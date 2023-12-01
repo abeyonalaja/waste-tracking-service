@@ -194,7 +194,9 @@ const TemplateTasklist = () => {
   useEffect(() => {
     dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/templates/${templateId}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
+      )
         .then((response) => {
           if (response.ok) return response.json();
           else {

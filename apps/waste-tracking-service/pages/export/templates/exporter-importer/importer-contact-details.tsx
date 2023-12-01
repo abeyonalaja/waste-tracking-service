@@ -51,7 +51,7 @@ const ImporterContactDetails = () => {
     setIsError(false);
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/importer-detail`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -114,7 +114,7 @@ const ImporterContactDetails = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
             {
               method: 'PUT',
               headers: {

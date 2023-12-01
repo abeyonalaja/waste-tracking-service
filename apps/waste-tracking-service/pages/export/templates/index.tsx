@@ -142,7 +142,7 @@ const ManageTemplates = () => {
   ]);
 
   useEffect(() => {
-    let url = `${process.env.NX_API_GATEWAY_URL}/templates?order=desc`;
+    let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates?order=desc`;
     if (token) {
       url = `${url}&token=${token}`;
     }
@@ -205,7 +205,7 @@ const ManageTemplates = () => {
         if (confirmRemove === 'Yes') {
           try {
             fetch(
-              `${process.env.NX_API_GATEWAY_URL}/templates/${itemToDelete.id}`,
+              `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${itemToDelete.id}`,
               {
                 method: 'DELETE',
                 headers: {

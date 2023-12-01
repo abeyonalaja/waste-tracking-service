@@ -156,7 +156,7 @@ const UpdateAnnex7 = () => {
     if (router.isReady) {
       dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates&order=desc`;
+      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates&order=desc`;
       if (token) {
         url = `${url}&token=${token}`;
       }
@@ -221,7 +221,7 @@ const UpdateAnnex7 = () => {
 
       try {
         fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${item.id}/cancel`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${item.id}/cancel`,
           {
             method: 'PUT',
             headers: {

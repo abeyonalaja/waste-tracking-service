@@ -187,7 +187,7 @@ const InterimSiteDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -208,7 +208,7 @@ const InterimSiteDetails = () => {
     dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -353,7 +353,7 @@ const InterimSiteDetails = () => {
         dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
             {
               method: 'PUT',
               headers: {
@@ -443,7 +443,7 @@ const InterimSiteDetails = () => {
   const createInterimSite = () => {
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
         {
           method: 'POST',
           headers: {

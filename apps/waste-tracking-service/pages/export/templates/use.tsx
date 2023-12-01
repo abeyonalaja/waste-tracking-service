@@ -115,7 +115,9 @@ const TemplateUse = () => {
   useEffect(() => {
     dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/templates/${templateId}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
+      )
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -142,7 +144,7 @@ const TemplateUse = () => {
         dispatchTemplatePage({ type: 'ERRORS_UPDATE', payload: newErrors });
       } else {
         dispatchTemplatePage({ type: 'ERRORS_UPDATE', payload: null });
-        const url = `${process.env.NX_API_GATEWAY_URL}/submissions/copy-template/${templateId}`;
+        const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/copy-template/${templateId}`;
         const body = JSON.stringify({ reference });
         try {
           fetch(url, {

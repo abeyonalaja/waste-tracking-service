@@ -96,7 +96,7 @@ const Index = () => {
     if (router.isReady) {
       dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-      let url = `${process.env.NX_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
+      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
       if (token) {
         url = `${url}&token=${token}`;
       }

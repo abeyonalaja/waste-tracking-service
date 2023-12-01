@@ -224,7 +224,7 @@ const WasteCarriers = () => {
       dispatchCarrierPage({ type: 'DATA_FETCH_INIT' });
       if (id !== null) {
         await fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/carriers`
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -374,7 +374,7 @@ const WasteCarriers = () => {
         dispatchCarrierPage({ type: 'DATA_FETCH_INIT' });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierPage.carrierData.id}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierPage.carrierData.id}`,
             {
               method: 'PUT',
               headers: {
@@ -505,7 +505,7 @@ const WasteCarriers = () => {
           dispatchCarrierPage({ type: 'DATA_DELETE_INIT' });
           try {
             fetch(
-              `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierPage.carrierData.id}`,
+              `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/carriers/${carrierPage.carrierData.id}`,
               {
                 method: 'DELETE',
                 headers: {
@@ -584,7 +584,7 @@ const WasteCarriers = () => {
   const createCarrierRecord = async () => {
     try {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/carriers`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/carriers`,
         {
           method: 'POST',
           headers: {

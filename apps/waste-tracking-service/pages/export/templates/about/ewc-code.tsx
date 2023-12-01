@@ -227,7 +227,7 @@ const EwcCodes = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NX_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -247,7 +247,7 @@ const EwcCodes = () => {
     dispatchEwcCodePage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -298,7 +298,7 @@ const EwcCodes = () => {
 
           try {
             fetch(
-              `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
+              `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
               {
                 method: 'PUT',
                 headers: {
@@ -456,7 +456,7 @@ const EwcCodes = () => {
     }
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
         {
           method: 'PUT',
           headers: {

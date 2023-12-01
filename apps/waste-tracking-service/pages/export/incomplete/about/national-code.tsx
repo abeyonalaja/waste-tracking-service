@@ -78,7 +78,7 @@ const NationalCode = () => {
     dispatchNationalCodePage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -139,7 +139,7 @@ const NationalCode = () => {
         setErrors(null);
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             {
               method: 'PUT',
               headers: {

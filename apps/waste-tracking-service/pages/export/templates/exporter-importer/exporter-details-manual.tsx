@@ -52,7 +52,7 @@ const ExporterManual = () => {
     setIsError(false);
     if (templateId !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -105,7 +105,7 @@ const ExporterManual = () => {
       };
       try {
         fetch(
-          `${process.env.NX_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
           {
             method: 'PUT',
             headers: {

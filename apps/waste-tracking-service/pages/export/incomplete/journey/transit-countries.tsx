@@ -148,7 +148,7 @@ const TransitCountries = () => {
     dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -197,7 +197,7 @@ const TransitCountries = () => {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
             {
               method: 'PUT',
               headers: {
@@ -339,7 +339,7 @@ const TransitCountries = () => {
     });
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
         {
           method: 'PUT',
           headers: {
@@ -558,6 +558,9 @@ const TransitCountries = () => {
                                     setAdditionalCountry(option)
                                   }
                                   confirmOnBlur={false}
+                                  dropdownArrow={() => {
+                                    return;
+                                  }}
                                 />
                               </GovUK.FormGroup>
                             </ConditionalRadioWrap>

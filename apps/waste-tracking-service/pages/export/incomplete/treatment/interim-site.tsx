@@ -106,7 +106,7 @@ const InterimSiteDetails = () => {
     dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
     if (id !== null) {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -185,7 +185,7 @@ const InterimSiteDetails = () => {
   const removeExistingInterimSite = (returnToDraft) => {
     try {
       fetch(
-        `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${existingInterimSite}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${existingInterimSite}`,
         {
           method: 'DELETE',
           headers: {

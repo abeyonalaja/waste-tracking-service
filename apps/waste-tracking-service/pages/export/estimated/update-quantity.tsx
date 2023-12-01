@@ -70,7 +70,7 @@ const QuantityEntry = () => {
     setIsLoading(true);
     setIsError(false);
     if (id !== null) {
-      fetch(`${process.env.NX_API_GATEWAY_URL}/submissions/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -146,7 +146,7 @@ const QuantityEntry = () => {
 
         try {
           fetch(
-            `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
             {
               method: 'PUT',
               headers: {

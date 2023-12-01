@@ -22,7 +22,7 @@ export const CookieBanner = () => {
   const { t } = useTranslation();
   const [isBannerVisible, setIsBannerVisible] = useState<boolean>(true);
   const [analyticsConsent, setAnalyticsConsent] = useState<boolean>(null);
-  const cookieName = process.env.NX_COOKIE_CONSENT_NAME;
+  const cookieName = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME;
   const [cookies, setCookie] = useCookies([cookieName]);
 
   useEffect(() => {

@@ -52,14 +52,14 @@ const WasteCode = () => {
   const [annexIIIBCode, setAnnexIIIBCode] = useState<singleCodeType>();
   const [isBulkOrSmall, setIsBulkOrSmall] = useState<string>();
 
-  const url = `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`;
+  const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`;
   const currentLanguage = i18n.language;
 
   useEffect(() => {
     const fetchData = async () => {
       if (data !== undefined) {
         await fetch(
-          `${process.env.NX_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -132,7 +132,7 @@ const WasteCode = () => {
     if (id !== null) {
       try {
         fetch(
-          `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-description`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -216,7 +216,7 @@ const WasteCode = () => {
             try {
               const data: PutWasteDescriptionRequest = { status: 'NotStarted' };
               fetch(
-                `${process.env.NX_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
+                `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
                 {
                   method: 'PUT',
                   headers: {
