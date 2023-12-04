@@ -9,10 +9,11 @@ export const getServerSideProps = async () => {
   const cookieConsent = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME || null;
   const googleAnalytics =
     process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT || null;
-  return { props: { cookieConsent, googleAnalytics } };
+  const dcidUrl = process.env.DCID_REDIRECT || null;
+  return { props: { cookieConsent, googleAnalytics, dcidUrl } };
 };
 
-const EnvTest = ({ cookieConsent, googleAnalytics }) => {
+const EnvTest = ({ cookieConsent, googleAnalytics, dcidUrl }) => {
   return (
     <>
       <Head>
@@ -41,6 +42,9 @@ const EnvTest = ({ cookieConsent, googleAnalytics }) => {
           <GovUK.ListItem>
             NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT from a server side page:{' '}
             {googleAnalytics}
+          </GovUK.ListItem>
+          <GovUK.ListItem>
+            DCID_REDIRECT from a server side page: <strong>{dcidUrl}</strong>
           </GovUK.ListItem>
         </GovUK.OrderedList>
         <TestEnvComponent />
