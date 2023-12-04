@@ -21,6 +21,12 @@ import {
   ButtonGroup,
 } from 'components';
 import { isNotEmpty, validateNationalCode } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const nationalCodeReducer = (state, action) => {
   switch (action.type) {
@@ -53,7 +59,7 @@ const nationalCodeReducer = (state, action) => {
   }
 };
 
-const NationalCode = () => {
+const NationalCode = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -75,26 +81,30 @@ const NationalCode = () => {
   }>({});
 
   useEffect(() => {
-    dispatchNationalCodePage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchNationalCodePage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchNationalCodePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+    const fetchData = async () => {
+      dispatchNationalCodePage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchNationalCodePage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchNationalCodePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleInputChange = (input) => {
@@ -113,12 +123,14 @@ const NationalCode = () => {
     });
   };
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
+
       const nationalCode = nationalCodePage.data.nationalCode?.value;
       const hasNationalCode = nationalCodePage.data.nationalCode?.provided;
 
@@ -138,13 +150,11 @@ const NationalCode = () => {
       } else {
         setErrors(null);
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(nationalCodePage.data),
             }
           )
@@ -166,8 +176,6 @@ const NationalCode = () => {
           console.error(e);
         }
       }
-
-      e.preventDefault();
     },
     [id, nationalCodePage.data, router]
   );

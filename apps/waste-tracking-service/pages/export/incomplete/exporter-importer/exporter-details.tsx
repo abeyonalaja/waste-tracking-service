@@ -23,6 +23,12 @@ import {
   validateEmail,
   validatePhone,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -39,7 +45,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterDetails = () => {
+const ExporterDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -69,38 +75,45 @@ const ExporterDetails = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setOrganisationName(data.exporterContactDetails?.organisationName);
-            setFullName(data.exporterContactDetails?.fullName);
-            setEmail(data.exporterContactDetails?.emailAddress);
-            setPhone(data.exporterContactDetails?.phoneNumber);
-            setFax(data.exporterContactDetails?.faxNumber);
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setOrganisationName(
+                data.exporterContactDetails?.organisationName
+              );
+              setFullName(data.exporterContactDetails?.fullName);
+              setEmail(data.exporterContactDetails?.emailAddress);
+              setPhone(data.exporterContactDetails?.phoneNumber);
+              setFax(data.exporterContactDetails?.faxNumber);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         organisationName: validateOrganisationName(organisationName),
         fullName: validateFullName(fullName),
@@ -123,13 +136,11 @@ const ExporterDetails = () => {
           },
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -151,7 +162,6 @@ const ExporterDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [organisationName, fullName, email, phone, fax]
   );

@@ -23,12 +23,6 @@ export interface PluginOptions {
   logger: Logger;
 }
 
-/**
- * This is a placeholder for an account-ID that will be drawn from an identity
- * token; we are currently simulating a single account.
- */
-export const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
-
 const plugin: Plugin<PluginOptions> = {
   name: 'templates',
   version: '1.0.0',
@@ -36,7 +30,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/',
-      handler: async function ({ query }) {
+      handler: async function ({ query }, h) {
         let order = query['order'] as string | undefined;
         if (!order) {
           order = 'ASC';
@@ -58,7 +52,7 @@ const plugin: Plugin<PluginOptions> = {
         const token = query['token'] as string | undefined;
         try {
           const value = await backend.getTemplates(
-            accountId,
+            h.request.auth.credentials.accountId as string,
             { order },
             pageLimit,
             token
@@ -78,11 +72,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getTemplate({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetTemplateResponse;
         } catch (err) {
@@ -109,7 +103,7 @@ const plugin: Plugin<PluginOptions> = {
           return h
             .response(
               (await backend.createTemplate(
-                accountId,
+                h.request.auth.credentials.accountId as string,
                 templateDetails
               )) as dto.CreateTemplateResponse
             )
@@ -140,7 +134,7 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.createTemplateFromSubmission(
                 params.id,
-                accountId,
+                h.request.auth.credentials.accountId as string,
                 templateDetails
               )) as dto.CreateTemplateResponse
             )
@@ -171,7 +165,7 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.createTemplateFromTemplate(
                 params.id,
-                accountId,
+                h.request.auth.credentials.accountId as string,
                 templateDetails
               )) as dto.CreateTemplateResponse
             )
@@ -202,7 +196,7 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.updateTemplate(
                 params.id,
-                accountId,
+                h.request.auth.credentials.accountId as string,
                 templateDetails
               )) as dto.CreateTemplateResponse
             )
@@ -227,7 +221,7 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.deleteTemplate({
                 id: params.id,
-                accountId,
+                accountId: h.request.auth.credentials.accountId as string,
               })) as undefined
             )
             .code(204);
@@ -245,11 +239,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/waste-description',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getWasteDescription({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetWasteDescriptionResponse;
         } catch (err) {
@@ -266,7 +260,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/waste-description',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validatePutWasteDescriptionRequest(payload)) {
           return Boom.badRequest();
         }
@@ -274,7 +268,10 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as DraftWasteDescription;
         try {
           await backend.setWasteDescription(
-            { id: params.id, accountId },
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
             request
           );
           return request as dto.PutWasteDescriptionResponse;
@@ -292,11 +289,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/exporter-detail',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getExporterDetail({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetExporterDetailResponse;
         } catch (err) {
@@ -313,7 +310,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/exporter-detail',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validatePutExporterDetailRequest(payload)) {
           return Boom.badRequest();
         }
@@ -321,7 +318,10 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.PutExporterDetailRequest;
         try {
           await backend.setExporterDetail(
-            { id: params.id, accountId },
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
             request
           );
           return request as dto.PutExporterDetailResponse;
@@ -339,11 +339,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/importer-detail',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getImporterDetail({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetImporterDetailResponse;
         } catch (err) {
@@ -360,7 +360,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/importer-detail',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validatePutImporterDetailRequest(payload)) {
           return Boom.badRequest();
         }
@@ -368,7 +368,10 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.PutImporterDetailRequest;
         try {
           await backend.setImporterDetail(
-            { id: params.id, accountId },
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
             request
           );
           return request as dto.PutImporterDetailResponse;
@@ -386,11 +389,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/carriers',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.listCarriers({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.ListCarriersResponse;
         } catch (err) {
@@ -419,7 +422,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.createCarriers(
                 {
                   id: params.id,
-                  accountId,
+                  accountId: h.request.auth.credentials.accountId as string,
                 },
                 request
               )) as dto.CreateCarriersResponse
@@ -439,12 +442,12 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/carriers/{carrierId}',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getCarriers(
             {
               id: params.id,
-              accountId,
+              accountId: h.request.auth.credentials.accountId as string,
             },
             params.carrierId
           );
@@ -463,7 +466,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/carriers/{carrierId}',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validateSetCarriersRequest(payload)) {
           return Boom.badRequest();
         }
@@ -480,7 +483,7 @@ const plugin: Plugin<PluginOptions> = {
           await backend.setCarriers(
             {
               id: params.id,
-              accountId,
+              accountId: h.request.auth.credentials.accountId as string,
             },
             params.carrierId,
             request
@@ -507,7 +510,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.deleteCarriers(
                 {
                   id: params.id,
-                  accountId,
+                  accountId: h.request.auth.credentials.accountId as string,
                 },
                 params.carrierId
               )) as undefined
@@ -527,11 +530,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/collection-detail',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getCollectionDetail({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetCollectionDetailResponse;
         } catch (err) {
@@ -548,7 +551,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/collection-detail',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validateSetCollectionDetailRequest(payload)) {
           return Boom.badRequest();
         }
@@ -556,7 +559,10 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.SetCollectionDetailRequest;
         try {
           await backend.setCollectionDetail(
-            { id: params.id, accountId },
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
             request
           );
           return request as dto.SetCollectionDetailResponse;
@@ -574,11 +580,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/exit-location',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getExitLocation({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetExitLocationResponse;
         } catch (err) {
@@ -595,14 +601,20 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/exit-location',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validatePutExitLocationRequest(payload)) {
           return Boom.badRequest();
         }
 
         const request = payload as dto.PutExitLocationRequest;
         try {
-          await backend.setExitLocation({ id: params.id, accountId }, request);
+          await backend.setExitLocation(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request
+          );
           return request as dto.PutExitLocationResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
@@ -618,11 +630,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/transit-countries',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getTransitCountries({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetTransitCountriesResponse;
         } catch (err) {
@@ -639,7 +651,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/transit-countries',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validatePutTransitCountriesRequest(payload)) {
           return Boom.badRequest();
         }
@@ -647,7 +659,10 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.PutTransitCountriesRequest;
         try {
           await backend.setTransitCountries(
-            { id: params.id, accountId },
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
             request
           );
           return request as dto.PutTransitCountriesResponse;
@@ -665,11 +680,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/recovery-facility',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.listRecoveryFacilityDetail({
             id: params.id,
-            accountId,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.ListRecoveryFacilityDetailResponse;
         } catch (err) {
@@ -698,7 +713,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.createRecoveryFacilityDetail(
                 {
                   id: params.id,
-                  accountId,
+                  accountId: h.request.auth.credentials.accountId as string,
                 },
                 request
               )) as dto.CreateRecoveryFacilityDetailRequest
@@ -718,12 +733,12 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/recovery-facility/{rfdId}',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
           const value = await backend.getRecoveryFacilityDetail(
             {
               id: params.id,
-              accountId,
+              accountId: h.request.auth.credentials.accountId as string,
             },
             params.rfdId
           );
@@ -742,7 +757,7 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/recovery-facility/{rfdId}',
-      handler: async function ({ params, payload }) {
+      handler: async function ({ params, payload }, h) {
         if (!validateSetRecoveryFacilityDetailRequest(payload)) {
           return Boom.badRequest();
         }
@@ -759,7 +774,7 @@ const plugin: Plugin<PluginOptions> = {
           await backend.setRecoveryFacilityDetail(
             {
               id: params.id,
-              accountId,
+              accountId: h.request.auth.credentials.accountId as string,
             },
             params.rfdId,
             request
@@ -786,7 +801,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.deleteRecoveryFacilityDetail(
                 {
                   id: params.id,
-                  accountId,
+                  accountId: h.request.auth.credentials.accountId as string,
                 },
                 params.rfdId
               )) as undefined

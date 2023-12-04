@@ -44,14 +44,6 @@ parameters:
         aksName: 'PREWTSINFAKS1401'
         resourceGroupName: 'PREWTSINFRGP1401'
         manualDeployment: False
-      - name: 'PRD'
-        dependsOn:
-          - 'build'
-          - 'PRE'
-        serviceConnection: 'AZR-WTS-PRD1'
-        aksName: 'PRDWTSINFAKS1401'
-        resourceGroupName: 'PRDWTSINFRGP1401'
-        manualDeployment: False
 
 stages:
   - stage: build

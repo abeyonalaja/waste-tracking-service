@@ -2,7 +2,6 @@ import React, { useState, useCallback, FormEvent } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
 import {
   CompleteFooter,
@@ -17,8 +16,14 @@ import {
   validateTemplateName,
   validateTemplateDesc,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
-const TemplateCreate = () => {
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
+const TemplateCreate = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateName, setTemplateName] = useState<string>('');
@@ -29,7 +34,8 @@ const TemplateCreate = () => {
   }>({});
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         templateName: validateTemplateName(templateName),
         templateDesc: validateTemplateDesc(templateDesc),
@@ -46,11 +52,9 @@ const TemplateCreate = () => {
           },
         });
         try {
-          fetch(url, {
+          await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: body,
           })
             .then((response) => response.json())
@@ -71,7 +75,6 @@ const TemplateCreate = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [router, templateName, templateDesc]
   );

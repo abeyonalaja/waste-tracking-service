@@ -36,6 +36,12 @@ import {
 } from 'utils/validators';
 
 import i18n from 'i18next';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -137,7 +143,8 @@ type codeType = Array<{
   description: string;
 }>;
 
-const InterimSiteDetails = () => {
+const InterimSiteDetails = ({ apiConfig }: PageProps) => {
+  const apiConfig2: HeadersInit = apiConfig;
   const { t } = useTranslation();
   const router = useRouter();
   const [interimPage, dispatchInterimPage] = useReducer(
@@ -187,7 +194,8 @@ const InterimSiteDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`,
+        { headers: apiConfig }
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -205,62 +213,66 @@ const InterimSiteDetails = () => {
   }, [currentLanguage]);
 
   useEffect(() => {
-    dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchInterimPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchInterimPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.values !== undefined) {
-              const interimSite = data.values.filter(
-                (site) => site.recoveryFacilityType?.type === 'InterimSite'
-              );
-              const emptyRecords = data.values.filter(
-                (site) => site.addressDetails === undefined
-              );
+    const fetchData = async () => {
+      dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchInterimPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchInterimPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.values !== undefined) {
+                const interimSite = data.values.filter(
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                );
+                const emptyRecords = data.values.filter(
+                  (site) => site.addressDetails === undefined
+                );
 
-              if (interimSite.length > 0) {
-                const [site] = interimSite;
-                dispatchInterimPage({
-                  type: 'FACILITY_DATA_UPDATE',
-                  payload: site,
-                });
-                setAddressDetails(site.addressDetails);
-                setContactDetails(site.contactDetails);
-                setRecoveryFacilityType(site.recoveryFacilityType);
-                if (page !== undefined) {
+                if (interimSite.length > 0) {
+                  const [site] = interimSite;
                   dispatchInterimPage({
-                    type: 'SHOW_VIEW',
-                    payload: VIEWS[page],
+                    type: 'FACILITY_DATA_UPDATE',
+                    payload: site,
                   });
+                  setAddressDetails(site.addressDetails);
+                  setContactDetails(site.contactDetails);
+                  setRecoveryFacilityType(site.recoveryFacilityType);
+                  if (page !== undefined) {
+                    dispatchInterimPage({
+                      type: 'SHOW_VIEW',
+                      payload: VIEWS[page],
+                    });
+                  }
+                } else if (emptyRecords.length > 0) {
+                  const [emptyInterimSite] = emptyRecords;
+                  dispatchInterimPage({
+                    type: 'FACILITY_DATA_UPDATE',
+                    payload: emptyInterimSite,
+                  });
+                  setStartPage(VIEWS.ADDRESS_DETAILS);
+                } else {
+                  createInterimSite();
                 }
-              } else if (emptyRecords.length > 0) {
-                const [emptyInterimSite] = emptyRecords;
-                dispatchInterimPage({
-                  type: 'FACILITY_DATA_UPDATE',
-                  payload: emptyInterimSite,
-                });
-                setStartPage(VIEWS.ADDRESS_DETAILS);
               } else {
                 createInterimSite();
               }
-            } else {
-              createInterimSite();
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id, startPage]);
 
   const handleLinkSubmit = (e, form, formSubmit) => {
@@ -268,7 +280,8 @@ const InterimSiteDetails = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, form, returnToDraft = false) => {
+    async (e: FormEvent, form, returnToDraft = false) => {
+      e.preventDefault();
       let nextView;
       let newErrors;
       let body;
@@ -352,13 +365,11 @@ const InterimSiteDetails = () => {
         dispatchInterimPage({ type: 'ERRORS_UPDATE', payload: null });
         dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility/${interimPage.facilityData.id}`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -440,15 +451,13 @@ const InterimSiteDetails = () => {
     }));
   };
 
-  const createInterimSite = () => {
+  const createInterimSite = async () => {
     try {
-      fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
         }
       )
@@ -580,6 +589,7 @@ const InterimSiteDetails = () => {
                         value={addressDetails?.country || ''}
                         onChange={onCountryChange}
                         size={75}
+                        apiConfig={apiConfig}
                       />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">

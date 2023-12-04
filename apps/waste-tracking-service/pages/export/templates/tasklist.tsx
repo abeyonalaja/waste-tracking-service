@@ -19,6 +19,12 @@ import {
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { differenceInSeconds, parseISO } from 'date-fns';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 enum VIEWS {
   DEFAULT = 0,
@@ -171,7 +177,7 @@ const ListItem = styled(GovUK.ListItem)`
   margin-bottom: 0.8em !important;
 `;
 
-const TemplateTasklist = () => {
+const TemplateTasklist = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templatePage, dispatchTemplatePage] = useReducer(
@@ -192,32 +198,38 @@ const TemplateTasklist = () => {
   }, [router.isReady, router.query.templateId, router.query.context]);
 
   useEffect(() => {
-    dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchTemplatePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-          setShowBanner(
-            differenceInSeconds(
-              new Date(),
-              parseISO(data?.templateDetails.lastModified)
-            ) < 5
-          );
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchTemplatePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+            setShowBanner(
+              differenceInSeconds(
+                new Date(),
+                parseISO(data?.templateDetails.lastModified)
+              ) < 5
+            );
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const BreadCrumbs = () => {

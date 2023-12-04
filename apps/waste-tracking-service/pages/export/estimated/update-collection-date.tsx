@@ -16,8 +16,14 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { isNotEmpty, validateActualDate } from 'utils/validators';
 import { format, addBusinessDays } from 'date-fns';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
-const CollectionDate = () => {
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
+const CollectionDate = ({ apiConfig }: PageProps) => {
   interface Date {
     day: string;
     month: string;
@@ -43,32 +49,37 @@ const CollectionDate = () => {
   }, [router.isReady, router.query.id]);
 
   useEffect(() => {
-    setIsLoading(true);
-    setIsError(false);
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      if (id !== null) {
+        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
+          headers: apiConfig,
         })
-        .then((data) => {
-          if (data !== undefined) {
-            if (data.collectionDate.value.type === 'ActualDate') {
-              router.push({
-                pathname: `/export/estimated/update`,
-                query: { id },
-              });
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
             }
-            setData(data.collectionDate);
-            setTransactionId(data.submissionDeclaration.values.transactionId);
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              if (data.collectionDate.value.type === 'ActualDate') {
+                router.push({
+                  pathname: `/export/estimated/update`,
+                  query: { id },
+                });
+              }
+              setData(data.collectionDate);
+              setTransactionId(data.submissionDeclaration.values.transactionId);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const get3WorkingDaysFromToday = () => {
@@ -76,7 +87,8 @@ const CollectionDate = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         date: validateActualDate(collectionDate),
       };
@@ -98,13 +110,11 @@ const CollectionDate = () => {
         body.value.actualDate = collectionDate;
 
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -123,7 +133,6 @@ const CollectionDate = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [collectionDate]
   );

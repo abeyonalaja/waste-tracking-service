@@ -2,31 +2,28 @@ Feature: AS A waste practitioner
   I NEED to be able to manage my templates
   SO THAT I can amend the templates relevant and updated for my waste submissions
 
-  @ignore
+  @ignore @single
   Scenario: User navigates to Manage templates page and verifies there are no records
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Manage your Annex VII record templates" link
     Then Manage your templates page is displayed with no records
 
   @translation
   Scenario: User creates template from Manage Templates page and verifies that order of the records is correct
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Manage your Annex VII record templates" link
     Then the "Manage templates" page is displayed
-    And I verify that manage templates page is correctly translated
-    And I click the "Create a new Annex VII record template" link
+    When I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I verify that create new record template page is correctly translated
     Then I complete Create record template page
     And I click Manage templates link
     Then the "Manage templates" page is displayed
-    Then I verify that newly created template is on top of the table
+    And I verify that manage templates page is correctly translated
+    And I verify that newly created template is on top of the table
 
   Scenario: User cancel template creation and verify template is not present on the manage templates page
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I click Create template button
@@ -38,7 +35,6 @@ Feature: AS A waste practitioner
 
   Scenario: User tries to create template with name that already exist
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -53,7 +49,6 @@ Feature: AS A waste practitioner
 
   Scenario: User updates template name and verifies correct success message is displayed
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -66,7 +61,6 @@ Feature: AS A waste practitioner
 
   Scenario: User verifies that the old name and description are pre-populated and cancel the update
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -80,7 +74,6 @@ Feature: AS A waste practitioner
   @translation
   Scenario: User creates a template and makes a copy of it
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -99,7 +92,6 @@ Feature: AS A waste practitioner
 
   Scenario: User select No option on the delete template page
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -116,7 +108,6 @@ Feature: AS A waste practitioner
 
   Scenario: User select Yes option on the delete template page
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -136,7 +127,6 @@ Feature: AS A waste practitioner
 
   Scenario: User hits back button on Template task page after deleting a template
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -151,7 +141,6 @@ Feature: AS A waste practitioner
 
   Scenario: Error validation for invalid characters in Template name
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I enter template name containing invalid characters
@@ -159,7 +148,6 @@ Feature: AS A waste practitioner
 
   Scenario: User create template, modify Waste code and description section and verify all entered data is pre-populated
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -180,7 +168,6 @@ Feature: AS A waste practitioner
 
   Scenario: User create template, modify Importer and Exporter section and verify all entered data is pre-populated
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -211,7 +198,6 @@ Feature: AS A waste practitioner
     #need to be checked, banner does not appear when test running. Manually its working
   Scenario: User create template, modify Journey of a waste section and verify all entered data is pre-populated
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -227,7 +213,6 @@ Feature: AS A waste practitioner
 
   Scenario: User create template, modify Treatment of waste section for small waste and verify all entered data is pre-populated
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -251,7 +236,6 @@ Feature: AS A waste practitioner
 
   Scenario: User create template, modify Treatment of waste section for bulk waste and verify all entered data is pre-populated
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page
@@ -268,7 +252,6 @@ Feature: AS A waste practitioner
 
   Scenario: User cancel template update and verify task status is not changed
     Given I login to waste tracking portal
-    And I navigate to the overview page
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
     And I complete Create record template page

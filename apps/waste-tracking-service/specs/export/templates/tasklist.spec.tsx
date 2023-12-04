@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act, fireEvent } from 'jest-utils';
+import { render, screen, act } from 'jest-utils';
 import TemplateTasklist from 'pages/export/templates/tasklist';
 
 jest.mock('next/router', () => ({
@@ -7,6 +7,10 @@ jest.mock('next/router', () => ({
     isReady: true,
     query: {},
   })),
+}));
+
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
 global.fetch = jest.fn(() =>

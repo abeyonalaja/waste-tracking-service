@@ -18,6 +18,12 @@ import {
   Paragraph,
 } from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   DEFAULT: 1,
@@ -96,7 +102,7 @@ const templateReducer = (state: State, action: Action) => {
   }
 };
 
-const TemplateUse = () => {
+const TemplateUse = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templatePage, dispatchTemplatePage] = useReducer(
@@ -113,30 +119,37 @@ const TemplateUse = () => {
   }, [router.isReady, router.query.templateId]);
 
   useEffect(() => {
-    dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchTemplatePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchTemplatePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         reference: validateReference(reference),
       };
@@ -147,11 +160,9 @@ const TemplateUse = () => {
         const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/copy-template/${templateId}`;
         const body = JSON.stringify({ reference });
         try {
-          fetch(url, {
+          await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: body,
           })
             .then((response) => response.json())
@@ -166,7 +177,6 @@ const TemplateUse = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [templateId, reference]
   );

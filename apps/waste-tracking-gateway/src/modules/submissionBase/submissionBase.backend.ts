@@ -103,7 +103,7 @@ export abstract class InMemorySubmissionBaseBackend
     return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
   }
 
-  getSubmisssionMap(): Map<string, Submission> {
+  getSubmissionMap(): Map<string, Submission> {
     return this.submissions;
   }
 
@@ -323,8 +323,8 @@ export abstract class InMemorySubmissionBaseBackend
     return targetFacilities;
   }
 
-  getSubmission({ id }: SubmissionRef): Promise<Submission> {
-    const value = this.submissions.get(id);
+  getSubmission({ id, accountId }: SubmissionRef): Promise<Submission> {
+    const value = this.submissions.get(JSON.stringify({ id, accountId }));
     if (
       value === undefined ||
       value.submissionState.status === 'Cancelled' ||
@@ -336,8 +336,8 @@ export abstract class InMemorySubmissionBaseBackend
     return Promise.resolve(value);
   }
 
-  getTemplate({ id }: TemplateRef): Promise<Template> {
-    const template = this.templates.get(id);
+  getTemplate({ id, accountId }: TemplateRef): Promise<Template> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }

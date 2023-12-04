@@ -31,7 +31,13 @@ import {
   validatePhone,
 } from 'utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 import i18n from 'i18next';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -136,7 +142,7 @@ type codeType = {
   }>;
 };
 
-const Laboratory = () => {
+const Laboratory = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [laboratoryPage, dispatchLaboratoryPage] = useReducer(
@@ -203,62 +209,66 @@ const Laboratory = () => {
   }, [currentLanguage]);
 
   useEffect(() => {
-    dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchLaboratoryPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchLaboratoryPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.values !== undefined) {
-              const labSite = data.values.filter(
-                (site) => site.recoveryFacilityType?.type === 'Laboratory'
-              );
-              const emptyRecords = data.values.filter(
-                (site) => site.addressDetails === undefined
-              );
+    const fetchData = async () => {
+      dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchLaboratoryPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchLaboratoryPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.values !== undefined) {
+                const labSite = data.values.filter(
+                  (site) => site.recoveryFacilityType?.type === 'Laboratory'
+                );
+                const emptyRecords = data.values.filter(
+                  (site) => site.addressDetails === undefined
+                );
 
-              if (labSite.length > 0) {
-                const [site] = labSite;
-                dispatchLaboratoryPage({
-                  type: 'FACILITY_DATA_UPDATE',
-                  payload: site,
-                });
-                setAddressDetails(site.addressDetails);
-                setContactDetails(site.contactDetails);
-                setRecoveryFacilityType(site.recoveryFacilityType);
-                if (page !== undefined) {
+                if (labSite.length > 0) {
+                  const [site] = labSite;
                   dispatchLaboratoryPage({
-                    type: 'SHOW_VIEW',
-                    payload: VIEWS[page],
+                    type: 'FACILITY_DATA_UPDATE',
+                    payload: site,
                   });
+                  setAddressDetails(site.addressDetails);
+                  setContactDetails(site.contactDetails);
+                  setRecoveryFacilityType(site.recoveryFacilityType);
+                  if (page !== undefined) {
+                    dispatchLaboratoryPage({
+                      type: 'SHOW_VIEW',
+                      payload: VIEWS[page],
+                    });
+                  }
+                } else if (emptyRecords.length > 0) {
+                  const [emptyLabSite] = emptyRecords;
+                  dispatchLaboratoryPage({
+                    type: 'FACILITY_DATA_UPDATE',
+                    payload: emptyLabSite,
+                  });
+                  setStartPage(VIEWS.ADDRESS_DETAILS);
+                } else {
+                  createLaboratoryDetails();
                 }
-              } else if (emptyRecords.length > 0) {
-                const [emptyLabSite] = emptyRecords;
-                dispatchLaboratoryPage({
-                  type: 'FACILITY_DATA_UPDATE',
-                  payload: emptyLabSite,
-                });
-                setStartPage(VIEWS.ADDRESS_DETAILS);
               } else {
                 createLaboratoryDetails();
               }
-            } else {
-              createLaboratoryDetails();
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId, startPage]);
 
   const getStatus = () => {
@@ -281,7 +291,8 @@ const Laboratory = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, form, returnToDraft = false) => {
+    async (e: FormEvent, form, returnToDraft = false) => {
+      e.preventDefault();
       let nextView;
       let newErrors;
       let body;
@@ -342,13 +353,11 @@ const Laboratory = () => {
         dispatchLaboratoryPage({ type: 'ERRORS_UPDATE', payload: null });
         dispatchLaboratoryPage({ type: 'DATA_FETCH_INIT' });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${laboratoryPage.facilityData.id}`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -402,7 +411,6 @@ const Laboratory = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [laboratoryPage.data, addressDetails, contactDetails, recoveryFacilityType]
   );
@@ -430,15 +438,13 @@ const Laboratory = () => {
     }));
   };
 
-  const createLaboratoryDetails = () => {
+  const createLaboratoryDetails = async () => {
     try {
-      fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
         }
       )
@@ -588,6 +594,7 @@ const Laboratory = () => {
                         onChange={onCountryChange}
                         error={laboratoryPage.errors?.country}
                         size={75}
+                        apiConfig={apiConfig}
                       />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">

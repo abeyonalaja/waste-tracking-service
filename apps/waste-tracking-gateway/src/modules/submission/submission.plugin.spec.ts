@@ -25,7 +25,7 @@ import {
 } from './submission.backend';
 import submissionPlugin from './submission.plugin';
 import Boom from '@hapi/boom';
-import { SubmissionBaseBackend } from '../submissionBase/submissionBase.backend';
+import AuthBearer from 'hapi-auth-bearer-token';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -34,6 +34,7 @@ jest.mock('winston', () => ({
 }));
 
 const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
+const token = 'my-token';
 
 const mockBackend = {
   createSubmission:
@@ -164,6 +165,31 @@ beforeAll(async () => {
     },
   });
 
+  await app.register(Object.create(AuthBearer));
+
+  app.auth.strategy('dcid-auth', 'bearer-access-token', {
+    allowQueryToken: true,
+    validate: async (request: any, token: string, h: any) => {
+      try {
+        const isValid = true;
+        const credentials = {
+          accountId: accountId,
+        };
+        const artifacts = {
+          contactId: accountId,
+          organisationId: '',
+          accountIdReference: accountId,
+        };
+
+        return { isValid, credentials, artifacts };
+      } catch (err) {
+        return Boom.unauthorized();
+      }
+    },
+  });
+
+  app.auth.default('dcid-auth');
+
   await app.start();
 });
 
@@ -209,6 +235,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'POST',
         url: '/submissions',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       const response = await app.inject(options);
@@ -217,10 +246,24 @@ describe('SubmissionPlugin', () => {
   });
 
   describe('GET /submissions', () => {
+    it('Responds 401 if no auth is provided', async () => {
+      const options = {
+        method: 'GET',
+        url: '/submissions',
+      };
+
+      mockBackend.getSubmissions.mockRejectedValue(Boom.unauthorized());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(401);
+    });
+
     it('Responds 404 if no submissions exist', async () => {
       const options = {
         method: 'GET',
-        url: '/submission',
+        url: '/submissions',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getSubmissions.mockRejectedValue(Boom.notFound());
@@ -234,6 +277,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'GET',
         url: `/submissions/${faker.datatype.uuid()}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getSubmission.mockRejectedValue(Boom.notFound());
@@ -247,6 +293,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'PUT',
         url: `/submissions/${faker.datatype.uuid()}/cancel`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       const response = await app.inject(options);
@@ -259,6 +308,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'GET',
         url: `/submissions/${faker.datatype.uuid()}/reference`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getCustomerReference.mockRejectedValue(Boom.notFound());
@@ -275,6 +327,9 @@ describe('SubmissionPlugin', () => {
         method: 'PUT',
         url: `/submissions/${id}/reference`,
         payload: JSON.stringify(null),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       expect(response.statusCode).toBe(400);
@@ -288,6 +343,9 @@ describe('SubmissionPlugin', () => {
         method: 'PUT',
         url: `/submissions/${id}/reference`,
         payload: JSON.stringify(reference),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       expect(response.result).toEqual(reference);
@@ -305,6 +363,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'GET',
         url: `/submissions/${faker.datatype.uuid()}/carriers/${faker.datatype.uuid()}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getCarriers.mockRejectedValue(Boom.notFound());
@@ -329,6 +390,9 @@ describe('SubmissionPlugin', () => {
             },
           ],
         }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getCarriers.mockRejectedValue(Boom.badRequest());
@@ -342,6 +406,9 @@ describe('SubmissionPlugin', () => {
       const options = {
         method: 'GET',
         url: `/submissions/${faker.datatype.uuid()}/recovery-facility/${faker.datatype.uuid()}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getRecoveryFacilityDetail.mockRejectedValue(Boom.notFound());
@@ -366,6 +433,9 @@ describe('SubmissionPlugin', () => {
             },
           ],
         }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getRecoveryFacilityDetail.mockRejectedValue(
@@ -387,6 +457,9 @@ describe('SubmissionPlugin', () => {
           status: 'NotStarted',
           confirmation: true,
         }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getSubmissionConfirmation.mockRejectedValue(
@@ -408,6 +481,9 @@ describe('SubmissionPlugin', () => {
           status: 'NotStarted',
           declaration: true,
         }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getSubmissionDeclaration.mockRejectedValue(Boom.badRequest());

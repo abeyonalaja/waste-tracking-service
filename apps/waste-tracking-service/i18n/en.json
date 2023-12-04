@@ -30,6 +30,8 @@
   "footer.cookies": "Cookies",
   "footer.privacy": "Privacy",
   "footer.metaCustom": "Built by the Department for Environment Food & Rural Affairs",
+  "auth.title": "You need to sign in to access this page",
+  "auth.button": "Sign in or create an account",
   "yourReference.breadcrumb": "Your reference",
   "yourReference.title": "What is your unique reference for this Annex VII record?",
   "yourReference.intro": "Your unique reference can be anything that helps you to identify your shipment. For example, it could match a reference on a system you already use to identify shipments. You can use it to find this record in the future.",

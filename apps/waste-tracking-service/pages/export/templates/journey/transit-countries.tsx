@@ -31,6 +31,12 @@ import {
 import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
 import Autocomplete from 'accessible-autocomplete/react';
 import { countriesData } from 'utils/countriesData';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -123,7 +129,7 @@ const wasteTransitReducer = (state: State, action: Action) => {
   }
 };
 
-const TransitCountries = () => {
+const TransitCountries = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [wasteTransitPage, dispatchWasteTransitPage] = useReducer(
@@ -145,38 +151,42 @@ const TransitCountries = () => {
   }, [router.isReady, router.query.templateId]);
 
   useEffect(() => {
-    dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchWasteTransitPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchWasteTransitPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.values === undefined || data.values.length === 0) {
-              if (data.status !== 'NotStarted') {
+    const fetchData = async () => {
+      dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchWasteTransitPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchWasteTransitPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.values === undefined || data.values.length === 0) {
+                if (data.status !== 'NotStarted') {
+                  dispatchWasteTransitPage({
+                    type: 'PROVIDED_UPDATE',
+                    payload: 'No',
+                  });
+                }
                 dispatchWasteTransitPage({
-                  type: 'PROVIDED_UPDATE',
-                  payload: 'No',
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.ADD_FORM,
                 });
               }
-              dispatchWasteTransitPage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.ADD_FORM,
-              });
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handleCancelReturn = (e) => {
@@ -188,7 +198,8 @@ const TransitCountries = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const hasCountries = wasteTransitPage.provided;
       const country = wasteTransitPage.data.values;
       const newErrors = {
@@ -200,13 +211,11 @@ const TransitCountries = () => {
       } else {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(wasteTransitPage.data),
             }
           )
@@ -232,13 +241,13 @@ const TransitCountries = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [templateId, wasteTransitPage, router]
   );
 
   const handleSubmitAdditionalCountry = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         hasCountries: validateTransitCountries(additionalProvided),
         country: validateSingleTransitCountry(
@@ -258,16 +267,16 @@ const TransitCountries = () => {
         } else {
           const countries = wasteTransitPage.data.values;
           countries.push(additionalCountry);
-          updateCountryData(countries, returnToDraft);
+          await updateCountryData(countries);
         }
       }
-      e.preventDefault();
     },
     [additionalProvided, additionalCountry]
   );
 
   const handleConfirmRemove = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         confirmRemove: validateConfirmRemove(confirmRemove, 'country'),
       };
@@ -281,27 +290,22 @@ const TransitCountries = () => {
             payload: VIEWS.LIST,
           });
         };
-        if (confirmRemove === 'No' && !returnToDraft) {
+        if (confirmRemove === 'No') {
           callBack();
-        } else if (confirmRemove === 'No' && returnToDraft) {
-          router.push({
-            pathname: `/export/templates/tasklist`,
-            query: { templateId },
-          });
         } else {
           const countries = wasteTransitPage.data.values;
           countries.splice(countryToChangeRemove, 1);
-          updateCountryData(countries, returnToDraft, callBack);
+          await updateCountryData(countries, callBack);
         }
         setConfirmRemove(null);
       }
-      e.preventDefault();
     },
     [confirmRemove, countryToChangeRemove]
   );
 
   const handleEditSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         changedCountry: validateSingleTransitCountry('Yes', changeCountry),
       };
@@ -317,26 +321,23 @@ const TransitCountries = () => {
             payload: VIEWS.LIST,
           });
         };
-        updateCountryData(countries, returnToDraft, callBack);
+        await updateCountryData(countries, callBack);
       }
-      e.preventDefault();
     },
     [changeCountry, countryToChangeRemove]
   );
 
-  const updateCountryData = (countries, returnToDraft, callBack?) => {
+  const updateCountryData = async (countries, callBack?) => {
     dispatchWasteTransitPage({
       type: 'DATA_UPDATE',
       payload: { status: 'Complete', values: countries },
     });
     try {
-      fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify(wasteTransitPage.data),
         }
       )
@@ -352,22 +353,16 @@ const TransitCountries = () => {
             if (typeof callBack === 'function') {
               callBack();
             }
-            if (returnToDraft) {
-              router.push({
-                pathname: `/export/templates/tasklist`,
-                query: { templateId },
+
+            if (countries.length === 0) {
+              dispatchWasteTransitPage({
+                type: 'PROVIDED_UPDATE',
+                payload: null,
               });
-            } else {
-              if (countries.length === 0) {
-                dispatchWasteTransitPage({
-                  type: 'PROVIDED_UPDATE',
-                  payload: null,
-                });
-                dispatchWasteTransitPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS.ADD_FORM,
-                });
-              }
+              dispatchWasteTransitPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.ADD_FORM,
+              });
             }
           }
         });

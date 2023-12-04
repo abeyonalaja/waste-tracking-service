@@ -8,4 +8,6 @@ export default withAuth({
   },
 });
 
-export const config = { matcher: ['/exportREMOVE-THIS-AFTER-DCID/:path*'] };
+export const config = {
+  matcher: ['/export/:path*'],
+};

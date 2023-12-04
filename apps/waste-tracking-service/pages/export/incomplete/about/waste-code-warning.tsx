@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
 
 import {

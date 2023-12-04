@@ -182,8 +182,11 @@ describe(InMemoryTemplateBackend, () => {
       },
     } as Submission;
     submissionBackend
-      .getSubmisssionMap()
-      .set(mockSubmission.id, mockSubmission);
+      .getSubmissionMap()
+      .set(
+        JSON.stringify({ id: mockSubmission.id, accountId }),
+        mockSubmission
+      );
 
     const { id } = await subject.createTemplateFromSubmission(
       mockSubmission.id,

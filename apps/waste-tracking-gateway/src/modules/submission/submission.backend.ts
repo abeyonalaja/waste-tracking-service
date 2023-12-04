@@ -198,7 +198,7 @@ export class InMemorySubmissionBackend
   }
 
   createSubmission(
-    _: string,
+    accountId: string,
     reference: CustomerReference
   ): Promise<Submission> {
     if (reference.length > 20) {
@@ -232,7 +232,7 @@ export class InMemorySubmissionBackend
       },
     };
 
-    this.submissions.set(id, value);
+    this.submissions.set(JSON.stringify({ id, accountId }), value);
     return Promise.resolve(value);
   }
 
@@ -247,7 +247,7 @@ export class InMemorySubmissionBackend
       );
     }
 
-    const template = await this.getTemplate({ id } as TemplateRef);
+    const template = await this.getTemplate({ id, accountId } as TemplateRef);
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -283,27 +283,30 @@ export class InMemorySubmissionBackend
       },
     };
 
-    this.submissions.set(id, value as Submission);
+    this.submissions.set(
+      JSON.stringify({ id, accountId }),
+      value as Submission
+    );
     return Promise.resolve(value);
   }
 
-  deleteSubmission({ id }: SubmissionRef): Promise<void> {
-    const value = this.submissions.get(id);
+  deleteSubmission({ id, accountId }: SubmissionRef): Promise<void> {
+    const value = this.submissions.get(JSON.stringify({ id, accountId }));
     if (value === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
     value.submissionState = { status: 'Deleted', timestamp: new Date() };
 
-    this.submissions.set(id, value);
+    this.submissions.set(JSON.stringify({ id, accountId }), value);
     return Promise.resolve();
   }
 
   cancelSubmission(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     cancellationType: dto.SubmissionCancellationType
   ): Promise<void> {
-    const value = this.submissions.get(id);
+    const value = this.submissions.get(JSON.stringify({ id, accountId }));
     if (value === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -314,18 +317,24 @@ export class InMemorySubmissionBackend
       cancellationType: cancellationType,
     };
 
-    this.submissions.set(id, value);
+    this.submissions.set(JSON.stringify({ id, accountId }), value);
     return Promise.resolve();
   }
 
   getSubmissions(
-    _: string,
+    accountId: string,
     { order }: OrderRef,
     pageLimit = 15,
     state?: SubmissionState['status'][],
     token?: string
   ): Promise<SubmissionSummaryPage> {
-    const rawValues: Submission[] = [...this.submissions.values()];
+    const rawKeys: string[] = [...this.submissions.keys()].filter(
+      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
+    );
+    const rawValues: Submission[] = [];
+    rawKeys.forEach((ref) =>
+      rawValues.push(this.submissions.get(ref) as Submission)
+    );
     let values: ReadonlyArray<SubmissionSummary> = rawValues
       .map((s) => {
         return {
@@ -441,8 +450,11 @@ export class InMemorySubmissionBackend
     });
   }
 
-  getCustomerReference({ id }: SubmissionRef): Promise<CustomerReference> {
-    const submission = this.submissions.get(id);
+  getCustomerReference({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CustomerReference> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -451,10 +463,10 @@ export class InMemorySubmissionBackend
   }
 
   setCustomerReference(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     reference: CustomerReference
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -470,12 +482,15 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
     return Promise.resolve();
   }
 
-  getWasteDescription({ id }: SubmissionRef): Promise<WasteDescription> {
-    const submission = this.submissions.get(id);
+  getWasteDescription({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<WasteDescription> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -484,10 +499,10 @@ export class InMemorySubmissionBackend
   }
 
   setWasteDescription(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: DraftWasteDescription
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -552,13 +567,13 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getWasteQuantity({ id }: SubmissionRef): Promise<WasteQuantity> {
-    const submission = this.submissions.get(id);
+  getWasteQuantity({ id, accountId }: SubmissionRef): Promise<WasteQuantity> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -566,8 +581,11 @@ export class InMemorySubmissionBackend
     return Promise.resolve(submission.wasteQuantity);
   }
 
-  setWasteQuantity({ id }: SubmissionRef, value: WasteQuantity): Promise<void> {
-    const submission = this.submissions.get(id);
+  setWasteQuantity(
+    { id, accountId }: SubmissionRef,
+    value: WasteQuantity
+  ): Promise<void> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -633,12 +651,12 @@ export class InMemorySubmissionBackend
         ? { status: 'UpdatedWithActuals', timestamp: new Date() }
         : submission.submissionState;
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
     return Promise.resolve();
   }
 
-  getExporterDetail({ id }: SubmissionRef): Promise<ExporterDetail> {
-    const submission = this.submissions.get(id);
+  getExporterDetail({ id, accountId }: SubmissionRef): Promise<ExporterDetail> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -647,10 +665,10 @@ export class InMemorySubmissionBackend
   }
 
   setExporterDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: ExporterDetail
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -663,13 +681,13 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getImporterDetail({ id }: SubmissionRef): Promise<ImporterDetail> {
-    const submission = this.submissions.get(id);
+  getImporterDetail({ id, accountId }: SubmissionRef): Promise<ImporterDetail> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -678,10 +696,10 @@ export class InMemorySubmissionBackend
   }
 
   setImporterDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: ImporterDetail
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -694,13 +712,13 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getCollectionDate({ id }: SubmissionRef): Promise<CollectionDate> {
-    const submission = this.submissions.get(id);
+  getCollectionDate({ id, accountId }: SubmissionRef): Promise<CollectionDate> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -709,10 +727,10 @@ export class InMemorySubmissionBackend
   }
 
   setCollectionDate(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: CollectionDate
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -762,12 +780,12 @@ export class InMemorySubmissionBackend
         ? { status: 'UpdatedWithActuals', timestamp: new Date() }
         : submission.submissionState;
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
     return Promise.resolve();
   }
 
-  listCarriers({ id }: SubmissionRef): Promise<Carriers> {
-    const submission = this.submissions.get(id);
+  listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -776,7 +794,7 @@ export class InMemorySubmissionBackend
   }
 
   createCarriers(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
     if (value.status !== 'Started') {
@@ -787,7 +805,7 @@ export class InMemorySubmissionBackend
       );
     }
 
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -810,7 +828,7 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve({
       status: value.status,
@@ -819,8 +837,11 @@ export class InMemorySubmissionBackend
     });
   }
 
-  getCarriers({ id }: SubmissionRef, carrierId: string): Promise<Carriers> {
-    const submission = this.submissions.get(id);
+  getCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<Carriers> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -847,11 +868,11 @@ export class InMemorySubmissionBackend
   }
 
   setCarriers(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     carrierId: string,
     value: Carriers
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -892,13 +913,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  deleteCarriers({ id }: SubmissionRef, carrierId: string): Promise<void> {
-    const submission = this.submissions.get(id);
+  deleteCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<void> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -923,13 +947,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getCollectionDetail({ id }: SubmissionRef): Promise<CollectionDetail> {
-    const submission = this.submissions.get(id);
+  getCollectionDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CollectionDetail> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -938,10 +965,10 @@ export class InMemorySubmissionBackend
   }
 
   setCollectionDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: CollectionDetail
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -954,13 +981,13 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getExitLocation({ id }: SubmissionRef): Promise<ExitLocation> {
-    const submission = this.submissions.get(id);
+  getExitLocation({ id, accountId }: SubmissionRef): Promise<ExitLocation> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -968,8 +995,11 @@ export class InMemorySubmissionBackend
     return Promise.resolve(submission.ukExitLocation);
   }
 
-  setExitLocation({ id }: SubmissionRef, value: ExitLocation): Promise<void> {
-    const submission = this.submissions.get(id);
+  setExitLocation(
+    { id, accountId }: SubmissionRef,
+    value: ExitLocation
+  ): Promise<void> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -982,13 +1012,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
-  getTransitCountries({ id }: SubmissionRef): Promise<TransitCountries> {
-    const submission = this.submissions.get(id);
+  getTransitCountries({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<TransitCountries> {
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -997,10 +1030,10 @@ export class InMemorySubmissionBackend
   }
 
   setTransitCountries(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: TransitCountries
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1013,15 +1046,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
   listRecoveryFacilityDetail({
     id,
+    accountId,
   }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1030,7 +1064,7 @@ export class InMemorySubmissionBackend
   }
 
   createRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: Omit<RecoveryFacilityDetail, 'values'>
   ): Promise<RecoveryFacilityDetail> {
     if (value.status !== 'Started') {
@@ -1041,7 +1075,7 @@ export class InMemorySubmissionBackend
       );
     }
 
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1071,7 +1105,7 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve({
       status: value.status,
@@ -1080,10 +1114,10 @@ export class InMemorySubmissionBackend
   }
 
   getRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<RecoveryFacilityDetail> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1113,11 +1147,11 @@ export class InMemorySubmissionBackend
   }
 
   setRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string,
     value: RecoveryFacilityDetail
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1161,16 +1195,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
   deleteRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1197,15 +1231,16 @@ export class InMemorySubmissionBackend
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
 
     return Promise.resolve();
   }
 
   getSubmissionConfirmation({
     id,
+    accountId,
   }: SubmissionRef): Promise<SubmissionConfirmation> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1214,10 +1249,10 @@ export class InMemorySubmissionBackend
   }
 
   setSubmissionConfirmation(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: SubmissionConfirmation
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1230,21 +1265,22 @@ export class InMemorySubmissionBackend
       submission.collectionDate = { status: 'NotStarted' };
       submission.submissionConfirmation = setSubmissionConfirmation(submission);
 
-      this.submissions.set(id, submission);
+      this.submissions.set(JSON.stringify({ id, accountId }), submission);
       return Promise.reject(Boom.badRequest('Invalid collection date'));
     }
 
     submission.submissionConfirmation = value;
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    this.submissions.set(id, submission);
+    this.submissions.set(JSON.stringify({ id, accountId }), submission);
     return Promise.resolve();
   }
 
   getSubmissionDeclaration({
     id,
+    accountId,
   }: SubmissionRef): Promise<SubmissionDeclaration> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1253,10 +1289,10 @@ export class InMemorySubmissionBackend
   }
 
   setSubmissionDeclaration(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void> {
-    const submission = this.submissions.get(id);
+    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -1271,7 +1307,7 @@ export class InMemorySubmissionBackend
       submission.submissionConfirmation = setSubmissionConfirmation(submission);
       submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-      this.submissions.set(id, submission);
+      this.submissions.set(JSON.stringify({ id, accountId }), submission);
       return Promise.reject(Boom.badRequest('Invalid collection date'));
     }
 
@@ -1302,7 +1338,7 @@ export class InMemorySubmissionBackend
           ? { status: 'SubmittedWithActuals', timestamp: timestamp }
           : { status: 'SubmittedWithEstimates', timestamp: timestamp };
 
-      this.submissions.set(id, submission);
+      this.submissions.set(JSON.stringify({ id, accountId }), submission);
     }
 
     return Promise.resolve();

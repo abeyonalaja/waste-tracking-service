@@ -1,5 +1,4 @@
 Given(/^I navigate to National Code page$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   TaskListPage.new.waste_codes_and_description

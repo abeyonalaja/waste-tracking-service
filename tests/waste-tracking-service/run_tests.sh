@@ -1,4 +1,5 @@
 #cucumber  --format pretty --expand --format json -o "report.json" --out report.html --tags 'not @ignore' --tags @t
+
 rm -r Allure_results
 rm -r allure-report
 mkdir -p report

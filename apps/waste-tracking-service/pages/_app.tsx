@@ -1,15 +1,21 @@
-import { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/Layout';
 import './styles.css';
 import 'i18n/config';
+import { CookiesProvider } from 'react-cookie';
 import { useGoogleTagManager } from '../utils/GoogleTagManager';
 
-type AppPropsWithLayout = AppProps & {
-  Component;
-};
-
-export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
   useGoogleTagManager();
-  return getLayout(<Component {...pageProps} />);
+  return getLayout(
+    <SessionProvider session={session}>
+      <CookiesProvider>
+        <Component {...pageProps} />
+      </CookiesProvider>
+    </SessionProvider>
+  );
 }

@@ -18,6 +18,12 @@ import {
   validatePostcode,
   validateSelectAddress,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const PostcodeInput = styled(GovUK.Input)`
   max-width: 23ex;
@@ -28,7 +34,7 @@ const Paragraph = styled.div`
   font-size: 19px;
 `;
 
-const ExporterPostcode = () => {
+const ExporterPostcode = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -48,7 +54,8 @@ const ExporterPostcode = () => {
   }, [router.isReady, router.query.id]);
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         postcode: validatePostcode(postcode),
       };
@@ -57,13 +64,12 @@ const ExporterPostcode = () => {
       } else {
         setErrors(null);
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
+
             {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
             }
           )
             .then((response) => {
@@ -85,17 +91,18 @@ const ExporterPostcode = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [buildingNameOrNumber, postcode]
   );
 
-  const handleLinkSubmit = (e) => {
-    handleSubmitAddress(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmitAddress(e, true);
   };
 
   const handleSubmitAddress = useCallback(
-    (e, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
+
       const newErrors = {
         selectedAddress: validateSelectAddress(selectedAddress),
       };
@@ -127,9 +134,7 @@ const ExporterPostcode = () => {
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )

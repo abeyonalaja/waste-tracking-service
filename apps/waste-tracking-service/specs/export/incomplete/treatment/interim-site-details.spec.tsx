@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import { render, act, screen, fireEvent } from 'jest-utils';
 import InterimSiteDetails from 'pages/export/incomplete/treatment/interim-site-details';
 
@@ -7,6 +7,10 @@ jest.mock('next/router', () => ({
     isReady: true,
     query: { id: '123' },
   })),
+}));
+
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
 const defaultJsonResponse = {

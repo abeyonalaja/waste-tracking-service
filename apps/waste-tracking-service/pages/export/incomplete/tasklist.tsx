@@ -2,7 +2,6 @@ import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
 import {
   AppLink,
@@ -20,6 +19,13 @@ import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import { differenceInSeconds, parseISO } from 'date-fns';
+
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: Submission;
@@ -128,7 +134,7 @@ const TaskStatus = styled.span`
   }
 `;
 
-const Tasklist = () => {
+const Tasklist = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [tasklistPage, dispatchTasklistPage] = useReducer(
@@ -152,8 +158,11 @@ const Tasklist = () => {
 
   useEffect(() => {
     dispatchTasklistPage({ type: 'DATA_FETCH_INIT' });
+
     if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
+        headers: apiConfig,
+      })
         .then((response) => {
           if (response.ok) return response.json();
           else {

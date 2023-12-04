@@ -21,4 +21,23 @@ module TestData
     YAML.load_file('features/data/ewc_code.yml')
   end
 
+  # Module for user login
+  module Users
+    def self.user_name(user)
+      UserData.users.fetch(user).fetch(:userId)
+    end
+
+    def self.user_password(user)
+      UserData.users.fetch(user).fetch(:password)
+    end
+
+    def self.user_business_name(user)
+      UserData.users.fetch(user).fetch(:businessName)
+    end
+
+    def self.user_business_unit_id(user)
+      UserData.users.fetch(user).fetch(:businessUnitId)
+    end
+  end
+
 end

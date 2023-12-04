@@ -13,6 +13,12 @@ import {
   SaveReturnButton,
   ButtonGroup,
 } from 'components';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 import styled from 'styled-components';
 
@@ -74,7 +80,7 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const SignDeclaration = () => {
+const SignDeclaration = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -91,40 +97,43 @@ const SignDeclaration = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const [errors] = useState<{
-    description?: string;
-  }>({});
-
   useEffect(() => {
-    dispatchSignDeclarationPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchSignDeclarationPage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchSignDeclarationPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchSignDeclarationPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchSignDeclarationPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchSignDeclarationPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleConfirmClick = useCallback(
-    (e) => {
-      fetch(
+    async (e) => {
+      e.preventDefault();
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/submission-declaration`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({
             status: 'Complete',
           }),
@@ -141,7 +150,6 @@ const SignDeclaration = () => {
             });
           }
         });
-      e.preventDefault();
     },
     [id, router, signDeclarationPage.data]
   );
@@ -184,15 +192,6 @@ const SignDeclaration = () => {
             {signDeclarationPage.isLoading && <Loading />}
             {!signDeclarationPage.isError && !signDeclarationPage.isLoading && (
               <>
-                {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
-                    heading={t('errorSummary.title')}
-                    errors={Object.keys(errors).map((key) => ({
-                      targetName: key,
-                      text: errors[key],
-                    }))}
-                  />
-                )}
                 <StyledHeading size="LARGE">
                   {t('exportJourney.checkAnswers.signDeclaration.title')}
                 </StyledHeading>

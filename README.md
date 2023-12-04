@@ -33,4 +33,4 @@ Run `nx graph` to see a diagram of the dependencies of the projects.
 
 To get this running locally you will need a .env.local containing
 
-NX_API_GATEWAY_URL=http://localhost:3000/api
+NEXT_PUBLIC_API_GATEWAY_URL=http://localhost:3000/api

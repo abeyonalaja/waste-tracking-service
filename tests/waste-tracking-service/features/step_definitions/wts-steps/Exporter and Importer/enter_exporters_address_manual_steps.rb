@@ -1,5 +1,4 @@
 When(/^I navigate to Enter exporter address manual page$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   click_link(Translations.value('exportJourney.submitAnExport.SectionTwo.exporterDetails'))

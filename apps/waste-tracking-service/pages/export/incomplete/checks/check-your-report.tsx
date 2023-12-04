@@ -21,6 +21,12 @@ import {
   Loading,
   SubmissionSummary,
 } from 'components';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
 
@@ -67,7 +73,7 @@ const checkYourReportReducer = (state: State, action: Action) => {
   }
 };
 
-const CheckYourReport = () => {
+const CheckYourReport = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [checkYourReportPage, dispatchCheckYourReportPage] = useReducer(
@@ -84,24 +90,32 @@ const CheckYourReport = () => {
   }, [router.isReady, router.query.id]);
 
   useEffect(() => {
-    dispatchCheckYourReportPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchCheckYourReportPage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchCheckYourReportPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchCheckYourReportPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchCheckYourReportPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchCheckYourReportPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   useEffect(() => {
@@ -147,15 +161,15 @@ const CheckYourReport = () => {
     });
     return sections.length === completedSections.length;
   };
+
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
-      fetch(
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/submission-confirmation`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({
             status: 'Complete',
             confirmation: true,
@@ -176,8 +190,6 @@ const CheckYourReport = () => {
             });
           }
         });
-
-      e.preventDefault();
     },
     [id, router, checkYourReportPage]
   );

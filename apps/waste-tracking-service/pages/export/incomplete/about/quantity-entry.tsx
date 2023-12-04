@@ -20,6 +20,12 @@ import {
   validateWeightOrVolume,
   validateQuantityValue,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
@@ -45,7 +51,7 @@ const BreadCrumbs = ({ id }) => {
   );
 };
 
-const QuantityEntry = () => {
+const QuantityEntry = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -73,53 +79,59 @@ const QuantityEntry = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
+    const fetchData = async () => {
+      if (id !== null) {
+        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
+          headers: apiConfig,
         })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data.wasteQuantity);
-
-            setEstimate(data.wasteQuantity.value.type === 'EstimateData');
-            const type =
-              data.wasteQuantity.value.type === 'EstimateData'
-                ? 'estimateData'
-                : 'actualData';
-
-            setQuantityType(
-              data.wasteQuantity.value[type]?.quantityType || null
-            );
-
-            if (data.wasteQuantity.value[type]?.quantityType === 'Weight')
-              setWeight(data.wasteQuantity.value[type]?.value);
-
-            if (data.wasteQuantity.value[type]?.quantityType === 'Volume')
-              setVolume(data.wasteQuantity.value[type]?.value);
-
-            if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
-              setBulkWaste(false);
-              setQuantityType('Weight');
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
             }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data.wasteQuantity);
 
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+              setEstimate(data.wasteQuantity.value.type === 'EstimateData');
+              const type =
+                data.wasteQuantity.value.type === 'EstimateData'
+                  ? 'estimateData'
+                  : 'actualData';
+
+              setQuantityType(
+                data.wasteQuantity.value[type]?.quantityType || null
+              );
+
+              if (data.wasteQuantity.value[type]?.quantityType === 'Weight')
+                setWeight(data.wasteQuantity.value[type]?.value);
+
+              if (data.wasteQuantity.value[type]?.quantityType === 'Volume')
+                setVolume(data.wasteQuantity.value[type]?.value);
+
+              if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
+                setBulkWaste(false);
+                setQuantityType('Weight');
+              }
+
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         quantityTypeError: validateWeightOrVolume(quantityType, estimate),
         quantityWeightError: validateQuantityValue(
@@ -158,13 +170,11 @@ const QuantityEntry = () => {
         };
 
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(updatedData),
             }
           )
@@ -183,7 +193,6 @@ const QuantityEntry = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [id, quantityType, weight, volume, estimate, bulkWaste]
   );

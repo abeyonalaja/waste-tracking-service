@@ -18,6 +18,11 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const DefinitionList = styled('dl')`
   margin-bottom: 20px;
@@ -89,7 +94,7 @@ const Actions = styled('dd')`
   }
 `;
 
-const ExporterAddress = () => {
+const ExporterAddress = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState(null);
@@ -97,42 +102,38 @@ const ExporterAddress = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [errors, setErrors] = useState<{
-    organisationName?: string;
-    fullName?: string;
-    email?: string;
-    phone?: string;
-    fax?: string;
-  }>({});
-
   useEffect(() => {
     if (router.isReady) {
       setTemplateId(router.query.templateId);
     }
   }, [router.isReady, router.query.templateId]);
+
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handleLinkSubmit = (e) => {
@@ -186,15 +187,6 @@ const ExporterAddress = () => {
             {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
-                {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
-                    heading={t('errorSummary.title')}
-                    errors={Object.keys(errors).map((key) => ({
-                      targetName: key,
-                      text: errors[key],
-                    }))}
-                  />
-                )}
                 <GovUK.Caption size="L">
                   {t('exportJourney.exporterDetails.caption')}
                 </GovUK.Caption>

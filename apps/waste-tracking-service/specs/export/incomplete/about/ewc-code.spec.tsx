@@ -9,6 +9,10 @@ jest.mock('next/router', () => ({
   })),
 }));
 
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
+}));
+
 const defaultJsonResponse = { status: 'NotStarted' };
 const startedJsonResponse = {
   status: 'Started',

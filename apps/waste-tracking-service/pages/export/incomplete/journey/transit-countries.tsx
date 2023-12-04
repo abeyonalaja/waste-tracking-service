@@ -31,6 +31,12 @@ import {
 import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
 import Autocomplete from 'accessible-autocomplete/react';
 import { countriesData } from 'utils/countriesData';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -123,7 +129,7 @@ const wasteTransitReducer = (state: State, action: Action) => {
   }
 };
 
-const TransitCountries = () => {
+const TransitCountries = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [wasteTransitPage, dispatchWasteTransitPage] = useReducer(
@@ -145,38 +151,42 @@ const TransitCountries = () => {
   }, [router.isReady, router.query.id]);
 
   useEffect(() => {
-    dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchWasteTransitPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchWasteTransitPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.values === undefined || data.values.length === 0) {
-              if (data.status !== 'NotStarted') {
+    const fetchData = async () => {
+      dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchWasteTransitPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchWasteTransitPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.values === undefined || data.values.length === 0) {
+                if (data.status !== 'NotStarted') {
+                  dispatchWasteTransitPage({
+                    type: 'PROVIDED_UPDATE',
+                    payload: 'No',
+                  });
+                }
                 dispatchWasteTransitPage({
-                  type: 'PROVIDED_UPDATE',
-                  payload: 'No',
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.ADD_FORM,
                 });
               }
-              dispatchWasteTransitPage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.ADD_FORM,
-              });
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleReturnSubmit = (e) => {
@@ -184,7 +194,8 @@ const TransitCountries = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const hasCountries = wasteTransitPage.provided;
       const country = wasteTransitPage.data.values;
       const newErrors = {
@@ -196,13 +207,11 @@ const TransitCountries = () => {
       } else {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(wasteTransitPage.data),
             }
           )
@@ -228,7 +237,6 @@ const TransitCountries = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [id, wasteTransitPage, router]
   );
@@ -332,7 +340,7 @@ const TransitCountries = () => {
     [changeCountry, countryToChangeRemove]
   );
 
-  const updateCountryData = (countries, returnToDraft, callBack?) => {
+  const updateCountryData = async (countries, returnToDraft, callBack?) => {
     dispatchWasteTransitPage({
       type: 'DATA_UPDATE',
       payload: { status: 'Complete', values: countries },
@@ -342,9 +350,7 @@ const TransitCountries = () => {
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify(wasteTransitPage.data),
         }
       )

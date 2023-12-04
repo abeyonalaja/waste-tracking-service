@@ -22,7 +22,13 @@ import {
   validateCountrySelect,
   validateAddress,
 } from 'utils/validators';
-import { countriesData } from '../../../../utils/countriesData';
+import { countriesData } from 'utils/countriesData';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -39,7 +45,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterManual = () => {
+const ExporterManual = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -63,30 +69,34 @@ const ExporterManual = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setAddress(data.exporterAddress?.addressLine1);
-            setAddress2(data.exporterAddress?.addressLine2);
-            setTownCity(data.exporterAddress?.townCity);
-            setPostcode(data.exporterAddress?.postcode);
-            setCountry(data.exporterAddress?.country);
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setAddress(data.exporterAddress?.addressLine1);
+              setAddress2(data.exporterAddress?.addressLine2);
+              setTownCity(data.exporterAddress?.townCity);
+              setPostcode(data.exporterAddress?.postcode);
+              setCountry(data.exporterAddress?.country);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   useEffect(() => {
@@ -95,12 +105,13 @@ const ExporterManual = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         townCity: validateTownCity(townCity),
         country: validateCountrySelect(country),
@@ -122,13 +133,11 @@ const ExporterManual = () => {
           },
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -150,7 +159,6 @@ const ExporterManual = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [townCity, country, address, data, address2, postcode, id, router]
   );

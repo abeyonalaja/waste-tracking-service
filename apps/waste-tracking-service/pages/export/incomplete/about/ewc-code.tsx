@@ -31,7 +31,12 @@ import formatEwcCode from 'utils/formatEwcCode';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import i18n from 'i18next';
-import { getStatus } from '../../../../utils/statuses/getStatus';
+import { getStatus } from 'utils/statuses/getStatus';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -204,7 +209,7 @@ type codeType = {
   description: string;
 };
 
-const EwcCodes = () => {
+const EwcCodes = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [ewcCodePage, dispatchEwcCodePage] = useReducer(
@@ -228,12 +233,13 @@ const EwcCodes = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`,
+        { headers: apiConfig }
       )
         .then((response) => {
           if (response.ok) return response.json();
         })
-        .then(async (data) => {
+        .then((data) => {
           if (data !== undefined) {
             setRefData(data);
           }
@@ -245,32 +251,36 @@ const EwcCodes = () => {
   }, [currentLanguage]);
 
   useEffect(() => {
-    dispatchEwcCodePage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchEwcCodePage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchEwcCodePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.ewcCodes === undefined || data.ewcCodes.length === 0) {
-              dispatchEwcCodePage({
-                type: 'SHOW_VIEW',
-                payload: VIEWS.ADD_FORM,
-              });
+    const fetchData = async () => {
+      dispatchEwcCodePage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchEwcCodePage({ type: 'DATA_FETCH_FAILURE' });
             }
-          }
-        });
-    }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchEwcCodePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.ewcCodes === undefined || data.ewcCodes.length === 0) {
+                dispatchEwcCodePage({
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.ADD_FORM,
+                });
+              }
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleReturnSubmit = (e) => {
@@ -278,8 +288,10 @@ const EwcCodes = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
+
       const newErrors = {
         ewcCode:
           validateEwcCode('Yes', newEwcCode) || checkValidEWC(newEwcCode),
@@ -299,13 +311,11 @@ const EwcCodes = () => {
         const body = { ...ewcCodePage.data, ewcCodes: [result] };
 
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -335,13 +345,12 @@ const EwcCodes = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [id, ewcCode, ewcCodePage, router]
   );
 
-  const handleReturnSubmitAdditionalEwcCode = (e) => {
-    handleSubmitAdditionalEwcCode(e, true);
+  const handleReturnSubmitAdditionalEwcCode = async (e) => {
+    await handleSubmitAdditionalEwcCode(e, true);
   };
 
   const checkDuplicate = (ewcCode) => {
@@ -371,7 +380,7 @@ const EwcCodes = () => {
   };
 
   const handleSubmitAdditionalEwcCode = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
       const hasEWCCode = ewcCodePage.provided;
       const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
@@ -402,19 +411,20 @@ const EwcCodes = () => {
             code: newEwcCode,
           };
           ewcCodes.push(additionalEwc);
-          updateEwcData(ewcCodes, returnToDraft);
+          await updateEwcData(ewcCodes, returnToDraft);
         }
       }
     },
     [ewcCode, ewcCodePage]
   );
 
-  const handleReturnConfirmRemove = (e) => {
-    handleConfirmRemove(e, true);
+  const handleReturnConfirmRemove = async (e) => {
+    await handleConfirmRemove(e, true);
   };
 
   const handleConfirmRemove = useCallback(
-    (e, returnToDraft = false) => {
+    async (e, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         confirmRemove: validateConfirmRemove(confirmRemove, 'EWC code'),
       };
@@ -439,31 +449,32 @@ const EwcCodes = () => {
           const ewcCodes = ewcCodePage.data.ewcCodes.filter(
             (ewcCode) => ewcCode.code !== ewcCodeToRemove
           );
-          updateEwcData(ewcCodes, returnToDraft, callBack);
+          await updateEwcData(ewcCodes, returnToDraft, callBack);
         }
         setConfirmRemove(null);
       }
-      e.preventDefault();
     },
     [confirmRemove, ewcCodeToRemove, ewcCodePage]
   );
 
-  const updateEwcData = (ewcCodes, returnToDraft, callBack?) => {
+  const updateEwcData = async (ewcCodes, returnToDraft, callBack?) => {
     ewcCodePage.data.status = getStatus(
       ewcCodePage.data?.wasteCode,
       ewcCodes,
       ewcCodePage.data?.nationalCode,
       ewcCodePage.data?.description
     );
-    const body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
+    let body = ewcCodePage.data;
+    if (ewcCodes.length > 0) {
+      body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
+    }
+
     try {
-      fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
         {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify(body),
         }
       )

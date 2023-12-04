@@ -35,6 +35,11 @@ import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gatew
 import Autocomplete from 'accessible-autocomplete/react';
 import boldUpToFirstColon from 'utils/boldUpToFirstColon';
 import i18n from 'i18next';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -155,7 +160,7 @@ type codeType = {
   }>;
 };
 
-const RecoveryFacilityDetails = () => {
+const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [recoveryPage, dispatchRecoveryPage] = useReducer(
@@ -211,7 +216,8 @@ const RecoveryFacilityDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`,
+        { headers: apiConfig }
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -240,7 +246,8 @@ const RecoveryFacilityDetails = () => {
     dispatchRecoveryPage({ type: 'DATA_FETCH_INIT' });
     if (templateId !== null) {
       fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
+        { headers: apiConfig }
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -349,9 +356,7 @@ const RecoveryFacilityDetails = () => {
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
         }
       )
@@ -457,9 +462,7 @@ const RecoveryFacilityDetails = () => {
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${recoveryPage.facilityData.id}`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -688,9 +691,7 @@ const RecoveryFacilityDetails = () => {
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${recoveryPage.facilityData.id}`,
               {
                 method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+                headers: apiConfig,
               }
             ).then(() => {
               const updatedValues = recoveryPage.data.values.filter(
@@ -843,6 +844,7 @@ const RecoveryFacilityDetails = () => {
                         error={recoveryPage.errors?.country}
                         hint={t('exportJourney.recoveryFacilities.countryHint')}
                         size={75}
+                        apiConfig={apiConfig}
                       />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">

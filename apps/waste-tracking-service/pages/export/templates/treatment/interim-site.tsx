@@ -20,8 +20,13 @@ import {
   SaveReturnButton,
   Paragraph,
 } from 'components';
-
 import { isNotEmpty, validateSelection } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: any;
@@ -85,7 +90,7 @@ const interimReducer = (state: State, action: Action) => {
   }
 };
 
-const InterimSiteDetails = () => {
+const InterimSiteDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [interimPage, dispatchInterimPage] = useReducer(
@@ -103,44 +108,50 @@ const InterimSiteDetails = () => {
   }, [router.isReady, router.query.templateId]);
 
   useEffect(() => {
-    dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchInterimPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchInterimPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-            if (data.values !== undefined) {
-              const interimSite = data.values.filter(
-                (site) => site.recoveryFacilityType?.type === 'InterimSite'
-              );
-              const recoveryFacilities = data.values.filter(
-                (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
-              );
-              if (interimSite.length > 0) {
-                setHasInterimSite('Yes');
-                setExistingInterimSite(interimSite[0].id);
-              } else if (recoveryFacilities.length > 0) {
-                setHasInterimSite('No');
+    const fetchData = async () => {
+      dispatchInterimPage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchInterimPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchInterimPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+              if (data.values !== undefined) {
+                const interimSite = data.values.filter(
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                );
+                const recoveryFacilities = data.values.filter(
+                  (site) =>
+                    site.recoveryFacilityType?.type === 'RecoveryFacility'
+                );
+                if (interimSite.length > 0) {
+                  setHasInterimSite('Yes');
+                  setExistingInterimSite(interimSite[0].id);
+                } else if (recoveryFacilities.length > 0) {
+                  setHasInterimSite('No');
+                }
               }
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         hasInterimSite: validateSelection(
           hasInterimSite,
@@ -162,7 +173,7 @@ const InterimSiteDetails = () => {
           });
         } else {
           if (existingInterimSite !== null) {
-            removeExistingInterimSite(returnToDraft);
+            await removeExistingInterimSite(returnToDraft);
           } else {
             router.push({
               pathname: returnToDraft
@@ -173,20 +184,17 @@ const InterimSiteDetails = () => {
           }
         }
       }
-      e.preventDefault();
     },
     [interimPage.data, hasInterimSite]
   );
 
-  const removeExistingInterimSite = (returnToDraft) => {
+  const removeExistingInterimSite = async (returnToDraft) => {
     try {
-      fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility/${existingInterimSite}`,
         {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
         }
       ).then(() => {
         router.push({

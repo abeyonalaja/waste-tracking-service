@@ -72,7 +72,7 @@ const countriesData = {
     'Eritrea (ER)',
     'Estonia (EE)',
     'Ethiopia (ET)',
-    'Falkland Islands (Malvinas) (FK)',
+    'Falkland Islands (FK)',
     'Faroe Islands (FO)',
     'Fiji (FJ)',
     'Finland (FI)',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import styled from 'styled-components';
 import CrownIcon from '@govuk-react/icon-crown';
 import { GlobalStyle, Main, TopNav, PhaseBanner } from 'govuk-react';
@@ -65,7 +66,6 @@ const GovukHeaderUserContent = styled.div`
   display: flex;
   gap: 15px;
   align-items: baseline;
-  display: none; /* Remove this after DCID */
   @media (min-width: 40.0625em) {
     font-size: 16px;
     margin-left: auto;
@@ -132,6 +132,7 @@ const PhaseBannerStyled = styled(PhaseBanner)`
 
 export const CompleteHeader = () => {
   const { t } = useTranslation();
+  const { data: session } = useSession();
   return (
     <>
       <GlobalStyle />
@@ -150,7 +151,38 @@ export const CompleteHeader = () => {
               {t('app.title')}
             </GovukHeaderLink>
           </GovukHeaderContent>
-          <GovukHeaderUserContent />
+          <GovukHeaderUserContent>
+            {!session && (
+              <>
+                <GovukHeaderLink
+                  href="#"
+                  onClick={() => {
+                    signIn('defra-b2c');
+                  }}
+                >
+                  Sign in
+                </GovukHeaderLink>
+              </>
+            )}
+            {session?.user && (
+              <>
+                <GovukHeaderLink
+                  href={'https://your-account.cpdev.cui.defra.gov.uk'}
+                >
+                  {session.user.name}
+                </GovukHeaderLink>
+                <GovukHeaderLink
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signOut();
+                  }}
+                >
+                  Sign out
+                </GovukHeaderLink>
+              </>
+            )}
+          </GovukHeaderUserContent>
         </GovukHeaderInner>
       </GovukHeader>
       <Main>

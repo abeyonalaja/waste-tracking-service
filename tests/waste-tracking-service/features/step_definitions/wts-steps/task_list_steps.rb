@@ -9,7 +9,6 @@ And(/^the reference should be displayed$/) do
 end
 
 When(/^I navigate to the task list page with reference$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
 end
@@ -51,6 +50,7 @@ And(/^I complete Waste codes and description task$/) do
   sleep 1
   QuantityOfWastePage.new.check_page_displayed
   QuantityOfWastePage.new.back
+  DescribeTheWastePage.new.check_page_displayed
   DescribeTheWastePage.new.save_and_return
 end
 
@@ -66,8 +66,4 @@ end
 
 And(/^I click Move export or import waste breadcrumb$/) do
   click_link('index-link')
-end
-
-And(/^I navigate to Export waste from UK page$/) do
-  click_link('dashboard_link')
 end

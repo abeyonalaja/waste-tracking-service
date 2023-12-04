@@ -33,7 +33,12 @@ import {
   validateConfirmCancelDocument,
   isNotEmpty,
 } from 'utils/validators';
-import { formatDate } from '../../../utils/formatDate';
+import { formatDate } from 'utils/formatDate';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: any;
@@ -131,7 +136,7 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const UpdateAnnex7 = () => {
+const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [updateAnnex7Page, dispatchUpdateAnnex7Page] = useReducer(
@@ -153,32 +158,35 @@ const UpdateAnnex7 = () => {
   }, [router.isReady, router.query.token]);
 
   useEffect(() => {
-    if (router.isReady) {
-      dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    const fetchData = async () => {
+      if (router.isReady) {
+        dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_INIT' });
 
-      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates&order=desc`;
-      if (token) {
-        url = `${url}&token=${token}`;
-      }
+        let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithEstimates&order=desc`;
+        if (token) {
+          url = `${url}&token=${token}`;
+        }
 
-      fetch(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          let filteredData;
-          if (data) {
-            filteredData = data;
-          }
-          dispatchUpdateAnnex7Page({
-            type: 'DATA_FETCH_SUCCESS',
-            payload: filteredData,
+        await fetch(url, { headers: apiConfig })
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchUpdateAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            let filteredData;
+            if (data) {
+              filteredData = data;
+            }
+            dispatchUpdateAnnex7Page({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: filteredData,
+            });
           });
-        });
-    }
+      }
+    };
+    fetchData();
   }, [router.isReady, token]);
 
   const doNotCancel = () => {
@@ -199,7 +207,7 @@ const UpdateAnnex7 = () => {
     });
     e.preventDefault();
   };
-  const handleConfirmSubmit = (e: FormEvent) => {
+  const handleConfirmSubmit = async (e: FormEvent) => {
     const newErrors = {
       type: validateConfirmCancelDocument(type),
       reason: validateConfirmCancelReason(type, reason),
@@ -220,13 +228,11 @@ const UpdateAnnex7 = () => {
       dispatchUpdateAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
 
       try {
-        fetch(
+        await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${item.id}/cancel`,
           {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: JSON.stringify(body),
           }
         ).then(() => {

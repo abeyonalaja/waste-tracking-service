@@ -9,6 +9,10 @@ jest.mock('next/router', () => ({
   })),
 }));
 
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
+}));
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,

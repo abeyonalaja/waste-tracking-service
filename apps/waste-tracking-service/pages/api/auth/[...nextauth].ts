@@ -13,15 +13,15 @@ export const authOptions: NextAuthOptions = {
   providers: [
     AzureADB2CProvider({
       id: 'defra-b2c',
-      clientId: process.env.DCID_CLIENTID,
-      clientSecret: process.env.DCID_CLIENTSECRET,
+      clientId: process.env.DCID_CLIENT_ID,
+      clientSecret: process.env.DCID_CLIENT_SECRET,
       tenantId: process.env.DCID_TENANT,
       primaryUserFlow: process.env.DCID_POLICY,
       wellKnown: process.env.DCID_WELLKNOWN,
       authorization: {
         params: {
           scope: 'openid offline_access profile',
-          serviceId: process.env.DCID_SERVICEID,
+          serviceId: process.env.DCID_SERVICE_ID,
           redirect_uri: process.env.DCID_REDIRECT,
         },
       },
@@ -45,13 +45,14 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
   },
-  debug: true,
   callbacks: {
-    async jwt({ token, profile }) {
+    async jwt({ token, profile, account }) {
       if (profile) {
         const dcidProfile = profile as DCIDProfile;
-        token.id = dcidProfile.sub;
         token.name = `${dcidProfile.firstName} ${dcidProfile.lastName}`;
+      }
+      if (account) {
+        token.id_token = account.id_token;
       }
       return token;
     },
@@ -59,7 +60,6 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          id: token.id,
           name: token.name,
           email: token.email,
         },

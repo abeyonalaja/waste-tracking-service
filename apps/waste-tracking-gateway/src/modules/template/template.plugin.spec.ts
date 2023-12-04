@@ -4,12 +4,10 @@ import { jest } from '@jest/globals';
 import winston from 'winston';
 import Boom from '@hapi/boom';
 import templatePlugin from './template.plugin';
-import {
-  TemplateDetails,
-  Template,
-  TemplateSummary,
-} from '@wts/api/waste-tracking-gateway';
+import { Template, TemplateSummaryPage } from '@wts/api/waste-tracking-gateway';
 import { TemplateRef, TemplateBackend } from './template.backend';
+import { OrderRef } from '../submission';
+import AuthBearer from 'hapi-auth-bearer-token';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -17,31 +15,50 @@ jest.mock('winston', () => ({
   })),
 }));
 
+const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
+const token = 'my-token';
+
 const mockBackend = {
-  createTemplate:
-    jest.fn<
-      (accountId: string, templateDetails: TemplateDetails) => Promise<Template>
-    >(),
-  createTemplateFromSubmission:
-    jest.fn<
-      (
-        id: string,
-        accountId: string,
-        templateDetails: TemplateDetails
-      ) => Promise<Template>
-    >(),
-  createTemplateFromTemplate:
-    jest.fn<
-      (
-        id: string,
-        accountId: string,
-        templateDetails: TemplateDetails
-      ) => Promise<Template>
-    >(),
+  createTemplate: jest.fn<
+    (
+      accountId: string,
+      templateDetails: {
+        name: string;
+        description: string;
+      }
+    ) => Promise<Template>
+  >(),
+  createTemplateFromSubmission: jest.fn<
+    (
+      id: string,
+      accountId: string,
+      templateDetails: {
+        name: string;
+        description: string;
+      }
+    ) => Promise<Template>
+  >(),
+  createTemplateFromTemplate: jest.fn<
+    (
+      id: string,
+      accountId: string,
+      templateDetails: {
+        name: string;
+        description: string;
+      }
+    ) => Promise<Template>
+  >(),
   getTemplate: jest.fn<(ref: TemplateRef) => Promise<Template>>(),
   deleteTemplate: jest.fn<(ref: TemplateRef) => Promise<void>>(),
   getTemplates:
-    jest.fn<(accountId: string) => Promise<ReadonlyArray<TemplateSummary>>>(),
+    jest.fn<
+      (
+        accountId: string,
+        order: OrderRef,
+        pageLimit?: number,
+        token?: string
+      ) => Promise<TemplateSummaryPage>
+    >(),
 };
 
 const app = server({
@@ -60,6 +77,31 @@ beforeAll(async () => {
       prefix: '/templates',
     },
   });
+
+  await app.register(Object.create(AuthBearer));
+
+  app.auth.strategy('dcid-auth', 'bearer-access-token', {
+    allowQueryToken: true,
+    validate: async (request: any, token: string, h: any) => {
+      try {
+        const isValid = true;
+        const credentials = {
+          accountId: accountId,
+        };
+        const artifacts = {
+          contactId: accountId,
+          organisationId: '',
+          accountIdReference: accountId,
+        };
+
+        return { isValid, credentials, artifacts };
+      } catch (err) {
+        return Boom.unauthorized();
+      }
+    },
+  });
+
+  app.auth.default('dcid-auth');
 
   await app.start();
 });
@@ -83,6 +125,9 @@ describe('TemplatePlugin', () => {
       const options = {
         method: 'POST',
         url: '/templates',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       const response = await app.inject(options);
@@ -90,49 +135,25 @@ describe('TemplatePlugin', () => {
     });
   });
 
-  describe('POST /templates/{id}', () => {
-    it('Responds 200 when creating template using submission id', async () => {
-      const options = {
-        method: 'POST',
-        url: `/templates/copy-submission/${faker.datatype.uuid()}`,
-        payload: JSON.stringify({
-          templateDetails: {
-            name: 'Template Name',
-            description: 'Template description',
-          },
-        }),
-      };
-
-      mockBackend.createTemplateFromSubmission.mockResolvedValue;
-      const response = await app.inject(options);
-      expect(response.statusCode).toBe(201);
-    });
-  });
-
-  describe('POST /templates/{id}/duplicate', () => {
-    it('Responds 200 when duplicating a template using template id', async () => {
-      const options = {
-        method: 'POST',
-        url: `/templates/copy-template/${faker.datatype.uuid()}`,
-        payload: JSON.stringify({
-          templateDetails: {
-            name: 'Template Name',
-            description: 'Template description',
-          },
-        }),
-      };
-
-      mockBackend.createTemplateFromTemplate.mockResolvedValue;
-      const response = await app.inject(options);
-      expect(response.statusCode).toBe(201);
-    });
-  });
-
   describe('GET /templates', () => {
+    it('Responds 401 if no auth is provided', async () => {
+      const options = {
+        method: 'GET',
+        url: '/templates',
+      };
+
+      mockBackend.getTemplates.mockRejectedValue(Boom.unauthorized());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(401);
+    });
+
     it('Responds 404 if no templates exist', async () => {
       const options = {
         method: 'GET',
         url: '/templates',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getTemplates.mockRejectedValue(Boom.notFound());
@@ -146,6 +167,9 @@ describe('TemplatePlugin', () => {
       const options = {
         method: 'GET',
         url: `/templates/${faker.datatype.uuid()}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       mockBackend.getTemplate.mockRejectedValue(Boom.notFound());

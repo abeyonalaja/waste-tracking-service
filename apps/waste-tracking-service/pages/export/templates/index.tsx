@@ -19,6 +19,12 @@ import {
 import { formatDate } from 'utils/formatDate';
 import styled from 'styled-components';
 import { isNotEmpty, validateConfirmRemove } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 enum VIEWS {
   LIST = 0,
@@ -114,7 +120,7 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const ManageTemplates = () => {
+const ManageTemplates = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templatesPage, dispatchTemplatePage] = useReducer(
@@ -142,24 +148,27 @@ const ManageTemplates = () => {
   ]);
 
   useEffect(() => {
-    let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates?order=desc`;
-    if (token) {
-      url = `${url}&token=${token}`;
-    }
-    dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
-    fetch(url)
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
-        }
-      })
-      .then((data) => {
-        dispatchTemplatePage({
-          type: 'DATA_FETCH_SUCCESS',
-          payload: data,
+    const fetchData = async () => {
+      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates?order=desc`;
+      if (token) {
+        url = `${url}&token=${token}`;
+      }
+      dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
+      await fetch(url, { headers: apiConfig })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          dispatchTemplatePage({
+            type: 'DATA_FETCH_SUCCESS',
+            payload: data,
+          });
         });
-      });
+    };
+    fetchData();
   }, [token]);
 
   useEffect(() => {
@@ -187,7 +196,8 @@ const ManageTemplates = () => {
   };
 
   const handleConfirmRemove = useCallback(
-    (e) => {
+    async (e) => {
+      e.preventDefault();
       const newErrors = {
         confirmRemove: validateConfirmRemove(confirmRemove, 'record template'),
       };
@@ -204,13 +214,11 @@ const ManageTemplates = () => {
         }
         if (confirmRemove === 'Yes') {
           try {
-            fetch(
+            await fetch(
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${itemToDelete.id}`,
               {
                 method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+                headers: apiConfig,
               }
             ).then(() => {
               const filteredDate = templatesPage.data;
@@ -235,7 +243,6 @@ const ManageTemplates = () => {
           }
         }
       }
-      e.preventDefault();
     },
     [confirmRemove, itemToDelete, dispatchTemplatePage]
   );

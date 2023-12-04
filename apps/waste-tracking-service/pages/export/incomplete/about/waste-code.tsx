@@ -26,6 +26,12 @@ import {
   PutWasteDescriptionRequest,
 } from '@wts/api/waste-tracking-gateway';
 import i18n from 'i18next';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type singleCodeType = {
   code: string;
@@ -37,7 +43,7 @@ type codeType = {
   values: Array<singleCodeType>;
 };
 
-const WasteCode = () => {
+const WasteCode = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -58,17 +64,22 @@ const WasteCode = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (data !== undefined) {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((refdata) => {
-            if (refdata !== undefined) {
-              setRefData(refdata);
-            }
-          });
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`,
+            { headers: apiConfig }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((refdata) => {
+              if (refdata !== undefined) {
+                setRefData(refdata);
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
       }
     };
     if (currentLanguage) {
@@ -129,30 +140,34 @@ const WasteCode = () => {
   useEffect(() => {
     setIsLoading(true);
     setHasValidId(false);
-    if (id !== null) {
-      try {
-        fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-            else {
-              setHasValidId(false);
-              setIsLoading(false);
-            }
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              setData(data);
-              setWasteCodeCategory(data.wasteCode?.type);
-              setIsBulkOrSmall(getWasteCodeType(data.wasteCode?.type));
-              setHasValidId(true);
-            }
-          });
-      } catch (e) {
-        console.error(e);
+    const fetchData = async () => {
+      if (id !== null) {
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+            { headers: apiConfig }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+              else {
+                setHasValidId(false);
+                setIsLoading(false);
+              }
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                setData(data);
+                setWasteCodeCategory(data.wasteCode?.type);
+                setIsBulkOrSmall(getWasteCodeType(data.wasteCode?.type));
+                setHasValidId(true);
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
       }
-    }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const [errors, setErrors] = useState<{
@@ -168,7 +183,7 @@ const WasteCode = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft) => {
+    async (e: FormEvent, returnToDraft) => {
       const getWasteCode = () => {
         if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode.code;
         if (wasteCodeCategory === 'OECD') return oecdCode.code;
@@ -215,13 +230,11 @@ const WasteCode = () => {
           if (isBulkOrSmall !== submittedWasteCodeType) {
             try {
               const data: PutWasteDescriptionRequest = { status: 'NotStarted' };
-              fetch(
+              await fetch(
                 `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
                 {
                   method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
+                  headers: apiConfig,
                   body: JSON.stringify(data),
                 }
               );
@@ -234,9 +247,7 @@ const WasteCode = () => {
         try {
           fetch(url, {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: JSON.stringify(body),
           })
             .then((response) => {

@@ -18,8 +18,14 @@ import {
   PutWasteQuantityRequest,
   Submission,
 } from '@wts/api/waste-tracking-gateway';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
-const Quantity = () => {
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
+const Quantity = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -40,12 +46,13 @@ const Quantity = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         quantityTypeError: validateQuantityType(quantityType, bulkWaste),
       };
@@ -66,13 +73,11 @@ const Quantity = () => {
             },
           };
           try {
-            fetch(
+            await fetch(
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
               {
                 method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+                headers: apiConfig,
                 body: JSON.stringify(newData),
               }
             )
@@ -105,7 +110,6 @@ const Quantity = () => {
           });
         }
       }
-      e.preventDefault();
     },
     [id, quantityType, data]
   );
@@ -113,42 +117,50 @@ const Quantity = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
+    const fetchData = async () => {
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data: Submission) => {
-          if (data !== undefined) {
-            setData(data.wasteQuantity);
-            setIsLoading(false);
-            setIsError(false);
-            setQuantityType(
-              data.wasteQuantity?.status === 'CannotStart' ||
-                data.wasteQuantity?.status === 'NotStarted'
-                ? null
-                : data.wasteQuantity?.value.type
-            );
-            setSavedQuantityType(
-              data.wasteQuantity?.status === 'CannotStart' ||
-                data.wasteQuantity?.status === 'NotStarted'
-                ? null
-                : data.wasteQuantity?.value.type
-            );
-            if (
-              (data.wasteDescription?.status === 'Started' ||
-                data.wasteDescription?.status === 'Complete') &&
-              data.wasteDescription?.wasteCode.type === 'NotApplicable'
-            ) {
-              setBulkWaste(false);
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
             }
-          }
-        });
-    }
+          })
+          .then((data: Submission) => {
+            if (data !== undefined) {
+              setData(data.wasteQuantity);
+              setIsLoading(false);
+              setIsError(false);
+              setQuantityType(
+                data.wasteQuantity?.status === 'CannotStart' ||
+                  data.wasteQuantity?.status === 'NotStarted'
+                  ? null
+                  : data.wasteQuantity?.value.type
+              );
+              setSavedQuantityType(
+                data.wasteQuantity?.status === 'CannotStart' ||
+                  data.wasteQuantity?.status === 'NotStarted'
+                  ? null
+                  : data.wasteQuantity?.value.type
+              );
+              if (
+                (data.wasteDescription?.status === 'Started' ||
+                  data.wasteDescription?.status === 'Complete') &&
+                data.wasteDescription?.wasteCode.type === 'NotApplicable'
+              ) {
+                setBulkWaste(false);
+              }
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const BreadCrumbs = () => {

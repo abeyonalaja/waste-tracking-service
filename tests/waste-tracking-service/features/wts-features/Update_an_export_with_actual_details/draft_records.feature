@@ -2,10 +2,9 @@ Feature: AS A Waste practitioner
   I NEED to be able to continue with a draft export after saving
   SO THAT I complete the export submission at my convenience with all the relevant details
 
-  @translation @ignore
+  @translation @ignore @single
   Scenario: User can navigate to empty incomplete Annex VII page
     Given I login to waste tracking portal
-    And I navigate to the overview page
     When I click the "Manage incomplete Annex VII records" link
     Then I should see empty draft Annex VII page
 

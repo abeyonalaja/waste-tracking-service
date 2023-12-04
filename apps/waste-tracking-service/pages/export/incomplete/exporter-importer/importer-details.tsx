@@ -21,6 +21,12 @@ import {
   validateCountry,
   validateAddress,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   @media (min-width: 641px) {
@@ -28,7 +34,7 @@ const AddressInput = styled(GovUK.InputField)`
   }
 `;
 
-const ImporterDetails = () => {
+const ImporterDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -47,28 +53,34 @@ const ImporterDetails = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setOrganisationName(data.importerAddressDetails?.organisationName);
-            setAddress(data.importerAddressDetails?.address);
-            setCountry(data.importerAddressDetails?.country);
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setOrganisationName(
+                data.importerAddressDetails?.organisationName
+              );
+              setAddress(data.importerAddressDetails?.address);
+              setCountry(data.importerAddressDetails?.country);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
   useEffect(() => {
     if (router.isReady) {
@@ -76,12 +88,13 @@ const ImporterDetails = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         organisationName: validateOrganisationName(organisationName),
         address: validateAddress(address),
@@ -101,13 +114,11 @@ const ImporterDetails = () => {
           },
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -129,7 +140,6 @@ const ImporterDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [organisationName, address, country]
   );
@@ -187,7 +197,7 @@ const ImporterDetails = () => {
                       input={{
                         name: 'organisationName',
                         id: 'organisationName',
-                        value: organisationName,
+                        value: organisationName || '',
                         maxLength: 250,
                         onChange: (e) => setOrganisationName(e.target.value),
                       }}
@@ -203,7 +213,7 @@ const ImporterDetails = () => {
                       input={{
                         name: 'address',
                         id: 'address',
-                        value: address,
+                        value: address || '',
                         maxLength: 250,
                         onChange: (e) => setAddress(e.target.value),
                       }}
@@ -219,7 +229,7 @@ const ImporterDetails = () => {
                       input={{
                         name: 'country',
                         id: 'country',
-                        value: country,
+                        value: country || '',
                         maxLength: 250,
                         onChange: (e) => setCountry(e.target.value),
                       }}

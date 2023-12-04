@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { BORDER_COLOUR } from 'govuk-colours';
 import styled from 'styled-components';
 import formatEwcCode from '../utils/formatEwcCode';
-import { EwcCodeType } from '../types/EwcCode';
+import { EwcCodeType } from '../types/wts';
 import { Tag } from 'govuk-react';
 
 interface Props {

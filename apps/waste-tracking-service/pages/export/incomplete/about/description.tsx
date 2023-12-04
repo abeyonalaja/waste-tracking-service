@@ -24,6 +24,12 @@ import { isNotEmpty, validateWasteDescription } from 'utils/validators';
 import styled from 'styled-components';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: { status: 'Started' } & GetWasteDescriptionResponse;
@@ -82,7 +88,7 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const Description = () => {
+const Description = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -104,26 +110,30 @@ const Description = () => {
   }>({});
 
   useEffect(() => {
-    dispatchDescribeWastePage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchDescribeWastePage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchDescribeWastePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+    const fetchData = async () => {
+      dispatchDescribeWastePage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchDescribeWastePage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchDescribeWastePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleInputChange = (input) => {
@@ -133,12 +143,13 @@ const Description = () => {
     });
   };
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const description = describeWastePage.data?.description;
       const newErrors = {
         description: validateWasteDescription(description),
@@ -149,13 +160,11 @@ const Description = () => {
       } else {
         setErrors(null);
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify({
                 ...describeWastePage.data,
                 status: 'Complete',
@@ -180,8 +189,6 @@ const Description = () => {
           console.error(e);
         }
       }
-
-      e.preventDefault();
     },
     [id, describeWastePage.data, router]
   );

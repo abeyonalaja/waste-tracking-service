@@ -51,7 +51,6 @@ import {
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { Logger } from 'winston';
 import { OrderRef, Submission } from '../submission';
-import { sub } from 'date-fns';
 
 export type TemplateRef = {
   id: string;
@@ -172,7 +171,7 @@ export class InMemoryTemplateBackend
       recoveryFacilityDetail: { status: 'CannotStart' },
     };
 
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
     return Promise.resolve(template);
   }
 
@@ -229,7 +228,7 @@ export class InMemoryTemplateBackend
       ),
     };
 
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
     return Promise.resolve(template);
   }
 
@@ -283,7 +282,7 @@ export class InMemoryTemplateBackend
       ),
     };
 
-    this.templates.set(id, newTemplate);
+    this.templates.set(JSON.stringify({ id, accountId }), newTemplate);
     return Promise.resolve(newTemplate);
   }
 
@@ -306,7 +305,7 @@ export class InMemoryTemplateBackend
       );
     }
 
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -329,7 +328,7 @@ export class InMemoryTemplateBackend
       template.templateDetails.description = templateDetails.description;
       template.templateDetails.lastModified = new Date();
 
-      this.templates.set(id, template);
+      this.templates.set(JSON.stringify({ id, accountId }), template);
     }
 
     return Promise.resolve(template);
@@ -337,7 +336,11 @@ export class InMemoryTemplateBackend
 
   doesTemplateAlreadyExist(accountId: string, templateName: string): boolean {
     let exists = false;
-    const templates: Template[] = [...this.templates.values()];
+    const keys: string[] = [...this.templates.keys()].filter(
+      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
+    );
+    const templates: Template[] = [];
+    keys.forEach((ref) => templates.push(this.templates.get(ref) as Template));
 
     Object.values(templates).map((template) => {
       if (template.templateDetails.name === templateName) {
@@ -355,7 +358,13 @@ export class InMemoryTemplateBackend
     pageLimit = 15,
     token?: string
   ): Promise<TemplateSummaryPage> {
-    const rawValues: Template[] = [...this.templates.values()];
+    const rawKeys: string[] = [...this.templates.keys()].filter(
+      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
+    );
+    const rawValues: Template[] = [];
+    rawKeys.forEach((ref) =>
+      rawValues.push(this.templates.get(ref) as Template)
+    );
     let templates: ReadonlyArray<TemplateSummary> = rawValues
       .map((s) => {
         return {
@@ -459,18 +468,21 @@ export class InMemoryTemplateBackend
     });
   }
 
-  deleteTemplate({ id }: TemplateRef): Promise<void> {
-    const template = this.templates.get(id);
+  deleteTemplate({ id, accountId }: TemplateRef): Promise<void> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
 
-    this.templates.delete(id);
+    this.templates.delete(JSON.stringify({ id, accountId }));
     return Promise.resolve();
   }
 
-  getWasteDescription({ id }: SubmissionRef): Promise<WasteDescription> {
-    const template = this.templates.get(id);
+  getWasteDescription({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<WasteDescription> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -479,10 +491,10 @@ export class InMemoryTemplateBackend
   }
 
   setWasteDescription(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: DraftWasteDescription
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -497,13 +509,13 @@ export class InMemoryTemplateBackend
     template.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  getExporterDetail({ id }: SubmissionRef): Promise<ExporterDetail> {
-    const template = this.templates.get(id);
+  getExporterDetail({ id, accountId }: SubmissionRef): Promise<ExporterDetail> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -512,10 +524,10 @@ export class InMemoryTemplateBackend
   }
 
   setExporterDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: ExporterDetail
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -526,13 +538,13 @@ export class InMemoryTemplateBackend
     ).exporterDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  getImporterDetail({ id }: SubmissionRef): Promise<ImporterDetail> {
-    const template = this.templates.get(id);
+  getImporterDetail({ id, accountId }: SubmissionRef): Promise<ImporterDetail> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -541,10 +553,10 @@ export class InMemoryTemplateBackend
   }
 
   setImporterDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: ImporterDetail
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -555,13 +567,13 @@ export class InMemoryTemplateBackend
     ).importerDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  listCarriers({ id }: SubmissionRef): Promise<Carriers> {
-    const template = this.templates.get(id);
+  listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -570,7 +582,7 @@ export class InMemoryTemplateBackend
   }
 
   createCarriers(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
     if (value.status !== 'Started') {
@@ -581,7 +593,7 @@ export class InMemoryTemplateBackend
       );
     }
 
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -602,7 +614,7 @@ export class InMemoryTemplateBackend
     template.carriers = submissionBasePlusId.submissionBase.carriers;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve({
       status: value.status,
@@ -611,8 +623,11 @@ export class InMemoryTemplateBackend
     });
   }
 
-  getCarriers({ id }: SubmissionRef, carrierId: string): Promise<Carriers> {
-    const template = this.templates.get(id);
+  getCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<Carriers> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -639,11 +654,11 @@ export class InMemoryTemplateBackend
   }
 
   setCarriers(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     carrierId: string,
     value: Carriers
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -682,13 +697,16 @@ export class InMemoryTemplateBackend
     }
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  deleteCarriers({ id }: SubmissionRef, carrierId: string): Promise<void> {
-    const template = this.templates.get(id);
+  deleteCarriers(
+    { id, accountId }: SubmissionRef,
+    carrierId: string
+  ): Promise<void> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -711,13 +729,16 @@ export class InMemoryTemplateBackend
     ).carriers;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  getCollectionDetail({ id }: SubmissionRef): Promise<CollectionDetail> {
-    const template = this.templates.get(id);
+  getCollectionDetail({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<CollectionDetail> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -726,10 +747,10 @@ export class InMemoryTemplateBackend
   }
 
   setCollectionDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: CollectionDetail
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -740,13 +761,13 @@ export class InMemoryTemplateBackend
     ).collectionDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  getExitLocation({ id }: SubmissionRef): Promise<ExitLocation> {
-    const template = this.templates.get(id);
+  getExitLocation({ id, accountId }: SubmissionRef): Promise<ExitLocation> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -754,8 +775,11 @@ export class InMemoryTemplateBackend
     return Promise.resolve(template.ukExitLocation);
   }
 
-  setExitLocation({ id }: SubmissionRef, value: ExitLocation): Promise<void> {
-    const template = this.templates.get(id);
+  setExitLocation(
+    { id, accountId }: SubmissionRef,
+    value: ExitLocation
+  ): Promise<void> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -766,13 +790,16 @@ export class InMemoryTemplateBackend
     ).ukExitLocation;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
-  getTransitCountries({ id }: SubmissionRef): Promise<TransitCountries> {
-    const template = this.templates.get(id);
+  getTransitCountries({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<TransitCountries> {
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -781,10 +808,10 @@ export class InMemoryTemplateBackend
   }
 
   setTransitCountries(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: TransitCountries
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -795,15 +822,16 @@ export class InMemoryTemplateBackend
     ).transitCountries;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
   listRecoveryFacilityDetail({
     id,
+    accountId,
   }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -812,7 +840,7 @@ export class InMemoryTemplateBackend
   }
 
   createRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     value: Omit<RecoveryFacilityDetail, 'values'>
   ): Promise<RecoveryFacilityDetail> {
     if (value.status !== 'Started') {
@@ -823,7 +851,7 @@ export class InMemoryTemplateBackend
       );
     }
 
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -851,7 +879,7 @@ export class InMemoryTemplateBackend
       submissionBasePlusId.submissionBase.recoveryFacilityDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve({
       status: value.status,
@@ -860,10 +888,10 @@ export class InMemoryTemplateBackend
   }
 
   getRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<RecoveryFacilityDetail> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -893,11 +921,11 @@ export class InMemoryTemplateBackend
   }
 
   setRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string,
     value: RecoveryFacilityDetail
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -939,16 +967,16 @@ export class InMemoryTemplateBackend
     }
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }
 
   deleteRecoveryFacilityDetail(
-    { id }: SubmissionRef,
+    { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<void> {
-    const template = this.templates.get(id);
+    const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
     }
@@ -973,7 +1001,7 @@ export class InMemoryTemplateBackend
     ).recoveryFacilityDetail;
 
     template.templateDetails.lastModified = new Date();
-    this.templates.set(id, template);
+    this.templates.set(JSON.stringify({ id, accountId }), template);
 
     return Promise.resolve();
   }

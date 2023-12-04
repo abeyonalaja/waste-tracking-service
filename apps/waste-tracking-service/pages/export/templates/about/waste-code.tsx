@@ -23,7 +23,13 @@ import {
 } from 'utils/validators';
 import Autocomplete from 'accessible-autocomplete/react';
 
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
 import i18n from 'i18next';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
 type singleCodeType = {
   code: string;
@@ -35,7 +41,7 @@ type codeType = {
   values: Array<singleCodeType>;
 };
 
-const WasteCode = () => {
+const WasteCode = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -56,7 +62,8 @@ const WasteCode = () => {
     const fetchData = async () => {
       try {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`,
+          { headers: apiConfig }
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -121,7 +128,8 @@ const WasteCode = () => {
       if (templateId !== null) {
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
+            { headers: apiConfig }
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -232,9 +240,7 @@ const WasteCode = () => {
           try {
             await fetch(url, {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             })
               .then((response) => {

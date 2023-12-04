@@ -39,6 +39,12 @@ import styled from 'styled-components';
 import { GetCollectionDetailResponse } from '@wts/api/waste-tracking-gateway';
 import { countriesData } from 'utils/countriesData';
 import { BORDER_COLOUR } from 'govuk-colours';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   POSTCODE_SEARCH: 1,
@@ -219,7 +225,7 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const CollectionDetails = () => {
+const CollectionDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [addressPage, dispatchAddressPage] = useReducer(
@@ -258,46 +264,52 @@ const CollectionDetails = () => {
 
   useEffect(() => {
     dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
-          }
+    const fetchData = async () => {
+      if (id !== null) {
+        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
+          headers: apiConfig,
         })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchAddressPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data.collectionDetail,
-            });
-            if (data.carriers?.values !== undefined) {
-              setNoOfWasteCarriers(data.carriers.values.length);
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
             }
-            if (data.collectionDetail?.address !== undefined) {
-              setReturnToTask(true);
-              setAddressDetails(data.collectionDetail.address);
-              setContactDetails(data.collectionDetail.contactDetails);
-              if (page !== undefined) {
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS[page],
-                });
-              } else {
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS.MANUAL_ADDRESS,
-                });
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchAddressPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data.collectionDetail,
+              });
+              if (data.carriers?.values !== undefined) {
+                setNoOfWasteCarriers(data.carriers.values.length);
+              }
+              if (data.collectionDetail?.address !== undefined) {
+                setReturnToTask(true);
+                setAddressDetails(data.collectionDetail.address);
+                setContactDetails(data.collectionDetail.contactDetails);
+                if (page !== undefined) {
+                  dispatchAddressPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS[page],
+                  });
+                } else {
+                  dispatchAddressPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS.MANUAL_ADDRESS,
+                  });
+                }
               }
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handlePostcodeSearch = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         postcode: validatePostcode(postcode),
       };
@@ -307,13 +319,11 @@ const CollectionDetails = () => {
         dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: null });
         dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
             {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
             }
           )
             .then((response) => {
@@ -348,7 +358,6 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [postcode]
   );
@@ -358,7 +367,8 @@ const CollectionDetails = () => {
   };
 
   const handleSubmitAddress = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         selectedAddress: validateSelectAddress(selectedAddress),
       };
@@ -376,13 +386,11 @@ const CollectionDetails = () => {
           address: JSON.parse(selectedAddress),
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -414,24 +422,21 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [selectedAddress]
   );
 
-  const handleSingleAddressFormSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
-      dispatchAddressPage({
-        type: 'SHOW_VIEW',
-        payload: VIEWS.CONTACT_DETAILS,
-      });
-      e.preventDefault();
-    },
-    []
-  );
+  const handleSingleAddressFormSubmit = useCallback((e: FormEvent) => {
+    e.preventDefault();
+    dispatchAddressPage({
+      type: 'SHOW_VIEW',
+      payload: VIEWS.CONTACT_DETAILS,
+    });
+  }, []);
 
   const handleContactFormSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         organisationName: validateOrganisationName(
           contactDetails?.organisationName
@@ -451,13 +456,11 @@ const CollectionDetails = () => {
           contactDetails: contactDetails,
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -478,13 +481,13 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [contactDetails]
   );
 
   const handleManualAddressSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         addressLine1: validateAddress(addressDetails?.addressLine1),
         townCity: validateTownCity(addressDetails?.townCity),
@@ -505,13 +508,11 @@ const CollectionDetails = () => {
           address: addressDetails,
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -542,7 +543,6 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [addressDetails]
   );

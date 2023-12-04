@@ -17,6 +17,12 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import { countriesData } from 'utils/countriesData';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -33,7 +39,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterManual = () => {
+const ExporterManual = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -48,32 +54,36 @@ const ExporterManual = () => {
   const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
-    setIsError(false);
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setAddress(data.exporterAddress?.addressLine1);
-            setAddress2(data.exporterAddress?.addressLine2);
-            setTownCity(data.exporterAddress?.townCity);
-            setPostcode(data.exporterAddress?.postcode);
-            setCountry(data.exporterAddress?.country);
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      if (templateId !== null) {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setAddress(data.exporterAddress?.addressLine1);
+              setAddress2(data.exporterAddress?.addressLine2);
+              setTownCity(data.exporterAddress?.townCity);
+              setPostcode(data.exporterAddress?.postcode);
+              setCountry(data.exporterAddress?.country);
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   useEffect(() => {
@@ -91,7 +101,8 @@ const ExporterManual = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const body = {
         ...data,
         status: 'Started',
@@ -104,13 +115,11 @@ const ExporterManual = () => {
         },
       };
       try {
-        fetch(
+        await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
           {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: JSON.stringify(body),
           }
         )
@@ -128,8 +137,6 @@ const ExporterManual = () => {
       } catch (e) {
         console.error(e);
       }
-
-      e.preventDefault();
     },
     [townCity, country, address, data, address2, postcode, templateId, router]
   );

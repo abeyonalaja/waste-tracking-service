@@ -18,8 +18,14 @@ import { useRouter } from 'next/router';
 import { isNotEmpty, validateDate, validateDateType } from 'utils/validators';
 import { GetCollectionDateResponse } from '@wts/api/waste-tracking-gateway';
 import { format, addBusinessDays } from 'date-fns';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
-const CollectionDate = () => {
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
+const CollectionDate = ({ apiConfig }: PageProps) => {
   interface Date {
     day: string;
     month: string;
@@ -48,37 +54,41 @@ const CollectionDate = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data: GetCollectionDateResponse) => {
-          if (data !== undefined) {
-            if (data.status === 'Complete') {
-              setData(data);
-              const type =
-                data.value.type === 'EstimateDate'
-                  ? 'estimateDate'
-                  : 'actualDate';
-              setDateType(data.value.type);
-              setCollectionDate({
-                day: data.value[type].day,
-                month: data.value[type].month,
-                year: data.value[type].year,
-              });
+    const fetchData = async () => {
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
             }
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+          })
+          .then((data: GetCollectionDateResponse) => {
+            if (data !== undefined) {
+              if (data.status === 'Complete') {
+                setData(data);
+                const type =
+                  data.value.type === 'EstimateDate'
+                    ? 'estimateDate'
+                    : 'actualDate';
+                setDateType(data.value.type);
+                setCollectionDate({
+                  day: data.value[type].day,
+                  month: data.value[type].month,
+                  year: data.value[type].year,
+                });
+              }
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const get3WorkingDaysFromToday = () => {
@@ -90,12 +100,13 @@ const CollectionDate = () => {
     setCollectionDate({ day: null, month: null, year: null });
   };
 
-  const handleReturnClick = (e) => {
-    handleSubmit(e, true);
+  const handleReturnClick = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         dateType: validateDateType(dateType),
         date:
@@ -126,9 +137,7 @@ const CollectionDate = () => {
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -150,7 +159,6 @@ const CollectionDate = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [dateType, collectionDate]
   );

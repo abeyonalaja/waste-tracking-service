@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import { format } from 'date-fns';
 import { UnitDisplay, BreakableString } from 'components';
-import { EwcCodeType } from 'types/EwcCode';
+import { EwcCodeType } from 'types/wts';
 
 type State = {
   data: Submission;
@@ -279,33 +279,51 @@ const Download = () => {
     initialWasteDescState
   );
   const [id, setId] = useState(null);
+  const [token, setToken] = useState(null);
+  const [apiConfig, setApiConfig] = useState(null);
 
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setToken(router.query.token);
     }
-  }, [router.isReady, router.query.id]);
+  }, [router.isReady, router.query.id, router.query.token]);
 
   useEffect(() => {
-    dispatchDownloadReport({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchDownloadReport({ type: 'DATA_FETCH_FAILURE' });
+    setApiConfig({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatchDownloadReport({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchDownloadReport({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
-  }, [router.isReady, id]);
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchDownloadReport({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchDownloadReport({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
+  }, [router.isReady, id, apiConfig]);
 
   useEffect(() => {
     if (downloadReport.data !== null) {

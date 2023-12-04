@@ -1,5 +1,4 @@
 When(/^I navigate to the add reference page$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberPage.new.check_page_displayed
 end

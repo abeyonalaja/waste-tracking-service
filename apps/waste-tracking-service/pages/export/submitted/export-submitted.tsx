@@ -15,6 +15,12 @@ import {
   Paragraph,
   AppLink,
 } from 'components';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 import styled from 'styled-components';
 
@@ -95,7 +101,7 @@ const IdDisplay = styled.div`
   font-weight: 600;
 `;
 
-const ExportSubmitted = () => {
+const ExportSubmitted = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -117,25 +123,33 @@ const ExportSubmitted = () => {
   }>({});
 
   useEffect(() => {
-    dispatchExportSubmittedPage({ type: 'DATA_FETCH_INIT' });
+    const fetchData = async () => {
+      dispatchExportSubmittedPage({ type: 'DATA_FETCH_INIT' });
 
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchExportSubmittedPage({ type: 'DATA_FETCH_FAILURE' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchExportSubmittedPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchExportSubmittedPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchExportSubmittedPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const BreadCrumbs = () => {

@@ -39,6 +39,12 @@ import styled from 'styled-components';
 import { GetCollectionDetailResponse } from '@wts/api/waste-tracking-gateway';
 import { countriesData } from 'utils/countriesData';
 import { BORDER_COLOUR } from 'govuk-colours';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 enum VIEWS {
   POSTCODE_SEARCH = 0,
@@ -219,7 +225,7 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const CollectionDetails = () => {
+const CollectionDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [addressPage, dispatchAddressPage] = useReducer(
@@ -288,50 +294,55 @@ const CollectionDetails = () => {
   }, [router.isReady, router.query.templateId]);
 
   useEffect(() => {
-    dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchAddressPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data.collectionDetail,
-            });
-            if (data.carriers?.values !== undefined) {
-              setNoOfWasteCarriers(data.carriers.values.length);
+    const fetchData = async () => {
+      dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchAddressPage({ type: 'DATA_FETCH_FAILURE' });
             }
-            if (data.collectionDetail?.address !== undefined) {
-              setReturnToTask(true);
-              setAddressDetails(data.collectionDetail.address);
-              setContactDetails(data.collectionDetail.contactDetails);
-              if (page !== undefined) {
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS[page],
-                });
-              } else {
-                setViewToReturnTo(VIEWS.POSTCODE_SEARCH);
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS.MANUAL_ADDRESS,
-                });
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchAddressPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data.collectionDetail,
+              });
+              if (data.carriers?.values !== undefined) {
+                setNoOfWasteCarriers(data.carriers.values.length);
+              }
+              if (data.collectionDetail?.address !== undefined) {
+                setReturnToTask(true);
+                setAddressDetails(data.collectionDetail.address);
+                setContactDetails(data.collectionDetail.contactDetails);
+                if (page !== undefined) {
+                  dispatchAddressPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS[page],
+                  });
+                } else {
+                  setViewToReturnTo(VIEWS.POSTCODE_SEARCH);
+                  dispatchAddressPage({
+                    type: 'SHOW_VIEW',
+                    payload: VIEWS.MANUAL_ADDRESS,
+                  });
+                }
               }
             }
-          }
-        });
-    }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handlePostcodeSearch = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         postcode: validatePostcode(postcode),
       };
@@ -341,13 +352,11 @@ const CollectionDetails = () => {
         dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: null });
         dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
             {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
             }
           )
             .then((response) => {
@@ -382,13 +391,13 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [postcode]
   );
 
   const handleSubmitAddress = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         selectedAddress: validateSelectAddress(selectedAddress),
       };
@@ -406,13 +415,11 @@ const CollectionDetails = () => {
           address: JSON.parse(selectedAddress),
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/collection-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -437,24 +444,21 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [selectedAddress]
   );
 
-  const handleSingleAddressFormSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
-      dispatchAddressPage({
-        type: 'SHOW_VIEW',
-        payload: VIEWS.CONTACT_DETAILS,
-      });
-      e.preventDefault();
-    },
-    []
-  );
+  const handleSingleAddressFormSubmit = useCallback((e: FormEvent) => {
+    dispatchAddressPage({
+      type: 'SHOW_VIEW',
+      payload: VIEWS.CONTACT_DETAILS,
+    });
+    e.preventDefault();
+  }, []);
 
   const handleContactFormSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         emailAddress: validateEmail(contactDetails?.emailAddress, true),
         phoneNumber: validatePhone(contactDetails?.phoneNumber, true),
@@ -473,13 +477,11 @@ const CollectionDetails = () => {
           status: getStatus(),
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/collection-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(updatedStatus),
             }
           )
@@ -498,13 +500,13 @@ const CollectionDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [contactDetails, addressPage]
   );
 
   const handleManualAddressSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       dispatchAddressPage({ type: 'DATA_FETCH_INIT' });
       const body = {
         ...addressPage.data,
@@ -515,13 +517,11 @@ const CollectionDetails = () => {
         status: getStatus(),
       };
       try {
-        fetch(
+        await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/collection-detail`,
           {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: JSON.stringify(updatedStatus),
           }
         )
@@ -534,25 +534,17 @@ const CollectionDetails = () => {
                 type: 'DATA_UPDATE',
                 payload: data,
               });
-              if (returnToDraft) {
-                router.push({
-                  pathname: `/export/templates/tasklist`,
-                  query: { templateId },
-                });
-              } else {
-                setViewToReturnTo(VIEWS.MANUAL_ADDRESS);
-                dispatchAddressPage({
-                  type: 'SHOW_VIEW',
-                  payload: VIEWS.SHOW_ADDRESS,
-                });
-              }
+
+              setViewToReturnTo(VIEWS.MANUAL_ADDRESS);
+              dispatchAddressPage({
+                type: 'SHOW_VIEW',
+                payload: VIEWS.SHOW_ADDRESS,
+              });
             }
           });
       } catch (e) {
         console.error(e);
       }
-
-      e.preventDefault();
     },
     [addressDetails, addressPage]
   );

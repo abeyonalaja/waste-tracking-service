@@ -24,7 +24,13 @@ import {
   isNotEmpty,
   validateTemplateDesc,
   validateTemplateName,
-} from '../../../utils/validators';
+} from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const VIEWS = {
   DEFAULT: 1,
@@ -87,7 +93,7 @@ const templateReducer = (state: State, action: Action) => {
   }
 };
 
-const TemplateCopy = () => {
+const TemplateCopy = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templatePage, dispatchTemplatePage] = useReducer(
@@ -109,30 +115,37 @@ const TemplateCopy = () => {
   }, [router.isReady, router.query.templateId]);
 
   useEffect(() => {
-    dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
+      if (templateId !== null) {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchTemplatePage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchTemplatePage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         templateName: validateTemplateName(templateName),
         templateDesc: validateTemplateDesc(templateDesc),
@@ -149,11 +162,9 @@ const TemplateCopy = () => {
           },
         });
         try {
-          fetch(url, {
+          await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: body,
           })
             .then((response) => response.json())
@@ -174,7 +185,6 @@ const TemplateCopy = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [router, templateName, templateDesc]
   );

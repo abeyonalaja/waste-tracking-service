@@ -11,8 +11,13 @@ import {
   Paragraph,
 } from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
 
-export function Reference() {
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+export function Reference({ apiConfig }: PageProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { submission, setSubmission } = useSubmissionContext();
@@ -26,34 +31,40 @@ export function Reference() {
   }>({});
 
   useEffect(() => {
-    if (router.isReady) {
-      const { id } = router.query;
-      if (id !== undefined) {
-        try {
-          fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-              const { id, reference } = data;
-              setId(id);
-              setReference(reference);
-            });
-        } catch (e) {
-          console.error(e);
+    const fetchData = async () => {
+      if (router.isReady) {
+        const { id } = router.query;
+        if (id !== undefined) {
+          try {
+            fetch(
+              `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+              {
+                headers: apiConfig,
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                const { id, reference } = data;
+                setId(id);
+                setReference(reference);
+              });
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
-    }
+    };
+    fetchData();
   }, [router.isReady, router.query]);
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
-      const updateData = () => {
+      const updateData = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/reference`;
         try {
-          fetch(url, {
+          await fetch(url, {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: JSON.stringify(reference.trim()),
           }).then(() => {
             router.push({
@@ -66,15 +77,13 @@ export function Reference() {
         }
       };
 
-      const postData = () => {
+      const postData = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions`;
         const body = JSON.stringify({ reference });
         try {
-          fetch(url, {
+          await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: apiConfig,
             body: body,
           })
             .then((response) => response.json())

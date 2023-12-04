@@ -3,7 +3,6 @@ Then(/^I verify add ewc code page is displayed$/) do
 end
 
 And(/^I navigate to Add EWC code page$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   TaskListPage.new.waste_codes_and_description
@@ -41,7 +40,6 @@ Then(/^I verify that task list page is displayed$/) do
 end
 
 Given(/^I navigate to ewc code page with selecting Not applicable option on waste code page$/) do
-  click_link('dashboard_link')
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   TaskListPage.new.waste_codes_and_description

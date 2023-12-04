@@ -3,6 +3,10 @@ import { render, fireEvent, act } from 'jest-utils';
 import { screen } from '@testing-library/dom';
 import Reference from 'pages/export/incomplete/reference';
 
+jest.mock('next-auth/jwt', () => ({
+  getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
+}));
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,

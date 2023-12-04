@@ -1,5 +1,6 @@
 import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
+import AuthBearer from 'hapi-auth-bearer-token';
 import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import * as winston from 'winston';
@@ -16,6 +17,7 @@ import {
   SubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
+import { validateToken } from './lib/auth';
 import {
   AnnexViiServiceTemplateBackend,
   InMemoryTemplateBackend,
@@ -23,6 +25,7 @@ import {
   templatePlugin,
 } from './modules/template';
 import { Template } from '@wts/api/annex-vii';
+import Boom from '@hapi/boom';
 import {
   WTSInfoBackend,
   WTSInfoServiceBackend,
@@ -100,6 +103,21 @@ if (process.env['NODE_ENV'] === 'development') {
     wtsInfo: wtsInfoBackend,
   };
 }
+
+await app.register(Object.create(AuthBearer));
+
+app.auth.strategy('dcid-auth', 'bearer-access-token', {
+  allowQueryToken: true,
+  validate: async (request: any, token: string, h: any) => {
+    try {
+      return validateToken(token);
+    } catch (err) {
+      return Boom.unauthorized();
+    }
+  },
+});
+
+app.auth.default('dcid-auth');
 
 await app.register({
   plugin: submissionPlugin,

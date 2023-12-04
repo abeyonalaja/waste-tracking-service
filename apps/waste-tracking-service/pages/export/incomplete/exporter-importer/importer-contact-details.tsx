@@ -21,6 +21,12 @@ import {
   validateEmail,
   validateInternationalPhone,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -31,7 +37,7 @@ const PostcodeInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ImporterContactDetails = () => {
+const ImporterContactDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
@@ -48,45 +54,56 @@ const ImporterContactDetails = () => {
   }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  useEffect(() => {
-    setIsLoading(true);
-    setIsError(false);
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setFullName(data.importerContactDetails?.fullName || '');
-            setEmail(data.importerContactDetails?.emailAddress || '');
-            setPhone(data.importerContactDetails?.phoneNumber || '');
-            setFax(data.importerContactDetails?.faxNumber || '');
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
-  }, [router.isReady, id]);
+
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
     }
   }, [router.isReady, router.query.id]);
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  useEffect(() => {
+    setIsLoading(true);
+    setIsError(false);
+    const fetchData = async () => {
+      if (id !== null) {
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`,
+            { headers: apiConfig }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+              else {
+                setIsLoading(false);
+                setIsError(true);
+              }
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                setData(data);
+                setFullName(data.importerContactDetails?.fullName || '');
+                setEmail(data.importerContactDetails?.emailAddress || '');
+                setPhone(data.importerContactDetails?.phoneNumber || '');
+                setFax(data.importerContactDetails?.faxNumber || '');
+                setIsLoading(false);
+                setIsError(false);
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    fetchData();
+  }, [router.isReady, id]);
+
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         fullName: validateFullName(fullName),
         email: validateEmail(email),
@@ -107,13 +124,11 @@ const ImporterContactDetails = () => {
           },
         };
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -135,7 +150,6 @@ const ImporterContactDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [fullName, email, phone, fax]
   );

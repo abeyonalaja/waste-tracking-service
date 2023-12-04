@@ -25,6 +25,12 @@ import {
   validateKnowsPointOfExit,
   validatePointOfExit,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const pointOfExitReducer = (state, action) => {
   switch (action.type) {
@@ -57,7 +63,7 @@ const pointOfExitReducer = (state, action) => {
   }
 };
 
-const ExitLocation = () => {
+const ExitLocation = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -80,26 +86,30 @@ const ExitLocation = () => {
   }>({});
 
   useEffect(() => {
-    dispatchPointOfExitPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchPointOfExitPage({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchPointOfExitPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data.exitLocation,
-            });
-          }
-        });
-    }
+    const fetchData = async () => {
+      dispatchPointOfExitPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchPointOfExitPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchPointOfExitPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data.exitLocation,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const handleInputChange = (input) => {
@@ -123,12 +133,13 @@ const ExitLocation = () => {
     });
   };
 
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleLinkSubmit = async (e) => {
+    await handleSubmit(e, true);
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const pointOfExit = pointOfExitPage.data?.value;
       const knowsPointOfExit = pointOfExitPage.data?.provided;
 
@@ -143,13 +154,11 @@ const ExitLocation = () => {
         setErrors(null);
 
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify({
                 status: 'Complete',
                 exitLocation: pointOfExitPage.data,
@@ -174,8 +183,6 @@ const ExitLocation = () => {
           console.error(e);
         }
       }
-
-      e.preventDefault();
     },
     [id, pointOfExitPage.data, router]
   );

@@ -30,6 +30,11 @@ import {
 } from 'utils/validators';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 enum VIEWS {
   ADDRESS_DETAILS = 1,
@@ -142,7 +147,7 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const WasteCarriers = () => {
+const WasteCarriers = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [carrierPage, dispatchCarrierPage] = useReducer(
@@ -198,7 +203,8 @@ const WasteCarriers = () => {
       dispatchCarrierPage({ type: 'DATA_FETCH_INIT' });
       if (templateId !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers`
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers`,
+          { headers: apiConfig }
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -304,9 +310,7 @@ const WasteCarriers = () => {
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers/${carrierPage.carrierData.id}`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
@@ -393,10 +397,6 @@ const WasteCarriers = () => {
     });
   };
 
-  const handleReturnConfirmRemove = (e) => {
-    handleConfirmRemove(e, true);
-  };
-
   const handleConfirmRemove = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const newErrors = {
@@ -429,9 +429,7 @@ const WasteCarriers = () => {
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers/${carrierPage.carrierData.id}`,
               {
                 method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+                headers: apiConfig,
               }
             ).then(() => {
               const updatedValues = carrierPage.data.values.filter(
@@ -507,9 +505,7 @@ const WasteCarriers = () => {
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
         }
       )

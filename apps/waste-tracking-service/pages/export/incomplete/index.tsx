@@ -10,6 +10,12 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 import {
   AppLink,
@@ -117,7 +123,7 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const IncompleteAnnex7 = () => {
+const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(
@@ -162,7 +168,7 @@ const IncompleteAnnex7 = () => {
         url = `${url}&token=${token}`;
       }
 
-      fetch(url)
+      fetch(url, { headers: apiConfig })
         .then((response) => {
           if (response.ok) return response.json();
           else {
@@ -192,7 +198,8 @@ const IncompleteAnnex7 = () => {
     e.preventDefault();
   };
 
-  const handleConfirmSubmit = (e: FormEvent) => {
+  const handleConfirmSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     const newErrors = {
       confirm: validateConfirmRemoveDocument(confirm),
     };
@@ -213,13 +220,11 @@ const IncompleteAnnex7 = () => {
       if (confirm === 'yes') {
         dispatchIncompleteAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${item.id}?action=DELETE`,
             {
               method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
             }
           ).then(() => {
             const newData = incompleteAnnex7Page.data;
@@ -239,7 +244,6 @@ const IncompleteAnnex7 = () => {
         }
       }
     }
-    e.preventDefault();
   };
   const handleDeleteClick = () => {
     setShowNotification(!showNotification);

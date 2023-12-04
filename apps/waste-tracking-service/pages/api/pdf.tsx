@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer';
+import { getToken } from 'next-auth/jwt';
 
-async function createPDF(hostname, id) {
+async function createPDF(hostname, id, token) {
   const browser = await puppeteer.launch(
     process.env['NODE_ENV'] !== 'production'
       ? {
@@ -35,7 +36,8 @@ async function createPDF(hostname, id) {
 }
 
 async function handler(req, res) {
-  await createPDF(req.headers.host, req.query.id).then((pdf) => {
+  const token = await getToken({ req });
+  await createPDF(req.headers.host, req.query.id, token).then((pdf) => {
     res.send(pdf);
   });
 }

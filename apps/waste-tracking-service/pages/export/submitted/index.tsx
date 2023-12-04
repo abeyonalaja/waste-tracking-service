@@ -16,6 +16,12 @@ import {
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: GetSubmissionsResponse;
@@ -76,7 +82,7 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const Index = () => {
+const Index = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [submittedAnnex7Page, dispatchSubmittedAnnex7Page] = useReducer(
@@ -93,32 +99,34 @@ const Index = () => {
   }, [router.isReady, router.query.token]);
 
   useEffect(() => {
-    if (router.isReady) {
-      dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
+    const fetchData = async () => {
+      if (router.isReady) {
+        dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
+        let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
+        if (token) {
+          url = `${url}&token=${token}`;
+        }
 
-      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
-      if (token) {
-        url = `${url}&token=${token}`;
-      }
-
-      fetch(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          let filteredData;
-          if (data) {
-            filteredData = data;
-          }
-          dispatchSubmittedAnnex7Page({
-            type: 'DATA_FETCH_SUCCESS',
-            payload: filteredData,
+        await fetch(url, { headers: apiConfig })
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            let filteredData;
+            if (data) {
+              filteredData = data;
+            }
+            dispatchSubmittedAnnex7Page({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: filteredData,
+            });
           });
-        });
-    }
+      }
+    };
+    fetchData();
   }, [router.isReady, token]);
 
   const BreadCrumbs = () => {

@@ -18,6 +18,11 @@ import {
 } from 'components';
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 type State = {
   data: Submission;
@@ -62,7 +67,7 @@ const viewRecordReducer = (state: State, action: Action) => {
   }
 };
 
-const UpdateRecord = () => {
+const UpdateRecord = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [viewRecordPage, dispatchViewRecordPage] = useReducer(
@@ -78,24 +83,32 @@ const UpdateRecord = () => {
   }, [router.isReady, router.query.id]);
 
   useEffect(() => {
-    dispatchViewRecordPage({ type: 'DATA_FETCH_INIT' });
-    if (id !== null) {
-      fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`)
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchViewRecordPage({ type: 'DATA_FETCH_FAILURE' });
+    const fetchData = async () => {
+      dispatchViewRecordPage({ type: 'DATA_FETCH_INIT' });
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          {
+            headers: apiConfig,
           }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            dispatchViewRecordPage({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: data,
-            });
-          }
-        });
-    }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              dispatchViewRecordPage({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              dispatchViewRecordPage({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: data,
+              });
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, id]);
 
   const BreadCrumbs = () => {

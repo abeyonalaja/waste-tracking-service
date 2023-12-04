@@ -21,6 +21,12 @@ import {
   validateInternationalPhone,
 } from 'utils/validators';
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -31,7 +37,7 @@ const PostcodeInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ImporterContactDetails = () => {
+const ImporterContactDetails = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState(null);
@@ -46,32 +52,37 @@ const ImporterContactDetails = () => {
   }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+
   useEffect(() => {
-    setIsLoading(true);
-    setIsError(false);
-    if (templateId !== null) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            setIsLoading(false);
-            setIsError(true);
-          }
-        })
-        .then((data) => {
-          if (data !== undefined) {
-            setData(data);
-            setFullName(data.importerContactDetails?.fullName || '');
-            setEmail(data.importerContactDetails?.emailAddress || '');
-            setPhone(data.importerContactDetails?.phoneNumber || '');
-            setFax(data.importerContactDetails?.faxNumber || '');
-            setIsLoading(false);
-            setIsError(false);
-          }
-        });
-    }
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsLoading(false);
+              setIsError(true);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setData(data);
+              setFullName(data.importerContactDetails?.fullName || '');
+              setEmail(data.importerContactDetails?.emailAddress || '');
+              setPhone(data.importerContactDetails?.phoneNumber || '');
+              setFax(data.importerContactDetails?.faxNumber || '');
+              setIsLoading(false);
+              setIsError(false);
+            }
+          });
+      }
+    };
+    fetchData();
   }, [router.isReady, templateId]);
 
   useEffect(() => {
@@ -89,7 +100,8 @@ const ImporterContactDetails = () => {
   };
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
+      e.preventDefault();
       const newErrors = {
         email: validateEmail(email, true),
         phone: validateInternationalPhone(phone, true),
@@ -113,13 +125,11 @@ const ImporterContactDetails = () => {
         };
 
         try {
-          fetch(
+          await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(updatedStatus),
             }
           )
@@ -139,7 +149,6 @@ const ImporterContactDetails = () => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [fullName, email, phone, fax, data]
   );
