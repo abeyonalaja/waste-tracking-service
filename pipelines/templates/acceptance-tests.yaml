@@ -16,8 +16,6 @@ parameters:
     type: string
     default: 'not @ignore'
 
-trigger: none
-
 jobs:
   - job: test
     displayName: Acceptance tests
