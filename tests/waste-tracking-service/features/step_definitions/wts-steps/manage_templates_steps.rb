@@ -11,7 +11,8 @@ And(/^I verify that create new record template page is correctly translated$/) d
 end
 
 Then(/^I complete Create record template page$/) do
-  CreateNewRecordTemplatePage.new.enter_template_name "#{Faker::Name.initials(number: 5)} #{Faker::Name.first_name} Template"
+  template_name = "#{Faker::Name.initials(number: 5)} #{Faker::Name.first_name} #{Time.now.to_i} Template"
+  CreateNewRecordTemplatePage.new.enter_template_name template_name
   CreateNewRecordTemplatePage.new.enter_description Faker::Alphanumeric.alpha(number: 100)
   CreateNewRecordTemplatePage.new.create_template_button
   expect(UpdateWithActualPage.new.success_title.text).to eq 'Success'

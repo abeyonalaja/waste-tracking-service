@@ -267,9 +267,8 @@ Feature: AS A waste producer/broker
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And the task "Countries waste will travel through" should be "COMPLETED"
     And the task "Recovery facility" should be "COMPLETED"
-    And the task "Check your report" should be "CANNOT START YET"
+    And the task "Check your report" should be "NOT STARTED"
     And the task "Sign declaration" should be "CANNOT START YET"
-
 
   @translation
   Scenario: User use a template to create a single Annex VII record

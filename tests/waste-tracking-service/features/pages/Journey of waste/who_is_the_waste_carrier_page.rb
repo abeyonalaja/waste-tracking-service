@@ -31,15 +31,15 @@ class WhoIsTheWasteCarrierPage < GenericPage
 
   def check_page_title(title)
     case title
-    when 'First'
+    when 'First', '1'
       expect(self).to have_css 'h1', text: FIRST_TITLE, exact_text: true
-    when 'Second'
+    when 'Second', '2'
       expect(self).to have_css 'h1', text: SECOND_TITLE, exact_text: true
-    when 'Third'
+    when 'Third', '3'
       expect(self).to have_css 'h1', text: THIRD_TITLE, exact_text: true
-    when 'Fourth'
+    when 'Fourth', '4'
       expect(self).to have_css 'h1', text: FOURTH_TITLE, exact_text: true
-    when 'Fifth'
+    when 'Fifth', '5'
       expect(self).to have_css 'h1', text: FIFTH_TITLE, exact_text: true
     end
   end

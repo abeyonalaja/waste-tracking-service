@@ -45,7 +45,7 @@ Feature: AS A waste practitioner
     Then the "Manage templates" page is displayed
     Then I click the "Create a new Annex VII record template" link
     And I create a template with the same name as the previous one
-    Then I remain on the Create new record template page with an "A template with this name already exists" error message displayed
+    Then I remain on the Create new record template page with an "Template with this name already exists" error message displayed
 
   Scenario: User updates template name and verifies correct success message is displayed
     Given I login to waste tracking portal
@@ -158,6 +158,7 @@ Feature: AS A waste practitioner
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
     Then I verify previously selected waste code is pre-selected
+    And I wait for a second
     Then I should see ewc code description on EWC list page
     And I click the button Save and continue
     Then I should see national code pre-populated

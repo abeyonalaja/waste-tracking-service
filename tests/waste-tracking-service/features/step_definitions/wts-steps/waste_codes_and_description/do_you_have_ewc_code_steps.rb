@@ -91,6 +91,7 @@ Then(/^I add (\d+) ewc codes$/) do |ewc_code|
   (1..ewc_code).each do |i|
     enter_an_ewc_code_page = EnterAnEwcCodePage.new
     ewc_code_list_page = EwcCodeListPage.new
+    HelperMethods.wait_for_a_sec
     ewc_code_list_page.choose_option(Translations.value('radio.yes'))
     ewc_code_list_page.save_and_continue
     puts TestData.get_ewc_codes i

@@ -46,5 +46,5 @@ Then(/^the who is the second waste carriers page is displayed$/) do
 end
 
 And(/^I complete waste carrier detail with (\d+) waste carrier$/) do |no_of_waste_carrier|
-
+  WasteCarrierBulkWasteController.complete no_of_waste_carrier
 end
