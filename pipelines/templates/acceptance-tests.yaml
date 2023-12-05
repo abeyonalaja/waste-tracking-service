@@ -1,0 +1,76 @@
+parameters:
+  - name: htmlReports
+    displayName: Generate HTML reports?
+    type: boolean
+    default: false
+
+  - name: environment
+    displayName: Environment under test
+    values:
+      - DEV
+      - TST
+      - PRE
+
+  - name: tags
+    displayName: Filter expression for Cucumber scenarios
+    type: string
+    default: 'not @ignore'
+
+trigger: none
+
+jobs:
+  - job: test
+    displayName: Acceptance tests
+
+    steps:
+      - task: UseRubyVersion@0
+        inputs:
+          versionSpec: '>= 3.0'
+
+      - bash: |
+          gem install bundler
+          bundle install
+
+          mkdir -p reports/parallel
+
+          args=(
+            --strict-undefined
+            --tags "${{ parameters.tags }}"
+            --format pretty
+          )
+
+          if [ "$HTML_REPORTS" == true ]; then
+            args+=(--format html --out reports)
+          else
+            args+=(--format junit --out junit)
+          fi
+
+          bundle exec parallel_cucumber \
+            --type cucumber \
+            -n 4 \
+            -o ' \
+              --strict-undefined \
+              --tags "not @ignore"  \
+              --format junit \
+              --out junit \
+              --format pretty \
+            ' \
+            features/
+
+        displayName: Run tests
+        workingDirectory: tests/waste-tracking-service
+        env:
+          ENVIRONMENT: ${{ parameters.environment }}
+          HTML_REPORTS: ${{ parameters.htmlReports }}
+          ${{ if eq(parameters.environment, 'DEV') }}:
+            START_PAGE_URL: https://track-waste-dev.azure.defra.cloud/
+          ${{ if eq(parameters.environment, 'TST') }}:
+            START_PAGE_URL: https://track-waste-tst.azure.defra.cloud/
+          ${{ if eq(parameters.environment, 'PRE') }}:
+            START_PAGE_URL: https://track-waste-pre.azure.defra.cloud/
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: tests/waste-tracking-service/junit/*.xml
+        condition: always()

@@ -260,3 +260,11 @@ stages:
                       - bash: |
                           echo "Specify deployment template for: ${{ app }}"
                         displayName: Specify deployment template
+
+  - stage: test
+    displayName: Test
+
+    jobs:
+      - template: templates/acceptance-tests.yaml
+        parameters:
+          environment: DEV
