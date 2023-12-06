@@ -1,6 +1,6 @@
-import NextAuth, { NextAuthOptions, Profile } from 'next-auth';
-
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import AzureADB2CProvider from 'next-auth/providers/azure-ad-b2c';
+import type { Profile } from 'next-auth/core/types';
 
 interface DCIDProfile extends Profile {
   sup: string;
@@ -25,17 +25,16 @@ export const authOptions: NextAuthOptions = {
           redirect_uri: process.env.DCID_REDIRECT,
         },
       },
-      idToken: true,
-      checks: ['pkce', 'state'],
       profile(profile) {
         return {
           id: profile.sub,
-          name: profile.firstName,
+          name: `${profile.firstName} ${profile.lastName}`,
           email: profile.email,
         };
       },
     }),
   ],
+
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
@@ -46,13 +45,14 @@ export const authOptions: NextAuthOptions = {
     signOut: '/auth/signout',
   },
   callbacks: {
-    async jwt({ token, profile, account }) {
-      if (profile) {
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
         const dcidProfile = profile as DCIDProfile;
-        token.name = `${dcidProfile.firstName} ${dcidProfile.lastName}`;
-      }
-      if (account) {
-        token.id_token = account.id_token;
+        return {
+          name: `${dcidProfile.firstName} ${dcidProfile.lastName}`,
+          email: profile.email,
+          id_token: account.id_token,
+        };
       }
       return token;
     },
