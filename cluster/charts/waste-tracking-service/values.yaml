@@ -72,6 +72,7 @@ secret:
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT: ''
     IS_MULTIPLE_UPLOAD_ENABLED: 'false'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
+    IS_WELSH_LANGUAGE_ENABLED: 'false'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

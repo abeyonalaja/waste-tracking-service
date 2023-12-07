@@ -9,6 +9,7 @@ secret:
   env:
     IS_MULTIPLE_UPLOAD_ENABLED: 'false'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
+    IS_WELSH_LANGUAGE_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'
