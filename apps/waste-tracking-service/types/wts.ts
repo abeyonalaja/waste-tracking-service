@@ -1,5 +1,6 @@
 export interface PageProps {
   apiConfig?: HeadersInit;
+  googleTagManagerID?: string;
 }
 
 export interface EwcCodeType {
