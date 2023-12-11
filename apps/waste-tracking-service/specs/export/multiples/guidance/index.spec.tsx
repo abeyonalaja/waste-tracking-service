@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen, act } from 'jest-utils';
-import Index from 'pages/export/multiples/guidance/index';
+import Index from 'pages/export/multiples/guidance';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,
-    query: { id: '123' },
+    push: () => {
+      return;
+    },
   })),
 }));
 

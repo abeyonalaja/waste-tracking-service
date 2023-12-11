@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import {
   AppLink,
-  Card,
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
@@ -10,7 +9,7 @@ import {
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
-import { useSubmissionContext } from 'contexts';
+import { useRouter } from 'next/router';
 
 const DocumentSection = styled.section`
   font-size: 1.1875rem;
@@ -76,6 +75,16 @@ const BreadCrumbs = () => {
 
 export function Index() {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_MULTIPLES_ENABLED !== 'true') {
+      router.push({
+        pathname: `/export/`,
+      });
+    }
+  }, [router]);
+
   return (
     <>
       <Head>

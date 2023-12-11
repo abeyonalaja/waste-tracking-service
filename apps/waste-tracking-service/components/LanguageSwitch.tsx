@@ -7,10 +7,6 @@ import { LINK_COLOUR, BLACK, YELLOW } from 'govuk-colours';
 import i18n from 'i18next';
 import '../i18n/config';
 
-interface Props {
-  showAll?: boolean;
-}
-
 const LanguageSwitchWrap = styled.div``;
 
 const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
@@ -89,8 +85,10 @@ const LanguageListItemCurrent = styled.li`
   }
 `;
 
-export const LanguageSwitch = ({ showAll = false }: Props) => {
+export const LanguageSwitch = () => {
   const { t } = useTranslation();
+  const isLanguagesEnabled =
+    process.env.NEXT_PUBLIC_LANGUAGES_ENABLED === 'true';
   const isEnglishActive = i18n.language === 'en';
   const isWelshActive = i18n.language === 'cy';
 
@@ -101,56 +99,66 @@ export const LanguageSwitch = ({ showAll = false }: Props) => {
   };
 
   useEffect(() => {
-    const storedLanguage = localStorage.getItem('language');
-    if (storedLanguage) {
-      i18n.changeLanguage(storedLanguage);
+    if (isLanguagesEnabled) {
+      const storedLanguage = localStorage.getItem('language');
+      if (storedLanguage) {
+        i18n.changeLanguage(storedLanguage);
+      }
     }
-  }, []);
+  }, [isLanguagesEnabled]);
 
   return (
-    <LanguageSwitchWrap id="languangeSwitch">
-      <LanguageNav aria-label="{t('language.languageAriaLabel')}">
-        {isWelshActive && (
-          <LanguageList>
-            <LanguageListItem>
-              <StyledLink
-                href="/"
-                rel="alternate"
-                onClick={(e) => changeLanguage(e, 'en')}
-              >
-                <VisuallyHidden>{t('language.languageMessage')}</VisuallyHidden>
-                <span aria-current={isEnglishActive ? 'true' : 'false'}>
-                  {t('language.languageLinkEnglish')}
-                </span>
-              </StyledLink>
-            </LanguageListItem>
-            <LanguageListItemCurrent>
-              <span aria-hidden="true">{t('language.languageLinkWelsh')}</span>
-            </LanguageListItemCurrent>
-          </LanguageList>
-        )}
-        {isEnglishActive && (
-          <LanguageList>
-            <LanguageListItemCurrent>
-              <span aria-current="true">
-                {t('language.languageLinkEnglish')}
-              </span>
-            </LanguageListItemCurrent>
-            <LanguageListItem>
-              <StyledLink
-                href="/"
-                rel="alternate"
-                onClick={(e) => changeLanguage(e, 'cy')}
-              >
-                <VisuallyHidden>{t('language.languageMessage')}</VisuallyHidden>
-                <span aria-hidden={isWelshActive ? 'false' : 'true'}>
+    isLanguagesEnabled && (
+      <LanguageSwitchWrap id="languangeSwitch">
+        <LanguageNav aria-label="{t('language.languageAriaLabel')}">
+          {isWelshActive && (
+            <LanguageList>
+              <LanguageListItem>
+                <StyledLink
+                  href="/"
+                  rel="alternate"
+                  onClick={(e) => changeLanguage(e, 'en')}
+                >
+                  <VisuallyHidden>
+                    {t('language.languageMessage')}
+                  </VisuallyHidden>
+                  <span aria-current={isEnglishActive ? 'true' : 'false'}>
+                    {t('language.languageLinkEnglish')}
+                  </span>
+                </StyledLink>
+              </LanguageListItem>
+              <LanguageListItemCurrent>
+                <span aria-hidden="true">
                   {t('language.languageLinkWelsh')}
                 </span>
-              </StyledLink>
-            </LanguageListItem>
-          </LanguageList>
-        )}
-      </LanguageNav>
-    </LanguageSwitchWrap>
+              </LanguageListItemCurrent>
+            </LanguageList>
+          )}
+          {isEnglishActive && (
+            <LanguageList>
+              <LanguageListItemCurrent>
+                <span aria-current="true">
+                  {t('language.languageLinkEnglish')}
+                </span>
+              </LanguageListItemCurrent>
+              <LanguageListItem>
+                <StyledLink
+                  href="/"
+                  rel="alternate"
+                  onClick={(e) => changeLanguage(e, 'cy')}
+                >
+                  <VisuallyHidden>
+                    {t('language.languageMessage')}
+                  </VisuallyHidden>
+                  <span aria-hidden={isWelshActive ? 'false' : 'true'}>
+                    {t('language.languageLinkWelsh')}
+                  </span>
+                </StyledLink>
+              </LanguageListItem>
+            </LanguageList>
+          )}
+        </LanguageNav>
+      </LanguageSwitchWrap>
+    )
   );
 };

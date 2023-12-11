@@ -148,22 +148,23 @@ export function Index() {
               </GovUK.UnorderedList>
             </Card>
           </GovUK.GridCol>
-
-          <GovUK.GridCol setWidth="one-third">
-            <Card title={t('export.homepage.multiples.guidance.title')}>
-              <GovUK.UnorderedList listStyleType={'none'}>
-                <GovUK.ListItem>
-                  <AppLink
-                    href={{
-                      pathname: `/export/multiples/guidance`,
-                    }}
-                  >
-                    {t('export.homepage.multiples.guidance.link')}
-                  </AppLink>
-                </GovUK.ListItem>
-              </GovUK.UnorderedList>
-            </Card>
-          </GovUK.GridCol>
+          {process.env.NEXT_PUBLIC_MULTIPLES_ENABLED === 'true' && (
+            <GovUK.GridCol setWidth="one-third">
+              <Card title={t('export.homepage.multiples.guidance.title')}>
+                <GovUK.UnorderedList listStyleType={'none'}>
+                  <GovUK.ListItem>
+                    <AppLink
+                      href={{
+                        pathname: `/export/multiples/guidance`,
+                      }}
+                    >
+                      {t('export.homepage.multiples.guidance.link')}
+                    </AppLink>
+                  </GovUK.ListItem>
+                </GovUK.UnorderedList>
+              </Card>
+            </GovUK.GridCol>
+          )}
         </GovUK.GridRow>
       </GovUK.Page>
     </>
