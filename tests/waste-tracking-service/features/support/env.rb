@@ -1,7 +1,7 @@
 
 class Env
   def self.start_page_url
-    (ENV['START_PAGE_URL']) || 'https://track-waste-pre.azure.defra.cloud/'
+    (ENV['START_PAGE_URL']) || 'http://localhost:4200/'
   end
 
   def self.start_shutter_pages_url(page_code)
