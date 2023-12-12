@@ -133,6 +133,13 @@ const PhaseBannerStyled = styled(PhaseBanner)`
 export const CompleteHeader = () => {
   const { t } = useTranslation();
   const { data: session } = useSession();
+
+  const signOutDCID = async () => {
+    const response = await fetch(`/api/auth/getSignoutEndpoint`);
+    const dcidConfig = await response.json();
+    await signOut();
+    window.location.assign(dcidConfig.url);
+  };
   return (
     <>
       <GlobalStyle />
@@ -175,7 +182,7 @@ export const CompleteHeader = () => {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    signOut();
+                    signOutDCID();
                   }}
                 >
                   Sign out
