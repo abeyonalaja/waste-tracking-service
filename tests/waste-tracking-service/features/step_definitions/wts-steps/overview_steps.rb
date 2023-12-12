@@ -1,24 +1,31 @@
 Given(/^I login to waste tracking portal$/) do
-  # refactor this when login page is implemented
   Log.info("Start url: #{Env.start_page_url}")
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  click_link('dashboard_link')
+  user = "USER#{@current_process}"
+  OverviewPage.new.login_to_DCID(user)
+  ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
 end
 
 And(/^I navigate to the overview page$/) do
   click_link('dashboard_link')
+  user = "USER#{@current_process}"
+  TestStatus.set_test_status(:current_user, user.to_sym)
+  OverviewPage.new.sign_in_or_create_an_account
+  HelperMethods.wait_for_a_sec
   case Env.test_env
-  when 'dev', 'LOCAL'
-    user = "USER#{@current_process}"
-    TestStatus.set_test_status(:current_user, user.to_sym)
-    OverviewPage.new.sign_in_or_create_an_account
-    sleep 1
+  when 'LOCAL'
     OverviewPage.new.sign_in(TestData::Users.user_name(user.to_sym), TestData::Users.user_password(user.to_sym))
-    ExportWasteFromUkPage.new.check_page_displayed
+  when 'DEV', 'TST', 'PRE'
+    OverviewPage.new.sign_in(TestData::Users.user_name(user.to_sym), TestData::Users.user_password(user.to_sym))
+  else
+    raise "#{Env.test_env} is an unknown environment, Please provide the correct env details"
   end
-
+  HelperMethods.wait_for_a_sec
+  ExportWasteFromUkPage.new.check_page_displayed
 end
 
 Then(/^I can see all the sections$/) do

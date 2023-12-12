@@ -190,7 +190,7 @@ Feature: AS A waste producer/broker
     And I verify that newly created template is on top of the table
 
   #need to revisit this and fix after waste transport stories
-  @ignore @single
+  @single
   Scenario: Export data should match what is in the template
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

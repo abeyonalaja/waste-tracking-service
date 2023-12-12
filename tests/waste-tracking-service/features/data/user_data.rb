@@ -8,21 +8,21 @@ module UserData
         businessName: 'WTS Testing',
         businessUnitId: '',
         userId: '655383298578',
-        password: 'WasteTracking@123',
+        password: 'WasteTracking@123'
       },
       USER2: {
         businessName: 'Wts Testing',
         username: 'Wtst testing Team member',
         businessUnitId: '',
         userId: '521578352286',
-        password: 'WasteTracking@123',
+        password: 'WasteTracking@123'
       },
       USER3: {
         businessName: 'Wts Testing',
         username: 'Wtst testing Team member',
         businessUnitId: '',
         userId: '316103537967',
-        password: 'wordWord1234',
+        password: 'wordWord1234'
       },
       EMAIL_USER1: {
         businessName: '',
@@ -31,24 +31,36 @@ module UserData
         password: ''
       }
     },
-    PRE_PROD: {
+    PRE: {
       USER1: {
         businessName: 'WTS Testing',
         businessUnitId: '',
-        userId: '521578352286',
-        password: 'WasteTracking@123',
+        userId: '521578352286'
       },
       USER2: {
         businessName: 'Wts Testing',
         businessUnitId: '',
-        userId: '655383298578',
-        password: 'WasteTracking@123',
+        userId: '655383298578'
+      },
+      USER3: {
+        businessName: 'Wts Testing',
+        businessUnitId: '',
+        userId: '233627527051'
+      },
+      USER4: {
+        businessName: 'Wts Testing',
+        businessUnitId: '',
+        userId: '560132886535'
+      },
+      USER5: {
+        businessName: 'Wts Testing',
+        businessUnitId: '',
+        userId: '541873557611'
       },
       EMAIL_USER1: {
         businessName: 'aabey0@hotmail.com',
         businessUnitId: '',
-        userId: '148287751353',
-        password: 'WasteTracking@123'
+        userId: '148287751353'
       }
     }
   }

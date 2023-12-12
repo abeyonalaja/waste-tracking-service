@@ -28,7 +28,7 @@ module TestData
     end
 
     def self.user_password(user)
-      UserData.users.fetch(user).fetch(:password)
+      ENV['USER_PASSWORD'] || raise('Env variable is not available on the env ')
     end
 
     def self.user_business_name(user)
