@@ -18,7 +18,7 @@ parameters:
     default: false
 
 jobs:
-  - ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
+  - ${{ if in(parameters.environment, 'SND', 'DEV', 'TST', 'PRE') }}:
       - deployment: restart_deployments
         displayName: Restart AKS Deployments
         environment: ${{ parameters.environment }}-Apps
@@ -30,7 +30,7 @@ jobs:
           - name: serviceConnection
             ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
               value: AZD-WTS-${{ parameters.environment }}1
-            ${{ if in(parameters.environment, 'PRE', 'PRD') }}:
+            ${{ if in(parameters.environment, 'PRE') }}:
               value: AZR-WTS-${{ parameters.environment }}1
           - name: aksName
             value: ${{ parameters.environment }}WTSINFAKS1401
