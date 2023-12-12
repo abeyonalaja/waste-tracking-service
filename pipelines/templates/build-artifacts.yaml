@@ -1,0 +1,104 @@
+parameters:
+  - name: serviceConnection
+    type: string
+    default: 'AZR-WTS-SSV5'
+  - name: containerRegistryName
+    type: string
+    default: 'SSVWTSINFCR5401'
+
+jobs:
+  - job: build_artifacts
+    displayName: Build and Push Artifacts
+
+    variables:
+      - name: branch
+        value: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', 'origin/') ]
+
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - task: Npm@1
+        displayName: Install packages
+        inputs:
+          command: ci
+
+      - template: auth/acr.yaml
+        parameters:
+          serviceConnection: ${{ parameters.serviceConnection }}
+          containerRegistryName: ${{ parameters.containerRegistryName }}
+
+      - template: auth/docker.yaml
+        parameters:
+          accessToken: $(acr.accessToken)
+          loginServer: $(acr.loginServer)
+
+      - bash: |
+          echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
+          affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*')
+          if [ -z "$affected" ]
+          then
+            echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+          else
+            echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+          fi
+          affectedProjects=$(echo $affected | tr ' ' ',')
+          mkdir -p $(Build.ArtifactStagingDirectory)/runtimeVariables
+          echo "$affectedProjects" > $(Build.ArtifactStagingDirectory)/runtimeVariables/affectedProjects
+          export INPUT_PUSH=true
+          for project in ${affected}
+          do
+            export INPUT_IMAGES="${REGISTRY}/wts/${project}"
+            npx nx container $project
+          done
+        name: publishContainers
+        displayName: Publish containers
+        failOnStderr: true
+        env:
+          NX_BASE: $(branch)~1
+          NX_HEAD: $(branch)
+          REGISTRY: $(acr.loginServer)
+
+      - template: auth/helm.yaml
+        parameters:
+          accessToken: $(acr.accessToken)
+          loginServer: $(acr.loginServer)
+
+      - bash: |
+          affected=$(
+            git diff --name-only $(branch) $(branch)~1 \
+              | grep -Po "(?<=^charts\/)[a-z-]+(?=\/)|(?<=^pipelines\/vars\/)[a-z-]+(?=\/)" \
+              | uniq
+          )
+          if [ -z "$affected" ]
+          then
+            echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+          else
+            echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+          fi
+          affectedCharts=$(echo $affected | tr ' ' ',')
+          mkdir -p $(Build.ArtifactStagingDirectory)/runtimeVariables
+          echo "$affectedCharts" > $(Build.ArtifactStagingDirectory)/runtimeVariables/affectedCharts
+          version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
+          updatedCharts=$(
+            git diff --name-only $(branch) $(branch)~1 \
+              | grep -Po "(?<=^charts\/)[a-z-]+(?=\/)" \
+              | uniq
+          )
+          for project in ${updatedCharts}
+          do
+            helm package ./charts/${project} \
+              --version ${version} \
+              --destination $(Build.StagingDirectory)
+            helm push \
+              $(Build.StagingDirectory)/${project}-${version}.tgz \
+              $HOST
+          done
+        name: publishCharts
+        displayName: Publish charts
+        env:
+          HOST: oci://$(acr.loginServer)/charts/wts
+
+      - publish: $(Build.ArtifactStagingDirectory)/runtimeVariables
+        artifact: runtimeVariables
+        displayName: Publish runtime variables

@@ -1,0 +1,46 @@
+trigger:
+  - none
+
+pool: DEFRA-COMMON-ubuntu2004-SSV3
+
+parameters:
+  - name: appName
+    type: string
+    default: waste-tracking-service
+    values:
+      - address
+      - annex-vii
+      - waste-tracking-service
+      - waste-tracking-gateway
+  - name: tag
+    type: string
+    default: ''
+  - name: releaseTag
+    type: string
+    default: ''
+
+steps:
+  - template: templates/auth/acr.yaml
+    parameters:
+      serviceConnection: AZR-WTS-SSV5
+      containerRegistryName: SSVWTSINFCR5401
+
+  - template: templates/auth/docker.yaml
+    parameters:
+      accessToken: $(acr.accessToken)
+      loginServer: $(acr.loginServer)
+
+  - bash: |
+      source="${LOGIN_SERVER}/wts/${APP_NAME}:${TAG}"
+      echo "Source artifacts: ${source}"
+      release="${LOGIN_SERVER}/wts/${APP_NAME}:${RELEASE_TAG}"
+      echo "Release artifacts: ${release}"
+      docker pull $source
+      docker tag $source $release
+      docker push $release
+    displayName: Create release tag
+    env:
+      LOGIN_SERVER: $(acr.loginServer)
+      APP_NAME: ${{ parameters.appName }}
+      TAG: ${{ parameters.tag }}
+      RELEASE_TAG: ${{ parameters.releaseTag }}

@@ -1,0 +1,45 @@
+trigger:
+  - none
+
+pool: DEFRA-COMMON-ubuntu2004-SSV3
+
+parameters:
+  - name: apps
+    type: object
+    default:
+      - name: address
+        nameTag: address
+      - name: annex-vii
+        nameTag: annex_vii
+      - name: waste-tracking-gateway
+        nameTag: waste_tracking_gateway
+      - name: waste-tracking-service
+        nameTag: waste_tracking_service
+
+  - name: artifacts
+    type: object
+    default:
+      - name: images
+        prefix: wts
+      - name: charts
+        prefix: charts/wts
+
+steps:
+  - ${{ each app in parameters.apps }}:
+      - ${{ each artifact in parameters.artifacts }}:
+          - task: AzureCLI@2
+            name: ${{ artifact.name }}_${{ app.nameTag }}
+            displayName: ACR ${{ artifact.name }} ${{ app.name }}
+            inputs:
+              azureSubscription: AZR-WTS-SSV5
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                response=$(az acr repository show-tags \
+                  --repository $REPOSITORY_NAME \
+                  --orderby time_desc
+                )
+                echo $response | jq -r .[]
+            env:
+              AZURE_DEFAULTS_ACR: SSVWTSINFCR5401
+              REPOSITORY_NAME: ${{ artifact.prefix }}/${{ app.name }}

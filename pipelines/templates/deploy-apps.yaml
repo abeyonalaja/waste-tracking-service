@@ -1,0 +1,216 @@
+parameters:
+  - name: acrServiceConnection
+    type: string
+    default: 'AZR-WTS-SSV5'
+  - name: containerRegistryName
+    type: string
+    default: 'SSVWTSINFCR5401'
+  - name: environment
+    default: 'DEV'
+    values:
+      - SND
+      - DEV
+      - TST
+      - PRE
+      - PRD
+  - name: manualDeployment
+    type: boolean
+    default: false
+
+jobs:
+  - ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
+      - deployment: restart_deployments
+        displayName: Restart AKS Deployments
+        environment: ${{ parameters.environment }}-Apps
+        continueOnError: false
+        ${{ if eq(parameters.manualDeployment, false) }}:
+          condition: and(succeeded(), eq(stageDependencies.build.build_artifacts.outputs['publishContainers.affected'], 'true'))
+
+        variables:
+          - name: serviceConnection
+            ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
+              value: AZD-WTS-${{ parameters.environment }}1
+            ${{ if in(parameters.environment, 'PRE', 'PRD') }}:
+              value: AZR-WTS-${{ parameters.environment }}1
+          - name: aksName
+            value: ${{ parameters.environment }}WTSINFAKS1401
+          - name: resourceGroupName
+            value: ${{ parameters.environment }}WTSINFRGP1401
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: auth/aks.yaml
+                  parameters:
+                    serviceConnection: ${{ variables.serviceConnection }}
+                    aksName: ${{ variables.aksName }}
+                    resourceGroupName: ${{ variables.resourceGroupName }}
+
+                - ${{ if eq(parameters.manualDeployment, false) }}:
+                    - download: current
+                      artifact: runtimeVariables
+                      displayName: Download runtime variables
+
+                    - bash: |
+                        affected=$(cat $(Pipeline.Workspace)/runtimeVariables/affectedProjects)
+                        for project in ${affected//,/ }
+                        do
+                          echo "Restarting deployment: $project"
+                          kubectl rollout restart deployment \
+                            $project \
+                            -n $project
+                        done
+                      displayName: AKS Restart Deployments
+                      env:
+                        AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+                        AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+
+                - ${{ else }}:
+                    - bash: |
+                        affected="address,annex-vii,waste-tracking-service,waste-tracking-gateway"
+                        for project in ${affected//,/ }
+                        do
+                          echo "Restarting deployment: $project"
+                          kubectl rollout restart deployment \
+                            $project \
+                            -n $project
+                        done
+                      displayName: AKS Restart Deployments
+                      env:
+                        AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
+                        AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
+
+  - deployment: deploy_charts
+    displayName: Deploy Helm Charts
+    environment: ${{ parameters.environment }}-Apps
+    continueOnError: false
+    ${{ if eq(parameters.manualDeployment, false) }}:
+      condition: and(succeeded(), eq(stageDependencies.build.build_artifacts.outputs['publishCharts.affected'], 'true'))
+
+    variables:
+      - group: VG_${{ parameters.environment }}_APPS_PARAMS
+      - name: appList
+        value: address,annex-vii,waste-tracking-service,waste-tracking-gateway
+      - name: serviceConnection
+        ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
+          value: AZD-WTS-${{ parameters.environment }}1
+        ${{ if in(parameters.environment, 'PRE', 'PRD') }}:
+          value: AZR-WTS-${{ parameters.environment }}1
+      - name: aksName
+        value: ${{ parameters.environment }}WTSINFAKS1401
+      - name: resourceGroupName
+        value: ${{ parameters.environment }}WTSINFRGP1401
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+              fetchDepth: 0
+
+            - template: deploy/login.yaml
+              parameters:
+                acrServiceConnection: ${{ parameters.acrServiceConnection }}
+                serviceConnection: ${{ variables.serviceConnection }}
+                containerRegistryName: ${{ parameters.containerRegistryName }}
+                aksName: ${{ variables.aksName }}
+                resourceGroupName: ${{ variables.resourceGroupName }}
+
+            - ${{ if eq(parameters.manualDeployment, false) }}:
+                - download: current
+                  artifact: runtimeVariables
+                  displayName: Download runtime variables
+
+                - bash: |
+                    affected=$(cat $(Pipeline.Workspace)/runtimeVariables/affectedCharts)
+                    if [[ $affected = *'address'* ]]
+                    then
+                      echo "Deploy address: true"
+                      echo "##vso[task.setvariable variable=deployAddress;isoutput=true]true"
+                    else
+                      echo "Deploy address: false"
+                      echo "##vso[task.setvariable variable=deployAddress;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'annex-vii'* ]]
+                    then
+                      echo "Deploy annex-vii: true"
+                      echo "##vso[task.setvariable variable=deployAnnexVii;isoutput=true]true"
+                    else
+                      echo "Deploy annex-vii: false"
+                      echo "##vso[task.setvariable variable=deployAnnexVii;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'waste-tracking-gateway'* ]]
+                    then
+                      echo "Deploy waste-tracking-gateway: true"
+                      echo "##vso[task.setvariable variable=deployWasteTrackingGateway;isoutput=true]true"
+                    else
+                      echo "Deploy waste-tracking-gateway: false"
+                      echo "##vso[task.setvariable variable=deployWasteTrackingGateway;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'waste-tracking-service'* ]]
+                    then
+                      echo "Deploy waste-tracking-service: true"
+                      echo "##vso[task.setvariable variable=deployWasteTrackingService;isoutput=true]true"
+                    else
+                      echo "Deploy waste-tracking-service: false"
+                      echo "##vso[task.setvariable variable=deployWasteTrackingService;isoutput=true]false"
+                    fi
+                  displayName: Helm chart deployment triggers
+                  name: chart_triggers
+
+            - ${{ each app in split(variables.appList, ',') }}:
+                - ${{ if eq(app, 'address') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployAddress'], true)
+
+                - ${{ elseif eq(app, 'annex-vii') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployAnnexVii'], true)
+
+                - ${{ elseif eq(app, 'waste-tracking-gateway') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployWasteTrackingGateway'], true)
+
+                - ${{ elseif eq(app, 'waste-tracking-service')}}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidClientSecret: $(dcidClientSecret)
+                        dcidPolicy: $(dcidPolicy)
+                        dcidRedirect: $(dcidRedirect)
+                        dcidServiceId: $(dcidServiceId)
+                        dcidTenant: $(dcidTenant)
+                        dcidWellKnown: $(dcidWellKnown)
+                        nextAuthSecret: $(nextAuthSecret)
+                        nextAuthUrl: $(nextAuthUrl)
+                        nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployWasteTrackingService'], true)
+
+                - ${{ else }}:
+                    - bash: |
+                        echo "Specify deployment template for: ${{ app }}"
+                      displayName: Specify deployment template

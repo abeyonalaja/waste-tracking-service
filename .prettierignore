@@ -2,4 +2,4 @@
 
 /dist
 /coverage
-/cluster/charts/**/templates
+/charts/**/templates

@@ -1,3 +1,5 @@
+image:
+  tag: 'sha-e25381f'
 resources:
   requests:
     cpu: 25m

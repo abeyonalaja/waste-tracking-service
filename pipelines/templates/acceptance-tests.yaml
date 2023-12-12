@@ -60,12 +60,7 @@ jobs:
         env:
           ENVIRONMENT: ${{ parameters.environment }}
           HTML_REPORTS: ${{ parameters.htmlReports }}
-          ${{ if eq(parameters.environment, 'DEV') }}:
-            START_PAGE_URL: https://track-waste-dev.azure.defra.cloud/
-          ${{ if eq(parameters.environment, 'TST') }}:
-            START_PAGE_URL: https://track-waste-tst.azure.defra.cloud/
-          ${{ if eq(parameters.environment, 'PRE') }}:
-            START_PAGE_URL: https://track-waste-pre.azure.defra.cloud/
+          START_PAGE_URL: https://track-waste-${{ lower(parameters.environment) }}.azure.defra.cloud/
 
       - task: PublishTestResults@2
         inputs:

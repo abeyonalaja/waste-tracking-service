@@ -17,6 +17,9 @@ parameters:
   - name: appInsightsConnectionString
     type: string
     default: ''
+  - name: deployChart
+    type: string
+    default: ''
 
 steps:
   - template: release.yaml
@@ -25,24 +28,21 @@ steps:
       containerRegistryName: ${{ parameters.containerRegistryName }}
       appName: ${{ parameters.appName }}
       appNameTag: ${{ parameters.appNameTag }}
+      deployChart: ${{ parameters.deployChart }}
 
   - bash: |
-      if [ $CHART_EXISTS == 'false' ]
-      then
-        echo "Installing release: ${PROJECT_NAME}"
-        chartFullName="${HOST}/${PROJECT_NAME}"
-        helm upgrade \
-          --install $PROJECT_NAME \
-          $chartFullName \
-          --version $CHART_TAG \
-          --create-namespace \
-          -n $PROJECT_NAME \
-          -f $VALUES_FILE_PATH \
-          --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
-      else
-        echo "Release: ${PROJECT_NAME} is already up to date"
-      fi
+      echo "Installing release: ${PROJECT_NAME}"
+      chartFullName="${HOST}/${PROJECT_NAME}"
+      helm upgrade \
+        --install $PROJECT_NAME \
+        $chartFullName \
+        --version $CHART_TAG \
+        --create-namespace \
+        -n $PROJECT_NAME \
+        -f $VALUES_FILE_PATH \
+        --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
     displayName: AKS Deploy ${{ parameters.appName }}
+    condition: ${{ parameters.deployChart }}
     env:
       AAD_SERVICE_PRINCIPAL_CLIENT_ID: $(spnClientId)
       AAD_SERVICE_PRINCIPAL_CLIENT_SECRET: $(spnClientSecret)
@@ -51,4 +51,3 @@ steps:
       CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
       VALUES_FILE_PATH: ${{ parameters.valuesFilePath }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
-      CHART_EXISTS: $(release_${{ parameters.appNameTag }}.exists)

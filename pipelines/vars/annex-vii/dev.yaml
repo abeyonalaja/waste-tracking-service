@@ -1,3 +1,5 @@
+image:
+  tag: 'sha-39d40e3'
 resources:
   requests:
     cpu: 25m
