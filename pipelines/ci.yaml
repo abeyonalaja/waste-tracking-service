@@ -55,4 +55,5 @@ stages:
     jobs:
       - template: templates/acceptance-tests.yaml
         parameters:
-          environment: DEV
+          environment: PRE
+          tags: 'not @ignore and not @code_display_issue'

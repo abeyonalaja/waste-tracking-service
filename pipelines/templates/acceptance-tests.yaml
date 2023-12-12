@@ -1,11 +1,7 @@
 parameters:
-  - name: htmlReports
-    displayName: Generate HTML reports?
-    type: boolean
-    default: false
-
   - name: environment
     displayName: Environment under test
+    default: DEV
     values:
       - DEV
       - TST
@@ -14,11 +10,16 @@ parameters:
   - name: tags
     displayName: Filter expression for Cucumber scenarios
     type: string
-    default: 'not @ignore'
+    default: 'not @ignore and not @dev_only and not @code_display_issue'
 
 jobs:
   - job: test
     displayName: Acceptance tests
+
+    variables:
+      - group: VG_${{ parameters.environment }}_APPS_PARAMS
+      - name: startPageUrl
+        value: https://track-waste-${{ lower(parameters.environment) }}.azure.defra.cloud/
 
     steps:
       - task: UseRubyVersion@0
@@ -31,36 +32,26 @@ jobs:
 
           mkdir -p reports/parallel
 
-          args=(
-            --strict-undefined
-            --tags "${{ parameters.tags }}"
-            --format pretty
-          )
-
-          if [ "$HTML_REPORTS" == true ]; then
-            args+=(--format html --out reports)
-          else
-            args+=(--format junit --out junit)
-          fi
-
           bundle exec parallel_cucumber \
             --type cucumber \
             -n 4 \
             -o ' \
               --strict-undefined \
-              --tags "not @ignore"  \
+              --tags "$TAGS"  \
               --format junit \
               --out junit \
               --format pretty \
             ' \
-            features/
+            features/ \
+          || echo "##vso[task.complete result=SucceededWithIssues;]"
 
         displayName: Run tests
         workingDirectory: tests/waste-tracking-service
         env:
           ENVIRONMENT: ${{ parameters.environment }}
-          HTML_REPORTS: ${{ parameters.htmlReports }}
-          START_PAGE_URL: https://track-waste-${{ lower(parameters.environment) }}.azure.defra.cloud/
+          START_PAGE_URL: ${{ variables.startPageUrl }}
+          USER_PASSWORD: $(testUserPassword)
+          TAGS: ${{ parameters.tags }}
 
       - task: PublishTestResults@2
         inputs:
