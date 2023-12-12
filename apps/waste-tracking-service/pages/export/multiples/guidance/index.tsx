@@ -83,7 +83,7 @@ export function Index() {
         pathname: `/export/`,
       });
     }
-  }, [router]);
+  }, []);
 
   return (
     <>

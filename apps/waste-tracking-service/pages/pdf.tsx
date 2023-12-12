@@ -2,7 +2,6 @@ import PDFLayout from 'components/PDFLayout';
 import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Submission } from '@wts/api/waste-tracking-gateway';
@@ -271,7 +270,7 @@ const BlockDesc = styled.span`
   word-break: break-word;
 `;
 
-const Download = () => {
+export const Download = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [downloadReport, dispatchDownloadReport] = useReducer(
@@ -286,15 +285,12 @@ const Download = () => {
     if (router.isReady) {
       setId(router.query.id);
       setToken(router.query.token);
+      setApiConfig({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${router.query.token}`,
+      });
     }
   }, [router.isReady, router.query.id, router.query.token]);
-
-  useEffect(() => {
-    setApiConfig({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-  }, [token]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import { getToken } from 'next-auth/jwt';
 
-async function createPDF(hostname, id, token) {
+async function createPDF(hostname, id, id_token) {
   const browser = await puppeteer.launch(
     process.env['NODE_ENV'] !== 'production'
       ? {
@@ -21,12 +21,9 @@ async function createPDF(hostname, id, token) {
   );
   const protocol = hostname.indexOf('localhost') === 0 ? 'http' : 'https';
   const page = await browser.newPage();
-  await page.goto(
-    `${protocol}://${hostname}/export/submitted/download?id=${id}`,
-    {
-      waitUntil: 'networkidle0',
-    }
-  );
+  await page.goto(`${protocol}://${hostname}/pdf?id=${id}&token=${id_token}`, {
+    waitUntil: 'networkidle0',
+  });
   const pdf = await page.pdf({
     format: 'A4',
     margin: { top: 20, left: 25.4, bottom: 20, right: 25.4 },
@@ -37,9 +34,11 @@ async function createPDF(hostname, id, token) {
 
 async function handler(req, res) {
   const token = await getToken({ req });
-  await createPDF(req.headers.host, req.query.id, token).then((pdf) => {
-    res.send(pdf);
-  });
+  await createPDF(req.headers.host, req.query.id, token.id_token).then(
+    (pdf) => {
+      res.send(pdf);
+    }
+  );
 }
 
 export default handler;
