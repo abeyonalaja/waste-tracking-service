@@ -22,7 +22,7 @@ type DraftWasteDescriptionData = {
         code: string;
       };
   ewcCodes: object[];
-  nationalCode: { provided: 'Yes'; value: string } | { provided: 'No' };
+  nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
 };
 

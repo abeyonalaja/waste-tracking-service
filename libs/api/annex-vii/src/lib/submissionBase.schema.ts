@@ -72,9 +72,11 @@ export const draftWasteDescription: SchemaObject = {
     Complete: {
       properties: {
         wasteCode: draftWasteDescriptionData.wasteCode,
-        nationalCode: draftWasteDescriptionData.nationalCode,
         ewcCodes: draftWasteDescriptionData.ewcCodes,
         description: draftWasteDescriptionData.description,
+      },
+      optionalProperties: {
+        nationalCode: draftWasteDescriptionData.nationalCode,
       },
     },
   },
