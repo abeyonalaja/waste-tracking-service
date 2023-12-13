@@ -30,6 +30,7 @@ class OverviewPage < GenericPage
     TestStatus.set_test_status(:current_user, user.to_sym)
     OverviewPage.new.sign_in_or_create_an_account
     HelperMethods.wait_for_a_sec
+    Log.info("current user: #{TestData::Users.user_name(user.to_sym)}")
     case Env.test_env
     when 'LOCAL'
       OverviewPage.new.sign_in(TestData::Users.user_name(user.to_sym), TestData::Users.user_password(user.to_sym))

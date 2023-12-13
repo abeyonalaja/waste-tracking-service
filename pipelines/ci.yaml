@@ -52,6 +52,8 @@ stages:
   - stage: test
     displayName: Test
 
+    condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.acceptanceTestsChanges.affected'], 'true')))
+
     jobs:
       - template: templates/acceptance-tests.yaml
         parameters:

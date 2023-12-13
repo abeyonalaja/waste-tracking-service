@@ -99,6 +99,21 @@ jobs:
         env:
           HOST: oci://$(acr.loginServer)/charts/wts
 
+      - bash: |
+          affected=$(
+            git diff --name-only $(branch) $(branch)~1 \
+              | grep -Po "(?<=^tests\/waste-tracking-service\/features\/)[a-z-]+(?=\/)" \
+              | uniq
+          )
+          if [ -z "$affected" ]
+          then
+            echo "##vso[task.setvariable variable=affected;isoutput=true]false"
+          else
+            echo "##vso[task.setvariable variable=affected;isoutput=true]true"
+          fi
+        name: acceptanceTestsChanges
+        displayName: Acceptance tests changes
+
       - publish: $(Build.ArtifactStagingDirectory)/runtimeVariables
         artifact: runtimeVariables
         displayName: Publish runtime variables
