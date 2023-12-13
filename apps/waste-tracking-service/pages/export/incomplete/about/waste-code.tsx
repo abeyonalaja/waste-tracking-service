@@ -184,6 +184,7 @@ const WasteCode = ({ apiConfig }: PageProps) => {
 
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft) => {
+      e.preventDefault();
       const getWasteCode = () => {
         if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode.code;
         if (wasteCodeCategory === 'OECD') return oecdCode.code;
@@ -268,7 +269,6 @@ const WasteCode = ({ apiConfig }: PageProps) => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [
       wasteCodeCategory,

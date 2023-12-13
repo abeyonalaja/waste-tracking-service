@@ -163,7 +163,8 @@ export const CompleteHeader = () => {
               <>
                 <GovukHeaderLink
                   href="#"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     signIn('defra-b2c');
                   }}
                 >
