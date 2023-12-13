@@ -192,7 +192,8 @@ const Laboratory = ({ apiConfig }: PageProps) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`,
+        { headers: apiConfig }
       )
         .then((response) => {
           if (response.ok) return response.json();
