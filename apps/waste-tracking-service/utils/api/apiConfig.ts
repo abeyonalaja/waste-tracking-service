@@ -6,11 +6,13 @@ export const getApiConfig = async (context) => {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token.id_token}`,
   };
+
+  console.log(context.host);
+
   return {
     props: {
       apiConfig,
-      googleTagManagerID:
-        process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT || null,
+      googleTagManagerID: 'G-SKK1DY4NVV',
     },
   };
 };
