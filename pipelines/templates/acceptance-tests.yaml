@@ -12,6 +12,20 @@ parameters:
     type: string
     default: 'not @ignore and not @dev_only and not @code_display_issue'
 
+  - name: parallelExecution
+    displayName: Execute test suite in parallel?
+    type: boolean
+    default: true
+
+  - name: numberOfThreads
+    displayName: Number of parallel threads (only applicable if test suite is executed in parallel)
+    type: number
+    default: 4
+    values:
+      - 2
+      - 3
+      - 4
+
 jobs:
   - job: test
     displayName: Acceptance tests
@@ -32,26 +46,41 @@ jobs:
 
           mkdir -p reports/parallel
 
-          bundle exec parallel_cucumber \
-            --type cucumber \
-            -n 4 \
-            -o ' \
-              --strict-undefined \
-              --tags "$TAGS"  \
+          echo "Parallel execution: $PARALLEL_EXECUTION"
+
+          if [ "$PARALLEL_EXECUTION" = "False" ]; then
+            echo "Executing acceptance tests on a single thread..."
+            bundle exec cucumber \
+              --color \
+              --tags "$TAGS" \
               --format junit \
               --out junit \
               --format pretty \
-            ' \
-            features/ \
-          || echo "##vso[task.complete result=SucceededWithIssues;]"
-
+            || echo "##vso[task.complete result=SucceededWithIssues;]"
+          else
+            echo "Executing acceptance tests in parallel on $NUMBER_OF_THREADS threads..."
+            bundle exec parallel_cucumber \
+              --type cucumber \
+              -n $NUMBER_OF_THREADS \
+              -o ' \
+                --strict-undefined \
+                --tags "$TAGS"  \
+                --format junit \
+                --out junit \
+                --format pretty \
+              ' \
+              features/ \
+            || echo "##vso[task.complete result=SucceededWithIssues;]"
+          fi
         displayName: Run tests
         workingDirectory: tests/waste-tracking-service
         env:
           ENVIRONMENT: ${{ parameters.environment }}
+          TAGS: ${{ parameters.tags }}
+          PARALLEL_EXECUTION: ${{ parameters.parallelExecution }}
+          NUMBER_OF_THREADS: ${{ parameters.numberOfThreads }}
           START_PAGE_URL: ${{ variables.startPageUrl }}
           USER_PASSWORD: $(testUserPassword)
-          TAGS: ${{ parameters.tags }}
 
       - task: PublishTestResults@2
         inputs:

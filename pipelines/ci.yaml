@@ -55,6 +55,15 @@ stages:
     condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.acceptanceTestsChanges.affected'], 'true')))
 
     jobs:
+      - job: wait
+        steps:
+          - bash: |
+              echo "Waiting 5 mins for AKS application pods to start running..."
+              echo "Start time: $(date +%T)"
+              sleep 300
+              echo "End time: $(date +%T)"
+            displayName: Wait for application to start
+
       - template: templates/acceptance-tests.yaml
         parameters:
           environment: PRE
