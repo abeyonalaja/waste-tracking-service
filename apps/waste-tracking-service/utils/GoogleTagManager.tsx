@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
-export const useGoogleTagManager = (googleTagManagerID: string) => {
+export const useGoogleTagManager = () => {
   const [cookies] = useCookies(['cookieConsent']);
+  const googleTagManagerID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT;
   const consentCookie = cookies.cookieConsent;
   const isConsentGiven = consentCookie?.analytics === true;
 
   useEffect(() => {
-    if (isConsentGiven) {
+    if (isConsentGiven && googleTagManagerID !== undefined) {
       loadGTM();
       gtmScript();
     }
-  }, [isConsentGiven]);
+  }, [isConsentGiven, googleTagManagerID]);
 
   const loadGTM = () => {
     const script = document.createElement('script');

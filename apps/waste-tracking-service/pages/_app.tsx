@@ -10,7 +10,7 @@ export default function MyApp({
   pageProps: { session, ...pageProps },
 }) {
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
-  useGoogleTagManager(pageProps.googleTagManagerID);
+  useGoogleTagManager();
   return getLayout(
     <SessionProvider session={session}>
       <CookiesProvider>
