@@ -140,6 +140,13 @@ export const CompleteHeader = () => {
     await signOut();
     window.location.assign(dcidConfig.url);
   };
+
+  const dcidProfile = async () => {
+    const response = await fetch(`/api/auth/getProfileURL`);
+    const dcidProfileUrl = await response.json();
+    window.location.assign(dcidProfileUrl.url);
+  };
+
   return (
     <>
       <GlobalStyle />
@@ -174,9 +181,7 @@ export const CompleteHeader = () => {
             )}
             {session?.user && (
               <>
-                <GovukHeaderLink
-                  href={'https://your-account.cpdev.cui.defra.gov.uk'}
-                >
+                <GovukHeaderLink href={'#'} onClick={dcidProfile}>
                   {session.user.name}
                 </GovukHeaderLink>
                 <GovukHeaderLink
