@@ -9,9 +9,8 @@ resources:
     memory: 512Mi
 secret:
   env:
-    IS_MULTIPLE_UPLOAD_ENABLED: 'false'
-    IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
-    IS_WELSH_LANGUAGE_ENABLED: 'false'
+    NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'
+    NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'

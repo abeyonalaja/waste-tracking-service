@@ -4,28 +4,28 @@ trigger:
 pool: DEFRA-COMMON-ubuntu2004-SSV3
 
 parameters:
+  - name: manualDeployment
+    type: boolean
+    default: false
+
   - name: environments
     type: object
     default:
       - name: 'SND'
         dependsOn:
           - 'build'
-        manualDeployment: false
       - name: 'DEV'
         dependsOn:
           - 'build'
           - 'SND'
-        manualDeployment: false
       - name: 'TST'
         dependsOn:
           - 'build'
           - 'DEV'
-        manualDeployment: false
       - name: 'PRE'
         dependsOn:
           - 'build'
           - 'TST'
-        manualDeployment: false
 
 stages:
   - stage: build
@@ -40,22 +40,24 @@ stages:
         ${{ if ne(environment.dependsOn, '') }}:
           dependsOn: ${{ environment.dependsOn }}
 
-        ${{ if eq(environment.manualDeployment, False) }}:
+        ${{ if eq(parameters.manualDeployment, False) }}:
           condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true')))
 
         jobs:
           - template: templates/deploy-apps.yaml
             parameters:
               environment: ${{ environment.name }}
-              manualDeployment: ${{ environment.manualDeployment }}
+              manualDeployment: ${{ parameters.manualDeployment }}
 
   - stage: test
     displayName: Test
 
-    condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.acceptanceTestsChanges.affected'], 'true')))
+    ${{ if eq(parameters.manualDeployment, False) }}:
+      condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.acceptanceTestsChanges.affected'], 'true')))
 
     jobs:
       - job: wait
+        displayName: Wait for deployment to complete
         steps:
           - bash: |
               echo "Waiting 5 mins for AKS application pods to start running..."
@@ -68,3 +70,5 @@ stages:
         parameters:
           environment: PRE
           tags: 'not @ignore and not @code_display_issue'
+          dependsOn:
+            - wait

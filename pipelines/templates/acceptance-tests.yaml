@@ -26,9 +26,16 @@ parameters:
       - 3
       - 4
 
+  - name: dependsOn
+    displayName: Acceptance tests job dependencies
+    type: object
+    default: []
+
 jobs:
   - job: test
     displayName: Acceptance tests
+
+    dependsOn: ${{ parameters.dependsOn }}
 
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
