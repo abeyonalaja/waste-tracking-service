@@ -483,6 +483,7 @@
   "multiples.guidance.upload.heading": "Upload your CSV file",
   "multiples.guidance.upload.sub": "You need to check for errors before uploading.",
   "multiples.guidance.upload.button": "Upload",
+  "multiples.guidance.page.title": " Export green list waste: how to submit multiple exports from a CSV file",
   "export.homepage.multiples.guidance.title": "Guidance",
   "export.homepage.multiples.guidance.link": "How to create a multiple Annex VII record CSV template"
 }

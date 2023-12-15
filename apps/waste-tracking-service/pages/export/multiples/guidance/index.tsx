@@ -6,6 +6,7 @@ import {
   CompleteHeader,
   BreadcrumbWrap,
 } from 'components';
+
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
