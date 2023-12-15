@@ -141,7 +141,8 @@ export const CompleteHeader = () => {
     window.location.assign(dcidConfig.url);
   };
 
-  const dcidProfile = async () => {
+  const dcidProfile = async (e) => {
+    e.preventDefault();
     const response = await fetch(`/api/auth/getProfileURL`);
     const dcidProfileUrl = await response.json();
     window.location.assign(dcidProfileUrl.url);

@@ -355,7 +355,7 @@ const WasteCarriers = ({ apiConfig }: PageProps) => {
               t(
                 `exportJourney.wasteCarrierTransport.${transportDetails?.type}`
               ).toLowerCase(),
-              t(`numberAdjective.${carrierIndex + 1}`).toLowerCase(),
+              t(`numberAdjective.${carrierIndex}`).toLowerCase(),
               transportDetails?.description
             ),
           };
