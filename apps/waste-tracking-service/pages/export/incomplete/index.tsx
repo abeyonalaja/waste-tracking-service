@@ -168,24 +168,36 @@ const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
         url = `${url}&token=${token}`;
       }
 
-      fetch(url, { headers: apiConfig })
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-          }
-        })
-        .then((data) => {
-          let filteredData;
-          if (data) {
-            filteredData = data;
-          }
+      const fetchData = async () => {
+        try {
+          fetch(url, { headers: apiConfig })
+            .then((response) => {
+              if (response.ok) return response.json();
+              else {
+                if (response.status === 403) {
+                  router.push({
+                    pathname: `/403/`,
+                  });
+                }
+                dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+              }
+            })
+            .then((data) => {
+              let filteredData;
+              if (data) {
+                filteredData = data;
+              }
 
-          dispatchIncompleteAnnex7Page({
-            type: 'DATA_FETCH_SUCCESS',
-            payload: filteredData,
-          });
-        });
+              dispatchIncompleteAnnex7Page({
+                type: 'DATA_FETCH_SUCCESS',
+                payload: filteredData,
+              });
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      fetchData();
     }
   }, [router.isReady, token]);
 

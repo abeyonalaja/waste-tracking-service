@@ -158,6 +158,11 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
         .then((response) => {
           if (response.ok) return response.json();
           else {
+            if (response.status === 403) {
+              router.push({
+                pathname: `/403/`,
+              });
+            }
             dispatchTemplatePage({ type: 'DATA_FETCH_FAILURE' });
           }
         })

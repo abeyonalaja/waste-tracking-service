@@ -86,7 +86,16 @@ export function Reference({ apiConfig }: PageProps) {
             headers: apiConfig,
             body: body,
           })
-            .then((response) => response.json())
+            .then((response) => {
+              if (response.ok) return response.json();
+              else {
+                if (response.status === 403) {
+                  router.push({
+                    pathname: `/403/`,
+                  });
+                }
+              }
+            })
             .then((data) => {
               const { id } = data;
               setSubmission({

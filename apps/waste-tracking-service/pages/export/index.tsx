@@ -11,6 +11,12 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { useSubmissionContext } from 'contexts';
+import { useRouter } from 'next/router';
+import { getApiConfig } from '../../utils/api/apiConfig';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
 
 const UnderlinedH1 = styled(GovUK.Heading)`
   border-bottom: 2px solid #e2e3e4;
@@ -31,12 +37,35 @@ const BreadCrumbs = () => {
   );
 };
 
-export function Index() {
+export function Index({ apiConfig }) {
+  const router = useRouter();
   const { setSubmission } = useSubmissionContext();
 
   useEffect(() => {
     setSubmission({});
   }, [setSubmission]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/countries`, {
+          headers: apiConfig,
+        }).then((response) => {
+          if (response.ok) return response.json();
+          else {
+            if (response.status === 403) {
+              router.push({
+                pathname: `/403/`,
+              });
+            }
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
+  }, []);
 
   const { t } = useTranslation();
   return (

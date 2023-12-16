@@ -7,6 +7,7 @@ interface DCIDProfile extends Profile {
   firstName: string;
   lastName: string;
   email: string;
+  uniqueReference: string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -52,6 +53,7 @@ export const authOptions: NextAuthOptions = {
           name: `${dcidProfile.firstName} ${dcidProfile.lastName}`,
           email: profile.email,
           id_token: account.id_token,
+          uniqueReference: dcidProfile.uniqueReference,
         };
       }
       return token;
