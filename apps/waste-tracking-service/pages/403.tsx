@@ -19,7 +19,7 @@ export default function Custom403() {
   return (
     <>
       <Head>
-        <title>Sorry, you are not part of the private beta</title>
+        <title>Sorry, you are not part of the private beta group </title>
       </Head>
       <GovUK.Page
         id="content"
@@ -29,19 +29,21 @@ export default function Custom403() {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth={'one-half'}>
             <GovUK.Heading size="LARGE">
-              Sorry, you are not part of the private beta
+              Sorry, you are not part of the private beta group
             </GovUK.Heading>
             <Paragraph>
-              If you think you should be part of the beta, contact{' '}
-              <AppLink href={`mailto:wastetracking@defra.gov.uk`}>
-                wastetracking@defra.gov.uk
+              If you think you should be part of the private beta group, email{' '}
+              <AppLink href={`mailto:wasteuserresearch@defra.gov.uk`}>
+                wasteuserresearch@defra.gov.uk
               </AppLink>{' '}
               and include the following details:
             </Paragraph>
-            <GovUK.InsetText>
-              <strong>Customer ID: </strong>
-              {userRef}
-            </GovUK.InsetText>
+            <GovUK.UnorderedList>
+              <GovUK.ListItem>
+                <strong>Customer ID: </strong>
+                {userRef}
+              </GovUK.ListItem>
+            </GovUK.UnorderedList>
           </GovUK.GridCol>
         </GovUK.GridRow>
       </GovUK.Page>
