@@ -6,7 +6,7 @@ import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
 import * as winston from 'winston';
-import { getWellKnownParams, validateToken } from './lib/auth';
+import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
 import { addressPlugin } from './modules/address';
 import {
   AddressBackend,
@@ -118,6 +118,8 @@ if (audience === undefined) {
   process.exit(1);
 }
 
+const users = process.env['ALLOWED_USERS'];
+
 const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
 
 app.auth.strategy('jwt', 'jwt', {
@@ -132,7 +134,11 @@ app.auth.strategy('jwt', 'jwt', {
     jwksUri,
   }),
 
-  validate: validateToken,
+  validate: validateToken(
+    users === undefined || users === '*'
+      ? userFilter.any
+      : userFilter.uniqueReferenceString(users)
+  ),
 
   verifyOptions: {
     audience,
