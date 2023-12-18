@@ -5,10 +5,17 @@ pool: DEFRA-COMMON-ubuntu2004-SSV3
 
 parameters:
   - name: manualDeployment
+    displayName: Deploy applications manually?
+    type: boolean
+    default: false
+
+  - name: runAcceptanceTests
+    displayName: Run acceptance tests? (only applicable for manual deployments)
     type: boolean
     default: false
 
   - name: environments
+    displayName: Environments and stage dependencies
     type: object
     default:
       - name: 'SND'
@@ -54,6 +61,9 @@ stages:
 
     ${{ if eq(parameters.manualDeployment, False) }}:
       condition: and(succeeded(), or(eq(stageDependencies.build.outputs['build_artifacts.publishContainers.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.publishCharts.affected'], 'true'), eq(stageDependencies.build.outputs['build_artifacts.acceptanceTestsChanges.affected'], 'true')))
+
+    ${{ if eq(parameters.manualDeployment, True) }}:
+      condition: and(succeeded(), eq('${{ parameters.runAcceptanceTests }}', true))
 
     jobs:
       - job: wait
