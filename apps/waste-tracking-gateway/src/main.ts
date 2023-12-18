@@ -1,9 +1,12 @@
 import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
-import AuthBearer from 'hapi-auth-bearer-token';
+import { Template } from '@wts/api/annex-vii';
 import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import jwt from 'hapi-auth-jwt2';
+import jwksRsa from 'jwks-rsa';
 import * as winston from 'winston';
+import { getWellKnownParams, validateToken } from './lib/auth';
 import { addressPlugin } from './modules/address';
 import {
   AddressBackend,
@@ -17,21 +20,18 @@ import {
   SubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
-import { validateToken } from './lib/auth';
 import {
   AnnexViiServiceTemplateBackend,
   InMemoryTemplateBackend,
   TemplateBackend,
   templatePlugin,
 } from './modules/template';
-import { Template } from '@wts/api/annex-vii';
-import Boom from '@hapi/boom';
+import { wtsInfoPlugin } from './modules/wts-info';
 import {
   WTSInfoBackend,
   WTSInfoServiceBackend,
   WTSInfoStub,
 } from './modules/wts-info/wts-info.backend';
-import { wtsInfoPlugin } from './modules/wts-info';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -104,20 +104,44 @@ if (process.env['NODE_ENV'] === 'development') {
   };
 }
 
-await app.register(Object.create(AuthBearer));
+await app.register(jwt);
 
-app.auth.strategy('dcid-auth', 'bearer-access-token', {
-  allowQueryToken: true,
-  validate: async (request: any, token: string, h: any) => {
-    try {
-      return validateToken(token);
-    } catch (err) {
-      return Boom.unauthorized();
-    }
+const wellKnownUri = process.env['DCID_WELLKNOWN'];
+if (wellKnownUri === undefined) {
+  logger.error('DCID_WELLKNOWN variable unset');
+  process.exit(1);
+}
+
+const audience = process.env['DCID_CLIENT_ID'];
+if (audience === undefined) {
+  logger.error('DCID_CLIENT_ID variable unset');
+  process.exit(1);
+}
+
+const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
+
+app.auth.strategy('jwt', 'jwt', {
+  complete: true,
+  headerKey: 'authorization',
+  tokenType: 'Bearer',
+
+  key: jwksRsa.hapiJwt2KeyAsync({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 2,
+    jwksUri,
+  }),
+
+  validate: validateToken,
+
+  verifyOptions: {
+    audience,
+    issuer,
+    algorithms: ['RS256'],
   },
 });
 
-app.auth.default('dcid-auth');
+app.auth.default('jwt');
 
 await app.register({
   plugin: submissionPlugin,

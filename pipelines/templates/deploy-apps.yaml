@@ -187,6 +187,8 @@ jobs:
                         containerRegistryName: ${{ parameters.containerRegistryName }}
                         valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
                         appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidWellKnown: $(dcidWellKnown)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployWasteTrackingGateway'], true)
 

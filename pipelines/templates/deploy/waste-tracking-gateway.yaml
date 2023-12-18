@@ -17,6 +17,12 @@ parameters:
   - name: appInsightsConnectionString
     type: string
     default: ''
+  - name: dcidClientId
+    type: string
+    default: ''
+  - name: dcidWellKnown
+    type: string
+    default: ''
   - name: deployChart
     type: string
     default: ''
@@ -40,7 +46,9 @@ steps:
         --create-namespace \
         -n $PROJECT_NAME \
         -f $VALUES_FILE_PATH \
-        --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING
+        --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
+        --set secret.env.DCID_CLIENT_ID=$DCID_CLIENT_ID \
+        --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN
     displayName: AKS Deploy ${{ parameters.appName }}
     condition: ${{ parameters.deployChart }}
     env:
@@ -51,3 +59,5 @@ steps:
       CHART_TAG: $(repository_${{ parameters.appNameTag }}.chartTag)
       VALUES_FILE_PATH: ${{ parameters.valuesFilePath }}
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
+      DCID_CLIENT_ID: ${{ parameters.dcidClientId }}
+      DCID_WELLKNOWN: ${{ parameters.dcidWellKnown }}

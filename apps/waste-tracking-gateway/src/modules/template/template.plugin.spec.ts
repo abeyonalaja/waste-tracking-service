@@ -1,13 +1,12 @@
 import { faker } from '@faker-js/faker';
+import Boom from '@hapi/boom';
 import { server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
-import winston from 'winston';
-import Boom from '@hapi/boom';
-import templatePlugin from './template.plugin';
 import { Template, TemplateSummaryPage } from '@wts/api/waste-tracking-gateway';
-import { TemplateRef, TemplateBackend } from './template.backend';
+import winston from 'winston';
 import { OrderRef } from '../submission';
-import AuthBearer from 'hapi-auth-bearer-token';
+import { TemplateBackend, TemplateRef } from './template.backend';
+import templatePlugin from './template.plugin';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -16,7 +15,6 @@ jest.mock('winston', () => ({
 }));
 
 const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
-const token = 'my-token';
 
 const mockBackend = {
   createTemplate: jest.fn<
@@ -78,30 +76,16 @@ beforeAll(async () => {
     },
   });
 
-  await app.register(Object.create(AuthBearer));
-
-  app.auth.strategy('dcid-auth', 'bearer-access-token', {
-    allowQueryToken: true,
-    validate: async (request: any, token: string, h: any) => {
-      try {
-        const isValid = true;
-        const credentials = {
-          accountId: accountId,
-        };
-        const artifacts = {
-          contactId: accountId,
-          organisationId: '',
-          accountIdReference: accountId,
-        };
-
-        return { isValid, credentials, artifacts };
-      } catch (err) {
-        return Boom.unauthorized();
-      }
-    },
+  app.auth.scheme('mock', function () {
+    return {
+      authenticate: async function (_, h) {
+        return h.authenticated({ credentials: { accountId } });
+      },
+    };
   });
 
-  app.auth.default('dcid-auth');
+  app.auth.strategy('mock', 'mock');
+  app.auth.default('mock');
 
   await app.start();
 });
@@ -125,9 +109,6 @@ describe('TemplatePlugin', () => {
       const options = {
         method: 'POST',
         url: '/templates',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       };
 
       const response = await app.inject(options);
@@ -151,9 +132,6 @@ describe('TemplatePlugin', () => {
       const options = {
         method: 'GET',
         url: '/templates',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       };
 
       mockBackend.getTemplates.mockRejectedValue(Boom.notFound());
@@ -167,9 +145,6 @@ describe('TemplatePlugin', () => {
       const options = {
         method: 'GET',
         url: `/templates/${faker.datatype.uuid()}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       };
 
       mockBackend.getTemplate.mockRejectedValue(Boom.notFound());
