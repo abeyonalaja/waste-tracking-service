@@ -17,8 +17,11 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
+const ListItemDashed = styled(GovUK.ListItem)`
+  list-style-type: '— ';
+`;
+
 const BreadCrumbs = () => {
-  const { t } = useTranslation();
   return (
     <BreadcrumbWrap>
       <GovUK.BackLink href="/export/multiples/guidance">Back</GovUK.BackLink>
@@ -41,6 +44,7 @@ export function HowToCreateCSV() {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
+            <GovUK.Caption>Guidance</GovUK.Caption>
             <GovUK.Heading size="L">
               {t('multiples.guidance.page.title')}
             </GovUK.Heading>
@@ -49,32 +53,35 @@ export function HowToCreateCSV() {
               multiple Annex VII records for the `Export green list waste&rsquo;
               service.
             </GovUK.LeadParagraph>
+            <GovUK.SectionBreak level="LARGE" visible />
+
+            <GovUK.Paragraph>Contents</GovUK.Paragraph>
             <GovUK.UnorderedList>
-              <GovUK.ListItem>
+              <ListItemDashed>
                 <AppLink href={'#details'}>Details</AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#reference'}>Your unique reference</AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#waste'}>Waste codes and description</AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#quantity'}>Quantity of waste</AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#exporter'}>
                   Exporter and importer details
                 </AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#journey'}>Journey of waste</AppLink>
-              </GovUK.ListItem>
-              <GovUK.ListItem>
+              </ListItemDashed>
+              <ListItemDashed>
                 <AppLink href={'#treatment'}>Treatment of waste</AppLink>
-              </GovUK.ListItem>
+              </ListItemDashed>
             </GovUK.UnorderedList>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="details">Details</a>
             </GovUK.H2>
@@ -149,7 +156,7 @@ export function HowToCreateCSV() {
               carrier or recovery facility), you need to complete all relevant
               details for that section and cannot leave any cells blank.
             </GovUK.Paragraph>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="reference">Your unique reference</a>
             </GovUK.H2>
@@ -172,7 +179,7 @@ export function HowToCreateCSV() {
               you put ABC10001 in one row, then you might put ABC10002 in the
               next to show it is different.
             </GovUK.Paragraph>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="waste">Waste codes and description</a>
             </GovUK.H2>
@@ -258,7 +265,7 @@ export function HowToCreateCSV() {
             <GovUK.Paragraph>
               Your description must be 100 characters or less.
             </GovUK.Paragraph>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="quantity">Quantity of waste and description</a>
             </GovUK.H2>
@@ -352,7 +359,7 @@ export function HowToCreateCSV() {
               actual date. Enter &lsquo;estimated&rsquo; or
               &lsquo;actual&rsquo;.
             </GovUK.Paragraph>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="exporter">Exporter and importer details</a>
             </GovUK.H2>
@@ -520,7 +527,7 @@ export function HowToCreateCSV() {
                 </TableCell>
               </GovUK.Table.Row>
             </GovUK.Table>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="journey">Journey of waste</a>
             </GovUK.H2>
@@ -650,7 +657,7 @@ export function HowToCreateCSV() {
               If you do not need to enter any transit countries, leave the cells
               blank.
             </GovUK.Paragraph>
-            <GovUK.SectionBreak level="LARGE" visible />
+
             <GovUK.H2 size="MEDIUM">
               <a id="treatment">Treatment of waste</a>
             </GovUK.H2>
