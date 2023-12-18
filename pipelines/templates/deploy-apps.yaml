@@ -189,6 +189,7 @@ jobs:
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         dcidClientId: $(dcidClientId)
                         dcidWellKnown: $(dcidWellKnown)
+                        allowedUsers: $(allowedUsers)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployWasteTrackingGateway'], true)
 

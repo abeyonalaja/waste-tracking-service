@@ -23,6 +23,9 @@ parameters:
   - name: dcidWellKnown
     type: string
     default: ''
+  - name: allowedUsers
+    type: string
+    default: ''
   - name: deployChart
     type: string
     default: ''
@@ -48,7 +51,8 @@ steps:
         -f $VALUES_FILE_PATH \
         --set secret.env.APPINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING \
         --set secret.env.DCID_CLIENT_ID=$DCID_CLIENT_ID \
-        --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN
+        --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
+        --set secret.env.ALLOWED_USERS=$ALLOWED_USERS
     displayName: AKS Deploy ${{ parameters.appName }}
     condition: ${{ parameters.deployChart }}
     env:
@@ -61,3 +65,4 @@ steps:
       APPINSIGHTS_CONNECTION_STRING: ${{ parameters.appInsightsConnectionString }}
       DCID_CLIENT_ID: ${{ parameters.dcidClientId }}
       DCID_WELLKNOWN: ${{ parameters.dcidWellKnown }}
+      ALLOWED_USERS: ${{ parameters.allowedUsers }}

@@ -72,6 +72,7 @@ secret:
     ADDRESS_APP_ID: 'address.address'
     DCID_CLIENT_ID: ''
     DCID_WELLKNOWN: ''
+    ALLOWED_USERS: '*'
     IS_MULTIPLE_UPLOAD_ENABLED: 'false'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
 
