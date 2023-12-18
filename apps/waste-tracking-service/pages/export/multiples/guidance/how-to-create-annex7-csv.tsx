@@ -8,6 +8,8 @@ import {
 } from 'components';
 import Head from 'next/head';
 import styled from 'styled-components';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const TableCell = styled(GovUK.Table.Cell)`
   vertical-align: top;
@@ -22,15 +24,31 @@ const ListItemDashed = styled(GovUK.ListItem)`
 `;
 
 const BreadCrumbs = () => {
+  const { t } = useTranslation();
   return (
     <BreadcrumbWrap>
-      <GovUK.BackLink href="/export/multiples/guidance">Back</GovUK.BackLink>
+      <GovUK.Breadcrumbs>
+        <GovUK.Breadcrumbs.Link href="/">
+          {t('app.parentTitle')}
+        </GovUK.Breadcrumbs.Link>
+        <GovUK.Breadcrumbs.Link>{t('app.title')}</GovUK.Breadcrumbs.Link>
+      </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
   );
 };
 
 export function HowToCreateCSV() {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_MULTIPLES_ENABLED !== 'true') {
+      router.push({
+        pathname: `/export/`,
+      });
+    }
+  }, []);
+
   return (
     <>
       <Head>
