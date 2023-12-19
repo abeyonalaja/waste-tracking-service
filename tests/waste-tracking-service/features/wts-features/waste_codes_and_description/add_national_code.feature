@@ -33,6 +33,9 @@ Feature:AS A Waste Producer/Broker
     Then I navigate to National Code page
     And I click the button Save and continue
     Then I verify Describe waste page is displayed
+    When I add a description of the waste up to 100 characters
+    And I click the Save and return to draft
+    Then the task "Waste codes and description" should be "COMPLETED"
 
   Scenario: Back function clicked
     Given I login to waste tracking portal

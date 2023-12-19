@@ -23,7 +23,7 @@ Then(/^I verify Yes option is selected$/) do
 end
 
 And(/^I have selected Yes and entered valid national code$/) do
-  national_code = Faker::Base.regexify(/[a-zA-Z0-9\s\\\-]{50}/)
+  national_code = Faker::Base.regexify(/[a-zA-Z09]{50}/)
   NationalCodePage.new.choose_option Translations.value 'radio.yes'
   NationalCodePage.new.enter_input_value national_code
   TestStatus.set_test_status(:national_code_text, national_code)
