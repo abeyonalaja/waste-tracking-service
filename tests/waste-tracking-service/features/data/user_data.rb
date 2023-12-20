@@ -31,6 +31,62 @@ module UserData
         password: ''
       }
     },
+    DEV: {
+      USER1: {
+        businessName: 'WTS USER DEV 1',
+        businessUnitId: '',
+        userId: '465230171890'
+      },
+      USER2: {
+        businessName: 'Wts USER DEV 2',
+        businessUnitId: '',
+        userId: '135263446271'
+      },
+      USER3: {
+        businessName: 'WTS USER DEV 3',
+        businessUnitId: '',
+        userId: '439168877251'
+      },
+      USER4: {
+        businessName: 'WTS USER DEV 4',
+        businessUnitId: '',
+        userId: '213944161257'
+      },
+      EMAIL_USER1: {
+        businessName: '',
+        businessUnitId: '',
+        userId: '',
+        password: ''
+      }
+    },
+    TST: {
+      USER1: {
+        businessName: 'WTS USER DEV 1',
+        businessUnitId: '',
+        userId: '465230171890'
+      },
+      USER2: {
+        businessName: 'Wts USER DEV 2',
+        businessUnitId: '',
+        userId: '135263446271'
+      },
+      USER3: {
+        businessName: 'WTS USER DEV 3',
+        businessUnitId: '',
+        userId: '439168877251'
+      },
+      USER4: {
+        businessName: 'WTS USER DEV 4',
+        businessUnitId: '',
+        userId: '213944161257'
+      },
+      EMAIL_USER1: {
+        businessName: '',
+        businessUnitId: '',
+        userId: '',
+        password: ''
+      }
+    },
     PRE: {
       USER1: {
         businessName: 'WTS Testing',
