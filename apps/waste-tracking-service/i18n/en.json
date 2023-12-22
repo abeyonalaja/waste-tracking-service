@@ -166,6 +166,7 @@
   "exportJourney.describeWaste.hint": "Give the usual description of the waste. For example, baled PET bottles, bagged HDPE pellets or OCC paper.",
   "exportJourney.exporterDetails.caption": "Exporter details",
   "exportJourney.exporterPostcode.title": "What's the exporter's address?",
+  "exportJourney.exporterPostcode.noResults": "The postcode {{n}} you have entered does not match any addresses.",
   "exportJourney.exporterPostcodeEdit.title": "Edit the exporter's address (optional)",
   "exportJourney.exporterPostcode.hint": "The exporter is the person who arranges the shipment. This must be a UK address.",
   "exportJourney.exporterDetails.contactDetails": "Contact details",

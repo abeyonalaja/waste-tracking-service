@@ -16,6 +16,9 @@ export interface AddressBackend {
  */
 export class AddressStub implements AddressBackend {
   async listAddresses(postcode?: string): Promise<api.ListAddressesResponse> {
+    if (postcode === 'aa11aa') {
+      return [];
+    }
     if (postcode === 'AA11AA') {
       return [
         {

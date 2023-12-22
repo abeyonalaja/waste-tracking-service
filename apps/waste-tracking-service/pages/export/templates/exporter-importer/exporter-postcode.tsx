@@ -213,35 +213,47 @@ const ExporterPostcode = ({ apiConfig }: PageProps) => {
             {addresses && (
               <div id="page-exporter-postcode-search-results">
                 <form onSubmit={handleSubmitAddress}>
-                  <GovUK.Fieldset>
-                    <GovUK.MultiChoice
-                      mb={6}
-                      label=""
-                      meta={{
-                        error: errors?.selectedAddress,
-                        touched: !!errors?.selectedAddress,
-                      }}
-                    >
-                      {addresses.map((address, key) => {
-                        return (
-                          <GovUK.Radio
-                            key={key}
-                            name="addressSelection"
-                            id={JSON.stringify(address)}
-                            checked={
-                              selectedAddress === JSON.stringify(address)
-                            }
-                            onChange={(e) => setSelectedAddress(e.target.value)}
-                            value={JSON.stringify(address)}
-                          >
-                            {Object.keys(address)
-                              .map((line) => address[line])
-                              .join(', ')}
-                          </GovUK.Radio>
-                        );
+                  {addresses.length === 0 ? (
+                    <Paragraph>
+                      {t('exportJourney.exporterPostcode.noResults', {
+                        n: postcode,
                       })}
-                    </GovUK.MultiChoice>
-                  </GovUK.Fieldset>
+                    </Paragraph>
+                  ) : addresses.length > 1 ? (
+                    <>
+                      <GovUK.Fieldset>
+                        <GovUK.MultiChoice
+                          mb={6}
+                          label=""
+                          meta={{
+                            error: errors?.selectedAddress,
+                            touched: !!errors?.selectedAddress,
+                          }}
+                        >
+                          {addresses.map((address, key) => {
+                            return (
+                              <GovUK.Radio
+                                key={key}
+                                name="addressSelection"
+                                id={JSON.stringify(address)}
+                                checked={
+                                  selectedAddress === JSON.stringify(address)
+                                }
+                                onChange={(e) =>
+                                  setSelectedAddress(e.target.value)
+                                }
+                                value={JSON.stringify(address)}
+                              >
+                                {Object.keys(address)
+                                  .map((line) => address[line])
+                                  .join(', ')}
+                              </GovUK.Radio>
+                            );
+                          })}
+                        </GovUK.MultiChoice>
+                      </GovUK.Fieldset>
+                    </>
+                  ) : null}
                   <Paragraph>
                     <AppLink
                       href={{
