@@ -22,6 +22,13 @@ import {
   validateCountrySelect,
   validateAddress,
 } from 'utils/validators';
+import { getApiConfig } from 'utils/api/apiConfig';
+import { PageProps } from 'types/wts';
+
+export const getServerSideProps = async (context) => {
+  return getApiConfig(context);
+};
+
 import { countriesData } from '../../../../utils/countriesData';
 
 const AddressInput = styled(GovUK.InputField)`
@@ -39,7 +46,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterAddressEdit = () => {
+const ExporterAddressEdit = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -65,7 +72,10 @@ const ExporterAddressEdit = () => {
     setIsError(false);
     if (templateId !== null) {
       fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
+        {
+          headers: apiConfig,
+        }
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -126,9 +136,7 @@ const ExporterAddressEdit = () => {
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
             {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: apiConfig,
               body: JSON.stringify(body),
             }
           )
