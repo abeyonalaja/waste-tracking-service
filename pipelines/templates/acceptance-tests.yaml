@@ -32,8 +32,8 @@ parameters:
     default: []
 
 jobs:
-  - job: test
-    displayName: Acceptance tests
+  - job: test_${{ parameters.environment }}
+    displayName: Acceptance tests ${{ parameters.environment }}
 
     dependsOn: ${{ parameters.dependsOn }}
 
@@ -52,6 +52,7 @@ jobs:
           bundle install
 
           mkdir -p reports/parallel
+          mkdir -p junit/$ENVIRONMENT
 
           echo "Parallel execution: $PARALLEL_EXECUTION"
 
@@ -61,7 +62,7 @@ jobs:
               --color \
               --tags "$TAGS" \
               --format junit \
-              --out junit \
+              --out junit/$ENVIRONMENT \
               --format pretty \
             || echo "##vso[task.complete result=SucceededWithIssues;]"
           else
@@ -73,13 +74,13 @@ jobs:
                 --strict-undefined \
                 --tags "$TAGS"  \
                 --format junit \
-                --out junit \
+                --out junit/$ENVIRONMENT \
                 --format pretty \
               ' \
               features/ \
             || echo "##vso[task.complete result=SucceededWithIssues;]"
           fi
-        displayName: Run tests
+        displayName: Run tests ${{ parameters.environment }}
         workingDirectory: tests/waste-tracking-service
         env:
           ENVIRONMENT: ${{ parameters.environment }}
@@ -90,7 +91,8 @@ jobs:
           USER_PASSWORD: $(testUserPassword)
 
       - task: PublishTestResults@2
+        displayName: Publish test results ${{ parameters.environment }}
         inputs:
           testResultsFormat: JUnit
-          testResultsFiles: tests/waste-tracking-service/junit/*.xml
+          testResultsFiles: tests/waste-tracking-service/junit/${{ parameters.environment }}/*.xml
         condition: always()
