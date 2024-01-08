@@ -144,7 +144,6 @@ type codeType = Array<{
 }>;
 
 const InterimSiteDetails = ({ apiConfig }: PageProps) => {
-  const apiConfig2: HeadersInit = apiConfig;
   const { t } = useTranslation();
   const router = useRouter();
   const [interimPage, dispatchInterimPage] = useReducer(

@@ -279,9 +279,9 @@ const ExporterPostcode = ({ apiConfig }: PageProps) => {
             {!addresses && (
               <div id="page-exporter-postcode-search">
                 <form onSubmit={handleSubmit}>
-                  <GovUK.HintText>
+                  <Paragraph>
                     {t('exportJourney.exporterPostcode.hint')}
-                  </GovUK.HintText>
+                  </Paragraph>
                   <GovUK.FormGroup error={!!errors?.postcode}>
                     <GovUK.Label htmlFor={'postcode'}>
                       <GovUK.LabelText>{t('postcode.label')}</GovUK.LabelText>

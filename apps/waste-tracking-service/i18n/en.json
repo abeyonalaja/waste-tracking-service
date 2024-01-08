@@ -170,7 +170,7 @@
   "exportJourney.exporterPostcodeEdit.title": "Edit the exporter's address (optional)",
   "exportJourney.exporterPostcode.hint": "The exporter is the person who arranges the shipment. This must be a UK address.",
   "exportJourney.exporterDetails.contactDetails": "Contact details",
-  "exportJourney.exporterDetails.title": "Exporter's details",
+  "exportJourney.exporterDetails.title": "What are the exporter's contact details?",
   "exportJourney.exporterAddress.title": "Check the exporter's address",
   "exportJourney.quantity.caption": "Quantity of waste",
   "exportJourney.quantity.small.title": "Do you know the net weight of the waste?",

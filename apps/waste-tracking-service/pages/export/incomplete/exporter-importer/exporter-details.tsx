@@ -231,10 +231,8 @@ const ExporterDetails = ({ apiConfig }: PageProps) => {
                     >
                       {t('contact.orgName')}
                     </AddressInput>
-                    <GovUK.Heading size={'MEDIUM'}>
-                      {t('exportJourney.exporterDetails.contactDetails')}
-                    </GovUK.Heading>
                     <AddressInput
+                      hint={t('contact.fullName')}
                       input={{
                         name: 'fullName',
                         id: 'fullName',
@@ -248,7 +246,7 @@ const ExporterDetails = ({ apiConfig }: PageProps) => {
                         touched: !!errors?.fullName,
                       }}
                     >
-                      {t('contact.fullName')}
+                      {t('contact.orgContactName')}
                     </AddressInput>
                     <TownCountryInput
                       input={{

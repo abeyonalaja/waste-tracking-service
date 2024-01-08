@@ -25,6 +25,7 @@ import {
 import { countriesData } from 'utils/countriesData';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
+import { getStatusExporter } from 'utils/statuses/getStatusExporter';
 
 export const getServerSideProps = async (context) => {
   return getApiConfig(context);
@@ -123,7 +124,7 @@ const ExporterManual = ({ apiConfig }: PageProps) => {
         setErrors(null);
         const body = {
           ...data,
-          status: 'Started',
+          status: getStatusExporter(data),
           exporterAddress: {
             addressLine1: address,
             addressLine2: address2,
