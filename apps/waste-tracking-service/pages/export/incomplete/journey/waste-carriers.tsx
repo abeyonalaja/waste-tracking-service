@@ -350,7 +350,10 @@ const WasteCarriers = ({ apiConfig }: PageProps) => {
               ? VIEWS.TRANSPORT_DETAILS
               : VIEWS.LIST;
           newErrors = {
-            transportTypeError: validateTransport(transportDetails?.type),
+            transportTypeError: validateTransport(
+              t(`numberAdjective.${carrierIndex}`).toLowerCase(),
+              transportDetails?.type
+            ),
             transportDescriptionError: validateTransportDescription(
               t(
                 `exportJourney.wasteCarrierTransport.${transportDetails?.type}`

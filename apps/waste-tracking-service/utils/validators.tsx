@@ -1,13 +1,12 @@
 import aOrAn from './aOrAn';
+import i18next from 'i18next';
 import { isPast, isValid, addBusinessDays, differenceInDays } from 'date-fns';
+
+const t = i18next.t;
 
 export function isNotEmpty(obj) {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
-
-export const validateOwnReference: (value?: string) => string | undefined = (
-  value
-) => (value ? undefined : 'Select yes if you want to add a reference');
 
 export const validateReference: (reference?: string) => string | null = (
   reference
@@ -15,24 +14,18 @@ export const validateReference: (reference?: string) => string | null = (
   if (reference !== null) {
     reference = reference.trim();
   }
-
-  if (reference === null || reference === '') return 'Enter a reference ';
-
-  if (reference.length === 1)
-    return 'Enter a reference using more than 1 character';
-
-  if (reference.length > 20)
-    return 'Enter a reference using 20 character or less';
-
+  if (reference === null || reference === '')
+    return t('validation.reference.empty');
+  if (reference.length === 1) return t('validation.reference.charTooFew');
+  if (reference.length > 20) return t('validation.reference.charTooMany');
   const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,20}$');
-  if (!regex.test(reference))
-    return 'The reference must only include letters a to z, numbers, spaces, hyphens and back slashes';
+  if (!regex.test(reference)) return t('validation.reference.charInvalid');
 };
 
 export const validateWasteCodeCategory: (
   wasteCodeCategory?: string
 ) => string | undefined = (wasteCodeCategory) =>
-  wasteCodeCategory ? undefined : 'Select a waste code';
+  wasteCodeCategory ? undefined : t('validation.wasteCode.category');
 
 export const validateWasteCode: (
   wasteCodeCategory?: string,
@@ -51,9 +44,26 @@ export const validateWasteCode: (
     wasteCodeCategory?.toLowerCase() ===
       wasteCodeCategoryLabel.toLowerCase().replace(/ /g, '')
   )
-    return `Enter ${aOrAn(
-      wasteCodeCategory.charAt(0)
-    )} ${wasteCodeCategoryLabel} waste code`;
+    return t('validation.wasteCode.empty', {
+      wc: `${aOrAn(wasteCodeCategory.charAt(0))} ${wasteCodeCategoryLabel}`,
+    });
+};
+
+export const validateEwcCode: (
+  hasEWCCode?: string,
+  ewcCode?: string
+) => string | undefined = (hasEWCCode, ewcCode) => {
+  if (hasEWCCode !== 'Yes') return;
+
+  if (ewcCode === null || ewcCode.length === 0)
+    return t('validation.ewcCode.empty');
+
+  const regex = /[A-Z-_|.* ]/gi;
+  ewcCode = ewcCode.replace(regex, '');
+
+  if (ewcCode.length != 6) {
+    return t('validation.ewcCode.invalid');
+  }
 };
 
 export const validateNationalCode: (
@@ -62,14 +72,14 @@ export const validateNationalCode: (
 ) => string | undefined = (hasNationalCode, nationalCode) => {
   if (hasNationalCode !== 'Yes') return;
 
-  if (nationalCode === undefined || nationalCode === '') return 'Enter code ';
+  if (nationalCode === undefined || nationalCode === '')
+    return t('validation.nationalCode.empty');
 
-  if (nationalCode.length > 50)
-    return 'Enter a code using 50 character or less';
+  if (nationalCode.length > 50) return t('validation.nationalCode.charTooMany');
 
   const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
   if (!regex.test(nationalCode))
-    return 'The code must only include letters a to z, numbers, spaces, hyphens and back slashes';
+    return t('validation.nationalCode.charInvalid');
 };
 
 export const validateWasteDescription: (
@@ -79,25 +89,23 @@ export const validateWasteDescription: (
     description = description.trim();
   }
   if (description === undefined || description?.length === 0)
-    return 'Enter a description';
-  if (description?.length > 100)
-    return 'Description must be 100 characters or less';
+    return t('validation.description.empty');
+  if (description?.length > 100) return t('validation.description.tooLong');
 };
 
 export const validateWasteDescriptionTemplate: (
   description?: string
 ) => string | undefined = (description) => {
-  if (description?.length > 100)
-    return 'Description must be 100 characters or less';
+  if (description?.length > 100) return t('validation.description.tooLong');
 };
 
 export const validatePostcode: (postcode?: string) => string = (postcode) => {
-  if (postcode?.length === 0) return 'Enter a postcode';
+  if (postcode?.length === 0) return t('validation.postcode.empty');
   const regex = new RegExp(
     '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$'
   );
   if (!regex.test(postcode)) {
-    return 'Enter a real postcode';
+    return t('validation.postcode.invalid');
   }
 };
 
@@ -108,10 +116,10 @@ export const validateEmail: (email?: string, allowNull?: boolean) => string = (
   if (allowNull && (email === undefined || email === '')) {
     return;
   }
-  if (email?.length === 0) return 'Enter an email address';
+  if (email?.length === 0) return t('validation.email.empty');
   const regex = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
   if (!regex.test(email)) {
-    return 'Enter a real email address';
+    return t('validation.email.invalid');
   }
 };
 
@@ -122,12 +130,12 @@ export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
   if (allowNull && (phone === undefined || phone === '')) {
     return;
   }
-  if (phone?.length === 0) return 'Enter a phone number';
+  if (phone?.length === 0) return t('validation.phone.empty');
   const regex = new RegExp(
     '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
   );
   if (!regex.test(phone)) {
-    return 'Enter a real phone number';
+    return t('validation.phone.invalid');
   }
 };
 
@@ -138,46 +146,50 @@ export const validateInternationalPhone: (
   if (allowNull && (phone === undefined || phone === '')) {
     return;
   }
-  if (phone?.length === 0) return 'Enter a phone number';
-  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 \\-\\(\\)\\.]{7,32}$');
+  if (phone?.length === 0) return t('validation.phone.empty');
+  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 \\-]{7,32}$');
   if (!regex.test(phone)) {
-    return 'Enter a real phone number';
+    return t('validation.phone.invalid');
   }
 };
 
 export const validateSelectAddress: (address?: string) => string = (
   address
 ) => {
-  if (address === '' || address === undefined) return 'Select an address';
+  if (address === '' || address === undefined)
+    return t('validation.address.select');
 };
 
 export const validateTownCity: (townCity?: string) => string = (townCity) => {
   if (townCity?.length === 0 || townCity === undefined)
-    return 'Enter a town or city';
+    return t('validation.address.townCity.empty');
 };
 export const validateCountrySelect: (country?: string) => string = (
   country
 ) => {
-  if (country?.length === 0 || country === undefined) return 'Select a country';
+  if (country?.length === 0 || country === undefined)
+    return t('validation.address.county.select');
 };
 
 export const validateCountry: (country?: string) => string = (country) => {
-  if (country?.length === 0 || country === undefined) return 'Enter a country';
+  if (country?.length === 0 || country === undefined)
+    return t('validation.address.county.empty');
 };
 
 export const validateAddress: (address?: string) => string = (address) => {
-  if (address?.length === 0 || address === undefined) return 'Enter an address';
+  if (address?.length === 0 || address === undefined)
+    return t('validation.address.empty');
 };
 
 export const validateOrganisationName: (organisationName?: string) => string = (
   organisationName
 ) => {
   if (organisationName?.length === 0 || organisationName === undefined)
-    return 'Enter an organisation name';
+    return t('validation.orgName.empty');
 };
 export const validateFullName: (fullName?: string) => string = (fullName) => {
   if (fullName?.length === 0 || fullName === undefined)
-    return 'Enter a full name';
+    return t('validation.fullName.empty');
 };
 
 export const validateQuantityType: (
@@ -186,9 +198,9 @@ export const validateQuantityType: (
 ) => string = (quantityType, isBulkWaste) => {
   if (quantityType === null) {
     if (isBulkWaste) {
-      return 'Select yes if you know the actual or estimated amount of waste';
+      return t('validation.quantity.type.bulk');
     } else {
-      return 'Select yes if you know the actual quantity of waste';
+      return t('validation.quantity.type.small');
     }
   }
 };
@@ -198,9 +210,9 @@ export const validateWeightOrVolume: (
   estimate?: boolean
 ) => string = (quantityType, estimate) => {
   if (quantityType === null && estimate)
-    return 'Enter the estimated net weight or volume of waste';
+    return t('validation.quantity.amount.estimate');
   if (quantityType === null && !estimate)
-    return 'Enter the actual net weight or volume of waste';
+    return t('validation.quantity.amount.actual');
 };
 
 export const validateQuantityValue: (
@@ -213,25 +225,31 @@ export const validateQuantityValue: (
   if (!quantityType) return;
   if (quantityType) {
     if (quantityValue === '') {
-      return `Enter the ${label.toLowerCase()} in ${unit}`;
+      return t('validation.quantity.value', {
+        label: label.toLowerCase(),
+        unit: unit,
+      });
     }
     const regex = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$');
     if (!regex.test(quantityValue)) {
-      return `Enter the ${label.toLowerCase()} using only numbers`;
+      return t('validation.quantity.value.numbers', {
+        label: label.toLowerCase(),
+      });
     }
     if (Number(quantityValue) === 0) {
-      return `The ${label.toLowerCase()} needs to be greater than O`;
+      return t('validation.quantity.value.invalid', {
+        label: label.toLowerCase(),
+      });
     }
     if (!bulk && Number(quantityValue) > 25) {
-      return 'Enter a weight 25kg or under';
+      return t('validation.quantity.value.invalid.small');
     }
   }
 };
 
 export const validateDateType: (value?: string) => string | undefined = (
   value
-) =>
-  value ? undefined : 'Select yes if you know when the waste will be collected';
+) => (value ? undefined : t('validation.date.collection.select'));
 
 interface Date {
   day: string;
@@ -252,16 +270,16 @@ export const validateDate: (date: Date) => string | undefined = (
   const year = Number(date?.year);
   const dateString = new Date(year, month - 1, day);
 
-  if (!isValid(dateString)) return 'Enter a real date';
+  if (!isValid(dateString)) return t('validation.date.invalid');
 
   const dateStringRaw = `${day}/${month}/${year}`;
-  if (!isValidDate(dateStringRaw)) return 'Enter a real date';
+  if (!isValidDate(dateStringRaw)) return t('validation.date.invalid');
 
-  if (isPast(dateString)) return 'Enter a date in the future';
+  if (isPast(dateString)) return t('validation.date.invalid.past');
 
   const threeWorkingDaysFromToday = addBusinessDays(new Date(), 3);
   if (differenceInDays(dateString, threeWorkingDaysFromToday) < 0)
-    return 'Enter a date at least 3 business days in the future';
+    return t('validation.date.invalid.working.days');
 };
 
 export const validateActualDate: (date: Date) => string | undefined = (
@@ -272,17 +290,16 @@ export const validateActualDate: (date: Date) => string | undefined = (
   const year = Number(date?.year);
   const dateString = new Date(year, month - 1, day);
 
-  if (!isValid(dateString)) return 'Enter a real date';
+  if (!isValid(dateString)) return t('validation.date.invalid');
 
   const dateStringRaw = `${day}/${month}/${year}`;
-  if (!isValidDate(dateStringRaw)) return 'Enter a real date';
+  if (!isValidDate(dateStringRaw)) return t('validation.date.invalid');
 };
 
 export const validateKnowsPointOfExit: (
   knowsPointOfExit?: string
 ) => string | undefined = (knowsPointOfExit) => {
-  if (knowsPointOfExit === undefined)
-    return 'Select yes if you know where the waste will leave the UK';
+  if (knowsPointOfExit === undefined) return t('validation.exit.select');
 };
 
 export const validatePointOfExit: (
@@ -292,21 +309,20 @@ export const validatePointOfExit: (
   if (knowsPointOfExit === undefined || knowsPointOfExit === 'No') return;
 
   if (pointOfExit === undefined || pointOfExit === '')
-    return 'Enter the location ';
+    return t('validation.location.empty');
 
-  if (pointOfExit.length > 50)
-    return 'Enter the location using 50 character or less';
+  if (pointOfExit.length > 50) return t('validation.location.charTooMany');
 
   const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
-  if (!regex.test(pointOfExit))
-    return 'The location must only include letters a to z, numbers, spaces, hyphens and back slashes';
+  if (!regex.test(pointOfExit)) return t('validation.location.charInvalid');
 };
 
-export const validateTransport: (value?: string) => string | undefined = (
-  value
-) => {
+export const validateTransport: (
+  carrierNumber: string,
+  value?: string
+) => string | undefined = (carrierNumber, value) => {
   if (value === undefined)
-    return 'Select how the first waste carrier will transport the waste';
+    return t('validation.transport.select', { carrierNumber });
 };
 
 export const validateTransportDescription: (
@@ -318,14 +334,13 @@ export const validateTransportDescription: (
     description = description.trim();
   }
   if (description?.length > 200)
-    return `The ${carrierNumber} carrier's ${type} transportation details must be 200 characters or less`;
+    return t('validation.transport.description', { carrierNumber, type });
 };
 
 export const validateTransitCountries: (
   value?: string
 ) => string | undefined = (value) => {
-  if (value === null)
-    return 'Select yes if there are any other countries the waste will travel through';
+  if (value === null) return t('validation.transit.countries.select');
 };
 
 export const validateTransitCountry: (
@@ -334,7 +349,7 @@ export const validateTransitCountry: (
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
   if (country === undefined || country.length === 0)
-    return 'Select or enter country';
+    return t('validation.transit.country.select');
 };
 
 export const validateSingleTransitCountry: (
@@ -342,40 +357,39 @@ export const validateSingleTransitCountry: (
   country?: []
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
-  if (country === null) return 'Select or enter country';
+  if (country === null) return t('validation.transit.country.select');
 };
 
 export const validateConfirmRemove: (
   value?: string,
   label?: string
 ) => string | undefined = (value, label) => {
-  if (value === null) return `Select yes if you want to remove this ${label}`;
+  if (value === null) return t('validation.confirmation', { label });
 };
 
 export const validateSelection: (
   value?: string,
   label?: string
 ) => string | undefined = (value, label) => {
-  if (value === null) return `Select yes ${label}`;
+  if (value === null) return t('validation.selection', { label });
 };
 
 export const validateConfirmRemoveCarrier: (
   value?: string
 ) => string | undefined = (value) => {
-  if (value === null) return 'Select yes if you want to remove this carrier';
+  if (value === null) return t('validation.remove.carrier');
 };
 
 export const validateConfirmRemoveDocument: (
   value?: string
 ) => string | undefined = (value) => {
-  if (value === null) return 'Select yes if you want to remove this document';
+  if (value === null) return t('validation.remove.document');
 };
 
 export const validateConfirmCancelDocument: (
   value?: string
 ) => string | undefined = (value) => {
-  if (value === null)
-    return 'Select a reason if you want to cancel this document';
+  if (value === null) return t('validation.remove.document.reason');
 };
 
 export const validateConfirmCancelReason: (
@@ -383,50 +397,37 @@ export const validateConfirmCancelReason: (
   reason?: string
 ) => string | undefined = (type, reason) => {
   if (type !== 'Other') return;
-  if (reason === null || reason === undefined) return 'Enter a reason';
+  if (reason === null || reason === undefined)
+    return t('validation.cancel.reason');
   reason = reason.trim();
-  if (reason.length === 0) return 'Enter a reason';
-  if (reason.length > 100) return 'Reason must be 100 characters or less';
+  if (reason.length === 0) return t('validation.cancel.reason');
+  if (reason.length > 100) return t('validation.cancel.reason.invalid');
 };
 
 export const validateRecoveryFacilityName: (facility?: string) => string = (
   facility
 ) => {
   if (facility?.length === 0 || facility === undefined)
-    return 'Enter the recovery facility name';
+    return t('validation.recovery.facility.name');
 };
 
 export const validateRecoveryCode: (code?: string) => string = (code) => {
-  if (code?.length === 0 || code === undefined) return 'Enter a recovery code';
+  if (code?.length === 0 || code === undefined)
+    return t('validation.recovery.facility.code');
 };
 
 export const validateAddAnotherFacility: (
   value?: string
 ) => string | undefined = (value) => {
-  if (value === null) return 'Select yes if you want to add another facility';
+  if (value === null) return t('validation.recovery.facility.another');
 };
 
 export const validateFieldNotEmpty: (
   value?: string,
   label?: string
 ) => string | undefined = (value, label) => {
-  if (value?.length === 0 || value === undefined) return `Enter ${label}`;
-};
-
-export const validateEwcCode: (
-  hasEWCCode?: string,
-  ewcCode?: string
-) => string | undefined = (hasEWCCode, ewcCode) => {
-  if (hasEWCCode !== 'Yes') return;
-
-  if (ewcCode === null || ewcCode.length === 0) return 'Enter a code';
-
-  const regex = /[A-Z-_|.* ]/gi;
-  ewcCode = ewcCode.replace(regex, '');
-
-  if (ewcCode.length != 6) {
-    return 'Enter a code with 6 digits';
-  }
+  if (value?.length === 0 || value === undefined)
+    return t('validation.empty', { label });
 };
 
 export const validateTemplateName: (value?: string) => string | undefined = (
@@ -435,13 +436,11 @@ export const validateTemplateName: (value?: string) => string | undefined = (
   if (value?.length === 0 || value === undefined)
     return `Enter a name for the template`;
   const regex = new RegExp("^[a-zA-Z0-9\\\\\\-_.')( ]{1,50}$");
-  if (!regex.test(value))
-    return 'The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes';
+  if (!regex.test(value)) return t('validation.template.name');
 };
 
 export const validateTemplateDesc: (
   description?: string
 ) => string | undefined = (description) => {
-  if (description?.length > 100)
-    return 'Description must be 100 characters or less';
+  if (description?.length > 100) return t('validation.template.description');
 };

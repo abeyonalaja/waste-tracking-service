@@ -76,7 +76,6 @@ export function Reference({ apiConfig }: PageProps) {
           console.error(e);
         }
       };
-
       const postData = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions`;
         const body = JSON.stringify({ reference });
