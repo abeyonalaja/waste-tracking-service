@@ -29,25 +29,14 @@ spec:
     spec:
       serviceAccountName: {{ include "reference-data.serviceAccountName" . }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.targetPort }}
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          env:          
-            {{- include "reference-data.env" . | nindent 12 }}
-          volumeMounts:
-          - name: {{ .Values.volume.name }}
-            mountPath: {{ .Values.volume.mountPath }}
-            readOnly: true
-      volumes:
-        - name: {{ .Values.volume.name }}
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: {{ include "reference-data.secretProviderClassName" . }}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.targetPort }}
+            protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        env:          
+          {{- include "reference-data.env" . | nindent 8 }}
