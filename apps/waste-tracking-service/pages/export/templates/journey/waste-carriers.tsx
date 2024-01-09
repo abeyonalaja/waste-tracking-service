@@ -623,9 +623,6 @@ const WasteCarriers = ({ apiConfig }: PageProps) => {
                         n: t(`numberAdjective.${carrierIndex}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
-                    <GovUK.Paragraph>
-                      {t('exportJourney.wasteCarrierDetails.YouCanEditMessage')}
-                    </GovUK.Paragraph>
                     <form onSubmit={(e) => handleSubmit(e, 'address')}>
                       <AddressField
                         mb={6}
@@ -692,9 +689,6 @@ const WasteCarriers = ({ apiConfig }: PageProps) => {
                         n: t(`numberAdjective.${carrierIndex}`).toLowerCase(),
                       })}
                     </GovUK.Heading>
-                    <GovUK.Paragraph>
-                      {t('exportJourney.wasteCarrierDetails.YouCanEditMessage')}
-                    </GovUK.Paragraph>
                     <form
                       onSubmit={(e) => handleSubmit(e, 'contact')}
                       noValidate={true}

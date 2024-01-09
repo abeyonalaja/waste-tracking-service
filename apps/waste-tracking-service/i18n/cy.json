@@ -202,7 +202,6 @@
   "exportJourney.wasteCarrierDetails.title": "Waste carriers",
   "exportJourney.wasteCarrierDetails.addressTitle": "Who is the {{n}} waste carrier?",
   "exportJourney.wasteCarrierDetails.contactTitle": "What are the {{n}} waste carrier's contact details?",
-  "exportJourney.wasteCarrierDetails.YouCanEditMessage": "You'll be able to update these details after submitting the record.",
   "exportJourney.wasteCarrierDetails.contactPerson": "Organisation contact person",
   "exportJourney.wasteCarrierTransport.pageQuestion": "How will the {{carrierIndex}} waste carrier transport the waste?",
   "exportJourney.wasteCarrierTransport.descriptionTitle": "What are the {{carrierIndex}} waste carrier's {{type}} transportation details?",
