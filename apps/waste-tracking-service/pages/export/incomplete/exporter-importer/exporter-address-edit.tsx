@@ -110,6 +110,7 @@ const ExporterAddressEdit = ({ apiConfig }: PageProps) => {
 
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft = false) => {
+      e.preventDefault();
       const newErrors = {
         townCity: validateTownCity(townCity),
         country: validateCountrySelect(country),
@@ -157,7 +158,6 @@ const ExporterAddressEdit = ({ apiConfig }: PageProps) => {
           console.error(e);
         }
       }
-      e.preventDefault();
     },
     [townCity, country, address, data, address2, postcode, id, router]
   );
