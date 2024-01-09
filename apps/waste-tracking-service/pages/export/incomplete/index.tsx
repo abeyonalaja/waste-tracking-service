@@ -32,6 +32,7 @@ import styled from 'styled-components';
 
 import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
 import { formatDate } from 'utils/formatDate';
+import useRefDataLookup from '../../../utils/useRefDataLookup';
 
 type State = {
   data: any;
@@ -125,6 +126,7 @@ const Action = styled.div`
 
 const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
+  const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(
     incompleteAnnex7Reducer,
@@ -398,15 +400,17 @@ const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
                           </TableCell>
 
                           <TableCell id={'waste-code-' + index}>
-                            {item.wasteDescription?.status === 'Complete' && (
+                            {item.wasteDescription?.status !== 'NotStarted' && (
                               <>
                                 {item.wasteDescription?.wasteCode.type !==
                                   'NotApplicable' && (
                                   <>
-                                    {item.wasteDescription?.wasteCode.value && (
-                                      <span>
-                                        {item.wasteDescription?.wasteCode.value}
-                                      </span>
+                                    <strong>
+                                      {item.wasteDescription?.wasteCode.code}:{' '}
+                                    </strong>
+                                    {getRefData(
+                                      'WasteCode',
+                                      item.wasteDescription?.wasteCode.code
                                     )}
                                   </>
                                 )}

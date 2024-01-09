@@ -193,7 +193,7 @@ const InterimSiteDetails = ({ apiConfig }: PageProps) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
         { headers: apiConfig }
       )
         .then((response) => {
@@ -201,7 +201,9 @@ const InterimSiteDetails = ({ apiConfig }: PageProps) => {
         })
         .then((data) => {
           if (data !== undefined) {
-            const filterInterimCodes = data.filter((code) => code.interim);
+            const filterInterimCodes = data.filter(
+              (code) => code.value.interim
+            );
             setRefData(filterInterimCodes);
           }
         });

@@ -154,15 +154,6 @@ import {
   setTemplateRecoveryFacilityDetails,
   setTemplateTransitCountries,
   setTemplateWasteDescriptionById,
-  GetCountriesResponse,
-  GetDisposalCodesResponse,
-  GetEWCCodesResponse,
-  GetRecoveryCodesResponse,
-  GetWasteCodesRequest,
-  GetWasteCodesResponse,
-  GetDisposalCodesRequest,
-  GetEWCCodesRequest,
-  GetRecoveryCodesRequest,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -893,55 +884,5 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as DeleteDraftRecoveryFacilityDetailsResponse;
-  }
-
-  async getWasteCodes(
-    req: GetWasteCodesRequest
-  ): Promise<GetWasteCodesResponse> {
-    return (await this.daprClient.invoker.invoke(
-      this.annexViiAppId,
-      this.getWasteCodes.name,
-      HttpMethod.POST,
-      req
-    )) as GetWasteCodesResponse;
-  }
-
-  async getEWCCodes(req: GetEWCCodesRequest): Promise<GetEWCCodesResponse> {
-    return (await this.daprClient.invoker.invoke(
-      this.annexViiAppId,
-      this.getEWCCodes.name,
-      HttpMethod.POST,
-      req
-    )) as GetEWCCodesResponse;
-  }
-
-  async getCountries(): Promise<GetCountriesResponse> {
-    return (await this.daprClient.invoker.invoke(
-      this.annexViiAppId,
-      this.getCountries.name,
-      HttpMethod.POST
-    )) as GetCountriesResponse;
-  }
-
-  async getRecoveryCodes(
-    req: GetRecoveryCodesRequest
-  ): Promise<GetRecoveryCodesResponse> {
-    return (await this.daprClient.invoker.invoke(
-      this.annexViiAppId,
-      this.getRecoveryCodes.name,
-      HttpMethod.POST,
-      req
-    )) as GetRecoveryCodesResponse;
-  }
-
-  async getDisposalCodes(
-    req: GetDisposalCodesRequest
-  ): Promise<GetDisposalCodesResponse> {
-    return (await this.daprClient.invoker.invoke(
-      this.annexViiAppId,
-      this.getDisposalCodes.name,
-      HttpMethod.POST,
-      req
-    )) as GetDisposalCodesResponse;
   }
 }

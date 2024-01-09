@@ -48,9 +48,12 @@ export function Index({ apiConfig }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/countries`, {
-          headers: apiConfig,
-        }).then((response) => {
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries`,
+          {
+            headers: apiConfig,
+          }
+        ).then((response) => {
           if (response.ok) return response.json();
           else {
             if (response.status === 403) {

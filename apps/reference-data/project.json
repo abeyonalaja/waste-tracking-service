@@ -1,0 +1,92 @@
+{
+  "name": "reference-data",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/reference-data/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/reference-data",
+        "main": "apps/reference-data/src/main.ts",
+        "tsConfig": "apps/reference-data/tsconfig.app.json",
+        "assets": ["apps/reference-data/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/reference-data/webpack.config.js",
+        "generatePackageJson": true,
+        "additionalEntryPoints": [
+          {
+            "entryName": "tracing",
+            "entryPath": "apps/reference-data/src/tracing.ts"
+          }
+        ]
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "reference-data:build",
+        "runtimeArgs": ["--require", "./dist/apps/reference-data/tracing.js"]
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "reference-data:build:development"
+        },
+        "production": {
+          "buildTarget": "reference-data:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/reference-data/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/reference-data/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "engine": "docker",
+        "metadata": {
+          "images": ["wts/reference-data"],
+          "load": true,
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
+    }
+  },
+  "tags": []
+}

@@ -11,6 +11,7 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
+  AutoComplete,
   CompleteFooter,
   CompleteHeader,
   BreadcrumbWrap,
@@ -37,8 +38,6 @@ import {
 
 import styled from 'styled-components';
 import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gateway';
-import Autocomplete from 'accessible-autocomplete/react';
-import boldUpToFirstColon from 'utils/boldUpToFirstColon';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
 import i18n from 'i18next';
@@ -158,12 +157,14 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-type codeType = {
-  type: string;
-  values: Array<{
-    code: string;
-    description: string;
-  }>;
+type optionType = {
+  code: string;
+  value: {
+    description: {
+      en?: string;
+      cy?: string;
+    };
+  };
 };
 
 const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
@@ -173,7 +174,7 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
     recoveryReducer,
     initialState
   );
-  const [refData, setRefData] = useState<Array<codeType>>();
+  const [refData, setRefData] = useState<Array<optionType>>();
   const [id, setId] = useState<string | string[]>(null);
   const [page, setPage] = useState(null);
   const [siteId, setSiteId] = useState<string | string[]>(null);
@@ -213,7 +214,7 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/recovery-codes?language=${currentLanguage}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
         { headers: apiConfig }
       )
         .then((response) => {
@@ -225,10 +226,8 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
           }
         });
     };
-    if (currentLanguage) {
-      fetchData();
-    }
-  }, [currentLanguage]);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (recoveryPage.data?.values !== undefined) {
@@ -542,25 +541,6 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
     }));
   };
 
-  function suggest(query, populateResults) {
-    const filterResults = (result) => {
-      const tempString = `${result.code}: ${result.description}`;
-      return tempString.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-    };
-    const filteredResults = refData.filter(filterResults);
-    populateResults(filteredResults);
-  }
-
-  const suggestionTemplate = (suggestion) => {
-    return typeof suggestion !== 'string'
-      ? `${suggestion?.code}: ${suggestion?.description}`
-      : suggestion;
-  };
-
-  const inputValueTemplate = (suggestion) => {
-    return `${suggestion?.code}`;
-  };
-
   const handleSubmitAdditionalFacility = (e) => {
     const newErrors = {
       additionalFacility: validateAddAnotherFacility(additionalFacility),
@@ -709,6 +689,13 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
     },
     [confirmRemove]
   );
+
+  const getCodeDescription = (recCode) => {
+    const result = refData.find(({ code }) => code === recCode);
+    if (result) {
+      return result.value.description[currentLanguage];
+    }
+  };
 
   const completedRecoveryFacilities = (facilities) => {
     return facilities.filter(
@@ -994,25 +981,18 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
                         <GovUK.ErrorText>
                           {recoveryPage.errors?.recoveryCode}
                         </GovUK.ErrorText>
-                        <Autocomplete
+                        <AutoComplete
                           id="recoveryCode"
-                          source={suggest}
-                          showAllValues={true}
-                          onConfirm={(option) =>
+                          options={refData}
+                          value={
+                            recoveryFacilityType?.recoveryCode || undefined
+                          }
+                          confirm={(o) =>
                             setRecoveryFacilityType({
                               type: 'RecoveryFacility',
-                              recoveryCode: option.code,
+                              recoveryCode: o.code,
                             })
                           }
-                          confirmOnBlur={false}
-                          defaultValue={recoveryFacilityType?.recoveryCode}
-                          templates={{
-                            inputValue: inputValueTemplate,
-                            suggestion: suggestionTemplate,
-                          }}
-                          dropdownArrow={() => {
-                            return;
-                          }}
                         />
                       </GovUK.FormGroup>
                       <ButtonGroup>
@@ -1098,9 +1078,11 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
                                   title: t(
                                     'exportJourney.recoveryFacilities.recoveryCode'
                                   ),
-                                  definition: boldUpToFirstColon(
+                                  definition: `${
                                     facility.recoveryFacilityType?.recoveryCode
-                                  ),
+                                  }: ${getCodeDescription(
+                                    facility.recoveryFacilityType?.recoveryCode
+                                  )}`,
                                 },
                               ]}
                             />

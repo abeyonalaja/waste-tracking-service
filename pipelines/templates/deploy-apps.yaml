@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,waste-tracking-service,waste-tracking-gateway"
+                        affected="address,annex-vii,waste-tracking-service,waste-tracking-gateway,reference-data"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,waste-tracking-service,waste-tracking-gateway
+        value: address,annex-vii,waste-tracking-service,waste-tracking-gateway,reference-data
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -153,6 +153,14 @@ jobs:
                       echo "Deploy waste-tracking-service: false"
                       echo "##vso[task.setvariable variable=deployWasteTrackingService;isoutput=true]false"
                     fi
+                    if [[ $affected = *'reference-data'* ]]
+                    then
+                      echo "Deploy reference-data: true"
+                      echo "##vso[task.setvariable variable=deployReferenceData;isoutput=true]true"
+                    else
+                      echo "Deploy reference-data: false"
+                      echo "##vso[task.setvariable variable=deployReferenceData;isoutput=true]false"
+                    fi
                   displayName: Helm chart deployment triggers
                   name: chart_triggers
 
@@ -209,6 +217,16 @@ jobs:
                         nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployWasteTrackingService'], true)
+
+                - ${{ elseif eq(app, 'reference-data') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployReferenceData'], true)
 
                 - ${{ else }}:
                     - bash: |

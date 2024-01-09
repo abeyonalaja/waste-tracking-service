@@ -3,6 +3,7 @@ import { GREY_2, ERROR_COLOUR } from 'govuk-colours';
 import { Fieldset, HintText, ErrorText, Radio } from 'govuk-react';
 import styled from 'styled-components';
 import boldUpToFirstColon from '../utils/boldUpToFirstColon';
+import i18n from 'i18next';
 
 type codeType = Array<{
   code: string;
@@ -80,6 +81,7 @@ export const RadioList = ({
   errorMessage,
   onChange,
 }: Props) => {
+  const currentLanguage = i18n.language;
   return (
     <RadioFormGroup id={id} error={!!errorMessage}>
       <Fieldset>
@@ -98,7 +100,7 @@ export const RadioList = ({
           if (typeof option === 'object') {
             radioVal = option.code;
             radioId = `${id}-${option.code}`;
-            radioLabel = `${option.code}: ${option.description}`;
+            radioLabel = `${option.code}: ${option.value.description[currentLanguage]}`;
           } else {
             radioVal = option;
             radioId = `${id}-${idify(option)}`;

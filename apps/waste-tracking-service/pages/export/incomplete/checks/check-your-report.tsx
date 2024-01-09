@@ -8,7 +8,6 @@ import React, {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
 import {
   CompleteFooter,
@@ -81,7 +80,6 @@ const CheckYourReport = ({ apiConfig }: PageProps) => {
     initialWasteDescState
   );
   const [id, setId] = useState(null);
-  const [sectionStatus, setSectionStatus] = useState<number>(0);
 
   useEffect(() => {
     if (router.isReady) {
@@ -147,7 +145,6 @@ const CheckYourReport = ({ apiConfig }: PageProps) => {
         sectionFourStatus,
         sectionFiveStatus,
       ].filter(Boolean).length;
-      setSectionStatus(statusCount);
 
       if (statusCount != 4) {
         router.push('/incomplete/tasklist?id=' + id);
@@ -253,7 +250,10 @@ const CheckYourReport = ({ apiConfig }: PageProps) => {
                   </div>
                 )}
 
-                <SubmissionSummary data={checkYourReportPage.data} />
+                <SubmissionSummary
+                  data={checkYourReportPage.data}
+                  apiConfig={apiConfig}
+                />
               </GovUK.GridCol>
             </GovUK.GridRow>
             <ButtonGroup>

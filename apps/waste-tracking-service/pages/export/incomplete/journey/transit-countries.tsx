@@ -20,6 +20,7 @@ import {
   SaveReturnButton,
   ButtonGroup,
   SummaryListWithActions,
+  CountrySelector,
 } from 'components';
 import {
   isNotEmpty,
@@ -29,8 +30,6 @@ import {
   validateConfirmRemove,
 } from 'utils/validators';
 import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
-import Autocomplete from 'accessible-autocomplete/react';
-import { countriesData } from 'utils/countriesData';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
 
@@ -390,14 +389,6 @@ const TransitCountries = ({ apiConfig }: PageProps) => {
     }
   };
 
-  const suggest = (query, populateResults) => {
-    const results = countriesData['World'];
-    const filteredResults = results.filter(
-      (result) => result.toLowerCase().indexOf(query.toLowerCase()) !== -1
-    );
-    populateResults(filteredResults);
-  };
-
   const handleCountrySelect = (country) => {
     dispatchWasteTransitPage({
       type: 'DATA_UPDATE',
@@ -542,31 +533,17 @@ const TransitCountries = ({ apiConfig }: PageProps) => {
                               <GovUK.FormGroup
                                 error={!!wasteTransitPage.errors?.country}
                               >
-                                <GovUK.Label htmlFor="country">
-                                  <GovUK.LabelText>
-                                    {t('autocompleteHint')}
-                                  </GovUK.LabelText>
-                                </GovUK.Label>
-
-                                <GovUK.HintText>
-                                  {t(
+                                <CountrySelector
+                                  id={'country'}
+                                  name={'country'}
+                                  label={t('autocompleteHint')}
+                                  hint={t(
                                     'exportJourney.wasteTransitCountries.additionalCountryAutocompleteHint'
                                   )}
-                                </GovUK.HintText>
-                                <GovUK.ErrorText>
-                                  {wasteTransitPage.errors?.country}
-                                </GovUK.ErrorText>
-                                <Autocomplete
-                                  id="country"
-                                  source={suggest}
-                                  showAllValues={true}
-                                  onConfirm={(option) =>
-                                    setAdditionalCountry(option)
-                                  }
-                                  confirmOnBlur={false}
-                                  dropdownArrow={() => {
-                                    return;
-                                  }}
+                                  value={''}
+                                  onChange={setAdditionalCountry}
+                                  error={wasteTransitPage.errors?.country}
+                                  apiConfig={apiConfig}
                                 />
                               </GovUK.FormGroup>
                             </ConditionalRadioWrap>
@@ -622,36 +599,17 @@ const TransitCountries = ({ apiConfig }: PageProps) => {
                               <GovUK.FormGroup
                                 error={!!wasteTransitPage.errors?.country}
                               >
-                                <GovUK.Label htmlFor="country">
-                                  <GovUK.LabelText>
-                                    {t('autocompleteHint')}
-                                  </GovUK.LabelText>
-                                </GovUK.Label>
-
-                                <GovUK.HintText>
-                                  {t(
+                                <CountrySelector
+                                  id={'country'}
+                                  name={'country'}
+                                  label={t('autocompleteHint')}
+                                  hint={t(
                                     'exportJourney.wasteTransitCountries.hint'
                                   )}
-                                </GovUK.HintText>
-                                <GovUK.ErrorText>
-                                  {wasteTransitPage.errors?.country}
-                                </GovUK.ErrorText>
-                                <Autocomplete
-                                  id="country"
-                                  source={suggest}
-                                  showAllValues={true}
-                                  onConfirm={(option) =>
-                                    handleCountrySelect(option)
-                                  }
-                                  confirmOnBlur={false}
-                                  defaultValue={
-                                    wasteTransitPage.data.values?.length > 0
-                                      ? wasteTransitPage.data.values[0]
-                                      : ''
-                                  }
-                                  dropdownArrow={() => {
-                                    return;
-                                  }}
+                                  value={''}
+                                  onChange={handleCountrySelect}
+                                  error={wasteTransitPage.errors?.country}
+                                  apiConfig={apiConfig}
                                 />
                               </GovUK.FormGroup>
                             </ConditionalRadioWrap>
@@ -698,28 +656,17 @@ const TransitCountries = ({ apiConfig }: PageProps) => {
                         <GovUK.FormGroup
                           error={!!wasteTransitPage.errors?.changedCountry}
                         >
-                          <GovUK.Label htmlFor="country">
-                            <GovUK.LabelText>
-                              {t('autocompleteHint')}
-                            </GovUK.LabelText>
-                          </GovUK.Label>
-                          <GovUK.HintText>
-                            {t(
+                          <CountrySelector
+                            id={'country'}
+                            name={'country'}
+                            label={t('autocompleteHint')}
+                            hint={t(
                               'exportJourney.wasteTransitCountries.additionalCountryHint'
                             )}
-                          </GovUK.HintText>
-                          <GovUK.ErrorText>
-                            {wasteTransitPage.errors?.changedCountry}
-                          </GovUK.ErrorText>
-                          <Autocomplete
-                            id="country"
-                            source={suggest}
-                            showAllValues={true}
-                            onConfirm={(option) => setChangeCountry(option)}
-                            confirmOnBlur={false}
-                            dropdownArrow={() => {
-                              return;
-                            }}
+                            value={''}
+                            onChange={setChangeCountry}
+                            error={wasteTransitPage.errors?.changedCountry}
+                            apiConfig={apiConfig}
                           />
                         </GovUK.FormGroup>
                       </GovUK.Fieldset>

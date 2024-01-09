@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
+import useRefDataLookup from '../../../utils/useRefDataLookup';
 
 export const getServerSideProps = async (context) => {
   return getApiConfig(context);
@@ -84,6 +85,7 @@ const Action = styled.div`
 
 const Index = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
+  const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [submittedAnnex7Page, dispatchSubmittedAnnex7Page] = useReducer(
     submittedAnnex7Reducer,
@@ -267,9 +269,13 @@ const Index = ({ apiConfig }: PageProps) => {
                                 {item.wasteDescription?.wasteCode.type !==
                                   'NotApplicable' && (
                                   <>
-                                    <span>
-                                      {item.wasteDescription?.wasteCode.code}
-                                    </span>
+                                    <strong>
+                                      {item.wasteDescription?.wasteCode.code}:{' '}
+                                    </strong>
+                                    {getRefData(
+                                      'WasteCode',
+                                      item.wasteDescription?.wasteCode.code
+                                    )}
                                   </>
                                 )}
                                 {item.wasteDescription?.wasteCode.type ===

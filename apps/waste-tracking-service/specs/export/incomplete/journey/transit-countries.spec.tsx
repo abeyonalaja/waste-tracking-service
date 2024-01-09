@@ -38,7 +38,9 @@ describe('Waste Transit Countries page', () => {
     expect(pageTitle).toBeTruthy();
 
     const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
 
     const errorHeading = screen.getByText('There is a problem');
     expect(errorHeading).toBeTruthy();
@@ -50,10 +52,14 @@ describe('Waste Transit Countries page', () => {
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');
-    fireEvent.click(yesRadioLabel);
+    await act(async () => {
+      fireEvent.click(yesRadioLabel);
+    });
 
     const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
 
     const errorHeading = screen.getByText('There is a problem');
     expect(errorHeading).toBeTruthy();
@@ -64,7 +70,7 @@ describe('Waste Transit Countries page', () => {
       Promise.resolve({
         ok: true,
         json: () =>
-          Promise.resolve({ status: 'Complete', values: ['England'] }),
+          Promise.resolve({ status: 'Complete', values: ['Afghanistan (AF)'] }),
       })
     );
 
@@ -72,7 +78,7 @@ describe('Waste Transit Countries page', () => {
       render(<TransitCountries />);
     });
 
-    const country = screen.getByText('1. England');
+    const country = screen.getByText('1. Afghanistan (AF)');
     expect(country).toBeTruthy();
 
     const pageTitle = screen.getByText('Waste transit countries');
@@ -85,10 +91,14 @@ describe('Waste Transit Countries page', () => {
     });
 
     const yesRadioLabel = screen.getByLabelText('Yes');
-    fireEvent.click(yesRadioLabel);
+    await act(async () => {
+      fireEvent.click(yesRadioLabel);
+    });
 
     const submitButton = screen.getByText('Save and continue');
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
 
     const errorHeading = screen.getByText('There is a problem');
     expect(errorHeading).toBeTruthy();
@@ -100,10 +110,12 @@ describe('Waste Transit Countries page', () => {
     });
 
     const changeLink = screen.getByText('Change');
-    fireEvent.click(changeLink);
+    await act(async () => {
+      fireEvent.click(changeLink);
+    });
 
     const pageTitle = screen.getByText(
-      'What would you like to change England to?'
+      'What would you like to change Afghanistan (AF) to?'
     );
     expect(pageTitle).toBeTruthy();
   });
@@ -114,10 +126,12 @@ describe('Waste Transit Countries page', () => {
     });
 
     const removeLink = screen.getByText('Remove');
-    fireEvent.click(removeLink);
+    await act(async () => {
+      fireEvent.click(removeLink);
+    });
 
     const pageTitle = screen.getByText(
-      'Are you sure you want to remove England?'
+      'Are you sure you want to remove Afghanistan (AF)?'
     );
     expect(pageTitle).toBeTruthy();
   });

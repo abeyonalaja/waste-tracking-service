@@ -206,7 +206,9 @@ const Actions = styled('dd')`
 
 type codeType = {
   code: string;
-  description: string;
+  value: {
+    description: object;
+  };
 };
 
 const EwcCodes = ({ apiConfig }: PageProps) => {
@@ -233,7 +235,7 @@ const EwcCodes = ({ apiConfig }: PageProps) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/ewc-codes?language=${currentLanguage}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/ewc-codes`,
         { headers: apiConfig }
       )
         .then((response) => {
@@ -245,10 +247,8 @@ const EwcCodes = ({ apiConfig }: PageProps) => {
           }
         });
     };
-    if (currentLanguage) {
-      fetchData();
-    }
-  }, [currentLanguage]);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -367,7 +367,7 @@ const EwcCodes = ({ apiConfig }: PageProps) => {
   const getEWCDesc = (ewcCode) => {
     const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
     if (result) {
-      return result.description;
+      return result.value.description[currentLanguage];
     }
   };
 

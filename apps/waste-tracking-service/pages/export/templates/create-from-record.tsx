@@ -318,6 +318,7 @@ const TemplateCreateFromRecord = ({ apiConfig }: PageProps) => {
                       data={templatePage.data}
                       showChangeLinks={false}
                       isTemplate={true}
+                      apiConfig={apiConfig}
                     />
                   </>
                 )}

@@ -36,6 +36,7 @@ import {
 import { formatDate } from 'utils/formatDate';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
+import useRefDataLookup from '../../../utils/useRefDataLookup';
 export const getServerSideProps = async (context) => {
   return getApiConfig(context);
 };
@@ -138,6 +139,7 @@ const Action = styled.div`
 
 const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
   const { t } = useTranslation();
+  const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [updateAnnex7Page, dispatchUpdateAnnex7Page] = useReducer(
     updateAnnex7Reducer,
@@ -429,14 +431,16 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
                                     {item.wasteDescription?.wasteCode.type !==
                                       'NotApplicable' && (
                                       <>
-                                        {item.wasteDescription?.wasteCode
-                                          .value && (
-                                          <span>
-                                            {
-                                              item.wasteDescription?.wasteCode
-                                                .value
-                                            }
-                                          </span>
+                                        <strong>
+                                          {
+                                            item.wasteDescription?.wasteCode
+                                              .code
+                                          }
+                                          :{' '}
+                                        </strong>
+                                        {getRefData(
+                                          'WasteCode',
+                                          item.wasteDescription?.wasteCode.code
                                         )}
                                       </>
                                     )}

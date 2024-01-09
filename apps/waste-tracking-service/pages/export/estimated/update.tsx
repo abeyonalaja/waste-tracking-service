@@ -179,6 +179,7 @@ const UpdateRecord = ({ apiConfig }: PageProps) => {
                     data={viewRecordPage.data}
                     showChangeLinks={false}
                     estimate={true}
+                    apiConfig={apiConfig}
                   />
 
                   <Paragraph mb={6}>

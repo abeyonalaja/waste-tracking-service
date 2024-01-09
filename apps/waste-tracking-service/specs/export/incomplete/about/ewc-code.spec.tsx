@@ -29,35 +29,100 @@ const startedJsonResponse = {
 const refDataResponse = [
   {
     code: '010101',
-    description: 'wastes from mineral metalliferous excavation',
+    value: {
+      description: {
+        en: 'wastes from mineral metalliferous excavation',
+        cy: 'gwastraff o gloddio metelaidd mwynol',
+      },
+    },
   },
   {
     code: '010102',
-    description: 'wastes from mineral non-metalliferous excavation',
+    value: {
+      description: {
+        en: 'wastes from mineral non-metalliferous excavation',
+        cy: 'gwastraff o gloddio anfetelaidd mwynol',
+      },
+    },
   },
   {
     code: '010304*',
-    description: 'acid-generating tailings from processing of sulphide ore',
+    value: {
+      description: {
+        en: 'acid-generating tailings from processing of sulphide ore',
+        cy: "cynffonnau sy'n cynhyrchu asid o brosesu mwyn sylffid",
+      },
+    },
   },
   {
     code: '010305*',
-    description: 'other tailings containing hazardous substances',
+    value: {
+      description: {
+        en: 'other tailings containing hazardous substances',
+        cy: "Tails eraill sy'n cynnwys sylweddau peryglus",
+      },
+    },
   },
   {
     code: '010306',
-    description: 'tailings other than those mentioned in 01 03 04 and 01 03 05',
+    value: {
+      description: {
+        en: 'tailings other than those mentioned in 01 03 04 and 01 03 05',
+        cy: "Cynffonnau heblaw'r rhai a grybwyllir yn 01 03 04 a 01 03 05",
+      },
+    },
   },
   {
     code: '010307*',
-    description:
-      'other wastes containing hazardous substances from physical and chemical processing of metalliferous minerals',
+    value: {
+      description: {
+        en: 'other wastes containing hazardous substances from physical and chemical processing of metalliferous minerals',
+        cy: "Gwastraff eraill sy'n cynnwys sylweddau peryglus o brosesu mwynau metelaidd yn gorfforol a chemegol",
+      },
+    },
+  },
+  {
+    code: '010308',
+    value: {
+      description: {
+        en: 'dusty and powdery wastes other than those mentioned in 01 03 07',
+        cy: "gwastraff llychlyd a phowdrog heblaw'r rhai a grybwyllir yn 01 03 07",
+      },
+    },
+  },
+  {
+    code: '010309',
+    value: {
+      description: {
+        en: 'red mud from alumina production other than the wastes mentioned in 01 03 10',
+        cy: "Mwd coch o gynhyrchu alwmina heblaw'r gwastraff a grybwyllir yn 01 03 10",
+      },
+    },
+  },
+  {
+    code: '010310*',
+    value: {
+      description: {
+        en: 'red mud from alumina production containing hazardous substances other than the wastes mentioned in 01 03 07',
+        cy: "Mwd coch o gynhyrchu alwmina sy'n cynnwys sylweddau peryglus heblaw'r gwastraff a grybwyllir yn 01 03 07",
+      },
+    },
+  },
+  {
+    code: '010399',
+    value: {
+      description: {
+        en: 'wastes not otherwise specified',
+        cy: 'gwastraff na nodir fel arall',
+      },
+    },
   },
 ];
 
 function setupFetchStub(started = false) {
   return function fetchStub(_url) {
     let data = {};
-    if (_url.includes('/wts-info/ewc-codes?language=en')) {
+    if (_url.includes('/reference-data/ewc-codes')) {
       data = refDataResponse;
     }
     if (_url.includes('/submissions/123/waste-description')) {

@@ -14,13 +14,13 @@ import {
   Loading,
   ButtonGroup,
   SaveReturnButton,
+  AutoComplete,
 } from 'components';
 import {
   isNotEmpty,
   validateWasteCode,
   validateWasteCodeCategory,
 } from 'utils/validators';
-import Autocomplete from 'accessible-autocomplete/react';
 import {
   GetWasteDescriptionResponse,
   PutWasteDescriptionRequest,
@@ -35,7 +35,9 @@ export const getServerSideProps = async (context) => {
 
 type singleCodeType = {
   code: string;
-  description: string;
+  value: {
+    description: any;
+  };
 };
 
 type codeType = {
@@ -52,21 +54,20 @@ const WasteCode = ({ apiConfig }: PageProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasValidId, setHasValidId] = useState<boolean>(false);
   const [wasteCodeCategory, setWasteCodeCategory] = useState<string>(null);
-  const [baselAnnexIXCode, setBaselAnnexIXCode] = useState<singleCodeType>();
-  const [oecdCode, setOecdCode] = useState<singleCodeType>();
-  const [annexIIIACode, setAnnexIIIACode] = useState<singleCodeType>();
-  const [annexIIIBCode, setAnnexIIIBCode] = useState<singleCodeType>();
+  const [baselAnnexIXCode, setBaselAnnexIXCode] = useState<string>();
+  const [oecdCode, setOecdCode] = useState<string>();
+  const [annexIIIACode, setAnnexIIIACode] = useState<string>();
+  const [annexIIIBCode, setAnnexIIIBCode] = useState<string>();
   const [isBulkOrSmall, setIsBulkOrSmall] = useState<string>();
 
   const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`;
-  const currentLanguage = i18n.language;
 
   useEffect(() => {
     const fetchData = async () => {
       if (data !== undefined) {
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/waste-codes?language=${currentLanguage}`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/waste-codes`,
             { headers: apiConfig }
           )
             .then((response) => {
@@ -82,10 +83,8 @@ const WasteCode = ({ apiConfig }: PageProps) => {
         }
       }
     };
-    if (currentLanguage) {
-      fetchData();
-    }
-  }, [currentLanguage, wasteCodeCategory]);
+    fetchData();
+  }, [wasteCodeCategory]);
 
   useEffect(() => {
     if (data !== undefined && refData !== undefined) {
@@ -100,14 +99,10 @@ const WasteCode = ({ apiConfig }: PageProps) => {
   }, [data, refData]);
 
   const setWasteCode = (category, code) => {
-    const codeObject = {
-      code: code,
-      description: getWasteCodeDescription(category, code),
-    };
-    if (category === 'BaselAnnexIX') setBaselAnnexIXCode(codeObject);
-    if (category === 'OECD') setOecdCode(codeObject);
-    if (category === 'AnnexIIIA') setAnnexIIIACode(codeObject);
-    if (category === 'AnnexIIIB') setAnnexIIIBCode(codeObject);
+    if (category === 'BaselAnnexIX') setBaselAnnexIXCode(code);
+    if (category === 'OECD') setOecdCode(code);
+    if (category === 'AnnexIIIA') setAnnexIIIACode(code);
+    if (category === 'AnnexIIIB') setAnnexIIIBCode(code);
   };
 
   const getWasteCodeType = (category) => {
@@ -119,16 +114,6 @@ const WasteCode = ({ apiConfig }: PageProps) => {
       }
     }
     return null;
-  };
-
-  const getWasteCodeDescription = (category, code) => {
-    if (refData !== undefined) {
-      const results = refData.find((codeTypes) => codeTypes.type === category);
-      const result = results.values.find((result) => result.code === code);
-      return result.description;
-    } else {
-      return '';
-    }
   };
 
   useEffect(() => {
@@ -186,10 +171,10 @@ const WasteCode = ({ apiConfig }: PageProps) => {
     async (e: FormEvent, returnToDraft) => {
       e.preventDefault();
       const getWasteCode = () => {
-        if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode.code;
-        if (wasteCodeCategory === 'OECD') return oecdCode.code;
-        if (wasteCodeCategory === 'AnnexIIIA') return annexIIIACode.code;
-        if (wasteCodeCategory === 'AnnexIIIB') return annexIIIBCode.code;
+        if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode;
+        if (wasteCodeCategory === 'OECD') return oecdCode;
+        if (wasteCodeCategory === 'AnnexIIIA') return annexIIIACode;
+        if (wasteCodeCategory === 'AnnexIIIB') return annexIIIBCode;
         return undefined;
       };
 
@@ -197,18 +182,18 @@ const WasteCode = ({ apiConfig }: PageProps) => {
         wasteCodeCategory: validateWasteCodeCategory(wasteCodeCategory),
         baselAnnexIXCode: validateWasteCode(
           wasteCodeCategory,
-          baselAnnexIXCode?.code,
+          baselAnnexIXCode,
           'Basel Annex IX'
         ),
-        oecdCode: validateWasteCode(wasteCodeCategory, oecdCode?.code, 'OECD'),
+        oecdCode: validateWasteCode(wasteCodeCategory, oecdCode, 'OECD'),
         annexIIIACode: validateWasteCode(
           wasteCodeCategory,
-          annexIIIACode?.code,
+          annexIIIACode,
           'Annex IIIA'
         ),
         annexIIIBCode: validateWasteCode(
           wasteCodeCategory,
-          annexIIIBCode?.code,
+          annexIIIBCode,
           'Annex IIIB'
         ),
       };
@@ -301,27 +286,9 @@ const WasteCode = ({ apiConfig }: PageProps) => {
     );
   };
 
-  function suggest(query, populateResults) {
-    const searchTerm = query.split(':')[0].toLowerCase();
-    const results = refData.find((codeTypes: codeType) => {
-      return codeTypes.type === wasteCodeCategory;
-    });
-    const filterResults = (result) => {
-      const tempString = `${result.code}: ${result.description}`;
-      return tempString.toLowerCase().indexOf(searchTerm) !== -1;
-    };
-    const filteredResults = results.values.filter(filterResults);
-    populateResults(filteredResults);
-  }
-
-  const suggestionTemplate = (suggestion) => {
-    return typeof suggestion !== 'string'
-      ? `${suggestion?.code}: ${suggestion?.description}`
-      : suggestion;
-  };
-
-  const inputValueTemplate = (suggestion) => {
-    return `${suggestion?.code}: ${suggestion?.description}`;
+  const getRefData = (type: string) => {
+    const filterData = refData.find((options) => options.type === type);
+    return filterData.values;
   };
 
   return (
@@ -388,29 +355,11 @@ const WasteCode = ({ apiConfig }: PageProps) => {
                             <GovUK.ErrorText>
                               {errors?.baselAnnexIXCode}
                             </GovUK.ErrorText>
-                            <Autocomplete
-                              id="BaselAnnexIXCode"
-                              source={suggest}
-                              showAllValues={true}
-                              onConfirm={(option) =>
-                                setBaselAnnexIXCode({
-                                  code: option.code,
-                                  description: option.description,
-                                })
-                              }
-                              confirmOnBlur={false}
-                              defaultValue={
-                                baselAnnexIXCode
-                                  ? `${baselAnnexIXCode?.code}: ${baselAnnexIXCode?.description}`
-                                  : ''
-                              }
-                              templates={{
-                                inputValue: inputValueTemplate,
-                                suggestion: suggestionTemplate,
-                              }}
-                              dropdownArrow={() => {
-                                return;
-                              }}
+                            <AutoComplete
+                              id={'BaselAnnexIXCode'}
+                              options={getRefData('BaselAnnexIX')}
+                              value={baselAnnexIXCode}
+                              confirm={(o) => setBaselAnnexIXCode(o.code)}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -437,29 +386,11 @@ const WasteCode = ({ apiConfig }: PageProps) => {
                             <GovUK.ErrorText>
                               {errors?.oecdCode}
                             </GovUK.ErrorText>
-                            <Autocomplete
-                              id="OecdCode"
-                              source={suggest}
-                              showAllValues={true}
-                              onConfirm={(option) =>
-                                setOecdCode({
-                                  code: option.code,
-                                  description: option.description,
-                                })
-                              }
-                              confirmOnBlur={false}
-                              defaultValue={
-                                oecdCode
-                                  ? `${oecdCode?.code}: ${oecdCode?.description}`
-                                  : ''
-                              }
-                              templates={{
-                                inputValue: inputValueTemplate,
-                                suggestion: suggestionTemplate,
-                              }}
-                              dropdownArrow={() => {
-                                return;
-                              }}
+                            <AutoComplete
+                              id={'OecdCode'}
+                              options={getRefData('OECD')}
+                              value={oecdCode}
+                              confirm={(o) => setOecdCode(o.code)}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -486,29 +417,11 @@ const WasteCode = ({ apiConfig }: PageProps) => {
                             <GovUK.ErrorText>
                               {errors?.annexIIIACode}
                             </GovUK.ErrorText>
-                            <Autocomplete
-                              id="AnnexIIIACode"
-                              source={suggest}
-                              showAllValues={true}
-                              onConfirm={(option) =>
-                                setAnnexIIIACode({
-                                  code: option.code,
-                                  description: option.description,
-                                })
-                              }
-                              confirmOnBlur={false}
-                              defaultValue={
-                                annexIIIACode
-                                  ? `${annexIIIACode?.code}: ${annexIIIACode?.description}`
-                                  : ''
-                              }
-                              templates={{
-                                inputValue: inputValueTemplate,
-                                suggestion: suggestionTemplate,
-                              }}
-                              dropdownArrow={() => {
-                                return;
-                              }}
+                            <AutoComplete
+                              id={'AnnexIIIACode'}
+                              options={getRefData('AnnexIIIA')}
+                              value={annexIIIACode}
+                              confirm={(o) => setAnnexIIIACode(o.code)}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>
@@ -535,29 +448,11 @@ const WasteCode = ({ apiConfig }: PageProps) => {
                             <GovUK.ErrorText>
                               {errors?.annexIIIBCode}
                             </GovUK.ErrorText>
-                            <Autocomplete
-                              id="AnnexIIIBCode"
-                              source={suggest}
-                              showAllValues={true}
-                              onConfirm={(option) =>
-                                setAnnexIIIBCode({
-                                  code: option.code,
-                                  description: option.description,
-                                })
-                              }
-                              confirmOnBlur={false}
-                              defaultValue={
-                                annexIIIBCode
-                                  ? `${annexIIIBCode?.code}: ${annexIIIBCode?.description}`
-                                  : ''
-                              }
-                              templates={{
-                                inputValue: inputValueTemplate,
-                                suggestion: suggestionTemplate,
-                              }}
-                              dropdownArrow={() => {
-                                return;
-                              }}
+                            <AutoComplete
+                              id={'AnnexIIIBCode'}
+                              options={getRefData('AnnexIIIB')}
+                              value={annexIIIBCode}
+                              confirm={(o) => setAnnexIIIBCode(o.code)}
                             />
                           </GovUK.FormGroup>
                         </ConditionalRadioWrap>

@@ -71,14 +71,6 @@ export {
   deleteTemplateRecoveryFacilityDetails,
 } from './template.dto';
 
-export {
-  getWasteCodes,
-  getEWCCodes,
-  getCountries,
-  getRecoveryCodes,
-  getDisposalCodes,
-} from './wts-info.dto';
-
 export type {
   SubmissionBase,
   DraftWasteDescription,
@@ -197,23 +189,6 @@ export type {
   DeleteTemplateResponse,
 } from './template.dto';
 
-export type {
-  WasteCodeType,
-  WasteCode,
-  Country,
-  RecoveryCode,
-  GetWasteCodesRequest,
-  GetEWCCodesRequest,
-  GetRecoveryCodesRequest,
-  GetDisposalCodesRequest,
-  GetWasteCodesResponse,
-  GetEWCCodesResponse,
-  GetCountriesResponse,
-  GetRecoveryCodesResponse,
-  GetDisposalCodesResponse,
-} from './wts-info.dto';
-
 export * as submissionBaseSchema from './submissionBase.schema';
 export * as submissionSchema from './submission.schema';
 export * as templateSchema from './template.schema';
-export * as wtsInfoSchema from './wts-info.schema';

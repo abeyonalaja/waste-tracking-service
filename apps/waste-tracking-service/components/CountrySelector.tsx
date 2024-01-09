@@ -46,7 +46,7 @@ export const CountrySelector = ({
     setIsLoading(true);
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/countries?language=${currentLanguage}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries`,
         { headers: apiConfig }
       )
         .then((response) => {

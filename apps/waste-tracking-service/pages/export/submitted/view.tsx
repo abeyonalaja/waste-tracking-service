@@ -171,6 +171,7 @@ const ViewRecord = ({ apiConfig }: PageProps) => {
                   <SubmissionSummary
                     data={viewRecordPage.data}
                     showChangeLinks={false}
+                    apiConfig={apiConfig}
                   />
                   <ButtonGroup>
                     <SaveReturnButton

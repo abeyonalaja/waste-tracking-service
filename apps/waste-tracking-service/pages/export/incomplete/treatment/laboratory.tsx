@@ -19,6 +19,7 @@ import {
   ButtonGroup,
   SaveReturnButton,
   CountrySelector,
+  AutoComplete,
 } from 'components';
 import styled from 'styled-components';
 import {
@@ -30,7 +31,6 @@ import {
   validateFullName,
   validatePhone,
 } from 'utils/validators';
-import Autocomplete from 'accessible-autocomplete/react';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
 import i18n from 'i18next';
@@ -134,12 +134,14 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-type codeType = {
-  type: string;
-  values: Array<{
-    code: string;
-    description: string;
-  }>;
+type optionType = {
+  code: string;
+  value: {
+    description: {
+      en?: string;
+      cy?: string;
+    };
+  };
 };
 
 const Laboratory = ({ apiConfig }: PageProps) => {
@@ -149,7 +151,7 @@ const Laboratory = ({ apiConfig }: PageProps) => {
     laboratoryReducer,
     initialState
   );
-  const [refData, setRefData] = useState<Array<codeType>>();
+  const [refData, setRefData] = useState<Array<optionType>>();
   const [id, setId] = useState(null);
   const [page, setPage] = useState(null);
   const [startPage, setStartPage] = useState(1);
@@ -192,7 +194,7 @@ const Laboratory = ({ apiConfig }: PageProps) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/wts-info/disposal-codes?language=${currentLanguage}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/disposal-codes`,
         { headers: apiConfig }
       )
         .then((response) => {
@@ -747,25 +749,18 @@ const Laboratory = ({ apiConfig }: PageProps) => {
                         <GovUK.ErrorText>
                           {laboratoryPage.errors?.disposalCode}
                         </GovUK.ErrorText>
-                        <Autocomplete
+                        <AutoComplete
                           id="recoveryCode"
-                          source={suggest}
-                          showAllValues={true}
-                          onConfirm={(option) =>
+                          options={refData}
+                          value={
+                            recoveryFacilityType?.disposalCode || undefined
+                          }
+                          confirm={(o) =>
                             setRecoveryFacilityType({
                               type: 'Laboratory',
-                              disposalCode: option.code,
+                              disposalCode: o.code,
                             })
                           }
-                          confirmOnBlur={false}
-                          defaultValue={recoveryFacilityType?.disposalCode}
-                          templates={{
-                            inputValue: inputValueTemplate,
-                            suggestion: suggestionTemplate,
-                          }}
-                          dropdownArrow={() => {
-                            return;
-                          }}
                         />
                       </GovUK.FormGroup>
                       <ButtonGroup>

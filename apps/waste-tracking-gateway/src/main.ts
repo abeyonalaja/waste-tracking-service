@@ -26,12 +26,13 @@ import {
   TemplateBackend,
   templatePlugin,
 } from './modules/template';
-import { wtsInfoPlugin } from './modules/wts-info';
 import {
-  WTSInfoBackend,
-  WTSInfoServiceBackend,
-  WTSInfoStub,
-} from './modules/wts-info/wts-info.backend';
+  ReferenceDataBackend,
+  ReferenceDataServiceBackend,
+  ReferenceDataStub,
+  referenceDataPlugin,
+} from './modules/reference-data';
+import { DaprReferenceDataClient } from '@wts/client/reference-data';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -52,7 +53,7 @@ let backend: {
   submission: SubmissionBackend;
   address: AddressBackend;
   template: TemplateBackend;
-  wtsInfo: WTSInfoBackend;
+  referenceData: ReferenceDataBackend;
 };
 if (process.env['NODE_ENV'] === 'development') {
   logger.warn('service is using mock-backends; NOT for production use');
@@ -63,12 +64,12 @@ if (process.env['NODE_ENV'] === 'development') {
     templates
   );
   const templateBackend = new InMemoryTemplateBackend(submissions, templates);
-  const wtsInfoBackend = new WTSInfoStub();
+  const referenceDataBackend = new ReferenceDataStub();
   backend = {
     address: new AddressStub(),
     submission: submissionBackend,
     template: templateBackend,
-    wtsInfo: wtsInfoBackend,
+    referenceData: referenceDataBackend,
   };
 } else {
   const client = new DaprClient();
@@ -86,10 +87,10 @@ if (process.env['NODE_ENV'] === 'development') {
     ),
     logger
   );
-  const wtsInfoBackend = new WTSInfoServiceBackend(
-    new DaprAnnexViiClient(
+  const referenceDataBackend = new ReferenceDataServiceBackend(
+    new DaprReferenceDataClient(
       client,
-      process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+      process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
     ),
     logger
   );
@@ -100,7 +101,7 @@ if (process.env['NODE_ENV'] === 'development') {
     ),
     submission: submissionBackend,
     template: templateBackend,
-    wtsInfo: wtsInfoBackend,
+    referenceData: referenceDataBackend,
   };
 }
 
@@ -172,13 +173,13 @@ await app.register({
 });
 
 await app.register({
-  plugin: wtsInfoPlugin,
+  plugin: referenceDataPlugin,
   options: {
-    backend: backend.wtsInfo,
+    backend: backend.referenceData,
     logger,
   },
   routes: {
-    prefix: '/api/wts-info',
+    prefix: '/api/reference-data',
   },
 });
 

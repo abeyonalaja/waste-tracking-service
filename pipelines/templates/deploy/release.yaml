@@ -12,6 +12,7 @@ parameters:
       - waste-tracking-gateway
       - annex-vii
       - address
+      - reference-data
   - name: appNameTag
     type: string
     values:
@@ -19,6 +20,7 @@ parameters:
       - waste_tracking_gateway
       - annex_vii
       - address
+      - reference_data
   - name: deployChart
     type: string
     default: ''

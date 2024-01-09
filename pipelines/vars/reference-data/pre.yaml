@@ -1,0 +1,14 @@
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 100m
+    memory: 512Mi
+secret:
+  env:
+    COSMOS_DB_ACCOUNT_URI: 'https://prewtsinfco1401.documents.azure.com:443/'
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: 1753ab4a-db62-4b12-97c6-134bc1a58eab
+    azure.workload.identity/tenant-id: 770a2450-0227-4c62-90c7-4e38537f1102

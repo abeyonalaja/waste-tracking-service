@@ -2,6 +2,7 @@ import { Accordion } from './Accordion';
 import { AccordionSection } from './AccordionSection';
 import { Address } from './Address';
 import { AppLink } from './AppLink';
+import { AutoComplete } from './AutoComplete';
 import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
@@ -36,6 +37,7 @@ export {
   AccordionSection,
   Address,
   AppLink,
+  AutoComplete,
   BreakableString,
   BreadcrumbWrap,
   ButtonGroup,

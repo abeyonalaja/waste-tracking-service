@@ -3,7 +3,6 @@ import { Submission } from '@wts/api/waste-tracking-gateway';
 import { Accordion } from './Accordion';
 import { AccordionSection } from './AccordionSection';
 import { AppLink } from './AppLink';
-import boldUpToFirstColon from '../utils/boldUpToFirstColon';
 import * as GovUK from 'govuk-react';
 import { BreakableString } from './BreakableString';
 import { UnitDisplay } from './UnitDisplay';
@@ -14,9 +13,11 @@ import styled from 'styled-components';
 import formatEwcCode from '../utils/formatEwcCode';
 import { EwcCodeType } from '../types/wts';
 import { Tag } from 'govuk-react';
+import useRefDataLookup from '../utils/useRefDataLookup';
 
 interface Props {
   data: Submission;
+  apiConfig: HeadersInit;
   showChangeLinks?: boolean;
   estimate?: boolean;
   isTemplate?: boolean;
@@ -103,14 +104,18 @@ const NotInTemplate = styled(Tag)`
   white-space: nowrap;
 `;
 
+const CodeDesc = styled.span``;
+
 export const SubmissionSummary = ({
   data,
   showChangeLinks = true,
   estimate = false,
   isTemplate = false,
+  apiConfig,
   testId,
 }: Props) => {
   const { t } = useTranslation();
+  const getRefData = useRefDataLookup(apiConfig);
   const [expandedAll, setExpandedAll] = useState(!estimate);
 
   const handleAccordionShowAll = (expand) => {
@@ -201,7 +206,15 @@ export const SubmissionSummary = ({
                         <WasteCodeType id="waste-code-type">
                           {data.wasteDescription?.wasteCode.type}
                         </WasteCodeType>
-                        <span>{data.wasteDescription?.wasteCode.code}</span>
+                        <strong>
+                          {data.wasteDescription?.wasteCode.code}:{' '}
+                        </strong>
+                        <CodeDesc>
+                          {getRefData(
+                            'WasteCode',
+                            data.wasteDescription?.wasteCode.code
+                          )}
+                        </CodeDesc>
                       </>
                     )}
                   </Value>
@@ -232,7 +245,8 @@ export const SubmissionSummary = ({
                       {data.wasteDescription?.ewcCodes?.map(
                         (item: EwcCodeType, index) => (
                           <GovUK.ListItem key={index}>
-                            <span>{formatEwcCode(item.code)}</span>
+                            <strong>{formatEwcCode(item.code)}: </strong>
+                            <CodeDesc>{getRefData('EWC', item.code)}</CodeDesc>
                           </GovUK.ListItem>
                         )
                       )}
@@ -1117,6 +1131,7 @@ export const SubmissionSummary = ({
                     id={data.id}
                     key={`lab${index}`}
                     showChangeLinks={showChangeLinks}
+                    apiConfig={apiConfig}
                   />
                 ))}
 
@@ -1132,6 +1147,7 @@ export const SubmissionSummary = ({
                       id={data.id}
                       key={`interimSite${index}`}
                       showChangeLinks={showChangeLinks}
+                      apiConfig={apiConfig}
                     />
                   </>
                 ))}
@@ -1155,6 +1171,7 @@ export const SubmissionSummary = ({
                       ).length > 1
                     }
                     showChangeLinks={showChangeLinks}
+                    apiConfig={apiConfig}
                   />
                 ))}
             </>
@@ -1171,8 +1188,10 @@ const SiteDetails = ({
   id,
   multiple = false,
   showChangeLinks,
+  apiConfig,
 }) => {
   const { t } = useTranslation();
+  const getRefData = useRefDataLookup(apiConfig);
   const type = site.recoveryFacilityType.type;
   let titleKey, nameKey, codeKey, url, code;
 
@@ -1305,7 +1324,8 @@ const SiteDetails = ({
             {t(codeKey)}
           </Key>
           <Value id={`${type.toLowerCase()}-code-${index}`}>
-            {boldUpToFirstColon(code)}
+            <strong>{code}: </strong>
+            <CodeDesc>{getRefData(type, code)}</CodeDesc>
           </Value>
           {showChangeLinks && (
             <Actions>
