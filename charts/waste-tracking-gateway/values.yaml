@@ -110,6 +110,6 @@ ingress:
           pathType: Prefix
         - path: /api/templates
           pathType: Prefix
-        - path: /api/wts-info
+        - path: /api/reference-data
           pathType: Prefix
   labels: {}
