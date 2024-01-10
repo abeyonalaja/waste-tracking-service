@@ -118,7 +118,7 @@ export function Index() {
               </GovUK.ListItem>
               <GovUK.ListItem>
                 {t('multiples.guidance.listItemTwo.start')}{' '}
-                <AppLink href={'/downloads/Multiples CSV template.v8.csv'}>
+                <AppLink href={'/downloads/Multiples CSV template.csv'}>
                   {t('multiples.guidance.listItemTwo.link')}
                 </AppLink>{' '}
                 {t('multiples.guidance.listItemTwo.end')}
@@ -185,7 +185,7 @@ export function Index() {
           <GovUK.GridCol setWidth="two-Thirds">
             <DocumentSection>
               <Thumbnail>
-                <AppLink href={'/downloads/Multiples CSV template.v8.csv'}>
+                <AppLink href={'/downloads/Multiples CSV template.csv'}>
                   <GovUK.VisuallyHidden>
                     {t('multiples.guidance.document.csv.heading')}
                   </GovUK.VisuallyHidden>
@@ -221,7 +221,7 @@ export function Index() {
                   {t('multiples.guidance.document.csv.sub')}
                 </GovUK.HintText>
                 <DetailsParagraph>
-                  <AppLink href={'/downloads/Multiples CSV template.v8.csv'}>
+                  <AppLink href={'/downloads/Multiples CSV template.csv'}>
                     {t('multiples.guidance.document.csv.link')}
                   </AppLink>
                 </DetailsParagraph>
