@@ -274,7 +274,8 @@ const Index = ({ apiConfig }: PageProps) => {
                                     </strong>
                                     {getRefData(
                                       'WasteCode',
-                                      item.wasteDescription?.wasteCode.code
+                                      item.wasteDescription?.wasteCode.code,
+                                      item.wasteDescription?.wasteCode.type
                                     )}
                                   </>
                                 )}

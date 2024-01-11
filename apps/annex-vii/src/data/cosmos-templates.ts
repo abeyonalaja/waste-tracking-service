@@ -60,7 +60,7 @@ export default class CosmosTemplateRepository
     token?: string
   ): Promise<TemplateSummaryPage> {
     const querySpec: SqlQuerySpec = {
-      query: `SELECT * FROM c 
+      query: `SELECT * FROM c
               WHERE
                 c["value"].accountId = @accountId
               ORDER BY
@@ -163,7 +163,7 @@ export default class CosmosTemplateRepository
       );
     } catch (err: any) {
       if (err.code && err.code === 409) {
-        throw Boom.conflict('Template with this name already exists');
+        throw Boom.conflict('A template with this name already exists');
       }
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,

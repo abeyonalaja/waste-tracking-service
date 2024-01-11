@@ -103,12 +103,14 @@ const useRefDataLookup = (apiConfig) => {
     fetchData();
   }, []);
 
-  const getWasteCodeDesc = (wasteCode) => {
+  const getWasteCodeDesc = (wasteCode, wasteCodeCategory) => {
     let result;
     let foundResult;
 
     wasteCodeRefData.map((category) => {
-      result = category.values.find(({ code }) => code === wasteCode);
+      if (category.type === wasteCodeCategory) {
+        result = category.values.find(({ code }) => code === wasteCode);
+      }
       if (result) {
         foundResult = result;
       }
@@ -137,7 +139,7 @@ const useRefDataLookup = (apiConfig) => {
     }
   };
 
-  return (type, code) => {
+  return (type, code, category?) => {
     let description = '';
 
     if (type === 'EWC') {
@@ -145,7 +147,7 @@ const useRefDataLookup = (apiConfig) => {
     }
 
     if (type === 'WasteCode') {
-      description = getWasteCodeDesc(code);
+      description = getWasteCodeDesc(code, category);
     }
 
     if (type === 'InterimSite' || type === 'RecoveryFacility') {

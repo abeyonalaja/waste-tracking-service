@@ -212,7 +212,8 @@ export const SubmissionSummary = ({
                         <CodeDesc>
                           {getRefData(
                             'WasteCode',
-                            data.wasteDescription?.wasteCode.code
+                            data.wasteDescription?.wasteCode.code,
+                            data.wasteDescription?.wasteCode.type
                           )}
                         </CodeDesc>
                       </>
