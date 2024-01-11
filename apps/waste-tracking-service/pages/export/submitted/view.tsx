@@ -130,7 +130,7 @@ const ViewRecord = ({ apiConfig }: PageProps) => {
             });
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

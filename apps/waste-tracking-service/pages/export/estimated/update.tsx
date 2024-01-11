@@ -112,6 +112,7 @@ const UpdateRecord = ({ apiConfig }: PageProps) => {
   }, [router.isReady, id]);
 
   const BreadCrumbs = () => {
+    const { t } = useTranslation();
     return (
       <BreadcrumbWrap>
         <GovUK.BackLink
@@ -122,7 +123,7 @@ const UpdateRecord = ({ apiConfig }: PageProps) => {
             });
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

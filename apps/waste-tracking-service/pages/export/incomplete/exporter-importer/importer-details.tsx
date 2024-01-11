@@ -152,7 +152,7 @@ const ImporterDetails = ({ apiConfig }: PageProps) => {
             history.back();
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

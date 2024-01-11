@@ -286,7 +286,7 @@ const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
               });
             }}
           >
-            Back
+            {t('Back')}
           </GovUK.BackLink>
         )}
       </BreadcrumbWrap>

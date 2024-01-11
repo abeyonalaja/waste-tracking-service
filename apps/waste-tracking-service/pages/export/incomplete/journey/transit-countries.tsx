@@ -447,7 +447,7 @@ const TransitCountries = ({ apiConfig }: PageProps) => {
             }
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

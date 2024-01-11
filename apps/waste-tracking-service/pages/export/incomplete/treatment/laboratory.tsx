@@ -518,7 +518,7 @@ const Laboratory = ({ apiConfig }: PageProps) => {
             }
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

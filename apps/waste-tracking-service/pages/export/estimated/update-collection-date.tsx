@@ -138,6 +138,7 @@ const CollectionDate = ({ apiConfig }: PageProps) => {
   );
 
   const BreadCrumbs = () => {
+    const { t } = useTranslation();
     return (
       <BreadcrumbWrap>
         <GovUK.BackLink
@@ -149,7 +150,7 @@ const CollectionDate = ({ apiConfig }: PageProps) => {
             });
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

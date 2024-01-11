@@ -34,6 +34,7 @@ const StyledInputWrap = styled.div`
 
 const BreadCrumbs = ({ id }) => {
   const router = useRouter();
+  const { t } = useTranslation();
   return (
     <BreadcrumbWrap>
       <GovUK.BackLink
@@ -45,7 +46,7 @@ const BreadCrumbs = ({ id }) => {
           });
         }}
       >
-        Back
+        {t('Back')}
       </GovUK.BackLink>
     </BreadcrumbWrap>
   );

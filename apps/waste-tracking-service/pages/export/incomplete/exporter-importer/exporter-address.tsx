@@ -164,7 +164,7 @@ const ExporterAddress = ({ apiConfig }: PageProps) => {
             history.back();
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

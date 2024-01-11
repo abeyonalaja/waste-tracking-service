@@ -506,7 +506,7 @@ const InterimSiteDetails = ({ apiConfig }: PageProps) => {
             }
           }}
         >
-          Back
+          {t('Back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

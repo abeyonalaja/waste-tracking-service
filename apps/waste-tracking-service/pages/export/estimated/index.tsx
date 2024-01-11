@@ -267,6 +267,7 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
   };
 
   const BreadCrumbs = () => {
+    const { t } = useTranslation();
     return (
       <BreadcrumbWrap>
         {updateAnnex7Page.showView === VIEWS.LIST ? (
@@ -289,7 +290,7 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
               });
             }}
           >
-            Back
+            {t('Back')}
           </GovUK.BackLink>
         )}
       </BreadcrumbWrap>
