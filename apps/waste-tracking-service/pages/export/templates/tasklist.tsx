@@ -562,6 +562,7 @@ const TemplateTasklist = ({ apiConfig }: PageProps) => {
                                 templatePage.data?.wasteDescription?.wasteCode
                                   ?.type === 'NotApplicable' && (
                                   <AppLink
+                                    id="recovery-facility-or-laboratory"
                                     href={{
                                       pathname: `/export/templates/treatment/laboratory`,
                                       query: { templateId, dashboard: true },
@@ -581,6 +582,7 @@ const TemplateTasklist = ({ apiConfig }: PageProps) => {
                                 templatePage.data?.wasteDescription?.wasteCode
                                   ?.type !== undefined && (
                                   <AppLink
+                                    id="recovery-facility-or-laboratory"
                                     href={{
                                       pathname: `/export/templates/treatment/interim-site`,
                                       query: { templateId, dashboard: true },

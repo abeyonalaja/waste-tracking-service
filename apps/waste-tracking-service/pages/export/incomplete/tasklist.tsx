@@ -555,6 +555,7 @@ const Tasklist = ({ apiConfig }: PageProps) => {
                         tasklistPage.data?.wasteDescription?.wasteCode?.type ===
                           'NotApplicable' && (
                           <AppLink
+                            id="recovery-facility-or-laboratory"
                             href={{
                               pathname: `/export/incomplete/treatment/laboratory`,
                               query: { id, dashboard: true },
@@ -574,6 +575,7 @@ const Tasklist = ({ apiConfig }: PageProps) => {
                         tasklistPage.data?.wasteDescription?.wasteCode?.type !==
                           undefined && (
                           <AppLink
+                            id="recovery-facility-or-laboratory"
                             href={{
                               pathname: `/export/incomplete/treatment/interim-site`,
                               query: { id, dashboard: true },
