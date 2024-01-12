@@ -114,7 +114,7 @@ Feature: AS A waste producer/broker
     Then the "Recovery facility address" page is displayed
     And I complete recovery facility address page
     And I click the Save and return to draft
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
     And I click the button Save and continue
@@ -152,7 +152,7 @@ Feature: AS A waste producer/broker
     And I should see 4th recovery facility details
     And I should see 5th recovery facility details
     When I click the button Save and continue
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     When I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
 

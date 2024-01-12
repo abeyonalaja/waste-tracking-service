@@ -10,24 +10,6 @@ Given(/^I login to waste tracking portal$/) do
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
 end
 
-And(/^I navigate to the overview page$/) do
-  click_link('dashboard_link')
-  user = "USER#{@current_process}"
-  TestStatus.set_test_status(:current_user, user.to_sym)
-  OverviewPage.new.sign_in_or_create_an_account
-  HelperMethods.wait_for_a_sec
-  case Env.test_env
-  when 'LOCAL'
-    OverviewPage.new.sign_in(TestData::Users.user_name(user.to_sym), TestData::Users.user_password(user.to_sym))
-  when 'DEV', 'TST', 'PRE'
-    OverviewPage.new.sign_in(TestData::Users.user_name(user.to_sym), TestData::Users.user_password(user.to_sym))
-  else
-    raise "#{Env.test_env} is an unknown environment, Please provide the correct env details"
-  end
-  HelperMethods.wait_for_a_sec
-  ExportWasteFromUkPage.new.check_page_displayed
-end
-
 Then(/^I can see all the sections$/) do
   expect(page).to have_css 'h2', text: Translations.value('exportJourney.submitAnExport.title'), exact_text: true
   expect(page).to have_css 'h2', text: Translations.value('exportJourney.exportHome.card.update'), exact_text: true

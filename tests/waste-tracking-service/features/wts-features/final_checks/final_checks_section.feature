@@ -22,7 +22,7 @@ Feature: AS A Waste Practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     Then the task "Check your report" should be "NOT STARTED"
     Then the task "Sign declaration" should be "CANNOT START YET"
 

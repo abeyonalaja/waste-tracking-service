@@ -5,9 +5,10 @@ Feature:AS A Waste Practitioner
   @translation
   Scenario: User navigates to How to create multiple Annex records section and verify page is translated
     Given I login to waste tracking portal
-    When I navigate to the overview page
     When Export waste from UK page is displayed
     And I click the "How to create a multiple Annex VII record CSV template" link
+    Then I should see multi Annex guidance page is display
+    And I click the first continue link
     Then the "Create multiple records" page is displayed
     Then I verify create multiple records page is correctly translated
 

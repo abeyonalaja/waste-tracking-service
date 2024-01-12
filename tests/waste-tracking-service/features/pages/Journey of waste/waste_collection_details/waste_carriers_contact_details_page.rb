@@ -13,7 +13,6 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   THIRD_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion3'
   FOURTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion4'
   FIFTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.secondPageQuestion5'
-  COPY_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.YouCanEditMessage'
   SUB_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.title'
   ORGANISATION_CONTACT = Translations.value 'exportJourney.wasteCarrierDetails.contactPerson'
   FULL_NAME = Translations.value 'exportJourney.wasteCarrierDetails.nameHint'
@@ -33,7 +32,6 @@ class WhatAreTheWasteCarriersContactDetailsPage < GenericPage
   end
 
   def check_translation
-    expect(self).to have_text COPY_TEXT
     expect(self).to have_text SUB_TEXT
     expect(self).to have_text ORGANISATION_CONTACT
     expect(self).to have_text FULL_NAME

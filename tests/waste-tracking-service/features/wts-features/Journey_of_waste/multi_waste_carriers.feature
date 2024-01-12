@@ -64,6 +64,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I see previously entered Waste carrier contact details pre-populated
     And I click the button Save and continue
+    And I wait for a second
     And I choose "Sea" radio button
     When I click the button Save and continue
     And the "Sea transport details" page is displayed

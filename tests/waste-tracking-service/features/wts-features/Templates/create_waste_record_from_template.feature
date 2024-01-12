@@ -62,7 +62,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -162,7 +162,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -180,16 +180,14 @@ Feature: AS A waste producer/broker
     And the task "Waste codes and description" should be "COMPLETED"
     And the task "Exporter details" should be "COMPLETED"
     And the task "Importer details" should be "COMPLETED"
-    # below need to be fixed
     And the task "Waste carriers" should be "IN PROGRESS"
     And the task "Waste collection details" should be "COMPLETED"
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And the task "Countries waste will travel through" should be "COMPLETED"
-    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Recovery facility details" should be "COMPLETED"
     Then I click Manage templates link
     And I verify that newly created template is on top of the table
 
-  #need to revisit this and fix after waste transport stories
   @single
   Scenario: Export data should match what is in the template
     Given I login to waste tracking portal
@@ -211,7 +209,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -232,7 +230,7 @@ Feature: AS A waste producer/broker
     And the task "Waste collection details" should be "COMPLETED"
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And the task "Countries waste will travel through" should be "COMPLETED"
-    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Recovery facility details" should be "COMPLETED"
     Then I click Manage templates link
     And I verify that newly created template is on top of the table
     And I click Use template link for the first record in the table
@@ -247,7 +245,7 @@ Feature: AS A waste producer/broker
     And the task "Waste collection details" should be "COMPLETED"
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And the task "Countries waste will travel through" should be "COMPLETED"
-    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Recovery facility details" should be "COMPLETED"
     And the task "Check your report" should be "CANNOT START YET"
     And the task "Sign declaration" should be "CANNOT START YET"
     When I click the "Quantity of waste" link
@@ -266,7 +264,7 @@ Feature: AS A waste producer/broker
     And the task "Waste collection details" should be "COMPLETED"
     And the task "Location waste leaves the UK" should be "COMPLETED"
     And the task "Countries waste will travel through" should be "COMPLETED"
-    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Recovery facility details" should be "COMPLETED"
     And the task "Check your report" should be "NOT STARTED"
     And the task "Sign declaration" should be "CANNOT START YET"
 
@@ -304,7 +302,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -337,7 +335,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -376,7 +374,7 @@ Feature: AS A waste producer/broker
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button

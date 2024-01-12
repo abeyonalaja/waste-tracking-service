@@ -16,7 +16,6 @@ class WhoIsTheWasteCarrierPage < GenericPage
   FOURTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion4'
   FIFTH_TITLE = Translations.value 'exportJourney.wasteCarrierDetails.firstPageQuestion5'
   SUB_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.title'
-  COPY_TEXT = Translations.value 'exportJourney.wasteCarrierDetails.YouCanEditMessage'
   ORGANISATION_NAME = Translations.value 'exportJourney.wasteCarrierDetails.organisationName'
   ADDRESS = Translations.value 'exportJourney.wasteCarrierDetails.address'
   COUNTRY = Translations.value 'exportJourney.wasteCarrierDetails.country'
@@ -50,7 +49,6 @@ class WhoIsTheWasteCarrierPage < GenericPage
 
   def check_translation
     expect(self).to have_text SUB_TEXT
-    expect(self).to have_text COPY_TEXT
     expect(self).to have_text ORGANISATION_NAME
     expect(self).to have_text ADDRESS
     expect(self).to have_text COUNTRY

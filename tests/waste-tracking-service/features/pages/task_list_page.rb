@@ -30,7 +30,7 @@ class TaskListPage < GenericPage
   # rubocop:disable Naming/PredicateName
 
   def has_completed_badge_for_task?(task_name, status)
-    task_name = 'recovery-facility-or-laboratory' if ['Laboratory details', 'Recovery facility'].include?(task_name)
+    task_name = 'recovery-facility-or-laboratory' if ['Laboratory details', 'Recovery facility details'].include?(task_name)
     task_name += '-status'
 
     find(task_name.downcase.gsub(' ', '-')).text == task_status(status)

@@ -187,7 +187,7 @@
   "exportJourney.exporterDetails.email": "Email address",
   "exportJourney.exporterDetails.phone": "Phone number",
   "exportJourney.exporterDetails.fax": "Fax number (optional)",
-  "exportJourney.exporterDetails.title": "Exporter's details",
+  "exportJourney.exporterDetails.title": "What are the exporter's contact details?",
   "exportJourney.quantity.small.title": "Do you know the net weight of the waste?",
   "postcode.checkAddress.exportingCountryStart": "From your selected address we'll use ",
   "postcode.checkAddress.exportingCountryEnd": " as the exporting country.",
@@ -235,7 +235,6 @@
   "exportJourney.wasteCarrierDetails.firstPageQuestion4": "Who is the fourth waste carrier?",
   "exportJourney.wasteCarrierDetails.firstPageQuestion5": "Who is the fifth waste carrier?",
   "exportJourney.wasteCarrier.carriersPage.cardTitle": "{{n}} waste carrier",
-  "exportJourney.wasteCarrierDetails.YouCanEditMessage": "You'll be able to update these details after submitting the record.",
   "exportJourney.wasteCarrierDetails.organisationName": "Organisation name",
   "exportJourney.wasteCarrierDetails.address": "Address",
   "exportJourney.wasteCarrierDetails.country": "Country",
@@ -475,7 +474,6 @@
   "exportJourney.submittedAnnexSeven.collectionDate": "Collection date",
   "exportJourney.interimSite.name": "Interim site name",
   "exportJourney.updateActualQuantity.success": "Your record has been updated",
-  "status.actualNeeded": "Actual needed",
   "exportJourney.wasteCarrierTransport.pageQuestion1": "How will the first waste carrier transport the waste?",
   "exportJourney.wasteCarrierTransport.pageQuestion2": "How will the second waste carrier transport the waste?",
   "exportJourney.wasteCarrierTransport.pageQuestion3": "How will the third waste carrier transport the waste?",
@@ -556,5 +554,9 @@
   "multiples.guidance.upload.sub": "You need to check for errors before uploading.",
   "multiples.guidance.upload.button": "Upload",
   "export.homepage.multiples.guidance.title": "Guidance",
-  "export.homepage.multiples.guidance.link": "How to create a multiple Annex VII record CSV template"
+  "export.homepage.multiples.guidance.link": "How to create a multiple Annex VII record CSV template",
+  "multiples.guidance.bouncePage.title": "Use the guidance to create multiple Annex VII records from the template",
+  "multiples.guidance.bouncePage.firstParagraph": "When you enter your Annex VII recored information into the template, you need to save it as a CSV file. This is where data is separated by commas rather than columns. If you change the structure of the template, your upload may fail.",
+  "multiples.guidance.bouncePage.secondParagraph": "It is important you use the guidance to help you fill in and upload the template correctly.",
+  "multiples.guidance.bouncePage.button": "Continue"
 }

@@ -23,7 +23,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -59,7 +59,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -147,7 +147,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -183,7 +183,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -203,7 +203,6 @@ Feature: AS A Waste practitioner
     And I click the button Save and continue
     Then the "Describe the waste" page is displayed
     And I verify data is wiped out
-
 
   Scenario: Change from one Basel Annex IX code to another Basel Annex IX code should reset the task status to In Progress
     Given I login to waste tracking portal
@@ -225,7 +224,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -237,7 +236,7 @@ Feature: AS A Waste practitioner
     Then the "task list" page is displayed
     And the task "Waste codes and description" should be "IN PROGRESS"
     And the task "Quantity of waste" should be "IN PROGRESS"
-    And the task "Recovery facility" should be "IN PROGRESS"
+    And the task "Recovery facility details" should be "IN PROGRESS"
     And the task "Waste carriers" should be "IN PROGRESS"
 
   Scenario: Change from one Basel Annex IX code to another Basel Annex IX code and verify data is cleared
@@ -260,7 +259,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -300,7 +299,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link
@@ -328,7 +327,7 @@ Feature: AS A Waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click waste code Change link

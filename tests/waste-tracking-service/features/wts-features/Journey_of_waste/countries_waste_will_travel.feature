@@ -101,7 +101,7 @@ Feature: AS A waste producer/broker
     Then the task "Countries waste will travel through" should be "COMPLETED"
 
   @translation
-  Scenario: User can remove the transit country and task should be compelted
+  Scenario: User can remove the transit country and task should be COMPLETED
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link

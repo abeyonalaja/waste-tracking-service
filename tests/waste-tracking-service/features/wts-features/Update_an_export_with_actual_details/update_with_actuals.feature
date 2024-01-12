@@ -23,7 +23,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -60,7 +60,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -103,7 +103,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -149,7 +149,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -187,7 +187,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -224,7 +224,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -285,7 +285,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -444,7 +444,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -492,7 +492,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -534,7 +534,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -579,7 +579,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button
@@ -624,7 +624,7 @@ Feature: AS A waste practitioner
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button

@@ -87,7 +87,7 @@ Feature: AS A waste producer/broker
     And I click the "Waste codes and description" link
     When I change the waste code from small to bulk waste
     And I click the Save and return to draft
-    And the task "Recovery facility" should be "NOT STARTED"
+    And the task "Recovery facility details" should be "NOT STARTED"
 
 
 

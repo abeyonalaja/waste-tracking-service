@@ -45,7 +45,7 @@ Feature: AS A waste practitioner
     Then the "Manage templates" page is displayed
     Then I click the "Create a new Annex VII record template" link
     And I create a template with the same name as the previous one
-    Then I remain on the Create new record template page with an "Template with this name already exists" error message displayed
+    Then I remain on the Create new record template page with an "A template with this name already exists" error message displayed
 
   Scenario: User updates template name and verifies correct success message is displayed
     Given I login to waste tracking portal
@@ -181,6 +181,7 @@ Feature: AS A waste practitioner
     Then I complete Importer contact details page
     And I click the button Save and continue
     Then I click the "Exporter details" link
+    And I click the button Save and continue
     And I should see Exporter Organisation name pre-populated
     And I should see Exporter Full name name pre-populated
     And I should see Exporter Email address pre-populated
@@ -248,7 +249,7 @@ Feature: AS A waste practitioner
     And I complete Treatment of waste section
     Then the "Template task list" page is displayed
     And I verify update success banner is displayed
-    And the task "Recovery facility" should be "IN PROGRESS"
+    And the task "Recovery facility details" should be "IN PROGRESS"
     And I click the "Recovery facility" link
 
   Scenario: User cancel template update and verify task status is not changed

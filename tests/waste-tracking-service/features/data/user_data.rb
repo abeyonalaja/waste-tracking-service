@@ -7,22 +7,25 @@ module UserData
       USER1: {
         businessName: 'WTS Testing',
         businessUnitId: '',
-        userId: '655383298578',
-        password: 'WasteTracking@123'
+        userId: '655383298578'
       },
       USER2: {
         businessName: 'Wts Testing',
         username: 'Wtst testing Team member',
         businessUnitId: '',
-        userId: '521578352286',
-        password: 'WasteTracking@123'
+        userId: '521578352286'
       },
       USER3: {
         businessName: 'Wts Testing',
         username: 'Wtst testing Team member',
         businessUnitId: '',
-        userId: '316103537967',
-        password: 'wordWord1234'
+        userId: '772918061129'
+      },
+      USER4: {
+        businessName: 'Wts Testing',
+        username: 'Wtst testing Team member',
+        businessUnitId: '',
+        userId: '772918061129'
       },
       EMAIL_USER1: {
         businessName: '',

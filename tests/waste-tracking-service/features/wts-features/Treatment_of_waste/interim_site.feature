@@ -64,7 +64,7 @@ Feature: AS A waste producer/broker
     And I complete the Interim site address page
     And I wait for a second
     And I click the Save and return to draft
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
 
   Scenario: User click browser back button on Interim recovery code page
     Given I login to waste tracking portal
@@ -131,7 +131,7 @@ Feature: AS A waste producer/broker
     When I choose "No" radio button
     And I click the button Save and continue
     Then the "task list" page is displayed
-    And the task "Recovery facility" should be "COMPLETED"
+    And the task "Recovery facility details" should be "COMPLETED"
 
   Scenario: Error validation on Interim address page
     Given I login to waste tracking portal
@@ -210,7 +210,7 @@ Feature: AS A waste producer/broker
     And I wait for a second
     And I click the Save and return to draft
     Then the "task list" page is displayed
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
 
   Scenario: User select No option on interim confirmation page and click save and continue
     Given I login to waste tracking portal
@@ -224,7 +224,7 @@ Feature: AS A waste producer/broker
     And I complete recovery facility address page
     And I click the Save and return to draft
     Then the "task list" page is displayed
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
 
   Scenario: User select Back button on recovery facility address page
     Given I login to waste tracking portal
@@ -260,7 +260,7 @@ Feature: AS A waste producer/broker
     And I complete the Interim site address page
     And I click the Save and return to draft
     Then the "task list" page is displayed
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
     And I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
     And I see previously selected option pre-selected
@@ -279,7 +279,7 @@ Feature: AS A waste producer/broker
     And I complete the Interim site address page
     And I click the Save and return to draft
     Then the "task list" page is displayed
-    Then the task "Recovery facility" should be "IN PROGRESS"
+    Then the task "Recovery facility details" should be "IN PROGRESS"
     And I click the "Recovery facility" link
     Then the "Confirmation Interim Site" page is displayed
     And I see previously selected option pre-selected
