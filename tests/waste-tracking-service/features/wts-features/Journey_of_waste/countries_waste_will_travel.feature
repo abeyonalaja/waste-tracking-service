@@ -1,4 +1,5 @@
-Feature: AS A waste producer/broker
+Feature: Countries waste will travel page
+  AS A waste producer/broker
   I NEED specify all countries the waste pass through
   SO THAT I can track the waste at any given point during transit
 

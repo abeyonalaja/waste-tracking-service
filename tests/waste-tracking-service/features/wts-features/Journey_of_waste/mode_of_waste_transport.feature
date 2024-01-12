@@ -1,4 +1,5 @@
-Feature: AS A waste producer/broker
+Feature: Mode of transport page
+  AS A waste producer/broker
   I NEED to be able to add a mode transport for my waste
   SO THAT I describe how the waste will be moved to end destination
 

@@ -1,4 +1,5 @@
-Feature:AS A Waste Practitioner
+Feature: Create multiple records
+  AS A Waste Practitioner
   I NEED to be able to upload multiple Annex VII records
   SO THAT I can save time in creating records to accompany any waste movement
 

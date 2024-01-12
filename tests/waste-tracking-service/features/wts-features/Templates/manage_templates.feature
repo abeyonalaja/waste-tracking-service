@@ -1,4 +1,4 @@
-Feature: AS A waste practitioner
+Feature: Manage templates page
   I NEED to be able to manage my templates
   SO THAT I can amend the templates relevant and updated for my waste submissions
 

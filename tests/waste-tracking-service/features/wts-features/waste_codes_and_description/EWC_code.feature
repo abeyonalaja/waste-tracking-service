@@ -1,5 +1,5 @@
 @add_ewc_code
-Feature:AS A waste producer
+Feature:EWC code page
   I NEED to be able to add my EWC code
   SO THAT I can classify my waste based on the European categorisation
 

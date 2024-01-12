@@ -1,4 +1,5 @@
-Feature: AS A waste producer/broker
+Feature: Waste collection details page
+  AS A waste producer/broker
   I NEED to add waste collection details
   SO THAT the waste movement can be tracked appropriately
 

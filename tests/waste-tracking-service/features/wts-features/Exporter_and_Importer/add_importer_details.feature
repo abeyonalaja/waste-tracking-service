@@ -1,6 +1,7 @@
-Feature: AS A waste producer
-I NEED to add the importer’s details
-SO THAT the importer can be tracked
+Feature: Add Importer details page
+  AS A waste producer
+  I NEED to add the importer’s details
+  SO THAT the importer can be tracked
 
   @translation
   Scenario: User navigates to Who is the importer page from Importer details link
@@ -11,7 +12,7 @@ SO THAT the importer can be tracked
     And I should see Who is the importer page translated
     And I click "Back" link should display "task list" page
 
-    @translation
+  @translation
   Scenario: User navigates to What are the importers contact details page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference

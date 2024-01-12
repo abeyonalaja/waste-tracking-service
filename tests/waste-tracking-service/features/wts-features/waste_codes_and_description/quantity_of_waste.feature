@@ -1,4 +1,4 @@
-Feature: AS A waste producer
+Feature: Quantity of waste page
   I NEED to add the waste quantity for an export
   SO THAT the weight or volume of the waste can be calculated and recorded
 

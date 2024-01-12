@@ -1,4 +1,5 @@
-Feature: AS A waste practitioner
+Feature: Delete incomplete records page
+  AS A waste practitioner
   I NEED to be able to delete a draft export
   SO THAT I can remove export that is no longer required
 

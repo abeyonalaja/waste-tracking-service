@@ -1,4 +1,5 @@
-Feature: AS A waste producer/broker
+Feature: Collection date
+  AS A waste producer/broker
   I NEED to set the date for the collection of waste
   SO THAT waste can be removed
 

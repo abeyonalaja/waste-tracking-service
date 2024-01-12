@@ -1,4 +1,5 @@
-Feature: AS A Waste practitioner
+Feature: Final checks - change waste code
+  AS A Waste practitioner
   I NEED to be warned about changing the waste code
   SO THAT I am aware of the implication the changes to waste code might cause to other details entered
 

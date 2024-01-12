@@ -1,4 +1,4 @@
-Feature: AS A waste producer/broker
+Feature: Interim site page
   I NEED to be able to add interim site details
   SO THAT the waste can be moved to a temporary site before it recovered
 
@@ -185,7 +185,7 @@ Feature: AS A waste producer/broker
     And I click the button Save and continue
     Then I remain on the Interim site recovery code page with an "Enter a recovery code" error message displayed
 
-    @translation @ignore @single
+  @translation  @single
   Scenario: User navigates to interim site confirmation page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

@@ -1,4 +1,5 @@
-Feature: AS A Waste Practitioner
+Feature: Check your report page
+  AS A Waste Practitioner
   I NEED to have a final section
   SO THAT I can ensure that all my entry details are correctly
 

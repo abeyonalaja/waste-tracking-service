@@ -1,4 +1,5 @@
-Feature: AS A waste producer/broker
+Feature: Multi waste carrier page
+  AS A waste producer/broker
   I NEED TO add waste carrier details
   SO THAT I have information to trace the waste carrier
 

@@ -1,5 +1,5 @@
 @add_reference_number
-Feature: AS A Waste Producer/Broker
+Feature: Add reference page
   I NEED to submit an Annex 7 form
   AND I want add my own reference to my export
   SO THAT my waste can be processed

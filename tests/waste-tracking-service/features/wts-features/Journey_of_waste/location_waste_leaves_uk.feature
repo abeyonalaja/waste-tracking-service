@@ -1,4 +1,5 @@
-Feature:  AS A waste producer/broker exporting GLW waste
+Feature: Location waste leaves UK
+  AS A waste producer/broker exporting GLW waste
   I NEED to specify the location where the waste leave the UK
   SO THAT the I provide visibility of the exit point
 

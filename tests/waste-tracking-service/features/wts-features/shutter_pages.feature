@@ -1,4 +1,4 @@
-Feature:AS A waste practitioner
+Feature:Shutter page feature
   I NEED a message displayed when WTS is not accessible
   SO THAT I know the reason I can’t access the service
 

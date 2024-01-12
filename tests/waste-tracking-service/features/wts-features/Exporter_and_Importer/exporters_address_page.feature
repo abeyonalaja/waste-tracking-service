@@ -1,4 +1,5 @@
-Feature: AS A waste producer
+Feature: Exporter address page
+  AS A waste producer
   I NEED to add the exporter’s details
   SO THAT the exporter can be tracker
 

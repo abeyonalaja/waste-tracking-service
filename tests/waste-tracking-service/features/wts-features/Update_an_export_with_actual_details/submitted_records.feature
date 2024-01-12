@@ -1,5 +1,5 @@
 @submitted
-Feature:AS A Waste practitioner
+Feature:Submitted records
   I NEED to be able to see all submitted Annex VII document
   SO THAT I can check any required details
 

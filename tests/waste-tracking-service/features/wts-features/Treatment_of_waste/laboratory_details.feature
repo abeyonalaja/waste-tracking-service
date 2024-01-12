@@ -1,4 +1,4 @@
-Feature: AS A waste producer/broker
+Feature: Laboratory details page
   I NEED to be able to add a laboratory facility details
   SO THAT if there is a need for the waste to be returned it can be moved to the laboratory facility
 

@@ -1,4 +1,4 @@
-Feature: AS A waste producer/broker
+Feature: Describe the waste page
   I NEED to add my waste code description details
   SO THAT I can correctly categorise and describe my waste export
 
