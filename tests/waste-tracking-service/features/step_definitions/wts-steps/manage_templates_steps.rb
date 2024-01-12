@@ -35,7 +35,8 @@ And(/^I verify Success banner with template name is displayed$/) do
 end
 
 And(/^I fill out the name and description fields$/) do
-  CreateNewRecordTemplatePage.new.enter_template_name "#{Faker::Name.first_name} Template"
+  template_name = "#{Faker::Name.initials(number: 5)} #{Faker::Name.first_name} #{Time.now.to_i} Template"
+  CreateNewRecordTemplatePage.new.enter_template_name template_name
   CreateNewRecordTemplatePage.new.enter_description Faker::Alphanumeric.alpha(number: 100)
 end
 
@@ -168,7 +169,8 @@ And(/^I verify update success banner is displayed with updated name$/) do
 end
 
 And(/^I complete create template from a submitted record page$/) do
-  CreateTemplateFromSubmittedRecordPage.new.enter_template_name "#{Faker::Name.first_name} Template"
+  template_name = "#{Faker::Name.initials(number: 5)} #{Faker::Name.first_name} #{Time.now.to_i} Template"
+  CreateTemplateFromSubmittedRecordPage.new.enter_template_name template_name
   CreateTemplateFromSubmittedRecordPage.new.enter_description Faker::Alphanumeric.alpha(number: 100)
   CreateTemplateFromSubmittedRecordPage.new.create_template_button
 end
