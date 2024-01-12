@@ -16,13 +16,18 @@ jest.mock('next-auth/jwt', () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({}),
+    json: () =>
+      Promise.resolve({
+        statusCode: 404,
+        error: 'Not Found',
+        message: 'Not Found',
+      }),
   })
 );
 
 describe('Manage templates page', () => {
-  it('should render successfully', () => {
-    act(() => {
+  it('should render successfully', async () => {
+    await act(() => {
       render(<ManageTemplates />);
     });
     expect(
@@ -37,23 +42,82 @@ describe('Manage templates page', () => {
         ok: true,
         json: () =>
           Promise.resolve({
+            totalTemplates: 2,
+            totalPages: 1,
+            currentPage: 1,
+            pages: [
+              {
+                pageNumber: 1,
+                token: '',
+              },
+            ],
             values: [
               {
-                id: '184eb9b7-ca6c-4396-98de-da7895a7d4ca',
-                templateDetails: {
-                  name: 'Template name',
-                  description: 'This is a description of a template',
-                  created: '2023-09-18T12:22:14.371Z',
-                  lastModified: '2023-09-18T12:22:14.371Z',
-                },
-              },
-              {
-                id: '184eb9b7-ca6c-4396-98de-da7895a7d4ca',
+                id: '29b5d05d-774c-44bc-a5e9-f023ac03850e',
                 templateDetails: {
                   name: 'Another template here',
                   description: 'This is the description of the second template',
-                  created: '2023-09-18T12:22:14.371Z',
-                  lastModified: '2023-09-18T12:22:14.371Z',
+                  created: '2024-01-12T12:41:00.025Z',
+                  lastModified: '2024-01-12T12:41:00.025Z',
+                },
+                wasteDescription: {
+                  status: 'NotStarted',
+                },
+                exporterDetail: {
+                  status: 'NotStarted',
+                },
+                importerDetail: {
+                  status: 'NotStarted',
+                },
+                carriers: {
+                  status: 'NotStarted',
+                  transport: true,
+                },
+                collectionDetail: {
+                  status: 'NotStarted',
+                },
+                ukExitLocation: {
+                  status: 'NotStarted',
+                },
+                transitCountries: {
+                  status: 'NotStarted',
+                },
+                recoveryFacilityDetail: {
+                  status: 'CannotStart',
+                },
+              },
+              {
+                id: 'd5573884-5774-4ad6-95a1-919d457ac716',
+                templateDetails: {
+                  name: 'Template name',
+                  description: 'This is a description of a template',
+                  created: '2024-01-12T12:39:08.261Z',
+                  lastModified: '2024-01-12T12:40:42.227Z',
+                },
+                wasteDescription: {
+                  status: 'NotStarted',
+                },
+                exporterDetail: {
+                  status: 'NotStarted',
+                },
+                importerDetail: {
+                  status: 'NotStarted',
+                },
+                carriers: {
+                  status: 'NotStarted',
+                  transport: true,
+                },
+                collectionDetail: {
+                  status: 'NotStarted',
+                },
+                ukExitLocation: {
+                  status: 'NotStarted',
+                },
+                transitCountries: {
+                  status: 'NotStarted',
+                },
+                recoveryFacilityDetail: {
+                  status: 'CannotStart',
                 },
               },
             ],
@@ -78,7 +142,9 @@ describe('Manage templates page', () => {
     });
     const deleteLink = screen.getAllByText('Delete')[0];
     expect(deleteLink).toBeTruthy();
-    fireEvent.click(deleteLink);
+    await act(async () => {
+      fireEvent.click(deleteLink);
+    });
 
     const pageTitle = screen.getByText(
       'Are you sure you want to delete this record template?'
@@ -86,7 +152,9 @@ describe('Manage templates page', () => {
     expect(pageTitle).toBeTruthy();
 
     const button = screen.getByText('Confirm and continue');
-    fireEvent.click(button);
+    await act(async () => {
+      fireEvent.click(button);
+    });
 
     const validationMessage = screen.getAllByText(
       'Select yes if you want to remove this record template'

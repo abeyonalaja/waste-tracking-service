@@ -155,7 +155,7 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
 
   useEffect(() => {
     if (router.isReady) {
-      setToken(router.query.token);
+      setToken(router.query.token || null);
     }
   }, [router.isReady, router.query.token]);
 

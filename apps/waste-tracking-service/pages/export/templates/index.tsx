@@ -136,7 +136,7 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
 
   useEffect(() => {
     if (router.isReady) {
-      setToken(router.query.token);
+      setToken(router.query.token || null);
       setTemplateId(String(router.query.templateId));
       setContext(String(router.query.context));
     }
@@ -178,15 +178,17 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
 
   useEffect(() => {
     if (templateId && templatesPage.data) {
-      const item = templatesPage.data.values.find(
-        (template) => template.id === templateId
-      );
-      if (item) {
-        setItemToDelete(item);
-        dispatchTemplatePage({
-          type: 'SHOW_VIEW',
-          payload: VIEWS.CONFIRM,
-        });
+      if (templatesPage.data.values !== undefined) {
+        const item = templatesPage.data.values.find(
+          (template) => template.id === templateId
+        );
+        if (item) {
+          setItemToDelete(item);
+          dispatchTemplatePage({
+            type: 'SHOW_VIEW',
+            payload: VIEWS.CONFIRM,
+          });
+        }
       }
     }
   }, [templateId, templatesPage.data]);
@@ -362,7 +364,8 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
                 <GovUK.GridRow>
                   <GovUK.GridCol>
                     {templatesPage.data === undefined ||
-                    templatesPage.data.values.length === 0 ? (
+                    templatesPage.data.values === undefined ||
+                    templatesPage.data.values?.length === 0 ? (
                       <>
                         <GovUK.Heading size="SMALL">
                           {t('templates.manage.noResults')}
