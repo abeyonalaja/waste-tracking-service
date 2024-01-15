@@ -3,8 +3,8 @@ import * as GovUK from 'govuk-react';
 import {
   BreadcrumbWrap,
   ButtonGroup,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   Loading,
   SaveReturnButton,
   SubmissionNotFound,
@@ -194,8 +194,8 @@ const Quantity = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -280,3 +280,4 @@ const Quantity = ({ apiConfig }: PageProps) => {
 };
 
 export default Quantity;
+Quantity.auth = true;

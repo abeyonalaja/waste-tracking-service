@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Loading,
   Error404Content,
@@ -257,8 +257,8 @@ const TemplateTasklist = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {templatePage.isError && !templatePage.isLoading && <Error404Content />}
@@ -693,3 +693,4 @@ const TemplateTasklist = ({ apiConfig }: PageProps) => {
 };
 
 export default TemplateTasklist;
+TemplateTasklist.auth = true;

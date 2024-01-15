@@ -1,5 +1,5 @@
 import { render, screen } from '../../jest-utils';
-import { CompleteHeader } from 'components';
+import { Header } from 'components';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -10,7 +10,7 @@ global.fetch = jest.fn(() =>
 
 describe('CompleteHeader', () => {
   it('renders Header component', () => {
-    render(<CompleteHeader />);
+    render(<Header />);
 
     expect(screen.findByText('GsOV.UK')).toBeTruthy();
   });

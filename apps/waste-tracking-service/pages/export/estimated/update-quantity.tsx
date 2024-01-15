@@ -4,8 +4,8 @@ import {
   AppLink,
   BreadcrumbWrap,
   ButtonGroup,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   Loading,
   Paragraph,
   SaveReturnButton,
@@ -201,8 +201,8 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs id={id} />}
       >
         <GovUK.GridRow>
@@ -362,3 +362,4 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
 };
 
 export default QuantityEntry;
+QuantityEntry.auth = true;

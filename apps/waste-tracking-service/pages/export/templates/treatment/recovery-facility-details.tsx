@@ -11,8 +11,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   ButtonGroup,
   SaveReturnButton,
@@ -763,8 +763,8 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -1225,3 +1225,4 @@ const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
 };
 
 export default RecoveryFacilityDetails;
+RecoveryFacilityDetails.auth = true;

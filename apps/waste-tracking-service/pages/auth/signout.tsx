@@ -1,7 +1,7 @@
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { CompleteFooter, CompleteHeader } from '../../components';
+import { Footer, Header } from '../../components';
 import React from 'react';
 import Head from 'next/head';
 
@@ -18,8 +18,8 @@ const SignOut = () => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       />
     </>

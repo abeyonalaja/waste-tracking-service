@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Paragraph,
   SubmissionNotFound,
@@ -301,8 +301,8 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {templatesPage.isError && !templatesPage.isLoading && (
@@ -545,3 +545,4 @@ const ManageTemplates = ({ apiConfig }: PageProps) => {
 };
 
 export default ManageTemplates;
+ManageTemplates.auth = true;

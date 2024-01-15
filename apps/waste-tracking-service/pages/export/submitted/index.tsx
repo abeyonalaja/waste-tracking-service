@@ -5,8 +5,8 @@ import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Paragraph,
   Pagination,
@@ -160,8 +160,8 @@ const Index = ({ apiConfig }: PageProps) => {
 
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {submittedAnnex7Page.isError && !submittedAnnex7Page.isLoading && (
@@ -342,3 +342,4 @@ const Index = ({ apiConfig }: PageProps) => {
 };
 
 export default Index;
+Index.auth = true;

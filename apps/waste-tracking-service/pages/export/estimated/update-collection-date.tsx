@@ -2,8 +2,8 @@ import Head from 'next/head';
 import * as GovUK from 'govuk-react';
 import {
   BreadcrumbWrap,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   ButtonGroup,
   SaveReturnButton,
   Paragraph,
@@ -163,8 +163,8 @@ const CollectionDate = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -253,3 +253,4 @@ const CollectionDate = ({ apiConfig }: PageProps) => {
 };
 
 export default CollectionDate;
+CollectionDate.auth = true;

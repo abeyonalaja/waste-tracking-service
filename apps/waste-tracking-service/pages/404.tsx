@@ -1,4 +1,4 @@
-import { Error404Content, CompleteFooter, CompleteHeader } from 'components';
+import { Error404Content, Footer, Header } from 'components';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import React from 'react';
@@ -11,11 +11,7 @@ export default function Custom404() {
       <Head>
         <title>{t('404.title')}</title>
       </Head>
-      <GovUK.Page
-        id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
-      >
+      <GovUK.Page id="content" header={<Header />} footer={<Footer />}>
         <Error404Content />
       </GovUK.Page>
     </>

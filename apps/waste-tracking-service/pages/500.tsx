@@ -1,4 +1,4 @@
-import { CompleteFooter, CompleteHeader } from 'components';
+import { Footer, Header } from 'components';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import React from 'react';
@@ -11,11 +11,7 @@ export default function Custom500() {
       <Head>
         <title>{t('500.title')}</title>
       </Head>
-      <GovUK.Page
-        id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
-      >
+      <GovUK.Page id="content" header={<Header />} footer={<Footer />}>
         <GovUK.Heading size="LARGE">{t('500.title')}</GovUK.Heading>
         <GovUK.Paragraph>{t('500.paragraph1')}</GovUK.Paragraph>
         <GovUK.Paragraph>{t('500.paragraph2')}</GovUK.Paragraph>

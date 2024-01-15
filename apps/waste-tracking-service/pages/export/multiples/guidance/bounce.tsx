@@ -2,12 +2,7 @@ import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import Link from 'next/link';
 import { BLACK, YELLOW, WHITE } from 'govuk-colours';
-import {
-  AppLink,
-  CompleteFooter,
-  CompleteHeader,
-  BreadcrumbWrap,
-} from 'components';
+import { AppLink, Footer, Header, BreadcrumbWrap } from 'components';
 import Head from 'next/head';
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
@@ -200,8 +195,8 @@ export function Bounce() {
       {showPanel && (
         <GovUK.Page
           id="content"
-          header={<CompleteHeader />}
-          footer={<CompleteFooter />}
+          header={<Header />}
+          footer={<Footer />}
           beforeChildren={<BreadCrumbs />}
         >
           <GovUK.GridRow>
@@ -274,3 +269,4 @@ export function Bounce() {
 }
 
 export default Bounce;
+Bounce.auth = true;

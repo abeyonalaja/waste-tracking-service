@@ -5,8 +5,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   ButtonGroup,
   Paragraph,
@@ -137,8 +137,8 @@ const UpdateRecord = ({ apiConfig }: PageProps) => {
 
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {viewRecordPage.isError && !viewRecordPage.isLoading && (
@@ -226,3 +226,4 @@ const UpdateRecord = ({ apiConfig }: PageProps) => {
 };
 
 export default UpdateRecord;
+UpdateRecord.auth = true;

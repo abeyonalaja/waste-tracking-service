@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { CompleteFooter, CompleteHeader } from '../../components';
+import { Footer, Header } from '../../components';
 import React from 'react';
 import Head from 'next/head';
 
@@ -11,11 +11,7 @@ const Privacy = () => {
       <Head>
         <title>{t('app.title')}</title>
       </Head>
-      <GovUK.Page
-        id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
-      >
+      <GovUK.Page id="content" header={<Header />} footer={<Footer />}>
         <GovUK.Heading size="L">Privacy</GovUK.Heading>
       </GovUK.Page>
     </>

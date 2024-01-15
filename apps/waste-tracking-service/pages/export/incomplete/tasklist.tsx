@@ -5,8 +5,8 @@ import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   DocumentStatus,
   Paragraph,
@@ -265,8 +265,8 @@ const Tasklist = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {tasklistPage.isError && !tasklistPage.isLoading && (
@@ -682,3 +682,4 @@ const Tasklist = ({ apiConfig }: PageProps) => {
 };
 
 export default Tasklist;
+Tasklist.auth = true;

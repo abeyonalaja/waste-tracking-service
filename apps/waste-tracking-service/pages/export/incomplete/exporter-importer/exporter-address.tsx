@@ -6,8 +6,8 @@ import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Loading,
   SubmissionNotFound,
@@ -177,8 +177,8 @@ const ExporterAddress = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow id="page-exporter-contact-details">
@@ -243,3 +243,4 @@ const ExporterAddress = ({ apiConfig }: PageProps) => {
 };
 
 export default ExporterAddress;
+ExporterAddress.auth = true;

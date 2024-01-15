@@ -5,8 +5,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
@@ -174,8 +174,8 @@ const ImporterContactDetails = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -278,3 +278,4 @@ const ImporterContactDetails = ({ apiConfig }: PageProps) => {
   );
 };
 export default ImporterContactDetails;
+ImporterContactDetails.auth = true;

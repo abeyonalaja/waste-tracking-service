@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
-    maxAge: 15 * 60,
+    maxAge: 60 * 15, // 15 minutes
   },
   pages: {
     signIn: '/auth/signin',
@@ -88,6 +88,8 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, profile }) {
+      const oneMinLessThanExpiry =
+        Number(token.idTokenExpires || 1200 * 1000) - 60 * 1000; // ~19 minutes
       if (account && profile) {
         const dcidProfile = profile as DCIDProfile;
         const dcidAccount = account as DCIDAccount;
@@ -95,11 +97,11 @@ export const authOptions: NextAuthOptions = {
           name: `${dcidProfile.firstName} ${dcidProfile.lastName}`,
           email: dcidProfile.email,
           id_token: dcidAccount.id_token,
-          idTokenExpires: Date.now() + dcidAccount.id_token_expires_in * 1000,
+          idTokenExpires: Date.now() + dcidAccount.id_token_expires_in * 1000, // ~20 minutes
           refreshToken: dcidAccount.refresh_token,
           uniqueReference: dcidProfile.uniqueReference,
         };
-      } else if (Date.now() < token.idTokenExpires) {
+      } else if (Date.now() < oneMinLessThanExpiry) {
         return token;
       } else {
         return refreshAccessToken(token);

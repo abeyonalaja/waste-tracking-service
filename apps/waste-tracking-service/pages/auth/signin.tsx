@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { CompleteFooter, CompleteHeader, Loading } from 'components';
+import { Footer, Header, Loading } from 'components';
 import React from 'react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';
@@ -30,11 +30,7 @@ const SignIn = () => {
       <Head>
         <title>{t('auth.title')}</title>
       </Head>
-      <GovUK.Page
-        id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
-      >
+      <GovUK.Page id="content" header={<Header />} footer={<Footer />}>
         {session && <Loading />}
         {!session && (
           <>

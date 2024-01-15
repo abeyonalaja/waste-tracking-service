@@ -10,8 +10,8 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   TextareaCharCount,
   SubmissionNotFound,
@@ -242,8 +242,8 @@ const Description = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -302,3 +302,4 @@ const Description = ({ apiConfig }: PageProps) => {
 };
 
 export default Description;
+Description.auth = true;

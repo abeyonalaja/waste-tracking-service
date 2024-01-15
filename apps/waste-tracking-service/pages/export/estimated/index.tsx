@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   ButtonGroup,
   Paragraph,
@@ -305,8 +305,8 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
 
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {updateAnnex7Page.isError && !updateAnnex7Page.isLoading && (
@@ -616,3 +616,4 @@ const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
 };
 
 export default UpdateAnnex7;
+UpdateAnnex7.auth = true;

@@ -19,8 +19,8 @@ export const getServerSideProps = async (context) => {
 
 import {
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Paragraph,
   Pagination,
@@ -301,8 +301,8 @@ const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
 
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {incompleteAnnex7Page.isError && !incompleteAnnex7Page.isLoading && (
@@ -528,3 +528,4 @@ const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
 };
 
 export default IncompleteAnnex7;
+IncompleteAnnex7.auth = true;

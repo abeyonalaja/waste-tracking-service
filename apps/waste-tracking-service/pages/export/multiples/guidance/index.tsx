@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import {
-  AppLink,
-  CompleteFooter,
-  CompleteHeader,
-  BreadcrumbWrap,
-} from 'components';
+import { AppLink, Footer, Header, BreadcrumbWrap } from 'components';
 
 import React, { useEffect } from 'react';
 import Head from 'next/head';
@@ -93,8 +88,8 @@ export function Index() {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.Heading size="L">
@@ -256,3 +251,4 @@ export function Index() {
 }
 
 export default Index;
+Index.auth = true;

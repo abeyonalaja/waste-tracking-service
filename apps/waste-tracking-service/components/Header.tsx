@@ -19,7 +19,6 @@ const GovukHeader = styled.header`
     font-size: 16px;
   }
 `;
-
 const GovukHeaderInner = styled.div`
   max-width: 960px;
   margin-right: 15px;
@@ -41,7 +40,6 @@ const GovukHeaderInner = styled.div`
     margin-left: auto;
   }
 `;
-
 const GovukHeaderLogo = styled.div`
   margin-bottom: 5px;
   font-size: 30px;
@@ -50,7 +48,6 @@ const GovukHeaderLogo = styled.div`
     margin-bottom: 10px;
   }
 `;
-
 const GovukHeaderContent = styled.div`
   padding-bottom: 10px;
   font-size: 18px;
@@ -59,7 +56,6 @@ const GovukHeaderContent = styled.div`
     font-size: 24px;
   }
 `;
-
 const GovukHeaderUserContent = styled.div`
   padding-bottom: 10px;
   font-size: 14px;
@@ -72,7 +68,6 @@ const GovukHeaderUserContent = styled.div`
     gap: 20px;
   }
 `;
-
 const GovukHeaderLogoLink = styled(TopNav.Anchor)`
   display: inline-block;
   &:active,
@@ -93,7 +88,6 @@ const GovukHeaderLogoLink = styled(TopNav.Anchor)`
     }
   }
 `;
-
 const GovukHeaderLink = styled(Link)`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -125,12 +119,11 @@ const GovukHeaderLink = styled(Link)`
     box-decoration-break: clone;
   }
 `;
-
 const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;
 `;
 
-export const CompleteHeader = () => {
+export const Header = () => {
   const { t } = useTranslation();
   const { data: session } = useSession();
 

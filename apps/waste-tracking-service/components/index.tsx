@@ -7,8 +7,8 @@ import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
 import { Card } from './Card';
-import { CompleteFooter } from './CompleteFooter';
-import { CompleteHeader } from './CompleteHeader';
+import { Footer } from './Footer';
+import { Header } from './Header';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
 import { CookieBanner } from './CookieBanner';
 import { CountrySelector } from './CountrySelector';
@@ -42,8 +42,8 @@ export {
   BreadcrumbWrap,
   ButtonGroup,
   Card,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   ConditionalRadioWrap,
   CookieBanner,
   CountrySelector,

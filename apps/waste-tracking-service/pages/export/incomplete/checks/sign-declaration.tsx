@@ -5,8 +5,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   SubmissionNotFound,
   Loading,
@@ -180,8 +180,8 @@ const SignDeclaration = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -255,3 +255,4 @@ const SignDeclaration = ({ apiConfig }: PageProps) => {
 };
 
 export default SignDeclaration;
+SignDeclaration.auth = true;

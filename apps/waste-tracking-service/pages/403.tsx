@@ -1,4 +1,4 @@
-import { AppLink, CompleteFooter, CompleteHeader } from 'components';
+import { AppLink, Footer, Header } from 'components';
 import * as GovUK from 'govuk-react';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
@@ -21,11 +21,7 @@ export default function Custom403() {
       <Head>
         <title>Sorry, you are not part of the private beta group </title>
       </Head>
-      <GovUK.Page
-        id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
-      >
+      <GovUK.Page id="content" header={<Header />} footer={<Footer />}>
         <GovUK.GridRow>
           <GovUK.GridCol setWidth={'one-half'}>
             <GovUK.Heading size="LARGE">

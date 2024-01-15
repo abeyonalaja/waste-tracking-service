@@ -11,8 +11,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   SubmissionNotFound,
   Loading,
@@ -516,8 +516,8 @@ const Laboratory = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -755,3 +755,4 @@ const Laboratory = ({ apiConfig }: PageProps) => {
 };
 
 export default Laboratory;
+Laboratory.auth = true;

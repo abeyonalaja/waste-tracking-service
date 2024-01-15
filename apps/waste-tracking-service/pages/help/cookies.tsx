@@ -3,8 +3,8 @@ import * as GovUK from 'govuk-react';
 import {
   BreadcrumbWrap,
   ButtonGroup,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   NotificationBanner,
   Paragraph,
 } from 'components';
@@ -66,8 +66,8 @@ const Cookies = () => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>

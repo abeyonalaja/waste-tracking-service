@@ -10,8 +10,8 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Loading,
   Error404Content,
@@ -216,8 +216,8 @@ const TemplateEdit = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -313,3 +313,4 @@ const TemplateEdit = ({ apiConfig }: PageProps) => {
 };
 
 export default TemplateEdit;
+TemplateEdit.auth = true;

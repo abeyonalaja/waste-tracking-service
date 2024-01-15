@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 import {
   Address,
   AppLink,
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   Paragraph,
   ButtonGroup,
@@ -649,8 +649,8 @@ const CollectionDetails = ({ apiConfig }: PageProps) => {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -1228,3 +1228,4 @@ const CollectionDetails = ({ apiConfig }: PageProps) => {
 };
 
 export default CollectionDetails;
+CollectionDetails.auth = true;

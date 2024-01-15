@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { Footer } from 'govuk-react';
+import * as GovUK from 'govuk-react';
 import { BLACK, YELLOW } from 'govuk-colours';
 import { useTranslation } from 'react-i18next';
 
@@ -37,11 +37,11 @@ const FooterLink = styled(Link)`
   }
 `;
 
-export const CompleteFooter = () => {
+export const Footer = () => {
   const { t } = useTranslation();
   return (
     <>
-      <Footer
+      <GovUK.Footer
         meta={
           <>
             <FooterLink href={{ pathname: '/help/accessibility' }}>
@@ -53,7 +53,9 @@ export const CompleteFooter = () => {
             <FooterLink href={{ pathname: '/help/privacy' }}>
               {t('footer.privacy')}
             </FooterLink>
-            <Footer.MetaCustom>{t('footer.metaCustom')}</Footer.MetaCustom>
+            <GovUK.Footer.MetaCustom>
+              {t('footer.metaCustom')}
+            </GovUK.Footer.MetaCustom>
           </>
         }
         copyright={{

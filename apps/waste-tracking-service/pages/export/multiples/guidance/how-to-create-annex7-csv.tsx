@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import {
-  AppLink,
-  CompleteFooter,
-  CompleteHeader,
-  BreadcrumbWrap,
-} from 'components';
+import { AppLink, Footer, Header, BreadcrumbWrap } from 'components';
 import Head from 'next/head';
 import styled from 'styled-components';
 import React, { useEffect } from 'react';
@@ -56,8 +51,8 @@ export function HowToCreateCSV() {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -775,3 +770,4 @@ export function HowToCreateCSV() {
 }
 
 export default HowToCreateCSV;
+HowToCreateCSV.auth = true;

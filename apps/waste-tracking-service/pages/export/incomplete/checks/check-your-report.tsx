@@ -10,8 +10,8 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 import {
-  CompleteFooter,
-  CompleteHeader,
+  Footer,
+  Header,
   BreadcrumbWrap,
   ButtonGroup,
   Paragraph,
@@ -214,8 +214,8 @@ const CheckYourReport = ({ apiConfig }: PageProps) => {
 
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         {checkYourReportPage.isError && !checkYourReportPage.isLoading && (
@@ -279,3 +279,4 @@ const CheckYourReport = ({ apiConfig }: PageProps) => {
 };
 
 export default CheckYourReport;
+CheckYourReport.auth = true;

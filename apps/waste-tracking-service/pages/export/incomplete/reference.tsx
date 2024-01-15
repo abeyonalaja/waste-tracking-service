@@ -4,12 +4,7 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useSubmissionContext } from 'contexts';
 import { useTranslation } from 'react-i18next';
-import {
-  CompleteFooter,
-  CompleteHeader,
-  BreadcrumbWrap,
-  Paragraph,
-} from 'components';
+import { Footer, Header, BreadcrumbWrap, Paragraph } from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
@@ -152,8 +147,8 @@ export function Reference({ apiConfig }: PageProps) {
       </Head>
       <GovUK.Page
         id="content"
-        header={<CompleteHeader />}
-        footer={<CompleteFooter />}
+        header={<Header />}
+        footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
         <GovUK.GridRow>
@@ -204,3 +199,4 @@ export function Reference({ apiConfig }: PageProps) {
 }
 
 export default Reference;
+Reference.auth = true;
