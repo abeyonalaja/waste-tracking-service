@@ -15,7 +15,6 @@
         "main": "apps/reference-data/src/main.ts",
         "tsConfig": "apps/reference-data/tsconfig.app.json",
         "assets": ["apps/reference-data/src/assets"],
-        "isolatedConfig": true,
         "webpackConfig": "apps/reference-data/webpack.config.js",
         "generatePackageJson": true,
         "additionalEntryPoints": [

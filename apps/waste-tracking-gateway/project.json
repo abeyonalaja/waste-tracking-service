@@ -15,7 +15,6 @@
         "main": "apps/waste-tracking-gateway/src/main.ts",
         "tsConfig": "apps/waste-tracking-gateway/tsconfig.app.json",
         "assets": ["apps/waste-tracking-gateway/src/assets"],
-        "isolatedConfig": true,
         "webpackConfig": "apps/waste-tracking-gateway/webpack.config.js",
         "generatePackageJson": true,
         "additionalEntryPoints": [

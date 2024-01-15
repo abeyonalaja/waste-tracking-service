@@ -15,7 +15,6 @@
         "main": "apps/annex-vii/src/main.ts",
         "tsConfig": "apps/annex-vii/tsconfig.app.json",
         "assets": ["apps/annex-vii/src/assets"],
-        "isolatedConfig": true,
         "webpackConfig": "apps/annex-vii/webpack.config.js",
         "generatePackageJson": true,
         "additionalEntryPoints": [
