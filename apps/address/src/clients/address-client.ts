@@ -1,11 +1,11 @@
 import Boom from '@hapi/boom';
-import https from 'https';
 import axios from 'axios';
+import https from 'https';
 import { Logger } from 'winston';
 import {
   Address,
-  GetAddressesResponse,
   GetAddressesErrorResponse,
+  GetAddressesResponse,
 } from '../model';
 
 export interface AddressClient {
@@ -59,26 +59,43 @@ export default class BoomiAddressClient implements AddressClient {
           country: r.Address.Country,
         };
       });
-    } catch (err: any) {
-      if (err.response) {
-        const errData = err.response.data as GetAddressesErrorResponse;
-        const boomErr = Boom.boomify(err, {
-          statusCode: err.response.status,
-          message: errData.error.message,
-        });
-        this.logger.error('Boomi API retruned unsuccessful response', {
-          error: boomErr.message,
-        });
-        throw boomErr;
-      } else if (err.request) {
-        // Case untested
-        const message = 'The client did not receive a response from Boomi';
-        this.logger.error(message);
-        throw Boom.boomify(err, { message });
-      } else {
+    } catch (err: unknown) {
+      if (typeof err !== 'object' || err === null) {
         this.logger.error('Boomi API Unknown error');
         throw Boom.internal();
       }
+
+      if ('response' in err && typeof err.response === 'object') {
+        if (
+          'data' in err.response! &&
+          'statusCode' in err.response &&
+          typeof err.response.statusCode === 'number'
+        ) {
+          const errData = err.response!.data! as GetAddressesErrorResponse;
+          new Boom.Boom(errData.error.message, {
+            statusCode: err.response.statusCode,
+          });
+          const boomErr = new Boom.Boom(errData.error.message, {
+            statusCode: err.response.statusCode,
+          });
+          this.logger.error('Boomi API retruned unsuccessful response', {
+            error: boomErr.message,
+          });
+          throw boomErr;
+        }
+
+        this.logger.error('Boomi API Unknown error');
+        throw Boom.internal();
+      }
+
+      if ('request' in err) {
+        const message = 'The client did not receive a response from Boomi';
+        this.logger.error(message);
+        throw Boom.internal(message);
+      }
+
+      this.logger.error('Boomi API Unknown error');
+      throw Boom.internal();
     }
   }
 }

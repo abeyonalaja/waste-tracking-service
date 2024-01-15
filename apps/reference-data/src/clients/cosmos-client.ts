@@ -45,7 +45,7 @@ export default class CosmosReferenceDataClient {
     containerName: string,
     id: string,
     partitionKeyValue: string,
-    data: any
+    data: { type: string; values: object[] }
   ) {
     const item = await this.readItem(containerName, id, partitionKeyValue);
     if (!item) {
@@ -76,7 +76,7 @@ export default class CosmosReferenceDataClient {
     partitionKeyValue: string,
     path: string,
     op: PatchOperation['op'],
-    data: any
+    data: object | null
   ) {
     const replaceOperation: PatchOperation[] = [
       {
@@ -101,8 +101,13 @@ export default class CosmosReferenceDataClient {
         .container(containerName)
         .item(id, partitionKeyValue)
         .delete();
-    } catch (err: any) {
-      if (err.code && err.code === 404) {
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 404
+      ) {
         console.log(
           `Record with ID: '${id}' and partitionKey: '${partitionKeyValue}' not found`
         );

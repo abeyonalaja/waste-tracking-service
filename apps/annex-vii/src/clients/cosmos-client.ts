@@ -45,7 +45,7 @@ export default class CosmosAnnexViiClient {
     containerName: string,
     id: string,
     partitionKeyValue: string,
-    data: any
+    data: object
   ) {
     const item = await this.readItem(containerName, id, partitionKeyValue);
     if (!item) {
@@ -80,8 +80,13 @@ export default class CosmosAnnexViiClient {
         .container(containerName)
         .item(id, partitionKeyValue)
         .delete();
-    } catch (err: any) {
-      if (err.code && err.code === 404) {
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 404
+      ) {
         console.log(
           `Record with ID: '${id}' and partitionKey: '${partitionKeyValue}' not found`
         );

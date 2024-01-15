@@ -56,13 +56,7 @@ const StyledLinkAsButton = styled('a')`
   }
 `;
 
-export const SaveReturnButton = ({
-  href,
-  onClick,
-  id,
-  testId,
-  children,
-}: Props) => {
+export const SaveReturnButton = ({ onClick, id, testId, children }: Props) => {
   const { t } = useTranslation();
   return (
     <StyledLinkAsButton

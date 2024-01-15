@@ -778,7 +778,7 @@ export default class CosmosReferenceDataRepository
     );
   }
 
-  async createContainerPartition(partitionKeyValue: string, data: any) {
+  async createContainerPartition(partitionKeyValue: string, data: object[]) {
     const results = await this.readContainerPartition(partitionKeyValue);
 
     if (results.results[0] !== undefined) {
@@ -797,7 +797,7 @@ export default class CosmosReferenceDataRepository
     );
   }
 
-  async updateContainerPartition(partitionKeyValue: string, data: any) {
+  async updateContainerPartition(partitionKeyValue: string, data: object[]) {
     const results = await this.readContainerPartition(partitionKeyValue);
 
     if (results.results[0] === undefined) {

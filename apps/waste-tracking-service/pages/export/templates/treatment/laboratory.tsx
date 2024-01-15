@@ -476,25 +476,6 @@ const Laboratory = ({ apiConfig }: PageProps) => {
     }
   };
 
-  function suggest(query, populateResults) {
-    const filterResults = (result) => {
-      const tempString = `${result.code}: ${result.description}`;
-      return tempString.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-    };
-    const filteredResults = refData.filter(filterResults);
-    populateResults(filteredResults);
-  }
-
-  const suggestionTemplate = (suggestion) => {
-    return typeof suggestion !== 'string'
-      ? `${suggestion?.code}: ${suggestion?.description}`
-      : suggestion;
-  };
-
-  const inputValueTemplate = (suggestion) => {
-    return `${suggestion?.code}`;
-  };
-
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({

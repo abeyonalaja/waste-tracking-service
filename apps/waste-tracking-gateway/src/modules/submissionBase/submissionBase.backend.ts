@@ -99,7 +99,11 @@ export abstract class InMemorySubmissionBaseBackend
     protected templates: Map<string, Template>
   ) {}
 
-  protected paginateArray(array: any[], pageSize: number, pageNumber: number) {
+  protected paginateArray<T>(
+    array: T[],
+    pageSize: number,
+    pageNumber: number
+  ): T[] {
     return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
   }
 

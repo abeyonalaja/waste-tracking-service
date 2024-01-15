@@ -127,11 +127,11 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
   }, [router.isReady, id]);
 
   const handleLinkSubmit = async (e) => {
-    await handleSubmit(e, true);
+    await handleSubmit(e);
   };
 
   const handleSubmit = useCallback(
-    async (e: FormEvent, returnToDraft = false) => {
+    async (e: FormEvent) => {
       e.preventDefault();
       const newErrors = {
         quantityTypeError: validateWeightOrVolume(quantityType, estimate),
@@ -258,7 +258,7 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
                           name="quantityType"
                           id="quantityTypeYes"
                           checked={quantityType === 'Weight'}
-                          onChange={(e) => setQuantityType('Weight')}
+                          onChange={() => setQuantityType('Weight')}
                           value="Weight"
                         >
                           {t('exportJourney.quantityValue.weightLabel')}
@@ -280,7 +280,7 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
                           name="quantityType"
                           id="quantityTypeEstimate"
                           checked={quantityType === 'Volume'}
-                          onChange={(e) => setQuantityType('Volume')}
+                          onChange={() => setQuantityType('Volume')}
                           value="Volume"
                         >
                           {t('exportJourney.quantityValue.volumeLabel')}

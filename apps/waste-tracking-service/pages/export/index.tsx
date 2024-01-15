@@ -12,7 +12,6 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import { useSubmissionContext } from 'contexts';
 import { useRouter } from 'next/router';
-import { useCookies } from 'react-cookie';
 import { getApiConfig } from '../../utils/api/apiConfig';
 
 export const getServerSideProps = async (context) => {

@@ -1,8 +1,7 @@
+import { ResponseToolkit } from '@hapi/hapi';
 import Ajv from 'ajv/dist/jtd';
 import { schema } from '.';
 import { UserFilter } from './user-filter';
-import { ResponseToolkit } from '@hapi/hapi';
-import Boom from '@hapi/boom';
 
 const ajv = new Ajv();
 const validateDcidToken = ajv.compile(schema.dcidToken);

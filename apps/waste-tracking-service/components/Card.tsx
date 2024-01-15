@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import { BORDER_COLOUR, GREY_3 } from 'govuk-colours';
+import { GREY_3 } from 'govuk-colours';
 
 type SummaryCardAction = {
   label: string | ReactNode;

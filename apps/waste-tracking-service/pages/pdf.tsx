@@ -278,7 +278,7 @@ export const Download = () => {
     initialWasteDescState
   );
   const [id, setId] = useState(null);
-  const [token, setToken] = useState(null);
+  const [, setToken] = useState(null);
   const [apiConfig, setApiConfig] = useState(null);
 
   useEffect(() => {
@@ -320,45 +320,6 @@ export const Download = () => {
     };
     fetchData();
   }, [router.isReady, id, apiConfig]);
-
-  useEffect(() => {
-    if (downloadReport.data !== null) {
-      const sectionOneStatus = isSectionComplete([
-        'wasteDescription',
-        'wasteQuantity',
-      ]);
-      const sectionTwoStatus = isSectionComplete([
-        'exporterDetail',
-        'importerDetail',
-      ]);
-      const sectionThreeStatus = isSectionComplete([
-        'collectionDate',
-        'carriers',
-        'collectionDetail',
-        'ukExitLocation',
-        'transitCountries',
-      ]);
-      const sectionFourStatus = isSectionComplete(['recoveryFacilityDetail']);
-      const sectionFiveStatus = isSectionComplete([
-        'submissionConfirmation',
-        'submissionDeclaration',
-      ]);
-      const statusCount = [
-        sectionOneStatus,
-        sectionTwoStatus,
-        sectionThreeStatus,
-        sectionFourStatus,
-        sectionFiveStatus,
-      ].filter(Boolean).length;
-    }
-  }, [downloadReport.data, id, router]);
-
-  const isSectionComplete = (sections) => {
-    const completedSections = sections.filter((section) => {
-      return downloadReport.data[section].status === 'Complete';
-    });
-    return sections.length === completedSections.length;
-  };
 
   const formatTransportType = (type) => {
     if (type === 'InlandWaterways') return 'Inland waterways';

@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { CompleteFooter, CompleteHeader, Loading, Paragraph } from 'components';
+import { CompleteFooter, CompleteHeader, Loading } from 'components';
 import React from 'react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';

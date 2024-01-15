@@ -1,7 +1,6 @@
 import Boom from '@hapi/boom';
 import { Plugin } from '@hapi/hapi';
 import { Logger } from 'winston';
-import * as dto from '@wts/api/waste-tracking-gateway';
 import { ReferenceDataBackend } from './reference-data.backend';
 
 export interface PluginOptions {

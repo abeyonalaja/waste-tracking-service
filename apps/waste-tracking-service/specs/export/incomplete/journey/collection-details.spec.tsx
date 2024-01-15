@@ -44,7 +44,7 @@ const selectedAddressResponse = {
 };
 
 function setupFetchStub(data) {
-  return function fetchStub(_url) {
+  return function fetchStub() {
     return new Promise((resolve) => {
       resolve({
         ok: true,

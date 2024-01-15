@@ -60,7 +60,7 @@ describe(CosmosReferenceDataClient, () => {
       const accountId = faker.datatype.uuid();
       mockRead.mockResolvedValueOnce({
         resource: undefined,
-      } as unknown as ItemResponse<any>);
+      } as ItemResponse<object>);
 
       const result = await subject.readItem(cosmosContainerName, id, accountId);
       expect(result).toEqual(undefined);
@@ -73,7 +73,7 @@ describe(CosmosReferenceDataClient, () => {
       const accountId = faker.datatype.uuid();
       mockFetchNext.mockResolvedValueOnce({
         resources: undefined,
-      } as unknown as FeedResponse<any>);
+      } as unknown as FeedResponse<object>);
 
       const querySpec = {
         query: 'SELECT * FROM c',

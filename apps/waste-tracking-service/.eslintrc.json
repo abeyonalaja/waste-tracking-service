@@ -13,7 +13,8 @@
         "@next/next/no-html-link-for-pages": [
           "error",
           "apps/waste-tracking-service/pages"
-        ]
+        ],
+        "@typescript-eslint/no-explicit-any": "warn"
       }
     },
     {

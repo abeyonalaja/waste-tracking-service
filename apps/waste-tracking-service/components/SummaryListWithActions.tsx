@@ -90,7 +90,7 @@ export const SummaryListWithActions = ({
                   <AppLink
                     key={`action-${index}-${action.label.toLowerCase()}`}
                     href="#"
-                    onClick={(e) => action.action(index)}
+                    onClick={() => action.action(index)}
                   >
                     {action.label}
                   </AppLink>

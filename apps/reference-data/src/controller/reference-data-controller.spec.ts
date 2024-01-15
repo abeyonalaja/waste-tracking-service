@@ -1,94 +1,59 @@
 import { expect, jest } from '@jest/globals';
-import winston from 'winston';
-import { WasteCodeType, WasteCode, Country, RecoveryCode } from '../model';
-import ReferenceDataController from './reference-data-controller';
-import { DaprClient } from '@dapr/dapr';
 import {
-  CreateWasteCodesRequest,
-  CreateWasteCodesResponse,
-  UpdateWasteCodesRequest,
-  UpdateWasteCodesResponse,
-  CreateWasteCodeRequest,
-  CreateWasteCodeResponse,
-  UpdateWasteCodeRequest,
-  UpdateWasteCodeResponse,
-  DeleteWasteCodeRequest,
-  DeleteWasteCodeResponse,
-  CreateEWCCodesRequest,
-  CreateEWCCodesResponse,
-  UpdateEWCCodesRequest,
-  UpdateEWCCodesResponse,
-  CreateEWCCodeRequest,
-  CreateEWCCodeResponse,
-  UpdateEWCCodeRequest,
-  UpdateEWCCodeResponse,
-  DeleteEWCCodeRequest,
-  DeleteEWCCodeResponse,
   CreateCountriesRequest,
   CreateCountriesResponse,
-  updateCountries,
-  UpdateCountriesRequest,
-  UpdateCountriesResponse,
-  deleteCountries,
-  createRecoveryCodes,
-  CreateRecoveryCodesRequest,
-  CreateRecoveryCodesResponse,
-  updateRecoveryCodes,
-  UpdateRecoveryCodesRequest,
-  UpdateRecoveryCodesResponse,
-  deleteRecoveryCodes,
-  createRecoveryCode,
-  CreateRecoveryCodeRequest,
-  CreateRecoveryCodeResponse,
-  updateRecoveryCode,
-  UpdateRecoveryCodeRequest,
-  UpdateRecoveryCodeResponse,
-  deleteRecoveryCode,
-  DeleteRecoveryCodeRequest,
-  DeleteRecoveryCodeResponse,
-  createDisposalCodes,
-  CreateDisposalCodesRequest,
-  CreateDisposalCodesResponse,
-  updateDisposalCodes,
-  UpdateDisposalCodesRequest,
-  UpdateDisposalCodesResponse,
-  deleteDisposalCodes,
-  createDisposalCode,
   CreateDisposalCodeRequest,
   CreateDisposalCodeResponse,
-  updateDisposalCode,
-  UpdateDisposalCodeRequest,
-  UpdateDisposalCodeResponse,
-  deleteDisposalCode,
+  CreateDisposalCodesRequest,
+  CreateDisposalCodesResponse,
+  CreateEWCCodeRequest,
+  CreateEWCCodeResponse,
+  CreateEWCCodesRequest,
+  CreateEWCCodesResponse,
+  CreateRecoveryCodeRequest,
+  CreateRecoveryCodeResponse,
+  CreateRecoveryCodesRequest,
+  CreateRecoveryCodesResponse,
+  CreateWasteCodeRequest,
+  CreateWasteCodeResponse,
+  CreateWasteCodesRequest,
+  CreateWasteCodesResponse,
   DeleteDisposalCodeRequest,
   DeleteDisposalCodeResponse,
+  DeleteEWCCodeRequest,
+  DeleteEWCCodeResponse,
+  DeleteRecoveryCodeRequest,
+  DeleteRecoveryCodeResponse,
+  DeleteWasteCodeRequest,
+  DeleteWasteCodeResponse,
+  UpdateCountriesRequest,
+  UpdateCountriesResponse,
+  UpdateDisposalCodeRequest,
+  UpdateDisposalCodeResponse,
+  UpdateDisposalCodesRequest,
+  UpdateDisposalCodesResponse,
+  UpdateEWCCodeRequest,
+  UpdateEWCCodeResponse,
+  UpdateEWCCodesRequest,
+  UpdateEWCCodesResponse,
+  UpdateRecoveryCodeRequest,
+  UpdateRecoveryCodeResponse,
+  UpdateRecoveryCodesRequest,
+  UpdateRecoveryCodesResponse,
+  UpdateWasteCodeRequest,
+  UpdateWasteCodeResponse,
+  UpdateWasteCodesRequest,
+  UpdateWasteCodesResponse,
 } from '@wts/api/reference-data';
-
-const mockGetBulk = jest.fn<typeof DaprClient.prototype.state.getBulk>();
-const mockSave = jest.fn<typeof DaprClient.prototype.state.save>();
-const mockQuery = jest.fn<typeof DaprClient.prototype.state.query>();
+import winston from 'winston';
+import { Country, RecoveryCode, WasteCode, WasteCodeType } from '../model';
+import ReferenceDataController from './reference-data-controller';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
   })),
 }));
-
-jest.mock('@dapr/dapr', () => ({
-  DaprClient: jest.fn().mockImplementation(() => ({
-    state: {
-      getBulk: mockGetBulk,
-      save: mockSave,
-      query: mockQuery,
-    },
-  })),
-}));
-
-beforeEach(() => {
-  mockGetBulk.mockClear();
-  mockSave.mockClear();
-  mockQuery.mockClear();
-});
 
 const mockRepository = {
   listWasteCodes: jest.fn<() => Promise<WasteCodeType[]>>(),

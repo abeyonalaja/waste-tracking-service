@@ -25,7 +25,6 @@ import {
   GetWasteDescriptionResponse,
   PutWasteDescriptionRequest,
 } from '@wts/api/waste-tracking-gateway';
-import i18n from 'i18next';
 import { getApiConfig } from 'utils/api/apiConfig';
 import { PageProps } from 'types/wts';
 

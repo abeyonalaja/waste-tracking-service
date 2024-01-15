@@ -238,7 +238,7 @@ const Quantity = ({ apiConfig }: PageProps) => {
                         name="quantityType"
                         id="quantityTypeYes"
                         checked={quantityType === 'ActualData'}
-                        onChange={(e) => setQuantityType('ActualData')}
+                        onChange={() => setQuantityType('ActualData')}
                         value="ActualData"
                       >
                         {t('exportJourney.quantity.radioYes')}
@@ -247,7 +247,7 @@ const Quantity = ({ apiConfig }: PageProps) => {
                         name="quantityType"
                         id="quantityTypeEstimate"
                         checked={quantityType === 'EstimateData'}
-                        onChange={(e) => setQuantityType('EstimateData')}
+                        onChange={() => setQuantityType('EstimateData')}
                         value="EstimateData"
                       >
                         {t('exportJourney.quantity.radioEstimate')}
@@ -256,7 +256,7 @@ const Quantity = ({ apiConfig }: PageProps) => {
                         name="quantityType"
                         id="quantityTypeNo"
                         checked={quantityType === 'NotApplicable'}
-                        onChange={(e) => setQuantityType('NotApplicable')}
+                        onChange={() => setQuantityType('NotApplicable')}
                         value="NotApplicable"
                       >
                         {t('exportJourney.quantity.radioNo')}
