@@ -4,8 +4,9 @@ Given(/^I login to waste tracking portal$/) do
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
   click_link('dashboard_link')
+  HelperMethods.wait_for_a_sec
   user = "USER#{@current_process}"
-  OverviewPage.new.login_to_DCID(user)
+  OverviewPage.new.login_to_dcid(user)
   ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
 end
