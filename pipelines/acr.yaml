@@ -11,6 +11,8 @@ parameters:
         nameTag: address
       - name: annex-vii
         nameTag: annex_vii
+      - name: reference-data
+        nameTag: reference-data
       - name: waste-tracking-gateway
         nameTag: waste_tracking_gateway
       - name: waste-tracking-service

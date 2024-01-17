@@ -10,6 +10,7 @@ parameters:
     values:
       - address
       - annex-vii
+      - reference-data
       - waste-tracking-service
       - waste-tracking-gateway
   - name: tag
