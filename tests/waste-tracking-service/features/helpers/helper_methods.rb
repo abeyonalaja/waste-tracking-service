@@ -41,6 +41,6 @@ module HelperMethods
   end
 
   def self.wait_for_a_sec
-    sleep 10
+    sleep 1
   end
 end
