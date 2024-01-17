@@ -3,7 +3,7 @@ Feature: Sign declaration page
   SO THAT I can submit the completed export form
 
   @translation
-  Scenario: Check sign declaration page after choosing Bulk waste
+  Scenario: Check sign declaration page after choosing Bulk waste and check the PDF display the data
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
@@ -47,7 +47,7 @@ Feature: Sign declaration page
     And I should see section 11 countries details correctly displayed
 
   @translation
-  Scenario: Check sign declaration page after choosing Actual Small waste and Actual collection waste
+  Scenario: Check sign declaration page after choosing Actual Small waste and Actual collection waste and check PDF is updated
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code

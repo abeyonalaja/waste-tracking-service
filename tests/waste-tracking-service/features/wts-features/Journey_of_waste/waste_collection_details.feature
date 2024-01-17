@@ -4,7 +4,7 @@ Feature: Waste collection details page
   SO THAT the waste movement can be tracked appropriately
 
   @translation
-  Scenario: Exporter page displayed correctly
+  Scenario: Waste collection address is displayed correctly
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     When I click the "Waste collection details" link

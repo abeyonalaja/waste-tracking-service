@@ -2,7 +2,8 @@ Feature: Submitted with estimates page
   I NEED to be able to amend the submitted Annex 7 form
   SO THAT I can update the form and replace any estimate with actuals
 
-  @single
+  #can't test it on dev tst
+  @single @ignore
   Scenario: User complete an export with actual and verifies that there are no records in the update with actual section
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

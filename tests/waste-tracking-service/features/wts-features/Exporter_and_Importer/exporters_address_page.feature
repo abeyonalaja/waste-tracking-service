@@ -4,7 +4,7 @@ Feature: Exporter address page
   SO THAT the exporter can be tracker
 
   @translation
-  Scenario: Exporter page displayed correctly
+  Scenario: Exporter post address page displayed correctly
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     When I click the "Exporter details" link

@@ -4,7 +4,7 @@ Feature: Exporter manual address page
   SO THAT the exporter can be tracker
 
   @translation
-  Scenario: Exporter page displayed correctly
+  Scenario: Exporter manual entry address page displayed correctly
     Given I login to waste tracking portal
     When I navigate to Enter exporter address manual page
     And I should see page correctly translated
