@@ -168,7 +168,7 @@ export default class CosmosTemplateRepository
         'code' in err &&
         err.code === 409
       ) {
-        throw Boom.conflict('Template with this name already exists');
+        throw Boom.conflict('A template with this name already exists');
       }
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,
