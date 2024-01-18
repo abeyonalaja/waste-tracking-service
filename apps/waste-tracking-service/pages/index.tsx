@@ -1,6 +1,6 @@
+import { AppLink, BreadcrumbWrap, Footer, Header, Paragraph } from 'components';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { AppLink, BreadcrumbWrap, Footer, Header, Paragraph } from 'components';
 import React from 'react';
 import Head from 'next/head';
 

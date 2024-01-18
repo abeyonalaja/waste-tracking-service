@@ -7,10 +7,10 @@ parameters:
     default: ''
   - name: appName
     type: string
-    default: 'annex-vii'
+    default: 'annex-vii-bulk'
   - name: appNameTag
     type: string
-    default: 'annex_vii'
+    default: 'annex_vii_bulk'
   - name: valuesFilePath
     type: string
     default: ''

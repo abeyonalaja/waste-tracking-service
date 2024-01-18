@@ -9,10 +9,10 @@ import {
   ChainedTokenCredential,
   WorkloadIdentityCredential,
 } from '@azure/identity';
+import { CosmosClient } from '@azure/cosmos';
 import { ReferenceDataController } from './controller';
 import CosmosReferenceDataRepository from './data/cosmos-reference-data';
 import { CosmosReferenceDataClient } from './clients';
-import { CosmosClient } from '@azure/cosmos';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration');

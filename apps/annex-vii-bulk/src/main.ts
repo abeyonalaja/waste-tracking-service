@@ -109,7 +109,6 @@ await server.invoker.listen(
         if (!batch.tryAddMessage(message)) {
           await sender.sendMessages(batch);
           batch = await sender.createMessageBatch();
-
           if (!batch.tryAddMessage(message)) {
             const message = 'Message too big to fit in a batch';
             logger.error(message);

@@ -3,10 +3,10 @@ import { server } from '@hapi/hapi';
 import { Template } from '@wts/api/annex-vii';
 import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
 import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
-import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
 import * as winston from 'winston';
 import {
   AddressBackend,

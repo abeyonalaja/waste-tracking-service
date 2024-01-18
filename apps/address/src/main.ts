@@ -5,7 +5,6 @@ import * as api from '@wts/api/address';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import winston from 'winston';
-
 import { AddressController, parse } from './controller';
 import BoomiAddressClient from './clients/address-client';
 

@@ -10,13 +10,13 @@ import {
   parse,
   validate,
 } from './controller';
-import { CosmosDraftRepository } from './data';
 import { CosmosClient } from '@azure/cosmos';
 import {
   AzureCliCredential,
   ChainedTokenCredential,
   WorkloadIdentityCredential,
 } from '@azure/identity';
+import { CosmosDraftRepository } from './data';
 import CosmosTemplateRepository from './data/cosmos-templates';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
