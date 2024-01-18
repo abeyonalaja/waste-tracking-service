@@ -69,6 +69,7 @@ secret:
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
     ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
+    ANNEX_VII_BULK_APP_ID: 'annex-vii-bulk.annex-vii-bulk'
     ADDRESS_APP_ID: 'address.address'
     REFERENCE_DATA_APP_ID: 'reference-data.reference-data'
     DCID_CLIENT_ID: ''
@@ -111,5 +112,7 @@ ingress:
         - path: /api/templates
           pathType: Prefix
         - path: /api/reference-data
+          pathType: Prefix
+        - path: /api/batches
           pathType: Prefix
   labels: {}

@@ -1,10 +1,17 @@
-import * as api from '@wts/api/annex-vii';
-import { SubmissionBase } from '../model';
+import {
+  DraftCarrier,
+  DraftCarriers,
+  DraftCollectionDetail,
+  DraftExitLocation,
+  DraftExporterDetail,
+  DraftImporterDetail,
+  DraftRecoveryFacility,
+  DraftRecoveryFacilityDetail,
+  DraftTransitCountries,
+  DraftWasteDescription,
+  SubmissionBase,
+} from '../model';
 import { v4 as uuidv4 } from 'uuid';
-
-export type Handler<Request, Response> = (
-  request: Request
-) => Promise<Response>;
 
 export type SubmissionBasePlusId = {
   submissionBase: SubmissionBase;
@@ -13,9 +20,9 @@ export type SubmissionBasePlusId = {
 
 export abstract class BaseController {
   protected setBaseWasteDescription(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftWasteDescription
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftWasteDescription
+  ): SubmissionBase {
     let recoveryFacilityDetail: SubmissionBase['recoveryFacilityDetail'] =
       submissionBase.recoveryFacilityDetail.status === 'CannotStart' &&
       value.status !== 'NotStarted' &&
@@ -123,15 +130,15 @@ export abstract class BaseController {
   }
 
   protected setBaseExporterDetail(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftExporterDetail
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftExporterDetail
+  ): SubmissionBase {
     submissionBase.exporterDetail = value;
 
     return submissionBase;
   }
 
-  protected isSmallWaste(wasteDescription: api.DraftWasteDescription): boolean {
+  protected isSmallWaste(wasteDescription: DraftWasteDescription): boolean {
     return (
       wasteDescription.status === 'Complete' &&
       wasteDescription.wasteCode.type === 'NotApplicable'
@@ -139,23 +146,23 @@ export abstract class BaseController {
   }
 
   protected setBaseImporterDetail(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftImporterDetail
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftImporterDetail
+  ): SubmissionBase {
     submissionBase.importerDetail = value;
 
     return submissionBase;
   }
 
   protected createBaseCarriers(
-    submissionBase: api.SubmissionBase,
-    value: Omit<api.DraftCarriers, 'transport' | 'values'>
+    submissionBase: SubmissionBase,
+    value: Omit<DraftCarriers, 'transport' | 'values'>
   ): SubmissionBasePlusId {
     const submissionBasePlusId = {
       submissionBase: submissionBase,
       id: uuidv4(),
     };
-    const transport: api.DraftCarriers['transport'] =
+    const transport: DraftCarriers['transport'] =
       submissionBase.wasteDescription.status !== 'NotStarted' &&
       submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
         ? false
@@ -171,7 +178,7 @@ export abstract class BaseController {
       return submissionBasePlusId;
     }
 
-    const carriers: api.DraftCarrier[] = [];
+    const carriers: DraftCarrier[] = [];
     for (const c of submissionBase.carriers.values) {
       carriers.push(c);
     }
@@ -186,10 +193,10 @@ export abstract class BaseController {
   }
 
   setBaseNoCarriers(
-    submissionBase: api.SubmissionBase,
+    submissionBase: SubmissionBase,
     carrierId: string,
-    value: api.DraftCarriers
-  ): api.SubmissionBase {
+    value: DraftCarriers
+  ): SubmissionBase {
     if (value.status === 'NotStarted') {
       submissionBase.carriers = value;
 
@@ -200,27 +207,27 @@ export abstract class BaseController {
   }
 
   setBaseCarriers(
-    submissionBase: api.SubmissionBase,
+    submissionBase: SubmissionBase,
     carrierId: string,
-    value: api.DraftCarriers,
-    carrier: api.DraftCarrier,
+    value: DraftCarriers,
+    carrier: DraftCarrier,
     index: number
-  ): api.SubmissionBase {
+  ): SubmissionBase {
     if (
       submissionBase !== undefined &&
       submissionBase.carriers.status !== 'NotStarted' &&
       value.status !== 'NotStarted'
     ) {
       submissionBase.carriers.status = value.status;
-      submissionBase.carriers.values[index] = carrier as api.DraftCarrier;
+      submissionBase.carriers.values[index] = carrier as DraftCarrier;
     }
     return submissionBase;
   }
 
   deleteBaseCarriers(
-    submissionBase: api.SubmissionBase,
+    submissionBase: SubmissionBase,
     carrierId: string
-  ): api.SubmissionBase {
+  ): SubmissionBase {
     if (submissionBase.carriers.status !== 'NotStarted') {
       const index = submissionBase.carriers.values.findIndex((c) => {
         return c.id === carrierId;
@@ -228,7 +235,7 @@ export abstract class BaseController {
 
       submissionBase.carriers.values.splice(index, 1);
       if (submissionBase.carriers.values.length === 0) {
-        const transport: api.DraftCarriers['transport'] =
+        const transport: DraftCarriers['transport'] =
           submissionBase.wasteDescription.status !== 'NotStarted' &&
           submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
             ? false
@@ -245,35 +252,35 @@ export abstract class BaseController {
   }
 
   protected setBaseCollectionDetail(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftCollectionDetail
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftCollectionDetail
+  ): SubmissionBase {
     submissionBase.collectionDetail = value;
 
     return submissionBase;
   }
 
   protected setBaseExitLocation(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftExitLocation
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftExitLocation
+  ): SubmissionBase {
     submissionBase.ukExitLocation = value;
 
     return submissionBase;
   }
 
   protected setBaseTransitCountries(
-    submissionBase: api.SubmissionBase,
-    value: api.DraftTransitCountries
-  ): api.SubmissionBase {
+    submissionBase: SubmissionBase,
+    value: DraftTransitCountries
+  ): SubmissionBase {
     submissionBase.transitCountries = value;
 
     return submissionBase;
   }
 
   createBaseRecoveryFacilityDetail(
-    submissionBase: api.SubmissionBase,
-    value: Omit<api.DraftRecoveryFacilityDetail, 'values'>
+    submissionBase: SubmissionBase,
+    value: Omit<DraftRecoveryFacilityDetail, 'values'>
   ): SubmissionBasePlusId {
     const submissionBasePlusId = {
       submissionBase: submissionBase,
@@ -291,7 +298,7 @@ export abstract class BaseController {
       return submissionBasePlusId;
     }
 
-    const facilities: api.DraftRecoveryFacility[] = [];
+    const facilities: DraftRecoveryFacility[] = [];
     for (const rf of submissionBase.recoveryFacilityDetail.values) {
       facilities.push(rf);
     }
@@ -305,10 +312,10 @@ export abstract class BaseController {
   }
 
   setBaseRecoveryFacilityDetail(
-    submissionBase: api.SubmissionBase,
+    submissionBase: SubmissionBase,
     rfdId: string,
-    value: api.DraftRecoveryFacilityDetail
-  ): api.SubmissionBase {
+    value: DraftRecoveryFacilityDetail
+  ): SubmissionBase {
     if (submissionBase !== undefined) {
       if (
         submissionBase.recoveryFacilityDetail.status === 'Started' ||
@@ -330,7 +337,7 @@ export abstract class BaseController {
         );
         submissionBase.recoveryFacilityDetail.status = value.status;
         submissionBase.recoveryFacilityDetail.values[index] =
-          recoveryFacility as api.DraftRecoveryFacility;
+          recoveryFacility as DraftRecoveryFacility;
       }
     }
 
@@ -338,9 +345,9 @@ export abstract class BaseController {
   }
 
   deleteBaseRecoveryFacilityDetail(
-    submissionBase: api.SubmissionBase,
+    submissionBase: SubmissionBase,
     rfdId: string
-  ): api.SubmissionBase {
+  ): SubmissionBase {
     if (
       submissionBase.recoveryFacilityDetail.status === 'Started' ||
       submissionBase.recoveryFacilityDetail.status === 'Complete'
@@ -363,8 +370,8 @@ export abstract class BaseController {
   }
 
   protected isWasteCodeChangingBulkToSmall(
-    currentWasteDescription: api.DraftWasteDescription,
-    newWasteDescription: api.DraftWasteDescription
+    currentWasteDescription: DraftWasteDescription,
+    newWasteDescription: DraftWasteDescription
   ): boolean {
     return (
       currentWasteDescription.status !== 'NotStarted' &&
@@ -375,8 +382,8 @@ export abstract class BaseController {
   }
 
   protected isWasteCodeChangingSmallToBulk(
-    currentWasteDescription: api.DraftWasteDescription,
-    newWasteDescription: api.DraftWasteDescription
+    currentWasteDescription: DraftWasteDescription,
+    newWasteDescription: DraftWasteDescription
   ): boolean {
     return (
       currentWasteDescription.status !== 'NotStarted' &&
@@ -387,8 +394,8 @@ export abstract class BaseController {
   }
 
   protected isWasteCodeChangingBulkToBulkDifferentType(
-    currentWasteDescription: api.DraftWasteDescription,
-    newWasteDescription: api.DraftWasteDescription
+    currentWasteDescription: DraftWasteDescription,
+    newWasteDescription: DraftWasteDescription
   ): boolean {
     return (
       currentWasteDescription.status !== 'NotStarted' &&
@@ -401,8 +408,8 @@ export abstract class BaseController {
   }
 
   protected isWasteCodeChangingBulkToBulkSameType(
-    currentWasteDescription: api.DraftWasteDescription,
-    newWasteDescription: api.DraftWasteDescription
+    currentWasteDescription: DraftWasteDescription,
+    newWasteDescription: DraftWasteDescription
   ): boolean {
     return (
       currentWasteDescription.status !== 'NotStarted' &&

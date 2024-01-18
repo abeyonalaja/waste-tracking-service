@@ -1,18 +1,8 @@
+import { AccountIdRequest, IdRequest } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 
-export type Method = Readonly<{
-  name: string;
-  httpVerb: 'GET' | 'PUT' | 'POST' | 'DELETE';
-}>;
-
-export type AccountIdRequest = { accountId: string };
-export type IdRequest = { id: string };
 type CarrierIdRequest = { carrierId: string };
 type RfdIdRequest = { rfdId: string };
-
-export type DraftSectionSummary = {
-  status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
-};
 
 type DraftWasteDescriptionData = {
   wasteCode:

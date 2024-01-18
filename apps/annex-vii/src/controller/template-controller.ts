@@ -3,13 +3,15 @@ import * as api from '@wts/api/annex-vii';
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
-import { Template } from '../model';
 import {
-  BaseController,
-  Handler,
-  SubmissionBasePlusId,
-} from './base-controller';
+  DraftCarriers,
+  DraftRecoveryFacilityDetail,
+  SubmissionBase,
+  Template,
+} from '../model';
+import { BaseController, SubmissionBasePlusId } from './base-controller';
 import { TemplateRepository } from '../data/templates-repository';
+import { Handler } from '@wts/api/common';
 
 function isTemplateNameValid(name: string): boolean {
   let valid = true;
@@ -298,7 +300,7 @@ export default class TemplateController extends BaseController {
       const template = await this.repository.getTemplate(id, accountId);
 
       const submissionBase = this.setBaseWasteDescription(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       );
 
@@ -349,7 +351,7 @@ export default class TemplateController extends BaseController {
       const template = await this.repository.getTemplate(id, accountId);
 
       template.exporterDetail = this.setBaseExporterDetail(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       ).exporterDetail;
 
@@ -390,7 +392,7 @@ export default class TemplateController extends BaseController {
     try {
       const template = await this.repository.getTemplate(id, accountId);
       template.importerDetail = this.setBaseImporterDetail(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       ).importerDetail;
 
@@ -442,7 +444,7 @@ export default class TemplateController extends BaseController {
         return fromBoom(Boom.notFound());
       }
 
-      const value: api.DraftCarriers = {
+      const value: DraftCarriers = {
         status: template.carriers.status,
         transport: template.carriers.transport,
         values: [carrier],
@@ -484,7 +486,7 @@ export default class TemplateController extends BaseController {
       }
 
       const submissionBasePlusId: SubmissionBasePlusId =
-        this.createBaseCarriers(template as api.SubmissionBase, value);
+        this.createBaseCarriers(template as SubmissionBase, value);
 
       template.carriers = submissionBasePlusId.submissionBase.carriers;
 
@@ -521,7 +523,7 @@ export default class TemplateController extends BaseController {
 
       if (value.status === 'NotStarted') {
         template.carriers = this.setBaseNoCarriers(
-          template as api.SubmissionBase,
+          template as SubmissionBase,
           carrierId,
           value
         ).carriers;
@@ -540,7 +542,7 @@ export default class TemplateController extends BaseController {
           return Promise.reject(Boom.notFound());
         }
         template.carriers = this.setBaseCarriers(
-          template as api.SubmissionBase,
+          template as SubmissionBase,
           carrierId,
           value,
           carrier,
@@ -584,7 +586,7 @@ export default class TemplateController extends BaseController {
       }
 
       template.carriers = this.deleteBaseCarriers(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         carrierId
       ).carriers;
 
@@ -625,7 +627,7 @@ export default class TemplateController extends BaseController {
     try {
       const template = await this.repository.getTemplate(id, accountId);
       template.collectionDetail = this.setBaseCollectionDetail(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       ).collectionDetail;
 
@@ -666,7 +668,7 @@ export default class TemplateController extends BaseController {
     try {
       const template = await this.repository.getTemplate(id, accountId);
       template.ukExitLocation = this.setBaseExitLocation(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       ).ukExitLocation;
 
@@ -707,7 +709,7 @@ export default class TemplateController extends BaseController {
     try {
       const template = await this.repository.getTemplate(id, accountId);
       template.transitCountries = this.setBaseTransitCountries(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         value
       ).transitCountries;
 
@@ -763,7 +765,7 @@ export default class TemplateController extends BaseController {
         return fromBoom(Boom.notFound());
       }
 
-      const value: api.DraftRecoveryFacilityDetail = {
+      const value: DraftRecoveryFacilityDetail = {
         status: template.recoveryFacilityDetail.status,
         values: [recoveryFacilityDetail],
       };
@@ -813,7 +815,7 @@ export default class TemplateController extends BaseController {
 
       const submissionBasePlusId: SubmissionBasePlusId =
         this.createBaseRecoveryFacilityDetail(
-          template as api.SubmissionBase,
+          template as SubmissionBase,
           value
         );
 
@@ -870,7 +872,7 @@ export default class TemplateController extends BaseController {
       }
 
       template.recoveryFacilityDetail = this.setBaseRecoveryFacilityDetail(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         rfdId,
         value
       ).recoveryFacilityDetail;
@@ -913,7 +915,7 @@ export default class TemplateController extends BaseController {
       }
 
       template.recoveryFacilityDetail = this.deleteBaseRecoveryFacilityDetail(
-        template as api.SubmissionBase,
+        template as SubmissionBase,
         rfdId
       ).recoveryFacilityDetail;
 

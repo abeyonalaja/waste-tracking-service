@@ -4,13 +4,15 @@ import { fromBoom, success } from '@wts/util/invocation';
 import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
-import { DraftSubmission } from '../model';
 import {
-  BaseController,
-  Handler,
-  SubmissionBasePlusId,
-} from './base-controller';
+  DraftCarriers,
+  DraftRecoveryFacilityDetail,
+  DraftSubmission,
+  SubmissionBase,
+} from '../model';
+import { BaseController, SubmissionBasePlusId } from './base-controller';
 import { DraftRepository } from '../data/repository';
+import { Handler } from '@wts/api/common';
 
 export default class DraftController extends BaseController {
   constructor(private repository: DraftRepository, private logger: Logger) {
@@ -350,7 +352,7 @@ export default class DraftController extends BaseController {
       }
 
       const submissionBase = this.setBaseWasteDescription(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       );
 
@@ -504,7 +506,7 @@ export default class DraftController extends BaseController {
       const draft = await this.repository.getDraft(id, accountId);
 
       draft.exporterDetail = this.setBaseExporterDetail(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       ).exporterDetail;
 
@@ -548,7 +550,7 @@ export default class DraftController extends BaseController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
       draft.importerDetail = this.setBaseImporterDetail(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       ).importerDetail;
 
@@ -694,7 +696,7 @@ export default class DraftController extends BaseController {
         return fromBoom(Boom.notFound());
       }
 
-      const value: api.DraftCarriers = {
+      const value: DraftCarriers = {
         status: draft.carriers.status,
         transport: draft.carriers.transport,
         values: [carrier],
@@ -736,7 +738,7 @@ export default class DraftController extends BaseController {
       }
 
       const submissionBasePlusId: SubmissionBasePlusId =
-        this.createBaseCarriers(draft as api.SubmissionBase, value);
+        this.createBaseCarriers(draft as SubmissionBase, value);
 
       draft.carriers = submissionBasePlusId.submissionBase.carriers;
 
@@ -776,7 +778,7 @@ export default class DraftController extends BaseController {
 
       if (value.status === 'NotStarted') {
         draft.carriers = this.setBaseNoCarriers(
-          draft as api.SubmissionBase,
+          draft as SubmissionBase,
           carrierId,
           value
         ).carriers;
@@ -795,7 +797,7 @@ export default class DraftController extends BaseController {
           return Promise.reject(Boom.notFound());
         }
         draft.carriers = this.setBaseCarriers(
-          draft as api.SubmissionBase,
+          draft as SubmissionBase,
           carrierId,
           value,
           carrier,
@@ -842,7 +844,7 @@ export default class DraftController extends BaseController {
       }
 
       draft.carriers = this.deleteBaseCarriers(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         carrierId
       ).carriers;
 
@@ -886,7 +888,7 @@ export default class DraftController extends BaseController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
       draft.collectionDetail = this.setBaseCollectionDetail(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       ).collectionDetail;
 
@@ -930,7 +932,7 @@ export default class DraftController extends BaseController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
       draft.ukExitLocation = this.setBaseExitLocation(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       ).ukExitLocation;
 
@@ -974,7 +976,7 @@ export default class DraftController extends BaseController {
     try {
       const draft = await this.repository.getDraft(id, accountId);
       draft.transitCountries = this.setBaseTransitCountries(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         value
       ).transitCountries;
 
@@ -1034,7 +1036,7 @@ export default class DraftController extends BaseController {
         return fromBoom(Boom.notFound());
       }
 
-      const value: api.DraftRecoveryFacilityDetail = {
+      const value: DraftRecoveryFacilityDetail = {
         status: draft.recoveryFacilityDetail.status,
         values: [recoveryFacilityDetail],
       };
@@ -1083,10 +1085,7 @@ export default class DraftController extends BaseController {
       }
 
       const submissionBasePlusId: SubmissionBasePlusId =
-        this.createBaseRecoveryFacilityDetail(
-          draft as api.SubmissionBase,
-          value
-        );
+        this.createBaseRecoveryFacilityDetail(draft as SubmissionBase, value);
 
       draft.recoveryFacilityDetail =
         submissionBasePlusId.submissionBase.recoveryFacilityDetail;
@@ -1144,7 +1143,7 @@ export default class DraftController extends BaseController {
       }
 
       draft.recoveryFacilityDetail = this.setBaseRecoveryFacilityDetail(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         rfdId,
         value
       ).recoveryFacilityDetail;
@@ -1190,7 +1189,7 @@ export default class DraftController extends BaseController {
       }
 
       draft.recoveryFacilityDetail = this.deleteBaseRecoveryFacilityDetail(
-        draft as api.SubmissionBase,
+        draft as SubmissionBase,
         rfdId
       ).recoveryFacilityDetail;
 

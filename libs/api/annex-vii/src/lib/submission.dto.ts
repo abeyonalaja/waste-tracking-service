@@ -1,13 +1,12 @@
-import { Response } from '@wts/util/invocation';
 import {
   AccountIdRequest,
-  SubmissionBase,
-  DraftSectionSummary,
   IdRequest,
+  OrderRequest,
   Method,
-  DraftWasteDescription,
-} from './submissionBase.dto';
-export type OrderRequest = { order: 'ASC' | 'DESC' };
+  SectionSummary,
+} from '@wts/api/common';
+import { Response } from '@wts/util/invocation';
+import { SubmissionBase, DraftWasteDescription } from './submissionBase.dto';
 
 export type CustomerReference = string;
 
@@ -127,16 +126,16 @@ export type DraftSubmissionSummary = Readonly<{
   id: string;
   reference: CustomerReference;
   wasteDescription: DraftWasteDescription;
-  wasteQuantity: DraftSectionSummary;
-  exporterDetail: DraftSectionSummary;
-  importerDetail: DraftSectionSummary;
+  wasteQuantity: SectionSummary;
+  exporterDetail: SectionSummary;
+  importerDetail: SectionSummary;
   collectionDate: DraftCollectionDate;
-  carriers: DraftSectionSummary;
-  collectionDetail: DraftSectionSummary;
-  ukExitLocation: DraftSectionSummary;
-  transitCountries: DraftSectionSummary;
-  recoveryFacilityDetail: DraftSectionSummary;
-  submissionConfirmation: DraftSectionSummary;
+  carriers: SectionSummary;
+  collectionDetail: SectionSummary;
+  ukExitLocation: SectionSummary;
+  transitCountries: SectionSummary;
+  recoveryFacilityDetail: SectionSummary;
+  submissionConfirmation: SectionSummary;
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: DraftSubmissionState;
 }>;

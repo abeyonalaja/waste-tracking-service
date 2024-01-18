@@ -12,7 +12,6 @@ import {
 } from './controller';
 import { CosmosDraftRepository } from './data';
 import { CosmosClient } from '@azure/cosmos';
-import { CosmosAnnexViiClient } from './clients';
 import {
   AzureCliCredential,
   ChainedTokenCredential,
@@ -47,15 +46,15 @@ const aadCredentials = new ChainedTokenCredential(
   new WorkloadIdentityCredential()
 );
 
+const dbClient = new CosmosClient({
+  endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
+  aadCredentials,
+});
+
 const draftController = new DraftController(
   new CosmosDraftRepository(
-    new CosmosAnnexViiClient(
-      new CosmosClient({
-        endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
-        aadCredentials,
-      }),
-      process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'
-    ),
+    dbClient,
+    process.env['COSMOS_DATABASE_NAME'] || 'annex-vii',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
     process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     logger
@@ -65,13 +64,8 @@ const draftController = new DraftController(
 
 const templateController = new TemplateController(
   new CosmosTemplateRepository(
-    new CosmosAnnexViiClient(
-      new CosmosClient({
-        endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
-        aadCredentials,
-      }),
-      process.env['COSMOS_DATABASE_NAME'] || 'annex-vii'
-    ),
+    dbClient,
+    process.env['COSMOS_DATABASE_NAME'] || 'annex-vii',
     process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
     logger

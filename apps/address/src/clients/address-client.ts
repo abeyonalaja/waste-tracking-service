@@ -72,13 +72,10 @@ export default class BoomiAddressClient implements AddressClient {
           typeof err.response.statusCode === 'number'
         ) {
           const errData = err.response!.data! as GetAddressesErrorResponse;
-          new Boom.Boom(errData.error.message, {
-            statusCode: err.response.statusCode,
-          });
           const boomErr = new Boom.Boom(errData.error.message, {
             statusCode: err.response.statusCode,
           });
-          this.logger.error('Boomi API retruned unsuccessful response', {
+          this.logger.error('Boomi API returned unsuccessful response', {
             error: boomErr.message,
           });
           throw boomErr;

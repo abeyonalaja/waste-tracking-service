@@ -18,6 +18,7 @@ parameters:
     values:
       - address
       - annex-vii
+      - annex-vii-bulk
       - reference-data
       - waste-tracking-service
       - waste-tracking-gateway

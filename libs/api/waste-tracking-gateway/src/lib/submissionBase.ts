@@ -1,6 +1,4 @@
-export type SectionSummary = {
-  status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
-};
+import { SectionSummary } from '@wts/api/common';
 
 export type WasteDescriptionData = {
   wasteCode:

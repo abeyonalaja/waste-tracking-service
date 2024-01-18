@@ -5,14 +5,21 @@ import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
-import * as winston from 'winston';
 import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
-import { addressPlugin } from './modules/address';
+import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import * as winston from 'winston';
 import {
   AddressBackend,
   AddressServiceBackend,
   AddressStub,
-} from './modules/address/address.backend';
+  addressPlugin,
+} from './modules/address';
+import {
+  AnnexViiBulkServiceBackend,
+  BulkSubmissionBackend,
+  BulkSubmissionStub,
+  bulkSubmissionPlugin,
+} from './modules/bulk-submission';
 import {
   AnnexViiServiceSubmissionBackend,
   InMemorySubmissionBackend,
@@ -54,6 +61,7 @@ let backend: {
   address: AddressBackend;
   template: TemplateBackend;
   referenceData: ReferenceDataBackend;
+  bulkSubmission: BulkSubmissionBackend;
 };
 if (process.env['NODE_ENV'] === 'development') {
   logger.warn('service is using mock-backends; NOT for production use');
@@ -65,11 +73,13 @@ if (process.env['NODE_ENV'] === 'development') {
   );
   const templateBackend = new InMemoryTemplateBackend(submissions, templates);
   const referenceDataBackend = new ReferenceDataStub();
+  const bulkSubmissionBackend = new BulkSubmissionStub();
   backend = {
     address: new AddressStub(),
     submission: submissionBackend,
     template: templateBackend,
     referenceData: referenceDataBackend,
+    bulkSubmission: bulkSubmissionBackend,
   };
 } else {
   const client = new DaprClient();
@@ -94,6 +104,13 @@ if (process.env['NODE_ENV'] === 'development') {
     ),
     logger
   );
+  const bulkSubmissionBackend = new AnnexViiBulkServiceBackend(
+    new DaprAnnexViiBulkClient(
+      client,
+      process.env['ANNEX_VII_BULK_APP_ID'] || 'annex-vii-bulk'
+    ),
+    logger
+  );
   backend = {
     address: new AddressServiceBackend(
       new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
@@ -102,6 +119,7 @@ if (process.env['NODE_ENV'] === 'development') {
     submission: submissionBackend,
     template: templateBackend,
     referenceData: referenceDataBackend,
+    bulkSubmission: bulkSubmissionBackend,
   };
 }
 
@@ -191,6 +209,17 @@ await app.register({
   },
   routes: {
     prefix: '/api/templates',
+  },
+});
+
+await app.register({
+  plugin: bulkSubmissionPlugin,
+  options: {
+    backend: backend.bulkSubmission,
+    logger,
+  },
+  routes: {
+    prefix: '/api/batches',
   },
 });
 

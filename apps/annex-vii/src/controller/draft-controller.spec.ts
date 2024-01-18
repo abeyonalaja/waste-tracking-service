@@ -4,12 +4,13 @@ import { expect, jest } from '@jest/globals';
 import { add } from 'date-fns';
 import winston from 'winston';
 import {
+  DraftCarriers,
+  DraftRecoveryFacilityDetail,
   DraftSubmission,
   DraftSubmissionSummaryPage,
   Template,
 } from '../model';
 import DraftController from './draft-controller';
-import { DraftCarriers, DraftRecoveryFacilityDetail } from '@wts/api/annex-vii';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({

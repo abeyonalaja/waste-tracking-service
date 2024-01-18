@@ -8,19 +8,21 @@ parameters:
   - name: appName
     type: string
     values:
-      - waste-tracking-service
-      - waste-tracking-gateway
-      - annex-vii
       - address
+      - annex-vii
+      - annex-vii-bulk
       - reference-data
+      - waste-tracking-gateway
+      - waste-tracking-service
   - name: appNameTag
     type: string
     values:
-      - waste_tracking_service
-      - waste_tracking_gateway
-      - annex_vii
       - address
+      - annex_vii
+      - annex_vii_bulk
       - reference_data
+      - waste_tracking_gateway
+      - waste_tracking_service
   - name: deployChart
     type: string
     default: ''

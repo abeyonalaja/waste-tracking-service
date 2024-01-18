@@ -1,13 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DraftSubmission, Template } from '../model';
-import { BaseRepository } from './base-repository';
 import {
   DraftCarrier,
   DraftCarriers,
   DraftRecoveryFacility,
   DraftRecoveryFacilityDetail,
+  DraftSubmission,
   DraftWasteDescription,
-} from '@wts/api/annex-vii';
+  Template,
+} from '../model';
+import { BaseRepository } from './base-repository';
 
 export type DraftSubmissionData = DraftSubmission & { accountId: string };
 export type TemplateData = Template & { accountId: string };

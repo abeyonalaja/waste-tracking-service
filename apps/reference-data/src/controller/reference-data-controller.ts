@@ -3,10 +3,7 @@ import * as api from '@wts/api/reference-data';
 import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
 import { ReferenceDataRepository } from '../data/reference-data-repository';
-
-export type Handler<Request, Response> = (
-  request: Request
-) => Promise<Response>;
+import { Handler } from '@wts/api/common';
 
 export default class ReferenceDataController {
   constructor(

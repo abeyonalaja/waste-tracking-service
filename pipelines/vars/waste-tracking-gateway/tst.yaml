@@ -28,3 +28,5 @@ ingress:
           pathType: Prefix
         - path: /api/reference-data
           pathType: Prefix
+        - path: /api/batches
+          pathType: Prefix

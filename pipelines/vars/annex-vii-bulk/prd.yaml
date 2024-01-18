@@ -1,0 +1,17 @@
+image:
+  tag: '1.0.0'
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 100m
+    memory: 512Mi
+secret:
+  env:
+    COSMOS_DB_ACCOUNT_URI: 'https://prdwtsinfco1401.documents.azure.com:443/'
+    SERVICE_BUS_HOST_NAME: 'PRDWTSINFASB1401.servicebus.windows.net'
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: f55a2683-e215-4977-930d-66fb5c5e33c5
+    azure.workload.identity/tenant-id: 770a2450-0227-4c62-90c7-4e38537f1102

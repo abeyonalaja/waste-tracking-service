@@ -1,12 +1,12 @@
-import { Response } from '@wts/util/invocation';
 import {
   AccountIdRequest,
-  DraftSectionSummary,
   IdRequest,
+  OrderRequest,
   Method,
-  SubmissionBase,
-} from './submissionBase.dto';
-import { OrderRequest } from './submission.dto';
+  SectionSummary,
+} from '@wts/api/common';
+import { Response } from '@wts/util/invocation';
+import { SubmissionBase } from './submissionBase.dto';
 
 export type TemplateDetails = {
   name: string;
@@ -22,14 +22,14 @@ export interface Template extends SubmissionBase {
 export type TemplateSummary = Readonly<{
   id: string;
   templateDetails: TemplateDetails;
-  wasteDescription: DraftSectionSummary;
-  exporterDetail: DraftSectionSummary;
-  importerDetail: DraftSectionSummary;
-  carriers: DraftSectionSummary;
-  collectionDetail: DraftSectionSummary;
-  ukExitLocation: DraftSectionSummary;
-  transitCountries: DraftSectionSummary;
-  recoveryFacilityDetail: DraftSectionSummary;
+  wasteDescription: SectionSummary;
+  exporterDetail: SectionSummary;
+  importerDetail: SectionSummary;
+  carriers: SectionSummary;
+  collectionDetail: SectionSummary;
+  ukExitLocation: SectionSummary;
+  transitCountries: SectionSummary;
+  recoveryFacilityDetail: SectionSummary;
 }>;
 
 export type TemplatePageMetadata = {

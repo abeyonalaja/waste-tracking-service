@@ -1,4 +1,5 @@
-import { SectionSummary, SubmissionBase } from './submissionBase';
+import { SectionSummary } from '@wts/api/common';
+import { SubmissionBase } from './submissionBase';
 
 export type TemplateDetails = {
   name: string;

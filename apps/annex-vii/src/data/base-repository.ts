@@ -1,4 +1,4 @@
-import { DraftCarriers, DraftRecoveryFacilityDetail } from '@wts/api/annex-vii';
+import { DraftCarriers, DraftRecoveryFacilityDetail } from '../model';
 
 export interface BaseRepository {
   copyCarriersNoTransport(

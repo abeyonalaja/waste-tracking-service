@@ -2,10 +2,15 @@ import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
-import { DraftSubmission, Template, TemplateSummaryPage } from '../model';
+import {
+  DraftCarriers,
+  DraftRecoveryFacilityDetail,
+  DraftSubmission,
+  Template,
+  TemplateSummaryPage,
+} from '../model';
 import TemplateController from './template-controller';
 import { DaprClient } from '@dapr/dapr';
-import { DraftCarriers, DraftRecoveryFacilityDetail } from '@wts/api/annex-vii';
 
 const mockGetBulk = jest.fn<typeof DaprClient.prototype.state.getBulk>();
 const mockSave = jest.fn<typeof DaprClient.prototype.state.save>();

@@ -1,8 +1,5 @@
-import {
-  SectionSummary,
-  SubmissionBase,
-  WasteDescription,
-} from './submissionBase';
+import { SectionSummary } from '@wts/api/common';
+import { SubmissionBase, WasteDescription } from './submissionBase';
 
 export type CustomerReference = string;
 

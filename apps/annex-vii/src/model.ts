@@ -2,8 +2,18 @@ import * as api from '@wts/api/annex-vii';
 
 export type SubmissionBase = api.SubmissionBase;
 export type DraftSubmission = api.DraftSubmission;
+export type DraftWasteDescription = api.DraftWasteDescription;
 export type DraftWasteQuantity = api.DraftWasteQuantity;
 export type DraftCollectionDate = api.DraftCollectionDate;
+export type DraftExporterDetail = api.DraftExporterDetail;
+export type DraftImporterDetail = api.DraftImporterDetail;
+export type DraftCarriers = api.DraftCarriers;
+export type DraftCarrier = api.DraftCarrier;
+export type DraftCollectionDetail = api.DraftCollectionDetail;
+export type DraftExitLocation = api.DraftExitLocation;
+export type DraftTransitCountries = api.DraftTransitCountries;
+export type DraftRecoveryFacility = api.DraftRecoveryFacility;
+export type DraftRecoveryFacilityDetail = api.DraftRecoveryFacilityDetail;
 export type DraftSubmissionSummary = api.DraftSubmissionSummary;
 export type DraftSubmissionSummaryPage = api.DraftSubmissionSummaryPage;
 export type DraftSubmissionPageMetadata = api.DraftSubmissionPageMetadata;

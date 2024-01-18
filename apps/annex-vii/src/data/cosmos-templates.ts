@@ -1,8 +1,12 @@
-import { SqlQuerySpec } from '@azure/cosmos';
+import {
+  CosmosClient,
+  Database,
+  PatchOperation,
+  SqlQuerySpec,
+} from '@azure/cosmos';
 import { v4 as uuidv4 } from 'uuid';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
-import { CosmosAnnexViiClient } from '../clients';
 import { TemplateRepository } from './templates-repository';
 import {
   SubmissionBase,
@@ -19,21 +23,24 @@ export default class CosmosTemplateRepository
   extends CosmosBaseRepository
   implements TemplateRepository
 {
+  private cosmosDb: Database;
+
   constructor(
-    private cosmosClient: CosmosAnnexViiClient,
+    private cosmosClient: CosmosClient,
+    private cosmosDbName: string,
     private templateContainerName: string,
     private draftContainerName: string,
     private logger: Logger
   ) {
     super();
+    this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }
 
   async getTemplate(id: string, accountId: string): Promise<Template> {
-    const item = await this.cosmosClient.readItem(
-      this.templateContainerName,
-      id,
-      accountId
-    );
+    const { resource: item } = await this.cosmosDb
+      .container(this.templateContainerName)
+      .item(id, accountId)
+      .read();
     if (!item) {
       throw Boom.notFound();
     }
@@ -73,7 +80,7 @@ export default class CosmosTemplateRepository
       ],
     };
 
-    let hasMoreResults = true;
+    let hasMorePages = true;
     let totalSubmissions = 0;
     let totalPages = 0;
     let currentPage = 0;
@@ -82,7 +89,7 @@ export default class CosmosTemplateRepository
     const metadataArray: TemplatePageMetadata[] = [];
     let values: ReadonlyArray<TemplateSummary> = [];
 
-    while (hasMoreResults) {
+    while (hasMorePages) {
       totalPages += 1;
       pageNumber += 1;
 
@@ -92,13 +99,16 @@ export default class CosmosTemplateRepository
         continuationToken: contToken,
       };
 
-      const response = await this.cosmosClient.queryContainerNext(
-        this.templateContainerName,
-        querySpec,
-        options
-      );
+      const {
+        resources: results,
+        hasMoreResults,
+        continuationToken,
+      } = await this.cosmosDb
+        .container(this.templateContainerName)
+        .items.query(querySpec, options)
+        .fetchNext();
 
-      if (response.results === undefined) {
+      if (results === undefined) {
         return {
           totalTemplates: 0,
           totalPages: 0,
@@ -108,11 +118,11 @@ export default class CosmosTemplateRepository
         };
       }
 
-      hasMoreResults = response.hasMoreResults;
-      totalSubmissions += response.results.length;
+      hasMorePages = hasMoreResults;
+      totalSubmissions += results.length;
 
       if ((!token && pageNumber === 1) || token === contToken) {
-        values = response.results.map((r) => {
+        values = results.map((r) => {
           const s = r.value as TemplateData;
           return {
             id: s.id,
@@ -130,11 +140,11 @@ export default class CosmosTemplateRepository
         currentPage = pageNumber;
       }
 
-      contToken = response.continuationToken;
+      contToken = continuationToken;
 
       const pageMetadata: TemplatePageMetadata = {
         pageNumber: pageNumber,
-        token: response.continuationToken ?? '',
+        token: continuationToken ?? '',
       };
       metadataArray.push(pageMetadata);
 
@@ -155,12 +165,33 @@ export default class CosmosTemplateRepository
   async saveTemplate(template: Template, accountId: string): Promise<void> {
     const data: TemplateData = { ...template, accountId };
     try {
-      await this.cosmosClient.createOrReplaceItem(
-        this.templateContainerName,
-        data.id,
-        data.accountId,
-        data
-      );
+      const { resource: item } = await this.cosmosDb
+        .container(this.templateContainerName)
+        .item(data.id, data.accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: data.id,
+          value: data,
+          partitionKey: data.accountId,
+        };
+        await this.cosmosDb
+          .container(this.templateContainerName)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: data,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.templateContainerName)
+          .item(data.id, data.accountId)
+          .patch(replaceOperation);
+      }
     } catch (err: unknown) {
       if (
         typeof err === 'object' &&
@@ -178,11 +209,25 @@ export default class CosmosTemplateRepository
   }
 
   async deleteTemplate(id: string, accountId: string): Promise<void> {
-    await this.cosmosClient.deleteItem(
-      this.templateContainerName,
-      id,
-      accountId
-    );
+    try {
+      await this.cosmosDb
+        .container(this.templateContainerName)
+        .item(id, accountId)
+        .delete();
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 404
+      ) {
+        throw Boom.notFound();
+      }
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
   }
 
   async createTemplateFromDraft(
@@ -191,11 +236,10 @@ export default class CosmosTemplateRepository
     templateName: string,
     templateDescription: string
   ): Promise<Template> {
-    const item = await this.cosmosClient.readItem(
-      this.draftContainerName,
-      id,
-      accountId
-    );
+    const { resource: item } = await this.cosmosDb
+      .container(this.draftContainerName)
+      .item(id, accountId)
+      .read();
     if (!item) {
       throw Boom.notFound();
     }
@@ -226,12 +270,33 @@ export default class CosmosTemplateRepository
     const templateData: TemplateData = { ...template, accountId };
 
     try {
-      await this.cosmosClient.createOrReplaceItem(
-        this.templateContainerName,
-        template.id,
-        accountId,
-        templateData
-      );
+      const { resource: item } = await this.cosmosDb
+        .container(this.templateContainerName)
+        .item(template.id, accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: template.id,
+          value: templateData,
+          partitionKey: accountId,
+        };
+        await this.cosmosDb
+          .container(this.templateContainerName)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: templateData,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.templateContainerName)
+          .item(template.id, accountId)
+          .patch(replaceOperation);
+      }
     } catch (err) {
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,

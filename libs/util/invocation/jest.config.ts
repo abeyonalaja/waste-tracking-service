@@ -15,7 +15,7 @@ export default {
       {
         suiteName: 'util-invocation',
         outputDirectory: 'reports/junit',
-        outputName: 'util-invocation',
+        outputName: 'util-invocation.xml',
       },
     ],
   ],

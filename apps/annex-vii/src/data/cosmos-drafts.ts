@@ -1,4 +1,9 @@
-import { SqlQuerySpec } from '@azure/cosmos';
+import {
+  CosmosClient,
+  Database,
+  PatchOperation,
+  SqlQuerySpec,
+} from '@azure/cosmos';
 import { v4 as uuidv4 } from 'uuid';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
@@ -10,20 +15,23 @@ import {
   SubmissionBase,
 } from '../model';
 import { DraftRepository } from './repository';
-import { CosmosAnnexViiClient } from '../clients';
 import { CosmosBaseRepository, DraftSubmissionData } from './cosmos-base';
 
 export default class CosmosDraftRepository
   extends CosmosBaseRepository
   implements DraftRepository
 {
+  private cosmosDb: Database;
+
   constructor(
-    private cosmosClient: CosmosAnnexViiClient,
+    private cosmosClient: CosmosClient,
+    private cosmosDbName: string,
     private draftContainerName: string,
     private templateContainerName: string,
     private logger: Logger
   ) {
     super();
+    this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }
 
   async getDrafts(
@@ -70,7 +78,7 @@ export default class CosmosDraftRepository
       };
     }
 
-    let hasMoreResults = true;
+    let hasMorePages = true;
     let totalSubmissions = 0;
     let totalPages = 0;
     let currentPage = 0;
@@ -79,7 +87,7 @@ export default class CosmosDraftRepository
     const metadataArray: DraftSubmissionPageMetadata[] = [];
     let values: ReadonlyArray<DraftSubmissionSummary> = [];
 
-    while (hasMoreResults) {
+    while (hasMorePages) {
       totalPages += 1;
       pageNumber += 1;
 
@@ -89,13 +97,16 @@ export default class CosmosDraftRepository
         continuationToken: contToken,
       };
 
-      const response = await this.cosmosClient.queryContainerNext(
-        this.draftContainerName,
-        querySpec,
-        options
-      );
+      const {
+        resources: results,
+        hasMoreResults,
+        continuationToken,
+      } = await this.cosmosDb
+        .container(this.draftContainerName)
+        .items.query(querySpec, options)
+        .fetchNext();
 
-      if (response.results === undefined) {
+      if (results === undefined) {
         return {
           totalSubmissions: 0,
           totalPages: 0,
@@ -105,11 +116,11 @@ export default class CosmosDraftRepository
         };
       }
 
-      hasMoreResults = response.hasMoreResults;
-      totalSubmissions += response.results.length;
+      hasMorePages = hasMoreResults;
+      totalSubmissions += results.length;
 
       if ((!token && pageNumber === 1) || token === contToken) {
-        values = response.results.map((r) => {
+        values = results.map((r) => {
           const s = r.value as DraftSubmissionData;
           return {
             id: s.id,
@@ -132,11 +143,11 @@ export default class CosmosDraftRepository
         currentPage = pageNumber;
       }
 
-      contToken = response.continuationToken;
+      contToken = continuationToken;
 
       const pageMetadata: DraftSubmissionPageMetadata = {
         pageNumber: pageNumber,
-        token: response.continuationToken ?? '',
+        token: continuationToken ?? '',
       };
       metadataArray.push(pageMetadata);
 
@@ -155,11 +166,10 @@ export default class CosmosDraftRepository
   }
 
   async getDraft(id: string, accountId: string): Promise<DraftSubmission> {
-    const item = await this.cosmosClient.readItem(
-      this.draftContainerName,
-      id,
-      accountId
-    );
+    const { resource: item } = await this.cosmosDb
+      .container(this.draftContainerName)
+      .item(id, accountId)
+      .read();
     if (!item) {
       throw Boom.notFound();
     }
@@ -187,12 +197,33 @@ export default class CosmosDraftRepository
   async saveDraft(value: DraftSubmission, accountId: string): Promise<void> {
     const data: DraftSubmissionData = { ...value, accountId };
     try {
-      await this.cosmosClient.createOrReplaceItem(
-        this.draftContainerName,
-        data.id,
-        data.accountId,
-        data
-      );
+      const { resource: item } = await this.cosmosDb
+        .container(this.draftContainerName)
+        .item(data.id, data.accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: data.id,
+          value: data,
+          partitionKey: data.accountId,
+        };
+        await this.cosmosDb
+          .container(this.draftContainerName)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: data,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.draftContainerName)
+          .item(data.id, data.accountId)
+          .patch(replaceOperation);
+      }
     } catch (err) {
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,
@@ -206,11 +237,10 @@ export default class CosmosDraftRepository
     accountId: string,
     reference: string
   ): Promise<DraftSubmission> {
-    const item = await this.cosmosClient.readItem(
-      this.templateContainerName,
-      id,
-      accountId
-    );
+    const { resource: item } = await this.cosmosDb
+      .container(this.templateContainerName)
+      .item(id, accountId)
+      .read();
     if (!item) {
       throw Boom.notFound();
     }
@@ -247,12 +277,33 @@ export default class CosmosDraftRepository
     const submissionData: DraftSubmissionData = { ...submission, accountId };
 
     try {
-      await this.cosmosClient.createOrReplaceItem(
-        this.draftContainerName,
-        submission.id,
-        accountId,
-        submissionData
-      );
+      const { resource: item } = await this.cosmosDb
+        .container(this.draftContainerName)
+        .item(submission.id, accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: submission.id,
+          value: submissionData,
+          partitionKey: accountId,
+        };
+        await this.cosmosDb
+          .container(this.draftContainerName)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: submissionData,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.draftContainerName)
+          .item(submission.id, accountId)
+          .patch(replaceOperation);
+      }
     } catch (err) {
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,

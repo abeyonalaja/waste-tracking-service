@@ -1,9 +1,5 @@
+import { Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
-
-export type Method = Readonly<{
-  name: string;
-  httpVerb: 'GET' | 'PUT' | 'POST' | 'DELETE';
-}>;
 
 export type LanguageDescription = {
   en: string;

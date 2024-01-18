@@ -1,32 +1,16 @@
-import { CosmosClient } from '@azure/cosmos';
+import {
+  CosmosClient,
+  FeedResponse,
+  Item,
+  ItemResponse,
+  Items,
+  QueryIterator,
+} from '@azure/cosmos';
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import { Logger } from 'winston';
 import CosmosDraftRepository from './cosmos-drafts';
-import { CosmosAnnexViiClient } from '../clients';
-
-const mockReadItem = jest.fn<typeof CosmosAnnexViiClient.prototype.readItem>();
-const mockQueryContainerNext =
-  jest.fn<typeof CosmosAnnexViiClient.prototype.queryContainerNext>();
-const mockCreateOrReplaceItem =
-  jest.fn<typeof CosmosAnnexViiClient.prototype.createOrReplaceItem>();
-
-jest.mock('@azure/cosmos', () => ({
-  CosmosClient: jest.fn().mockImplementation(() => ({
-    database: jest.fn(() => ({
-      container: jest.fn(),
-    })),
-  })),
-}));
-
-jest.mock('../clients', () => ({
-  CosmosAnnexViiClient: jest.fn().mockImplementation(() => ({
-    readItem: mockReadItem,
-    queryContainerNext: mockQueryContainerNext,
-    createOrReplaceItem: mockCreateOrReplaceItem,
-  })),
-}));
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -34,11 +18,36 @@ jest.mock('winston', () => ({
   })),
 }));
 
+const mockRead = jest.fn<typeof Item.prototype.read>();
+const mockPatch = jest.fn<typeof Item.prototype.patch>();
+const mockCreate = jest.fn<typeof Items.prototype.create>();
+const mockFetchNext = jest.fn<typeof QueryIterator.prototype.fetchNext>();
+
+jest.mock('@azure/cosmos', () => ({
+  CosmosClient: jest.fn().mockImplementation(() => ({
+    database: jest.fn(() => ({
+      container: jest.fn(() => ({
+        item: jest.fn(() => ({
+          read: mockRead,
+          patch: mockPatch,
+        })),
+        items: {
+          create: mockCreate,
+          query: jest.fn(() => ({
+            fetchNext: mockFetchNext,
+          })),
+        },
+      })),
+    })),
+  })),
+}));
+
 describe(CosmosDraftRepository, () => {
   beforeEach(() => {
-    mockReadItem.mockClear();
-    mockQueryContainerNext.mockClear();
-    mockCreateOrReplaceItem.mockClear();
+    mockRead.mockClear();
+    mockPatch.mockClear();
+    mockCreate.mockClear();
+    mockFetchNext.mockClear();
   });
 
   const mockCosmosEndpoint = faker.datatype.string();
@@ -48,13 +57,11 @@ describe(CosmosDraftRepository, () => {
   const logger = new Logger();
 
   const subject = new CosmosDraftRepository(
-    new CosmosAnnexViiClient(
-      new CosmosClient({
-        endpoint: mockCosmosEndpoint,
-        key: mockCosmosKey,
-      }),
-      mockCosmosDbName
-    ),
+    new CosmosClient({
+      endpoint: mockCosmosEndpoint,
+      key: mockCosmosKey,
+    }),
+    mockCosmosDbName,
     mockCosmosContainerName,
     mockCosmosContainerName,
     logger
@@ -62,22 +69,17 @@ describe(CosmosDraftRepository, () => {
 
   describe('getDrafts', () => {
     it('handles empty response', async () => {
-      mockQueryContainerNext.mockResolvedValueOnce({
+      mockFetchNext.mockResolvedValueOnce({
         results: undefined || [],
         hasMoreResults: false,
         continuationToken: '',
-      });
+      } as unknown as FeedResponse<object>);
 
       expect(await subject.getDrafts(faker.datatype.uuid(), 'ASC')).toEqual({
         totalSubmissions: 0,
-        totalPages: 1,
-        currentPage: 1,
-        pages: [
-          {
-            pageNumber: 1,
-            token: '',
-          },
-        ],
+        totalPages: 0,
+        currentPage: 0,
+        pages: [],
         values: [],
       });
     });
@@ -115,7 +117,9 @@ describe(CosmosDraftRepository, () => {
         _attachments: faker.datatype.string(),
         _ts: faker.datatype.bigInt(),
       };
-      mockReadItem.mockResolvedValueOnce(mockResponse);
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
 
       const result = await subject.getDraft(id, accountId);
       expect(result).toEqual({
@@ -138,26 +142,18 @@ describe(CosmosDraftRepository, () => {
         wasteDescription: { status: 'NotStarted' },
         wasteQuantity: { status: 'CannotStart' },
       });
-      expect(mockReadItem).toHaveBeenCalledWith(
-        mockCosmosContainerName,
-        id,
-        accountId
-      );
-      expect(mockReadItem).toBeCalledTimes(1);
+      expect(mockRead).toBeCalledTimes(1);
     });
 
     it("throws Not Found exception if key doesn't exist", async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
-      mockReadItem.mockResolvedValueOnce(undefined);
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
 
       expect(subject.getDraft(id, accountId)).rejects.toThrow(Boom.notFound());
-      expect(mockReadItem).toHaveBeenCalledWith(
-        mockCosmosContainerName,
-        id,
-        accountId
-      );
-      expect(mockReadItem).toBeCalledTimes(1);
+      expect(mockRead).toBeCalledTimes(1);
     });
   });
 });

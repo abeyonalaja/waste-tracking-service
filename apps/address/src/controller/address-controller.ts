@@ -5,8 +5,9 @@ import { AddressClient } from '../clients/address-client';
 import {
   GetAddressByPostcodeRequest,
   GetAddressByPostcodeResponse,
-} from '../model';
+} from '@wts/api/address';
 import FuzzySearch from 'fuzzy-search';
+import { Handler } from '@wts/api/common';
 
 function titleCase(str: string) {
   return str
@@ -17,10 +18,6 @@ function titleCase(str: string) {
     })
     .join(' ');
 }
-
-export type Handler<Request, Response> = (
-  request: Request
-) => Promise<Response>;
 
 export default class AddressController {
   constructor(private addressClient: AddressClient, private logger: Logger) {}
