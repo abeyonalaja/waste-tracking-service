@@ -1,0 +1,57 @@
+{
+  "name": "generate-invitation-token",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/generate-invitation-token/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/generate-invitation-token",
+        "main": "apps/generate-invitation-token/src/main.ts",
+        "tsConfig": "apps/generate-invitation-token/tsconfig.app.json",
+        "assets": ["apps/generate-invitation-token/src/assets"],
+        "webpackConfig": "apps/generate-invitation-token/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "create": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "production",
+      "options": {
+        "command": "node dist/apps/generate-invitation-token/main.js create"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "generate-invitation-token:build:development"
+        },
+        "production": {
+          "buildTarget": "generate-invitation-token:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/generate-invitation-token/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/generate-invitation-token/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}

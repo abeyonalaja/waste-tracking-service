@@ -57,10 +57,12 @@
     "next-router-mock": "^0.9.3",
     "nx": "17.2.8",
     "prettier": "^2.6.2",
+    "react-refresh": "^0.10.0",
     "react-test-renderer": "18.2.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "~4.9.5"
+    "typescript": "~4.9.5",
+    "url-loader": "^4.1.1"
   },
   "optionalDependencies": {
     "@nrwl/nx-linux-x64-gnu": "17.2.8"
@@ -79,6 +81,8 @@
     "accessible-autocomplete": "^2.0.4",
     "ajv": "^8.12.0",
     "axios": "^1.0.0",
+    "commander": "^11.1.0",
+    "csv-stringify": "^6.4.5",
     "date-fns": "^2.30.0",
     "fuzzy-search": "^3.2.1",
     "govuk-colours": "^1.1.0",
