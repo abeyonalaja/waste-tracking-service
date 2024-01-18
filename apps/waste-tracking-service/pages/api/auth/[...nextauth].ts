@@ -88,8 +88,8 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, profile }) {
-      const oneMinLessThanExpiry =
-        Number(token.idTokenExpires || 1200 * 1000) - 60 * 1000; // ~19 minutes
+      const twoMinLessThanExpiry =
+        Number(token.idTokenExpires || 1200 * 1000) - 2 * 60 * 1000; // ~18 minutes
       if (account && profile) {
         const dcidProfile = profile as DCIDProfile;
         const dcidAccount = account as DCIDAccount;
@@ -101,7 +101,7 @@ export const authOptions: NextAuthOptions = {
           refreshToken: dcidAccount.refresh_token,
           uniqueReference: dcidProfile.uniqueReference,
         };
-      } else if (Date.now() < oneMinLessThanExpiry) {
+      } else if (Date.now() < twoMinLessThanExpiry) {
         return token;
       } else {
         return refreshAccessToken(token);
