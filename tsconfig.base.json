@@ -20,6 +20,7 @@
       "@wts/api/annex-vii": ["libs/api/annex-vii/src/index.ts"],
       "@wts/api/annex-vii-bulk": ["libs/api/annex-vii-bulk/src/index.ts"],
       "@wts/api/common": ["libs/api/common/src/index.ts"],
+      "@wts/api/limited-audience": ["libs/api/limited-audience/src/index.ts"],
       "@wts/api/reference-data": ["libs/api/reference-data/src/index.ts"],
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
