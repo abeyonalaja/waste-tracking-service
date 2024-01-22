@@ -22,12 +22,7 @@ import {
 } from 'components';
 
 import { isNotEmpty, validateSelection } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: any;
@@ -91,9 +86,10 @@ const interimReducer = (state: State, action: Action) => {
   }
 };
 
-const InterimSiteDetails = ({ apiConfig }: PageProps) => {
+const InterimSiteDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [interimPage, dispatchInterimPage] = useReducer(
     interimReducer,
     initialState

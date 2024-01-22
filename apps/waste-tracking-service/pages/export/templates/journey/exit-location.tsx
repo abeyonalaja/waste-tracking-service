@@ -25,12 +25,7 @@ import {
   validateKnowsPointOfExit,
   validatePointOfExit,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const pointOfExitReducer = (state, action) => {
   switch (action.type) {
@@ -63,9 +58,10 @@ const pointOfExitReducer = (state, action) => {
   }
 };
 
-const ExitLocation = ({ apiConfig }: PageProps) => {
+const ExitLocation = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
 
   const [pointOfExitPage, dispatchPointOfExitPage] = useReducer(
     pointOfExitReducer,

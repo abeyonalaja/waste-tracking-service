@@ -32,11 +32,7 @@ import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import i18n from 'i18next';
 import { getStatus } from 'utils/statuses/getStatus';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -211,7 +207,7 @@ type codeType = {
   };
 };
 
-const EwcCodes = ({ apiConfig }: PageProps) => {
+const EwcCodes = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [ewcCodePage, dispatchEwcCodePage] = useReducer(
@@ -223,6 +219,7 @@ const EwcCodes = ({ apiConfig }: PageProps) => {
   const [ewcCode, setEwcCode] = useState('');
   const [ewcCodeToRemove, setEwcCodeToRemove] = useState<string>(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
+  const apiConfig = useApiConfig();
 
   useEffect(() => {
     if (router.isReady) {

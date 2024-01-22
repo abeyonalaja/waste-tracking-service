@@ -31,12 +31,7 @@ import {
 } from 'utils/validators';
 
 import i18n from 'i18next';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -138,9 +133,10 @@ type codeType = Array<{
   description: string;
 }>;
 
-const InterimSiteDetails = ({ apiConfig }: PageProps) => {
+const InterimSiteDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [interimPage, dispatchInterimPage] = useReducer(
     interimReducer,
     initialState

@@ -34,12 +34,9 @@ import {
   isNotEmpty,
 } from 'utils/validators';
 import { formatDate } from 'utils/formatDate';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+
 import useRefDataLookup from '../../../utils/useRefDataLookup';
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: any;
@@ -137,8 +134,9 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const UpdateAnnex7 = ({ apiConfig }: PageProps) => {
+const UpdateAnnex7 = () => {
   const { t } = useTranslation();
+  const apiConfig = useApiConfig();
   const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [updateAnnex7Page, dispatchUpdateAnnex7Page] = useReducer(

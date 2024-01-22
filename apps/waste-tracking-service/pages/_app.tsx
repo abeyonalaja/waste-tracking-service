@@ -13,7 +13,7 @@ export default function App({
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
   useGoogleTagManager();
   return getLayout(
-    <SessionProvider session={session} refetchInterval={60}>
+    <SessionProvider session={session} refetchInterval={30}>
       <CookiesProvider>
         {Component.auth ? (
           <AuthWrapper>

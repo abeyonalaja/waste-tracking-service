@@ -19,11 +19,7 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const DefinitionList = styled('dl')`
   margin-bottom: 20px;
@@ -95,10 +91,11 @@ const Actions = styled('dd')`
   }
 `;
 
-const ExporterAddress = ({ apiConfig }: PageProps) => {
+const ExporterAddress = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);
+  const apiConfig = useApiConfig();
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);

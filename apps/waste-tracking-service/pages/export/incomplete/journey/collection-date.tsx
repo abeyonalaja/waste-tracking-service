@@ -18,14 +18,9 @@ import { useRouter } from 'next/router';
 import { isNotEmpty, validateDate, validateDateType } from 'utils/validators';
 import { GetCollectionDateResponse } from '@wts/api/waste-tracking-gateway';
 import { format, addBusinessDays } from 'date-fns';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+import useApiConfig from 'utils/useApiConfig';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
-
-const CollectionDate = ({ apiConfig }: PageProps) => {
+const CollectionDate = () => {
   interface Date {
     day: string;
     month: string;
@@ -33,6 +28,7 @@ const CollectionDate = ({ apiConfig }: PageProps) => {
   }
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState(null);
   const [dateType, setDateType] = useState<'ActualDate' | 'EstimateDate'>(null);

@@ -16,12 +16,7 @@ import {
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`
   @media (min-width: 641px) {
@@ -29,9 +24,10 @@ const AddressInput = styled(GovUK.InputField)`
   }
 `;
 
-const ImporterDetails = ({ apiConfig }: PageProps) => {
+const ImporterDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [address, setAddress] = useState<string>('');

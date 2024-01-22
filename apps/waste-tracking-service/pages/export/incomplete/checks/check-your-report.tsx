@@ -20,14 +20,9 @@ import {
   Loading,
   SubmissionSummary,
 } from 'components';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: Submission;
@@ -72,9 +67,10 @@ const checkYourReportReducer = (state: State, action: Action) => {
   }
 };
 
-const CheckYourReport = ({ apiConfig }: PageProps) => {
+const CheckYourReport = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [checkYourReportPage, dispatchCheckYourReportPage] = useReducer(
     checkYourReportReducer,
     initialWasteDescState

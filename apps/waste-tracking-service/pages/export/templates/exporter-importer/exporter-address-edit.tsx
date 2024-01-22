@@ -22,14 +22,9 @@ import {
   validateCountrySelect,
   validateAddress,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
 
 import { countriesData } from '../../../../utils/countriesData';
+import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -46,9 +41,10 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterAddressEdit = ({ apiConfig }: PageProps) => {
+const ExporterAddressEdit = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState<string>(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [postcode, setPostcode] = useState<string>('');

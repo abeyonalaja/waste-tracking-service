@@ -163,7 +163,7 @@ export const Header = () => {
             {!session && (
               <>
                 <GovukHeaderLink
-                  href="#"
+                  href="/auth/signin"
                   onClick={(e) => {
                     e.preventDefault();
                     signIn('defra-b2c');

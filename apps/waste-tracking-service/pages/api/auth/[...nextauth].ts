@@ -1,6 +1,6 @@
 import NextAuth, { Account, NextAuthOptions } from 'next-auth';
 import AzureADB2CProvider from 'next-auth/providers/azure-ad-b2c';
-import type { Profile } from 'next-auth/core/types';
+import type { Profile, Session } from 'next-auth/core/types';
 
 interface DCIDProfile extends Profile {
   sup: string;
@@ -12,6 +12,10 @@ interface DCIDProfile extends Profile {
 
 interface DCIDAccount extends Account {
   id_token_expires_in: number;
+}
+
+export interface DCIDSession extends Session {
+  token?: string;
 }
 
 const refreshAccessToken = async (token) => {
@@ -39,12 +43,12 @@ const refreshAccessToken = async (token) => {
           `&refresh_token=${token.refreshToken as string}` +
           `&client_id=${process.env.DCID_CLIENT_ID}`,
       });
-      const refreshedTokens = await response.json();
+      const refreshedToken = await response.json();
       return {
         ...token,
-        id_token: refreshedTokens.id_token,
-        idTokenExpires: Date.now() + refreshedTokens.id_token_expires_in * 1000,
-        refreshToken: refreshedTokens.refresh_token,
+        id_token: refreshedToken.id_token,
+        idTokenExpires: Date.now() + refreshedToken.id_token_expires_in * 1000,
+        refreshToken: refreshedToken.refresh_token,
       };
     } catch (error) {
       console.error(error);
@@ -108,8 +112,10 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async session({ session, token }) {
+      const dcidSession = session as DCIDSession;
       return {
-        ...session,
+        ...dcidSession,
+        token: token.id_token.toString() || null,
         user: {
           name: token.name,
           email: token.email,

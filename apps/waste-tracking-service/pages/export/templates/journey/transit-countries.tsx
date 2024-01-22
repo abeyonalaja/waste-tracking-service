@@ -30,12 +30,7 @@ import {
   validateConfirmRemove,
 } from 'utils/validators';
 import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -128,9 +123,10 @@ const wasteTransitReducer = (state: State, action: Action) => {
   }
 };
 
-const TransitCountries = ({ apiConfig }: PageProps) => {
+const TransitCountries = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [wasteTransitPage, dispatchWasteTransitPage] = useReducer(
     wasteTransitReducer,
     initialState

@@ -31,13 +31,9 @@ import {
   validateFullName,
   validatePhone,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-import i18n from 'i18next';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import i18n from 'i18next';
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -144,9 +140,10 @@ type optionType = {
   };
 };
 
-const Laboratory = ({ apiConfig }: PageProps) => {
+const Laboratory = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [laboratoryPage, dispatchLaboratoryPage] = useReducer(
     laboratoryReducer,
     initialState

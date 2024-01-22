@@ -38,11 +38,7 @@ import {
 } from 'utils/validators';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 enum VIEWS {
   ADDRESS_DETAILS = 1,
@@ -157,9 +153,10 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const WasteCarriers = ({ apiConfig }: PageProps) => {
+const WasteCarriers = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [carrierPage, dispatchCarrierPage] = useReducer(
     carrierReducer,
     initialState

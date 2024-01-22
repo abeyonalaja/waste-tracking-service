@@ -16,16 +16,12 @@ import {
   validateTemplateName,
   validateTemplateDesc,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+import useApiConfig from 'utils/useApiConfig';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
-
-const TemplateCreate = ({ apiConfig }: PageProps) => {
+const TemplateCreate = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateName, setTemplateName] = useState<string>('');
   const [templateDesc, setTemplateDesc] = useState<string>('');
   const [errors, setErrors] = useState<{

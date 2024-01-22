@@ -25,12 +25,7 @@ import {
   GetWasteDescriptionResponse,
   PutWasteDescriptionRequest,
 } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type singleCodeType = {
   code: string;
@@ -44,7 +39,7 @@ type codeType = {
   values: Array<singleCodeType>;
 };
 
-const WasteCode = ({ apiConfig }: PageProps) => {
+const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -58,6 +53,7 @@ const WasteCode = ({ apiConfig }: PageProps) => {
   const [annexIIIACode, setAnnexIIIACode] = useState<string>();
   const [annexIIIBCode, setAnnexIIIBCode] = useState<string>();
   const [isBulkOrSmall, setIsBulkOrSmall] = useState<string>();
+  const apiConfig = useApiConfig();
 
   const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`;
 

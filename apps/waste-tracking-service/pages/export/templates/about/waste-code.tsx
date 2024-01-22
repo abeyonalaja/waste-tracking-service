@@ -22,13 +22,7 @@ import {
   validateWasteCode,
   validateWasteCodeCategory,
 } from 'utils/validators';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
-
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+import useApiConfig from 'utils/useApiConfig';
 
 type singleCodeType = {
   code: string;
@@ -42,9 +36,10 @@ type codeType = {
   values: Array<singleCodeType>;
 };
 
-const WasteCode = ({ apiConfig }: PageProps) => {
+const WasteCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState<string>(null);
   const [data, setData] = useState<GetWasteDescriptionResponse>();
   const [refData, setRefData] = useState<Array<codeType>>();

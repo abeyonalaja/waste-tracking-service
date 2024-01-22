@@ -10,12 +10,6 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
 
 import {
   AppLink,
@@ -33,6 +27,7 @@ import styled from 'styled-components';
 import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
 import { formatDate } from 'utils/formatDate';
 import useRefDataLookup from '../../../utils/useRefDataLookup';
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: any;
@@ -124,8 +119,9 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const IncompleteAnnex7 = ({ apiConfig }: PageProps) => {
+const IncompleteAnnex7 = () => {
   const { t } = useTranslation();
+  const apiConfig = useApiConfig();
   const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(

@@ -16,13 +16,9 @@ import {
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-import useRefDataLookup from '../../../utils/useRefDataLookup';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useRefDataLookup from '../../../utils/useRefDataLookup';
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: GetSubmissionsResponse;
@@ -83,8 +79,9 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const Index = ({ apiConfig }: PageProps) => {
+const Index = () => {
   const { t } = useTranslation();
+  const apiConfig = useApiConfig();
   const getRefData = useRefDataLookup(apiConfig);
   const router = useRouter();
   const [submittedAnnex7Page, dispatchSubmittedAnnex7Page] = useReducer(

@@ -6,15 +6,12 @@ import { useSubmissionContext } from 'contexts';
 import { useTranslation } from 'react-i18next';
 import { Footer, Header, BreadcrumbWrap, Paragraph } from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+import useApiConfig from 'utils/useApiConfig';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
-export function Reference({ apiConfig }: PageProps) {
+export function Reference() {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const { submission, setSubmission } = useSubmissionContext();
   const [id, setId] = useState<string>(submission?.id || null);
   const [reference, setReference] = useState<string>(

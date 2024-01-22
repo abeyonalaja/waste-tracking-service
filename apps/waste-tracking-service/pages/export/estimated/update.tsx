@@ -18,11 +18,7 @@ import {
 } from 'components';
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: Submission;
@@ -67,9 +63,10 @@ const viewRecordReducer = (state: State, action: Action) => {
   }
 };
 
-const UpdateRecord = ({ apiConfig }: PageProps) => {
+const UpdateRecord = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [viewRecordPage, dispatchViewRecordPage] = useReducer(
     viewRecordReducer,
     initialState

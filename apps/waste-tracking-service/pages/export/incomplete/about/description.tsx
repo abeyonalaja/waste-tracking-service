@@ -24,12 +24,7 @@ import { isNotEmpty, validateWasteDescription } from 'utils/validators';
 import styled from 'styled-components';
 
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: { status: 'Started' } & GetWasteDescriptionResponse;
@@ -88,9 +83,10 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const Description = ({ apiConfig }: PageProps) => {
+const Description = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
 
   const [describeWastePage, dispatchDescribeWastePage] = useReducer(
     describeWasteReducer,

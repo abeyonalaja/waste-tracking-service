@@ -21,12 +21,7 @@ import {
   ButtonGroup,
 } from 'components';
 import { isNotEmpty, validateNationalCode } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const nationalCodeReducer = (state, action) => {
   switch (action.type) {
@@ -59,9 +54,10 @@ const nationalCodeReducer = (state, action) => {
   }
 };
 
-const NationalCode = ({ apiConfig }: PageProps) => {
+const NationalCode = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
 
   const [nationalCodePage, dispatchNationalCodePage] = useReducer(
     nationalCodeReducer,

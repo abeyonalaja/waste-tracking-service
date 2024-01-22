@@ -21,12 +21,7 @@ import {
   validateQuantityValue,
 } from 'utils/validators';
 import { PutWasteQuantityRequest } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const BreadCrumbs = ({ id }) => {
   const router = useRouter();
@@ -47,9 +42,10 @@ const BreadCrumbs = ({ id }) => {
   );
 };
 
-const QuantityEntry = ({ apiConfig }: PageProps) => {
+const QuantityEntry = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState(null);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);

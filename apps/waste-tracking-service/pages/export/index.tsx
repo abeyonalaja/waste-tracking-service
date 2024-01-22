@@ -6,11 +6,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import { useSubmissionContext } from 'contexts';
 import { useRouter } from 'next/router';
-import { getApiConfig } from '../../utils/api/apiConfig';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const UnderlinedH1 = styled(GovUK.Heading)`
   border-bottom: 2px solid #e2e3e4;
@@ -31,8 +27,9 @@ const BreadCrumbs = () => {
   );
 };
 
-export function Index({ apiConfig }) {
+export function Index() {
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const { setSubmission } = useSubmissionContext();
 
   useEffect(() => {

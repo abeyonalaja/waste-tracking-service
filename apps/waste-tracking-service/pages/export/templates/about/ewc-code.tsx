@@ -31,12 +31,7 @@ import formatEwcCode from 'utils/formatEwcCode';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import i18n from 'i18next';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADD_FORM: 1,
@@ -211,9 +206,10 @@ type codeType = {
   };
 };
 
-const EwcCodes = ({ apiConfig }: PageProps) => {
+const EwcCodes = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [ewcCodePage, dispatchEwcCodePage] = useReducer(
     ewcCodeReducer,
     initialState

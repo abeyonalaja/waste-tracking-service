@@ -20,12 +20,7 @@ import {
   validateWeightOrVolume,
   validateQuantityValue,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
@@ -52,7 +47,7 @@ const BreadCrumbs = ({ id }) => {
   );
 };
 
-const QuantityEntry = ({ apiConfig }: PageProps) => {
+const QuantityEntry = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -64,6 +59,7 @@ const QuantityEntry = ({ apiConfig }: PageProps) => {
   const [volume, setVolume] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+  const apiConfig = useApiConfig();
 
   const [errors, setErrors] = useState<{
     quantityTypeError?: string;

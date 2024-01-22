@@ -18,12 +18,7 @@ import styled from 'styled-components';
 
 import { isNotEmpty, validateEmail, validatePhone } from 'utils/validators';
 import { getStatusExporter } from 'utils/statuses/getStatusExporter';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -40,9 +35,10 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterDetails = ({ apiConfig }: PageProps) => {
+const ExporterDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState<string>(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

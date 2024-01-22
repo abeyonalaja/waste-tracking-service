@@ -25,12 +25,7 @@ import {
   validateTemplateDesc,
   validateTemplateName,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   DEFAULT: 1,
@@ -93,9 +88,10 @@ const templateReducer = (state: State, action: Action) => {
   }
 };
 
-const TemplateCreateFromRecord = ({ apiConfig }: PageProps) => {
+const TemplateCreateFromRecord = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
     initialState

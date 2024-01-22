@@ -15,16 +15,11 @@ import {
   Paragraph,
   AppLink,
 } from 'components';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
 
 import styled from 'styled-components';
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: Submission;
@@ -101,9 +96,10 @@ const IdDisplay = styled.div`
   font-weight: 600;
 `;
 
-const ExportSubmitted = ({ apiConfig }: PageProps) => {
+const ExportSubmitted = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
 
   const [exportSubmittedPage, dispatchExportSubmittedPage] = useReducer(
     exportSubmittedReducer,
@@ -225,18 +221,19 @@ const ExportSubmitted = ({ apiConfig }: PageProps) => {
 
                 <Paragraph>
                   {t('exportJourney.exportSubmitted.listHeader')}
-                  <StyledUnorderedList>
-                    <GovUK.ListItem>
-                      {t('exportJourney.exportSubmitted.listItemOne')}
-                    </GovUK.ListItem>
-                    <GovUK.ListItem>
-                      {t('exportJourney.exportSubmitted.listItemTwo')}
-                    </GovUK.ListItem>
-                    <GovUK.ListItem>
-                      {t('exportJourney.exportSubmitted.listItemThree')}
-                    </GovUK.ListItem>
-                  </StyledUnorderedList>
                 </Paragraph>
+                <StyledUnorderedList>
+                  <GovUK.ListItem>
+                    {t('exportJourney.exportSubmitted.listItemOne')}
+                  </GovUK.ListItem>
+                  <GovUK.ListItem>
+                    {t('exportJourney.exportSubmitted.listItemTwo')}
+                  </GovUK.ListItem>
+                  <GovUK.ListItem>
+                    {t('exportJourney.exportSubmitted.listItemThree')}
+                  </GovUK.ListItem>
+                </StyledUnorderedList>
+
                 {exportSubmittedPage.data.submissionState.status ===
                   'SubmittedWithEstimates' && (
                   <>

@@ -13,16 +13,11 @@ import {
   SaveReturnButton,
   ButtonGroup,
 } from 'components';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
 
 import styled from 'styled-components';
 
 import { Submission } from '@wts/api/waste-tracking-gateway';
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: Submission;
@@ -80,7 +75,7 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const SignDeclaration = ({ apiConfig }: PageProps) => {
+const SignDeclaration = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -90,6 +85,7 @@ const SignDeclaration = ({ apiConfig }: PageProps) => {
   );
 
   const [id, setId] = useState(null);
+  const apiConfig = useApiConfig();
 
   useEffect(() => {
     if (router.isReady) {

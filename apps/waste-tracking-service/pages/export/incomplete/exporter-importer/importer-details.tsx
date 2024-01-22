@@ -21,12 +21,7 @@ import {
   validateCountry,
   validateAddress,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`
   @media (min-width: 641px) {
@@ -34,9 +29,10 @@ const AddressInput = styled(GovUK.InputField)`
   }
 `;
 
-const ImporterDetails = ({ apiConfig }: PageProps) => {
+const ImporterDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [id, setId] = useState(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
 

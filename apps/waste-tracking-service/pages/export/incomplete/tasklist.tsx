@@ -19,13 +19,7 @@ import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import { differenceInSeconds, parseISO } from 'date-fns';
-
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 type State = {
   data: Submission;
@@ -134,9 +128,10 @@ const TaskStatus = styled.span`
   }
 `;
 
-const Tasklist = ({ apiConfig }: PageProps) => {
+const Tasklist = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [tasklistPage, dispatchTasklistPage] = useReducer(
     tasklistReducer,
     initialWasteDescState

@@ -18,14 +18,9 @@ import {
   PutWasteQuantityRequest,
   Submission,
 } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
+import useApiConfig from 'utils/useApiConfig';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
-
-const Quantity = ({ apiConfig }: PageProps) => {
+const Quantity = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
@@ -35,6 +30,7 @@ const Quantity = ({ apiConfig }: PageProps) => {
   const [savedQuantityType, setSavedQuantityType] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+  const apiConfig = useApiConfig();
 
   const [errors, setErrors] = useState<{
     quantityTypeError?: string;

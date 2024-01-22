@@ -19,12 +19,7 @@ import {
 import { formatDate } from 'utils/formatDate';
 import styled from 'styled-components';
 import { isNotEmpty, validateConfirmRemove } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 enum VIEWS {
   LIST = 0,
@@ -120,9 +115,10 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const ManageTemplates = ({ apiConfig }: PageProps) => {
+const ManageTemplates = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templatesPage, dispatchTemplatePage] = useReducer(
     templatesReducer,
     manageTemplatesState

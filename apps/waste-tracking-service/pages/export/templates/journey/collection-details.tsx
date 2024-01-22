@@ -39,12 +39,7 @@ import styled from 'styled-components';
 import { GetCollectionDetailResponse } from '@wts/api/waste-tracking-gateway';
 import { countriesData } from 'utils/countriesData';
 import { BORDER_COLOUR } from 'govuk-colours';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 enum VIEWS {
   POSTCODE_SEARCH = 0,
@@ -225,9 +220,10 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const CollectionDetails = ({ apiConfig }: PageProps) => {
+const CollectionDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [addressPage, dispatchAddressPage] = useReducer(
     addressReducer,
     initialState

@@ -38,13 +38,9 @@ import {
 
 import styled from 'styled-components';
 import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gateway';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-import i18n from 'i18next';
 
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import i18n from 'i18next';
+import useApiConfig from 'utils/useApiConfig';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -167,9 +163,10 @@ type optionType = {
   };
 };
 
-const RecoveryFacilityDetails = ({ apiConfig }: PageProps) => {
+const RecoveryFacilityDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [recoveryPage, dispatchRecoveryPage] = useReducer(
     recoveryReducer,
     initialState

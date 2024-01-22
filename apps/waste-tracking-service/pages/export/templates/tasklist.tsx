@@ -19,12 +19,7 @@ import {
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { differenceInSeconds, parseISO } from 'date-fns';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 enum VIEWS {
   DEFAULT = 0,
@@ -177,9 +172,10 @@ const ListItem = styled(GovUK.ListItem)`
   margin-bottom: 0.8em !important;
 `;
 
-const TemplateTasklist = ({ apiConfig }: PageProps) => {
+const TemplateTasklist = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
     initialState

@@ -18,12 +18,7 @@ import {
   validatePostcode,
   validateSelectAddress,
 } from 'utils/validators';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const PostcodeInput = styled(GovUK.Input)`
   max-width: 23ex;
@@ -34,9 +29,10 @@ const Paragraph = styled.div`
   font-size: 19px;
 `;
 
-const ExporterPostcode = ({ apiConfig }: PageProps) => {
+const ExporterPostcode = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState(null);
   const [postcode, setPostcode] = useState<string>('');
   const [buildingNameOrNumber, setNumber] = useState<string>('');

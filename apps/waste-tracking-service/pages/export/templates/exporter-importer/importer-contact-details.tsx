@@ -21,12 +21,7 @@ import {
   validateInternationalPhone,
 } from 'utils/validators';
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
-import { getApiConfig } from 'utils/api/apiConfig';
-import { PageProps } from 'types/wts';
-
-export const getServerSideProps = async (context) => {
-  return getApiConfig(context);
-};
+import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -37,9 +32,10 @@ const PostcodeInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ImporterContactDetails = ({ apiConfig }: PageProps) => {
+const ImporterContactDetails = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState(null);
   const [data, setData] = useState<GetExporterDetailResponse>(null);
   const [fullName, setFullName] = useState<string>('');
