@@ -14,7 +14,7 @@ parameters:
       - name: annex-vii-bulk
         nameTag: annex_vii_bulk
       - name: reference-data
-        nameTag: reference-data
+        nameTag: reference_data
       - name: waste-tracking-gateway
         nameTag: waste_tracking_gateway
       - name: waste-tracking-service
