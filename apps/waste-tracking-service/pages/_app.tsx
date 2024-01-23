@@ -5,6 +5,8 @@ import 'i18n/config';
 import { CookiesProvider } from 'react-cookie';
 import { useGoogleTagManager } from '../utils/GoogleTagManager';
 import { useSession } from 'next-auth/react';
+import { useIdle } from '@uidotdev/usehooks';
+import { useRouter } from 'next/router';
 
 export default function App({
   Component,
@@ -13,7 +15,7 @@ export default function App({
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
   useGoogleTagManager();
   return getLayout(
-    <SessionProvider session={session} refetchInterval={30}>
+    <SessionProvider session={session} refetchInterval={60}>
       <CookiesProvider>
         {Component.auth ? (
           <AuthWrapper>
@@ -28,7 +30,14 @@ export default function App({
 }
 
 const AuthWrapper = ({ children }) => {
+  const router = useRouter();
   const { status } = useSession({ required: true });
+  const idle = useIdle(1000 * 60 * 15);
+
+  if (idle) {
+    router.push({ pathname: '/auth/signout' });
+  }
+
   if (status === 'loading') {
     return <></>;
   }

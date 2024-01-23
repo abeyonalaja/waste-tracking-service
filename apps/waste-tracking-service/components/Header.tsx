@@ -123,9 +123,10 @@ const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;
 `;
 
-export const Header = () => {
+export const Header = ({ isSignOutPage = false }) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
+  const callBackOptions = isSignOutPage ? { callbackUrl: '/export' } : null;
 
   const signOutDCID = async () => {
     const response = await fetch(`/api/auth/getSignoutEndpoint`);
@@ -166,7 +167,7 @@ export const Header = () => {
                   href="/auth/signin"
                   onClick={(e) => {
                     e.preventDefault();
-                    signIn('defra-b2c');
+                    signIn('defra-b2c', callBackOptions);
                   }}
                 >
                   Sign in
