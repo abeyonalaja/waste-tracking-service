@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import { BreadcrumbWrap, Footer, Header, Paragraph, AppLink } from 'components';
 import { signIn, signOut } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 
 const BreadCrumbs = () => {
@@ -21,7 +21,9 @@ const BreadCrumbs = () => {
 
 const SignOut = () => {
   const { t } = useTranslation();
-  signOut({ redirect: false });
+  useEffect(() => {
+    signOut({ redirect: false });
+  }, []);
   return (
     <>
       <Head>
