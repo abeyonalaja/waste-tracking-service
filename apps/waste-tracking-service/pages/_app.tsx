@@ -35,7 +35,10 @@ const AuthWrapper = ({ children }) => {
   const idle = useIdle(1000 * 60 * 15);
 
   if (idle) {
-    router.push({ pathname: '/auth/signout' });
+    router.push({
+      pathname: '/auth/signout',
+      query: { callbackUrl: router.asPath },
+    });
   }
 
   if (status === 'loading') {

@@ -1,10 +1,10 @@
-import '../../i18n/config';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import { BreadcrumbWrap, Footer, Header, Paragraph, AppLink } from 'components';
 import { signIn, signOut } from 'next-auth/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 const BreadCrumbs = () => {
   const { t } = useTranslation();
@@ -20,18 +20,27 @@ const BreadCrumbs = () => {
 };
 
 const SignOut = () => {
-  const { t } = useTranslation();
+  const router = useRouter();
+  const [callbackUrl, setCallbackUrl] = useState<string>('/export');
+
+  useEffect(() => {
+    if (router.isReady) {
+      setCallbackUrl(router.query.callbackUrl.toString());
+    }
+  }, [router.isReady]);
+
   useEffect(() => {
     signOut({ redirect: false });
   }, []);
+
   return (
     <>
       <Head>
-        <title>{t('app.title')}</title>
+        <title>For your security, we signed you out</title>
       </Head>
       <GovUK.Page
         id="content"
-        header={<Header isSignOutPage={true} />}
+        header={<Header isSignOutPage={true} callbackUrl={callbackUrl} />}
         footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
@@ -47,7 +56,7 @@ const SignOut = () => {
                 href="/auth/signin"
                 onClick={(e) => {
                   e.preventDefault();
-                  signIn('defra-b2c', { callbackUrl: '/export' });
+                  signIn('defra-b2c', { callbackUrl });
                 }}
               >
                 sign in

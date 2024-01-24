@@ -123,10 +123,10 @@ const PhaseBannerStyled = styled(PhaseBanner)`
   margin-top: -30px;
 `;
 
-export const Header = ({ isSignOutPage = false }) => {
+export const Header = ({ isSignOutPage = false, callbackUrl = '/export' }) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
-  const callBackOptions = isSignOutPage ? { callbackUrl: '/export' } : null;
+  const callBackOptions = isSignOutPage ? { callbackUrl } : null;
 
   const signOutDCID = async () => {
     const response = await fetch(`/api/auth/getSignoutEndpoint`);
