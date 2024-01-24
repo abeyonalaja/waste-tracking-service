@@ -128,11 +128,11 @@ const ManageTemplates = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [showBanner, setShowBanner] = useState(false);
-  const [token, setToken] = useState(null);
+  const [paginationToken, setPaginationToken] = useState(null);
 
   useEffect(() => {
     if (router.isReady) {
-      setToken(router.query.token || null);
+      setPaginationToken(router.query.paginationToken || 'NO_TOKEN_SET');
       setTemplateId(String(router.query.templateId));
       setContext(String(router.query.context));
     }
@@ -140,14 +140,14 @@ const ManageTemplates = () => {
     router.isReady,
     router.query.templateId,
     router.query.context,
-    router.query.token,
+    router.query.paginationToken,
   ]);
 
   useEffect(() => {
     const fetchData = async () => {
       let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates?order=desc`;
-      if (token) {
-        url = `${url}&token=${token}`;
+      if (paginationToken !== 'NO_TOKEN_SET') {
+        url = `${url}&paginationToken=${paginationToken}`;
       }
       dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
       await fetch(url, { headers: apiConfig })
@@ -169,8 +169,10 @@ const ManageTemplates = () => {
           });
         });
     };
-    fetchData();
-  }, [token]);
+    if (paginationToken) {
+      fetchData();
+    }
+  }, [paginationToken]);
 
   useEffect(() => {
     if (templateId && templatesPage.data) {

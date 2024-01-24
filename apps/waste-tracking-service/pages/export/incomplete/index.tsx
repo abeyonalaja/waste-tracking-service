@@ -133,6 +133,7 @@ const IncompleteAnnex7 = () => {
   const [confirm, setConfirm] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const notificationRef = useRef(null);
+  const [paginationToken, setPaginationToken] = useState(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -149,55 +150,50 @@ const IncompleteAnnex7 = () => {
     };
   }, []);
 
-  const [token, setToken] = useState(null);
-
   useEffect(() => {
     if (router.isReady) {
-      setToken(router.query.token || null);
+      setPaginationToken(router.query.paginationToken || 'NO_TOKEN_SET');
     }
-  }, [router.isReady, router.query.token]);
+  }, [router.isReady, router.query.paginationToken]);
 
   useEffect(() => {
-    if (router.isReady) {
+    const fetchData = async () => {
       dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_INIT' });
-
       let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=InProgress&order=desc`;
-      if (token) {
-        url = `${url}&token=${token}`;
+      if (paginationToken !== 'NO_TOKEN_SET') {
+        url = `${url}&paginationToken=${paginationToken}`;
       }
-
-      const fetchData = async () => {
-        try {
-          fetch(url, { headers: apiConfig })
-            .then((response) => {
-              if (response.ok) return response.json();
-              else {
-                if (response.status === 403) {
-                  router.push({
-                    pathname: `/403/`,
-                  });
-                }
-                dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+      try {
+        fetch(url, { headers: apiConfig })
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              if (response.status === 403) {
+                router.push({
+                  pathname: `/403/`,
+                });
               }
-            })
-            .then((data) => {
-              let filteredData;
-              if (data) {
-                filteredData = data;
-              }
-
-              dispatchIncompleteAnnex7Page({
-                type: 'DATA_FETCH_SUCCESS',
-                payload: filteredData,
-              });
+              dispatchIncompleteAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+            }
+          })
+          .then((data) => {
+            let filteredData;
+            if (data) {
+              filteredData = data;
+            }
+            dispatchIncompleteAnnex7Page({
+              type: 'DATA_FETCH_SUCCESS',
+              payload: filteredData,
             });
-        } catch (e) {
-          console.error(e);
-        }
-      };
+          });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    if (paginationToken) {
       fetchData();
     }
-  }, [router.isReady, token]);
+  }, [paginationToken]);
 
   const handleRemove = (e, item) => {
     setItem(item);

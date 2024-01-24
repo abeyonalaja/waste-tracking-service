@@ -88,50 +88,48 @@ const Index = () => {
     submittedAnnex7Reducer,
     initialWasteDescState
   );
-
-  const [token, setToken] = useState(null);
+  const [paginationToken, setPaginationToken] = useState(null);
 
   useEffect(() => {
     if (router.isReady) {
-      setToken(router.query.token || null);
+      setPaginationToken(router.query.paginationToken || 'NO_TOKEN_SET');
     }
-  }, [router.isReady, router.query.token]);
+  }, [router.isReady, router.query.paginationToken]);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (router.isReady) {
-        dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
-        let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
-        if (token) {
-          url = `${url}&token=${token}`;
-        }
-
-        await fetch(url, { headers: apiConfig })
-          .then((response) => {
-            if (response.ok) return response.json();
-            else {
-              if (response.status === 403) {
-                router.push({
-                  pathname: `/403/`,
-                });
-              }
-              dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
-            }
-          })
-          .then((data) => {
-            let filteredData;
-            if (data) {
-              filteredData = data;
-            }
-            dispatchSubmittedAnnex7Page({
-              type: 'DATA_FETCH_SUCCESS',
-              payload: filteredData,
-            });
-          });
+      dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_INIT' });
+      let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions?state=SubmittedWithActuals,UpdatedWithActuals&order=desc`;
+      if (paginationToken !== 'NO_TOKEN_SET') {
+        url = `${url}&paginationToken=${paginationToken}`;
       }
+      await fetch(url, { headers: apiConfig })
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            if (response.status === 403) {
+              router.push({
+                pathname: `/403/`,
+              });
+            }
+            dispatchSubmittedAnnex7Page({ type: 'DATA_FETCH_FAILURE' });
+          }
+        })
+        .then((data) => {
+          let filteredData;
+          if (data) {
+            filteredData = data;
+          }
+          dispatchSubmittedAnnex7Page({
+            type: 'DATA_FETCH_SUCCESS',
+            payload: filteredData,
+          });
+        });
     };
-    fetchData();
-  }, [router.isReady, token]);
+    if (paginationToken) {
+      fetchData();
+    }
+  }, [paginationToken]);
 
   const BreadCrumbs = () => {
     return (

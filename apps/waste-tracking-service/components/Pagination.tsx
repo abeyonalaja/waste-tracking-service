@@ -103,9 +103,9 @@ const NextIcon = styled(Icon)`
 export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
   const { t } = useTranslation();
 
-  const getToken = (pageNumber) => {
+  const getPaginationToken = (pageNumber) => {
     if (pageNumber === 1) return {};
-    return { token: encodeURIComponent(pages[pageNumber - 2].token) };
+    return { paginationToken: encodeURIComponent(pages[pageNumber - 2].token) };
   };
 
   const getPageRange = () => {
@@ -152,7 +152,7 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
                 <PaginationLink
                   href={{
                     pathname: url,
-                    query: getToken(currentPage - 1),
+                    query: getPaginationToken(currentPage - 1),
                   }}
                   rel="prev"
                 >
@@ -184,7 +184,7 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
                     aria-label={`Page ${page}`}
                     href={{
                       pathname: url,
-                      query: getToken(page),
+                      query: getPaginationToken(page),
                     }}
                   >
                     {page}
@@ -198,7 +198,7 @@ export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
                 <PaginationLink
                   href={{
                     pathname: url,
-                    query: getToken(currentPage + 1),
+                    query: getPaginationToken(currentPage + 1),
                   }}
                   rel="next"
                 >
