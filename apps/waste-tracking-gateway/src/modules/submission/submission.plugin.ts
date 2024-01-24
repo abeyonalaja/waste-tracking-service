@@ -64,7 +64,7 @@ const plugin: Plugin<PluginOptions> = {
             .map((i) => i as dto.SubmissionState['status']);
         }
 
-        const token = query['token'] as string | undefined;
+        const token = query['paginationToken'] as string | undefined;
         try {
           const value = await backend.getSubmissions(
             h.request.auth.credentials.accountId as string,

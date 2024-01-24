@@ -49,7 +49,7 @@ const plugin: Plugin<PluginOptions> = {
         }
         const pageLimit = pageLimitStr ? parseInt(pageLimitStr) : undefined;
 
-        const token = query['token'] as string | undefined;
+        const token = query['paginationToken'] as string | undefined;
         try {
           const value = await backend.getTemplates(
             h.request.auth.credentials.accountId as string,
