@@ -7,6 +7,8 @@ import { CookiesProvider } from 'react-cookie';
 import { useSession } from 'next-auth/react';
 import { useIdle } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+const queryClient = new QueryClient();
 
 export default function App({
   Component,
@@ -23,13 +25,15 @@ export default function App({
       <Layout>
         <SessionProvider session={session} refetchInterval={60}>
           <CookiesProvider>
-            {Component.auth ? (
-              <AuthWrapper>
+            <QueryClientProvider client={queryClient}>
+              {Component.auth ? (
+                <AuthWrapper>
+                  <Component {...pageProps} />
+                </AuthWrapper>
+              ) : (
                 <Component {...pageProps} />
-              </AuthWrapper>
-            ) : (
-              <Component {...pageProps} />
-            )}
+              )}
+            </QueryClientProvider>
           </CookiesProvider>
         </SessionProvider>
       </Layout>

@@ -273,7 +273,6 @@ const Tasklist = () => {
           <>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="two-thirds">
-                {showBanner}
                 {showBanner && context === 'createdFromTemplate' && (
                   <NotificationBanner
                     headingText={t('templates.use.banner.title')}

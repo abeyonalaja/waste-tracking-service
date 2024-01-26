@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import 'i18n/config';
 
 interface Props {
+  size?: string;
   testId?: string;
 }
 
-const LoadingStyled = styled(LoadingBox)`
+const LoadingStyled = styled(LoadingBox)<{ $size?: string }>`
   padding: 0;
-  width: 30px;
+  width: ${(props) => (props.$size === 'L' ? '120px' : '30px')};
   * {
     position: relative;
     display: inline-block;
@@ -22,12 +23,16 @@ const LoadingStyled = styled(LoadingBox)`
     position: relative;
     width: 100%;
   }
+  svg {
+    width: ${(props) => (props.$size === 'L' ? '120px' : '30px')} !important;
+  }
 `;
 
-export const Loading = ({ testId }: Props) => {
+export const Loading = ({ size, testId }: Props) => {
   const { t } = useTranslation();
   return (
     <LoadingStyled
+      $size={size}
       loading
       data-testid={testId}
       aria-busy="true"

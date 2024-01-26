@@ -20,14 +20,14 @@ const Message = styled(Main)`
 
 export const CookieBanner = () => {
   const { t } = useTranslation();
-  const [isBannerVisible, setIsBannerVisible] = useState<boolean>(true);
+  const [isBannerVisible, setIsBannerVisible] = useState<boolean>(false);
   const [analyticsConsent, setAnalyticsConsent] = useState<boolean>(null);
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME;
   const [cookies, setCookie] = useCookies([cookieName]);
 
   useEffect(() => {
-    if (cookies['cookieConsent']) {
-      setIsBannerVisible(false);
+    if (!cookies['cookieConsent']) {
+      setIsBannerVisible(true);
     }
   }, []);
 

@@ -156,9 +156,7 @@ export const Header = ({ isSignOutPage = false, callbackUrl = '/export' }) => {
             </GovukHeaderLogoLink>
           </GovukHeaderLogo>
           <GovukHeaderContent>
-            <GovukHeaderLink href={{ pathname: '/' }}>
-              {t('app.title')}
-            </GovukHeaderLink>
+            <GovukHeaderLink href="/">{t('app.title')}</GovukHeaderLink>
           </GovukHeaderContent>
           <GovukHeaderUserContent>
             {!session && (

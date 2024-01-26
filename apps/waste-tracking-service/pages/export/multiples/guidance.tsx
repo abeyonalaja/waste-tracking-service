@@ -26,13 +26,16 @@ const BreadCrumbs = () => {
         <GovUK.Breadcrumbs.Link href="/">
           {t('app.parentTitle')}
         </GovUK.Breadcrumbs.Link>
-        <GovUK.Breadcrumbs.Link>{t('app.title')}</GovUK.Breadcrumbs.Link>
+        <GovUK.Breadcrumbs.Link href="/export">
+          {t('app.title')}
+        </GovUK.Breadcrumbs.Link>
+        {t('export.homepage.multiples.guidance.link')}
       </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
   );
 };
 
-export function HowToCreateCSV() {
+const Guidance = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -767,7 +770,7 @@ export function HowToCreateCSV() {
       </GovUK.Page>
     </>
   );
-}
+};
 
-export default HowToCreateCSV;
-HowToCreateCSV.auth = true;
+export default Guidance;
+Guidance.auth = true;

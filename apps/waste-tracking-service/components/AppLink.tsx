@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { LINK_COLOUR, BLACK, YELLOW, BUTTON_COLOUR } from 'govuk-colours';
@@ -9,7 +9,7 @@ interface Props {
   isGreen?: boolean;
   id?: string;
   noVisitedState?: boolean;
-  onClick?: (e: FormEvent) => void;
+  onClick?: (e) => void;
   children: ReactNode;
   testId?: string;
   rel?: string;

@@ -101,6 +101,17 @@ export function Index() {
                     {t('exportJourney.exportHome.useTemplateToCreatRecord')}
                   </AppLink>
                 </GovUK.ListItem>
+                {process.env.NEXT_PUBLIC_MULTIPLES_ENABLED === 'true' && (
+                  <GovUK.ListItem>
+                    <AppLink
+                      href={{
+                        pathname: `/export/multiples/upload`,
+                      }}
+                    >
+                      {t('exportJourney.exportHome.createMultipleRecords')}
+                    </AppLink>
+                  </GovUK.ListItem>
+                )}
                 <GovUK.ListItem>
                   <AppLink
                     href={{
@@ -178,7 +189,7 @@ export function Index() {
                   <GovUK.ListItem>
                     <AppLink
                       href={{
-                        pathname: `/export/multiples/guidance/bounce`,
+                        pathname: `/export/multiples/guidance`,
                       }}
                     >
                       {t('export.homepage.multiples.guidance.link')}
