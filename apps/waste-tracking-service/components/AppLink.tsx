@@ -1,11 +1,12 @@
 import React, { FormEvent, ReactNode } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { LINK_COLOUR, BLACK, YELLOW } from 'govuk-colours';
+import { LINK_COLOUR, BLACK, YELLOW, BUTTON_COLOUR } from 'govuk-colours';
 
 interface Props {
   href: string | object;
   isBold?: boolean;
+  isGreen?: boolean;
   id?: string;
   noVisitedState?: boolean;
   onClick?: (e: FormEvent) => void;
@@ -16,13 +17,17 @@ interface Props {
   target?: string;
 }
 
-const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
+const StyledLink = styled(Link)<{
+  $isBold?: boolean;
+  disabled?: boolean;
+  $isGreen: boolean;
+}>`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-decoration: underline;
   text-decoration-thickness: max(1px, 0.0625rem);
   text-underline-offset: 0.15em;
-  color: ${LINK_COLOUR};
+  color: ${(props) => (props.$isGreen ? BUTTON_COLOUR : LINK_COLOUR)};
   font-weight: ${(props) => (props.$isBold ? '700' : '400')};
   font-size: 16px;
   line-height: 1.25;
@@ -51,6 +56,7 @@ const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
 export const AppLink = ({
   href,
   isBold,
+  isGreen,
   id,
   children,
   onClick,
@@ -66,6 +72,7 @@ export const AppLink = ({
       onClick={onClick}
       data-testid={testId}
       $isBold={isBold}
+      $isGreen={isGreen}
       disabled={disabled}
       target={target}
       rel={rel}

@@ -67,6 +67,7 @@
   "cancelButton": "Cancel",
   "updateButton": "Update",
   "confirmContinueButton": "Confirm and continue",
+  "cookieSaveButton": "Save cookie settings",
   "postcode.label": "Postcode",
   "buildingNameNumber.label": "Building name or number (optional)",
   "postcode.findButton": "Find address",

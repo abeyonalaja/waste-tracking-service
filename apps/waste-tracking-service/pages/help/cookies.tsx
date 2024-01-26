@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
 import {
+  AppLink,
   BreadcrumbWrap,
   ButtonGroup,
   Footer,
@@ -50,11 +51,15 @@ const Cookies = () => {
     const { t } = useTranslation();
     return (
       <BreadcrumbWrap>
-        <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-        </GovUK.Breadcrumbs>
+        <GovUK.BackLink
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            history.back();
+          }}
+        >
+          {t('Back')}
+        </GovUK.BackLink>
       </BreadcrumbWrap>
     );
   };
@@ -76,7 +81,19 @@ const Cookies = () => {
               <NotificationBanner
                 type="success"
                 headingText={t('cookie.page.saved')}
-              />
+              >
+                <AppLink
+                  href="#"
+                  isGreen
+                  isBold
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.back();
+                  }}
+                >
+                  Go back to the page you were looking at
+                </AppLink>
+              </NotificationBanner>
             )}
             <GovUK.Heading size="L">{t('cookie.page.title')}</GovUK.Heading>
             <Paragraph>{t('cookie.page.p1')}</Paragraph>
@@ -152,7 +169,9 @@ const Cookies = () => {
                 </GovUK.MultiChoice>
               </GovUK.Fieldset>
               <ButtonGroup>
-                <GovUK.Button id="saveButton">{t('saveButton')}</GovUK.Button>
+                <GovUK.Button id="saveButton">
+                  {t('cookieSaveButton')}
+                </GovUK.Button>
               </ButtonGroup>
             </form>
           </GovUK.GridCol>
