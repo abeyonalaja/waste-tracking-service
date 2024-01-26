@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 const Main = styled.main`
   @media screen {
     padding: 30px;

@@ -1,4 +1,3 @@
-import PDFLayout from 'components/PDFLayout';
 import React, { useEffect, useState, useReducer } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -331,8 +330,6 @@ export const Download = () => {
       <Head>
         <title>{t('exportJourney.checkAnswers.pageTitle')}</title>
       </Head>
-      {downloadReport.isError && !downloadReport.isLoading && <></>}
-      {downloadReport.isLoading && <></>}
       {!downloadReport.isError && !downloadReport.isLoading && (
         <>
           <Page>
@@ -1095,55 +1092,58 @@ export const Download = () => {
                   {downloadReport.data.transitCountries.status ===
                     'Complete' && (
                     <>
-                      <tr>
-                        <th>Export/dispatch</th>
-                        <th
-                          colSpan={
-                            downloadReport.data.transitCountries.values.length >
-                            3
-                              ? 3
-                              : downloadReport.data.transitCountries.values
-                                  .length
-                          }
-                        >
-                          Transit
-                        </th>
-                        <th>Import/destination</th>
-                      </tr>
-                      <tr>
-                        <td>
-                          <BreakableString>
-                            {downloadReport.data.exporterDetail.status ===
-                              'Complete' &&
-                              downloadReport.data.exporterDetail.exporterAddress
-                                .country}
-                          </BreakableString>
-                        </td>
-                        <td>
+                      <tbody>
+                        <tr>
+                          <th>Export/dispatch</th>
+                          <th
+                            colSpan={
+                              downloadReport.data.transitCountries.values
+                                .length > 3
+                                ? 3
+                                : downloadReport.data.transitCountries.values
+                                    .length
+                            }
+                          >
+                            Transit
+                          </th>
+                          <th>Import/destination</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <BreakableString>
+                              {downloadReport.data.exporterDetail.status ===
+                                'Complete' &&
+                                downloadReport.data.exporterDetail
+                                  .exporterAddress.country}
+                            </BreakableString>
+                          </td>
+                          <td>
+                            {downloadReport.data.transitCountries.values
+                              .length > 0 &&
+                              downloadReport.data.transitCountries.values[0]}
+                          </td>
                           {downloadReport.data.transitCountries.values.length >
-                            0 && downloadReport.data.transitCountries.values[0]}
-                        </td>
-                        {downloadReport.data.transitCountries.values.length >
-                          1 && (
+                            1 && (
+                            <td>
+                              {downloadReport.data.transitCountries.values[1]}
+                            </td>
+                          )}
+                          {downloadReport.data.transitCountries.values.length >
+                            2 && (
+                            <td>
+                              {downloadReport.data.transitCountries.values[2]}
+                            </td>
+                          )}
                           <td>
-                            {downloadReport.data.transitCountries.values[1]}
+                            <BreakableString>
+                              {downloadReport.data.importerDetail.status ===
+                                'Complete' &&
+                                downloadReport.data.importerDetail
+                                  .importerAddressDetails.country}
+                            </BreakableString>
                           </td>
-                        )}
-                        {downloadReport.data.transitCountries.values.length >
-                          2 && (
-                          <td>
-                            {downloadReport.data.transitCountries.values[2]}
-                          </td>
-                        )}
-                        <td>
-                          <BreakableString>
-                            {downloadReport.data.importerDetail.status ===
-                              'Complete' &&
-                              downloadReport.data.importerDetail
-                                .importerAddressDetails.country}
-                          </BreakableString>
-                        </td>
-                      </tr>
+                        </tr>
+                      </tbody>
                     </>
                   )}
                 </Table>
@@ -1726,11 +1726,9 @@ export const Download = () => {
   );
 };
 
-Download.getLayout = function getLayout(page) {
-  return <PDFLayout>{page}</PDFLayout>;
-};
-
 export default Download;
+Download.auth = true;
+Download.layout = 'PDF';
 
 const SiteDetails = ({ data, type, index, inlineFax = false }) => {
   const facilities = data.values.filter(

@@ -1,9 +1,9 @@
 import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/Layout';
+import PDFLayout from 'components/PDFLayout';
 import './styles.css';
 import 'i18n/config';
 import { CookiesProvider } from 'react-cookie';
-import { useGoogleTagManager } from '../utils/GoogleTagManager';
 import { useSession } from 'next-auth/react';
 import { useIdle } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
@@ -12,21 +12,29 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
-  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>);
-  useGoogleTagManager();
-  return getLayout(
-    <SessionProvider session={session} refetchInterval={60}>
-      <CookiesProvider>
-        {Component.auth ? (
-          <AuthWrapper>
-            <Component {...pageProps} />
-          </AuthWrapper>
-        ) : (
-          <Component {...pageProps} />
-        )}
-      </CookiesProvider>
-    </SessionProvider>
-  );
+  if (Component.layout === 'PDF') {
+    return (
+      <PDFLayout>
+        <Component {...pageProps} />
+      </PDFLayout>
+    );
+  } else {
+    return (
+      <Layout>
+        <SessionProvider session={session} refetchInterval={60}>
+          <CookiesProvider>
+            {Component.auth ? (
+              <AuthWrapper>
+                <Component {...pageProps} />
+              </AuthWrapper>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </CookiesProvider>
+        </SessionProvider>
+      </Layout>
+    );
+  }
 }
 
 const AuthWrapper = ({ children }) => {
