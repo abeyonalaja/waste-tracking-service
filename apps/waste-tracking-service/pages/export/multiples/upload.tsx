@@ -10,6 +10,7 @@ import {
   Paragraph,
   BreadcrumbWrap,
   SaveReturnButton,
+  ButtonGroup,
 } from 'components';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
@@ -20,6 +21,7 @@ import { useCookies } from 'react-cookie';
 import UploadUI_Content from './_content/upload-content';
 import UploadUI_Interuption from './_content/guidance-interuption';
 import { RED } from 'govuk-colours';
+import { Button } from 'govuk-react';
 
 const BackLinkWrap = styled.div`
   margin-top: -30px;
@@ -70,6 +72,7 @@ const Upload = () => {
   const [id, setId] = useState<string>(null);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [filename, setFilename] = useState<string>(null);
+  const [isSecondForm, setIsSecondForm] = useState<boolean>(false);
   const [cookies, setCookie] = useCookies(['GLWMultipleGuidanceViewed']);
 
   useEffect(() => {
@@ -100,6 +103,8 @@ const Upload = () => {
                   <UploadUI_Form
                     assignId={setId}
                     updateFilename={setFilename}
+                    isSecondForm={false}
+                    setIsSecondForm={setIsSecondForm}
                   />
                 </GovUK.GridCol>
               </GovUK.GridRow>
@@ -107,7 +112,13 @@ const Upload = () => {
           </>
         )}
         {id && (
-          <UploadUI_Process id={id} assignId={setId} filename={filename} />
+          <UploadUI_Process
+            id={id}
+            assignId={setId}
+            filename={filename}
+            isSecondForm={isSecondForm}
+            setIsSecondForm={setIsSecondForm}
+          />
         )}
       </GovUK.Page>
     </>
@@ -117,7 +128,12 @@ const Upload = () => {
 export default Upload;
 Upload.auth = true;
 
-const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
+const UploadUI_Form = ({
+  assignId,
+  updateFilename,
+  isSecondForm,
+  setIsSecondForm,
+}) => {
   const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<{
@@ -143,7 +159,7 @@ const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
   };
 
   const validateFile = (file) => {
-    if (file === null) {
+    if (file === null || file === undefined) {
       return 'Select a file to upload';
     }
     if (file.type !== 'text/csv') {
@@ -160,6 +176,7 @@ const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
       setErrors(newErrors);
       setFile(null);
     } else {
+      assignId(null);
       setErrors(null);
       const formData = new FormData();
       formData.append('input', file);
@@ -168,6 +185,7 @@ const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
       if (response?.status === 201) {
         updateFilename(file.name);
         assignId(response.data.id);
+        setIsSecondForm(isSecondForm);
       } else {
         setErrors({ file: response.data.message });
         setFile(null);
@@ -206,7 +224,13 @@ const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
   );
 };
 
-const UploadUI_Process = ({ id, assignId, filename }) => {
+const UploadUI_Process = ({
+  id,
+  assignId,
+  filename,
+  isSecondForm,
+  setIsSecondForm,
+}) => {
   const { t } = useTranslation();
   const [result, setResult] = useState<string>(null);
 
@@ -262,6 +286,7 @@ const UploadUI_Process = ({ id, assignId, filename }) => {
               data={data}
               updateResult={setResult}
               updateId={assignId}
+              setIsSecondForm={setIsSecondForm}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>
@@ -273,6 +298,7 @@ const UploadUI_Process = ({ id, assignId, filename }) => {
               data={data}
               updateResult={setResult}
               updateId={assignId}
+              isSecondForm={isSecondForm}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>
@@ -281,7 +307,12 @@ const UploadUI_Process = ({ id, assignId, filename }) => {
   );
 };
 
-const UploadUI_Success = ({ data, updateResult, updateId }) => {
+const UploadUI_Success = ({
+  data,
+  updateResult,
+  updateId,
+  isSecondForm = false,
+}) => {
   const { t } = useTranslation();
   return (
     <div id="upload-page-success">
@@ -300,16 +331,38 @@ const UploadUI_Success = ({ data, updateResult, updateId }) => {
       <NotificationBanner
         type="success"
         id="success-banner-csv-upload"
-        headingText={t('multiples.errorSummaryPage.success.heading', {
-          n: data?.state?.submissions.length || 0,
-        })}
+        headingText={t(
+          isSecondForm
+            ? 'multiples.success.heading.afterCorrection'
+            : 'multiples.success.heading',
+          {
+            count: data?.data.state?.submissions.length || 0,
+          }
+        )}
       />
-      <Paragraph>{t('multiples.errorSummaryPage.success.para')}</Paragraph>
+      <Paragraph>{t('multiples.success.intro')}</Paragraph>
+      <ButtonGroup>
+        <Button>{t('multiples.success.submitButton')}</Button>
+        <SaveReturnButton
+          onClick={(e) => {
+            e.preventDefault();
+            updateId(null);
+            updateResult(null);
+          }}
+        >
+          {t('cancelButton')}
+        </SaveReturnButton>
+      </ButtonGroup>
     </div>
   );
 };
 
-const UploadUI_ErrorSummary = ({ data, updateResult, updateId }) => {
+const UploadUI_ErrorSummary = ({
+  data,
+  updateResult,
+  updateId,
+  setIsSecondForm,
+}) => {
   const { t } = useTranslation();
   const [showRow, setShowRow] = useState<number | null>(null);
   const errors = data.data.state.errors || [];
@@ -419,6 +472,7 @@ const UploadUI_ErrorSummary = ({ data, updateResult, updateId }) => {
               assignId={updateId}
               updateFilename={updateResult}
               isSecondForm={true}
+              setIsSecondForm={setIsSecondForm}
             />
           </div>
         </>
