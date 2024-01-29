@@ -195,7 +195,10 @@ const UploadUI_Form = ({ assignId, updateFilename, isSecondForm = false }) => {
             </GovUK.H2>
           </GovUK.FileUpload>
         </GovUK.FormGroup>
-        <GovUK.Button disabled={mutation.status === 'pending'}>
+        <GovUK.Button
+          disabled={mutation.status === 'pending'}
+          id="upload-button"
+        >
           {t('multiples.guidance.upload.button')}
         </GovUK.Button>
       </form>
@@ -477,6 +480,7 @@ const UploadUI_ErrorSummary = ({ data, updateResult, updateId }) => {
 
           <SaveReturnButton
             href="#"
+            id="back-to-summary-table-button"
             onClick={(e) => {
               e.preventDefault();
               setShowRow(null);
