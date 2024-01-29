@@ -91,7 +91,7 @@ const Cookies = () => {
                     history.back();
                   }}
                 >
-                  Go back to the page you were looking at
+                  {t('cookie.page.saved.link')}
                 </AppLink>
               </NotificationBanner>
             )}
