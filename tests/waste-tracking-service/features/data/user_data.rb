@@ -13,7 +13,7 @@ module UserData
         businessName: 'Wts Testing',
         username: 'Wtst testing Team member',
         businessUnitId: '',
-        userId: '521578352286'
+        userId: '772918061129'
       },
       USER3: {
         businessName: 'Wts Testing',

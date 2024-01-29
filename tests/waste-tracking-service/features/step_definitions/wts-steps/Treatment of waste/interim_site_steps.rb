@@ -43,6 +43,6 @@ Then(/^I see interim site description translated$/) do
 end
 
 And(/^I click description link$/) do
-  click_on(Translations.value 'exportJourney.interimSite.summary')
-  # page.find(class: 'src__StyledSummary-sc-273hbe-1 gFIgVF').click
+  xpath = "//span[text()='#{Translations.value('exportJourney.interimSite.summary')}']"
+  InterimSiteRecoveryCodePage.new.interim_site_link xpath
 end

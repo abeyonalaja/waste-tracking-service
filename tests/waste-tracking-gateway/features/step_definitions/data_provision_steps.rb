@@ -54,13 +54,13 @@ Then(/^I should see all the EWC code for "([^"]*)"$/) do |lang|
   expect(@response.code).to eq('200')
 end
 
-Given(/^I request countries for "([^"]*)"$/) do |lang|
+Given(/^I request countries$/) do
   @wts = WasteTracking.new(@region)
-  path = "/api/wts-info/countries?language=#{lang}"
+  path = "api/reference-data/countries"
   @response = @wts.call_api('get', path, '')
   @body = JSON.parse(@response.body)
 end
 
-Then(/^I should see all the countries for "([^"]*)"$/) do |lang|
+Then(/^I should see all the countries$/) do
   expect(@response.code).to eq('200')
 end

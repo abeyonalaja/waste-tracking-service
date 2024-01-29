@@ -3,7 +3,7 @@ Feature: Create multiple records
   I NEED to be able to upload multiple Annex VII records
   SO THAT I can save time in creating records to accompany any waste movement
 
-  @translation
+  @translation @single
   Scenario: User navigates to How to create multiple Annex records section and verify page is translated
     Given I login to waste tracking portal
     When Export waste from UK page is displayed

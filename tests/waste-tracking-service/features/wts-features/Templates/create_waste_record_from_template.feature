@@ -189,7 +189,6 @@ Feature: Create template page
     Then I click Manage templates link
     And I verify that newly created template is on top of the table
 
-  @single
   Scenario: Export data should match what is in the template
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

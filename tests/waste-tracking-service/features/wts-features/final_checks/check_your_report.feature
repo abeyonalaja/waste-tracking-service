@@ -441,6 +441,59 @@ Feature: Check your report page
     And I click the button Save and continue
     Then Enter an EWC code is displayed
 
+    @defect-299979
+  Scenario: User can navigate to Interim site and recovery facility from check your report page using change link
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    And I complete Quantity of waste sub-section
+    Then I complete Exporter details with valid postcode
+    And the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    Then I complete Importer contact details page
+    And I click the button Save and continue
+    And I click the "Collection date" link
+    And I complete the Journey of a waste section
+    Then I click the "Recovery facility" link
+    And I complete Treatment of waste section
+    When I click the "Check your record" link
+    Then the "check your record" page is displayed
+    When I click on Interim site address Change link
+    Then I should see interim site address details pre-populated
+    When I click the Save and return to draft
+    And I click the "Check your record" link
+    And I wait for a second
+    When I click on Interim site contact Change link
+    Then I should see interim site contact details pre-populated
+    When I click the Save and return to draft
+#    And I click the "Check your record" link
+#    And I wait for a second
+#    When I click on Interim site recovery code Change link
+#    Then I should see previously selected interim recovery code
+#    When I click the Save and return to draft
+    And I click the "Check your record" link
+    And I wait for a second
+    When I click on Recovery facility address Change link
+    Then I should see previously entered recovery facility details
+    When I click the button Save and continue
+    When I click the button Save and continue
+    When I click the Save and return to draft
+    And I click the "Check your record" link
+    And I wait for a second
+    When I click on Recovery facility contact Change link
+    Then I should see previously entered recovery contact details
+    When I click the button Save and continue
+    When I click the Save and return to draft
+    And I click the "Check your record" link
+    And I wait for a second
+    When I click on Recovery facility code Change link
+    Then I should see previously entered recovery code details pre-populated
+
+
+
+
 
 
 

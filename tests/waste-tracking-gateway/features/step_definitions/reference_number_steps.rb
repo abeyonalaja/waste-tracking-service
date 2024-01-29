@@ -2,7 +2,8 @@ Given(/^I POST reference number "([^"]*)" for waste export$/) do |ref_number|
   uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
-  headers = { 'Content-Type': 'application/json' }
+  headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $token }
+
   request = Net::HTTP::Post.new('/api/submissions', headers)
   payload = '{
 	"reference": "testing"
@@ -32,7 +33,7 @@ Given(/^I POST long reference number "([^"]*)" for waste export$/) do |reference
   uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
-  headers = { 'Content-Length': 'multipart/form-data' }
+  headers = { 'Content-Length': 'multipart/form-data', 'Authorization': 'Bearer ' + $token }
   request = Net::HTTP::Post.new('/api/submissions', headers)
   payload = '{
 	"reference": "testing"
@@ -49,7 +50,7 @@ When(/^I amend the reference number to "([^"]*)" for waste export$/) do |referen
   uri = URI.parse Env.host_url.to_s
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true if uri.instance_of? URI::HTTPS
-  headers = { 'Content-Length': 'text/plain', 'Content-Type': 'text/plain' }
+  headers = { 'Content-Length': 'text/plain', 'Content-Type': 'text/plain', 'Authorization': 'Bearer ' + $token }
   request = Net::HTTP::Put.new("/api/submissions/#{@id}/reference", headers)
   payload = '{"reference"}'
 

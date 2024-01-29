@@ -128,3 +128,15 @@ end
 Then(/^the recovery code page is displayed and correctly translated$/) do
   RecoveryCodePage.new.check_page_displayed
 end
+
+Then(/^I should see previously entered recovery facility details$/) do
+  expect(RecoveryFacilityAddressPage.new).to have_name TestStatus.test_status('recovery_facility_name'.to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_address TestStatus.test_status('recovery_facility_address'.to_sym)
+  expect(RecoveryFacilityAddressPage.new).to have_country TestStatus.test_status('1st_recovery_facility_country_country'.to_sym)
+end
+
+Then(/^I should see previously entered recovery contact details$/) do
+  expect(RecoveryFacilityContactDetailsPage.new).to have_full_name TestStatus.test_status('recovery_facility_full_name'.to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status('recovery_facility_email'.to_sym)
+  expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status('recovery_facility_phone_number'.to_sym)
+end

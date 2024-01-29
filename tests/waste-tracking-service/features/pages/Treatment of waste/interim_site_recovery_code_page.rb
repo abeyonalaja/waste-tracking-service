@@ -31,4 +31,8 @@ class InterimSiteRecoveryCodePage < GenericPage
       'R13' => 'recoveryCode-R13'
     }
   end
+
+  def interim_site_link xpath
+    find(:xpath, xpath).click
+  end
 end

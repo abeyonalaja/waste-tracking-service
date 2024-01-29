@@ -93,7 +93,7 @@ end
 Then(/^waste description should be successfully added to the template$/) do
   @response = @wts.get_template @template_id
   body = JSON.parse(@response.body)
-  expect(body['wasteDescription']['status']).to eq('Complete')
+  expect(body['wasteDescription']['status']).to eq('NotStarted')
 end
 
 Then(/^exporter details should be successfully added to the template$/) do
@@ -169,4 +169,16 @@ Then(/^recovery facility should be successfully added to the template$/) do
   body = JSON.parse(@response.body)
   expect(body['recoveryFacilityDetail']['values'][0]['contactDetails']['fullName']).to eq('Joel Miller')
   expect(body['recoveryFacilityDetail']['status']).to eq('Complete')
+end
+
+Then(/^waste description should be successfully added to the template with status "([^"]*)"$/) do |status|
+  @response = @wts.get_template @template_id
+  body = JSON.parse(@response.body)
+  expect(body['wasteDescription']['status']).to eq(status)
+end
+
+Then(/^template request waste description should be completed with status "([^"]*)"$/) do |status|
+  @response = @wts.get_template @template_id
+  body = JSON.parse(@response.body)
+  expect(body['wasteDescription']['status']).to eq(status)
 end

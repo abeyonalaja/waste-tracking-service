@@ -652,4 +652,28 @@ class CheckYourRecordPage < GenericPage
     find('laboratory-fax-0').text
   end
 
+  def interim_site_address_change
+    click_link 'interimsite-change-address-0'
+  end
+
+  def interim_site_contact_change
+    click_link 'interimsite-change-contact-0'
+  end
+
+  def interim_site_recovery_code_change
+    click_link 'interimsite-change-code-0'
+  end
+
+  def recovery_facility_address_change
+    click_link 'recoveryfacility-change-address-0'
+  end
+
+  def recovery_facility_contact_change
+    click_link 'recoveryfacility-change-contact-0'
+  end
+
+  def recovery_facility_recovery_code_change
+    click_link 'recoveryfacility-change-code-0'
+  end
+
 end

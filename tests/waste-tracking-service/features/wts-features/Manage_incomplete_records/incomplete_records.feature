@@ -2,7 +2,7 @@ Feature: Incomplete records
   I NEED to be able to continue with a draft export after saving
   SO THAT I complete the export submission at my convenience with all the relevant details
 
-  @translation @ignore @single
+  @translation @ignore
   Scenario: User can navigate to empty incomplete Annex VII page
     Given I login to waste tracking portal
     When I click the "Manage incomplete Annex VII records" link
@@ -23,7 +23,6 @@ Feature: Incomplete records
     Then task list page is displayed
     And the reference should be displayed
 
-  @single
   Scenario: User can save draft application after completing all the tasks
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

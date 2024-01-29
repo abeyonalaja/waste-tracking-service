@@ -127,10 +127,10 @@ And(/^I should see export Treatment of waste correctly displayed$/) do
   expect(CheckYourRecordPage.new.interimsite_fax_title_0).to eq Translations.value 'contact.faxNumber'
   expect(CheckYourRecordPage.new.interimsite_code_title_0).to eq Translations.value 'exportJourney.recoveryFacilities.recoveryCode'
 
-  expect(CheckYourRecordPage.new.interimsite_org_name_0).to eq TestStatus.test_status(:interim_site_name_name)
+  expect(CheckYourRecordPage.new.interimsite_org_name_0).to eq TestStatus.test_status(:interim_site_name)
   expect(CheckYourRecordPage.new.interimsite_address_0).to eq TestStatus.test_status(:interim_site_name_address)
   expect(CheckYourRecordPage.new.interimsite_country_0).to eq TestStatus.test_status(:interim_site_country)
-  expect(CheckYourRecordPage.new.interimsite_contact_person_0).to eq TestStatus.test_status(:interim_site_contact_name_full_name)
+  expect(CheckYourRecordPage.new.interimsite_contact_person_0).to eq TestStatus.test_status(:interim_site_contact_full_name)
   expect(CheckYourRecordPage.new.interimsite_email_0).to eq TestStatus.test_status(:interim_site_contact_name_email)
   expect(CheckYourRecordPage.new.interimsite_phone_0).to eq TestStatus.test_status(:interim_site_contact_name_phone_number)
   expect(CheckYourRecordPage.new.interimsite_fax_0).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
@@ -494,4 +494,28 @@ end
 
 Then(/^I should see Not provided label on Check your record page$/) do
   expect(CheckYourRecordPage.new.carrier_transport_details(0)).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
+end
+
+When(/^I click on Interim site address Change link$/) do
+  CheckYourRecordPage.new.interim_site_address_change
+end
+
+When(/^I click on Interim site contact Change link$/) do
+  CheckYourRecordPage.new.interim_site_contact_change
+end
+
+When(/^I click on Interim site recovery code Change link$/) do
+  CheckYourRecordPage.new.interim_site_recovery_code_change
+end
+
+When(/^I click on Recovery facility address Change link$/) do
+  CheckYourRecordPage.new.recovery_facility_address_change
+end
+
+When(/^I click on Recovery facility contact Change link$/) do
+  CheckYourRecordPage.new.recovery_facility_contact_change
+end
+
+When(/^I click on Recovery facility code Change link$/) do
+  CheckYourRecordPage.new.recovery_facility_recovery_code_change
 end

@@ -185,7 +185,7 @@ Feature: Interim site page
     And I click the button Save and continue
     Then I remain on the Interim site recovery code page with an "Enter a recovery code" error message displayed
 
-  @translation  @single
+  @translation
   Scenario: User navigates to interim site confirmation page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

@@ -42,14 +42,14 @@ Feature: Checking templates
     Given I send a POST request to create a template
     Then I should see template is successfully created
     When I request to add small waste description for a template
-    Then waste description should be successfully added to the template
+    Then waste description should be successfully added to the template with status "Complete"
 
   Scenario: Add bulk waste description for a template
     Given I send a POST request to create a template
     Then I should see template is successfully created
     When I request to add bulk waste description for a template
     Then waste description should be successfully added to the template
-    Then template request waste description should be completed
+    Then template request waste description should be completed with status "NotStarted"
 
   Scenario: Add data for a template
     Given I send a POST request to create a template

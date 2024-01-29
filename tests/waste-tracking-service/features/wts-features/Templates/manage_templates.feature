@@ -2,7 +2,7 @@ Feature: Manage templates page
   I NEED to be able to manage my templates
   SO THAT I can amend the templates relevant and updated for my waste submissions
 
-  @ignore @single
+  @ignore
   Scenario: User navigates to Manage templates page and verifies there are no records
     Given I login to waste tracking portal
     And I click the "Manage your Annex VII record templates" link

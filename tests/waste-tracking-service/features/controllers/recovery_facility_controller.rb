@@ -15,14 +15,14 @@ module RecoveryFacilityController
     confirmation_interim_site_page.choose_option 'Yes'
     confirmation_interim_site_page.save_and_continue
 
-    interim_address_page.enter_name 'interim_site_name'
-    interim_address_page.enter_address 'interim_site_name'
+    interim_address_page.enter_name 'interim_site'
+    interim_address_page.enter_address 'interim_site'
     interim_address_page.select_interim_site_country
     interim_address_page.save_and_continue
 
-    interim_site_contact_details_page.enter_full_name 'interim_site_contact_name'
-    interim_site_contact_details_page.enter_email 'interim_site_contact_name'
-    interim_site_contact_details_page.enter_phone_number 'interim_site_contact_name'
+    interim_site_contact_details_page.enter_full_name 'interim_site_contact'
+    interim_site_contact_details_page.enter_email 'interim_site_contact'
+    interim_site_contact_details_page.enter_phone_number 'interim_site_contact'
     interim_site_contact_details_page.save_and_continue
 
     interim_site_recovery_code_page.choose_option 'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11'
