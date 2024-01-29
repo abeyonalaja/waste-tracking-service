@@ -5,6 +5,7 @@ import { DaprAddressClient } from '@wts/client/address';
 import { DaprFeedbackClient } from '@wts/client/feedback';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
 import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
@@ -46,7 +47,6 @@ import {
   ReferenceDataStub,
   referenceDataPlugin,
 } from './modules/reference-data';
-import { DaprReferenceDataClient } from '@wts/client/reference-data';
 
 const logger = winston.createLogger({
   level: 'info',
