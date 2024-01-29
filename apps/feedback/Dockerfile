@@ -1,7 +1,8 @@
 FROM node:18-alpine
 
 ENV NODE_ENV=production \
-    APP_PORT=7000
+    APP_PORT=7000 \
+    NODE_TLS_REJECT_UNAUTHORIZED=0
 
 WORKDIR /app
 COPY --chown=node:node dist/apps/feedback/main.js ./main.js
