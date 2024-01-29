@@ -13,6 +13,8 @@ parameters:
         nameTag: annex_vii
       - name: annex-vii-bulk
         nameTag: annex_vii_bulk
+      - name: feedback
+        nameTag: feedback
       - name: reference-data
         nameTag: reference_data
       - name: waste-tracking-gateway

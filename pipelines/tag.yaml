@@ -11,9 +11,10 @@ parameters:
       - address
       - annex-vii
       - annex-vii-bulk
+      - feedback
       - reference-data
-      - waste-tracking-service
       - waste-tracking-gateway
+      - waste-tracking-service
   - name: tag
     type: string
     default: ''

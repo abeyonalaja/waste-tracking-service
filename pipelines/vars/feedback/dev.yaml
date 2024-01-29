@@ -1,0 +1,14 @@
+image:
+  tag: 'main'
+resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
+  limits:
+    cpu: 50m
+    memory: 256Mi
+secret:
+  env:
+    CLIENT_ID: 'fe24d1fe9e0c9ab326e582ac3e1aca63'
+    SURVEY_ID: 'SV_5p3VxHvybU0P7p4'
+    SURVEY_API_ENDPOINT: 'https://fra1.qualtrics.com/'

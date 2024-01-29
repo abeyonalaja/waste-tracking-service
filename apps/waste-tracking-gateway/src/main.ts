@@ -2,12 +2,19 @@ import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
 import { Template } from '@wts/api/annex-vii';
 import { DaprAddressClient } from '@wts/client/address';
+import { DaprFeedbackClient } from '@wts/client/feedback';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
 import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
 import * as winston from 'winston';
+import { feedbackPlugin } from './modules/feedback';
+import {
+  FeedbackBackend,
+  FeedbackServiceBackend,
+  FeedbackStub,
+} from './modules/feedback/feedback.backend';
 import {
   AddressBackend,
   AddressServiceBackend,
@@ -59,6 +66,7 @@ const app = server({
 let backend: {
   submission: SubmissionBackend;
   address: AddressBackend;
+  feedback: FeedbackBackend;
   template: TemplateBackend;
   referenceData: ReferenceDataBackend;
   bulkSubmission: BulkSubmissionBackend;
@@ -76,6 +84,7 @@ if (process.env['NODE_ENV'] === 'development') {
   const bulkSubmissionBackend = new BulkSubmissionStub();
   backend = {
     address: new AddressStub(),
+    feedback: new FeedbackStub(),
     submission: submissionBackend,
     template: templateBackend,
     referenceData: referenceDataBackend,
@@ -114,6 +123,13 @@ if (process.env['NODE_ENV'] === 'development') {
   backend = {
     address: new AddressServiceBackend(
       new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
+      logger
+    ),
+    feedback: new FeedbackServiceBackend(
+      new DaprFeedbackClient(
+        client,
+        process.env['FEEDBACK_APP_ID'] || 'feedback'
+      ),
       logger
     ),
     submission: submissionBackend,
@@ -198,6 +214,17 @@ await app.register({
   },
   routes: {
     prefix: '/api/reference-data',
+  },
+});
+
+await app.register({
+  plugin: feedbackPlugin,
+  options: {
+    backend: backend.feedback,
+    logger,
+  },
+  routes: {
+    prefix: '/api/feedback',
   },
 });
 

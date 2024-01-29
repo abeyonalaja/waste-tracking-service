@@ -115,4 +115,6 @@ ingress:
           pathType: Prefix
         - path: /api/batches
           pathType: Prefix
+        - path: /api/feedback
+          pathType: Prefix
   labels: {}
