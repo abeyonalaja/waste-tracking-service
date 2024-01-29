@@ -31,6 +31,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
+  validateFax,
   validateRecoveryCode,
   validateAddAnotherFacility,
   validateConfirmRemove,
@@ -412,6 +413,7 @@ const RecoveryFacilityDetails = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber),
           };
           body = {
             status: 'Started',
@@ -920,7 +922,7 @@ const RecoveryFacilityDetails = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {recoveryPage.errors?.fax && (
+                          {recoveryPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {recoveryPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -934,6 +936,7 @@ const RecoveryFacilityDetails = () => {
                             value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
+                            error={recoveryPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

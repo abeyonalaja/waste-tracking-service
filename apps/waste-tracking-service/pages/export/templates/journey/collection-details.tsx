@@ -31,6 +31,7 @@ import {
   validateFullName,
   validateOrganisationName,
   validatePhone,
+  validateFax,
   validatePostcode,
   validateSelectAddress,
   validateTownCity,
@@ -271,6 +272,7 @@ const CollectionDetails = () => {
       fullName: validateFullName(contactDetails?.fullName),
       emailAddress: validateEmail(contactDetails?.emailAddress),
       phoneNumber: validatePhone(contactDetails?.phoneNumber),
+      faxNumber: validateFax(contactDetails?.faxNumber),
       addressLine1: validateAddress(addressDetails?.addressLine1),
       townCity: validateTownCity(addressDetails?.townCity),
       postcode: validatePostcode(addressDetails?.postcode),
@@ -458,6 +460,7 @@ const CollectionDetails = () => {
       const newErrors = {
         emailAddress: validateEmail(contactDetails?.emailAddress, true),
         phoneNumber: validatePhone(contactDetails?.phoneNumber, true),
+        faxNumber: validateFax(contactDetails?.faxNumber, true),
       };
       if (isNotEmpty(newErrors)) {
         dispatchAddressPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -1187,7 +1190,7 @@ const CollectionDetails = () => {
                               {t('contact.faxNumber')}
                             </GovUK.LabelText>
 
-                            {addressPage.errors?.fax && (
+                            {addressPage.errors?.faxNumber && (
                               <GovUK.ErrorText>
                                 {addressPage.errors?.faxNumber}
                               </GovUK.ErrorText>
@@ -1198,6 +1201,7 @@ const CollectionDetails = () => {
                               value={contactDetails?.faxNumber}
                               maxLength={50}
                               type="tel"
+                              error={addressPage.errors?.faxNumber}
                               onChange={onContactDetailsChange}
                             />
                           </GovUK.Label>

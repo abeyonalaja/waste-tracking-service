@@ -139,6 +139,20 @@ export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
   }
 };
 
+export const validateFax: (fax?: string, allowNull?: boolean) => string = (
+  fax,
+  allowNull = true
+) => {
+  if (allowNull && (fax === undefined || fax === '')) {
+    return;
+  }
+  const regex = new RegExp('^([0-9]{11})$');
+  const regexInternational = new RegExp('^\\+(\\d{1,20})$');
+  if (!regex.test(fax) && !regexInternational.test(fax)) {
+    return t('validation.fax.invalid');
+  }
+};
+
 export const validateInternationalPhone: (
   phone?: string,
   allowNull?: boolean

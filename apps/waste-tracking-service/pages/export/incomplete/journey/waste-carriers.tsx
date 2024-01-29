@@ -31,6 +31,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
+  validateFax,
   validateOrganisationName,
   validateSelection,
   validateTransport,
@@ -326,6 +327,7 @@ const WasteCarriers = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber),
           };
           body = {
             status: carrierId
@@ -873,7 +875,7 @@ const WasteCarriers = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {carrierPage.errors?.fax && (
+                          {carrierPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {carrierPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -887,6 +889,7 @@ const WasteCarriers = () => {
                             value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
+                            error={carrierPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

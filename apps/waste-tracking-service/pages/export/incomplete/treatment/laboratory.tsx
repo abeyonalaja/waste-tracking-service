@@ -30,6 +30,7 @@ import {
   validateFieldNotEmpty,
   validateFullName,
   validatePhone,
+  validateFax,
 } from 'utils/validators';
 
 import i18n from 'i18next';
@@ -316,6 +317,7 @@ const Laboratory = () => {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
             phoneNumber: validatePhone(contactDetails?.phoneNumber),
+            faxNumber: validateFax(contactDetails?.faxNumber),
           };
 
           body = {
@@ -675,7 +677,7 @@ const Laboratory = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {laboratoryPage.errors?.fax && (
+                          {laboratoryPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {laboratoryPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -689,6 +691,7 @@ const Laboratory = () => {
                             value={contactDetails?.faxNumber}
                             maxLength={50}
                             type="tel"
+                            error={laboratoryPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

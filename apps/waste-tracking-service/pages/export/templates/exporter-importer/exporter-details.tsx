@@ -16,7 +16,12 @@ import {
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 
-import { isNotEmpty, validateEmail, validatePhone } from 'utils/validators';
+import {
+  isNotEmpty,
+  validateEmail,
+  validatePhone,
+  validateFax,
+} from 'utils/validators';
 import { getStatusExporter } from 'utils/statuses/getStatusExporter';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -112,6 +117,7 @@ const ExporterDetails = () => {
       const newErrors = {
         email: validateEmail(email, true),
         phone: validatePhone(phone, true),
+        fax: validateFax(fax, true),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -284,6 +290,10 @@ const ExporterDetails = () => {
                         value: fax || '',
                         maxLength: 250,
                         onChange: (e) => setFax(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.fax,
+                        touched: !!errors?.fax,
                       }}
                     >
                       {t('contact.faxNumber')}

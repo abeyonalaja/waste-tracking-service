@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import {
   isNotEmpty,
   validateEmail,
+  validateFax,
   validateInternationalPhone,
 } from 'utils/validators';
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
@@ -45,6 +46,7 @@ const ImporterContactDetails = () => {
   const [errors, setErrors] = useState<{
     email?: string;
     phone?: string;
+    fax?: string;
   }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -101,6 +103,7 @@ const ImporterContactDetails = () => {
       const newErrors = {
         email: validateEmail(email, true),
         phone: validateInternationalPhone(phone, true),
+        fax: validateFax(fax, true),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -248,6 +251,10 @@ const ImporterContactDetails = () => {
                         value: fax,
                         maxLength: 250,
                         onChange: (e) => setFax(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.fax,
+                        touched: !!errors?.fax,
                       }}
                     >
                       {t('contact.faxNumber')}

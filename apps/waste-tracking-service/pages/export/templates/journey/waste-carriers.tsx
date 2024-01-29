@@ -26,6 +26,7 @@ import {
   validateConfirmRemove,
   validateEmail,
   validateInternationalPhone,
+  validateFax,
   validateSelection,
 } from 'utils/validators';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
@@ -277,6 +278,7 @@ const WasteCarriers = () => {
               contactDetails?.phoneNumber,
               true
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber, true),
           };
           body = {
             status: 'Started',
@@ -761,7 +763,7 @@ const WasteCarriers = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {carrierPage.errors?.fax && (
+                          {carrierPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {carrierPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -775,6 +777,7 @@ const WasteCarriers = () => {
                             value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
+                            error={carrierPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

@@ -28,6 +28,7 @@ import {
   isNotEmpty,
   validateEmail,
   validateInternationalPhone,
+  validateFax,
 } from 'utils/validators';
 
 import i18n from 'i18next';
@@ -309,6 +310,7 @@ const InterimSiteDetails = () => {
               contactDetails?.phoneNumber,
               true
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber, true),
           };
 
           body = {
@@ -672,7 +674,7 @@ const InterimSiteDetails = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {interimPage.errors?.fax && (
+                          {interimPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {interimPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -686,6 +688,7 @@ const InterimSiteDetails = () => {
                             value={contactDetails?.faxNumber}
                             maxLength={50}
                             type="tel"
+                            error={interimPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

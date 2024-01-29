@@ -20,6 +20,7 @@ import {
   validateFullName,
   validateEmail,
   validateInternationalPhone,
+  validateFax,
 } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -104,6 +105,7 @@ const ImporterContactDetails = () => {
         fullName: validateFullName(fullName),
         email: validateEmail(email),
         phone: validateInternationalPhone(phone),
+        fax: validateFax(fax),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -253,6 +255,10 @@ const ImporterContactDetails = () => {
                         value: fax,
                         maxLength: 250,
                         onChange: (e) => setFax(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.fax,
+                        touched: !!errors?.fax,
                       }}
                     >
                       {t('contact.faxNumber')}

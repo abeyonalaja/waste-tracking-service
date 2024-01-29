@@ -547,6 +547,7 @@
   "validation.email.invalid": "Enter a real email address",
   "validation.phone.empty": "Enter a phone number",
   "validation.phone.invalid": "Enter a real phone number",
+  "validation.fax.invalid": "Enter a real fax number",
   "validation.address.empty": "Enter an address",
   "validation.address.select": "Select an address",
   "validation.address.townCity.empty": "Enter a town or city",

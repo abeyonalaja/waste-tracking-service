@@ -31,6 +31,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
+  validateFax,
   validateRecoveryCode,
   validateFieldNotEmpty,
 } from 'utils/validators';
@@ -319,6 +320,7 @@ const InterimSiteDetails = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber),
           };
 
           body = {
@@ -682,7 +684,7 @@ const InterimSiteDetails = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {interimPage.errors?.fax && (
+                          {interimPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {interimPage.errors?.faxNumber}
                             </GovUK.ErrorText>
@@ -696,6 +698,7 @@ const InterimSiteDetails = () => {
                             value={contactDetails?.faxNumber || ''}
                             maxLength={50}
                             type="tel"
+                            error={interimPage.errors?.faxNumber}
                             onChange={onContactDetailsChange}
                           />
                         </GovUK.Label>

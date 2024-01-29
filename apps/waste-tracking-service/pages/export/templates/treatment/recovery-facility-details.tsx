@@ -27,6 +27,7 @@ import {
   isNotEmpty,
   validateEmail,
   validateInternationalPhone,
+  validateFax,
   validateAddAnotherFacility,
   validateConfirmRemove,
 } from 'utils/validators';
@@ -421,6 +422,7 @@ const RecoveryFacilityDetails = () => {
               contactDetails?.phoneNumber,
               true
             ),
+            faxNumber: validateFax(contactDetails?.faxNumber, true),
           };
           body = {
             status: 'Started',
@@ -922,7 +924,7 @@ const RecoveryFacilityDetails = () => {
                             {t('contact.faxNumber')}
                           </GovUK.LabelText>
 
-                          {recoveryPage.errors?.fax && (
+                          {recoveryPage.errors?.faxNumber && (
                             <GovUK.ErrorText>
                               {recoveryPage.errors?.faxNumber}
                             </GovUK.ErrorText>
