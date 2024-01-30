@@ -53,17 +53,12 @@ export const validateEwcCode: (
   hasEWCCode?: string,
   ewcCode?: string
 ) => string | undefined = (hasEWCCode, ewcCode) => {
+  const regex = new RegExp('^[0-9]+$');
   if (hasEWCCode !== 'Yes') return;
-
-  if (ewcCode === null || ewcCode.length === 0)
+  else if (!regex.test(ewcCode)) return t('validation.ewcCode.wrongFormat');
+  else if (ewcCode === null || ewcCode.length === 0)
     return t('validation.ewcCode.empty');
-
-  const regex = /[A-Z-_|.* ]/gi;
-  ewcCode = ewcCode.replace(regex, '');
-
-  if (ewcCode.length != 6) {
-    return t('validation.ewcCode.invalid');
-  }
+  else if (ewcCode.length != 6) return t('validation.ewcCode.invalid');
 };
 
 export const validateNationalCode: (

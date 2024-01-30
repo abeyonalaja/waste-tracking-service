@@ -78,7 +78,9 @@ const Upload = () => {
   useEffect(() => {
     if (!cookies.GLWMultipleGuidanceViewed) {
       setShowCard(true);
-      setCookie('GLWMultipleGuidanceViewed', 'true');
+      setCookie('GLWMultipleGuidanceViewed', 'true', {
+        maxAge: 2592000,
+      });
     }
   }, [cookies]);
 

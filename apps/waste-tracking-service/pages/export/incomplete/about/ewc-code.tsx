@@ -355,7 +355,7 @@ const EwcCodes = () => {
       ({ code }) => code.slice(0, 6) === ewcCode
     );
     if (result !== undefined) {
-      return `You have already entered this code`;
+      return t('validation.ewcCode.duplicate');
     }
   };
 
@@ -365,7 +365,7 @@ const EwcCodes = () => {
     }
     const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
     if (result === undefined) {
-      return 'Enter a code in the correct format';
+      return t('validation.ewcCode.wrongFormat');
     }
   };
 

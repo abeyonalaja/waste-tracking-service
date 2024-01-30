@@ -541,6 +541,8 @@
   "validation.wasteCode.empty": "Enter {{ wc }} waste code",
   "validation.ewcCode.empty": "Enter a code",
   "validation.ewcCode.invalid": "Enter a code with 6 digits",
+  "validation.ewcCode.duplicate": "You have already entered this code",
+  "validation.ewcCode.wrongFormat": "Enter a code in the correct format",
   "validation.nationalCode.empty": "Enter code",
   "validation.nationalCode.charTooMany": "Enter a code using 50 character or less",
   "validation.nationalCode.charInvalid": "The code must only include letters a to z, numbers, spaces, hyphens and back slashes",
