@@ -1,7 +1,6 @@
 import Boom from '@hapi/boom';
 import * as api from '@wts/api/annex-vii';
 import { fromBoom, success } from '@wts/util/invocation';
-import { differenceInBusinessDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import {
@@ -35,12 +34,6 @@ export default class DraftController extends BaseController {
       ];
 
       if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-        return false;
-      }
-
-      if (
-        differenceInBusinessDays(new Date(year, month, day), new Date()) < 3
-      ) {
         return false;
       }
     }

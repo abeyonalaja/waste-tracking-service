@@ -2468,7 +2468,7 @@ describe(DraftController, () => {
   describe('setDraftSubmissionConfirmation', () => {
     const id = faker.datatype.uuid();
     const accountId = faker.datatype.uuid();
-    let date = add(new Date(), { weeks: 2 });
+    const date = add(new Date(), { weeks: 2 });
 
     const mockValidSubmission = {
       id: id,
@@ -2626,22 +2626,6 @@ describe(DraftController, () => {
       },
     } as DraftSubmission;
 
-    const mockInvalidDateSubmission = { ...mockValidSubmission };
-    date = add(new Date(), { days: 1 });
-
-    mockInvalidDateSubmission.collectionDate = {
-      status: 'Complete',
-      value: {
-        type: 'ActualDate',
-        actualDate: {
-          year: date.getFullYear().toString(),
-          month: (date.getMonth() + 1).toString().padStart(2, '0'),
-          day: date.getDate().toString().padStart(2, '0'),
-        },
-        estimateDate: {},
-      },
-    };
-
     it('accepts a valid set submission confirmation request', async () => {
       mockRepository.getDraft.mockResolvedValue(mockValidSubmission);
 
@@ -2746,31 +2730,12 @@ describe(DraftController, () => {
         },
       });
     });
-
-    it('Reset collection date to NotStarted if the collection date fails revalidation on the submission confirmation check', async () => {
-      mockRepository.getDraft.mockResolvedValue(mockInvalidDateSubmission);
-      const response = await subject.setDraftSubmissionConfirmationById({
-        id,
-        accountId,
-        value: {
-          status: 'Complete',
-          confirmation: true,
-        } as DraftSubmission['submissionConfirmation'],
-      });
-
-      expect(response.success).toBe(false);
-      const { collectionDate } = await mockRepository.getDraft(id, accountId);
-
-      expect(collectionDate).toEqual({
-        status: 'NotStarted',
-      });
-    });
   });
 
   describe('setDraftSubmissionDeclaration', () => {
     const id = faker.datatype.uuid();
     const accountId = faker.datatype.uuid();
-    let date = add(new Date(), { weeks: 2 });
+    const date = add(new Date(), { weeks: 2 });
 
     const mockSubmission = {
       id: id,
@@ -2927,22 +2892,6 @@ describe(DraftController, () => {
         timestamp: new Date(),
       },
     } as DraftSubmission;
-
-    const mockInvalidDateSubmission = { ...mockSubmission };
-    date = add(new Date(), { days: 1 });
-
-    mockInvalidDateSubmission.collectionDate = {
-      status: 'Complete',
-      value: {
-        type: 'ActualDate',
-        actualDate: {
-          year: date.getFullYear().toString(),
-          month: (date.getMonth() + 1).toString().padStart(2, '0'),
-          day: date.getDate().toString().padStart(2, '0'),
-        },
-        estimateDate: {},
-      },
-    };
 
     it('accepts a valid set submission declaration request', async () => {
       mockSubmission.submissionConfirmation = {

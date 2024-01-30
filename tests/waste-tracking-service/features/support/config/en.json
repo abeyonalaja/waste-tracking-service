@@ -222,7 +222,7 @@
   "exportJourney.importerDetails.fax": "Fax number",
   "exportJourney.importerDetails.faxHint": "For international numbers inclued the country code",
   "exportJourney.wasteCollectionDate.title": "Do you know when the waste will be collected?",
-  "exportJourney.wasteCollectionDate.intro": "The collection date must be at least 3 working days from today.",
+  "exportJourney.wasteCollectionDate.intro": "The collection date must be in the future.",
   "exportJourney.wasteCollectionDate.radioYes": "Yes, I’ll enter the actual date",
   "exportJourney.wasteCollectionDate.radioYesHint": "If the date might change, enter an estimate instead.",
   "exportJourney.wasteCollectionDate.radioNo": "No, I’ll enter an estimate date",

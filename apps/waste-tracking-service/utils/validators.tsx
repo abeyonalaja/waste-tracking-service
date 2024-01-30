@@ -1,6 +1,6 @@
 import aOrAn from './aOrAn';
 import i18next from 'i18next';
-import { isPast, isValid, addBusinessDays, differenceInDays } from 'date-fns';
+import { isPast, isValid } from 'date-fns';
 
 const t = i18next.t;
 
@@ -290,10 +290,6 @@ export const validateDate: (date: Date) => string | undefined = (
   if (!isValidDate(dateStringRaw)) return t('validation.date.invalid');
 
   if (isPast(dateString)) return t('validation.date.invalid.past');
-
-  const threeWorkingDaysFromToday = addBusinessDays(new Date(), 3);
-  if (differenceInDays(dateString, threeWorkingDaysFromToday) < 0)
-    return t('validation.date.invalid.working.days');
 };
 
 export const validateActualDate: (date: Date) => string | undefined = (

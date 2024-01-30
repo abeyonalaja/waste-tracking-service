@@ -41,7 +41,7 @@ import {
   Template,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
-import { differenceInBusinessDays } from 'date-fns';
+
 import { v4 as uuidv4 } from 'uuid';
 import {
   AnnexViiServiceSubmissionBaseBackend,
@@ -119,10 +119,6 @@ function isCollectionDateValid(date: CollectionDate) {
     ];
 
     if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-      return false;
-    }
-
-    if (differenceInBusinessDays(new Date(year, month, day), new Date()) < 3) {
       return false;
     }
   }

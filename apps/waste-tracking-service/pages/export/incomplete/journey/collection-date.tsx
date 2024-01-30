@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { isNotEmpty, validateDate, validateDateType } from 'utils/validators';
 import { GetCollectionDateResponse } from '@wts/api/waste-tracking-gateway';
-import { format, addBusinessDays } from 'date-fns';
 import useApiConfig from 'utils/useApiConfig';
 
 const CollectionDate = () => {
@@ -86,10 +85,6 @@ const CollectionDate = () => {
     };
     fetchData();
   }, [router.isReady, id]);
-
-  const get3WorkingDaysFromToday = () => {
-    return format(addBusinessDays(new Date(), 3), 'dd MM yyyy');
-  };
 
   const handleRadioChange = (e, dateType) => {
     setDateType(dateType);
@@ -214,10 +209,7 @@ const CollectionDate = () => {
                       {t('exportJourney.wasteCollectionDate.title')}
                     </GovUK.Fieldset.Legend>
                     <Paragraph>
-                      <>
-                        {t('exportJourney.wasteCollectionDate.intro')} <br />
-                        {t('forExample')} {get3WorkingDaysFromToday()}
-                      </>
+                      <>{t('exportJourney.wasteCollectionDate.intro')}</>
                     </Paragraph>
                     <GovUK.MultiChoice
                       label=""
