@@ -48,3 +48,12 @@ end
 And(/^I complete waste carrier detail with (\d+) waste carrier$/) do |no_of_waste_carrier|
   WasteCarrierBulkWasteController.complete no_of_waste_carrier
 end
+
+And(/^I enter not valid fax number$/) do
+  WhoIsTheWasteCarrierPage.new.enter_invalid_fax_number
+end
+
+And(/^I enter not valid international fax number$/) do
+  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number ''
+  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number '+123456789123654789123'
+end

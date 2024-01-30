@@ -153,3 +153,21 @@ Feature: Waste collection details page
     And I remain on the Contact details collection address page with an "Enter a full name" error message displayed
     And I remain on the Contact details collection address page with an "Enter a real email address" error message displayed
     And I remain on the Contact details collection address page with an "Enter a real phone number" error message displayed
+
+  Scenario: User enter invalid fax number on Contact details collection address page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    When I click the "Waste collection details" link
+    Then the "Waste collection address" page is displayed
+    When I enter valid postcode
+    And I click Find Address button
+    And I choose first collection address from the list
+    And I click the button Save and continue
+    And I click the button Save and continue
+    Then  I should see "Contact details collection address" page is displayed
+    And I enter not valid fax number
+    And I click the button Save and continue
+    Then I remain on the Contact details collection address page with an "Enter a real fax number" error message displayed
+    And I enter not valid international fax number
+    And I click the button Save and continue
+    Then I remain on the Contact details collection address page with an "Enter a real fax number" error message displayed

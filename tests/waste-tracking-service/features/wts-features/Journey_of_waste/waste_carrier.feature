@@ -89,3 +89,17 @@ Feature: Waste carriers page
     And I remain on the what are the waste carriers contact details page with an "Enter a real email address" error message displayed
     And I remain on the what are the waste carriers contact details page with an "Enter a real phone number" error message displayed
 
+  Scenario: User enter invalid fax number Who is the waste carrier page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Waste carriers" link
+    Then the "who is the waste carrier" page is displayed
+    And I complete the Who is the waste carrier page
+    And I click the button Save and continue
+    Then I should see "what are the waste carriers contact details" page is displayed
+    And I enter not valid fax number
+    And I click the button Save and continue
+    Then I remain on the what are the waste carriers contact details page with an "Enter a real fax number" error message displayed
+    And I enter not valid international fax number
+    And I click the button Save and continue
+    Then I remain on the what are the waste carriers contact details page with an "Enter a real fax number" error message displayed

@@ -16,6 +16,7 @@ module CommonComponents
   EMAIL = Faker::Internet.email
   PHONE_NUMBER = '08123456789'
   FAX_NUMBER = '01234567890'
+  INVALID_FAX = '0123456789'
   phone = '08001234567'
   COUNTRY = 'ENGLAND'
   NEW_COUNTRY = 'WALES'
@@ -69,6 +70,15 @@ module CommonComponents
     TestStatus.set_test_status("#{page}_fax_number".to_sym, FAX_NUMBER)
   end
 
+  def enter_invalid_fax_number
+    fill_in FAX_ID, with: INVALID_FAX, visible: false
+    TestStatus.set_test_status("#{page}_fax_number".to_sym, INVALID_FAX)
+  end
+
+  def enter_invalid_int_fax_number(int_fax)
+    fill_in FAX_ID, with: int_fax, visible: false
+    TestStatus.set_test_status("#{page}_fax_number".to_sym, int_fax)
+  end
   def has_reference_organisation_name?(organisation_name)
     find(ORGANISATION_NAME_ID).value == organisation_name
   end

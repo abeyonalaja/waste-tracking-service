@@ -89,8 +89,21 @@ Feature: Laboratory details page
     And I click the Save and return to draft
     And the task "Recovery facility details" should be "NOT STARTED"
 
-
-
+  Scenario: User enter not valid fax number on laboratory details page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I complete Waste codes and description task with "Not applicable" has waste code
+    Then the task "Waste codes and description" should be "COMPLETED"
+    And the task "Laboratory details" should be "NOT STARTED"
+    When I click the "Laboratory details" link
+    When I complete laboratory address details
+    Then the "Laboratory contact details" page is displayed
+    And I enter not valid fax number
+    And I click the button Save and continue
+    Then I remain on the Laboratory contact details page with an "Enter a real fax number" error message displayed
+    And I enter not valid international fax number
+    And I click the button Save and continue
+    Then I remain on the Laboratory contact details page with an "Enter a real fax number" error message displayed
 
 
 

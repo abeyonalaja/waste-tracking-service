@@ -295,3 +295,22 @@ Feature: Interim site page
     Then the "Confirmation Interim Site" page is displayed
     And I click the button Save and continue
     Then I remain on the Confirmation interim site page with an "Select yes if the waste will go to an interim site" error message displayed
+
+  Scenario: User enter not valid fax number Interim contact details page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I complete Waste codes and description task
+    When I click the "Recovery facility" link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    Then the "Interim site address" page is displayed
+    And I complete the Interim site address page
+    And I click the button Save and continue
+    Then the "Interim site contact details" page is displayed
+    And I enter not valid fax number
+    And I click the button Save and continue
+    Then I remain on the Interim site contact details page with an "Enter a real fax number" error message displayed
+    And I enter not valid international fax number
+    And I click the button Save and continue
+    Then I remain on the Interim site contact details page with an "Enter a real fax number" error message displayed

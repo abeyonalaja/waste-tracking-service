@@ -72,3 +72,16 @@ Feature: Exporter details page
     When I click the button Save and continue
     Then I should check exporter address is displayed with Change address link on the page
 
+  Scenario: User enter invalid fax number
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I navigate to Check Exporter address details page with valid postcode
+    Then I should check exporter address is displayed with Change address link on the page
+    When I click the button Save and continue
+    And I wait for a second
+    And I enter invalid fax code
+    And I click the button Save and continue
+    Then I remain on the exporter details page with an "Enter a real fax number" error message displayed
+    And I enter invalid international fax code
+    And I click the button Save and continue
+    Then I remain on the exporter details page with an "Enter a real fax number" error message displayed

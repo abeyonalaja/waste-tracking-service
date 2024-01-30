@@ -208,3 +208,21 @@ Feature: Recovery Facility page
     Then the chosen facility page is displayed
     And I should see 1st recovery facility details
 
+  Scenario: User enter not valid fax number on facility contact details page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I complete Waste codes and description task
+    When I click the "Recovery facility" link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
+    And I complete recovery facility address page
+    And I click the button Save and continue
+    And I enter not valid fax number
+    And I click the button Save and continue
+    Then I remain on the recovery facility contact details page with an "Enter a real fax number" error message displayed
+    And I enter not valid international fax number
+    And I click the button Save and continue
+    Then I remain on the recovery facility contact details page with an "Enter a real fax number" error message displayed
+

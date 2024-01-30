@@ -33,3 +33,12 @@ end
 And(/^I should see Exporter Phone number pre-populated$/) do
   expect(ExporterDetailsPage.new).to have_phone TestStatus.test_status(:exporter_phone)
 end
+
+And(/^I enter invalid fax code$/) do
+  ExporterDetailsPage.new.enter_invalid_fax '1234567890'
+end
+
+And(/^I enter invalid international fax code$/) do
+  ExporterDetailsPage.new.enter_invalid_fax ''
+  ExporterDetailsPage.new.enter_invalid_international_fax '+123456789123654789123'
+end

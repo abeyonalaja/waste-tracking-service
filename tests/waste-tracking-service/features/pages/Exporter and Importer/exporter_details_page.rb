@@ -13,6 +13,7 @@ class ExporterDetailsPage < GenericPage
   FULL_NAME = 'fullName'
   EMAIL = 'email'
   PHONE = 'phone'
+  FAX = 'fax'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -32,6 +33,14 @@ class ExporterDetailsPage < GenericPage
 
   def exporter_phone_num(exporter_phone)
     fill_in PHONE, with: exporter_phone, visible: false
+  end
+
+  def enter_invalid_fax(fax)
+    fill_in FAX, with: fax, visible: false
+  end
+
+  def enter_invalid_international_fax(int_fax)
+    fill_in FAX, with: int_fax, visible: false
   end
 
   def has_organisation_name?(org_name)
