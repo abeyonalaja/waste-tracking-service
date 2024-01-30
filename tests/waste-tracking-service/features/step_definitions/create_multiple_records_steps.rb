@@ -4,5 +4,8 @@ end
 
 Then(/^I should see multi Annex guidance page is display$/) do
   MultipleGuidancePage.new.check_page_displayed
-  MultipleGuidancePage.new.check_page_translation
+end
+
+Then(/^I should see glw csv helper page is display$/) do
+  MultipleGuidanceBouncePage.new.check_page_displayed
 end

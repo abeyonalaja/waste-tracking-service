@@ -20,11 +20,22 @@ module GeneralHelpers
     click_button CONTINUE
   end
 
+  def first_continue_button
+    click_link(CONTINUE)
+  end
+
   def find_address
     click_button FIND_ADDRESS
   end
 
   def back
     click_link BACK
+  end
+
+  def upload_file(file_type)
+    raise "Unknown file type :#{file_type}." unless FileUploadHelper.file_exists?(file_type)
+
+    file_path = FileUploadHelper.get_upload_file(file_type)
+    attach_file('csvUpload', file_path)
   end
 end

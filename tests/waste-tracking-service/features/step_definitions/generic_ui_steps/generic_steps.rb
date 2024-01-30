@@ -64,7 +64,7 @@ And(/^I wait for a second long$/) do
 end
 
 When(/^I click the first continue link$/) do
-  click_link('Continue', :match => :first)
+  click_link('Continue', match: :first)
 end
 
 And(/^I click the update button$/) do
@@ -86,4 +86,8 @@ end
 When(/^I click the "([^"]*)" button$/) do |option|
   get_key = Translations.key(option)
   click_button Translations.value(get_key)
+end
+
+And(/^I click the upload button$/) do
+  click_on Translations.value 'multiples.upload.button'
 end

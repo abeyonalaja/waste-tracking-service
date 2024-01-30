@@ -4,6 +4,7 @@
 module TestStatus
 
   @test_status = {}
+  @feature_flags = {}
   @countries_waste_will_travel = []
   @waste_carrier_org_details = []
   @waste_carrier_titles = []
@@ -11,8 +12,20 @@ module TestStatus
   @ewc_codes = []
   @waste_mode_of_travel = []
 
+  def self.set_feature_flag(feature_flag, value)
+    @feature_flags[feature_flag] = value
+  end
+
   def self.set_test_status(key, value)
     @test_status[key] = value
+  end
+
+  def self.reset_feature_flag
+    @feature_flags = {}
+  end
+
+  def self.feature_flag
+    @feature_flags
   end
 
   def self.reset_test_status
@@ -23,6 +36,7 @@ module TestStatus
     @waste_carrier_addresses = []
     @ewc_codes = []
     @waste_mode_of_travel = []
+    @feature_flags = {}
   end
 
   def self.test_status(key = 'all')

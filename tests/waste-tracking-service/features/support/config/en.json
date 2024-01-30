@@ -126,6 +126,7 @@
   "exportJourney.exportHome.card.submitted": "Submitted Annex VII records",
   "exportJourney.exportHome.card.templates": "Templates",
   "exportJourney.submitAnExport.breadcrumb": "Create a single Annex VII record",
+  "exportJourney.exportHome.createMultipleRecords": "Create multiple Annex VII records",
   "exportJourney.submitAnExport.statusZero": "CANNOT START YET",
   "exportJourney.submitAnExport.statusOne": "NOT STARTED",
   "exportJourney.submitAnExport.statusTwo": "COMPLETED",
@@ -556,8 +557,10 @@
   "multiples.guidance.upload.button": "Upload",
   "export.homepage.multiples.guidance.title": "Guidance",
   "export.homepage.multiples.guidance.link": "How to create a multiple Annex VII record CSV template",
+  "multiples.guidance.page.title": "Export green list waste: how to submit multiple exports from a CSV file",
   "multiples.guidance.bouncePage.title": "Use the guidance to create multiple Annex VII records from the template",
   "multiples.guidance.bouncePage.firstParagraph": "When you enter your Annex VII recored information into the template, you need to save it as a CSV file. This is where data is separated by commas rather than columns. If you change the structure of the template, your upload may fail.",
   "multiples.guidance.bouncePage.secondParagraph": "It is important you use the guidance to help you fill in and upload the template correctly.",
-  "multiples.guidance.bouncePage.button": "Continue"
+  "multiples.guidance.bouncePage.button": "Continue",
+  "multiples.upload.button": "Upload"
 }

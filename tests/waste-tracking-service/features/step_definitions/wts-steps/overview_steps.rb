@@ -9,6 +9,7 @@ Given(/^I login to waste tracking portal$/) do
   OverviewPage.new.login_to_dcid(user)
   ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
+  set_feature_cookies
 end
 
 Then(/^I can see all the sections$/) do
@@ -27,4 +28,15 @@ end
 
 Then(/^Export waste from UK page is displayed$/) do
   ExportWasteFromUkPage.new.check_page_displayed
+end
+
+def set_feature_cookies
+  TestStatus.feature_flag&.each do |feature, value|
+    add_custom_cookie(feature, value)
+  end
+end
+
+def add_custom_cookie(key, value)
+  browser = page.driver.browser
+  browser.manage.add_cookie name: key, value: value
 end
