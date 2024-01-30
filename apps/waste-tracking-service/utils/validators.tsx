@@ -18,7 +18,7 @@ export const validateReference: (reference?: string) => string | null = (
     return t('validation.reference.empty');
   if (reference.length === 1) return t('validation.reference.charTooFew');
   if (reference.length > 20) return t('validation.reference.charTooMany');
-  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,20}$');
+  const regex = new RegExp('^[a-zA-Z0-9]{1,20}$');
   if (!regex.test(reference)) return t('validation.reference.charInvalid');
 };
 

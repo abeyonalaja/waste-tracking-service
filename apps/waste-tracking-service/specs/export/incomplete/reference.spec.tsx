@@ -131,9 +131,7 @@ describe('Add reference to submission', () => {
 
     expect(screen.getByText('There is a problem')).toBeTruthy();
     expect(
-      screen.getAllByText(
-        'The reference must only include letters a to z, numbers, spaces, hyphens and back slashes'
-      )[0]
+      screen.getAllByText('Enter a reference using only numbers and letters')[0]
     ).toBeTruthy();
   });
 });

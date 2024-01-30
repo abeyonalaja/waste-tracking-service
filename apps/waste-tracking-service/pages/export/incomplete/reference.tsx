@@ -164,6 +164,7 @@ export function Reference() {
               {t('yourReference.title')}
             </GovUK.Heading>
             <Paragraph>{t('yourReference.intro')}</Paragraph>
+            <Paragraph>{t('yourReference.intro.second.paragraph')}</Paragraph>
             <GovUK.GridRow>
               <GovUK.GridCol setWidth="one-half">
                 <form onSubmit={handleSubmit}>
@@ -173,7 +174,7 @@ export function Reference() {
                         name: 'reference',
                         id: 'reference',
                         value: reference === null ? '' : reference,
-                        maxLength: 20,
+                        maxLength: 50,
                         onChange: (e) => setReference(e.target.value),
                       }}
                       meta={{
