@@ -30,7 +30,7 @@ When(/^I have entered an invalid special character as part of the reference$/) d
 end
 
 When(/^I have entered less than the required character length$/) do
-  AddReferenceNumberPage.new.enter_reference_number Faker::Base.regexify(%r{[a-zA-Z0-9\-/]{1}})
+  AddReferenceNumberPage.new.enter_reference_number Faker::Base.regexify(%r{[a-zA-Z0-9]{1}})
 end
 
 When(/^I amend the previously entered reference$/) do
@@ -42,7 +42,6 @@ When(/^I amend the previously entered reference$/) do
 end
 
 When(/^I have entered an invalid reference containing more than (\d+) characters$/) do |arg|
-  AddReferenceNumberPage.new.choose_option 'Yes'
   ref = Faker::Base.regexify(%r{[a-zA-Z0-9]{21}})
   AddReferenceNumberPage.new.enter_reference_number ref
   Log.info("App ref -#{ref}")

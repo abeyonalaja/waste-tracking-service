@@ -16,7 +16,7 @@ class ChosenFacilitiesPage < GenericPage
   YOUR_CHOSEN_SINGLE_TITLE = Translations.value 'exportJourney.recoveryFacilities.listTitleSingle'
   FIRST_RECOVERY_FACILITY = Translations.value 'exportJourney.recoveryFacilities.cardTitle'
   FACILITY_NAME = Translations.value 'exportJourney.recoveryFacilities.name'
-  COUNTRY = Translations.value 'exportJourney.importerDetails.country'
+  COUNTRY = Translations.value 'address.country'
   RECOVERY_CODE = Translations.value 'exportJourney.recoveryFacilities.recoveryCode'
   MAX_RECOVERY_TEXT = Translations.value 'exportJourney.recoveryFacilities.maxReached'
   MAX_PAGE_TITLE = Translations.value 'exportJourney.recoveryFacilities.listTitleMultiple'

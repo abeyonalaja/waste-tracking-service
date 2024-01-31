@@ -6,7 +6,7 @@ export START_PAGE_URL=https://track-waste-pre.azure.defra.cloud/
 rm -f failed_scenarios.txt
 
 if [ -z "$1" ]; then
-  bundle exec parallel_cucumber --type cucumber -n 4 features/ -o '--strict-undefined --tags "not @dev_only"  --tags "not @code_display_issue" --tags "not @ignore" --format json --out reports/parallel.json --format pretty'
+  bundle exec parallel_cucumber --type cucumber -n 4 features/ -o '--strict-undefined --tags "not @dev_only"  --tags "not @ignore" --format json --out reports/parallel.json --format pretty'
 
   FILE=failed_scenarios.txt
   if [ -f "$FILE" ]; then

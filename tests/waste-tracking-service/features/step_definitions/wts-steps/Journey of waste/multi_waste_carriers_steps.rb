@@ -13,7 +13,7 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
   TestStatus.waste_carrier_titles(waste_carrier_title)
   TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)
@@ -124,7 +124,7 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)" without transportati
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
   TestStatus.waste_carrier_titles(waste_carrier_title)
   TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)

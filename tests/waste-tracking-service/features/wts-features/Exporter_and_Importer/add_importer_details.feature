@@ -23,7 +23,6 @@ Feature: Add Importer details page
     Then the "Importer contact details" page is displayed
     And I should see What are the importers contact details page translated
 
-
   Scenario: User completes Importer contact details and lands on task list page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference

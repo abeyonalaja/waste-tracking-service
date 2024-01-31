@@ -19,11 +19,11 @@ class ManualAddressEntryWasteCollectionPage < GenericPage
   end
 
   def check_page_translation
-    address1 = Translations.value 'exportJourney.exporterManual.addressOneLabel'
-    address2 = Translations.value 'exportJourney.exporterManual.addressTwoLabel'
-    town = Translations.value 'exportJourney.exporterManual.townLabel'
-    postcode = Translations.value 'exportJourney.exporterManual.postCodeLabel'
-    country = Translations.value 'exportJourney.exporterManual.countryLabel'
+    address1 = Translations.value 'address.addressLine1'
+    address2 = Translations.value 'address.addressLine2'
+    town = Translations.value 'address.townCity'
+    postcode = Translations.value 'postcode.label'
+    country = Translations.value 'address.country'
     address_hint = Translations.value 'address.addressLine.hint'
     country_hint = Translations.value 'exportJourney.wasteCollectionDetails.countryHint'
 

@@ -12,9 +12,10 @@ class RecoveryFacilityAddressPage < GenericPage
 
   TITLE = Translations.value 'exportJourney.recoveryFacilities.addressTitle'
   FACILITY_NAME = Translations.value 'exportJourney.recoveryFacilities.name'
-  ADDRESS = Translations.value 'exportJourney.importerDetails.address'
-  COUNTRY = Translations.value 'exportJourney.importerDetails.country'
+  ADDRESS = Translations.value 'address'
+  COUNTRY = Translations.value 'address.country'
   CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
+  HINT_TEXT = Translations.value 'exportJourney.recoveryFacilities.countryHint'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -25,6 +26,7 @@ class RecoveryFacilityAddressPage < GenericPage
     expect(page).to have_text ADDRESS
     expect(page).to have_text COUNTRY
     expect(page).to have_text CAPTION
+    expect(page).to have_text HINT_TEXT
   end
 
   def select_recovery_facility_country(recovery_country)

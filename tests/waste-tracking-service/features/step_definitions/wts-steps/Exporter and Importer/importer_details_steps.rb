@@ -24,11 +24,11 @@ And(/^I complete Importer contact details page$/) do
   ImporterContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
   ImporterContactDetailsPage.new.enter_phone_number '+441234567891'
-  ImporterContactDetailsPage.new.enter_fax_number '123Fax'
+  ImporterContactDetailsPage.new.enter_fax_number '12345678910'
   TestStatus.set_test_status(:importer_org_contact, 'John Arnold')
   TestStatus.set_test_status(:importer_email, 'mail@mail.com')
   TestStatus.set_test_status(:importer_phone_number, '+441234567891')
-  TestStatus.set_test_status(:importer_fax_number, '123Fax')
+  TestStatus.set_test_status(:importer_fax_number, '12345678910')
 end
 
 Then(/^I verify that previously entered details are pre\-populated$/) do

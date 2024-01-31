@@ -104,11 +104,11 @@ Feature: Collection date
     When I navigate to the task list page with reference
     And I click the "Collection date" link
     And I choose "Yes, I’ll enter the actual date" radio button
-    When I enter collection date within 3 days
+    When I enter collection date as today
     And I click the button Save and continue
-    Then I remain on the collection date page with an "Enter a date at least 3 business days in the future" error message displayed
+    Then I remain on the collection date page with an "Enter a date in the future" error message displayed
     When I click the Save and return to draft
-    Then I remain on the collection date page with an "Enter a date at least 3 business days in the future" error message displayed
+    Then I remain on the collection date page with an "Enter a date in the future" error message displayed
 
 
 

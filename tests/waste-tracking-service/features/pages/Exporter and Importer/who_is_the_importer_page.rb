@@ -10,9 +10,9 @@ class WhoIsTheImporterPage < GenericPage
 
   HINT_TEXT = Translations.value 'exportJourney.importerDetails.title'
   TITLE = Translations.value 'exportJourney.importerDetails.firstPageQuestion'
-  ORGANISATION_NAME = Translations.value 'exportJourney.importerDetails.organisationName'
-  ADDRESS = Translations.value 'exportJourney.importerDetails.address'
-  COUNTRY = Translations.value 'exportJourney.importerDetails.country'
+  ORGANISATION_NAME = Translations.value 'contact.orgName'
+  ADDRESS = Translations.value 'address'
+  COUNTRY = Translations.value 'address.country'
 
   ORGANISATION_NAME_FIELD_ID = 'organisationName'
   ADDRESS_FIELD_ID = 'address'

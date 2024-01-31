@@ -14,12 +14,12 @@ class EditExporterAddressPage < GenericPage
   end
 
   def check_page_translation
-    address1 = Translations.value 'exportJourney.exporterManual.addressOneLabel'
-    address2 = Translations.value 'exportJourney.exporterManual.addressTwoLabel'
-    town = Translations.value 'exportJourney.exporterManual.townLabel'
-    postcode = Translations.value 'exportJourney.exporterManual.postCodeLabel'
-    country = Translations.value 'exportJourney.exporterManual.countryLabel'
-    exporter_text = Translations.value'exportJourney.wasteCollectionDetails.countryHint'
+    address1 = Translations.value 'address.addressLine1'
+    address2 = Translations.value 'address.addressLine2'
+    town = Translations.value 'address.townCity'
+    postcode = Translations.value 'address.postcodeOptional'
+    country = Translations.value 'address.country'
+    exporter_text = Translations.value 'exportJourney.wasteCollectionDetails.countryHint'
 
     expect(self).to have_css 'h1', text: title, exact_text: true
     expect(page).to have_text address1

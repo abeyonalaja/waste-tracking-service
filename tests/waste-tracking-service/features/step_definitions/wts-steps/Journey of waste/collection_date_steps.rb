@@ -35,8 +35,8 @@ When(/^I enter past collection date$/) do
   CollectionDatePage.new.enter_actual_collection_date DateTime.now.prev_day(2).strftime('%d %m %Y')
 end
 
-When(/^I enter collection date within 3 days$/) do
-  CollectionDatePage.new.enter_actual_collection_date DateTime.now.next_day(2).strftime('%d %m %Y')
+When(/^I enter collection date as today$/) do
+  CollectionDatePage.new.enter_actual_collection_date DateTime.now.strftime('%d %m %Y')
 end
 
 And(/^I complete collection date with estimated details$/) do

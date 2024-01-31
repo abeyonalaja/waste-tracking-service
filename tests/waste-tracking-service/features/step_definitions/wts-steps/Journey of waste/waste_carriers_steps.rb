@@ -9,7 +9,7 @@ And(/^I complete the Whats is the waste carriers contact details page$/) do
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '123Fax'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
 end
 
 And(/^I see previously entered waste carrier details pre-populated$/) do

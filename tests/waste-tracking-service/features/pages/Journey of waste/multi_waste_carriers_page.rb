@@ -12,7 +12,7 @@ class MultiWasteCarriersPage < GenericPage
 
   MULTI_WASTE_PAGE_TITLE = Translations.value 'exportJourney.wasteCarrier.carriersPage.title'
   MULTI_WASTE_PAGE_ORG_NAME = Translations.value 'exportJourney.exporterDetails.organisationName'
-  MULTI_WASTE_PAGE_COUNTRY = Translations.value 'exportJourney.exporterManual.countryLabel'
+  MULTI_WASTE_PAGE_COUNTRY = Translations.value 'address.country'
   MULTI_WASTE_PAGE_ADD_MORE_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.question'
   MULTI_WASTE_PAGE_ADD_4_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.hint'
   MULTI_WASTE_PAGE_MAX_WASTE_CARRIERS = Translations.value 'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'

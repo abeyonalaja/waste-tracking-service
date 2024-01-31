@@ -148,10 +148,10 @@ And(/^I should see section interim site details correctly displayed$/) do
   within 'pdf-box-7-int' do
     expect(SignDeclarationPage.new).to have_text 'Interim site:'
     expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_name)
-    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_name_address)
+    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_address)
     expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_contact_full_name)
-    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_contact_name_email)
-    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_contact_name_phone_number)
+    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_contact_email)
+    expect(SignDeclarationPage.new).to have_text TestStatus.test_status(:interim_site_contact_phone_number)
   end
 end
 

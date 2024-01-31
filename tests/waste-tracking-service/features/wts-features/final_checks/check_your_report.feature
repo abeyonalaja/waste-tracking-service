@@ -4,7 +4,6 @@ Feature: Check your report page
   SO THAT I can ensure that all my entry details are correctly
 
   @translation
-  @code_display_issue
   Scenario: User should see all the data displayed correctly on check your report page for Bulk waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -31,7 +30,6 @@ Feature: Check your report page
     And I should see export Journey of waste correctly displayed
     And I should see export Treatment of waste correctly displayed
 
-  @code_display_issue
   Scenario: User should see all the data displayed correctly on check your report page for small waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -118,7 +116,8 @@ Feature: Check your report page
     And I should see Estimate Quantity of Waste
 
     #max export for bulk waste
-  @code_display_issue
+  #defect raised - 304215
+  @ignore
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

@@ -9,18 +9,22 @@ class AddReferenceNumberPage < GenericPage
 
   REFERENCE_NUMBER_INPUT_ID = 'reference'
   TITLE = Translations.value 'yourReference.title'
-  HINT_TEXT = Translations.value 'yourReference.intro'
+  INTRO = Translations.value 'yourReference.intro'
   YOUR_REFERENCE = Translations.value 'yourReference.breadcrumb'
+  PARAGRAPH = Translations.value 'yourReference.intro.second.paragraph'
   APP_TITLE = Translations.value 'app.title'
   PARENT_TITLE = Translations.value 'app.parentTitle'
   SINGLE_EXPORT_TITLE = Translations.value 'exportJourney.submitAnExport.breadcrumb'
+  INPUT_LABEL = Translations.value 'yourReference.inputLabel'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
   end
 
   def check_page_translation
-    expect(self).to have_text HINT_TEXT
+    expect(self).to have_text PARAGRAPH
+    expect(self).to have_text INTRO
+    expect(self).to have_text INPUT_LABEL
   end
 
   def choose_option option

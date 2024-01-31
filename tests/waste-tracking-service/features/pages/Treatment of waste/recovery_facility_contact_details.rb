@@ -13,8 +13,9 @@ class RecoveryFacilityContactDetailsPage < GenericPage
 
   TITLE = Translations.value 'exportJourney.recoveryFacilities.contactTitle'
   FACILITY_CONTACT_NAME = Translations.value 'exportJourney.recoveryFacilities.contactPerson'
-  EMAIL_ADDRESS = Translations.value 'exportJourney.exporterDetails.email'
-  PHONE_NUMBER = Translations.value 'exportJourney.exporterDetails.phone'
+  EMAIL_ADDRESS = Translations.value 'contact.emailAddress'
+  PHONE_NUMBER = Translations.value 'contact.phoneNumber'
+  FAX_NUMBER = Translations.value 'contact.faxNumber'
   CAPTION = Translations.value 'exportJourney.recoveryFacilities.caption'
 
   def check_page_displayed
@@ -25,6 +26,7 @@ class RecoveryFacilityContactDetailsPage < GenericPage
     expect(page).to have_text FACILITY_CONTACT_NAME
     expect(page).to have_text EMAIL_ADDRESS
     expect(page).to have_text PHONE_NUMBER
+    expect(page).to have_text FAX_NUMBER
     expect(page).to have_text CAPTION
   end
 
