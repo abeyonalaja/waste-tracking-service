@@ -21,7 +21,6 @@ import { useCookies } from 'react-cookie';
 import UploadUI_Content from './_content/upload-content';
 import UploadUI_Interuption from './_content/guidance-interuption';
 import { RED } from 'govuk-colours';
-import { Button } from 'govuk-react';
 
 const BackLinkWrap = styled.div`
   margin-top: -30px;
@@ -74,6 +73,9 @@ const Upload = () => {
   const [filename, setFilename] = useState<string>(null);
   const [isSecondForm, setIsSecondForm] = useState<boolean>(false);
   const [cookies, setCookie] = useCookies(['GLWMultipleGuidanceViewed']);
+  const [validationErrors, setValidationErrors] = useState<{
+    file?: string;
+  }>({});
 
   useEffect(() => {
     if (!cookies.GLWMultipleGuidanceViewed) {
@@ -101,13 +103,27 @@ const Upload = () => {
             {!showCard && (
               <GovUK.GridRow>
                 <GovUK.GridCol setWidth="two-thirds">
-                  <UploadUI_Content />
-                  <UploadUI_Form
-                    assignId={setId}
-                    updateFilename={setFilename}
-                    isSecondForm={false}
-                    setIsSecondForm={setIsSecondForm}
-                  />
+                  <>
+                    {validationErrors &&
+                      !!Object.keys(validationErrors).length && (
+                        <GovUK.ErrorSummary
+                          heading={t('errorSummary.title')}
+                          errors={Object.keys(validationErrors).map((key) => ({
+                            targetName: key,
+                            text: validationErrors[key],
+                          }))}
+                        />
+                      )}
+                    <UploadUI_Content />
+                    <UploadUI_Form
+                      assignId={setId}
+                      updateFilename={setFilename}
+                      isSecondForm={false}
+                      setIsSecondForm={setIsSecondForm}
+                      validationErrors={validationErrors}
+                      setValidationErrors={setValidationErrors}
+                    />
+                  </>
                 </GovUK.GridCol>
               </GovUK.GridRow>
             )}
@@ -120,6 +136,8 @@ const Upload = () => {
             filename={filename}
             isSecondForm={isSecondForm}
             setIsSecondForm={setIsSecondForm}
+            validationErrors={validationErrors}
+            setValidationErrors={setValidationErrors}
           />
         )}
       </GovUK.Page>
@@ -135,12 +153,11 @@ const UploadUI_Form = ({
   updateFilename,
   isSecondForm,
   setIsSecondForm,
+  validationErrors,
+  setValidationErrors,
 }) => {
   const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
-  const [errors, setErrors] = useState<{
-    file?: string;
-  }>({});
 
   const putFile = (formData) => {
     return apiClient({
@@ -175,11 +192,12 @@ const UploadUI_Form = ({
       file: validateFile(file),
     };
     if (isNotEmpty(newErrors)) {
-      setErrors(newErrors);
+      setValidationErrors(newErrors);
       setFile(null);
+      window.scrollTo(0, 0);
     } else {
       assignId(null);
-      setErrors(null);
+      setValidationErrors(null);
       const formData = new FormData();
       formData.append('input', file);
       const response = await mutation.mutateAsync(formData);
@@ -189,7 +207,7 @@ const UploadUI_Form = ({
         assignId(response.data.id);
         setIsSecondForm(isSecondForm);
       } else {
-        setErrors({ file: response.data.message });
+        setValidationErrors({ file: response.data.message });
         setFile(null);
       }
     }
@@ -204,8 +222,8 @@ const UploadUI_Form = ({
             name="csvUpload"
             onChange={handleFileChange}
             meta={{
-              error: errors?.file,
-              touched: !!errors?.file,
+              error: validationErrors?.file,
+              touched: !!validationErrors?.file,
             }}
           >
             <GovUK.H2 size="MEDIUM">
@@ -232,6 +250,8 @@ const UploadUI_Process = ({
   filename,
   isSecondForm,
   setIsSecondForm,
+  validationErrors,
+  setValidationErrors,
 }) => {
   const { t } = useTranslation();
   const [result, setResult] = useState<string>(null);
@@ -289,6 +309,8 @@ const UploadUI_Process = ({
               updateResult={setResult}
               updateId={assignId}
               setIsSecondForm={setIsSecondForm}
+              validationErrors={validationErrors}
+              setValidationErrors={setValidationErrors}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>
@@ -344,7 +366,7 @@ const UploadUI_Success = ({
       />
       <Paragraph>{t('multiples.success.intro')}</Paragraph>
       <ButtonGroup>
-        <Button>{t('multiples.success.submitButton')}</Button>
+        <GovUK.Button>{t('multiples.success.submitButton')}</GovUK.Button>
         <SaveReturnButton
           onClick={(e) => {
             e.preventDefault();
@@ -364,6 +386,8 @@ const UploadUI_ErrorSummary = ({
   updateResult,
   updateId,
   setIsSecondForm,
+  validationErrors,
+  setValidationErrors,
 }) => {
   const { t } = useTranslation();
   const [showRow, setShowRow] = useState<number | null>(null);
@@ -386,6 +410,15 @@ const UploadUI_ErrorSummary = ({
                 {t('Back')}
               </GovUK.BackLink>
             </BackLinkWrap>
+            {validationErrors && !!Object.keys(validationErrors).length && (
+              <GovUK.ErrorSummary
+                heading={t('errorSummary.title')}
+                errors={Object.keys(validationErrors).map((key) => ({
+                  targetName: key,
+                  text: validationErrors[key],
+                }))}
+              />
+            )}
             <NotificationBanner
               type="important"
               id="error-banner-important"
@@ -475,6 +508,8 @@ const UploadUI_ErrorSummary = ({
               updateFilename={updateResult}
               isSecondForm={true}
               setIsSecondForm={setIsSecondForm}
+              validationErrors={validationErrors}
+              setValidationErrors={setValidationErrors}
             />
           </div>
         </>
@@ -495,7 +530,7 @@ const UploadUI_ErrorSummary = ({
           <ErrorBanner>
             <GovUK.H2 size="MEDIUM">
               {t('multiples.errorSummaryPage.errorList.title', {
-                n: errors[showRow - 1].errorAmount,
+                count: errors[showRow - 1].errorAmount,
               })}
             </GovUK.H2>
             <Paragraph>
