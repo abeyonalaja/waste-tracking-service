@@ -338,46 +338,86 @@ const UploadUI_Success = ({
   isSecondForm = false,
 }) => {
   const { t } = useTranslation();
+  const [cancel, setCancel] = useState(false);
+
   return (
-    <div id="upload-page-success">
-      <BackLinkWrap>
-        <GovUK.BackLink
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            updateId(null);
-            updateResult(null);
-          }}
-        >
-          {t('Back')}
-        </GovUK.BackLink>
-      </BackLinkWrap>
-      <NotificationBanner
-        type="success"
-        id="success-banner-csv-upload"
-        headingText={t(
-          isSecondForm
-            ? 'multiples.success.heading.afterCorrection'
-            : 'multiples.success.heading',
-          {
-            count: data?.data.state?.submissions.length || 0,
-          }
-        )}
-      />
-      <Paragraph>{t('multiples.success.intro')}</Paragraph>
-      <ButtonGroup>
-        <GovUK.Button>{t('multiples.success.submitButton')}</GovUK.Button>
-        <SaveReturnButton
-          onClick={(e) => {
-            e.preventDefault();
-            updateId(null);
-            updateResult(null);
-          }}
-        >
-          {t('cancelButton')}
-        </SaveReturnButton>
-      </ButtonGroup>
-    </div>
+    <>
+      {cancel && (
+        <>
+          <BackLinkWrap>
+            <GovUK.BackLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setCancel(false);
+              }}
+            >
+              {t('Back')}
+            </GovUK.BackLink>
+          </BackLinkWrap>
+          <GovUK.Heading size={'L'}>
+            {t('multiples.cancel.title')}
+          </GovUK.Heading>
+          <Paragraph>{t('multiples.cancel.intro')}</Paragraph>
+          <ButtonGroup>
+            <GovUK.Button
+              onClick={() => {
+                updateId(null);
+                updateResult(null);
+              }}
+            >
+              {t('multiples.cancel.confirmButton')}
+            </GovUK.Button>
+            <SaveReturnButton
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              {t('multiples.cancel.submitButton')}
+            </SaveReturnButton>
+          </ButtonGroup>
+        </>
+      )}
+      {!cancel && (
+        <div id="upload-page-success">
+          <BackLinkWrap>
+            <GovUK.BackLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setCancel(true);
+              }}
+            >
+              {t('Back')}
+            </GovUK.BackLink>
+          </BackLinkWrap>
+          <NotificationBanner
+            type="success"
+            id="success-banner-csv-upload"
+            headingText={t(
+              isSecondForm
+                ? 'multiples.success.heading.afterCorrection'
+                : 'multiples.success.heading',
+              {
+                count: data?.data.state?.submissions.length || 0,
+              }
+            )}
+          />
+          <Paragraph>{t('multiples.success.intro')}</Paragraph>
+          <ButtonGroup>
+            <GovUK.Button>{t('multiples.success.submitButton')}</GovUK.Button>
+            <SaveReturnButton
+              onClick={(e) => {
+                e.preventDefault();
+                setCancel(true);
+              }}
+            >
+              {t('cancelButton')}
+            </SaveReturnButton>
+          </ButtonGroup>
+        </div>
+      )}
+    </>
   );
 };
 
