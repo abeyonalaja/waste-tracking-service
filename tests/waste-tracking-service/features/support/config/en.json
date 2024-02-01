@@ -183,7 +183,7 @@
   "exportJourney.incompleteAnnexSeven.delete.button": "Confirm",
   "exportJourney.incompleteAnnexSeven.delete.caption": "Your reference: ",
   "exportJourney.incompleteAnnexSeven.delete.notification": "Your Annex VII record has been deleted",
-  "exportJourney.incompleteAnnexSeven.delete.notificationRef": " has been deleted",
+  "exportJourney.incompleteAnnexSeven.delete.notificationRef": "has been deleted",
   "exportJourney.incompleteAnnexSeven.delete.title": "Are you sure you want to delete this incomplete Annex VII record?",
   "exportJourney.incompleteAnnexSeven.notResultsMessage": "You have no incomplete Annex VII forms",
   "exportJourney.incompleteAnnexSeven.paragraph": "These are Annex VII records that are incomplete and have not been submitted.",

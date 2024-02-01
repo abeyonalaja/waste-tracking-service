@@ -23,7 +23,7 @@ class TaskListPage < GenericPage
   end
 
   def reference_number
-    find('my-reference')
+    find('reference')
   end
 
   # These methods need the 'has_' prefix so that RSpec can use them as matchers.

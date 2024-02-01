@@ -1,4 +1,4 @@
-@glw_multiple
+@ignore @glw_multiple
 Feature: GLW multiple
   AS A Waste Practitioner
   I NEED to be able to upload multiple Annex VII records

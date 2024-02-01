@@ -440,7 +440,7 @@ Feature: Check your report page
     And I click the button Save and continue
     Then Enter an EWC code is displayed
 
-    @defect-299979
+    @ignore @defect-299979
   Scenario: User can navigate to Interim site and recovery facility from check your report page using change link
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

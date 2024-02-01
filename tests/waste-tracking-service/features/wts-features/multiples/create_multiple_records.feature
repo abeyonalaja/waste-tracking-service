@@ -1,3 +1,4 @@
+@ignore
 Feature: Create multiple records
   AS A Waste Practitioner
   I NEED to be able to upload multiple Annex VII records

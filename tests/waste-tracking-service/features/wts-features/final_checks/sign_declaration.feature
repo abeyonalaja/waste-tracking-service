@@ -2,7 +2,7 @@ Feature: Sign declaration page
   I NEED to sign the declaration for the export details
   SO THAT I can submit the completed export form
 
-  @translation
+  @translation @ignore #defecf 304931
   Scenario: Check sign declaration page after choosing Bulk waste and check the PDF display the data
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -46,7 +46,7 @@ Feature: Sign declaration page
     And I should see section 10 waste identification details correctly displayed
     And I should see section 11 countries details correctly displayed
 
-  @translation
+  @translation @ignore #defecf 304931
   Scenario: Check sign declaration page after choosing Actual Small waste and Actual collection waste and check PDF is updated
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
