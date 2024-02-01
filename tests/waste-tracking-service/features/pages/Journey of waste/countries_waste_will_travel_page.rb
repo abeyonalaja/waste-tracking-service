@@ -30,7 +30,7 @@ class CountriesWasteWillTravelPage < GenericPage
   end
 
   def select_country_of_waste
-    index = rand(0..248)
+    index = rand(0..247)
     country = "country__option--#{index}"
     first('country', minimum: 1).click
     first(country, minimum: 1).select_option

@@ -8,11 +8,12 @@ class CollectionDatePage < GenericPage
   include ErrorBox
   include PageHelper
 
-
   TITLE = Translations.value 'exportJourney.wasteCollectionDate.title'
   SUB_TEXT = Translations.value 'exportJourney.wasteCollectionDate.intro'
-  ACTUAL_DATE = Translations.value 'exportJourney.wasteCollectionDate.radioYesHint'
+  ACTUAL_DATE = Translations.value 'exportJourney.wasteCollectionDate.radioYes'
+  ACTUAL_DATE_HINT = Translations.value 'exportJourney.wasteCollectionDate.radioYesHint'
   ESTIMATE_DATE = Translations.value 'exportJourney.wasteCollectionDate.radioNo'
+  ESTIMATE_DATE_HINT = Translations.value 'exportJourney.wasteCollectionDate.radioNoHint'
   CAPTION = Translations.value 'exportJourney.wasteCollectionDate.caption'
 
   def check_page_displayed
@@ -26,10 +27,12 @@ class CollectionDatePage < GenericPage
 
   def check_actual_collection_translation
     expect(self).to have_text ACTUAL_DATE
+    expect(self).to have_text ACTUAL_DATE_HINT
   end
 
   def check_estimate_collection_translation
     expect(self).to have_text ESTIMATE_DATE
+    expect(self).to have_text ESTIMATE_DATE_HINT
   end
 
   def enter_actual_collection_date(date)

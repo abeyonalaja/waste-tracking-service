@@ -26,6 +26,10 @@ class TaskListPage < GenericPage
     find('reference')
   end
 
+  def task_list_reference_number
+    find('my-reference')
+  end
+
   # These methods need the 'has_' prefix so that RSpec can use them as matchers.
   # rubocop:disable Naming/PredicateName
 

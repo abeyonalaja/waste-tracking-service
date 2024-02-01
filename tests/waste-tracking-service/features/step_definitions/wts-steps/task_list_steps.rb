@@ -5,7 +5,7 @@ Then(/^task list page is displayed$/) do
 end
 
 And(/^the reference should be displayed$/) do
-  expect(TaskListPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:application_reference_number)}")
+  expect(TaskListPage.new.task_list_reference_number.text).to eq("Your reference: #{TestStatus.test_status(:application_reference_number)}")
 end
 
 When(/^I navigate to the task list page with reference$/) do
@@ -34,7 +34,7 @@ And(/^I click "([^"]*)" from the breadcrumb$/) do |link|
 end
 
 And(/^the new reference should be displayed$/) do
-  expect(TaskListPage.new.reference_number.text).to eq("Your reference: #{TestStatus.test_status(:new_application_reference_number)}")
+  expect(TaskListPage.new.task_list_reference_number.text).to eq("Your reference: #{TestStatus.test_status(:new_application_reference_number)}")
 end
 
 And(/^I click the link Return to this draft later$/) do

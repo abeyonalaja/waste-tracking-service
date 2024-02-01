@@ -34,11 +34,12 @@ When(/^I have entered less than the required character length$/) do
 end
 
 When(/^I amend the previously entered reference$/) do
-  reference = 'new reference'
+  reference = 'newreference123'
   add_reference_number_page = AddReferenceNumberPage.new
   add_reference_number_page.enter_reference_number reference
-  add_reference_number_page.save_and_continue
   TestStatus.set_test_status(:new_application_reference_number, reference)
+  add_reference_number_page.save_and_continue
+  HelperMethods.wait_for_a_sec
 end
 
 When(/^I have entered an invalid reference containing more than (\d+) characters$/) do |arg|
