@@ -463,7 +463,11 @@ const UploadUI_ErrorSummary = ({
               type="important"
               id="error-banner-important"
               headingText={t('multiples.errorSummaryPage.importantMessage', {
-                n: errors.length,
+                count: errors.reduce(
+                  (accumulator, currentError) =>
+                    accumulator + currentError.errorDescriptions.length,
+                  0
+                ),
               })}
             />
             <GovUK.Heading size="L">
