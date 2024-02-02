@@ -69,7 +69,7 @@ class CollectionDatePage < GenericPage
 
   def collection_date_options
     {
-      'Yes, I’ll enter the actual date' => 'collectionDateKnownYes',
+      'Yes' => 'collectionDateKnownYes',
       'No, I’ll enter an estimate date' => 'collectionDateKnownNo'
     }
   end

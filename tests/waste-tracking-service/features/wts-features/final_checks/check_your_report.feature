@@ -132,7 +132,7 @@ Feature: Check your report page
     Then I complete Importer contact details page
     And I click the button Save and continue
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
     And I complete the "First" waste carrier with "Road"
@@ -199,7 +199,7 @@ Feature: Check your report page
     Then I complete Importer contact details page
     And I click the button Save and continue
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
     And I complete the "First" waste carrier with "Road" without transportation details
@@ -353,7 +353,7 @@ Feature: Check your report page
     When I click the "Check your record" link
     Then the "check your record" page is displayed
     When I click on Collection date Change link
-    Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
+    Then I should see Collection date option "Yes" is selected
     When I click the Save and return to draft
     And I click the "Check your record" link
     When I click on Waste carrier Change link

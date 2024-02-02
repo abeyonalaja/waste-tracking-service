@@ -23,6 +23,7 @@ Feature: GLW multiple
     When I upload valid glw csv
     And I click the upload button
     Then I should see glw csv is successfully uploaded
+    And I should see glw csv upload page correctly translated
 
   Scenario: User should see error page when upload csv with incorrect data
     Given I login to waste tracking portal
@@ -62,6 +63,20 @@ Feature: GLW multiple
       Then I should see glw csv error page is displayed
       When I navigate to glw csv error row 1
       Then I should see glw csv guidance page link
+
+  Scenario: User can cancel glw csv uploaded records
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload valid glw csv
+    And I click the upload button
+    Then I should see glw csv is successfully uploaded
+    When I click the "Cancel" link
+    Then I should see cancel glw csv upload page is displayed
+    And I should see cancel glw csv upload page is correctly translated
+    Then I click "Back" link should display "Glw Upload Success" page
+    When I click the "Cancel" link
+    And I click the "Confirm and cancel" button
+    Then I should see "Create multiple records" page is displayed
 
 
 

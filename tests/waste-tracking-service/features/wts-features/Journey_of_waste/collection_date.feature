@@ -10,7 +10,7 @@ Feature: Collection date
     And I click the "Collection date" link
     Then the "collection date" page is displayed
     And I should see collection date page correctly translated
-    When I choose "Yes, I’ll enter the actual date" radio button
+    When I choose "Yes" radio button
     Then I should see actual collection date helper text correctly translated
     When I choose "No, I’ll enter an estimate date" radio button
     Then I should see estimate collection date helper text correctly translated
@@ -34,7 +34,7 @@ Feature: Collection date
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
     Then the "who is the waste carrier" page is displayed
@@ -42,7 +42,7 @@ Feature: Collection date
     And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
-    Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
+    Then I should see Collection date option "Yes" is selected
     And I should see Actual Collection date pre-populated
 
   Scenario: User can change Collection date from Estimated to actual
@@ -57,7 +57,7 @@ Feature: Collection date
     And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     And I enter valid Actual collection date
     And I click the button Save and continue
     Then the "who is the waste carrier" page is displayed
@@ -65,7 +65,7 @@ Feature: Collection date
     And I click the Save and return to draft
     Then the task "Collection date" should be "COMPLETED"
     And I click the "Collection date" link
-    Then I should see Collection date option "Yes, I’ll enter the actual date" is selected
+    Then I should see Collection date option "Yes" is selected
     And I should see Actual Collection date pre-populated
 
   Scenario: User can't continue without selecting collection date option
@@ -82,7 +82,7 @@ Feature: Collection date
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a real date" error message displayed
     When I click the Save and return to draft
@@ -92,7 +92,7 @@ Feature: Collection date
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     When I enter past collection date
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a date in the future" error message displayed
@@ -103,7 +103,7 @@ Feature: Collection date
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Collection date" link
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     When I enter collection date as today
     And I click the button Save and continue
     Then I remain on the collection date page with an "Enter a date in the future" error message displayed

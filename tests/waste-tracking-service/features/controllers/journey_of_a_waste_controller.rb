@@ -2,7 +2,7 @@
 
 # Provides a way to happy path flow
 module JourneyOfAWasteController
-  def self.complete(collection_date_option = 'Yes, I’ll enter the actual date')
+  def self.complete(collection_date_option = 'Yes')
     location_leaves_uk_page = LocationWasteLeavesTheUkPage.new
     who_is_waste_carrier_page = WhoIsTheWasteCarrierPage.new
     collection_date_page = CollectionDatePage.new
@@ -16,7 +16,7 @@ module JourneyOfAWasteController
     countries_waste_will_travel_page = CountriesWasteWillTravelPage.new
 
     collection_date_page.choose_option collection_date_option
-    if collection_date_option == 'Yes, I’ll enter the actual date'
+    if collection_date_option == 'Yes'
       collection_date_page.enter_actual_collection_date DateTime.now.next_day(7).strftime('%-d %m %Y')
     end
     if collection_date_option == 'No, I’ll enter an estimate date'

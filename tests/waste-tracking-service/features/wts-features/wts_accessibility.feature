@@ -160,7 +160,7 @@ Feature: Automation to check accessibility tool
     When I navigate to the task list page with reference
     And I click the "Collection date" link
     Then the "collection date" page is displayed
-    And I choose "Yes, I’ll enter the actual date" radio button
+    And I choose "Yes" radio button
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label

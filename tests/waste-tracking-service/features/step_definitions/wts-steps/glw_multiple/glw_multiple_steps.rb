@@ -52,3 +52,15 @@ end
 Then(/^I should see glw csv guidance page link$/) do
   expect(GlwUploadErrorDetailsPage.new).to have_link('how to create multiple Annex VII records using the CSV template (opens in new tab)')
 end
+
+And(/^I should see glw csv upload page correctly translated$/) do
+  GlwUploadSuccessPage.new.check_page_translation
+end
+
+Then(/^I should see cancel glw csv upload page is displayed$/) do
+  GlwCancelUploadPage.new.check_page_displayed
+end
+
+And(/^I should see cancel glw csv upload page is correctly translated$/) do
+  GlwCancelUploadPage.new.check_page_translated
+end
