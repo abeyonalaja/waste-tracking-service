@@ -172,7 +172,7 @@ const RecoveryFacilityDetails = () => {
     recoveryReducer,
     initialState
   );
-  const [refData, setRefData] = useState<Array<optionType>>();
+  const [refData, setRefData] = useState<Array<optionType>>(null);
   const [id, setId] = useState<string | string[]>(null);
   const [page, setPage] = useState(null);
   const [siteId, setSiteId] = useState<string | string[]>(null);
@@ -690,10 +690,14 @@ const RecoveryFacilityDetails = () => {
   );
 
   const getCodeDescription = (recCode) => {
-    const result = refData.find(({ code }) => code === recCode);
-    if (result) {
-      return result.value.description[currentLanguage];
+    if (refData) {
+      const result = refData.find(({ code }) => code === recCode);
+      if (result) {
+        return result.value.description[currentLanguage];
+      }
+      return null;
     }
+    return null;
   };
 
   const completedRecoveryFacilities = (facilities) => {
@@ -981,19 +985,21 @@ const RecoveryFacilityDetails = () => {
                         <GovUK.ErrorText>
                           {recoveryPage.errors?.recoveryCode}
                         </GovUK.ErrorText>
-                        <AutoComplete
-                          id="recoveryCode"
-                          options={refData}
-                          value={
-                            recoveryFacilityType?.recoveryCode || undefined
-                          }
-                          confirm={(o) =>
-                            setRecoveryFacilityType({
-                              type: 'RecoveryFacility',
-                              recoveryCode: o.code,
-                            })
-                          }
-                        />
+                        {refData && (
+                          <AutoComplete
+                            id="recoveryCode"
+                            options={refData}
+                            value={
+                              recoveryFacilityType?.recoveryCode || undefined
+                            }
+                            confirm={(o) =>
+                              setRecoveryFacilityType({
+                                type: 'RecoveryFacility',
+                                recoveryCode: o.code,
+                              })
+                            }
+                          />
+                        )}
                       </GovUK.FormGroup>
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonCode">
