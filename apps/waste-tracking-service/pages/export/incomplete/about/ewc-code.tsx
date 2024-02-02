@@ -216,7 +216,7 @@ const EwcCodes = () => {
   );
   const [id, setId] = useState(null);
   const [refData, setRefData] = useState<Array<codeType>>([]);
-  const [ewcCode, setEwcCode] = useState('');
+  const [ewcCode, setEwcCode] = useState<string>(null);
   const [ewcCodeToRemove, setEwcCodeToRemove] = useState<string>(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const apiConfig = useApiConfig();
@@ -287,7 +287,7 @@ const EwcCodes = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
-      const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
+      const newEwcCode = ewcCode?.replace(/[A-Z-_|.* ]/gi, '');
 
       const newErrors = {
         ewcCode:
@@ -360,7 +360,7 @@ const EwcCodes = () => {
   };
 
   const checkValidEWC = (ewcCode) => {
-    if (ewcCode === '') {
+    if (ewcCode === null) {
       return null;
     }
     const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
@@ -380,11 +380,11 @@ const EwcCodes = () => {
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
       const hasEWCCode = ewcCodePage.provided;
-      const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
+      const newEwcCode = ewcCode?.replace(/[A-Z-_|.* ]/gi, '');
       const newErrors = {
         hasEWCCode: validateSelection(hasEWCCode, 'if you have an EWC code'),
         ewcCode:
-          hasEWCCode &&
+          hasEWCCode === 'Yes' &&
           (validateEwcCode(hasEWCCode, newEwcCode) ||
             checkDuplicate(newEwcCode) ||
             checkValidEWC(newEwcCode)),
@@ -464,6 +464,8 @@ const EwcCodes = () => {
     let body = ewcCodePage.data;
     if (ewcCodes.length > 0) {
       body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
+    } else {
+      body = { ...ewcCodePage.data, ewcCodes: [] };
     }
 
     try {
@@ -480,7 +482,7 @@ const EwcCodes = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setEwcCode('');
+            setEwcCode(null);
             dispatchEwcCodePage({
               type: 'PROVIDED_UPDATE',
               payload: null,
@@ -517,7 +519,7 @@ const EwcCodes = () => {
   };
 
   const handleRadioChange = (input) => {
-    setEwcCode('');
+    setEwcCode(null);
     dispatchEwcCodePage({
       type: 'PROVIDED_UPDATE',
       payload: input.target.value,
@@ -688,7 +690,7 @@ const EwcCodes = () => {
                                         maxLength: 8,
                                         type: 'text',
                                         inputMode: 'numeric',
-                                        value: ewcCode,
+                                        value: ewcCode || '',
                                         onChange: (e) =>
                                           setEwcCode(e.target.value),
                                       }}

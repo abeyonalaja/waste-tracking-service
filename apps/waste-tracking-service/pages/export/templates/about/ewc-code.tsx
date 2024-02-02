@@ -216,7 +216,7 @@ const EwcCodes = () => {
   );
   const [templateId, setTemplateId] = useState(null);
   const [refData, setRefData] = useState<Array<codeType>>([]);
-  const [ewcCode, setEwcCode] = useState('');
+  const [ewcCode, setEwcCode] = useState<string>(null);
   const [ewcCodeToRemove, setEwcCodeToRemove] = useState<string>(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
 
@@ -282,7 +282,7 @@ const EwcCodes = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
+      const newEwcCode = ewcCode?.replace(/[A-Z-_|.* ]/gi, '');
       const newErrors = {
         ewcCode:
           validateEwcCode('Yes', newEwcCode) || checkValidEWC(newEwcCode),
@@ -346,17 +346,17 @@ const EwcCodes = () => {
       ({ code }) => code.slice(0, 6) === ewcCode
     );
     if (result !== undefined) {
-      return `You have already entered this code`;
+      return t('validation.ewcCode.duplicate');
     }
   };
 
   const checkValidEWC = (ewcCode) => {
-    if (ewcCode === '') {
+    if (ewcCode === null) {
       return null;
     }
     const result = refData.find(({ code }) => code.slice(0, 6) === ewcCode);
     if (result === undefined) {
-      return 'Enter a code in the correct format';
+      return t('validation.ewcCode.wrongFormat');
     }
   };
 
@@ -371,10 +371,10 @@ const EwcCodes = () => {
     async (e: FormEvent) => {
       e.preventDefault();
       const hasEWCCode = ewcCodePage.provided;
-      const newEwcCode = ewcCode.replace(/[A-Z-_|.* ]/gi, '');
+      const newEwcCode = ewcCode?.replace(/[A-Z-_|.* ]/gi, '');
       const newErrors = {
         ewcCode:
-          hasEWCCode &&
+          hasEWCCode === 'Yes' &&
           (validateEwcCode(hasEWCCode, newEwcCode) ||
             checkDuplicate(newEwcCode) ||
             checkValidEWC(newEwcCode)),
@@ -456,6 +456,8 @@ const EwcCodes = () => {
     let body = ewcCodePage.data;
     if (ewcCodes.length > 0) {
       body = { ...ewcCodePage.data, ewcCodes: ewcCodes };
+    } else {
+      body = { ...ewcCodePage.data, ewcCodes: [] };
     }
     try {
       await fetch(
@@ -471,7 +473,7 @@ const EwcCodes = () => {
         })
         .then((data) => {
           if (data !== undefined) {
-            setEwcCode('');
+            setEwcCode(null);
             dispatchEwcCodePage({
               type: 'PROVIDED_UPDATE',
               payload: null,
@@ -508,7 +510,7 @@ const EwcCodes = () => {
   };
 
   const handleRadioChange = (input) => {
-    setEwcCode('');
+    setEwcCode(null);
     dispatchEwcCodePage({
       type: 'PROVIDED_UPDATE',
       payload: input.target.value,
@@ -687,7 +689,7 @@ const EwcCodes = () => {
                                         maxLength: 8,
                                         type: 'text',
                                         inputMode: 'numeric',
-                                        value: ewcCode,
+                                        value: ewcCode || '',
                                         onChange: (e) =>
                                           setEwcCode(e.target.value),
                                       }}

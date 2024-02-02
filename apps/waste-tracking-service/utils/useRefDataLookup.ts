@@ -121,7 +121,9 @@ const useRefDataLookup = (apiConfig) => {
   };
 
   const getEWCDesc = (savedCode) => {
-    const result = ewcRefData.find(({ code }) => code === savedCode);
+    const result = ewcRefData.find(
+      ({ code }) => code.slice(0, 6) === savedCode
+    );
     if (result) {
       return result.value.description[currentLanguage];
     }

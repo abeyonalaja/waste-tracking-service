@@ -55,6 +55,7 @@ export const validateEwcCode: (
 ) => string | undefined = (hasEWCCode, ewcCode) => {
   const regex = new RegExp('^[0-9]+$');
   if (hasEWCCode !== 'Yes') return;
+  else if (ewcCode === undefined) return t('validation.ewcCode.empty');
   else if (!regex.test(ewcCode)) return t('validation.ewcCode.wrongFormat');
   else if (ewcCode === null || ewcCode.length === 0)
     return t('validation.ewcCode.empty');
