@@ -44,7 +44,7 @@ describe('Collection date page', () => {
       render(<CollectionDate />);
     });
 
-    const yesRadio = screen.getByLabelText('Yes, I’ll enter the actual date');
+    const yesRadio = screen.getByLabelText('Yes');
     fireEvent.click(yesRadio);
 
     const submitButton = screen.getByText('Save and continue');
@@ -59,7 +59,7 @@ describe('Collection date page', () => {
       render(<CollectionDate />);
     });
 
-    const yesRadio = screen.getByLabelText('Yes, I’ll enter the actual date');
+    const yesRadio = screen.getByLabelText('Yes');
     fireEvent.click(yesRadio);
 
     const day = screen.getByLabelText('Day');
