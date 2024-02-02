@@ -11,6 +11,7 @@ And(/^I should see export reference correctly displayed$/) do
 end
 
 And(/^I should see export About the waste section correctly displayed$/) do
+  HelperMethods.wait_for_a_sec
   expect(CheckYourRecordPage.new.waste_code_header).to eq Translations.value 'exportJourney.checkAnswers.wasteCode'
   expect(CheckYourRecordPage.new.ewc_code_header).to eq Translations.value 'exportJourney.checkAnswers.ewcCodes'
   expect(CheckYourRecordPage.new.national_code_header).to eq Translations.value 'exportJourney.checkAnswers.nationalCode'

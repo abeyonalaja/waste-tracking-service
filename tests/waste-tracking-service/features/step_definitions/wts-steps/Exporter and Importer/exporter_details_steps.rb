@@ -35,7 +35,7 @@ And(/^I should see Exporter Phone number pre-populated$/) do
 end
 
 And(/^I enter invalid fax code$/) do
-  ExporterDetailsPage.new.enter_invalid_fax '1234567890'
+  ExporterDetailsPage.new.enter_invalid_fax 'fax123'
 end
 
 And(/^I enter invalid international fax code$/) do
