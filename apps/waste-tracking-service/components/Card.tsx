@@ -11,7 +11,7 @@ type SummaryCardAction = {
 interface Props {
   title: string;
   children: ReactNode;
-  id?: string;
+  id: string;
   actions?: Array<SummaryCardAction>;
 }
 

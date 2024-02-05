@@ -126,7 +126,10 @@ export function Index() {
             </Card>
           </GovUK.GridCol>
           <GovUK.GridCol setWidth="one-third">
-            <Card title={t('exportJourney.exportHome.card.update')}>
+            <Card
+              title={t('exportJourney.exportHome.card.update')}
+              id="card-update-annex"
+            >
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -141,7 +144,10 @@ export function Index() {
             </Card>
           </GovUK.GridCol>
           <GovUK.GridCol setWidth="one-third">
-            <Card title={t('exportJourney.exportHome.card.submitted')}>
+            <Card
+              title={t('exportJourney.exportHome.card.submitted')}
+              id="card-submitted-annex"
+            >
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -158,7 +164,10 @@ export function Index() {
         </GovUK.GridRow>
         <GovUK.GridRow mb={9}>
           <GovUK.GridCol setWidth="one-third">
-            <Card title={t('exportJourney.exportHome.card.templates')}>
+            <Card
+              title={t('exportJourney.exportHome.card.templates')}
+              id="card-templates"
+            >
               <GovUK.UnorderedList listStyleType={'none'}>
                 <GovUK.ListItem>
                   <AppLink
@@ -184,7 +193,10 @@ export function Index() {
           </GovUK.GridCol>
           {process.env.NEXT_PUBLIC_MULTIPLES_ENABLED === 'true' && (
             <GovUK.GridCol setWidth="one-third">
-              <Card title={t('export.homepage.multiples.guidance.title')}>
+              <Card
+                title={t('export.homepage.multiples.guidance.title')}
+                id="card-guidance"
+              >
                 <GovUK.UnorderedList listStyleType={'none'}>
                   <GovUK.ListItem>
                     <AppLink
