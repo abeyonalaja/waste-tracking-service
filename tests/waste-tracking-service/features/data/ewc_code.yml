@@ -5,7 +5,7 @@
   description: wastes from mineral non-metalliferous excavation
 
 - code: :010304
-  description: Acid-generating tailings from processing of sulphide ore
+  description: acid-generating tailings from processing of sulphide ore
 
 - code: :010305
   description: other tailings containing hazardous substances

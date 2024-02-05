@@ -117,7 +117,6 @@ Feature: Check your report page
 
     #max export for bulk waste
   #defect raised - 304215
-  @ignore
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -439,7 +438,7 @@ Feature: Check your report page
     And I choose "Yes" radio button
     And I click the button Save and continue
     Then Enter an EWC code is displayed
-    
+
   Scenario: User can navigate to Interim site and recovery facility from check your report page using change link
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
