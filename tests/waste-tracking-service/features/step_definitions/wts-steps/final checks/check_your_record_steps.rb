@@ -18,6 +18,7 @@ And(/^I should see export About the waste section correctly displayed$/) do
   expect(CheckYourRecordPage.new.waste_description_header).to eq Translations.value 'exportJourney.checkAnswers.wasteDescription'
   expect(CheckYourRecordPage.new.waste_quantity_header).to eq Translations.value 'exportJourney.checkAnswers.wasteQuantity'
   expect(CheckYourRecordPage.new.waste_code_type).to eq TestStatus.test_status(:waste_code).gsub(/\s+/, '').gsub(' ', '')
+  HelperMethods.wait_for_a_sec
   expect(CheckYourRecordPage.new.waste_code_description).to eq TestStatus.test_status(:waste_code_description)
   description = TestData.get_ewc_code_description(TestStatus.test_status(:ewc_code))
   expect(CheckYourRecordPage.new.ewc_codes).to eq "#{TestStatus.test_status(:ewc_code).gsub(/(..)(?=.)/, '\1 ')}: #{description}"

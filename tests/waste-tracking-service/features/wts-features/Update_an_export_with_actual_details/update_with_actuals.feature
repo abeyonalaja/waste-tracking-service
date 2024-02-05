@@ -506,6 +506,7 @@ Feature: Submitted with estimates page
     When I click the "Cancel this record" button
     Then I remain on the cancel the export page with an "Select a reason if you want to cancel this document" error message displayed
 
+    #defect - 306758
   Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -550,6 +551,7 @@ Feature: Submitted with estimates page
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
 
+    #defect - 306758
   Scenario: User can Cancel estimated export with No longer exporting this waste reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -594,6 +596,7 @@ Feature: Submitted with estimates page
     And I should see Success cancelled message
     And I should not see cancelled export on update with actual page
 
+    #defect - 306758
   Scenario: User can Cancel estimated export with other reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -615,7 +618,7 @@ Feature: Submitted with estimates page
     And I complete the Journey of a waste section with estimated collection date
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
-    Then the task "Recovery facility" should be "COMPLETED"
+    Then the task "Recovery facility details" should be "COMPLETED"
     And I click the "Check your record" link
     Then the "check your record" page is displayed
     And I click Confirm all answers button

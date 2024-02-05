@@ -116,7 +116,6 @@ Feature: Check your report page
     And I should see Estimate Quantity of Waste
 
     #max export for bulk waste
-  #defect raised - 304215
   Scenario: User can navigate to check your report page with Max each EWS codes, Waste carriers, Recovery facility and multiple Countries waste will travel
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
