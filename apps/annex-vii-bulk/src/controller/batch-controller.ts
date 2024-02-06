@@ -10,14 +10,13 @@ import { BulkSubmission } from '../model';
 export default class BatchController {
   constructor(private repository: BatchRepository, private logger: Logger) {}
 
-  addBatchContent: Handler<
-    api.AddBatchContentRequest,
-    api.AddBatchContentResponse
+  addContentToBatch: Handler<
+    api.AddContentToBatchRequest,
+    api.AddContentToBatchResponse
   > = async ({ accountId }) => {
     try {
-      const id = uuidv4();
       const bulkSubmission: BulkSubmission = {
-        id: id,
+        id: uuidv4(),
         state: {
           status: 'Processing',
           timestamp: new Date(),
@@ -25,7 +24,7 @@ export default class BatchController {
       };
 
       await this.repository.saveBatch(bulkSubmission, accountId);
-      return success({ batchId: id });
+      return success({ batchId: bulkSubmission.id });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -36,10 +35,10 @@ export default class BatchController {
     }
   };
 
-  getBatchContent: Handler<
-    api.GetBatchContentRequest,
-    api.GetBatchContentResponse
-  > = async ({ id, accountId }) => {
+  getBatch: Handler<api.GetBatchRequest, api.GetBatchResponse> = async ({
+    id,
+    accountId,
+  }) => {
     try {
       return success(await this.repository.getBatch(id, accountId));
     } catch (err) {
@@ -51,4 +50,35 @@ export default class BatchController {
       return fromBoom(Boom.internal());
     }
   };
+
+  updateBatch: Handler<api.UpdateBatchRequest, api.UpdateBatchResponse> =
+    async ({ id, accountId }) => {
+      try {
+        const timestamp = new Date();
+        const transactionId =
+          timestamp.getFullYear().toString().substring(2) +
+          (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+          '_' +
+          id.substring(0, 8).toUpperCase();
+        const bulkSubmission: BulkSubmission = {
+          id: id,
+          state: {
+            status: 'Submitted',
+            timestamp: timestamp,
+            transactionId: transactionId,
+            submissions: [],
+          },
+        };
+        return success(
+          await this.repository.saveBatch(bulkSubmission, accountId)
+        );
+      } catch (err) {
+        if (err instanceof Boom.Boom) {
+          return fromBoom(err);
+        }
+
+        this.logger.error('Unknown error', { error: err });
+        return fromBoom(Boom.internal());
+      }
+    };
 }

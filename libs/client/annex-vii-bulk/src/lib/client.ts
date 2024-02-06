@@ -1,11 +1,14 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
-  addBatchContent,
-  AddBatchContentRequest,
-  AddBatchContentResponse,
-  getBatchContent,
-  GetBatchContentRequest,
-  GetBatchContentResponse,
+  addContentToBatch,
+  AddContentToBatchRequest,
+  AddContentToBatchResponse,
+  getBatch,
+  GetBatchRequest,
+  GetBatchResponse,
+  updateBatch,
+  UpdateBatchRequest,
+  UpdateBatchResponse,
 } from '@wts/api/annex-vii-bulk';
 
 export class DaprAnnexViiBulkClient {
@@ -14,25 +17,32 @@ export class DaprAnnexViiBulkClient {
     private annexViiBulkAppId: string
   ) {}
 
-  async addBatchContent(
-    req: AddBatchContentRequest
-  ): Promise<AddBatchContentResponse> {
+  async addContentToBatch(
+    req: AddContentToBatchRequest
+  ): Promise<AddContentToBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiBulkAppId,
-      addBatchContent.name,
+      addContentToBatch.name,
       HttpMethod.POST,
       req
-    )) as AddBatchContentResponse;
+    )) as AddContentToBatchResponse;
   }
 
-  async getBatchContent(
-    req: GetBatchContentRequest
-  ): Promise<GetBatchContentResponse> {
+  async getBatch(req: GetBatchRequest): Promise<GetBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiBulkAppId,
-      getBatchContent.name,
+      getBatch.name,
       HttpMethod.POST,
       req
-    )) as GetBatchContentResponse;
+    )) as GetBatchResponse;
+  }
+
+  async updateBatch(req: UpdateBatchRequest): Promise<UpdateBatchResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiBulkAppId,
+      updateBatch.name,
+      HttpMethod.POST,
+      req
+    )) as UpdateBatchResponse;
   }
 }

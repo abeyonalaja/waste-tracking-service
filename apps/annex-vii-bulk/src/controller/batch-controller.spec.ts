@@ -26,10 +26,10 @@ describe(BatchController, () => {
     mockRepository.getBatch.mockClear();
   });
 
-  describe('addBatchContent', () => {
+  describe('addContentToBatch', () => {
     it('forwards thrown Boom errors', async () => {
       mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
-      const response = await subject.addBatchContent({
+      const response = await subject.addContentToBatch({
         accountId: faker.datatype.uuid(),
         content: {
           type: 'text/csv',
@@ -46,32 +46,15 @@ describe(BatchController, () => {
       expect(mockRepository.saveBatch).toBeCalled();
       expect(response.error.statusCode).toBe(418);
     });
-
-    it('cannot initially start recovery facility section', async () => {
-      mockRepository.saveBatch.mockResolvedValue();
-      const response = await subject.addBatchContent({
-        accountId: faker.datatype.uuid(),
-        content: {
-          type: 'text/csv',
-          compression: 'Snappy',
-          value: faker.datatype.string(),
-        },
-      });
-
-      expect(response.success).toBe(true);
-      if (!response.success) {
-        return;
-      }
-    });
   });
 
-  describe('getBatchContent', () => {
+  describe('getBatch', () => {
     it('forwards thrown Boom errors', async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
       mockRepository.getBatch.mockRejectedValue(Boom.teapot());
 
-      const response = await subject.getBatchContent({ id, accountId });
+      const response = await subject.getBatch({ id, accountId });
 
       expect(response.success).toBe(false);
       if (response.success) {
@@ -95,7 +78,7 @@ describe(BatchController, () => {
 
       mockRepository.getBatch.mockResolvedValue(value);
 
-      const response = await subject.getBatchContent({ id, accountId });
+      const response = await subject.getBatch({ id, accountId });
       expect(response.success).toBe(true);
       if (!response.success) {
         return;
@@ -103,6 +86,44 @@ describe(BatchController, () => {
 
       expect(mockRepository.getBatch).toHaveBeenCalledWith(id, accountId);
       expect(response.value).toEqual(value);
+    });
+  });
+
+  describe('updateBatch', () => {
+    it('forwards thrown Boom errors', async () => {
+      const id = faker.datatype.uuid();
+      const accountId = faker.datatype.uuid();
+      mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
+
+      const response = await subject.updateBatch({ id, accountId });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.saveBatch).toBeCalled();
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('successfully updates value from the repository', async () => {
+      const id = faker.datatype.uuid();
+      const accountId = faker.datatype.uuid();
+      mockRepository.saveBatch.mockResolvedValue(undefined);
+
+      const response = await subject.updateBatch({
+        id,
+        accountId,
+      });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      id.substring(0, 8).toUpperCase();
+      expect(mockRepository.saveBatch).toBeCalledTimes(1);
+      expect(response.value).toEqual(undefined);
     });
   });
 });

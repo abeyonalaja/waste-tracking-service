@@ -18,12 +18,8 @@ import {
 } from '@azure/identity';
 import { CosmosBatchRepository } from './data';
 import { CosmosClient } from '@azure/cosmos';
-import {
-  BulkSubmission,
-  ContentProcessingTask,
-  ValidateCsvContentRequest,
-} from './model';
-import { validateBatch } from './lib/csv-validation';
+import { BulkSubmission, ContentProcessingTask } from './model';
+import { CsvValidator } from './lib/csv-validator';
 import { v4 as uuidv4 } from 'uuid';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
@@ -73,20 +69,26 @@ const serviceBusClient = new ServiceBusClient(
   aadCredentials
 );
 const batchController = new BatchController(repository, logger);
+const csvValidator = new CsvValidator(logger);
 
 await server.invoker.listen(
-  api.addBatchContent.name,
+  api.addContentToBatch.name,
   async ({ body }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = JSON.parse(body) as api.AddBatchContentRequest;
-    if (!validate.addBatchContentRequest(request)) {
+    const request = JSON.parse(body) as api.AddContentToBatchRequest;
+    if (!validate.addContentToBatchRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
-    const response = await batchController.addBatchContent(request);
+    const validateCsvResponse = await csvValidator.validateBatch(request);
+    if (!validateCsvResponse.success) {
+      return validateCsvResponse;
+    }
+
+    const response = await batchController.addContentToBatch(request);
     if (!response.success) {
       return response;
     }
@@ -94,7 +96,7 @@ await server.invoker.listen(
     const message: ContentProcessingTask = {
       batchId: response.value.batchId,
       accountId: request.accountId,
-      content: request.content,
+      content: JSON.stringify(validateCsvResponse.value.rows),
     };
 
     try {
@@ -133,18 +135,35 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
-  api.getBatchContent.name,
+  api.getBatch.name,
   async ({ body }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getBatchContentRequest(body);
+    const request = parse.getBatchRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
 
-    return await batchController.getBatchContent(request);
+    return await batchController.getBatch(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.updateBatch.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.updateBatchRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await batchController.updateBatch(request);
   },
   { method: HttpMethod.POST }
 );
@@ -156,10 +175,8 @@ while (execute) {
   const receiver = serviceBusClient.createReceiver(tasksQueueName);
   const subscription = receiver.subscribe({
     processMessage: async (brokeredMessage) => {
-      const data = brokeredMessage.body as ValidateCsvContentRequest;
+      const data = brokeredMessage.body as ContentProcessingTask;
       try {
-        const records = await validateBatch(data);
-        console.log(records.rows.length);
         const value: BulkSubmission = {
           id: data.batchId,
           state: {
@@ -174,23 +191,11 @@ while (execute) {
         };
         await repository.saveBatch(value, data.accountId);
       } catch (error) {
-        if (
-          error instanceof Error &&
-          'code' in error &&
-          typeof error.code === 'string'
-        ) {
-          logger.error(error.message, {
-            batchId: data.batchId,
-            accountId: data.accountId,
-            code: error.code,
-          });
-        } else {
-          logger.error('Unknown error', {
-            batchId: data.batchId,
-            accountId: data.accountId,
-            error: error,
-          });
-        }
+        logger.error('Unknown error', {
+          batchId: data.batchId,
+          accountId: data.accountId,
+          error: error,
+        });
 
         const value: BulkSubmission = {
           id: data.batchId,

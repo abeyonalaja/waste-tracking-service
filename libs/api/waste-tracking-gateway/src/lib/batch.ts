@@ -31,6 +31,7 @@ export type BulkSubmissionState =
   | {
       status: 'Submitted';
       timestamp: Date;
+      transactionId: string;
       submissions: SubmissionReference[];
     };
 

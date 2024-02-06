@@ -34,6 +34,7 @@ export type BulkSubmissionState =
   | {
       status: 'Submitted';
       timestamp: Date;
+      transactionId: string;
       submissions: SubmissionReference[];
     };
 
@@ -42,7 +43,7 @@ export type BulkSubmission = {
   state: BulkSubmissionState;
 };
 
-export type AddBatchContentRequest = AccountIdRequest & {
+export type AddContentToBatchRequest = AccountIdRequest & {
   batchId?: string;
   content: {
     type: 'text/csv';
@@ -50,16 +51,16 @@ export type AddBatchContentRequest = AccountIdRequest & {
     value: string;
   };
 };
-export type AddBatchContentResponse = Response<{ batchId: string }>;
-export const addBatchContent: Method = {
-  name: 'addBatchContent',
+export type AddContentToBatchResponse = Response<{ batchId: string }>;
+export const addContentToBatch: Method = {
+  name: 'addContentToBatch',
   httpVerb: 'POST',
 };
 
-export type GetBatchContentRequest = IdRequest & AccountIdRequest;
-export type GetBatchContentResponse = Response<BulkSubmission>;
-export const getBatchContent: Method = {
-  name: 'getBatchContent',
+export type GetBatchRequest = IdRequest & AccountIdRequest;
+export type GetBatchResponse = Response<BulkSubmission>;
+export const getBatch: Method = {
+  name: 'getBatch',
   httpVerb: 'POST',
 };
 
@@ -82,3 +83,10 @@ export type ValidateBatchContentRequest = AccountIdRequest & {
 };
 
 export type ValidateBatchContentResponse = Response<{ batchId: string }>;
+
+export type UpdateBatchRequest = IdRequest & AccountIdRequest;
+export type UpdateBatchResponse = Response<void>;
+export const updateBatch: Method = {
+  name: 'updateBatch',
+  httpVerb: 'POST',
+};

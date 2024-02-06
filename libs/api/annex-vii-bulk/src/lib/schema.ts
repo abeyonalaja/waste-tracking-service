@@ -1,5 +1,9 @@
 import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
-import { AddBatchContentRequest, GetBatchContentRequest } from './dto';
+import {
+  AddContentToBatchRequest,
+  GetBatchRequest,
+  UpdateBatchRequest,
+} from './dto';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -46,6 +50,7 @@ const bulkSubmissionState: SchemaObject = {
     Submitted: {
       properties: {
         timestamp: { type: 'timestamp' },
+        transactionId: { type: 'string' },
         submissions: {
           elements: {
             properties: {
@@ -66,23 +71,24 @@ const bulkSubmission: SchemaObject = {
   },
 };
 
-export const addBatchContentRequest: JTDSchemaType<AddBatchContentRequest> = {
-  properties: {
-    accountId: { type: 'string' },
-    content: {
-      properties: {
-        type: { enum: ['text/csv'] },
-        compression: { enum: ['Snappy', 'None'] },
-        value: { type: 'string' },
+export const addContentToBatchRequest: JTDSchemaType<AddContentToBatchRequest> =
+  {
+    properties: {
+      accountId: { type: 'string' },
+      content: {
+        properties: {
+          type: { enum: ['text/csv'] },
+          compression: { enum: ['Snappy', 'None'] },
+          value: { type: 'string' },
+        },
       },
     },
-  },
-  optionalProperties: {
-    batchId: { type: 'string' },
-  },
-};
+    optionalProperties: {
+      batchId: { type: 'string' },
+    },
+  };
 
-export const addBatchContentResponse: SchemaObject = {
+export const addContentToBatchResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
@@ -90,17 +96,32 @@ export const addBatchContentResponse: SchemaObject = {
   },
 };
 
-export const getBatchContentRequest: JTDSchemaType<GetBatchContentRequest> = {
+export const getBatchRequest: JTDSchemaType<GetBatchRequest> = {
   properties: {
     id: { type: 'string' },
     accountId: { type: 'string' },
   },
 };
 
-export const getBatchContentResponse: SchemaObject = {
+export const getBatchResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
     value: bulkSubmission,
+  },
+};
+
+export const updateBatchRequest: JTDSchemaType<UpdateBatchRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const updateBatchResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: {} },
   },
 };

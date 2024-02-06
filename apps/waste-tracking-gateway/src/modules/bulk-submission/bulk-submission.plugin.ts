@@ -22,12 +22,6 @@ const plugin: Plugin<PluginOptions> = {
           multipart.getBoundary(req.headers['content-type'])
         );
 
-        for (const input of inputs) {
-          if (input.type !== 'text/csv') {
-            return Boom.badRequest("Input type must be 'text/csv'");
-          }
-        }
-
         try {
           return h
             .response(
@@ -40,15 +34,6 @@ const plugin: Plugin<PluginOptions> = {
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;
-          }
-
-          if (
-            error instanceof Error &&
-            'code' in error &&
-            typeof error.code === 'string'
-          ) {
-            logger.error(error.message, { code: error.code });
-            return Boom.badRequest(error.code);
           }
 
           logger.error('Unknown error', { error: error });
@@ -76,6 +61,30 @@ const plugin: Plugin<PluginOptions> = {
             accountId: h.request.auth.credentials.accountId as string,
           });
           return value as dto.GetBulkSubmissionResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/{id}/finalize',
+      handler: async function ({ params }, h) {
+        try {
+          return h
+            .response(
+              (await backend.finalizeBatch({
+                id: params.id,
+                accountId: h.request.auth.credentials.accountId as string,
+              })) as undefined
+            )
+            .code(201);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

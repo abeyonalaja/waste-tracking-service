@@ -23,6 +23,7 @@ const mockBackend = {
   createBatch:
     jest.fn<(accountId: string, inputs: Input[]) => Promise<{ id: string }>>(),
   getBatch: jest.fn<(ref: BatchRef) => Promise<BulkSubmission>>(),
+  finalizeBatch: jest.fn<(ref: BatchRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -64,6 +65,7 @@ describe('BulkSubmissionPlugin', () => {
   beforeEach(() => {
     mockBackend.createBatch.mockClear();
     mockBackend.getBatch.mockClear();
+    mockBackend.finalizeBatch.mockClear();
   });
 
   describe('POST /batches', () => {
@@ -88,6 +90,18 @@ describe('BulkSubmissionPlugin', () => {
       mockBackend.getBatch.mockRejectedValue(Boom.notFound());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('POST /batches/{id}/finalize', () => {
+    it('Responds 201 with no request payload', async () => {
+      const options = {
+        method: 'POST',
+        url: `/batches/${faker.datatype.uuid()}/finalize`,
+      };
+
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(201);
     });
   });
 });
