@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,annex-vii-bulk,feedback,reference-data,waste-tracking-service,waste-tracking-gateway"
+                        affected="address,annex-vii,annex-vii-bulk,limited-audience,feedback,reference-data,waste-tracking-service,waste-tracking-gateway"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,annex-vii-bulk,feedback,reference-data,waste-tracking-service,waste-tracking-gateway
+        value: address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,waste-tracking-service,waste-tracking-gateway
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -152,6 +152,14 @@ jobs:
                     else
                       echo "Deploy feedback: false"
                       echo "##vso[task.setvariable variable=deployFeedback;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'limited-audience'* ]]
+                    then
+                      echo "Deploy limited-audience: true"
+                      echo "##vso[task.setvariable variable=deployLimitedAudience;isoutput=true]true"
+                    else
+                      echo "Deploy limited-audience: false"
+                      echo "##vso[task.setvariable variable=deployLimitedAudience;isoutput=true]false"
                     fi
                     if [[ $affected = *'reference-data'* ]]
                     then
@@ -221,6 +229,17 @@ jobs:
                         qualtricsClientSecret: $(qualtricsClientSecret)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployFeedback'], true)
+
+                - ${{ elseif eq(app, 'limited-audience') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        invitationTokenPublicKey: $(invitationTokenPublicKey)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployLimitedAudience'], true)
 
                 - ${{ elseif eq(app, 'reference-data') }}:
                     - template: deploy/${{ app }}.yaml

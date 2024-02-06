@@ -12,6 +12,7 @@ parameters:
       - annex-vii
       - annex-vii-bulk
       - feedback
+      - limited-audience
       - reference-data
       - waste-tracking-gateway
       - waste-tracking-service
@@ -22,6 +23,7 @@ parameters:
       - annex_vii
       - annex_vii_bulk
       - feedback
+      - limited_audience
       - reference_data
       - waste_tracking_gateway
       - waste_tracking_service
