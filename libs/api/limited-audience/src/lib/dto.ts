@@ -21,6 +21,13 @@ export type RedeemInvitationRequest = {
 
 export type RedeemInvitationResponse = Response<void>;
 
+export type AddParticipantRequest = {
+  dcidSubjectId: string;
+  content: 'GLW' | 'UKWM';
+};
+
+export type AddParticipantResponse = Response<void>;
+
 export const checkParticipation: Method = {
   name: 'checkParticipation',
   httpVerb: 'POST',
@@ -28,5 +35,10 @@ export const checkParticipation: Method = {
 
 export const redeemInvitation: Method = {
   name: 'redeemInvitation',
+  httpVerb: 'POST',
+};
+
+export const addParticipant: Method = {
+  name: 'addParticipant',
   httpVerb: 'POST',
 };

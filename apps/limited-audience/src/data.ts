@@ -1,7 +1,7 @@
-import { Assignment } from './model';
 import { Container, ErrorResponse } from '@azure/cosmos';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
+import { Assignment } from './model';
 
 export interface AssignmentRepository {
   getAssignment(
@@ -47,9 +47,7 @@ export class CosmosAssignmentRepository implements AssignmentRepository {
 
   async setAssignment(value: Assignment): Promise<void> {
     try {
-      await this.container
-        .item(value.dcidSubjectId, value.content)
-        .replace({ value });
+      await this.container.items.upsert({ id: value.dcidSubjectId, value });
     } catch (err) {
       if (err instanceof ErrorResponse) {
         this.logger.error('Error writing Cosmos DB item', err);

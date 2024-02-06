@@ -71,4 +71,38 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.redeemInvitation.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.redeemInvitationRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await controller.redeemInvitation(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.addParticipant.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.addParticipantRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await controller.addParticipant(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

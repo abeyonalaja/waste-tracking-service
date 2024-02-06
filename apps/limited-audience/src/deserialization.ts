@@ -10,3 +10,7 @@ export const checkParticipationRequest = ajv.compileParser(
 export const redeemInvitationRequest = ajv.compileParser(
   schema.redeemInvitationRequest
 );
+
+export const addParticipantRequest = ajv.compileParser(
+  schema.addParticipantRequest
+);

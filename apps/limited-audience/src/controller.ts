@@ -1,10 +1,11 @@
 import Boom from '@hapi/boom';
 import * as api from '@wts/api/limited-audience';
 import { fromBoom, success } from '@wts/util/invocation';
+import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { AssignmentRepository } from './data';
-import { TokenValidator } from './tokens';
 import { Assignment } from './model';
+import { TokenValidator } from './tokens';
 
 type Handler<Request, Response> = (request: Request) => Promise<Response>;
 
@@ -63,6 +64,28 @@ export default class AssignmentController {
       }
 
       this.repository.setAssignment({ participantId, dcidSubjectId, content });
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  addParticipant: Handler<
+    api.AddParticipantRequest,
+    api.AddParticipantResponse
+  > = async ({ content, dcidSubjectId }) => {
+    try {
+      const value: Assignment = {
+        content,
+        dcidSubjectId,
+        participantId: uuidv4(),
+      };
+      this.repository.setAssignment(value);
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
