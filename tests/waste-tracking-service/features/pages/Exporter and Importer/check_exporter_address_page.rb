@@ -11,8 +11,6 @@ class CheckExporterAddressPage < GenericPage
 
   TITLE = Translations.value 'exportJourney.exporterAddress.title'
   EXPORTER_DETAILS = Translations.value 'postcode.checkAddress.address'
-  SUB_TITLE1 = Translations.value 'postcode.checkAddress.exportingCountryStart'
-  SUB_TITLE2 = Translations.value 'postcode.checkAddress.exportingCountryEnd'
   CHANGE_LINK = Translations.value 'change'
 
   def check_page_displayed
@@ -21,7 +19,6 @@ class CheckExporterAddressPage < GenericPage
 
   def check_page_translation
     expect(page).to have_text EXPORTER_DETAILS
-    expect(page).to have_text SUB_TITLE1 + TestStatus.test_status(:exporter_country) + SUB_TITLE2
     expect(page).to have_link CHANGE_LINK
   end
 

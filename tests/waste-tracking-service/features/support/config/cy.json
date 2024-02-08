@@ -532,8 +532,6 @@
   "postcode.addressesFound": "{{n}} addresses found",
   "postcode.checkAddress.address": "Exporter address",
   "postcode.checkAddress.collectionAddress": "Collection address",
-  "postcode.checkAddress.exportingCountryEnd": " as the exporting country.",
-  "postcode.checkAddress.exportingCountryStart": "From your selected address we'll use ",
   "postcode.enterManualy": "Enter your address manually",
   "postcode.findButton": "Find address",
   "postcode.label": "Postcode",

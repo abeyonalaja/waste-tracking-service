@@ -19,7 +19,6 @@ class EditExporterAddressPage < GenericPage
     town = Translations.value 'address.townCity'
     postcode = Translations.value 'address.postcodeOptional'
     country = Translations.value 'address.country'
-    exporter_text = Translations.value 'exportJourney.wasteCollectionDetails.countryHint'
 
     expect(self).to have_css 'h1', text: title, exact_text: true
     expect(page).to have_text address1
@@ -27,7 +26,6 @@ class EditExporterAddressPage < GenericPage
     expect(page).to have_text town
     expect(page).to have_text postcode
     expect(page).to have_text country
-    expect(page).to have_text exporter_text
   end
 
 end

@@ -80,8 +80,6 @@
   "postcode.addressesFound": "{{n}} addresses found",
   "postcode.checkAddress.address": "Exporter address",
   "postcode.checkAddress.collectionAddress": "Collection address",
-  "postcode.checkAddress.exportingCountryStart": "From your selected address we'll use ",
-  "postcode.checkAddress.exportingCountryEnd": " as the exporting country.",
   "weight.tonnes": "tonnes",
   "weight.kg": "kg",
   "volume.m3": "m3",

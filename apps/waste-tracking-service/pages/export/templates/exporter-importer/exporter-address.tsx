@@ -14,7 +14,6 @@ import {
   SaveReturnButton,
   ButtonGroup,
   Address,
-  Paragraph,
 } from 'components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -191,13 +190,6 @@ const ExporterAddress = () => {
                 <GovUK.Heading size={'LARGE'}>
                   {t('exportJourney.exporterAddress.title')}
                 </GovUK.Heading>
-                {data.status !== 'NotStarted' && (
-                  <Paragraph>
-                    {t('postcode.checkAddress.exportingCountryStart')}
-                    <b>{data.exporterAddress.country}</b>
-                    {t('postcode.checkAddress.exportingCountryEnd')}
-                  </Paragraph>
-                )}
                 <DefinitionList id="address-list">
                   <Row>
                     <Title>{t('postcode.checkAddress.address')}</Title>

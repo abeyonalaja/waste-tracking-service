@@ -272,9 +272,6 @@ const ExporterManual = () => {
                       id="country"
                       name="country"
                       label={t('address.country')}
-                      hint={t(
-                        'exportJourney.wasteCollectionDetails.countryHint'
-                      )}
                       errorMessage={errors?.country}
                       options={countriesData.UK}
                       onChange={(e) => setCountry(e.target.value)}
