@@ -7,6 +7,7 @@ import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
 import { Card } from './Card';
+import { CrownIcon } from './CrownIcon';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
@@ -43,6 +44,7 @@ export {
   BreadcrumbWrap,
   ButtonGroup,
   Card,
+  CrownIcon,
   Footer,
   Header,
   ConditionalRadioWrap,

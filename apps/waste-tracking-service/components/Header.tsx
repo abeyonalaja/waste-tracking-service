@@ -1,12 +1,11 @@
 import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import styled from 'styled-components';
-import CrownIcon from '@govuk-react/icon-crown';
 import { GlobalStyle, Main, TopNav, PhaseBanner } from 'govuk-react';
 import Link from 'next/link';
 import { BLUE, BLACK, YELLOW } from 'govuk-colours';
 import { useTranslation } from 'react-i18next';
-import { CookieBanner, LanguageSwitch } from 'components';
+import { CookieBanner, LanguageSwitch, CrownIcon } from 'components';
 
 const GovukHeader = styled.header`
   background: ${BLACK};
@@ -86,6 +85,9 @@ const GovukHeaderLogoLink = styled(TopNav.Anchor)`
     @media (min-width: 40.0625em) {
       box-shadow: 0 0 ${YELLOW};
     }
+    & svg > path {
+      fill: ${BLACK};
+    }
   }
 `;
 const GovukHeaderLink = styled(Link)`
@@ -150,9 +152,7 @@ export const Header = ({ isSignOutPage = false, callbackUrl = '/export' }) => {
         <GovukHeaderInner>
           <GovukHeaderLogo>
             <GovukHeaderLogoLink href="https://www.gov.uk/" target="_blank">
-              <TopNav.IconTitle icon={<CrownIcon height="32" width="36" />}>
-                {t('header.iconTitle')}
-              </TopNav.IconTitle>
+              <CrownIcon />
             </GovukHeaderLogoLink>
           </GovukHeaderLogo>
           <GovukHeaderContent>
