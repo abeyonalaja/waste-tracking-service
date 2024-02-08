@@ -10,6 +10,7 @@ import {
   Header,
   BreadcrumbWrap,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
 } from 'components';
 import styled from 'styled-components';
@@ -190,7 +191,7 @@ const ExporterPostcode = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {errors && !!Object.keys(errors).length && (
-              <GovUK.ErrorSummary
+              <ErrorSummary
                 heading={t('errorSummary.title')}
                 errors={Object.keys(errors).map((key) => ({
                   targetName: key,

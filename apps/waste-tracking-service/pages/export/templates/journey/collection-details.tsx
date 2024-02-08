@@ -16,6 +16,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   Paragraph,
   ButtonGroup,
   SaveReturnButton,
@@ -662,7 +663,7 @@ const CollectionDetails = () => {
               <>
                 {addressPage.errors &&
                   !!Object.keys(addressPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(addressPage.errors).map((key) => ({
                         targetName: key,

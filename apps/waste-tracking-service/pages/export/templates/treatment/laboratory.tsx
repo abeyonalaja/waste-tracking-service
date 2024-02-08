@@ -17,6 +17,7 @@ import {
   SubmissionNotFound,
   Loading,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
   CountrySelector,
   AutoComplete,
@@ -530,7 +531,7 @@ const Laboratory = () => {
               <>
                 {laboratoryPage.errors &&
                   !!Object.keys(laboratoryPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(laboratoryPage.errors).map((key) => ({
                         targetName: key,

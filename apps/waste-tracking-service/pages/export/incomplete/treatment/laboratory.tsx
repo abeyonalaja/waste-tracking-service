@@ -14,6 +14,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   SubmissionNotFound,
   Loading,
   ButtonGroup,
@@ -525,7 +526,7 @@ const Laboratory = () => {
               <>
                 {laboratoryPage.errors &&
                   !!Object.keys(laboratoryPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(laboratoryPage.errors).map((key) => ({
                         targetName: key,

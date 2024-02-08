@@ -15,6 +15,7 @@ import {
   Header,
   ConditionalRadioWrap,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   SubmissionNotFound,
   SaveReturnButton,
@@ -470,7 +471,7 @@ const TransitCountries = () => {
               <>
                 {wasteTransitPage.errors &&
                   !!Object.keys(wasteTransitPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(wasteTransitPage.errors).map(
                         (key) => ({

@@ -18,6 +18,7 @@ import {
   BreadcrumbWrap,
   Paragraph,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
   SubmissionNotFound,
   Loading,
@@ -651,7 +652,7 @@ const CollectionDetails = () => {
               <>
                 {addressPage.errors &&
                   !!Object.keys(addressPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(addressPage.errors).map((key) => ({
                         targetName: key,

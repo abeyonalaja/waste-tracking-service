@@ -13,6 +13,7 @@ import {
   AppLink,
   ButtonGroup,
   BreakableString,
+  ErrorSummary,
   NotificationBanner,
   Pagination,
 } from 'components';
@@ -479,7 +480,7 @@ const ManageTemplates = () => {
                 <GovUK.GridCol setWidth="two-thirds">
                   {templatesPage.errors &&
                     !!Object.keys(templatesPage.errors).length && (
-                      <GovUK.ErrorSummary
+                      <ErrorSummary
                         heading={t('errorSummary.title')}
                         errors={Object.keys(templatesPage.errors).map(
                           (key) => ({

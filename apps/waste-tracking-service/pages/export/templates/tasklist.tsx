@@ -9,6 +9,7 @@ import {
   BreadcrumbWrap,
   Loading,
   Error404Content,
+  ErrorSummary,
   AppLink,
   Paragraph,
   DocumentStatus,
@@ -265,7 +266,7 @@ const TemplateTasklist = () => {
               <GovUK.GridCol setWidth="two-thirds">
                 {templatePage.errors &&
                   !!Object.keys(templatePage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(templatePage.errors).map((key) => ({
                         targetName: key,

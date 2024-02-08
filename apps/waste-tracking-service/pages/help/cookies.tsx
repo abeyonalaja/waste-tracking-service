@@ -84,7 +84,7 @@ const Cookies = () => {
               >
                 <AppLink
                   href="#"
-                  isGreen
+                  colour={'green'}
                   isBold
                   onClick={(e) => {
                     e.preventDefault();

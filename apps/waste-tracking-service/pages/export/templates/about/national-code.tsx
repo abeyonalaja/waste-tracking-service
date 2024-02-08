@@ -15,6 +15,7 @@ import {
   Header,
   ConditionalRadioWrap,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   SubmissionNotFound,
   SaveReturnButton,
@@ -219,7 +220,7 @@ const NationalCode = () => {
             {!nationalCodePage.isError && !nationalCodePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

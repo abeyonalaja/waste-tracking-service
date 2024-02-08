@@ -3,6 +3,7 @@ import * as GovUK from 'govuk-react';
 import {
   BreadcrumbWrap,
   ButtonGroup,
+  ErrorSummary,
   Footer,
   Header,
   Loading,
@@ -220,7 +221,7 @@ const QuantityEntry = () => {
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

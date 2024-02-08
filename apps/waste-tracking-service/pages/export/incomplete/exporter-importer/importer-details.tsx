@@ -10,6 +10,7 @@ import {
   BreadcrumbWrap,
   SaveReturnButton,
   ButtonGroup,
+  ErrorSummary,
   SubmissionNotFound,
   Loading,
 } from 'components';
@@ -139,6 +140,7 @@ const ImporterDetails = () => {
     },
     [organisationName, address, country]
   );
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -171,7 +173,7 @@ const ImporterDetails = () => {
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

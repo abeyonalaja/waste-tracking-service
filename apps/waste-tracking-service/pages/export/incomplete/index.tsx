@@ -16,6 +16,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   Paragraph,
   Pagination,
   SubmissionNotFound,
@@ -460,7 +461,7 @@ const IncompleteAnnex7 = () => {
                   <GovUK.GridCol setWidth="two-thirds">
                     {incompleteAnnex7Page.errors &&
                       !!Object.keys(incompleteAnnex7Page.errors).length && (
-                        <GovUK.ErrorSummary
+                        <ErrorSummary
                           heading={t('errorSummary.title')}
                           errors={Object.keys(incompleteAnnex7Page.errors).map(
                             (key) => ({

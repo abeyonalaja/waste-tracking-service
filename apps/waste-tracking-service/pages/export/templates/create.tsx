@@ -8,6 +8,7 @@ import {
   Header,
   BreadcrumbWrap,
   ButtonGroup,
+  ErrorSummary,
   TextareaCharCount,
   SaveReturnButton,
 } from 'components';
@@ -110,7 +111,7 @@ const TemplateCreate = () => {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {errors && !!Object.keys(errors).length && (
-              <GovUK.ErrorSummary
+              <ErrorSummary
                 heading={t('errorSummary.title')}
                 errors={Object.keys(errors).map((key) => ({
                   targetName: key,

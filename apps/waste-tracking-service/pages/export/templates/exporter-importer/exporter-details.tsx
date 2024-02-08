@@ -8,6 +8,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   SubmissionNotFound,
   SaveReturnButton,
@@ -201,7 +202,7 @@ const ExporterDetails = () => {
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

@@ -8,6 +8,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   SubmissionNotFound,
   ButtonGroup,
@@ -111,9 +112,9 @@ const ExporterManual = () => {
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
       const newErrors = {
+        address: validateAddress(address),
         townCity: validateTownCity(townCity),
         country: validateCountrySelect(country),
-        address: validateAddress(address),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -194,7 +195,7 @@ const ExporterManual = () => {
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

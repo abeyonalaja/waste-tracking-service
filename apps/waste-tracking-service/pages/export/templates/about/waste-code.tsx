@@ -11,6 +11,7 @@ import {
   ConditionalRadioWrap,
   RadiosDivider,
   BreadcrumbWrap,
+  ErrorSummary,
   SubmissionNotFound,
   Loading,
   ButtonGroup,
@@ -275,7 +276,7 @@ const WasteCode = () => {
             {!isLoading && hasValidId && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

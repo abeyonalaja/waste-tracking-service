@@ -17,6 +17,7 @@ import {
   SaveReturnButton,
   ButtonGroup,
   Error404Content,
+  ErrorSummary,
   Loading,
   SummaryCard,
   SummaryList,
@@ -712,7 +713,7 @@ const WasteCarriers = () => {
               <>
                 {carrierPage.errors &&
                   !!Object.keys(carrierPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(carrierPage.errors).map((key) => ({
                         targetName: key,

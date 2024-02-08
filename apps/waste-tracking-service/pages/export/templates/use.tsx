@@ -15,6 +15,7 @@ import {
   BreadcrumbWrap,
   Loading,
   Error404Content,
+  ErrorSummary,
   Paragraph,
 } from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
@@ -223,7 +224,7 @@ const TemplateUse = () => {
               <>
                 {templatePage.errors &&
                   !!Object.keys(templatePage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(templatePage.errors).map((key) => ({
                         targetName: key,

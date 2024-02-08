@@ -15,6 +15,7 @@ import { CountrySelector } from './CountrySelector';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { Error404Content } from './Error404Content';
+import { ErrorSummary } from './ErrorSummary';
 import { InputWithSuffix } from './InputWithSuffix';
 import { LanguageSwitch } from './LanguageSwitch';
 import { Loading } from './Loading';
@@ -50,6 +51,7 @@ export {
   DocumentStatus,
   DownloadPDFLink,
   Error404Content,
+  ErrorSummary,
   InputWithSuffix,
   LanguageSwitch,
   Loading,

@@ -16,6 +16,7 @@ import {
   Header,
   BreadcrumbWrap,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
   SubmissionNotFound,
   Loading,
@@ -761,7 +762,7 @@ const RecoveryFacilityDetails = () => {
               <>
                 {recoveryPage.errors &&
                   !!Object.keys(recoveryPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(recoveryPage.errors).map((key) => ({
                         targetName: key,

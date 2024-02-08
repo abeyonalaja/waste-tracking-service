@@ -15,6 +15,7 @@ import {
   BreadcrumbWrap,
   Loading,
   Error404Content,
+  ErrorSummary,
   TextareaCharCount,
   ButtonGroup,
   SaveReturnButton,
@@ -223,7 +224,7 @@ const TemplateCopy = () => {
             {!templatePage.isError && !templatePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

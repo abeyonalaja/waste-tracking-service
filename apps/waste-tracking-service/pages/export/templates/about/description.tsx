@@ -13,6 +13,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   TextareaCharCount,
   SubmissionNotFound,
   Loading,
@@ -251,7 +252,7 @@ const Description = () => {
             {!describeWastePage.isError && !describeWastePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

@@ -17,6 +17,7 @@ import {
   SubmissionNotFound,
   Loading,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
   RadioList,
   Paragraph,
@@ -524,7 +525,7 @@ const InterimSiteDetails = () => {
               <>
                 {interimPage.errors &&
                   !!Object.keys(interimPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(interimPage.errors).map((key) => ({
                         targetName: key,

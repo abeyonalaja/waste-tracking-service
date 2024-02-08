@@ -14,6 +14,7 @@ import {
   Header,
   ConditionalRadioWrap,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   SubmissionNotFound,
   SaveReturnButton,
@@ -584,7 +585,7 @@ const EwcCodes = () => {
                 <>
                   {ewcCodePage.errors &&
                     !!Object.keys(ewcCodePage.errors).length && (
-                      <GovUK.ErrorSummary
+                      <ErrorSummary
                         heading={t('errorSummary.title')}
                         errors={Object.keys(ewcCodePage.errors).map((key) => ({
                           targetName: key,

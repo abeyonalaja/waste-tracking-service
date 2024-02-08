@@ -6,6 +6,7 @@ import {
   Header,
   ConditionalRadioWrap,
   ButtonGroup,
+  ErrorSummary,
   SaveReturnButton,
   Paragraph,
   Loading,
@@ -192,7 +193,7 @@ const CollectionDate = () => {
             {!isError && !isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

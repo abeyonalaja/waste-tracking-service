@@ -4,7 +4,13 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 import { useSubmissionContext } from 'contexts';
 import { useTranslation } from 'react-i18next';
-import { Footer, Header, BreadcrumbWrap, Paragraph } from 'components';
+import {
+  Footer,
+  Header,
+  BreadcrumbWrap,
+  ErrorSummary,
+  Paragraph,
+} from 'components';
 import { isNotEmpty, validateReference } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -151,7 +157,7 @@ export function Reference() {
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
             {errors && !!Object.keys(errors).length && (
-              <GovUK.ErrorSummary
+              <ErrorSummary
                 heading={t('errorSummary.title')}
                 errors={Object.keys(errors).map((key) => ({
                   targetName: key,

@@ -13,6 +13,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   Loading,
   Error404Content,
   TextareaCharCount,
@@ -234,7 +235,7 @@ const TemplateCreateFromRecord = () => {
             {!templatePage.isError && !templatePage.isLoading && (
               <>
                 {errors && !!Object.keys(errors).length && (
-                  <GovUK.ErrorSummary
+                  <ErrorSummary
                     heading={t('errorSummary.title')}
                     errors={Object.keys(errors).map((key) => ({
                       targetName: key,

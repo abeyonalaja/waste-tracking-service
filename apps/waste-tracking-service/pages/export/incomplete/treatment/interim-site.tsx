@@ -14,6 +14,7 @@ import {
   Footer,
   Header,
   BreadcrumbWrap,
+  ErrorSummary,
   SubmissionNotFound,
   Loading,
   ButtonGroup,
@@ -249,7 +250,7 @@ const InterimSiteDetails = () => {
               <>
                 {interimPage.errors &&
                   !!Object.keys(interimPage.errors).length && (
-                    <GovUK.ErrorSummary
+                    <ErrorSummary
                       heading={t('errorSummary.title')}
                       errors={Object.keys(interimPage.errors).map((key) => ({
                         targetName: key,

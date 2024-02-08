@@ -9,6 +9,7 @@ import {
   NotificationBanner,
   Paragraph,
   BreadcrumbWrap,
+  ErrorSummary,
   SaveReturnButton,
   ButtonGroup,
 } from 'components';
@@ -106,7 +107,7 @@ const Upload = () => {
                   <>
                     {validationErrors &&
                       !!Object.keys(validationErrors).length && (
-                        <GovUK.ErrorSummary
+                        <ErrorSummary
                           heading={t('errorSummary.title')}
                           errors={Object.keys(validationErrors).map((key) => ({
                             targetName: key,
@@ -451,7 +452,7 @@ const UploadUI_ErrorSummary = ({
               </GovUK.BackLink>
             </BackLinkWrap>
             {validationErrors && !!Object.keys(validationErrors).length && (
-              <GovUK.ErrorSummary
+              <ErrorSummary
                 heading={t('errorSummary.title')}
                 errors={Object.keys(validationErrors).map((key) => ({
                   targetName: key,
