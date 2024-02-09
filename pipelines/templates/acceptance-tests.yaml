@@ -95,4 +95,5 @@ jobs:
         inputs:
           testResultsFormat: JUnit
           testResultsFiles: tests/waste-tracking-service/junit/${{ parameters.environment }}/*.xml
+          testRunTitle: acceptance_tests_${{ parameters.environment }}
         condition: always()
