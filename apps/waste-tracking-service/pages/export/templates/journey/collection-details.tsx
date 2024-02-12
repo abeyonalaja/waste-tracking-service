@@ -1046,7 +1046,15 @@ const CollectionDetails = () => {
                         'exportJourney.wasteCollectionDetails.singleAddressTitle'
                       )}
                     </GovUK.Heading>
-
+                    {addressDetails.country && (
+                      <Paragraph>
+                        <>
+                          {t('exportJourney.wasteCollection.CountryStart')}
+                          <strong>{addressDetails.country}</strong>
+                          {t('exportJourney.wasteCollection.CountryEnd')}
+                        </>
+                      </Paragraph>
+                    )}
                     <DefinitionList id="address-list">
                       <Row>
                         <Title>
