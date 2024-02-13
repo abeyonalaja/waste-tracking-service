@@ -24,11 +24,17 @@ export function validateToken(filter: UserFilter) {
 
     const organisationId = decoded.relationships[0].split(':')[1];
     if (isValidGuid(organisationId)) {
-      return { isValid: true, credentials: { accountId: organisationId } };
+      return {
+        isValid: true,
+        credentials: { accountId: organisationId, subjectId: decoded.sub },
+      };
     }
 
     if (isValidGuid(decoded.contactId)) {
-      return { isValid: true, credentials: { accountId: decoded.contactId } };
+      return {
+        isValid: true,
+        credentials: { accountId: decoded.contactId, subjectId: decoded.sub },
+      };
     }
 
     return { isValid: false };

@@ -1,1 +1,1 @@
-export * from './lib/client-limited-audience';
+export * from './lib/client';

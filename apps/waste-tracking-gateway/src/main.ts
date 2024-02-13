@@ -2,20 +2,15 @@ import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
 import { Template } from '@wts/api/annex-vii';
 import { DaprAddressClient } from '@wts/client/address';
-import { DaprFeedbackClient } from '@wts/client/feedback';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
 import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import { DaprFeedbackClient } from '@wts/client/feedback';
+import { DaprLimitedAudienceClient } from '@wts/client/limited-audience';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
-import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
 import * as winston from 'winston';
-import { feedbackPlugin } from './modules/feedback';
-import {
-  FeedbackBackend,
-  FeedbackServiceBackend,
-  FeedbackStub,
-} from './modules/feedback/feedback.backend';
+import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
 import {
   AddressBackend,
   AddressServiceBackend,
@@ -28,6 +23,24 @@ import {
   BulkSubmissionStub,
   bulkSubmissionPlugin,
 } from './modules/bulk-submission';
+import { feedbackPlugin } from './modules/feedback';
+import {
+  FeedbackBackend,
+  FeedbackServiceBackend,
+  FeedbackStub,
+} from './modules/feedback/feedback.backend';
+import {
+  PrivateAudienceServiceBackend,
+  Backend as PrivateBetaBackend,
+  PrivateBetaStub,
+  privateBetaPlugin,
+} from './modules/private-beta';
+import {
+  ReferenceDataBackend,
+  ReferenceDataServiceBackend,
+  ReferenceDataStub,
+  referenceDataPlugin,
+} from './modules/reference-data';
 import {
   AnnexViiServiceSubmissionBackend,
   InMemorySubmissionBackend,
@@ -41,12 +54,6 @@ import {
   TemplateBackend,
   templatePlugin,
 } from './modules/template';
-import {
-  ReferenceDataBackend,
-  ReferenceDataServiceBackend,
-  ReferenceDataStub,
-  referenceDataPlugin,
-} from './modules/reference-data';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -70,56 +77,24 @@ let backend: {
   template: TemplateBackend;
   referenceData: ReferenceDataBackend;
   bulkSubmission: BulkSubmissionBackend;
+  privateBeta: PrivateBetaBackend;
 };
+
 if (process.env['NODE_ENV'] === 'development') {
   logger.warn('service is using mock-backends; NOT for production use');
   const submissions = new Map<string, Submission>();
   const templates = new Map<string, Template>();
-  const submissionBackend = new InMemorySubmissionBackend(
-    submissions,
-    templates
-  );
-  const templateBackend = new InMemoryTemplateBackend(submissions, templates);
-  const referenceDataBackend = new ReferenceDataStub();
-  const bulkSubmissionBackend = new BulkSubmissionStub();
   backend = {
     address: new AddressStub(),
     feedback: new FeedbackStub(),
-    submission: submissionBackend,
-    template: templateBackend,
-    referenceData: referenceDataBackend,
-    bulkSubmission: bulkSubmissionBackend,
+    submission: new InMemorySubmissionBackend(submissions, templates),
+    template: new InMemoryTemplateBackend(submissions, templates),
+    referenceData: new ReferenceDataStub(),
+    bulkSubmission: new BulkSubmissionStub(),
+    privateBeta: new PrivateBetaStub(),
   };
 } else {
   const client = new DaprClient();
-  const submissionBackend = new AnnexViiServiceSubmissionBackend(
-    new DaprAnnexViiClient(
-      client,
-      process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
-    ),
-    logger
-  );
-  const templateBackend = new AnnexViiServiceTemplateBackend(
-    new DaprAnnexViiClient(
-      client,
-      process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
-    ),
-    logger
-  );
-  const referenceDataBackend = new ReferenceDataServiceBackend(
-    new DaprReferenceDataClient(
-      client,
-      process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
-    ),
-    logger
-  );
-  const bulkSubmissionBackend = new AnnexViiBulkServiceBackend(
-    new DaprAnnexViiBulkClient(
-      client,
-      process.env['ANNEX_VII_BULK_APP_ID'] || 'annex-vii-bulk'
-    ),
-    logger
-  );
   backend = {
     address: new AddressServiceBackend(
       new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
@@ -132,10 +107,41 @@ if (process.env['NODE_ENV'] === 'development') {
       ),
       logger
     ),
-    submission: submissionBackend,
-    template: templateBackend,
-    referenceData: referenceDataBackend,
-    bulkSubmission: bulkSubmissionBackend,
+    submission: new AnnexViiServiceSubmissionBackend(
+      new DaprAnnexViiClient(
+        client,
+        process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+      ),
+      logger
+    ),
+    template: new AnnexViiServiceTemplateBackend(
+      new DaprAnnexViiClient(
+        client,
+        process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+      ),
+      logger
+    ),
+    referenceData: new ReferenceDataServiceBackend(
+      new DaprReferenceDataClient(
+        client,
+        process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
+      ),
+      logger
+    ),
+    bulkSubmission: new AnnexViiBulkServiceBackend(
+      new DaprAnnexViiBulkClient(
+        client,
+        process.env['ANNEX_VII_BULK_APP_ID'] || 'annex-vii-bulk'
+      ),
+      logger
+    ),
+    privateBeta: new PrivateAudienceServiceBackend(
+      new DaprLimitedAudienceClient(
+        client,
+        process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
+      ),
+      logger
+    ),
   };
 }
 
@@ -247,6 +253,17 @@ await app.register({
   },
   routes: {
     prefix: '/api/batches',
+  },
+});
+
+await app.register({
+  plugin: privateBetaPlugin,
+  options: {
+    backend: backend.privateBeta,
+    logger,
+  },
+  routes: {
+    prefix: '/api/privatebeta',
   },
 });
 
