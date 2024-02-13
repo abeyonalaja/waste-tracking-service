@@ -12,6 +12,7 @@ interface Props {
   href: string | object;
   isBold?: boolean;
   colour?: string;
+  fontSize?: number;
   id?: string;
   noVisitedState?: boolean;
   onClick?: (e) => void;
@@ -26,6 +27,7 @@ const StyledLink = styled(Link)<{
   $isBold?: boolean;
   disabled?: boolean;
   $colours: Colour;
+  $fontSize?: number;
 }>`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,12 +36,14 @@ const StyledLink = styled(Link)<{
   text-underline-offset: 0.15em;
   color: ${(props) => props.$colours.default};
   font-weight: ${(props) => (props.$isBold ? '700' : '400')};
-  font-size: 16px;
+  font-size: ${(props) =>
+    props.$fontSize ? `${props.$fontSize - 2}px` : '16px'};
   line-height: 1.25;
   opacity: ${(props) => (props.disabled ? '0.5' : '1')};
   cursor: ${(props) => (props.disabled ? 'wait' : 'pointer')};
   @media (min-width: 40.0625em) {
-    font-size: 19px;
+    font-size: ${(props) =>
+      props.$fontSize ? `${props.$fontSize}px` : '19px'};
     line-height: 1.3;
   }
   &:hover {
@@ -62,6 +66,7 @@ export const AppLink = ({
   href,
   isBold,
   colour = 'blue',
+  fontSize,
   id,
   children,
   onClick,
@@ -103,6 +108,7 @@ export const AppLink = ({
       data-testid={testId}
       $isBold={isBold}
       $colours={getColour(colour)}
+      $fontSize={fontSize}
       disabled={disabled}
       target={target}
       rel={rel}

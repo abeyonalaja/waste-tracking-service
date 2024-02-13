@@ -5,7 +5,7 @@ import { GlobalStyle, Main, TopNav, PhaseBanner } from 'govuk-react';
 import Link from 'next/link';
 import { BLUE, BLACK, YELLOW } from 'govuk-colours';
 import { useTranslation } from 'react-i18next';
-import { CookieBanner, LanguageSwitch, CrownIcon } from 'components';
+import { AppLink, CookieBanner, LanguageSwitch, CrownIcon } from 'components';
 
 const GovukHeader = styled.header`
   background: ${BLACK};
@@ -121,11 +121,15 @@ const GovukHeaderLink = styled(Link)`
     box-decoration-break: clone;
   }
 `;
-const PhaseBannerStyled = styled(PhaseBanner)`
+const PhaseBannerWrapper = styled.div`
   margin-top: -30px;
 `;
 
-export const Header = ({ isSignOutPage = false, callbackUrl = '/export' }) => {
+export const Header = ({
+  isSignOutPage = false,
+  callbackUrl = '/export',
+  showPhaseBanner = true,
+}) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
   const callBackOptions = isSignOutPage ? { callbackUrl } : null;
@@ -192,9 +196,17 @@ export const Header = ({ isSignOutPage = false, callbackUrl = '/export' }) => {
         </GovukHeaderInner>
       </GovukHeader>
       <Main>
-        <PhaseBannerStyled level={t('tag')}>
-          {t('header.serviceBanner')}
-        </PhaseBannerStyled>
+        <PhaseBannerWrapper>
+          {showPhaseBanner && (
+            <PhaseBanner level={t('tag')}>
+              {t('header.serviceBanner-1')}
+              <AppLink href={'/export/feedback'} fontSize={16}>
+                feedback
+              </AppLink>
+              {t('header.serviceBanner-2')}
+            </PhaseBanner>
+          )}
+        </PhaseBannerWrapper>
         <LanguageSwitch />
       </Main>
     </>

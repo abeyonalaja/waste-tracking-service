@@ -7,6 +7,7 @@ import { BreakableString } from './BreakableString';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
 import { Card } from './Card';
+import { CharacterCountHint } from './CharacterCountHint';
 import { CrownIcon } from './CrownIcon';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -16,6 +17,7 @@ import { CountrySelector } from './CountrySelector';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
 import { Error404Content } from './Error404Content';
+import { FeedbackForm } from './FeedbackForm';
 import { ErrorSummary } from './ErrorSummary';
 import { InputWithSuffix } from './InputWithSuffix';
 import { LanguageSwitch } from './LanguageSwitch';
@@ -44,6 +46,7 @@ export {
   BreadcrumbWrap,
   ButtonGroup,
   Card,
+  CharacterCountHint,
   CrownIcon,
   Footer,
   Header,
@@ -53,6 +56,7 @@ export {
   DocumentStatus,
   DownloadPDFLink,
   Error404Content,
+  FeedbackForm,
   ErrorSummary,
   InputWithSuffix,
   LanguageSwitch,
