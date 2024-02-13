@@ -1,7 +1,7 @@
-//@ts-check
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
+// Import the next-intl plugin
+const nextIntl = require('next-intl/plugin');
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -20,6 +20,7 @@ const nextConfig = {
 const plugins = [
   // Add more Next.js plugins to this list if needed.
   withNx,
+  nextIntl('./i18n.ts'),
 ];
 
 module.exports = composePlugins(...plugins)(nextConfig);
