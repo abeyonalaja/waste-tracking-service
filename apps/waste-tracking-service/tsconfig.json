@@ -17,7 +17,8 @@
       "@wts/api/waste-tracking-gateway": [
         "../../libs/api/waste-tracking-gateway/src/index.ts"
       ],
-      "@wts/api/common": ["../../libs/api/common/src/index.ts"]
+      "@wts/api/common": ["../../libs/api/common/src/index.ts"],
+      "@wts/api/annex-vii-bulk": ["../../libs/api/annex-vii-bulk/src/index.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],

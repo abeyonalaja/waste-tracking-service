@@ -1,6 +1,6 @@
+import React from 'react';
 import * as GovUK from 'govuk-react';
 import { AppLink } from 'components';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -49,8 +49,9 @@ const StyledSvg = styled.svg`
   stroke: #b1b4b6;
 `;
 
-const UploadContent = () => {
+export function Instructions() {
   const { t } = useTranslation();
+
   return (
     <>
       <GovUK.Heading size="L">{t('multiples.guidance.heading')}</GovUK.Heading>
@@ -158,6 +159,4 @@ const UploadContent = () => {
       <GovUK.SectionBreak level="LARGE" visible />
     </>
   );
-};
-
-export default UploadContent;
+}

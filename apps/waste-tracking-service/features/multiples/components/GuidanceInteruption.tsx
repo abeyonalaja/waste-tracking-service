@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import * as GovUK from 'govuk-react';
-import Link from 'next/link';
-import { BLACK, YELLOW, WHITE } from 'govuk-colours';
-import { AppLink } from 'components';
-import styled from 'styled-components';
 import React from 'react';
+import Link from 'next/link';
+import * as GovUK from 'govuk-react';
+import { AppLink } from 'components';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { BLACK, YELLOW, WHITE } from 'govuk-colours';
 
 const MainHeading = styled(GovUK.Heading)`
   color: ${WHITE};
@@ -99,7 +99,7 @@ const StyledSvg = styled.svg`
   stroke: #b1b4b6;
 `;
 
-const StyledLinkAsButton = styled('a')`
+const StyledContinueButton = styled.button`
   font-weight: 400;
   font-size: 16px;
   line-height: 1.2;
@@ -144,8 +144,15 @@ const StyledLinkAsButton = styled('a')`
   }
 `;
 
-const GuidanceInteruption = () => {
+type GuidanceTypeProps = {
+  acknowledgeGuidance: () => void;
+};
+
+export const GuidanceInteruption = ({
+  acknowledgeGuidance,
+}: GuidanceTypeProps) => {
   const { t } = useTranslation();
+
   return (
     <FullContainer>
       <MainHeading size="XL">
@@ -187,13 +194,12 @@ const GuidanceInteruption = () => {
           </DetailsParagraph>
         </Details>
       </DocumentSection>
+
       <ButtonContainer>
-        <StyledLinkAsButton role="button" href={'/export/multiples/upload'}>
+        <StyledContinueButton onClick={acknowledgeGuidance}>
           {t('multiples.guidance.bouncePage.button')}
-        </StyledLinkAsButton>
+        </StyledContinueButton>
       </ButtonContainer>
     </FullContainer>
   );
 };
-
-export default GuidanceInteruption;
