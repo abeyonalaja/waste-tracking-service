@@ -31,6 +31,7 @@
       "@wts/client/annex-vii-bulk": ["libs/client/annex-vii-bulk/src/index.ts"],
       "@wts/client/feedback": ["libs/client/feedback/src/index.ts"],
       "@wts/client/reference-data": ["libs/client/reference-data/src/index.ts"],
+      "@wts/ui/govuk-react-ui": ["libs/ui/govuk-react-ui/src/index.ts"],
       "@wts/util/dapr-winston-logging": [
         "libs/util/dapr-winston-logging/src/index.ts"
       ],
