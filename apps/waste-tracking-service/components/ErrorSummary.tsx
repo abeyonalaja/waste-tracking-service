@@ -64,7 +64,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
   ...props
 }: ErrorSummaryProps) => {
   return (
-    <StyledErrorSummary tabIndex={-1} {...props}>
+    <StyledErrorSummary id="error-summary-box" tabIndex={-1} {...props}>
       <H2 size="MEDIUM">{heading}</H2>
       {description && <Paragraph mb={3}>{description}</Paragraph>}
       {errors.length > 0 && (
@@ -72,6 +72,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
           {errors.map((error) => (
             <ListItem key={error.targetName}>
               <AppLink
+                id={'error-link-' + error.targetName}
                 href={'#'}
                 isBold={true}
                 colour={'red'}
