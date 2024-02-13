@@ -353,6 +353,7 @@ const WasteCode = () => {
                             </GovUK.ErrorText>
                             <AutoComplete
                               id={'BaselAnnexIXCode'}
+                              name={'baselAnnexIXCode'}
                               options={getRefData('BaselAnnexIX')}
                               value={baselAnnexIXCode}
                               confirm={(o) => setBaselAnnexIXCode(o.code)}
@@ -384,6 +385,7 @@ const WasteCode = () => {
                             </GovUK.ErrorText>
                             <AutoComplete
                               id={'OecdCode'}
+                              name={'oecdCode'}
                               options={getRefData('OECD')}
                               value={oecdCode}
                               confirm={(o) => setOecdCode(o.code)}
@@ -415,6 +417,7 @@ const WasteCode = () => {
                             </GovUK.ErrorText>
                             <AutoComplete
                               id={'AnnexIIIACode'}
+                              name={'annexIIIACode'}
                               options={getRefData('AnnexIIIA')}
                               value={annexIIIACode}
                               confirm={(o) => setAnnexIIIACode(o.code)}
@@ -446,6 +449,7 @@ const WasteCode = () => {
                             </GovUK.ErrorText>
                             <AutoComplete
                               id={'AnnexIIIBCode'}
+                              name={'annexIIIBCode'}
                               options={getRefData('AnnexIIIB')}
                               value={annexIIIBCode}
                               confirm={(o) => setAnnexIIIBCode(o.code)}

@@ -14,12 +14,13 @@ type optionType = {
 
 interface Props {
   id: string;
+  name?: string;
   options: Array<optionType>;
   value: string;
   confirm: (optionType) => void;
 }
 
-export const AutoComplete = ({ id, options, value, confirm }: Props) => {
+export const AutoComplete = ({ id, name, options, value, confirm }: Props) => {
   const currentLanguage = i18n.language;
   function suggest(query, populateResults) {
     const searchTerm = query.split(':')[0].toLowerCase();
@@ -54,6 +55,7 @@ export const AutoComplete = ({ id, options, value, confirm }: Props) => {
   return (
     <Autocomplete
       id={id}
+      name={name}
       source={suggest}
       showAllValues={true}
       confirmOnBlur={false}

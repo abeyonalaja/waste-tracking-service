@@ -989,6 +989,7 @@ const RecoveryFacilityDetails = () => {
                         {refData && (
                           <AutoComplete
                             id="recoveryCode"
+                            name="recoveryCode"
                             options={refData}
                             value={
                               recoveryFacilityType?.recoveryCode || undefined

@@ -982,6 +982,7 @@ const RecoveryFacilityDetails = () => {
                         </GovUK.ErrorText>
                         <AutoComplete
                           id="recoveryCode"
+                          name="recoveryCode"
                           options={refData}
                           value={
                             recoveryFacilityType?.recoveryCode || undefined

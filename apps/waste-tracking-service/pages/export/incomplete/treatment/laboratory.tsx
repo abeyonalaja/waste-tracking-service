@@ -733,6 +733,7 @@ const Laboratory = () => {
                         </GovUK.ErrorText>
                         <AutoComplete
                           id="recoveryCode"
+                          name="recoveryCode"
                           options={refData}
                           value={
                             recoveryFacilityType?.disposalCode || undefined
