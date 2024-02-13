@@ -2,7 +2,7 @@
 
 # The box with the red border (or red and yellow, depending on browser) showing error messages at the top of the page.
 module ErrorBox
-  ERROR_BOX_CSS_SELECTOR ||= "[class^='src__StyledErrorSummary-sc-6d0w2']"
+  ERROR_BOX_CSS_SELECTOR ||= "[class^='ErrorSummary__StyledErrorSummary-sc-d7437b']"
   # These methods need the 'has_' prefix so that RSpec can use them as matchers.
   # rubocop:disable Naming/PredicateName
   def has_error_box?(**kwargs)
