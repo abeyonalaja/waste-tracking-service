@@ -101,52 +101,62 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
     }
 
     try {
-      const qid6: string = surveyData.feedback;
-
       const sd: SurveyData = {
         advance: true,
-        responses: {
-          QID5: {
-            1: {
-              selected: false,
-            },
-            2: {
-              selected: false,
-            },
-            3: {
-              selected: false,
-            },
-            4: {
-              selected: false,
-            },
-            5: {
-              selected: false,
-            },
-          },
-          QID6: qid6,
-        },
+        responses: {},
       };
 
-      switch (surveyData.rating) {
-        case 1:
-          sd.responses.QID5[1].selected = true;
-          break;
-        case 2:
-          sd.responses.QID5[2].selected = true;
-          break;
-        case 3:
-          sd.responses.QID5[3].selected = true;
-          break;
-        case 4:
-          sd.responses.QID5[4].selected = true;
-          break;
-        case 5:
-          sd.responses.QID5[5].selected = true;
-          break;
+      if (surveyData.rating) {
+        sd.responses.QID5 = {
+          1: {
+            selected: false,
+          },
+          2: {
+            selected: false,
+          },
+          3: {
+            selected: false,
+          },
+          4: {
+            selected: false,
+          },
+          5: {
+            selected: false,
+          },
+        };
 
-        default: {
+        if (surveyData.rating < 1 || surveyData.rating > 5) {
           throw Boom.badRequest();
         }
+
+        switch (surveyData.rating) {
+          case 1:
+            sd.responses.QID5[1].selected = true;
+            break;
+          case 2:
+            sd.responses.QID5[2].selected = true;
+            break;
+          case 3:
+            sd.responses.QID5[3].selected = true;
+            break;
+          case 4:
+            sd.responses.QID5[4].selected = true;
+            break;
+          case 5:
+            sd.responses.QID5[5].selected = true;
+            break;
+          default: {
+            throw Boom.badRequest();
+          }
+        }
+      }
+
+      if (surveyData.feedback) {
+        sd.responses.QID6 = surveyData.feedback;
+      }
+
+      if (!sd.responses.QID5 && !sd.responses.QID6) {
+        throw Boom.badRequest();
       }
 
       const sendSurveyDataResponse = await axios.post(

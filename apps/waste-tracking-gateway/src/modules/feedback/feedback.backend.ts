@@ -6,8 +6,8 @@ import { Logger } from 'winston';
 
 export interface FeedbackBackend {
   sendFeedback(
-    feedback: string,
-    rating: number
+    feedback?: string,
+    rating?: number
   ): Promise<api.SendFeedbackResponse>;
 }
 
@@ -26,8 +26,8 @@ export class FeedbackServiceBackend implements FeedbackBackend {
   constructor(private client: DaprFeedbackClient, private logger: Logger) {}
 
   async sendFeedback(
-    feedback: string,
-    rating: number
+    feedback?: string,
+    rating?: number
   ): Promise<api.SendFeedbackResponse> {
     let response: SendFeedbackResponse;
     try {

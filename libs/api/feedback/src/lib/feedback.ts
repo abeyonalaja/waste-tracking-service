@@ -2,8 +2,8 @@ import { Response } from '@wts/util/invocation';
 import { Method } from '@wts/api/common';
 
 export type SendFeedbackRequest = {
-  rating: number;
-  feedback: string;
+  rating?: number;
+  feedback?: string;
 };
 
 export type FeedbackResponse = {

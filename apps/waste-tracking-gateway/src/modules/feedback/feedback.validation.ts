@@ -5,7 +5,7 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const validateSendFeedback = ajv.compile<SendFeedbackRequest>({
-  properties: {
+  optionalProperties: {
     rating: {
       type: 'uint8',
     },

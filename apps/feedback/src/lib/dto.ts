@@ -83,8 +83,8 @@ export type SurveyErrorResponse = {
 export type SurveyData = {
   advance: boolean;
   responses: {
-    QID5: QID5;
-    QID6: string;
+    QID5?: QID5;
+    QID6?: string;
   };
 };
 

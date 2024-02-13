@@ -10,7 +10,7 @@ const errorResponseValue: SchemaObject = {
 };
 
 export const sendFeedbackRequest: JTDSchemaType<SendFeedbackRequest> = {
-  properties: {
+  optionalProperties: {
     rating: { type: 'uint16' },
     feedback: { type: 'string' },
   },
