@@ -4,11 +4,17 @@ type Props = {
   children?: ReactNode;
   testId?: string;
   href?: string;
+  target?: '_blank' | '_self' | '_parent' | '_top';
 };
 
-export const Link = ({ href, children, testId }: Props) => {
+export const Link = ({ href, target, children, testId }: Props) => {
   return (
-    <a href={href} className={`govuk-link`} data-testid={testId}>
+    <a
+      href={href}
+      target={target}
+      className={`govuk-link`}
+      data-testid={testId}
+    >
       {children}
     </a>
   );

@@ -81,22 +81,34 @@ export default function Index() {
           </GovUK.Paragraph>
           <GovUK.List type="unordered">
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.gov.uk/guidance/importing-and-exporting-waste"
+                target="_blank"
+              >
                 {t('exportImportControls.linkOne')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.sepa.org.uk/regulations/waste/transfrontier-shipment-of-waste/"
+                target="_blank"
+              >
                 {t('exportImportControls.linkTwo')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://naturalresources.wales/permits-and-permissions/waste-permitting/guidance-on-importing-and-exporting-waste/?lang=en"
+                target="_blank"
+              >
                 {t('exportImportControls.linkThree')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.daera-ni.gov.uk/articles/transfrontier-shipment-waste"
+                target="_blank"
+              >
                 {t('exportImportControls.linkFour')}
               </GovUK.Link>
             </GovUK.ListItem>
@@ -109,7 +121,9 @@ export default function Index() {
           </GovUK.Paragraph>
           <GovUK.Paragraph>
             {t('getHelpTechnicalIssue.emailKey')}{' '}
-            <GovUK.Link href="#">
+            <GovUK.Link
+              href={`mailto:${t('getHelpTechnicalIssue.emailValue')}`}
+            >
               {t('getHelpTechnicalIssue.emailValue')}
             </GovUK.Link>
           </GovUK.Paragraph>
@@ -127,22 +141,34 @@ export default function Index() {
           </GovUK.Paragraph>
           <GovUK.List type="unordered">
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.gov.uk/browse/business/waste-environment"
+                target="_blank"
+              >
                 {t('getHelpRegulatoryIssue.linkOne')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.sepa.org.uk/regulations/waste/"
+                target="_blank"
+              >
                 {t('getHelpRegulatoryIssue.linkTwo')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://www.daera-ni.gov.uk/articles/waste-policy-tracker"
+                target="_blank"
+              >
                 {t('getHelpRegulatoryIssue.linkThree')}
               </GovUK.Link>
             </GovUK.ListItem>
             <GovUK.ListItem>
-              <GovUK.Link href="#">
+              <GovUK.Link
+                href="https://businesswales.gov.wales/topics-and-guidance/sustainability-and-social-responsibility/resource-efficiency/waste/managing-waste"
+                target="_blank"
+              >
                 {t('getHelpRegulatoryIssue.linkFour')}
               </GovUK.Link>
             </GovUK.ListItem>
