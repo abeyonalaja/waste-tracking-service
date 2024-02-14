@@ -72,6 +72,7 @@ secret:
     ANNEX_VII_BULK_APP_ID: 'annex-vii-bulk.annex-vii-bulk'
     ADDRESS_APP_ID: 'address.address'
     FEEDBACK_APP_ID: 'feedback.feedback'
+    LIMITED_AUDIENCE_APP_ID: 'limited-audience.limited-audience'
     REFERENCE_DATA_APP_ID: 'reference-data.reference-data'
     DCID_CLIENT_ID: ''
     DCID_WELLKNOWN: ''
@@ -117,5 +118,7 @@ ingress:
         - path: /api/batches
           pathType: Prefix
         - path: /api/feedback
+          pathType: Prefix
+        - path: /api/privatebeta
           pathType: Prefix
   labels: {}
