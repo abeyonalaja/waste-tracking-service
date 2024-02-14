@@ -2,7 +2,7 @@
 
 # The box with the red border (or red and yellow, depending on browser) showing error messages at the top of the page.
 module ErrorBox
-  ERROR_BOX_CSS_SELECTOR ||= "[tabindex='-1']"
+  ERROR_BOX_CSS_SELECTOR ||= '#error-summary-box'
   # These methods need the 'has_' prefix so that RSpec can use them as matchers.
   # rubocop:disable Naming/PredicateName
   def has_error_box?(**kwargs)
