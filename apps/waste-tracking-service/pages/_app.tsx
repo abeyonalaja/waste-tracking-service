@@ -8,7 +8,6 @@ import { useSession } from 'next-auth/react';
 import { useIdle } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export const queryClient = new QueryClient();
 
@@ -35,7 +34,6 @@ export default function App({
               ) : (
                 <Component {...pageProps} />
               )}
-              <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </CookiesProvider>
         </SessionProvider>
