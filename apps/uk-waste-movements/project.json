@@ -9,7 +9,9 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/uk-waste-movements"
+        "root": "apps/uk-waste-movements",
+        "outputPath": "dist/apps/uk-waste-movements",
+        "generateLockfile": true
       },
       "configurations": {
         "development": {
@@ -47,13 +49,40 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/uk-waste-movements/jest.config.ts"
+        "jestConfig": "apps/uk-waste-movements/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/uk-waste-movements/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "engine": "docker",
+        "metadata": {
+          "images": ["wts/uk-waste-movements"],
+          "load": true,
+          "tags": [
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
     }
   },
-  "tags": []
+  "tags": ["type:app"]
 }
