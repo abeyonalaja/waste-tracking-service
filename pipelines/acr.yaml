@@ -19,6 +19,8 @@ parameters:
         nameTag: limited_audience
       - name: reference-data
         nameTag: reference_data
+      - name: uk-waste-movements
+        nameTag: uk_waste_movements
       - name: waste-tracking-gateway
         nameTag: waste_tracking_gateway
       - name: waste-tracking-service

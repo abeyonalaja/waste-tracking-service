@@ -35,7 +35,7 @@ jobs:
 
       - bash: |
           echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
-          affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*,ui-*')
+          affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*,govuk-*')
           if [ -z "$affected" ]
           then
             echo "##vso[task.setvariable variable=affected;isoutput=true]false"

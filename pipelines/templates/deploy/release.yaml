@@ -14,6 +14,7 @@ parameters:
       - feedback
       - limited-audience
       - reference-data
+      - uk-waste-movements
       - waste-tracking-gateway
       - waste-tracking-service
   - name: appNameTag
@@ -25,6 +26,7 @@ parameters:
       - feedback
       - limited_audience
       - reference_data
+      - uk_waste_movements
       - waste_tracking_gateway
       - waste_tracking_service
   - name: deployChart
