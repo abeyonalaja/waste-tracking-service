@@ -12,9 +12,7 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  sassOptions: {
-    includePaths: ['node_modules/govuk-frontend/dist/'],
-  },
+  basePath: '/ukwm',
 };
 
 const plugins = [
