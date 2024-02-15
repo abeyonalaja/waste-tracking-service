@@ -201,7 +201,7 @@ export const Header = ({
             <PhaseBanner level={t('tag')}>
               {t('header.serviceBanner-1')}
               <AppLink href={'/export/feedback'} fontSize={16}>
-                feedback
+                {t('header.serviceBanner-link')}
               </AppLink>
               {t('header.serviceBanner-2')}
             </PhaseBanner>
