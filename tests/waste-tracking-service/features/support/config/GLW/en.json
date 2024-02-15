@@ -690,5 +690,18 @@
   "yourReference.inputLabel": "Enter a reference",
   "yourReference.intro": "Your unique reference can be anything that helps you to identify your shipment. For example, it could match a reference on a system you already use to identify shipments.",
   "yourReference.intro.second.paragraph": "Your unique reference can only have numbers and letters and should be a maximum of 20 characters. For example, ABC10001.",
-  "yourReference.title": "What is your unique reference for this Annex VII record?"
+  "yourReference.title": "What is your unique reference for this Annex VII record?",
+  "feedback.title": "Give feedback on Green list waste movement service",
+  "feedbackForm.title": "Satisfaction survey",
+  "feedbackForm.rating.title": "Overall, how did you feel about the service you received today?",
+  "feedbackForm.rating-5": "Very satisfied",
+  "feedbackForm.rating-4": "Satisfied",
+  "feedbackForm.rating-3": "Neither satisfied or dissatisfied",
+  "feedbackForm.rating-2": "Dissatisfied",
+  "feedbackForm.rating-1": "Very dissatisfied",
+  "feedbackForm.improvement.label": "How could we improve this service?",
+  "feedbackForm.improvement.hint": "Do not include any business or personal information here, for example reference numbers or names.",
+  "feedbackForm.submitButton": "Send feedback",
+  "feedback.returnLink": "Return to the export waste in the UK service",
+  "header.serviceBanner-link": "feedback"
 }
