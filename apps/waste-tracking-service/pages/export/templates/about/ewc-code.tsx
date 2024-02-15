@@ -685,7 +685,7 @@ const EwcCodes = () => {
                                   <GovUK.FormGroup>
                                     <EwcCodeInput
                                       input={{
-                                        name: 'ewc-code',
+                                        name: 'ewcCode',
                                         id: 'ewc-code',
                                         maxLength: 8,
                                         type: 'text',
@@ -749,7 +749,7 @@ const EwcCodes = () => {
                           <GovUK.FormGroup>
                             <EwcCodeInput
                               input={{
-                                name: 'ewc-code',
+                                name: 'ewcCode',
                                 id: 'ewc-code',
                                 maxLength: 8,
                                 type: 'text',
