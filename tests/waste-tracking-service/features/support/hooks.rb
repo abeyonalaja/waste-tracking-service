@@ -22,6 +22,10 @@ Before('not @cookies') do
   @reset_cookies = true
 end
 
+Before('@UKMV') do
+  ENV['START_PAGE_URL'] = 'http://localhost:4201/'
+end
+
 After do |scenario|
   if scenario.failed?
     File.open('failed_scenarios.txt', 'a+') do |f|
@@ -36,4 +40,6 @@ After do |scenario|
     attach "#{png_files}", 'image/png'
   end
 end
+
+
 

@@ -14,6 +14,10 @@ require 'rspec/matchers'
 require 'active_support/time'
 require_relative 'page_helpers/generic_page'
 require_relative '../pages/shared_components/translations'
+require_relative '../pages/shared_components/general_helpers'
+require_relative '../pages/shared_components/error_box'
+require_relative '../pages/shared_components/page_helper'
+require_relative '../pages/shared_components/common_components'
 require 'report_builder'
 require 'axe-cucumber-steps'
 require 'axe-capybara'
@@ -47,7 +51,7 @@ Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox')
   # options.add_argument('--enable-features1=NetworkService,NetworkServiceInProcess')
-  options.add_argument('--headless')
+  # options.add_argument('--headless')
   options.add_argument('--disable-gpu')
   options.add_argument('window-size=1920,1080')
   options.add_argument('--disable-dev-shm-usage')
