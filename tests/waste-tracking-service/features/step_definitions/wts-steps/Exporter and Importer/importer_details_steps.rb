@@ -9,7 +9,7 @@ And(/^I should see What are the importers contact details page translated$/) do
 end
 
 And(/^I complete who is the importer page$/) do
-  org_name = Faker::Company.name
+  org_name = Faker::Company.name.gsub(/\W/, '')
   WhoIsTheImporterPage.new.enter_organisation_name org_name
   TestStatus.set_test_status(:importer_org_name, org_name)
   address = 'Address,1 street'

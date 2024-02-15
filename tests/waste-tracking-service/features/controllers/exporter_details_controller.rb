@@ -25,7 +25,7 @@ module ExporterDetailsController
       # need to enter manual details
     end
     exporter_details_page = ExporterDetailsPage.new
-    org_name = Faker::Company.name
+    org_name = Faker::Company.name.gsub(/\W/, '')
     exporter_name = Faker::Name.name
     email = Faker::Internet.email
     exporter_phone = '08001234567'

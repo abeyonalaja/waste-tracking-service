@@ -11,7 +11,7 @@ module CommonComponents
   PHONE_ID = 'phoneNumber'
   FAX_ID = 'faxNumber'
 
-  ORG_NAME = Faker::Company.name
+  ORG_NAME = Faker::Company.name.gsub(/\W/, '')
   NAME = Faker::Name.name
   EMAIL = Faker::Internet.email
   PHONE_NUMBER = '08123456789'
@@ -28,7 +28,7 @@ module CommonComponents
   end
 
   def enter_organisation_name(page)
-    org_name = Faker::Company.name
+    org_name = Faker::Company.name.gsub(/\W/, '')
     fill_in ORGANISATION_NAME_ID, with: org_name, visible: false
     TestStatus.set_test_status("#{page}_org_name".to_sym, org_name)
   end
