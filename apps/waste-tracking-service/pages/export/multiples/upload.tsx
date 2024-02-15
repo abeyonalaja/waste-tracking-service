@@ -8,6 +8,9 @@ import {
   Instructions,
   PageLayout,
   UploadForm,
+  SubmissionConfirmation,
+  UploadBreadCrumbs,
+  SubmissionConfirmationBreadCrumbs,
   ValidationProcess,
   ValidationErrorsType,
 } from 'features/multiples';
@@ -15,6 +18,7 @@ import {
 function Upload() {
   const { t } = useTranslation();
   const [uploadId, setUploadId] = useState<string | null>(null);
+  const [uploadCount, setUploadCount] = useState<number | null>(null);
   const [cookies, setCookie] = useCookies(['GLWMultipleGuidanceViewed']);
   const [showGuidance, setShowGuidance] = useState<boolean>(false);
   const [filename, setFilename] = useState<string | null>(null);
@@ -38,7 +42,7 @@ function Upload() {
 
   if (!uploadId) {
     return (
-      <PageLayout uploadId={uploadId}>
+      <PageLayout breadCrumbs={<UploadBreadCrumbs id={uploadId} />}>
         {showGuidance && (
           <GuidanceInteruption acknowledgeGuidance={acknowledgeGuidance} />
         )}
@@ -74,7 +78,7 @@ function Upload() {
 
   if (!submitted) {
     return (
-      <PageLayout uploadId={uploadId}>
+      <PageLayout breadCrumbs={<UploadBreadCrumbs id={uploadId} />}>
         <ValidationProcess
           uploadId={uploadId}
           setUploadId={setUploadId}
@@ -84,15 +88,18 @@ function Upload() {
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
           setSubmitted={setSubmitted}
+          setUploadCount={setUploadCount}
         />
       </PageLayout>
     );
   }
 
   return (
-    // To implement in User Story 219003
-    <PageLayout uploadId={uploadId}>
-      <p>I have submitted a multiple upload with id of {uploadId}</p>
+    <PageLayout breadCrumbs={<SubmissionConfirmationBreadCrumbs />}>
+      <SubmissionConfirmation
+        submissionCount={uploadCount}
+        uploadId={uploadId}
+      />
     </PageLayout>
   );
 }

@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { Breadcrumbs } from 'govuk-react';
 import { BreadcrumbWrap } from 'components';
 
-type BreadCrumbsProps = {
+type UploadBreadCrumbsProps = {
   id: string;
 };
 
-export const UploadBreadCrumbs = ({ id }: BreadCrumbsProps) => {
+export const UploadBreadCrumbs = ({ id }: UploadBreadCrumbsProps) => {
   const { t } = useTranslation();
   if (id) {
     return;

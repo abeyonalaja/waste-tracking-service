@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction } from 'react';
 
 export type SetUploadId = Dispatch<SetStateAction<string | null>>;
 
+export type SetUploadCount = Dispatch<SetStateAction<number | null>>;
+
 export type SetIsSecondForm = Dispatch<SetStateAction<boolean>>;
 
 export type SetValidationResult = Dispatch<SetStateAction<string | null>>;

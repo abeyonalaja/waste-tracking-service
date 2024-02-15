@@ -10,6 +10,7 @@ import { SubmissionProcess } from './SubmissionProcess';
 import {
   ValidationErrorsType,
   SetUploadId,
+  SetUploadCount,
   SetIsSecondForm,
   SetValidationErrors,
   SetSubmitted,
@@ -39,6 +40,7 @@ type UploadProcessProps = {
   validationErrors: ValidationErrorsType;
   setValidationErrors: SetValidationErrors;
   setSubmitted: SetSubmitted;
+  setUploadCount: SetUploadCount;
 };
 
 export function ValidationProcess({
@@ -50,6 +52,7 @@ export function ValidationProcess({
   validationErrors,
   setValidationErrors,
   setSubmitted,
+  setUploadCount,
 }: UploadProcessProps) {
   const { t } = useTranslation();
   const [validationResult, setValidationResult] = useState<string | null>(null);
@@ -64,6 +67,10 @@ export function ValidationProcess({
     const uploadStatus = q.state.data?.data.state.status || null;
     if (uploadStatus === 'Submitted' || uploadStatus === 'FailedValidation') {
       setValidationResult(uploadStatus);
+
+      if (uploadStatus === 'Submitted') {
+        setUploadCount(q.state.data?.data.state.submissions.length);
+      }
       return false;
     }
     return 4000;

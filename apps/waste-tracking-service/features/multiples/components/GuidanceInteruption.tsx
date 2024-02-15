@@ -194,7 +194,6 @@ export const GuidanceInteruption = ({
           </DetailsParagraph>
         </Details>
       </DocumentSection>
-
       <ButtonContainer>
         <StyledContinueButton onClick={acknowledgeGuidance}>
           {t('multiples.guidance.bouncePage.button')}

@@ -3,14 +3,13 @@ import Head from 'next/head';
 import { Page } from 'govuk-react';
 import { Footer, Header } from 'components';
 import { useTranslation } from 'react-i18next';
-import { UploadBreadCrumbs } from './UploadBreadCrumbs';
 
 type PageLayoutProps = {
-  uploadId: string;
+  breadCrumbs: ReactNode;
   children: ReactNode;
 };
 
-export function PageLayout({ uploadId, children }: PageLayoutProps) {
+export function PageLayout({ breadCrumbs, children }: PageLayoutProps) {
   const { t } = useTranslation();
 
   return (
@@ -22,7 +21,7 @@ export function PageLayout({ uploadId, children }: PageLayoutProps) {
         id="content"
         header={<Header />}
         footer={<Footer />}
-        beforeChildren={<UploadBreadCrumbs id={uploadId} />}
+        beforeChildren={breadCrumbs}
       >
         {children}
       </Page>
