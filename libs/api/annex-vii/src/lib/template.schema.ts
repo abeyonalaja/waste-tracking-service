@@ -99,6 +99,20 @@ export const getTemplatesResponse: SchemaObject = {
   },
 };
 
+export const getNumberOfTemplatesRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+  },
+};
+
+export const getNumberOfTemplatesResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { type: 'float64' },
+  },
+};
+
 export const getTemplateByIdRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },

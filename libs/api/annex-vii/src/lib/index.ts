@@ -41,6 +41,7 @@ export {
 
 export {
   getTemplates,
+  getNumberOfTemplates,
   getTemplateById,
   createTemplate,
   createTemplateFromSubmission,
@@ -177,6 +178,8 @@ export type {
   TemplatePageMetadata,
   GetTemplatesRequest,
   GetTemplatesResponse,
+  GetNumberOfTemplatesRequest,
+  GetNumberOfTemplatesResponse,
   GetTemplateByIdRequest,
   GetTemplateByIdResponse,
   CreateTemplateRequest,

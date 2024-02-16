@@ -57,6 +57,7 @@ const mockBackend = {
         token?: string
       ) => Promise<TemplateSummaryPage>
     >(),
+  getNumberOfTemplates: jest.fn<(accountId: string) => Promise<number>>(),
 };
 
 const app = server({
@@ -102,6 +103,7 @@ describe('TemplatePlugin', () => {
     mockBackend.getTemplate.mockClear();
     mockBackend.deleteTemplate.mockClear();
     mockBackend.getTemplates.mockClear();
+    mockBackend.getNumberOfTemplates.mockClear();
   });
 
   describe('POST /templates', () => {

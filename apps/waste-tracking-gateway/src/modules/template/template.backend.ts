@@ -15,6 +15,7 @@ import {
   GetDraftRecoveryFacilityDetailsResponse,
   GetDraftTransitCountriesResponse,
   GetDraftWasteDescriptionByIdResponse,
+  GetNumberOfTemplatesResponse,
   GetTemplatesResponse,
   ListDraftCarriersResponse,
   ListDraftRecoveryFacilityDetailsResponse,
@@ -96,6 +97,7 @@ export interface TemplateBackend extends SubmissionBaseBackend {
     token?: string
   ): Promise<TemplateSummaryPage>;
   deleteTemplate(ref: TemplateRef): Promise<void>;
+  getNumberOfTemplates(accountId: string): Promise<number>;
 }
 
 function isTemplateNameValid(name: string): boolean {
@@ -350,6 +352,14 @@ export class InMemoryTemplateBackend
     });
 
     return exists;
+  }
+
+  getNumberOfTemplates(accountId: string): Promise<number> {
+    return Promise.resolve(
+      [...this.templates.keys()].filter(
+        (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
+      ).length
+    );
   }
 
   getTemplates(
@@ -1143,6 +1153,24 @@ export class AnnexViiServiceTemplateBackend
         pageLimit,
         token,
       });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async getNumberOfTemplates(accountId: string): Promise<number> {
+    let response: GetNumberOfTemplatesResponse;
+    try {
+      response = await this.client.getNumberOfTemplates({ accountId });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();

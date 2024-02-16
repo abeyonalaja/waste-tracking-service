@@ -154,6 +154,8 @@ import {
   setTemplateRecoveryFacilityDetails,
   setTemplateTransitCountries,
   setTemplateWasteDescriptionById,
+  GetNumberOfTemplatesRequest,
+  GetNumberOfTemplatesResponse,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -576,6 +578,17 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as GetTemplatesResponse;
+  }
+
+  async getNumberOfTemplates(
+    req: GetNumberOfTemplatesRequest
+  ): Promise<GetNumberOfTemplatesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      this.getNumberOfTemplates.name,
+      HttpMethod.POST,
+      req
+    )) as GetNumberOfTemplatesResponse;
   }
 
   async getTemplateById(

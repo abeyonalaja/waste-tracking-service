@@ -64,6 +64,24 @@ export default class TemplateController extends BaseController {
       }
     };
 
+  getNumberOfTemplates: Handler<
+    api.GetNumberOfTemplatesRequest,
+    api.GetNumberOfTemplatesResponse
+  > = async ({ accountId }) => {
+    try {
+      return success(
+        await this.repository.getNumberOfTemplates(accountId)
+      ) as api.GetNumberOfTemplatesResponse;
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
   createTemplate: Handler<
     api.CreateTemplateRequest,
     api.CreateTemplateResponse

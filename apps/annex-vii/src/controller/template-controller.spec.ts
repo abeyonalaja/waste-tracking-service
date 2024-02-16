@@ -48,6 +48,7 @@ const mockRepository = {
         token?: string
       ) => Promise<TemplateSummaryPage>
     >(),
+  getNumberOfTemplates: jest.fn<(accountId: string) => Promise<number>>(),
   getTemplate: jest.fn<(id: string, accountId: string) => Promise<Template>>(),
   deleteTemplate: jest.fn<(id: string) => Promise<void>>(),
   createTemplateFromDraft:
@@ -195,6 +196,23 @@ describe(TemplateController, () => {
         totalTemplates: 0,
         values: [],
       });
+    });
+
+    it('successfully returns number of templates from repository', async () => {
+      const accountId = faker.datatype.uuid();
+      mockRepository.getNumberOfTemplates.mockResolvedValue(2);
+
+      const response = await subject.getNumberOfTemplates({ accountId });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.getNumberOfTemplates).toHaveBeenCalledWith(
+        accountId
+      );
+      expect(response.value).toEqual(2);
     });
   });
 

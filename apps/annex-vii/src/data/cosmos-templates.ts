@@ -60,6 +60,26 @@ export default class CosmosTemplateRepository
     };
   }
 
+  async getNumberOfTemplates(accountId: string): Promise<number> {
+    const querySpec: SqlQuerySpec = {
+      query: `SELECT value count(c.id) FROM c
+              WHERE
+                c["value"].accountId = @accountId`,
+      parameters: [
+        {
+          name: '@accountId',
+          value: accountId,
+        },
+      ],
+    };
+    const results = await this.cosmosDb
+      .container(this.templateContainerName)
+      .items.query(querySpec)
+      .fetchNext();
+
+    return results.resources[0];
+  }
+
   async getTemplates(
     accountId: string,
     order: 'ASC' | 'DESC',

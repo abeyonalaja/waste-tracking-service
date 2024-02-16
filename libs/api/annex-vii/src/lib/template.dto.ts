@@ -53,6 +53,13 @@ export type GetTemplatesRequest = AccountIdRequest &
 export type GetTemplatesResponse = Response<TemplateSummaryPage>;
 export const getTemplates: Method = { name: 'getTemplates', httpVerb: 'POST' };
 
+export type GetNumberOfTemplatesRequest = AccountIdRequest;
+export type GetNumberOfTemplatesResponse = Response<number>;
+export const getNumberOfTemplates: Method = {
+  name: 'getNumberOfTemplates',
+  httpVerb: 'POST',
+};
+
 export type GetTemplateByIdRequest = IdRequest & AccountIdRequest;
 export type GetTemplateByIdResponse = Response<Template>;
 export const getTemplateById: Method = {

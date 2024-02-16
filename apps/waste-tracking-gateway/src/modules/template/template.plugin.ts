@@ -71,6 +71,26 @@ const plugin: Plugin<PluginOptions> = {
 
     server.route({
       method: 'GET',
+      path: '/numberOfTemplates',
+      handler: async function (h) {
+        try {
+          const value = await backend.getNumberOfTemplates(
+            h.auth.credentials.accountId as string
+          );
+          return value as dto.GetNumberOfTemplatesResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
       path: '/{id}',
       handler: async function ({ params }, h) {
         try {

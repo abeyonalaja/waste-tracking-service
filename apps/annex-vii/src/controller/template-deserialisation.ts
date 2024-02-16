@@ -36,3 +36,22 @@ export const createTemplateFromTemplate =
 export const deleteTemplateRequest = ajv.compileParser<DeleteTemplateRequest>(
   templateSchema.deleteTemplateRequest
 );
+
+export const getNumberOfTemplatesRequest =
+  ajv.compileParser<GetTemplatesRequest>(
+    templateSchema.getNumberOfTemplatesRequest
+  );
+
+export const createTemplateRequest = ajv.compileParser<CreateTemplateRequest>(
+  templateSchema.createTemplateRequest
+);
+
+export const createTemplateFromSubmissionRequest =
+  ajv.compileParser<CreateTemplateFromSubmissionRequest>(
+    templateSchema.createTemplateFromSubmissionRequest
+  );
+
+export const createTemplateFromTemplateRequest =
+  ajv.compileParser<CreateTemplateFromTemplateRequest>(
+    templateSchema.createTemplateFromTemplateRequest
+  );

@@ -7,7 +7,8 @@ import * as winston from 'winston';
 import {
   DraftController,
   TemplateController,
-  parse,
+  parseDraft,
+  parseTemplate,
   validate,
 } from './controller';
 import { CosmosClient } from '@azure/cosmos';
@@ -80,7 +81,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftByIdRequest(body);
+    const request = parseDraft.getDraftByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -97,7 +98,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftsRequest(body);
+    const request = parseDraft.getDraftsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -114,7 +115,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.createDraftRequest(body);
+    const request = parseDraft.createDraftRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -148,7 +149,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.deleteDraftRequest(body);
+    const request = parseDraft.deleteDraftRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -182,7 +183,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCustomerReferenceByIdRequest(body);
+    const request = parseDraft.getDraftCustomerReferenceByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -218,7 +219,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftWasteDescriptionByIdRequest(body);
+    const request = parseDraft.getDraftWasteDescriptionByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -252,7 +253,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftWasteQuantityByIdRequest(body);
+    const request = parseDraft.getDraftWasteQuantityByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -286,7 +287,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftExporterDetailByIdRequest(body);
+    const request = parseDraft.getDraftExporterDetailByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -320,7 +321,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftImporterDetailByIdRequest(body);
+    const request = parseDraft.getDraftImporterDetailByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -354,7 +355,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCollectionDateByIdRequest(body);
+    const request = parseDraft.getDraftCollectionDateByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -388,7 +389,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.listDraftCarriersRequest(body);
+    const request = parseDraft.listDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -405,7 +406,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCarriersRequest(body);
+    const request = parseDraft.getDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -456,7 +457,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.deleteDraftCarriersRequest(body);
+    const request = parseDraft.deleteDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -473,7 +474,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCollectionDetailRequest(body);
+    const request = parseDraft.getDraftCollectionDetailRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -507,7 +508,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftExitLocationByIdRequest(body);
+    const request = parseDraft.getDraftExitLocationByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -541,7 +542,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftTransitCountriesRequest(body);
+    const request = parseDraft.getDraftTransitCountriesRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -575,7 +576,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.listDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.listDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -592,7 +593,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.getDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -647,7 +648,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.deleteDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.deleteDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -664,7 +665,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftSubmissionConfirmationByIdRequest(body);
+    const request = parseDraft.getDraftSubmissionConfirmationByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -700,7 +701,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftSubmissionDeclarationByIdRequest(body);
+    const request = parseDraft.getDraftSubmissionDeclarationByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -736,7 +737,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getTemplateByIdRequest(body);
+    const request = parseTemplate.getTemplateByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -753,12 +754,29 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getTemplatesRequest(body);
+    const request = parseTemplate.getTemplatesRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
 
     return await templateController.getTemplates(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getNumberOfTemplates.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parseTemplate.getNumberOfTemplatesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await templateController.getNumberOfTemplates(request);
   },
   { method: HttpMethod.POST }
 );
@@ -855,7 +873,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftWasteDescriptionByIdRequest(body);
+    const request = parseDraft.getDraftWasteDescriptionByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -889,7 +907,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftExporterDetailByIdRequest(body);
+    const request = parseDraft.getDraftExporterDetailByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -923,7 +941,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftImporterDetailByIdRequest(body);
+    const request = parseDraft.getDraftImporterDetailByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -957,7 +975,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.listDraftCarriersRequest(body);
+    const request = parseDraft.listDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -974,7 +992,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCarriersRequest(body);
+    const request = parseDraft.getDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1025,7 +1043,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.deleteDraftCarriersRequest(body);
+    const request = parseDraft.deleteDraftCarriersRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1042,7 +1060,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftCollectionDetailRequest(body);
+    const request = parseDraft.getDraftCollectionDetailRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1076,7 +1094,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftExitLocationByIdRequest(body);
+    const request = parseDraft.getDraftExitLocationByIdRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1110,7 +1128,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftTransitCountriesRequest(body);
+    const request = parseDraft.getDraftTransitCountriesRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1144,7 +1162,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.listDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.listDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1163,7 +1181,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.getDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.getDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }
@@ -1220,7 +1238,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.deleteDraftRecoveryFacilityDetailsRequest(body);
+    const request = parseDraft.deleteDraftRecoveryFacilityDetailsRequest(body);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }

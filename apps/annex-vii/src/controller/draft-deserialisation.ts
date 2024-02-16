@@ -22,13 +22,6 @@ import {
   submissionBaseSchema,
   GetDraftSubmissionConfirmationByIdRequest,
   GetDraftSubmissionDeclarationByIdRequest,
-  templateSchema,
-  GetTemplatesRequest,
-  GetTemplateByIdRequest,
-  CreateTemplateRequest,
-  DeleteTemplateRequest,
-  CreateTemplateFromSubmissionRequest,
-  CreateTemplateFromTemplateRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -134,29 +127,3 @@ export const getDraftSubmissionDeclarationByIdRequest =
   ajv.compileParser<GetDraftSubmissionDeclarationByIdRequest>(
     submissionSchema.getDraftSubmissionDeclarationByIdByIdRequest
   );
-
-export const getTemplatesRequest = ajv.compileParser<GetTemplatesRequest>(
-  templateSchema.getTemplatesRequest
-);
-
-export const getTemplateByIdRequest = ajv.compileParser<GetTemplateByIdRequest>(
-  templateSchema.getTemplateByIdRequest
-);
-
-export const createTemplateRequest = ajv.compileParser<CreateTemplateRequest>(
-  templateSchema.createTemplateRequest
-);
-
-export const createTemplateFromSubmissionRequest =
-  ajv.compileParser<CreateTemplateFromSubmissionRequest>(
-    templateSchema.createTemplateFromSubmissionRequest
-  );
-
-export const createTemplateFromTemplateRequest =
-  ajv.compileParser<CreateTemplateFromTemplateRequest>(
-    templateSchema.createTemplateFromTemplateRequest
-  );
-
-export const deleteTemplateRequest = ajv.compileParser<DeleteTemplateRequest>(
-  templateSchema.deleteTemplateRequest
-);

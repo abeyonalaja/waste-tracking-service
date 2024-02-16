@@ -1,4 +1,4 @@
-import { SectionSummary } from '@wts/api/common';
+import { AccountIdRequest, SectionSummary } from '@wts/api/common';
 import { SubmissionBase } from './submissionBase';
 
 export type TemplateDetails = {
@@ -43,3 +43,5 @@ export type GetTemplatesResponse = TemplateSummaryPage;
 export type GetTemplateResponse = Template;
 export type CreateTemplateRequest = Pick<Template, 'templateDetails'>;
 export type CreateTemplateResponse = Template;
+export type GetNumberOfTemplatesRequest = AccountIdRequest;
+export type GetNumberOfTemplatesResponse = number;
