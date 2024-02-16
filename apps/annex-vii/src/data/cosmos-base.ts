@@ -1,15 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  DraftCarrier,
+  Carrier,
   DraftCarriers,
-  DraftRecoveryFacility,
   DraftRecoveryFacilityDetail,
   DraftSubmission,
   DraftWasteDescription,
+  RecoveryFacility,
+  Submission,
   Template,
 } from '../model';
 import { BaseRepository } from './base-repository';
 
+export type SubmissionData = Submission & { accountId: string };
 export type DraftSubmissionData = DraftSubmission & { accountId: string };
 export type TemplateData = Template & { accountId: string };
 
@@ -31,9 +33,9 @@ export abstract class CosmosBaseRepository implements BaseRepository {
     };
 
     if (sourceCarriers.status !== 'NotStarted') {
-      const carriers: DraftCarrier[] = [];
+      const carriers: Carrier[] = [];
       for (const c of sourceCarriers.values) {
-        const carrier: DraftCarrier = {
+        const carrier: Carrier = {
           id: uuidv4(),
           addressDetails: c.addressDetails,
           contactDetails: c.contactDetails,
@@ -61,9 +63,9 @@ export abstract class CosmosBaseRepository implements BaseRepository {
       sourceFacilities.status === 'Started' ||
       sourceFacilities.status === 'Complete'
     ) {
-      const facilities: DraftRecoveryFacility[] = [];
+      const facilities: RecoveryFacility[] = [];
       for (const r of sourceFacilities.values) {
-        const facility: DraftRecoveryFacility = {
+        const facility: RecoveryFacility = {
           id: uuidv4(),
           addressDetails: r.addressDetails,
           contactDetails: r.contactDetails,

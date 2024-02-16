@@ -22,7 +22,6 @@ import {
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
 import { Logger } from 'winston';
-import { DraftWasteDescription } from '@wts/api/annex-vii';
 
 export interface PluginOptions {
   backend: SubmissionBackend;
@@ -248,7 +247,7 @@ const plugin: Plugin<PluginOptions> = {
           return Boom.badRequest();
         }
 
-        const request = payload as DraftWasteDescription;
+        const request = payload as dto.PutWasteDescriptionRequest;
         try {
           await backend.setWasteDescription(
             {

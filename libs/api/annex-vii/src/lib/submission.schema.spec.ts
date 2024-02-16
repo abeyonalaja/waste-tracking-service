@@ -207,14 +207,6 @@ describe('setDraftWasteQuantityByIdRequest', () => {
     value = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
-      value: { status: 'Started' },
-    };
-
-    expect(validate(value)).toBe(true);
-
-    value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
       value: {
         status: 'Started',
         value: { type: 'ActualData' },

@@ -125,6 +125,51 @@ function isCollectionDateValid(date: CollectionDate) {
   return true;
 }
 
+function setWasteQuantityUnit(
+  wasteQuantity: WasteQuantity,
+  submission: dto.Submission
+) {
+  if (
+    submission.wasteDescription.status !== 'NotStarted' &&
+    wasteQuantity.status !== 'CannotStart' &&
+    wasteQuantity.status !== 'NotStarted'
+  ) {
+    if (submission.wasteDescription.wasteCode?.type === 'NotApplicable') {
+      if (wasteQuantity.value?.type === 'ActualData') {
+        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
+          wasteQuantity.value.actualData.unit = 'Litre';
+        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
+          wasteQuantity.value.actualData.unit = 'Kilogram';
+        }
+      } else if (wasteQuantity.value?.type === 'EstimateData') {
+        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
+          wasteQuantity.value.estimateData.unit = 'Litre';
+        } else if (
+          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
+        ) {
+          wasteQuantity.value.estimateData.unit = 'Kilogram';
+        }
+      }
+    } else {
+      if (wasteQuantity.value?.type === 'ActualData') {
+        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
+          wasteQuantity.value.actualData.unit = 'Cubic Metre';
+        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
+          wasteQuantity.value.actualData.unit = 'Tonne';
+        }
+      } else if (wasteQuantity.value?.type === 'EstimateData') {
+        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
+          wasteQuantity.value.estimateData.unit = 'Cubic Metre';
+        } else if (
+          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
+        ) {
+          wasteQuantity.value.estimateData.unit = 'Tonne';
+        }
+      }
+    }
+  }
+}
+
 export type SubmissionRef = {
   id: string;
   accountId: string;
@@ -585,6 +630,7 @@ export class InMemorySubmissionBackend
     if (submission === undefined) {
       return Promise.reject(Boom.notFound());
     }
+    setWasteQuantityUnit(value, submission);
 
     let wasteQuantity = value;
     if (
@@ -628,7 +674,7 @@ export class InMemorySubmissionBackend
       }
     }
 
-    submission.wasteQuantity = wasteQuantity;
+    submission.wasteQuantity = wasteQuantity as WasteQuantity;
 
     if (submission.submissionConfirmation.status !== 'Complete') {
       submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1002,7 +1048,7 @@ export class InMemorySubmissionBackend
 
     submission.ukExitLocation = this.setBaseExitLocation(
       submission as dto.SubmissionBase,
-      value
+      value as ExitLocation
     ).ukExitLocation;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1022,7 +1068,7 @@ export class InMemorySubmissionBackend
       return Promise.reject(Boom.notFound());
     }
 
-    return Promise.resolve(submission.transitCountries);
+    return Promise.resolve(submission.transitCountries as TransitCountries);
   }
 
   setTransitCountries(
@@ -1036,7 +1082,7 @@ export class InMemorySubmissionBackend
 
     submission.transitCountries = this.setBaseTransitCountries(
       submission as dto.SubmissionBase,
-      value
+      value as TransitCountries
     ).transitCountries;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1576,7 +1622,7 @@ export class AnnexViiServiceSubmissionBackend
       });
     }
 
-    return response.value;
+    return response.value as WasteQuantity;
   }
 
   async setWasteQuantity(

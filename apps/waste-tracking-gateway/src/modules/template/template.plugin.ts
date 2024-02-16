@@ -16,7 +16,6 @@ import {
   validateSetCollectionDetailRequest,
   validateSetRecoveryFacilityDetailRequest,
 } from '../submission/submission.validation';
-import { DraftWasteDescription } from '@wts/api/annex-vii';
 
 export interface PluginOptions {
   backend: TemplateBackend;
@@ -285,7 +284,7 @@ const plugin: Plugin<PluginOptions> = {
           return Boom.badRequest();
         }
 
-        const request = payload as DraftWasteDescription;
+        const request = payload as dto.PutWasteDescriptionRequest;
         try {
           await backend.setWasteDescription(
             {

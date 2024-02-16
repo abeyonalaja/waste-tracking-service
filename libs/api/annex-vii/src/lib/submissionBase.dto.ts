@@ -4,7 +4,7 @@ import { Response } from '@wts/util/invocation';
 type CarrierIdRequest = { carrierId: string };
 type RfdIdRequest = { rfdId: string };
 
-type DraftWasteDescriptionData = {
+export type WasteDescriptionData = {
   wasteCode:
     | { type: 'NotApplicable' }
     | {
@@ -18,10 +18,10 @@ type DraftWasteDescriptionData = {
 
 export type DraftWasteDescription =
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<DraftWasteDescriptionData>)
-  | ({ status: 'Complete' } & DraftWasteDescriptionData);
+  | ({ status: 'Started' } & Partial<WasteDescriptionData>)
+  | ({ status: 'Complete' } & WasteDescriptionData);
 
-type DraftExporterDetailData = {
+export type ExporterDetailData = {
   exporterAddress: {
     addressLine1: string;
     addressLine2?: string;
@@ -38,7 +38,7 @@ type DraftExporterDetailData = {
   };
 };
 
-export type DraftImporterDetailData = {
+export type ImporterDetailData = {
   importerAddressDetails: {
     organisationName: string;
     address: string;
@@ -54,15 +54,15 @@ export type DraftImporterDetailData = {
 
 export type DraftExporterDetail =
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<DraftExporterDetailData>)
-  | ({ status: 'Complete' } & DraftExporterDetailData);
+  | ({ status: 'Started' } & Partial<ExporterDetailData>)
+  | ({ status: 'Complete' } & ExporterDetailData);
 
 export type DraftImporterDetail =
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<DraftImporterDetailData>)
-  | ({ status: 'Complete' } & DraftImporterDetailData);
+  | ({ status: 'Started' } & Partial<ImporterDetailData>)
+  | ({ status: 'Complete' } & ImporterDetailData);
 
-export type DraftCarrierData = {
+type CarrierData = {
   addressDetails?: {
     organisationName: string;
     address: string;
@@ -80,7 +80,7 @@ export type DraftCarrierData = {
   };
 };
 
-export type DraftCarrier = { id: string } & DraftCarrierData;
+export type Carrier = { id: string } & CarrierData;
 
 export type DraftCarriers =
   | {
@@ -90,10 +90,10 @@ export type DraftCarriers =
   | {
       status: 'Started' | 'Complete';
       transport: boolean;
-      values: DraftCarrier[];
+      values: Carrier[];
     };
 
-type DraftCollectionDetailData = {
+export type CollectionDetailData = {
   address: {
     addressLine1: string;
     addressLine2?: string;
@@ -112,14 +112,18 @@ type DraftCollectionDetailData = {
 
 export type DraftCollectionDetail =
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<DraftCollectionDetailData>)
-  | ({ status: 'Complete' } & DraftCollectionDetailData);
+  | ({ status: 'Started' } & Partial<CollectionDetailData>)
+  | ({ status: 'Complete' } & CollectionDetailData);
+
+export type ExitLocationData =
+  | { provided: 'No' }
+  | { provided: 'Yes'; value: string };
 
 export type DraftExitLocation =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
-      exitLocation: { provided: 'Yes'; value: string } | { provided: 'No' };
+      exitLocation: ExitLocationData;
     };
 
 export type DraftTransitCountries =
@@ -129,7 +133,7 @@ export type DraftTransitCountries =
       values: string[];
     };
 
-export type DraftRecoveryFacilityData = {
+export type RecoveryFacilityData = {
   addressDetails?: {
     name: string;
     address: string;
@@ -156,13 +160,13 @@ export type DraftRecoveryFacilityData = {
       };
 };
 
-export type DraftRecoveryFacility = { id: string } & DraftRecoveryFacilityData;
+export type RecoveryFacility = { id: string } & RecoveryFacilityData;
 
 export type DraftRecoveryFacilityDetail =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Started' | 'Complete';
-      values: DraftRecoveryFacility[];
+      values: RecoveryFacility[];
     };
 
 export type SubmissionBase = {

@@ -1,11 +1,11 @@
 import {
-  DraftCarrier,
+  Carrier,
   DraftCarriers,
   DraftCollectionDetail,
   DraftExitLocation,
   DraftExporterDetail,
   DraftImporterDetail,
-  DraftRecoveryFacility,
+  RecoveryFacility,
   DraftRecoveryFacilityDetail,
   DraftTransitCountries,
   DraftWasteDescription,
@@ -178,7 +178,7 @@ export abstract class BaseController {
       return submissionBasePlusId;
     }
 
-    const carriers: DraftCarrier[] = [];
+    const carriers: Carrier[] = [];
     for (const c of submissionBase.carriers.values) {
       carriers.push(c);
     }
@@ -210,7 +210,7 @@ export abstract class BaseController {
     submissionBase: SubmissionBase,
     carrierId: string,
     value: DraftCarriers,
-    carrier: DraftCarrier,
+    carrier: Carrier,
     index: number
   ): SubmissionBase {
     if (
@@ -219,7 +219,7 @@ export abstract class BaseController {
       value.status !== 'NotStarted'
     ) {
       submissionBase.carriers.status = value.status;
-      submissionBase.carriers.values[index] = carrier as DraftCarrier;
+      submissionBase.carriers.values[index] = carrier as Carrier;
     }
     return submissionBase;
   }
@@ -298,7 +298,7 @@ export abstract class BaseController {
       return submissionBasePlusId;
     }
 
-    const facilities: DraftRecoveryFacility[] = [];
+    const facilities: RecoveryFacility[] = [];
     for (const rf of submissionBase.recoveryFacilityDetail.values) {
       facilities.push(rf);
     }
@@ -337,7 +337,7 @@ export abstract class BaseController {
         );
         submissionBase.recoveryFacilityDetail.status = value.status;
         submissionBase.recoveryFacilityDetail.values[index] =
-          recoveryFacility as DraftRecoveryFacility;
+          recoveryFacility as RecoveryFacility;
       }
     }
 

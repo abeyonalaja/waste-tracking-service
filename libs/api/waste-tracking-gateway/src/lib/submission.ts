@@ -31,10 +31,12 @@ export type WasteQuantity =
         type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
         estimateData?: {
           quantityType?: 'Volume' | 'Weight';
+          unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
           value?: number;
         };
         actualData?: {
           quantityType?: 'Volume' | 'Weight';
+          unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
           value?: number;
         };
       };
@@ -49,10 +51,12 @@ export type WasteQuantity =
             type: 'EstimateData' | 'ActualData';
             estimateData: {
               quantityType?: 'Volume' | 'Weight';
+              unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
               value?: number;
             };
             actualData: {
               quantityType?: 'Volume' | 'Weight';
+              unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
               value?: number;
             };
           };

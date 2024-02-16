@@ -77,7 +77,7 @@ export type {
   DraftWasteDescription,
   DraftExporterDetail,
   DraftImporterDetail,
-  DraftCarrier,
+  Carrier,
   DraftCarriers,
   DraftCollectionDetail,
   DraftExitLocation,
@@ -116,7 +116,7 @@ export type {
   GetDraftCollectionDetailResponse,
   SetDraftCollectionDetailRequest,
   SetDraftCollectionDetailResponse,
-  DraftRecoveryFacility,
+  RecoveryFacility,
   DraftRecoveryFacilityDetail,
   ListDraftRecoveryFacilityDetailsRequest,
   ListDraftRecoveryFacilityDetailsResponse,
@@ -131,6 +131,7 @@ export type {
 } from './submissionBase.dto';
 
 export type {
+  Submission,
   CreateDraftRequest,
   CreateDraftFromTemplateRequest,
   CreateDraftResponse,

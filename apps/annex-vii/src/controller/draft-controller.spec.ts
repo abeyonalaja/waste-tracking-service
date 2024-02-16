@@ -8,6 +8,7 @@ import {
   DraftRecoveryFacilityDetail,
   DraftSubmission,
   DraftSubmissionSummaryPage,
+  Submission,
   Template,
 } from '../model';
 import DraftController from './draft-controller';
@@ -32,6 +33,12 @@ const mockRepository = {
   getDraft:
     jest.fn<(id: string, accountId: string) => Promise<DraftSubmission>>(),
   saveDraft:
+    jest.fn<(value: DraftSubmission, accountId: string) => Promise<void>>(),
+  getSubmission:
+    jest.fn<(id: string, accountId: string) => Promise<Submission>>(),
+  saveSubmission:
+    jest.fn<(value: Submission, accountId: string) => Promise<void>>(),
+  createSubmissionFromDraft:
     jest.fn<(value: DraftSubmission, accountId: string) => Promise<void>>(),
   createTemplateFromDraft:
     jest.fn<
@@ -1185,6 +1192,7 @@ describe(DraftController, () => {
               type: 'ActualData',
               actualData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
               estimateData: {},
@@ -1245,10 +1253,12 @@ describe(DraftController, () => {
               type: 'EstimateData',
               actualData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
               estimateData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
             },
@@ -1304,6 +1314,7 @@ describe(DraftController, () => {
               actualData: {},
               estimateData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
             },
@@ -1362,10 +1373,12 @@ describe(DraftController, () => {
               type: 'ActualData',
               actualData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
               estimateData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
             },
@@ -1425,10 +1438,12 @@ describe(DraftController, () => {
               type: 'EstimateData',
               actualData: {
                 quantityType: 'Weight',
+                unit: 'Kilogram',
                 value: 5,
               },
               estimateData: {
                 quantityType: 'Volume',
+                unit: 'Litre',
                 value: 5,
               },
             },
@@ -2496,6 +2511,7 @@ describe(DraftController, () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
+            unit: 'Kilogram',
             value: faker.datatype.number(),
           },
           estimateData: {},
@@ -2763,6 +2779,7 @@ describe(DraftController, () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
+            unit: 'Kilogram',
             value: faker.datatype.number(),
           },
           estimateData: {},
@@ -3034,7 +3051,7 @@ describe(DraftController, () => {
 
       expect(
         (await mockRepository.getDraft(id, accountId)).submissionState.status
-      ).toBe('Cancelled');
+      ).toBe('InProgress');
 
       mockRepository.getDraft.mockResolvedValue({
         id,
@@ -3055,7 +3072,7 @@ describe(DraftController, () => {
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
         submissionState: {
-          status: 'InProgress',
+          status: 'SubmittedWithEstimates',
           timestamp: new Date(),
         },
       });

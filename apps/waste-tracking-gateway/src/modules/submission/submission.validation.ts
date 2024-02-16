@@ -110,12 +110,14 @@ export const validatePutWasteQuantityRequest =
               estimateData: {
                 optionalProperties: {
                   quantityType: { enum: ['Volume', 'Weight'] },
+                  unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
                   value: { type: 'float64' },
                 },
               },
               actualData: {
                 optionalProperties: {
                   quantityType: { enum: ['Volume', 'Weight'] },
+                  unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
                   value: { type: 'float64' },
                 },
               },
@@ -134,12 +136,18 @@ export const validatePutWasteQuantityRequest =
                   estimateData: {
                     optionalProperties: {
                       quantityType: { enum: ['Volume', 'Weight'] },
+                      unit: {
+                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                      },
                       value: { type: 'float64' },
                     },
                   },
                   actualData: {
                     optionalProperties: {
                       quantityType: { enum: ['Volume', 'Weight'] },
+                      unit: {
+                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                      },
                       value: { type: 'float64' },
                     },
                   },
@@ -150,12 +158,18 @@ export const validatePutWasteQuantityRequest =
                   estimateData: {
                     optionalProperties: {
                       quantityType: { enum: ['Volume', 'Weight'] },
+                      unit: {
+                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                      },
                       value: { type: 'float64' },
                     },
                   },
                   actualData: {
                     optionalProperties: {
                       quantityType: { enum: ['Volume', 'Weight'] },
+                      unit: {
+                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                      },
                       value: { type: 'float64' },
                     },
                   },
@@ -457,7 +471,7 @@ export const validatePutExitLocationRequest =
       },
       Complete: {
         properties: {
-          exitLocation: { ref: 'exitLocation' },
+          values: { ref: 'exitLocation' },
         },
       },
     },

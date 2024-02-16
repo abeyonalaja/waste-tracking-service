@@ -48,12 +48,14 @@ export const draftWasteQuantity: SchemaObject = {
             estimateData: {
               optionalProperties: {
                 quantityType: { enum: ['Volume', 'Weight'] },
+                unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
                 value: { type: 'float64' },
               },
             },
             actualData: {
               optionalProperties: {
                 quantityType: { enum: ['Volume', 'Weight'] },
+                unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
                 value: { type: 'float64' },
               },
             },
@@ -72,12 +74,18 @@ export const draftWasteQuantity: SchemaObject = {
                 estimateData: {
                   optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
                     value: { type: 'float64' },
                   },
                 },
                 actualData: {
                   optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
                     value: { type: 'float64' },
                   },
                 },
@@ -88,12 +96,18 @@ export const draftWasteQuantity: SchemaObject = {
                 estimateData: {
                   optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
                     value: { type: 'float64' },
                   },
                 },
                 actualData: {
                   optionalProperties: {
                     quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
                     value: { type: 'float64' },
                   },
                 },

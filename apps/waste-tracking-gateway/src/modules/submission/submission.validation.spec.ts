@@ -729,7 +729,7 @@ describe('validatePutExitLocationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        exitLocation: {
+        values: {
           provided: 'No',
           value: faker.datatype.string(),
         },
@@ -739,7 +739,7 @@ describe('validatePutExitLocationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        exitLocation: {
+        values: {
           provided: 'Yes',
         },
       })
@@ -752,7 +752,7 @@ describe('validatePutExitLocationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        exitLocation: {
+        values: {
           provided: 'Yes',
           value: faker.datatype.string(),
         },
@@ -762,7 +762,7 @@ describe('validatePutExitLocationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-        exitLocation: {
+        values: {
           provided: 'No',
         },
       })

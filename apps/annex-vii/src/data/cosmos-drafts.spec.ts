@@ -64,6 +64,7 @@ describe(CosmosDraftRepository, () => {
     mockCosmosDbName,
     mockCosmosContainerName,
     mockCosmosContainerName,
+    mockCosmosContainerName,
     logger
   );
 

@@ -13,10 +13,73 @@ import {
   DraftSubmissionSummary,
   DraftSubmissionSummaryPage,
   SubmissionBase,
+  Submission,
 } from '../model';
 import { DraftRepository } from './repository';
-import { CosmosBaseRepository, DraftSubmissionData } from './cosmos-base';
+import {
+  CosmosBaseRepository,
+  DraftSubmissionData,
+  SubmissionData,
+} from './cosmos-base';
 
+function getSubmissionData(data: DraftSubmission): Submission {
+  if (
+    data.wasteDescription.status === 'Complete' &&
+    data.wasteQuantity.status === 'Complete' &&
+    data.exporterDetail.status === 'Complete' &&
+    data.importerDetail.status === 'Complete' &&
+    data.collectionDate.status === 'Complete' &&
+    data.carriers.status === 'Complete' &&
+    data.collectionDetail.status === 'Complete' &&
+    data.ukExitLocation.status === 'Complete' &&
+    data.transitCountries.status === 'Complete' &&
+    data.recoveryFacilityDetail.status === 'Complete' &&
+    data.submissionDeclaration.status === 'Complete' &&
+    (data.submissionState.status === 'SubmittedWithActuals' ||
+      data.submissionState.status === 'SubmittedWithEstimates' ||
+      data.submissionState.status === 'UpdatedWithActuals')
+  ) {
+    const submission: Submission = {
+      id: data.id,
+      reference: data.reference,
+      wasteDescription: {
+        wasteCode: data.wasteDescription.wasteCode,
+        ewcCodes: data.wasteDescription.ewcCodes,
+        nationalCode: data.wasteDescription.nationalCode,
+        description: data.wasteDescription.description,
+      },
+      wasteQuantity: data.wasteQuantity.value,
+      exporterDetail: {
+        exporterAddress: data.exporterDetail.exporterAddress,
+        exporterContactDetails: data.exporterDetail.exporterContactDetails,
+      },
+      importerDetail: {
+        importerAddressDetails: data.importerDetail.importerAddressDetails,
+        importerContactDetails: data.importerDetail.importerContactDetails,
+      },
+      collectionDate: data.collectionDate.value,
+      carriers: {
+        transport: data.carriers.transport,
+        values: data.carriers.values,
+      },
+      collectionDetail: {
+        address: data.collectionDetail.address,
+        contactDetails: data.collectionDetail.contactDetails,
+      },
+      ukExitLocation: data.ukExitLocation.exitLocation,
+      transitCountries: data.transitCountries.values,
+      recoveryFacilityDetail: data.recoveryFacilityDetail.values,
+      submissionDeclaration: data.submissionDeclaration.values,
+      submissionState: {
+        status: data.submissionState.status,
+        timestamp: data.submissionState.timestamp,
+      },
+    };
+    return submission;
+  } else {
+    return null as unknown as Submission;
+  }
+}
 export default class CosmosDraftRepository
   extends CosmosBaseRepository
   implements DraftRepository
@@ -27,6 +90,7 @@ export default class CosmosDraftRepository
     private cosmosClient: CosmosClient,
     private cosmosDbName: string,
     private draftContainerName: string,
+    private submissionContainerName: string,
     private templateContainerName: string,
     private logger: Logger
   ) {
@@ -194,6 +258,34 @@ export default class CosmosDraftRepository
     };
   }
 
+  async getSubmission(id: string, accountId: string): Promise<Submission> {
+    const { resource: item } = await this.cosmosDb
+      .container(this.submissionContainerName)
+      .item(id, accountId)
+      .read();
+    if (!item) {
+      throw Boom.notFound();
+    }
+
+    const data = item.value as Submission;
+    return {
+      id: data.id,
+      reference: data.reference,
+      wasteDescription: data.wasteDescription,
+      wasteQuantity: data.wasteQuantity,
+      exporterDetail: data.exporterDetail,
+      importerDetail: data.importerDetail,
+      collectionDate: data.collectionDate,
+      carriers: data.carriers,
+      collectionDetail: data.collectionDetail,
+      ukExitLocation: data.ukExitLocation,
+      transitCountries: data.transitCountries,
+      recoveryFacilityDetail: data.recoveryFacilityDetail,
+      submissionDeclaration: data.submissionDeclaration,
+      submissionState: data.submissionState,
+    };
+  }
+
   async saveDraft(value: DraftSubmission, accountId: string): Promise<void> {
     const data: DraftSubmissionData = { ...value, accountId };
     try {
@@ -230,6 +322,51 @@ export default class CosmosDraftRepository
       });
       throw Boom.internal();
     }
+  }
+
+  async saveSubmission(value: Submission, accountId: string): Promise<void> {
+    const data: SubmissionData = { ...value, accountId };
+    try {
+      const { resource: item } = await this.cosmosDb
+        .container(this.submissionContainerName)
+        .item(data.id, data.accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: data.id,
+          value: data,
+          partitionKey: data.accountId,
+        };
+        await this.cosmosDb
+          .container(this.submissionContainerName)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: data,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.submissionContainerName)
+          .item(data.id, data.accountId)
+          .patch(replaceOperation);
+      }
+    } catch (err) {
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
+  }
+
+  async createSubmissionFromDraft(
+    value: DraftSubmission,
+    accountId: string
+  ): Promise<void> {
+    this.saveSubmission(getSubmissionData(value), accountId);
   }
 
   async createDraftFromTemplate(

@@ -1,4 +1,8 @@
-import { DraftSubmission, DraftSubmissionSummaryPage } from '../model';
+import {
+  DraftSubmission,
+  DraftSubmissionSummaryPage,
+  Submission,
+} from '../model';
 import { BaseRepository } from './base-repository';
 
 export interface DraftRepository extends BaseRepository {
@@ -10,7 +14,13 @@ export interface DraftRepository extends BaseRepository {
     token?: string
   ): Promise<DraftSubmissionSummaryPage>;
   getDraft(id: string, accountId: string): Promise<DraftSubmission>;
+  getSubmission(id: string, accountId: string): Promise<Submission>;
+  saveSubmission(value: Submission, accountId: string): Promise<void>;
   saveDraft(value: DraftSubmission, accountId: string): Promise<void>;
+  createSubmissionFromDraft(
+    value: DraftSubmission,
+    accountId: string
+  ): Promise<void>;
   createDraftFromTemplate(
     id: string,
     accountId: string,

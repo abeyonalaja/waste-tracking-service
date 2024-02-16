@@ -4,6 +4,8 @@ import {
   GetDraftByIdResponse,
   GetTemplateByIdResponse,
   DraftWasteDescription,
+  DraftExitLocation,
+  DraftTransitCountries,
 } from '@wts/api/annex-vii';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -62,12 +64,12 @@ export interface SubmissionBaseBackend {
     ref: SubmissionRef,
     value: CollectionDetail
   ): Promise<void>;
-  getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
-  setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
-  getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
+  getExitLocation(ref: SubmissionRef): Promise<DraftExitLocation>;
+  setExitLocation(ref: SubmissionRef, value: DraftExitLocation): Promise<void>;
+  getTransitCountries(ref: SubmissionRef): Promise<DraftTransitCountries>;
   setTransitCountries(
     ref: SubmissionRef,
-    value: TransitCountries
+    value: DraftTransitCountries
   ): Promise<void>;
   listRecoveryFacilityDetail(
     ref: SubmissionRef
@@ -165,20 +167,20 @@ export abstract class InMemorySubmissionBaseBackend
     value: dto.CollectionDetail
   ): Promise<void>;
 
-  abstract getExitLocation(ref: SubmissionRef): Promise<dto.ExitLocation>;
+  abstract getExitLocation(ref: SubmissionRef): Promise<DraftExitLocation>;
 
   abstract setExitLocation(
     ref: SubmissionRef,
-    value: dto.ExitLocation
+    value: DraftExitLocation
   ): Promise<void>;
 
   abstract getTransitCountries(
     ref: SubmissionRef
-  ): Promise<dto.TransitCountries>;
+  ): Promise<DraftTransitCountries>;
 
   abstract setTransitCountries(
     ref: SubmissionRef,
-    value: dto.TransitCountries
+    value: DraftTransitCountries
   ): Promise<void>;
 
   abstract listRecoveryFacilityDetail(
@@ -798,21 +800,21 @@ export abstract class AnnexViiServiceSubmissionBaseBackend {
   abstract getExitLocation({
     id,
     accountId,
-  }: SubmissionRef): Promise<ExitLocation>;
+  }: SubmissionRef): Promise<DraftExitLocation>;
 
   abstract setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: ExitLocation
+    value: DraftExitLocation
   ): Promise<void>;
 
   abstract getTransitCountries({
     id,
     accountId,
-  }: SubmissionRef): Promise<TransitCountries>;
+  }: SubmissionRef): Promise<DraftTransitCountries>;
 
   abstract setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: TransitCountries
+    value: DraftTransitCountries
   ): Promise<void>;
 
   abstract listRecoveryFacilityDetail({

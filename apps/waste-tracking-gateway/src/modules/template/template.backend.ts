@@ -6,6 +6,8 @@ import {
   DeleteDraftCarriersResponse,
   DeleteDraftRecoveryFacilityDetailsResponse,
   DeleteTemplateResponse,
+  DraftExitLocation,
+  DraftTransitCountries,
   DraftWasteDescription,
   GetDraftCarriersResponse,
   GetDraftCollectionDetailResponse,
@@ -38,7 +40,6 @@ import {
   AnnexViiServiceSubmissionBaseBackend,
   Carriers,
   CollectionDetail,
-  ExitLocation,
   ExporterDetail,
   ImporterDetail,
   InMemorySubmissionBaseBackend,
@@ -46,7 +47,6 @@ import {
   SubmissionBaseBackend,
   SubmissionBasePlusId,
   SubmissionRef,
-  TransitCountries,
   WasteDescription,
 } from '../submissionBase/submissionBase.backend';
 import { DaprAnnexViiClient } from '@wts/client/annex-vii';
@@ -776,7 +776,10 @@ export class InMemoryTemplateBackend
     return Promise.resolve();
   }
 
-  getExitLocation({ id, accountId }: SubmissionRef): Promise<ExitLocation> {
+  getExitLocation({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<DraftExitLocation> {
     const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
@@ -787,7 +790,7 @@ export class InMemoryTemplateBackend
 
   setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: ExitLocation
+    value: DraftExitLocation
   ): Promise<void> {
     const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
@@ -796,7 +799,7 @@ export class InMemoryTemplateBackend
 
     template.ukExitLocation = super.setBaseExitLocation(
       template as dto.SubmissionBase,
-      value
+      value as dto.ExitLocation
     ).ukExitLocation;
 
     template.templateDetails.lastModified = new Date();
@@ -808,7 +811,7 @@ export class InMemoryTemplateBackend
   getTransitCountries({
     id,
     accountId,
-  }: SubmissionRef): Promise<TransitCountries> {
+  }: SubmissionRef): Promise<DraftTransitCountries> {
     const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
       return Promise.reject(Boom.notFound());
@@ -819,7 +822,7 @@ export class InMemoryTemplateBackend
 
   setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: TransitCountries
+    value: DraftTransitCountries
   ): Promise<void> {
     const template = this.templates.get(JSON.stringify({ id, accountId }));
     if (template === undefined) {
@@ -828,8 +831,8 @@ export class InMemoryTemplateBackend
 
     template.transitCountries = super.setBaseTransitCountries(
       template as dto.SubmissionBase,
-      value
-    ).transitCountries;
+      value as dto.TransitCountries
+    ).transitCountries as DraftTransitCountries;
 
     template.templateDetails.lastModified = new Date();
     this.templates.set(JSON.stringify({ id, accountId }), template);
@@ -1517,7 +1520,7 @@ export class AnnexViiServiceTemplateBackend
   async getExitLocation({
     id,
     accountId,
-  }: SubmissionRef): Promise<ExitLocation> {
+  }: SubmissionRef): Promise<DraftExitLocation> {
     let response: GetDraftExitLocationByIdResponse;
     try {
       response = await this.client.getTemplateExitLocationById({
@@ -1540,7 +1543,7 @@ export class AnnexViiServiceTemplateBackend
 
   async setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: ExitLocation
+    value: DraftExitLocation
   ): Promise<void> {
     let response: SetDraftExitLocationByIdResponse;
     try {
@@ -1564,7 +1567,7 @@ export class AnnexViiServiceTemplateBackend
   async getTransitCountries({
     id,
     accountId,
-  }: SubmissionRef): Promise<TransitCountries> {
+  }: SubmissionRef): Promise<DraftTransitCountries> {
     let response: GetDraftTransitCountriesResponse;
     try {
       response = await this.client.getTemplateTransitCountries({
@@ -1587,7 +1590,7 @@ export class AnnexViiServiceTemplateBackend
 
   async setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: TransitCountries
+    value: DraftTransitCountries
   ): Promise<void> {
     let response: SetDraftTransitCountriesResponse;
     try {

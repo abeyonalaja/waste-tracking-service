@@ -13,6 +13,51 @@ import { BaseController, SubmissionBasePlusId } from './base-controller';
 import { DraftRepository } from '../data/repository';
 import { Handler } from '@wts/api/common';
 
+function setWasteQuantityUnit(
+  wasteQuantity: api.DraftWasteQuantity,
+  submission: api.DraftSubmission
+) {
+  if (
+    submission.wasteDescription.status !== 'NotStarted' &&
+    wasteQuantity.status !== 'CannotStart' &&
+    wasteQuantity.status !== 'NotStarted'
+  ) {
+    if (submission.wasteDescription.wasteCode?.type === 'NotApplicable') {
+      if (wasteQuantity.value?.type === 'ActualData') {
+        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
+          wasteQuantity.value.actualData.unit = 'Litre';
+        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
+          wasteQuantity.value.actualData.unit = 'Kilogram';
+        }
+      } else if (wasteQuantity.value?.type === 'EstimateData') {
+        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
+          wasteQuantity.value.estimateData.unit = 'Litre';
+        } else if (
+          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
+        ) {
+          wasteQuantity.value.estimateData.unit = 'Kilogram';
+        }
+      }
+    } else {
+      if (wasteQuantity.value?.type === 'ActualData') {
+        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
+          wasteQuantity.value.actualData.unit = 'Cubic Metre';
+        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
+          wasteQuantity.value.actualData.unit = 'Tonne';
+        }
+      } else if (wasteQuantity.value?.type === 'EstimateData') {
+        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
+          wasteQuantity.value.estimateData.unit = 'Cubic Metre';
+        } else if (
+          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
+        ) {
+          wasteQuantity.value.estimateData.unit = 'Tonne';
+        }
+      }
+    }
+  }
+}
+
 export default class DraftController extends BaseController {
   constructor(private repository: DraftRepository, private logger: Logger) {
     super();
@@ -194,8 +239,10 @@ export default class DraftController extends BaseController {
     async ({ id, accountId }) => {
       try {
         const draft = await this.repository.getDraft(id, accountId);
-        draft.submissionState = { status: 'Deleted', timestamp: new Date() };
-        await this.repository.saveDraft({ ...draft }, accountId);
+        if (draft.submissionState.status === 'InProgress') {
+          draft.submissionState = { status: 'Deleted', timestamp: new Date() };
+          await this.repository.saveDraft({ ...draft }, accountId);
+        }
         return success(undefined);
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -213,12 +260,22 @@ export default class DraftController extends BaseController {
   > = async ({ id, accountId, cancellationType }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
-      draft.submissionState = {
-        status: 'Cancelled',
-        timestamp: new Date(),
-        cancellationType: cancellationType,
-      };
-      await this.repository.saveDraft({ ...draft }, accountId);
+      if (draft.submissionState.status === 'SubmittedWithEstimates') {
+        const timestamp = new Date();
+        draft.submissionState = {
+          status: 'Cancelled',
+          timestamp: timestamp,
+          cancellationType: cancellationType,
+        };
+        await this.repository.saveDraft({ ...draft }, accountId);
+        const submission = await this.repository.getSubmission(id, accountId);
+        submission.submissionState = {
+          status: 'Cancelled',
+          timestamp: timestamp,
+          cancellationType: cancellationType,
+        };
+        await this.repository.saveSubmission({ ...submission }, accountId);
+      }
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -398,6 +455,11 @@ export default class DraftController extends BaseController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      const propagateToSubmission: boolean =
+        draft.submissionState.status === 'SubmittedWithEstimates' ||
+        draft.submissionState.status === 'SubmittedWithActuals' ||
+        draft.submissionState.status === 'UpdatedWithActuals';
+      setWasteQuantityUnit(value, draft);
 
       let wasteQuantity = value;
       if (
@@ -463,6 +525,14 @@ export default class DraftController extends BaseController {
           : draft.submissionState;
 
       await this.repository.saveDraft({ ...draft }, accountId);
+      if (propagateToSubmission) {
+        const submission = await this.repository.getSubmission(id, accountId);
+        if (draft.wasteQuantity.status === 'Complete') {
+          submission.wasteQuantity = draft.wasteQuantity.value;
+        }
+        submission.submissionState = draft.submissionState;
+        await this.repository.saveSubmission({ ...submission }, accountId);
+      }
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -586,6 +656,10 @@ export default class DraftController extends BaseController {
   > = async ({ id, accountId, value }) => {
     try {
       const draft = await this.repository.getDraft(id, accountId);
+      const propagateToSubmission: boolean =
+        draft.submissionState.status === 'SubmittedWithEstimates' ||
+        draft.submissionState.status === 'SubmittedWithActuals' ||
+        draft.submissionState.status === 'UpdatedWithActuals';
 
       let collectionDate = value;
       if (
@@ -643,6 +717,14 @@ export default class DraftController extends BaseController {
           : draft.submissionState;
 
       await this.repository.saveDraft({ ...draft }, accountId);
+      if (propagateToSubmission) {
+        const submission = await this.repository.getSubmission(id, accountId);
+        if (draft.collectionDate.status === 'Complete') {
+          submission.collectionDate = draft.collectionDate.value;
+        }
+        submission.submissionState = draft.submissionState;
+        await this.repository.saveSubmission({ ...submission }, accountId);
+      }
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -1313,6 +1395,15 @@ export default class DraftController extends BaseController {
         },
         accountId
       );
+      await this.repository.createSubmissionFromDraft(
+        {
+          ...draft,
+          submissionDeclaration: submissionDeclaration,
+          submissionState: submissionState,
+        },
+        accountId
+      );
+
       return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {

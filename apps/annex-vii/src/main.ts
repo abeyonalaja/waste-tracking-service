@@ -57,6 +57,7 @@ const draftController = new DraftController(
     dbClient,
     process.env['COSMOS_DATABASE_NAME'] || 'annex-vii',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+    process.env['COSMOS_SUBMISSIONS_CONTAINER_NAME'] || 'submissions',
     process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     logger
   ),

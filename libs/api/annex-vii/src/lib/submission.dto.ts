@@ -6,63 +6,69 @@ import {
   SectionSummary,
 } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
-import { SubmissionBase, DraftWasteDescription } from './submissionBase.dto';
+import {
+  SubmissionBase,
+  DraftWasteDescription,
+  WasteDescriptionData,
+  ExporterDetailData,
+  ImporterDetailData,
+  Carrier,
+  CollectionDetailData,
+  ExitLocationData,
+  RecoveryFacilityData,
+} from './submissionBase.dto';
 
 export type CustomerReference = string;
+
+type WasteQuantityData =
+  | {
+      type: 'NotApplicable';
+    }
+  | {
+      type?: 'EstimateData' | 'ActualData';
+      estimateData?: {
+        quantityType?: 'Volume' | 'Weight';
+        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+        value?: number;
+      };
+      actualData?: {
+        quantityType?: 'Volume' | 'Weight';
+        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+        value?: number;
+      };
+    };
 
 export type DraftWasteQuantity =
   | { status: 'CannotStart' }
   | { status: 'NotStarted' }
   | {
       status: 'Started';
-      value?: {
-        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
-        estimateData?: {
-          quantityType?: 'Volume' | 'Weight';
-          value?: number;
-        };
-        actualData?: {
-          quantityType?: 'Volume' | 'Weight';
-          value?: number;
-        };
-      };
+      value?: WasteQuantityData;
     }
   | {
       status: 'Complete';
-      value:
-        | {
-            type: 'NotApplicable';
-          }
-        | {
-            type: 'EstimateData' | 'ActualData';
-            estimateData: {
-              quantityType?: 'Volume' | 'Weight';
-              value?: number;
-            };
-            actualData: {
-              quantityType?: 'Volume' | 'Weight';
-              value?: number;
-            };
-          };
+      value: WasteQuantityData;
     };
+
+type CollectionDateData = {
+  type: 'EstimateDate' | 'ActualDate';
+  estimateDate: {
+    day?: string;
+    month?: string;
+    year?: string;
+  };
+  actualDate: {
+    day?: string;
+    month?: string;
+    year?: string;
+  };
+};
 
 export type DraftCollectionDate =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
-      value: {
-        type: 'EstimateDate' | 'ActualDate';
-        estimateDate: {
-          day?: string;
-          month?: string;
-          year?: string;
-        };
-        actualDate: {
-          day?: string;
-          month?: string;
-          year?: string;
-        };
-      };
+      value: CollectionDateData;
     };
 
 export type DraftSubmissionConfirmation =
@@ -72,7 +78,7 @@ export type DraftSubmissionConfirmation =
       confirmation: boolean;
     };
 
-export type DraftSubmissionDeclarationData = {
+export type SubmissionDeclarationData = {
   declarationTimestamp: Date;
   transactionId: string;
 };
@@ -81,7 +87,7 @@ export type DraftSubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
-      values: DraftSubmissionDeclarationData;
+      values: SubmissionDeclarationData;
     };
 
 export type DraftSubmissionCancellationType =
@@ -121,6 +127,26 @@ export interface DraftSubmission extends SubmissionBase {
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: DraftSubmissionState;
 }
+
+export type Submission = {
+  id: string;
+  reference: CustomerReference;
+  wasteDescription: WasteDescriptionData;
+  wasteQuantity: WasteQuantityData;
+  exporterDetail: ExporterDetailData;
+  importerDetail: ImporterDetailData;
+  collectionDate: CollectionDateData;
+  carriers: {
+    transport: boolean;
+    values: Carrier[];
+  };
+  collectionDetail: CollectionDetailData;
+  ukExitLocation: ExitLocationData;
+  transitCountries: string[];
+  recoveryFacilityDetail: RecoveryFacilityData[];
+  submissionDeclaration: SubmissionDeclarationData;
+  submissionState: DraftSubmissionState;
+};
 
 export type DraftSubmissionSummary = Readonly<{
   id: string;
