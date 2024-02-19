@@ -10,6 +10,7 @@ import {
   DraftSubmissionSummaryPage,
   Submission,
   Template,
+  NumberOfSubmissions,
 } from '../model';
 import DraftController from './draft-controller';
 
@@ -67,6 +68,8 @@ const mockRepository = {
         sourceFacilities: DraftRecoveryFacilityDetail
       ) => DraftRecoveryFacilityDetail
     >(),
+  getNumberOfSubmissions:
+    jest.fn<(accountId: string) => Promise<NumberOfSubmissions>>(),
 };
 
 describe(DraftController, () => {
@@ -138,6 +141,31 @@ describe(DraftController, () => {
         currentPage: 0,
         pages: [],
         values: [],
+      });
+    });
+
+    it('successfully returns number of submissions from repository', async () => {
+      const accountId = faker.datatype.uuid();
+      mockRepository.getNumberOfSubmissions.mockResolvedValue({
+        complete: 1,
+        incomplete: 2,
+        completeWithEstimates: 3,
+      });
+
+      const response = await subject.getNumberOfSubmissions({ accountId });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.getNumberOfSubmissions).toHaveBeenCalledWith(
+        accountId
+      );
+      expect(response.value).toEqual({
+        complete: 1,
+        incomplete: 2,
+        completeWithEstimates: 3,
       });
     });
   });

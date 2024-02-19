@@ -573,3 +573,23 @@ export const createDraftFromTemplateRequest: SchemaObject = {
     reference: customerReference,
   },
 };
+
+export const getNumberOfSubmissionsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+  },
+};
+
+export const getNumberOfSubmissionsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      properties: {
+        complete: { type: 'float64' },
+        incomplete: { type: 'float64' },
+        completeWithEstimates: { type: 'float64' },
+      },
+    },
+  },
+};

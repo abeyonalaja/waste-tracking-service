@@ -1,4 +1,4 @@
-import { SectionSummary } from '@wts/api/common';
+import { AccountIdRequest, SectionSummary } from '@wts/api/common';
 import { SubmissionBase, WasteDescription } from './submissionBase';
 
 export type CustomerReference = string;
@@ -148,6 +148,14 @@ export type SubmissionSummaryPage = {
   pages: SubmissionPageMetadata[];
   values: ReadonlyArray<SubmissionSummary>;
 };
+
+export type NumberOfSubmissions = {
+  complete: number;
+  incomplete: number;
+  completeWithEstimates: number;
+};
+export type GetNumberOfSubmissionsRequest = AccountIdRequest;
+export type GetNumberOfSubmissionsResponse = NumberOfSubmissions;
 
 export type GetSubmissionsResponse = SubmissionSummaryPage;
 

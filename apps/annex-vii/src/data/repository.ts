@@ -2,6 +2,7 @@ import {
   DraftSubmission,
   DraftSubmissionSummaryPage,
   Submission,
+  NumberOfSubmissions,
 } from '../model';
 import { BaseRepository } from './base-repository';
 
@@ -26,4 +27,5 @@ export interface DraftRepository extends BaseRepository {
     accountId: string,
     reference: string
   ): Promise<DraftSubmission>;
+  getNumberOfSubmissions(accountId: string): Promise<NumberOfSubmissions>;
 }

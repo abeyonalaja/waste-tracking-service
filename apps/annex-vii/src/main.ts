@@ -1251,4 +1251,21 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getNumberOfSubmissions.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parseDraft.getNumberOfSubmissionsRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await draftController.getNumberOfSubmissions(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

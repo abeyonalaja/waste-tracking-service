@@ -11,6 +11,7 @@ import {
   ExitLocation,
   ExporterDetail,
   ImporterDetail,
+  NumberOfSubmissions,
   OrderRef,
   RecoveryFacilityDetail,
   Submission,
@@ -144,6 +145,8 @@ const mockBackend = {
     jest.fn<
       (ref: SubmissionRef, value: SubmissionDeclaration) => Promise<void>
     >(),
+  getNumberOfSubmissions:
+    jest.fn<(accountId: string) => Promise<NumberOfSubmissions>>(),
 };
 
 const app = server({
@@ -212,6 +215,7 @@ describe('SubmissionPlugin', () => {
     mockBackend.getRecoveryFacilityDetail.mockClear();
     mockBackend.setRecoveryFacilityDetail.mockClear();
     mockBackend.deleteRecoveryFacilityDetail.mockClear();
+    mockBackend.getNumberOfSubmissions.mockClear();
   });
 
   describe('POST /submissions', () => {
@@ -432,6 +436,25 @@ describe('SubmissionPlugin', () => {
       };
 
       mockBackend.getSubmissionDeclaration.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /submissions/numberOfSubmissions', () => {
+    it('Responds 400 if invalid request is received from payload', async () => {
+      mockBackend.getNumberOfSubmissions.mockResolvedValue({
+        complete: 0,
+        incomplete: 1,
+        completeWithEstimates: 2,
+      });
+
+      const options = {
+        method: 'GET',
+        url: `/submissions/numberOfSubmissions`,
+      };
+
+      mockBackend.getNumberOfSubmissions.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

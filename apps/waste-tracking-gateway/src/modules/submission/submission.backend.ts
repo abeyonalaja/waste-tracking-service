@@ -23,6 +23,7 @@ import {
   GetDraftWasteDescriptionByIdResponse,
   GetDraftWasteQuantityByIdResponse,
   GetDraftsResponse,
+  GetNumberOfSubmissionsResponse,
   ListDraftCarriersResponse,
   ListDraftRecoveryFacilityDetailsResponse,
   SetDraftCarriersResponse,
@@ -71,6 +72,7 @@ export type SubmissionConfirmation = dto.SubmissionConfirmation;
 export type SubmissionDeclaration = dto.SubmissionDeclaration;
 export type SubmissionState = dto.SubmissionState;
 export type SubmissionCancellationType = dto.SubmissionCancellationType;
+export type NumberOfSubmissions = dto.NumberOfSubmissions;
 
 function setSubmissionConfirmation(
   submission: Submission
@@ -222,6 +224,7 @@ export interface SubmissionBackend extends SubmissionBaseBackend {
     ref: SubmissionRef,
     value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void>;
+  getNumberOfSubmissions(accountId: string): Promise<NumberOfSubmissions>;
 }
 
 /**
@@ -1385,6 +1388,47 @@ export class InMemorySubmissionBackend
 
     return Promise.resolve();
   }
+
+  async getNumberOfSubmissions(
+    accountId: string
+  ): Promise<NumberOfSubmissions> {
+    const numberOfSubmissions: NumberOfSubmissions = {
+      complete: 0,
+      incomplete: 0,
+      completeWithEstimates: 0,
+    };
+
+    numberOfSubmissions.incomplete = [...this.submissions.keys()].filter(
+      (i) =>
+        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
+        (JSON.parse(i) as Submission).submissionState.status === 'InProgress'
+    ).length;
+
+    numberOfSubmissions.completeWithEstimates = [
+      ...this.submissions.keys(),
+    ].filter(
+      (i) =>
+        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
+        (JSON.parse(i) as Submission).submissionState.status ===
+          'SubmittedWithEstimates'
+    ).length;
+
+    const submittedStates = [
+      'UpdatedWithActuals',
+      'SubmittedWithEstimates',
+      'SubmittedWithActuals',
+    ];
+
+    numberOfSubmissions.complete = [...this.submissions.keys()].filter(
+      (i) =>
+        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
+        submittedStates.includes(
+          (JSON.parse(i) as Submission).submissionState.status
+        )
+    ).length;
+
+    return Promise.resolve(numberOfSubmissions);
+  }
 }
 
 export class AnnexViiServiceSubmissionBackend
@@ -2272,5 +2316,25 @@ export class AnnexViiServiceSubmissionBackend
         statusCode: response.error.statusCode,
       });
     }
+  }
+
+  async getNumberOfSubmissions(
+    accountId: string
+  ): Promise<NumberOfSubmissions> {
+    let response: GetNumberOfSubmissionsResponse;
+    try {
+      response = await this.client.getNumberOfSubmissions({ accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 }

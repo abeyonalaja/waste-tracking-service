@@ -192,6 +192,18 @@ export type GetDraftByIdRequest = IdRequest & AccountIdRequest;
 export type GetDraftByIdResponse = Response<DraftSubmission>;
 export const getDraftById: Method = { name: 'getDraftById', httpVerb: 'POST' };
 
+export type NumberOfSubmissions = {
+  complete: number;
+  incomplete: number;
+  completeWithEstimates: number;
+};
+export type GetNumberOfSubmissionsRequest = AccountIdRequest;
+export type GetNumberOfSubmissionsResponse = Response<NumberOfSubmissions>;
+export const getNumberOfSubmissions: Method = {
+  name: 'getNumberOfSubmissions',
+  httpVerb: 'POST',
+};
+
 export type CreateDraftRequest = AccountIdRequest & {
   reference: CustomerReference;
 };

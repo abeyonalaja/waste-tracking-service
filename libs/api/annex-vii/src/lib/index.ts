@@ -37,6 +37,7 @@ export {
   getDraftRecoveryFacilityDetails,
   setDraftRecoveryFacilityDetails,
   deleteDraftRecoveryFacilityDetails,
+  getNumberOfSubmissions,
 } from './submission.dto';
 
 export {
@@ -169,6 +170,9 @@ export type {
   GetDraftSubmissionDeclarationByIdResponse,
   SetDraftSubmissionDeclarationByIdRequest,
   SetDraftSubmissionDeclarationByIdResponse,
+  GetNumberOfSubmissionsRequest,
+  GetNumberOfSubmissionsResponse,
+  NumberOfSubmissions,
 } from './submission.dto';
 
 export type {

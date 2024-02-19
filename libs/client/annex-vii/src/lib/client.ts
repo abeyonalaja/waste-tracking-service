@@ -156,6 +156,8 @@ import {
   setTemplateWasteDescriptionById,
   GetNumberOfTemplatesRequest,
   GetNumberOfTemplatesResponse,
+  GetNumberOfSubmissionsRequest,
+  GetNumberOfSubmissionsResponse,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -897,5 +899,16 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as DeleteDraftRecoveryFacilityDetailsResponse;
+  }
+
+  async getNumberOfSubmissions(
+    req: GetNumberOfSubmissionsRequest
+  ): Promise<GetNumberOfSubmissionsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      this.getNumberOfSubmissions.name,
+      HttpMethod.POST,
+      req
+    )) as GetNumberOfSubmissionsResponse;
   }
 }

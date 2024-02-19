@@ -1431,4 +1431,22 @@ export default class DraftController extends BaseController {
       return fromBoom(Boom.internal());
     }
   };
+
+  getNumberOfSubmissions: Handler<
+    api.GetNumberOfSubmissionsRequest,
+    api.GetNumberOfSubmissionsResponse
+  > = async ({ accountId }) => {
+    try {
+      return success(
+        await this.repository.getNumberOfSubmissions(accountId)
+      ) as api.GetNumberOfSubmissionsResponse;
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

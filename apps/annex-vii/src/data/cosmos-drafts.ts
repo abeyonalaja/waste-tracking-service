@@ -14,6 +14,7 @@ import {
   DraftSubmissionSummaryPage,
   SubmissionBase,
   Submission,
+  NumberOfSubmissions,
 } from '../model';
 import { DraftRepository } from './repository';
 import {
@@ -448,5 +449,83 @@ export default class CosmosDraftRepository
       throw Boom.internal();
     }
     return submission;
+  }
+
+  async getNumberOfSubmissions(
+    accountId: string
+  ): Promise<NumberOfSubmissions> {
+    const numberOfSubmissions: NumberOfSubmissions = {
+      complete: 0,
+      completeWithEstimates: 0,
+      incomplete: 0,
+    };
+
+    const completeQuerySpec: SqlQuerySpec = {
+      query: `SELECT value count(c.id) FROM c
+              WHERE
+                c["value"].accountId = @accountId
+                and c["value"].submissionState.status in("SubmittedWithEstimates", "UpdatedWithActuals", "SubmittedWithActuals")`,
+      parameters: [
+        {
+          name: '@accountId',
+          value: accountId,
+        },
+      ],
+    };
+
+    const incompleteQuerySpec: SqlQuerySpec = {
+      query: `SELECT value count(c.id) FROM c
+              WHERE
+                c["value"].accountId = @accountId
+                and c["value"].submissionState.status = "InProgress"`,
+      parameters: [
+        {
+          name: '@accountId',
+          value: accountId,
+        },
+      ],
+    };
+
+    const completeWithEstimatesQuerySpec: SqlQuerySpec = {
+      query: `SELECT value count(c.id) FROM c
+                WHERE
+                  c["value"].accountId = @accountId
+                  and c["value"].submissionState.status = "SubmittedWithEstimates"`,
+      parameters: [
+        {
+          name: '@accountId',
+          value: accountId,
+        },
+      ],
+    };
+
+    const completeResultsPromise = this.cosmosDb
+      .container(this.draftContainerName)
+      .items.query(completeQuerySpec)
+      .fetchNext();
+
+    const incompleteResultsPromise = this.cosmosDb
+      .container(this.draftContainerName)
+      .items.query(incompleteQuerySpec)
+      .fetchNext();
+
+    const completeWithEstimatesResultsPromise = this.cosmosDb
+      .container(this.draftContainerName)
+      .items.query(completeWithEstimatesQuerySpec)
+      .fetchNext();
+
+    const [completeResults, incompleteResults, completeWithEstimatesResults] =
+      await Promise.all([
+        completeResultsPromise,
+        incompleteResultsPromise,
+        completeWithEstimatesResultsPromise,
+      ]);
+
+    numberOfSubmissions.complete = completeResults.resources[0];
+    numberOfSubmissions.incomplete = incompleteResults.resources[0];
+    numberOfSubmissions.completeWithEstimates =
+      completeWithEstimatesResults.resources[0];
+
+    return numberOfSubmissions;
   }
 }

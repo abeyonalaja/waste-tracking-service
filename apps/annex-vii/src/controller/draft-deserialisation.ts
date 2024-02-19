@@ -22,6 +22,7 @@ import {
   submissionBaseSchema,
   GetDraftSubmissionConfirmationByIdRequest,
   GetDraftSubmissionDeclarationByIdRequest,
+  GetNumberOfSubmissionsRequest,
 } from '@wts/api/annex-vii';
 import Ajv from 'ajv/dist/jtd';
 
@@ -34,6 +35,11 @@ export const getDraftsRequest = ajv.compileParser<GetDraftsRequest>(
 export const getDraftByIdRequest = ajv.compileParser<GetDraftByIdRequest>(
   submissionSchema.getDraftByIdRequest
 );
+
+export const getNumberOfSubmissionsRequest =
+  ajv.compileParser<GetNumberOfSubmissionsRequest>(
+    submissionSchema.getNumberOfSubmissionsRequest
+  );
 
 export const createDraftRequest = ajv.compileParser<CreateDraftRequest>(
   submissionSchema.createDraftRequest

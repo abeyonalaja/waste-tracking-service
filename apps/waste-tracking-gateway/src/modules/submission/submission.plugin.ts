@@ -1049,6 +1049,26 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'GET',
+      path: '/numberOfSubmissions',
+      handler: async function (h) {
+        try {
+          const value = await backend.getNumberOfSubmissions(
+            h.auth.credentials.accountId as string
+          );
+          return value as dto.GetNumberOfSubmissionsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

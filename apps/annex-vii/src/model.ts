@@ -22,3 +22,4 @@ export type Template = api.Template;
 export type TemplateSummary = api.TemplateSummary;
 export type TemplateSummaryPage = api.TemplateSummaryPage;
 export type TemplatePageMetadata = api.TemplatePageMetadata;
+export type NumberOfSubmissions = api.NumberOfSubmissions;
