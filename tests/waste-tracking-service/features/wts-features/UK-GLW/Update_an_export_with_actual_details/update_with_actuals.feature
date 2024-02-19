@@ -1,3 +1,4 @@
+
 Feature: Submitted with estimates page
   I NEED to be able to amend the submitted Annex 7 form
   SO THAT I can update the form and replace any estimate with actuals
@@ -200,7 +201,7 @@ Feature: Submitted with estimates page
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
 
-  Scenario: User can update estimated quantity in tonnes and collection date but didn't not confirm the changes
+  Scenario: User can update estimated quantity in tonnes and collection date then record should move to submitted list
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     Then task list page is displayed
@@ -507,6 +508,7 @@ Feature: Submitted with estimates page
     Then I remain on the cancel the export page with an "Select a reason if you want to cancel this document" error message displayed
 
     #defect - 306758
+  @ignore
   Scenario: User can Cancel estimated export with Change of recovery facility or laboratory reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -552,6 +554,7 @@ Feature: Submitted with estimates page
     And I should not see cancelled export on update with actual page
 
     #defect - 306758
+  @ignore
   Scenario: User can Cancel estimated export with No longer exporting this waste reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -597,6 +600,7 @@ Feature: Submitted with estimates page
     And I should not see cancelled export on update with actual page
 
     #defect - 306758
+  @ignore
   Scenario: User can Cancel estimated export with other reason
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

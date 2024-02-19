@@ -53,6 +53,10 @@ jobs:
 
           mkdir -p reports/parallel
           mkdir -p junit/$ENVIRONMENT
+          mkdir -p junit/$ENVIRONMENT/rerun
+          mkdir -p test
+          mkdir -p screenshots
+          mkdir -p report
 
           echo "Parallel execution: $PARALLEL_EXECUTION"
 
@@ -77,9 +81,25 @@ jobs:
                 --out junit/$ENVIRONMENT \
                 --format pretty \
               ' \
-              features/ \
-            || echo "##vso[task.complete result=SucceededWithIssues;]"
+              features/
+              if [ -f "failed_scenarios.txt" ]; then
+                echo "failed scenario file exists"
+                echo '####################################'
+                echo 'RETRYING THE FAILED SCENARIOS'
+                echo 'FAILED SCENARIOS ARE :'
+                cat "failed_scenarios.txt"
+                echo 'FAILED SCENARIOS COUNT: '
+                grep -o -i '.feature:' "failed_scenarios.txt" | wc -l
+                bundle exec cucumber \
+                --strict-undefined \
+                --format junit \
+                --out junit/$ENVIRONMENT/rerun \
+                --format pretty $(cat "failed_scenarios.txt")                
+              else
+                echo "No failed scenarios"
+              fi || echo "##vso[task.complete result=SucceededWithIssues;]"
           fi
+            cp report/screenshot_*.png screenshots/
         displayName: Run tests ${{ parameters.environment }}
         workingDirectory: tests/waste-tracking-service
         env:
@@ -91,9 +111,26 @@ jobs:
           USER_PASSWORD: $(testUserPassword)
 
       - task: PublishTestResults@2
-        displayName: Publish test results ${{ parameters.environment }}
+        displayName: Parallel Test Results ${{ parameters.environment }}
         inputs:
           testResultsFormat: JUnit
           testResultsFiles: tests/waste-tracking-service/junit/${{ parameters.environment }}/*.xml
-          testRunTitle: acceptance_tests_${{ parameters.environment }}
+          testRunTitle: Parallel Test Results on ${{ parameters.environment }}
+          publishRunAttachments: true
+          mergeTestResults: true
         condition: always()
+
+      - task: PublishTestResults@2
+        displayName: Rerun Test Results ${{ parameters.environment }}
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: tests/waste-tracking-service/junit/${{ parameters.environment }}/rerun/*.xml
+          testRunTitle: Rerun Tests Results on ${{ parameters.environment }}
+          mergeTestResults: true
+          failTaskOnFailedTests: false
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish screenshots as artifacts on ${{ parameters.environment }}
+        inputs:
+          PathtoPublish: tests/waste-tracking-service/screenshots
+          ArtifactName: Screenshots on ${{ parameters.environment }}

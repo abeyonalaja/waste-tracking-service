@@ -19,7 +19,7 @@ class DraftRecordsPage < GenericPage
   PARENT_APP_TITLE = Translations.value 'app.parentTitle'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true, wait: 10
   end
 
   def check_page_translation

@@ -13,10 +13,12 @@ Given(/^I login to waste tracking portal$/) do
 end
 
 Then(/^I can see all the sections$/) do
-  expect(page).to have_css 'h2', text: Translations.value('exportJourney.submitAnExport.title'), exact_text: true
+  expect(page).to have_css 'h2', text: Translations.value('exportJourney.exportHome.card.createRecord'), exact_text: true
   expect(page).to have_css 'h2', text: Translations.value('exportJourney.exportHome.card.update'), exact_text: true
   expect(page).to have_css 'h2', text: Translations.value('exportJourney.exportHome.card.submitted'), exact_text: true
   expect(page).to have_css 'h2', text: Translations.value('exportJourney.exportHome.card.templates'), exact_text: true
+  expect(page).to have_css 'h2', text: Translations.value('export.homepage.multiples.guidance.title'), exact_text: true
+
 end
 
 And(/^I can see links for each sections$/) do

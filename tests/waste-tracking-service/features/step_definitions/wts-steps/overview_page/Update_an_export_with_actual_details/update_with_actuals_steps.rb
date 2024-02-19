@@ -16,6 +16,7 @@ end
 
 And(/^I should see correct date and waste code and transaction reference$/) do
   HelperMethods.wait_for_a_sec
+  UpdateWithActualPage.new.check_page_displayed
   expect(UpdateWithActualPage.new.application_ref.text).to eq TestStatus.test_status(:application_reference_number)
   expect(UpdateWithActualPage.new.export_date.text).to eq HelperMethods.current_date_format Date.today
   expect(UpdateWithActualPage.new.transaction_number.text).to eq TestStatus.test_status(:export_transaction_number)

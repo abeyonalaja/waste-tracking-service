@@ -1,3 +1,4 @@
+
 Feature: Exporter details page
   AS A waste producer
   I NEED to add the exporter’s details

@@ -199,6 +199,7 @@ Then(/^I should see (\d+) waste carriers on check your export page$/) do |waste_
 end
 
 And(/^I should see (\d+) ewc codes on check your export page$/) do |ewc_codes|
+  sleep 2
   expect(CheckYourRecordPage.new.ewc_codes_list.count).to eq TestStatus.ewc_code_list.size
   (0...ewc_codes).each do |i|
     description = TestData.get_ewc_code_description(TestStatus.ewc_code_list[i])

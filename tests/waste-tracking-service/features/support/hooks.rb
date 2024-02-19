@@ -28,7 +28,7 @@ end
 
 After do |scenario|
   if scenario.failed?
-    File.open('failed_scenarios.txt', 'a+') do |f|
+    File.open("#{File.dirname(__FILE__)}/../../failed_scenarios.txt", 'a+') do |f|
       f.write(scenario.location)
       f.write(' ')
       f.close
@@ -36,8 +36,16 @@ After do |scenario|
     Log.console("Failed scenario is #{scenario.name}")
     Log.warn("Test status report: #{JSON.pretty_generate(TestStatus.test_status)}")
     Log.warn("Error page URL: #{URI.parse(page.current_url)}")
+    base_url = ENV['SYSTEM_TASKDEFINITIONSURI'] || ''
     png_files = Dir.glob(File.join('report', 'screenshot_*.png'))
     attach "#{png_files}", 'image/png'
+
+    image_urls = png_files.map { |file| "#{base_url}/report/#{File.basename(file)}" }
+
+    # Attach screenshots with full image URLs
+    image_urls.each do |url|
+      attach url, 'image/png'
+    end
   end
 end
 

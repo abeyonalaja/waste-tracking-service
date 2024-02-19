@@ -1,3 +1,4 @@
+
 Feature: Waste collection details page
   AS A waste producer/broker
   I NEED to add waste collection details

@@ -1,3 +1,4 @@
+
 Feature: Create template page
   AS A waste producer/broker
   I NEED to make use of an existing template

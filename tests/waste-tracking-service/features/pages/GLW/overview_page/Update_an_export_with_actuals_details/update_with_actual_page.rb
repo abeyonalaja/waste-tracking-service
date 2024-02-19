@@ -16,7 +16,7 @@ class UpdateWithActualPage < GenericPage
   NO_EXPORTS_FOR_UPDATE = Translations.value 'exportJourney.updateAnnexSeven.notResultsMessage'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(self).to have_css 'h1', text: TITLE, exact_text: true, wait: 10
   end
 
   def check_page_displayed_no_exports

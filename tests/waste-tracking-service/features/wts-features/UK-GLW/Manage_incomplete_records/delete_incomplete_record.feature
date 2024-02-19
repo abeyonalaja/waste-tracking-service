@@ -1,3 +1,4 @@
+
 Feature: Delete incomplete records page
   AS A waste practitioner
   I NEED to be able to delete a draft export
