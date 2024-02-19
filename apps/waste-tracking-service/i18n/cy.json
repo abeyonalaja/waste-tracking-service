@@ -412,7 +412,7 @@
   "exportJourney.ewc.maxReached": "You have added the maximum number of EWC codes.",
   "exportJourney.validation.selectReference": "Select yes if you want to add a reference",
   "exportJourney.downloadPDFLinkText": "download the Annex VII records created from this export (PDF, 2 pages)",
-  "feedback.title": "Give feedback on Green list waste movement service",
+  "feedback.title": "Give feedback on the Create a green list waste movement record service",
   "feedback.textValidation": "Character count exceeded",
   "templates": "Templates",
   "templates.template": "Template",
