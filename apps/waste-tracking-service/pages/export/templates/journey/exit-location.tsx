@@ -100,7 +100,7 @@ const ExitLocation = () => {
             if (data !== undefined) {
               dispatchPointOfExitPage({
                 type: 'DATA_FETCH_SUCCESS',
-                payload: data.exitLocation,
+                payload: data.values,
               });
             }
           });
@@ -154,7 +154,7 @@ const ExitLocation = () => {
               headers: apiConfig,
               body: JSON.stringify({
                 status: 'Complete',
-                exitLocation: pointOfExitPage.data,
+                values: pointOfExitPage.data,
               }),
             }
           )
