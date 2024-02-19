@@ -47,7 +47,7 @@ export function ValidationSuccess({
         id="success-banner-csv-upload"
         headingText={t(
           isSecondForm
-            ? 'multiples.success.heading.afterCorrection'
+            ? 'multiples.success.heading.afterCorrection_one'
             : 'multiples.success.heading',
           {
             count: uploadCount || 0,
@@ -61,6 +61,7 @@ export function ValidationSuccess({
             e.preventDefault();
             setShowDeclaration(true);
           }}
+          id="continueButton"
         >
           {t('multiples.success.submitButton')}
         </GovUK.Button>

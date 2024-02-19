@@ -40,6 +40,7 @@ type ValidationErrorsProps = {
   errors: ValidationError[] | null;
   setValidationResult: SetValidationResult;
   setUploadId: SetUploadId;
+  isSecondForm: boolean;
   setIsSecondForm: SetIsSecondForm;
   validationErrors: ValidationErrorsType;
   setValidationErrors: SetValidationErrors;
@@ -49,6 +50,7 @@ export function ValidationErrors({
   errors,
   setValidationResult,
   setUploadId,
+  isSecondForm,
   setIsSecondForm,
   validationErrors,
   setValidationErrors,
@@ -173,7 +175,7 @@ export function ValidationErrors({
             <UploadForm
               setUploadId={setUploadId}
               setFilename={setValidationResult}
-              isSecondForm={false}
+              isSecondForm={isSecondForm}
               setIsSecondForm={setIsSecondForm}
               validationErrors={validationErrors}
               setValidationErrors={setValidationErrors}

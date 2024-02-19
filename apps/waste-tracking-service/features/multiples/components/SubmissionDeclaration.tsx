@@ -84,7 +84,9 @@ export function SubmissionDeclaration({
         <ListItem>{t('multiples.submit.list.itemFour')}</ListItem>
       </UnorderedList>
       <form onSubmit={handleSubmission}>
-        <Button type="submit">{t('multiples.submit.button')}</Button>
+        <Button type="submit" id="submitButton">
+          {t('multiples.submit.button')}
+        </Button>
       </form>
     </div>
   );

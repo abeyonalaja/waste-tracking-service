@@ -68,6 +68,10 @@ export function ValidationProcess({
     if (uploadStatus === 'Submitted' || uploadStatus === 'FailedValidation') {
       setValidationResult(uploadStatus);
 
+      if (uploadStatus === 'FailedValidation') {
+        setIsSecondForm(true);
+      }
+
       if (uploadStatus === 'Submitted') {
         setUploadCount(q.state.data?.data.state.submissions.length);
       }
@@ -117,6 +121,7 @@ export function ValidationProcess({
             errors={data.data.state.errors}
             setValidationResult={setValidationResult}
             setUploadId={setUploadId}
+            isSecondForm={isSecondForm}
             setIsSecondForm={setIsSecondForm}
             validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
