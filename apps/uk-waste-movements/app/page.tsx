@@ -1,12 +1,13 @@
-import { useTranslations } from 'next-intl';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 
 export const metadata = {
   title: 'UK waste movements',
 };
 
-export default function Index() {
-  const t = useTranslations('startPage');
+export default async function Index() {
+  const t = function (text: string) {
+    return text;
+  };
   return (
     <>
       <GovUK.GridRow>
@@ -39,7 +40,6 @@ export default function Index() {
           </GovUK.Paragraph>
           <GovUK.List type={'ordered'}>
             <GovUK.ListItem>
-              {' '}
               {t('beforeYouStart.listElementOne')}
             </GovUK.ListItem>
             <GovUK.ListItem>

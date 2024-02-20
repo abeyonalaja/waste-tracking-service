@@ -1,7 +1,6 @@
 import React from 'react';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { useTranslations } from 'next-intl';
-import '../main.scss';
+import './main.scss';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +11,9 @@ export default function RootLayout({
   children,
   params: { locale },
 }: LayoutProps) {
-  const t = useTranslations('app');
+  const t = function (text: string) {
+    return text;
+  };
   return (
     <html lang={locale} className={'govuk-template'}>
       <body className={'govuk-template__body'}>
