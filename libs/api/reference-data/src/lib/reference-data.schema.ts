@@ -8,7 +8,7 @@ export const errorResponseValue: SchemaObject = {
   },
 };
 
-export const getWasteCodes: SchemaObject = {
+export const getWasteCodesResponse: SchemaObject = {
   properties: {
     success: {
       type: 'boolean',
@@ -43,42 +43,7 @@ export const getWasteCodes: SchemaObject = {
   },
 };
 
-export const GetWasteCodesResponse: SchemaObject = {
-  properties: {
-    success: {
-      type: 'boolean',
-    },
-  },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      elements: {
-        properties: {
-          type: { type: 'string' },
-          values: {
-            elements: {
-              properties: {
-                code: { type: 'string' },
-                value: {
-                  properties: {
-                    description: {
-                      properties: {
-                        en: { type: 'string' },
-                        cy: { type: 'string' },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const getEWCCodes: SchemaObject = {
+export const getEWCCodesResponse: SchemaObject = {
   properties: {
     success: {
       type: 'boolean',
@@ -106,35 +71,7 @@ export const getEWCCodes: SchemaObject = {
   },
 };
 
-export const GetEWCCodesResponse: SchemaObject = {
-  properties: {
-    success: {
-      type: 'boolean',
-    },
-  },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      elements: {
-        properties: {
-          code: { type: 'string' },
-          value: {
-            properties: {
-              description: {
-                properties: {
-                  en: { type: 'string' },
-                  cy: { type: 'string' },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const getCountries: SchemaObject = {
+export const getCountriesResponse: SchemaObject = {
   properties: {
     success: {
       type: 'boolean',
@@ -152,25 +89,7 @@ export const getCountries: SchemaObject = {
   },
 };
 
-export const GetCountriesResponse: SchemaObject = {
-  properties: {
-    success: {
-      type: 'boolean',
-    },
-  },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      elements: {
-        properties: {
-          name: { type: 'string' },
-        },
-      },
-    },
-  },
-};
-
-export const getRecoveryCodes: SchemaObject = {
+export const getRecoveryCodesResponse: SchemaObject = {
   properties: {
     success: {
       type: 'boolean',
@@ -199,64 +118,7 @@ export const getRecoveryCodes: SchemaObject = {
   },
 };
 
-export const GetRecoveryCodesResponse: SchemaObject = {
-  properties: {
-    success: {
-      type: 'boolean',
-    },
-  },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      elements: {
-        properties: {
-          code: { type: 'string' },
-          value: {
-            properties: {
-              description: {
-                properties: {
-                  en: { type: 'string' },
-                  cy: { type: 'string' },
-                },
-              },
-              interim: { type: 'boolean' },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const getDisposalCodes: SchemaObject = {
-  properties: {
-    success: {
-      type: 'boolean',
-    },
-  },
-  optionalProperties: {
-    error: errorResponseValue,
-    value: {
-      elements: {
-        properties: {
-          code: { type: 'string' },
-          value: {
-            properties: {
-              description: {
-                properties: {
-                  en: { type: 'string' },
-                  cy: { type: 'string' },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const GetDisposalCodesResponse: SchemaObject = {
+export const getDisposalCodesResponse: SchemaObject = {
   properties: {
     success: {
       type: 'boolean',

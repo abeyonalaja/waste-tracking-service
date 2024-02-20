@@ -7,18 +7,18 @@ import {
   GetWasteCodesResponse,
 } from './reference-data.dto';
 import {
-  getCountries,
-  getDisposalCodes,
-  getEWCCodes,
-  getRecoveryCodes,
-  getWasteCodes,
+  getCountriesResponse,
+  getDisposalCodesResponse,
+  getEWCCodesResponse,
+  getRecoveryCodesResponse,
+  getWasteCodesResponse,
 } from './reference-data.schema';
 
 const ajv = new Ajv();
 
 describe('Reference-Data tests', () => {
   describe('GetWasteCodesResponse', () => {
-    const validate = ajv.compile<GetWasteCodesResponse>(getWasteCodes);
+    const validate = ajv.compile<GetWasteCodesResponse>(getWasteCodesResponse);
 
     it('getWasteCodes is compatible with success value', () => {
       const value: GetWasteCodesResponse = {
@@ -57,7 +57,7 @@ describe('Reference-Data tests', () => {
   });
 
   describe('GetEWCCodesResponse', () => {
-    const validate = ajv.compile<GetEWCCodesResponse>(getEWCCodes);
+    const validate = ajv.compile<GetEWCCodesResponse>(getEWCCodesResponse);
 
     it('getEWCCodes is compatible with success value', () => {
       const value: GetEWCCodesResponse = {
@@ -91,7 +91,7 @@ describe('Reference-Data tests', () => {
   });
 
   describe('GetCountriesResponse', () => {
-    const validate = ajv.compile<GetCountriesResponse>(getCountries);
+    const validate = ajv.compile<GetCountriesResponse>(getCountriesResponse);
 
     it('getCountries is compatible with success value', () => {
       const value: GetCountriesResponse = {
@@ -119,7 +119,9 @@ describe('Reference-Data tests', () => {
   });
 
   describe('GetRecoveryCodesResponse', () => {
-    const validate = ajv.compile<GetRecoveryCodesResponse>(getRecoveryCodes);
+    const validate = ajv.compile<GetRecoveryCodesResponse>(
+      getRecoveryCodesResponse
+    );
 
     it('getRecoveryCodes is compatible with success value', () => {
       const value: GetRecoveryCodesResponse = {
@@ -154,7 +156,9 @@ describe('Reference-Data tests', () => {
   });
 
   describe('GetDisposalCodesResponse', () => {
-    const validate = ajv.compile<GetDisposalCodesResponse>(getDisposalCodes);
+    const validate = ajv.compile<GetDisposalCodesResponse>(
+      getDisposalCodesResponse
+    );
 
     it('getDisposalCodes is compatible with success value', () => {
       const value: GetDisposalCodesResponse = {

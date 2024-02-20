@@ -106,6 +106,7 @@
     "i18next": "^23.7.16",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
+    "lru-cache": "^10.2.0",
     "negotiator": "^0.6.3",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
