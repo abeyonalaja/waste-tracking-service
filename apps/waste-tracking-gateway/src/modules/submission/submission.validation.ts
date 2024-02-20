@@ -471,7 +471,7 @@ export const validatePutExitLocationRequest =
       },
       Complete: {
         properties: {
-          values: { ref: 'exitLocation' },
+          exitLocation: { ref: 'exitLocation' },
         },
       },
     },
