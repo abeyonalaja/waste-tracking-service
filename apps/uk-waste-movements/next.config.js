@@ -1,6 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
-const isProd = process.env.NODE_ENV === 'production';
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -11,7 +10,7 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  assetPrefix: isProd ? '/ukwm' : undefined,
+  basePath: '/ukwm',
 };
 
 const plugins = [
