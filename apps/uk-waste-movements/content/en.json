@@ -55,5 +55,16 @@
       "linkThree": "DEARA ( Department of Agriculture, Environment and Rural Affairs) waste policy tracker",
       "linkFour": "Business Cymru Waste Legislation"
     }
+  },
+  "accountPage": {
+    "company": "{company}",
+    "name": "{name}",
+    "titleTwo": "Move, export or import waste",
+    "cardOneTitle": "Move waste in the UK",
+    "cardOneContent": "Create a digital waste record to move and track hazardous and non-hazardous waste for processing and recovery around the UK.",
+    "cardTwoTitle": "Export waste from the UK",
+    "cardTwoContent": "Create an Annex VII and inform environmental agency officers if you plan to export green list waste.",
+    "cardThreeTitle": "Import waste to the UK",
+    "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
   }
 }

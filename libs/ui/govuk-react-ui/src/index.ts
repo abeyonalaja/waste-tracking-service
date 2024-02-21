@@ -24,6 +24,7 @@ export { Panel } from './components/Panel';
 export { Paragraph } from './components/Paragraph';
 export { PhaseBanner } from './components/PhaseBanner';
 export { Radios } from './components/Radios';
+export { SectionBreak } from './components/SectionBreak';
 export { SkipLink } from './components/SkipLink';
 export { Tag } from './components/Tag';
 export { Textarea } from './components/Textarea';

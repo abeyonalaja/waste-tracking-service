@@ -1,14 +1,14 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface GridRowProps {
   children?: ReactNode;
   testId?: string;
-};
+}
 
-export const GridRow = ({ children, testId }: Props) => {
+export function GridRow({ children, testId }: GridRowProps) {
   return (
     <div className="govuk-grid-row" data-testid={testId}>
       {children}
     </div>
   );
-};
+}

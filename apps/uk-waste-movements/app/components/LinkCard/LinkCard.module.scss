@@ -1,0 +1,40 @@
+@import 'node_modules/govuk-frontend/dist/govuk/base';
+
+.card {
+  box-sizing: border-box;
+  padding: 15px;
+  background-color: govuk-colour('light-grey');
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  text-decoration: none;
+  flex-direction: column;
+  border: 1px solid $govuk-border-colour;
+  margin-bottom: 20px;
+  &:hover {
+    background-color: $govuk-link-colour;
+    border-color: $govuk-link-colour;
+    * {
+      color: #fff;
+    }
+  }
+  &:focus {
+    @include govuk-focused-text;
+    border-color: transparent;
+    * {
+      color: inherit;
+    }
+  }
+  @include govuk-media-query(tablet) {
+    padding: 20px;
+  }
+}
+
+.card-title {
+  color: $govuk-link-colour;
+  margin: 5px 0 10px;
+  text-decoration: none;
+  @include govuk-media-query(tablet) {
+    min-height: 3em;
+  }
+}
