@@ -6,7 +6,6 @@ class GlwUploadSuccessPage < GenericPage
   include ErrorBox
 
   HINT_TEXT = Translations.value 'multiples.success.intro'
-
   def check_page_displayed
     expect(self).to have_text 'You have no errors in your 1 Annex VII record and you can submit it.'
   end

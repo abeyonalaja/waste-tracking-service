@@ -55,6 +55,26 @@ module UserData
         businessUnitId: '',
         userId: '213944161257'
       },
+      USER5: {
+        businessName: 'WTS USER DEV 5',
+        businessUnitId: '',
+        userId: '547223973558'
+      },
+      USER6: {
+        businessName: 'WTS USER DEV 6',
+        businessUnitId: '',
+        userId: '344330805112'
+      },
+      USER7: {
+        businessName: 'WTS USER DEV 7',
+        businessUnitId: '',
+        userId: '836363665373'
+      },
+      USER8: {
+        businessName: 'WTS USER DEV 8',
+        businessUnitId: '',
+        userId: '910505857560'
+      },
       EMAIL_USER1: {
         businessName: '',
         businessUnitId: '',
@@ -82,6 +102,26 @@ module UserData
         businessName: 'WTS USER DEV 4',
         businessUnitId: '',
         userId: '213944161257'
+      },
+      USER5: {
+        businessName: 'WTS USER DEV 5',
+        businessUnitId: '',
+        userId: '547223973558'
+      },
+      USER6: {
+        businessName: 'WTS USER DEV 6',
+        businessUnitId: '',
+        userId: '344330805112'
+      },
+      USER7: {
+        businessName: 'WTS USER DEV 7',
+        businessUnitId: '',
+        userId: '836363665373'
+      },
+      USER8: {
+        businessName: 'WTS USER DEV 8',
+        businessUnitId: '',
+        userId: '910505857560'
       },
       EMAIL_USER1: {
         businessName: '',

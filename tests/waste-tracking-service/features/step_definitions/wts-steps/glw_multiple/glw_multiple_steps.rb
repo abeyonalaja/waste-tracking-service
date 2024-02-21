@@ -64,3 +64,19 @@ end
 And(/^I should see cancel glw csv upload page is correctly translated$/) do
   GlwCancelUploadPage.new.check_page_translated
 end
+
+Then(/^I should see glw csv declaration page is displayed$/) do
+  GlwCsvDeclarationPage.new.check_page_displayed 1
+end
+
+And(/^I should see glw csv declaration page is correctly translated$/) do
+  GlwCsvDeclarationPage.new.check_page_translation
+end
+
+Then(/^I should see glw csv submitted successful page$/) do
+  MultipleConfirmationUploadPage.new.check_page_displayed 1
+end
+
+And(/^I should see glw csv submitted successful page is correctly translated$/) do
+  MultipleConfirmationUploadPage.new.check_page_translation
+end

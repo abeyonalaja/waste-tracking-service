@@ -523,6 +523,7 @@
   "multiples.upload.button": "Upload",
   "multiples.cancel.confirmButton": "Confirm and cancel",
   "multiples.cancel.submitButton": "Continue to submit records",
+  "multiples.exportSubmitted.panelTitle": "{{count}} Annex VII record submitted",
   "nextPage": "Next page",
   "notApplicable": "Not applicable",
   "numberAdjective.1": "First",
