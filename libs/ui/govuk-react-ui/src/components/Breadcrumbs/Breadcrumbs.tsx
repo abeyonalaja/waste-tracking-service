@@ -3,12 +3,12 @@ interface breadcrumbLink {
   href?: string;
 }
 
-type Props = {
+interface BreadcrumbProps {
   items: Array<breadcrumbLink>;
   testId?: string;
-};
+}
 
-export const Breadcrumbs = ({ items, testId }: Props) => {
+export const Breadcrumbs = ({ items, testId }: BreadcrumbProps) => {
   return (
     <div className="govuk-breadcrumbs" data-testid={testId}>
       <ol className="govuk-breadcrumbs__list">

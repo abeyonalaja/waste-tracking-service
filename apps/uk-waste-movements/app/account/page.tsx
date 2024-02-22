@@ -1,23 +1,22 @@
-import { useTranslations } from 'next-intl';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { GridRow, LanguageSwitch, LinkCard } from '../../components/';
+import { GridRow, LinkCard } from '../components';
 
 export const metadata = {
   title: 'UK waste movements',
 };
 
 export default function Index() {
-  const t = useTranslations('accountPage');
+  const t = function (text: string) {
+    return text;
+  };
   return (
     <>
       <GovUK.GridRow>
         <GovUK.GridCol size="full">
-          <LanguageSwitch />
-          <GovUK.Caption size={'l'}>
-            {t('company', { company: 'Waste Producers Ltd' })}
-          </GovUK.Caption>
+          {/* <LanguageSwitch /> */}
+          <GovUK.Caption size={'l'}>{t('company')}</GovUK.Caption>
           <GovUK.Heading size={'l'} level={1}>
-            {t('name', { name: 'John Doe' })}
+            {t('name')}
           </GovUK.Heading>
           <GovUK.Heading size={'m'} level={2}>
             {t('titleTwo')}

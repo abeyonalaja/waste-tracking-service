@@ -66,5 +66,12 @@
     "cardTwoContent": "Create an Annex VII and inform environmental agency officers if you plan to export green list waste.",
     "cardThreeTitle": "Import waste to the UK",
     "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
+  },
+  "moveWastePage": {
+    "title": "Move waste in the UK",
+    "name": "{name}",
+    "titleTwo": "Move, export or import waste",
+    "cardOneTitle": "Start a new waste movement",
+    "cardOneContent": "Create multiple new waste movements"
   }
 }

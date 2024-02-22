@@ -110,7 +110,6 @@
     "negotiator": "^0.6.3",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
-    "next-intl": "^3.7.0",
     "parse-multipart-data": "^1.5.0",
     "puppeteer": "^21.7.0",
     "react": "^18.2.0",
