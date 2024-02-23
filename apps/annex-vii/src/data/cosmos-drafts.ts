@@ -455,16 +455,16 @@ export default class CosmosDraftRepository
     accountId: string
   ): Promise<NumberOfSubmissions> {
     const numberOfSubmissions: NumberOfSubmissions = {
-      complete: 0,
-      completeWithEstimates: 0,
+      completedWithActuals: 0,
+      completedWithEstimates: 0,
       incomplete: 0,
     };
 
-    const completeQuerySpec: SqlQuerySpec = {
+    const completedWithActualsQuerySpec: SqlQuerySpec = {
       query: `SELECT value count(c.id) FROM c
               WHERE
                 c["value"].accountId = @accountId
-                and c["value"].submissionState.status in("SubmittedWithEstimates", "UpdatedWithActuals", "SubmittedWithActuals")`,
+                and c["value"].submissionState.status in("UpdatedWithActuals", "SubmittedWithActuals")`,
       parameters: [
         {
           name: '@accountId',
@@ -486,7 +486,7 @@ export default class CosmosDraftRepository
       ],
     };
 
-    const completeWithEstimatesQuerySpec: SqlQuerySpec = {
+    const completedWithEstimatesQuerySpec: SqlQuerySpec = {
       query: `SELECT value count(c.id) FROM c
                 WHERE
                   c["value"].accountId = @accountId
@@ -499,9 +499,9 @@ export default class CosmosDraftRepository
       ],
     };
 
-    const completeResultsPromise = this.cosmosDb
+    const completedWithActualsResultsPromise = this.cosmosDb
       .container(this.draftContainerName)
-      .items.query(completeQuerySpec)
+      .items.query(completedWithActualsQuerySpec)
       .fetchNext();
 
     const incompleteResultsPromise = this.cosmosDb
@@ -509,22 +509,26 @@ export default class CosmosDraftRepository
       .items.query(incompleteQuerySpec)
       .fetchNext();
 
-    const completeWithEstimatesResultsPromise = this.cosmosDb
+    const completedWithEstimatesResultsPromise = this.cosmosDb
       .container(this.draftContainerName)
-      .items.query(completeWithEstimatesQuerySpec)
+      .items.query(completedWithEstimatesQuerySpec)
       .fetchNext();
 
-    const [completeResults, incompleteResults, completeWithEstimatesResults] =
-      await Promise.all([
-        completeResultsPromise,
-        incompleteResultsPromise,
-        completeWithEstimatesResultsPromise,
-      ]);
+    const [
+      completedWithActualsResults,
+      incompleteResults,
+      completedWithEstimatesResults,
+    ] = await Promise.all([
+      completedWithActualsResultsPromise,
+      incompleteResultsPromise,
+      completedWithEstimatesResultsPromise,
+    ]);
 
-    numberOfSubmissions.complete = completeResults.resources[0];
+    numberOfSubmissions.completedWithActuals =
+      completedWithActualsResults.resources[0];
     numberOfSubmissions.incomplete = incompleteResults.resources[0];
-    numberOfSubmissions.completeWithEstimates =
-      completeWithEstimatesResults.resources[0];
+    numberOfSubmissions.completedWithEstimates =
+      completedWithEstimatesResults.resources[0];
 
     return numberOfSubmissions;
   }

@@ -1393,9 +1393,9 @@ export class InMemorySubmissionBackend
     accountId: string
   ): Promise<NumberOfSubmissions> {
     const numberOfSubmissions: NumberOfSubmissions = {
-      complete: 0,
+      completedWithActuals: 0,
       incomplete: 0,
-      completeWithEstimates: 0,
+      completedWithEstimates: 0,
     };
 
     numberOfSubmissions.incomplete = [...this.submissions.keys()].filter(
@@ -1404,7 +1404,7 @@ export class InMemorySubmissionBackend
         (JSON.parse(i) as Submission).submissionState.status === 'InProgress'
     ).length;
 
-    numberOfSubmissions.completeWithEstimates = [
+    numberOfSubmissions.completedWithEstimates = [
       ...this.submissions.keys(),
     ].filter(
       (i) =>
@@ -1419,7 +1419,9 @@ export class InMemorySubmissionBackend
       'SubmittedWithActuals',
     ];
 
-    numberOfSubmissions.complete = [...this.submissions.keys()].filter(
+    numberOfSubmissions.completedWithActuals = [
+      ...this.submissions.keys(),
+    ].filter(
       (i) =>
         (JSON.parse(i) as SubmissionRef).accountId === accountId &&
         submittedStates.includes(

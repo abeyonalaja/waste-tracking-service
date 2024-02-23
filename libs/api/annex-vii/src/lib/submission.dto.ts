@@ -193,9 +193,9 @@ export type GetDraftByIdResponse = Response<DraftSubmission>;
 export const getDraftById: Method = { name: 'getDraftById', httpVerb: 'POST' };
 
 export type NumberOfSubmissions = {
-  complete: number;
+  completedWithActuals: number;
+  completedWithEstimates: number;
   incomplete: number;
-  completeWithEstimates: number;
 };
 export type GetNumberOfSubmissionsRequest = AccountIdRequest;
 export type GetNumberOfSubmissionsResponse = Response<NumberOfSubmissions>;

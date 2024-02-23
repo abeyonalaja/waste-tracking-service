@@ -150,9 +150,9 @@ export type SubmissionSummaryPage = {
 };
 
 export type NumberOfSubmissions = {
-  complete: number;
+  completedWithActuals: number;
+  completedWithEstimates: number;
   incomplete: number;
-  completeWithEstimates: number;
 };
 export type GetNumberOfSubmissionsRequest = AccountIdRequest;
 export type GetNumberOfSubmissionsResponse = NumberOfSubmissions;

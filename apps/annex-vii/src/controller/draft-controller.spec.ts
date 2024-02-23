@@ -147,9 +147,9 @@ describe(DraftController, () => {
     it('successfully returns number of submissions from repository', async () => {
       const accountId = faker.datatype.uuid();
       mockRepository.getNumberOfSubmissions.mockResolvedValue({
-        complete: 1,
+        completedWithActuals: 1,
         incomplete: 2,
-        completeWithEstimates: 3,
+        completedWithEstimates: 3,
       });
 
       const response = await subject.getNumberOfSubmissions({ accountId });
@@ -163,9 +163,9 @@ describe(DraftController, () => {
         accountId
       );
       expect(response.value).toEqual({
-        complete: 1,
+        completedWithActuals: 1,
         incomplete: 2,
-        completeWithEstimates: 3,
+        completedWithEstimates: 3,
       });
     });
   });

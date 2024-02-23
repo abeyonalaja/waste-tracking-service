@@ -444,9 +444,9 @@ describe('SubmissionPlugin', () => {
   describe('GET /submissions/numberOfSubmissions', () => {
     it('Responds 400 if invalid request is received from payload', async () => {
       mockBackend.getNumberOfSubmissions.mockResolvedValue({
-        complete: 0,
+        completedWithActuals: 0,
         incomplete: 1,
-        completeWithEstimates: 2,
+        completedWithEstimates: 2,
       });
 
       const options = {
