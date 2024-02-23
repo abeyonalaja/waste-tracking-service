@@ -1014,7 +1014,7 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for - countries the waste travel and countries transit page
+  Scenario: Check WTS Accessibility for - Countries the waste travel and countries transit page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Countries waste will travel through" link
@@ -1026,3 +1026,97 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
+  Scenario: Check WTS Accessibility for - Feedback page
+    Given I login to waste tracking portal
+    When I click the "feedback" link
+    Then the "Feedback Survey" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Multiple guidance page
+    Given I login to waste tracking portal
+    When I click the "How to create a multiple Annex VII record CSV template" link
+    Then the "Multiple Guidance" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Creating multiple Annex VII records page
+    Given I login to waste tracking portal
+    When I click the "Create multiple Annex VII records" link
+    Then the "Create multiple records" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - CSV error page
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload invalid glw csv
+    And I click the upload button
+    Then I should see glw csv error page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - CSV upload page
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload valid glw csv
+    And I click the upload button
+    Then I should see glw csv is successfully uploaded
+    And I should see glw csv upload page correctly translated
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - CSV declaration page
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload valid glw csv
+    And I click the upload button
+    Then I should see glw csv is successfully uploaded
+    And I should see glw csv upload page correctly translated
+    When I wait for a second
+    When I click the "Continue and submit all records" button
+    Then I should see glw csv declaration page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - CSV submitted successful page
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload valid glw csv
+    And I click the upload button
+    Then I should see glw csv is successfully uploaded
+    And I should see glw csv upload page correctly translated
+    When I wait for a second
+    When I click the "Continue and submit all records" button
+    Then I should see glw csv declaration page is displayed
+    When I click the "I confirm - submit all records" button
+    Then I should see glw csv submitted successful page
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - No csv file uploaded
+    Given I login to waste tracking portal
+    And I navigate to upload glw csv
+    When I upload invalid glw csv
+    And I click the upload button
+    Then I should see glw csv error page is displayed
+    And I click the upload button
+    Then I remain on the Glw upload error page with an "Select a file to upload" error message displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
