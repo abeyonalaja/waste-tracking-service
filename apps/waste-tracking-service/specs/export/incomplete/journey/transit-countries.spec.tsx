@@ -13,11 +13,12 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ status: 'NotStarted' }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ status: 'NotStarted' }),
+    }) as Promise<Response>
 );
 
 describe('Waste Transit Countries page', () => {
@@ -66,12 +67,16 @@ describe('Waste Transit Countries page', () => {
   });
 
   it('should show list page if countries are returned from the API', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({ status: 'Complete', values: ['Afghanistan (AF)'] }),
-      })
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              status: 'Complete',
+              values: ['Afghanistan (AF)'],
+            }),
+        }) as Promise<Response>
     );
 
     await act(async () => {

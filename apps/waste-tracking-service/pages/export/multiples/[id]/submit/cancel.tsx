@@ -1,54 +1,38 @@
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
+import { useQueryClient } from '@tanstack/react-query';
 import * as GovUK from 'govuk-react';
-import styled from 'styled-components';
+import { PageLayout } from 'features/multiples';
 import { Paragraph, SaveReturnButton, ButtonGroup } from 'components';
-import {
-  SetUploadId,
-  SetValidationResult,
-  SetShowCancelPrompt,
-  SetShowDeclaration,
-} from '../types';
 
-const BackLinkWrap = styled.div`
-  margin-top: -30px;
-  margin-bottom: 30px;
-`;
-
-type CancelSubmissionProps = {
-  setShowCancel: SetShowCancelPrompt;
-  setShowDeclaration: SetShowDeclaration;
-  setUploadId: SetUploadId;
-  setValidationResult: SetValidationResult;
-};
-
-export function CancelSubmissionPrompt({
-  setShowCancel,
-  setShowDeclaration,
-  setUploadId,
-  setValidationResult,
-}: CancelSubmissionProps) {
+export default function Cancel() {
+  const router = useRouter();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   return (
-    <>
-      <BackLinkWrap>
+    <PageLayout
+      breadCrumbs={
         <GovUK.BackLink
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setShowCancel(false);
+            router.back();
           }}
         >
           {t('Back')}
         </GovUK.BackLink>
-      </BackLinkWrap>
+      }
+    >
       <GovUK.Heading size={'L'}>{t('multiples.cancel.title')}</GovUK.Heading>
       <Paragraph>{t('multiples.cancel.intro')}</Paragraph>
       <ButtonGroup>
         <GovUK.Button
           onClick={() => {
-            setUploadId(null);
-            setValidationResult(null);
+            queryClient.removeQueries({
+              queryKey: ['multiples'],
+            });
+            router.push(`/export/multiples/`);
           }}
         >
           {t('multiples.cancel.confirmButton')}
@@ -56,13 +40,14 @@ export function CancelSubmissionPrompt({
         <SaveReturnButton
           onClick={(e) => {
             e.preventDefault();
-            setShowCancel(false);
-            setShowDeclaration(true);
+            router.back();
           }}
         >
           {t('multiples.cancel.submitButton')}
         </SaveReturnButton>
       </ButtonGroup>
-    </>
+    </PageLayout>
   );
 }
+
+Cancel.auth = true;

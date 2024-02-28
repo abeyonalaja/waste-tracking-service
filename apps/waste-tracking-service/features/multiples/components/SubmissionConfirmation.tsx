@@ -1,22 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import {
-  GridRow,
-  GridCol,
-  Panel,
-  H2,
-  UnorderedList,
-  ListItem,
-} from 'govuk-react';
+import { Panel, H2, UnorderedList, ListItem } from 'govuk-react';
 import { AppLink, Paragraph } from 'components';
 import { YELLOW, GREY_3, BLACK } from 'govuk-colours';
 import styled from 'styled-components';
 import Link from 'next/link';
-
-type SubmissionConfirmationProps = {
-  uploadId: string;
-  submissionCount: number;
-  pageCount?: number;
-};
 
 const LinkWrapper = styled.div`
   margin-top: 20px;
@@ -68,56 +55,57 @@ const StyledLinkAsButton = styled(Link)`
   }
 `;
 
+type SubmissionConfirmationProps = {
+  recordCount: number;
+  pageCount?: number;
+};
+
 export function SubmissionConfirmation({
-  submissionCount,
+  recordCount,
   pageCount = 200,
 }: SubmissionConfirmationProps) {
   const { t } = useTranslation();
 
   return (
     <>
-      <GridRow>
-        <GridCol setWidth="two-thirds">
-          <Panel
-            title={t('multiples.confirmation.title', {
-              count: submissionCount,
-              plural: submissionCount > 1 ? 's' : '',
-            })}
-          />
-          {/* TODO: Add link to actual page once backend capable */}
-          <LinkWrapper>
-            <AppLink href="" target="__blank">
-              {t('multiples.confirmation.detailsLink')}
-            </AppLink>
-          </LinkWrapper>
-          <H2 size="MEDIUM">{t('mulitples.confirmation.nextSteps')}</H2>
-          <Paragraph>{t('multiples.confirmation.stepsPrompt')}</Paragraph>
-          <UnorderedList>
-            <ListItem>{t('multiples.confirmation.stepOne')}</ListItem>
-            <ListItem>{t('multiples.confirmation.stepTwo')}</ListItem>
-            <ListItem>{t('multiples.confirmation.stepThree')}</ListItem>
-          </UnorderedList>
-          <H2 size="MEDIUM">{t('mulitples.confirmation.updateTitle')}</H2>
-          <Paragraph>{t('multiples.confirmation.estimatesPrompt')}</Paragraph>
-          <UnorderedList>
-            <ListItem>{t('multiples.confirmation.estimatesOne')}</ListItem>
-            <ListItem>{t('multiples.confirmation.estimatesTwo')}</ListItem>
-          </UnorderedList>
-          <Paragraph mb={7}>
-            <span>{t('multiples.confirmation.legalStatementp1')}</span>
-            {/* TODO: Add link to actual page once backend capable */}
-            <AppLink href="">
-              {t('multiples.confirmation.legalStatementLink', {
-                count: pageCount,
-              })}
-            </AppLink>
-            <span>{t('multiples.confirmation.legalStatementp2')}</span>
-          </Paragraph>
-          <StyledLinkAsButton href="/export">
-            {t('multiples.confirmation.returnButton')}
-          </StyledLinkAsButton>
-        </GridCol>
-      </GridRow>
+      <Panel
+        title={t('multiples.confirmation.title', {
+          count: recordCount,
+          plural: recordCount > 1 ? 's' : '',
+        })}
+      />
+      {/* TODO: Add link to actual page once backend capable */}
+      <LinkWrapper>
+        <AppLink href="" target="__blank">
+          {t('multiples.confirmation.detailsLink')}
+        </AppLink>
+      </LinkWrapper>
+      <H2 size="MEDIUM">{t('mulitples.confirmation.nextSteps')}</H2>
+      <Paragraph>{t('multiples.confirmation.stepsPrompt')}</Paragraph>
+      <UnorderedList>
+        <ListItem>{t('multiples.confirmation.stepOne')}</ListItem>
+        <ListItem>{t('multiples.confirmation.stepTwo')}</ListItem>
+        <ListItem>{t('multiples.confirmation.stepThree')}</ListItem>
+      </UnorderedList>
+      <H2 size="MEDIUM">{t('mulitples.confirmation.updateTitle')}</H2>
+      <Paragraph>{t('multiples.confirmation.estimatesPrompt')}</Paragraph>
+      <UnorderedList>
+        <ListItem>{t('multiples.confirmation.estimatesOne')}</ListItem>
+        <ListItem>{t('multiples.confirmation.estimatesTwo')}</ListItem>
+      </UnorderedList>
+      <Paragraph mb={7}>
+        <span>{t('multiples.confirmation.legalStatementp1')}</span>
+        {/* TODO: Add link to actual page once backend capable */}
+        <AppLink href="">
+          {t('multiples.confirmation.legalStatementLink', {
+            count: pageCount,
+          })}
+        </AppLink>
+        <span>{t('multiples.confirmation.legalStatementp2')}</span>
+      </Paragraph>
+      <StyledLinkAsButton href="/export">
+        {t('multiples.confirmation.returnButton')}
+      </StyledLinkAsButton>
     </>
   );
 }

@@ -516,7 +516,7 @@
   "multiples.guidance.bouncePage.button": "Continue",
   "multiples.errorSummaryPage.important": "Important",
   "multiples.errorSummaryPage.heading": "Correct errors and upload the amended file",
-  "multiples.errorSummaryPage.importantMessage": "You need to correct {{n}} errors before you can submit all your Annex VII records",
+  "multiples.errorSummaryPage.importantMessage": "You need to correct {{count}} errors before you can submit all your Annex VII records",
   "multiples.errorSummaryPage.leadParagraph": "You need to correct all errors in your file and upload it again. This will replace your previous upload.",
   "multiples.errorSummaryPage.linkParagraphStart": "Review the guidance on ",
   "multiples.errorSummaryPage.linkGuidanceText": "how to create multiple Annex VII records using the CSV template (opens in new tab)",

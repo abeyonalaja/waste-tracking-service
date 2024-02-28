@@ -23,3 +23,9 @@ export type ValidationErrorsType = {
 export type SetValidationErrors = Dispatch<
   SetStateAction<ValidationErrorsType>
 >;
+
+export type UploadErrorResponse = {
+  error: string;
+  message: string;
+  statusCode: number;
+};

@@ -1,107 +1,117 @@
 import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import apiClient from 'utils/api/apiClient';
 import { isNotEmpty } from 'utils/validators';
 import { Button, FileUpload, FormGroup, H2 } from 'govuk-react';
+import { ErrorSummary } from 'components';
+import { ValidationErrorsType } from '../types';
+import axios, { AxiosError } from 'axios';
+import useApiConfig from 'utils/useApiConfig';
+import { UploadErrorResponse } from '../types';
+import styled from 'styled-components';
+import { BLACK, YELLOW } from 'govuk-colours';
 
-import {
-  SetUploadId,
-  SetIsSecondForm,
-  SetValidationErrors,
-  SetFileName,
-  ValidationErrorsType,
-} from '../types';
+const StyledInput = styled(FileUpload)`
+  > input:focus {
+    outline: 3px solid ${YELLOW};
+    color: ${BLACK};
+    box-shadow: inset 0 0 0 4px ${BLACK};
+    text-decoration: none;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+`;
 
-type UploadFormProps = {
-  setUploadId: SetUploadId;
-  setFilename: SetFileName;
-  isSecondForm: boolean;
-  setIsSecondForm: SetIsSecondForm;
-  validationErrors: ValidationErrorsType;
-  setValidationErrors: SetValidationErrors;
-};
-
+interface UploadFormProps {
+  setShowNotificationBanner?: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+}
 export function UploadForm({
-  setUploadId,
-  setFilename,
-  isSecondForm,
-  setIsSecondForm,
-  validationErrors,
-  setValidationErrors,
+  setShowNotificationBanner,
+  children,
 }: UploadFormProps) {
+  const router = useRouter();
+  const apiConfig = useApiConfig();
   const { t } = useTranslation();
   const [file, setFile] = useState<File>(null);
+  const [validationErrors, setValidationErrors] =
+    useState<ValidationErrorsType>(
+      router.query.columnsError
+        ? { file: 'Csv record inconsistent columns' }
+        : {}
+    );
 
-  const putFile = (formData) => {
-    return apiClient({
-      url: '/batches',
-      method: 'post',
-      data: formData,
-    });
-  };
-
-  const mutation = useMutation({
-    mutationFn: putFile,
-  });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
-  };
+  }
 
-  const validateFile = (file) => {
-    if (file === null || file === undefined) {
-      return 'Select a file to upload';
+  function validateFile(file: File | null | undefined) {
+    if (file === null || file === undefined || file.type !== 'text/csv') {
+      window.scrollTo(0, 0);
+      return 'Upload a CSV file';
     }
-    if (file.type !== 'text/csv') {
-      return 'Only upload a CSV file';
-    }
-  };
+  }
 
-  const errorMessageContent = (error) => {
-    if (error === 'CSV_RECORD_INCONSISTENT_COLUMNS')
-      return 'The format of the CSV file is not correct';
-    if (error.search('Payload') > -1)
-      return 'The CSV file should be less than 10M in size';
-    return error;
-  };
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/batches`;
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: apiConfig.Authorization,
+      };
+      return axios.post(url, formData, { headers });
+    },
 
-  const handleSubmitUpload = async (e: FormEvent) => {
+    onSuccess: async (data) => {
+      router.push(`/export/multiples/${data.data.id}?filename=${file.name}`);
+    },
+    onError: async (error: AxiosError<UploadErrorResponse>) => {
+      if (setShowNotificationBanner) {
+        setShowNotificationBanner(false);
+      }
+      setValidationErrors({ file: error.response.data.message });
+      setFile(null);
+    },
+  });
+
+  async function handleSubmitUpload(e: FormEvent) {
     e.preventDefault();
     const newErrors = {
       file: validateFile(file),
     };
     if (isNotEmpty(newErrors)) {
+      if (setShowNotificationBanner) {
+        setShowNotificationBanner(false);
+      }
       setValidationErrors(newErrors);
       setFile(null);
       window.scrollTo(0, 0);
     } else {
-      setUploadId(null);
       setValidationErrors(null);
       const formData = new FormData();
       formData.append('input', file);
-      const response = await mutation.mutateAsync(formData);
-
-      if (response?.status === 201) {
-        setFilename(file.name);
-        setUploadId(response.data.id);
-        setIsSecondForm(isSecondForm);
-      } else {
-        setFile(null);
-        setValidationErrors({
-          file: errorMessageContent(response.data.message),
-        });
-      }
+      mutation.mutate(formData);
     }
-  };
+  }
 
   return (
     <>
+      {validationErrors && !!Object.keys(validationErrors).length && (
+        <ErrorSummary
+          heading={t('errorSummary.title')}
+          errors={Object.keys(validationErrors).map((key) => ({
+            targetName: key,
+            text: validationErrors[key],
+          }))}
+        />
+      )}
+      {children}
       <form onSubmit={handleSubmitUpload}>
         <FormGroup>
-          <FileUpload
+          <StyledInput
             acceptedFormats=".csv"
             name="csvUpload"
             onChange={handleFileChange}
@@ -111,11 +121,11 @@ export function UploadForm({
             }}
           >
             <H2 size="MEDIUM">
-              {isSecondForm
+              {router.query.errors
                 ? t('multiples.errorSummaryPage.uploadForm.titleSecond')
                 : t('multiples.errorSummaryPage.uploadForm.title')}
             </H2>
-          </FileUpload>
+          </StyledInput>
         </FormGroup>
         <Button disabled={mutation.status === 'pending'} id="upload-button">
           {t('multiples.guidance.upload.button')}

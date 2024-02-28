@@ -13,11 +13,12 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ wasteCode: { type: 'NotApplicable' } }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ wasteCode: { type: 'NotApplicable' } }),
+    }) as Promise<Response>
 );
 
 describe('Point Of Exit page', () => {
@@ -28,7 +29,7 @@ describe('Point Of Exit page', () => {
   });
 
   it('should display a loading message while data is being fetched', async () => {
-    global.fetch.mockImplementationOnce(
+    (global.fetch as jest.Mock).mockImplementationOnce(
       () =>
         new Promise(() => {
           return;

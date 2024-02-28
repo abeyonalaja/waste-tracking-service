@@ -13,32 +13,33 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        status: 'Started',
-        transport: true,
-        values: [
-          {
-            id: '54321',
-            addressDetails: {
-              organisationName: 'test',
-              address: 'test',
-              country: 'test',
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          status: 'Started',
+          transport: true,
+          values: [
+            {
+              id: '54321',
+              addressDetails: {
+                organisationName: 'test',
+                address: 'test',
+                country: 'test',
+              },
+              contactDetails: {
+                fullName: 'test',
+                emailAddress: 'test@test.com',
+                phoneNumber: '07777123456',
+                faxNumber: '',
+              },
+              transportDetails: {},
             },
-            contactDetails: {
-              fullName: 'test',
-              emailAddress: 'test@test.com',
-              phoneNumber: '07777123456',
-              faxNumber: '',
-            },
-            transportDetails: {},
-          },
-        ],
-      }),
-  })
+          ],
+        }),
+    }) as Promise<Response>
 );
 
 describe('Waste carrier transport means page', () => {

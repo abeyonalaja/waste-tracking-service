@@ -241,7 +241,7 @@ describe('Interim site pages', () => {
     fireEvent.click(submitButton);
 
     await act(async () => {
-      global.fetch = jest.fn(() =>
+      (global.fetch as jest.Mock) = jest.fn(() =>
         Promise.resolve({
           ok: true,
           method: 'PUT',

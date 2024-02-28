@@ -533,7 +533,7 @@
   "multiples.errorSummaryPage.uploadForm.titleSecond": "Upload your corrected CSV file",
   "multiples.errorSummaryPage.errorList.title_one": "You have {{count}} error",
   "multiples.errorSummaryPage.errorList.title_other": "You have {{count}} errors",
-  "multiples.errorSummaryPage.errorList.heading": "Review the guidance on",
+  "multiples.errorSummaryPage.errorList.heading": "Review the guidance on ",
   "multiples.errorSummaryPage.errorList.rowCorrection": "Correct all errors for row {{rowNumber}}",
   "multiples.errorSummaryPage.errorList.rowCorrection.para": "Check the list below for the error descriptions before correcting these errors in your file.",
   "multiples.errorSummaryPage.errorListTable.heading": "Error descriptions",

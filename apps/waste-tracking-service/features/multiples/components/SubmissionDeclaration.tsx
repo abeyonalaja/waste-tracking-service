@@ -1,39 +1,21 @@
-import { Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import {
-  BackLink,
-  Heading,
-  UnorderedList,
-  ListItem,
-  Button,
-} from 'govuk-react';
-import styled from 'styled-components';
-import { Paragraph } from 'components';
-import { SetSubmitted } from '../types';
 import useApiConfig from 'utils/useApiConfig';
 import axios from 'axios';
-
-const BackLinkWrap = styled.div`
-  margin-top: -30px;
-  margin-bottom: 30px;
-`;
+import { Heading, UnorderedList, ListItem, Button } from 'govuk-react';
+import { Paragraph } from 'components';
 
 type SubmissionDeclarationProps = {
-  setShowDeclaration: Dispatch<SetStateAction<boolean>>;
-  setSubmitted: SetSubmitted;
-  uploadId: string;
-  uploadCount: number;
+  recordCount: number;
 };
 
 export function SubmissionDeclaration({
-  setShowDeclaration,
-  setSubmitted,
-  uploadId,
-  uploadCount,
+  recordCount,
 }: SubmissionDeclarationProps) {
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
+  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: async (uploadId: string) => {
@@ -48,30 +30,19 @@ export function SubmissionDeclaration({
       console.error(err);
     },
     onSuccess: async () => {
-      setSubmitted(true);
+      router.push(`/export/multiples/${router.query.id}/submit/submitted`);
     },
   });
 
   function handleSubmission(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    mutation.mutate(uploadId);
+    mutation.mutate(router.query.id as string);
   }
 
   return (
-    <div>
-      <BackLinkWrap>
-        <BackLink
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setShowDeclaration(false);
-          }}
-        >
-          {t('Back')}
-        </BackLink>
-      </BackLinkWrap>
+    <>
       <Heading size={'L'}>
-        {t('multiples.submit.heading', { count: uploadCount })}
+        {t('multiples.submit.heading', { count: recordCount })}
       </Heading>
       <Heading as={'h2'} size={'M'}>
         {t('multiples.submit.declaration')}
@@ -88,6 +59,6 @@ export function SubmissionDeclaration({
           {t('multiples.submit.button')}
         </Button>
       </form>
-    </div>
+    </>
   );
 }

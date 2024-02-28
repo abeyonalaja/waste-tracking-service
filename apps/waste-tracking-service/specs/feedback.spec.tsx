@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import React from 'react';
-import { render, screen, act } from 'jest-utils';
+import { render, screen, act, waitFor } from 'jest-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import Feedback from 'pages/export/feedback';
@@ -13,11 +13,12 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ status: 'NotStarted' }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ status: 'NotStarted' }),
+    }) as Promise<Response>
 );
 
 function TestFeedbackPage() {
@@ -51,7 +52,11 @@ describe('Feedback page', () => {
     const button = screen.getByRole('button', { name: 'Send feedback' });
     await userEvent.click(button);
 
-    const successMessage = screen.getByText('You have submitted your feedback');
-    expect(successMessage).toBeInTheDocument();
+    waitFor(() => {
+      const successMessage = screen.getByText(
+        'You have submitted your feedback'
+      );
+      expect(successMessage).toBeInTheDocument();
+    });
   });
 });

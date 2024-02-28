@@ -13,7 +13,7 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
+(global.fetch as jest.Mock) = jest.fn(() =>
   Promise.resolve({
     ok: true,
     method: 'GET',
@@ -80,7 +80,7 @@ describe('Recovery facilities pages', () => {
     fireEvent.click(submitButton);
 
     await act(async () => {
-      global.fetch = jest.fn(() =>
+      (global.fetch as jest.Mock) = jest.fn(() =>
         Promise.resolve({
           ok: true,
           method: 'PUT',

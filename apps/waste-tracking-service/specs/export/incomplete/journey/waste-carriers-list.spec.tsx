@@ -13,68 +13,69 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        status: 'Complete',
-        transport: true,
-        values: [
-          {
-            id: '1111111111',
-            addressDetails: {
-              organisationName: 'TestWasteCarrier1',
-              address: 'test',
-              country: 'test',
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          status: 'Complete',
+          transport: true,
+          values: [
+            {
+              id: '1111111111',
+              addressDetails: {
+                organisationName: 'TestWasteCarrier1',
+                address: 'test',
+                country: 'test',
+              },
+              contactDetails: {
+                fullName: 'test',
+                emailAddress: 'test@test.com',
+                phoneNumber: '07777123456',
+                faxNumber: '',
+              },
+              transportDetails: {
+                type: 'Rail',
+              },
             },
-            contactDetails: {
-              fullName: 'test',
-              emailAddress: 'test@test.com',
-              phoneNumber: '07777123456',
-              faxNumber: '',
+            {
+              id: '22222222222',
+              addressDetails: {
+                organisationName: 'TestWasteCarrier2',
+                address: 'test',
+                country: 'test',
+              },
+              contactDetails: {
+                fullName: 'test',
+                emailAddress: 'test@test.com',
+                phoneNumber: '07777123456',
+                faxNumber: '',
+              },
+              transportDetails: {
+                type: 'Rail',
+              },
             },
-            transportDetails: {
-              type: 'Rail',
+            {
+              id: '3333333333',
+              addressDetails: {
+                organisationName: 'TestWasteCarrier3',
+                address: 'test',
+                country: 'test',
+              },
+              contactDetails: {
+                fullName: 'test',
+                emailAddress: 'test@test.com',
+                phoneNumber: '07777123456',
+                faxNumber: '',
+              },
+              transportDetails: {
+                type: 'Rail',
+              },
             },
-          },
-          {
-            id: '22222222222',
-            addressDetails: {
-              organisationName: 'TestWasteCarrier2',
-              address: 'test',
-              country: 'test',
-            },
-            contactDetails: {
-              fullName: 'test',
-              emailAddress: 'test@test.com',
-              phoneNumber: '07777123456',
-              faxNumber: '',
-            },
-            transportDetails: {
-              type: 'Rail',
-            },
-          },
-          {
-            id: '3333333333',
-            addressDetails: {
-              organisationName: 'TestWasteCarrier3',
-              address: 'test',
-              country: 'test',
-            },
-            contactDetails: {
-              fullName: 'test',
-              emailAddress: 'test@test.com',
-              phoneNumber: '07777123456',
-              faxNumber: '',
-            },
-            transportDetails: {
-              type: 'Rail',
-            },
-          },
-        ],
-      }),
-  })
+          ],
+        }),
+    }) as Promise<Response>
 );
 
 describe('Waste carriers page', () => {

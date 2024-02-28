@@ -56,7 +56,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  global.fetch.mockClear();
+  (global.fetch as jest.Mock).mockClear();
 });
 
 describe('Exporter postcode page', () => {

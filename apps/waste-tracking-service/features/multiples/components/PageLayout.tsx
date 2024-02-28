@@ -1,15 +1,20 @@
 import { ReactNode } from 'react';
 import Head from 'next/head';
-import { Page } from 'govuk-react';
+import { Page, GridRow, GridCol } from 'govuk-react';
 import { Footer, Header } from 'components';
 import { useTranslation } from 'react-i18next';
 
 type PageLayoutProps = {
-  breadCrumbs: ReactNode;
+  breadCrumbs?: ReactNode;
+  setWidth?: string;
   children: ReactNode;
 };
 
-export function PageLayout({ breadCrumbs, children }: PageLayoutProps) {
+export function PageLayout({
+  breadCrumbs = null,
+  setWidth = 'two-thirds',
+  children,
+}: PageLayoutProps) {
   const { t } = useTranslation();
 
   return (
@@ -21,9 +26,11 @@ export function PageLayout({ breadCrumbs, children }: PageLayoutProps) {
         id="content"
         header={<Header />}
         footer={<Footer />}
-        beforeChildren={breadCrumbs}
+        beforeChildren={breadCrumbs ? breadCrumbs : null}
       >
-        {children}
+        <GridRow>
+          <GridCol setWidth={setWidth}>{children}</GridCol>
+        </GridRow>
       </Page>
     </>
   );

@@ -105,7 +105,7 @@ export function Index() {
                   <GovUK.ListItem>
                     <AppLink
                       href={{
-                        pathname: `/export/multiples/upload`,
+                        pathname: `/export/multiples/`,
                       }}
                     >
                       {t('exportJourney.exportHome.createMultipleRecords')}

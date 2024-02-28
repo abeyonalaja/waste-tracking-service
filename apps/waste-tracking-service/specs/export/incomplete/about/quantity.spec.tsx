@@ -13,16 +13,17 @@ jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        wasteQuantity: {
-          status: 'NotStarted',
-        },
-      }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          wasteQuantity: {
+            status: 'NotStarted',
+          },
+        }),
+    }) as Promise<Response>
 );
 
 describe('Quantity page', () => {

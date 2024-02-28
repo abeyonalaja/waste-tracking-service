@@ -1,5 +1,7 @@
 // Components
+import { ErrorSummary } from './components/ErrorSummary';
 import { GuidanceInteruption } from './components/GuidanceInteruption';
+import { Loader } from './components/Loader';
 import { Instructions } from './components/Instructions';
 import { PageLayout } from './components/PageLayout';
 import { UploadBreadCrumbs } from './components/UploadBreadCrumbs';
@@ -7,20 +9,26 @@ import { UploadForm } from './components/UploadForm';
 import { SubmissionConfirmation } from './components/SubmissionConfirmation';
 import { SubmissionConfirmationBreadCrumbs } from './components/SubmissionConfirmationBreadCrumbs';
 import { SubmissionDeclaration } from './components/SubmissionDeclaration';
-import { ValidationProcess } from './components/ValidationProcess';
-
-// Types
-import { ValidationErrorsType } from './types';
+import { ValidationSuccess } from './components/ValidationSuccess';
 
 export {
+  ErrorSummary,
+  Loader,
   GuidanceInteruption,
   Instructions,
   PageLayout,
   UploadBreadCrumbs,
   UploadForm,
-  ValidationProcess,
   SubmissionConfirmation,
   SubmissionConfirmationBreadCrumbs,
   SubmissionDeclaration,
+  ValidationSuccess,
 };
+
+// Types
+import { ValidationErrorsType } from './types';
 export type { ValidationErrorsType };
+
+// Utils
+import { getValidationResult } from './utils/getValidationResult';
+export { getValidationResult };

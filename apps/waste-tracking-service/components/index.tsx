@@ -9,6 +9,7 @@ import { ButtonGroup } from './ButtonGroup';
 import { Card } from './Card';
 import { CharacterCountHint } from './CharacterCountHint';
 import { CrownIcon } from './CrownIcon';
+import { FileUpload } from './FileUpload';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { ConditionalRadioWrap } from './ConditionalRadioWrap';
@@ -57,6 +58,7 @@ export {
   DownloadPDFLink,
   Error404Content,
   FeedbackForm,
+  FileUpload,
   ErrorSummary,
   InputWithSuffix,
   LanguageSwitch,

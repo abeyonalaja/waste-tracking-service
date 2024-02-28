@@ -2,14 +2,15 @@ import React from 'react';
 import { render, screen, act } from 'jest-utils';
 import Index from 'pages/index';
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        data: {},
-      }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: {},
+        }),
+    }) as Promise<Response>
 );
 
 describe('Landing page', () => {

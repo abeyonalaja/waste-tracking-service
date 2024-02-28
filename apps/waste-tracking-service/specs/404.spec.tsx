@@ -3,14 +3,15 @@ import { act, render, screen } from 'jest-utils';
 import '@testing-library/jest-dom';
 import Custom404 from 'pages/404';
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () =>
-      Promise.resolve({
-        data: {},
-      }),
-  })
+global.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: {},
+        }),
+    }) as Promise<Response>
 );
 
 describe('Custom404', () => {
