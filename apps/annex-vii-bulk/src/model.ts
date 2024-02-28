@@ -5,7 +5,25 @@ import { Response } from '@wts/util/invocation';
 export type ContentProcessingTask = {
   batchId: string;
   accountId: string;
-  content: string;
+  content: {
+    type: 'text/csv';
+    compression: 'Snappy' | 'None';
+    value: string;
+  };
+};
+
+export type ContentToBeProcessedTask = {
+  id: string;
+  time: string;
+  type: string;
+  source: string;
+  specversion: string;
+  datacontenttype: string;
+  pubsubname: string;
+  queue: string;
+  traceparent: string;
+  tracestate: string;
+  data: ContentProcessingTask;
 };
 
 export type ValidateCsvContentRequest = api.AddContentToBatchRequest;

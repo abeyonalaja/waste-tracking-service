@@ -31,7 +31,7 @@ export interface BulkSubmissionBackend {
   finalizeBatch(ref: BatchRef): Promise<void>;
 }
 
-export class BulkSubmissionStub implements BulkSubmissionBackend {
+export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
   async createBatch(
     accountId: string,
     inputs: Input[]
@@ -74,7 +74,16 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
         'code' in err &&
         typeof err.code === 'string'
       ) {
-        return Promise.reject(Boom.badRequest(err.code));
+        const value: BulkSubmission = {
+          id: id,
+          state: {
+            status: 'FailedCsvValidation',
+            timestamp: new Date(),
+            error: err.code,
+          },
+        };
+        batches.set(JSON.stringify({ id, accountId }), value);
+        return Promise.resolve({ id: id });
       }
 
       return Promise.reject(Boom.internal());
@@ -110,12 +119,12 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
           id: uuidv4(),
           state: {
             status: 'FailedValidation',
-            timestamp: timestamp,
-            errors: [
+            timestamp: new Date(),
+            rowErrors: [
               {
                 rowNumber: 3,
                 errorAmount: 9,
-                errorDescriptions: [
+                errorDetails: [
                   'Enter a uniqure reference',
                   'Enter a second EWC code in correct format',
                   'Waste description must be less than 100 characheters',
@@ -130,7 +139,7 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
               {
                 rowNumber: 12,
                 errorAmount: 6,
-                errorDescriptions: [
+                errorDetails: [
                   'Enter a real phone number for the importer',
                   'Enter a real collection date',
                   'Enter the first carrier country',
@@ -142,7 +151,7 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
               {
                 rowNumber: 24,
                 errorAmount: 5,
-                errorDescriptions: [
+                errorDetails: [
                   'Enter a uniqure reference',
                   'Enter a second EWC code in correct format',
                   'Waste description must be less than 100 characheters',
@@ -153,8 +162,52 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
               {
                 rowNumber: 34,
                 errorAmount: 1,
-                errorDescriptions: [
+                errorDetails: [
                   'Waste description must be less than 100 characheters',
+                ],
+              },
+            ],
+            columnErrors: [
+              {
+                errorAmount: 9,
+                columnName: 'Organisation contact person phone number',
+                errorDetails: [
+                  {
+                    rowNumber: 2,
+                    errorReason: 'Enter contact phone number',
+                  },
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter a valid contact phone number',
+                  },
+                  {
+                    rowNumber: 12,
+                    errorReason: 'Enter contact phone number',
+                  },
+                  {
+                    rowNumber: 24,
+                    errorReason: 'Enter contact phone number',
+                  },
+                  {
+                    rowNumber: 27,
+                    errorReason: 'Enter contact phone number',
+                  },
+                  {
+                    rowNumber: 32,
+                    errorReason: 'Enter a valid contact phone number',
+                  },
+                  {
+                    rowNumber: 41,
+                    errorReason: 'Enter a valid contact phone number',
+                  },
+                  {
+                    rowNumber: 56,
+                    errorReason: 'Enter contact phone number',
+                  },
+                  {
+                    rowNumber: 63,
+                    errorReason: 'Enter a valid contact phone number',
+                  },
                 ],
               },
             ],
@@ -185,7 +238,7 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
             submissions: [
               {
                 id: uuidv4(),
-                transactionNumber: 'transaction_number',
+                transactionId: '2307_1234ABCD',
               },
             ],
           },
@@ -226,7 +279,7 @@ export class BulkSubmissionStub implements BulkSubmissionBackend {
       submissions: [
         {
           id: uuidv4(),
-          transactionNumber: 'transaction_number',
+          transactionId: '2307_1234ABCD',
         },
       ],
     };

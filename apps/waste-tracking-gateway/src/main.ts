@@ -20,7 +20,7 @@ import {
 import {
   AnnexViiBulkServiceBackend,
   BulkSubmissionBackend,
-  BulkSubmissionStub,
+  InMemoryBulkSubmissionBackend,
   bulkSubmissionPlugin,
 } from './modules/bulk-submission';
 import { feedbackPlugin } from './modules/feedback';
@@ -90,7 +90,7 @@ if (process.env['NODE_ENV'] === 'development') {
     submission: new InMemorySubmissionBackend(submissions, templates),
     template: new InMemoryTemplateBackend(submissions, templates),
     referenceData: new ReferenceDataStub(),
-    bulkSubmission: new BulkSubmissionStub(),
+    bulkSubmission: new InMemoryBulkSubmissionBackend(),
     privateBeta: new PrivateBetaStub(),
   };
 } else {

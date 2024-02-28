@@ -18,9 +18,16 @@ import {
 } from '@azure/identity';
 import { CosmosBatchRepository } from './data';
 import { CosmosClient } from '@azure/cosmos';
-import { BulkSubmission, ContentProcessingTask } from './model';
 import { CsvValidator } from './lib/csv-validator';
+import {
+  BulkSubmission,
+  ContentProcessingTask,
+  ContentToBeProcessedTask,
+} from './model';
 import { v4 as uuidv4 } from 'uuid';
+import { CloudEvent, HTTP } from 'cloudevents';
+import * as taskValidate from './lib/task-validation';
+import { BulkSubmissionCsvRow } from './lib/csv-content';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -31,12 +38,13 @@ if (!process.env['SERVICE_BUS_HOST_NAME']) {
 }
 
 const tasksQueueName =
-  process.env['SERVICE_BUS_TASKS_QUEUE_NAME'] || 'annex-vii-bulk-tasks';
+  process.env['TASKS_QUEUE_NAME'] || 'annex-vii-bulk-tasks';
+const appId = process.env['APP_ID'] || 'annex-vii-bulk';
 
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.simple(),
-  defaultMeta: { appId: process.env['APP_ID'] },
+  defaultMeta: { appId: appId },
   transports: [new winston.transports.Console()],
 });
 
@@ -73,7 +81,7 @@ const csvValidator = new CsvValidator(logger);
 
 await server.invoker.listen(
   api.addContentToBatch.name,
-  async ({ body }) => {
+  async ({ body, headers }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
@@ -83,26 +91,33 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest());
     }
 
-    const validateCsvResponse = await csvValidator.validateBatch(request);
-    if (!validateCsvResponse.success) {
-      return validateCsvResponse;
-    }
-
     const response = await batchController.addContentToBatch(request);
     if (!response.success) {
       return response;
     }
 
-    const message: ContentProcessingTask = {
-      batchId: response.value.batchId,
-      accountId: request.accountId,
-      content: JSON.stringify(validateCsvResponse.value.rows),
-    };
-
     try {
+      const task: ContentProcessingTask = {
+        batchId: response.value.batchId,
+        accountId: request.accountId,
+        content: request.content,
+      };
+      const cloudEvent = new CloudEvent({
+        specversion: '1.0',
+        type: `${appId}.event.sent.ContentToBeProcessed`,
+        source: `${appId}.${api.addContentToBatch.name}`,
+        id: uuidv4(),
+        time: new Date().toJSON(),
+        datacontenttype: 'application/cloudevents+json',
+        data: task,
+        pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
+        queue: tasksQueueName,
+        traceparent: headers?.traceparent || '',
+        tracestate: headers?.tracestate || '',
+      });
       const messages = [
         {
-          body: message,
+          body: HTTP.structured(cloudEvent),
         },
       ];
       const sender = serviceBusClient.createSender(tasksQueueName);
@@ -175,90 +190,181 @@ while (execute) {
   const receiver = serviceBusClient.createReceiver(tasksQueueName);
   const subscription = receiver.subscribe({
     processMessage: async (brokeredMessage) => {
-      const data = brokeredMessage.body as ContentProcessingTask;
-      try {
-        const value: BulkSubmission = {
-          id: data.batchId,
-          state: {
-            status: 'PassedValidation',
-            timestamp: new Date(),
-            drafts: [
-              {
-                id: uuidv4(),
-              },
-            ],
-          },
-        };
-        await repository.saveBatch(value, data.accountId);
-      } catch (error) {
-        logger.error('Unknown error', {
-          batchId: data.batchId,
-          accountId: data.accountId,
-          error: error,
-        });
+      if (HTTP.isEvent(brokeredMessage.body)) {
+        const body = JSON.parse(
+          brokeredMessage.body.body
+        ) as ContentToBeProcessedTask;
 
-        const value: BulkSubmission = {
-          id: data.batchId,
-          state: {
-            status: 'FailedValidation',
-            timestamp: new Date(),
-            errors: [
-              {
-                rowNumber: 3,
-                errorAmount: 9,
-                errorDescriptions: [
-                  'Enter a uniqure reference',
-                  'Enter a second EWC code in correct format',
-                  'Waste description must be less than 100 characheters',
-                  'Enter a real phone number for the importer',
-                  'Enter a real collection date',
-                  'Enter the first carrier country',
-                  'Enter the first carrier email address',
-                  'Enter the first recovery facility or laboratory address',
-                  'Enter the first recovery code of the first laboratory facility',
-                ],
-              },
-              {
-                rowNumber: 12,
-                errorAmount: 6,
-                errorDescriptions: [
-                  'Enter a real phone number for the importer',
-                  'Enter a real collection date',
-                  'Enter the first carrier country',
-                  'Enter the first carrier email address',
-                  'Enter the first recovery facility or laboratory address',
-                  'Enter the first recovery code of the first laboratory facility',
-                ],
-              },
-              {
-                rowNumber: 24,
-                errorAmount: 5,
-                errorDescriptions: [
-                  'Enter a uniqure reference',
-                  'Enter a second EWC code in correct format',
-                  'Waste description must be less than 100 characheters',
-                  'Enter a real phone number for the importer',
-                  'Enter a real collection date',
-                ],
-              },
-              {
-                rowNumber: 34,
-                errorAmount: 1,
-                errorDescriptions: [
-                  'Waste description must be less than 100 characheters',
-                ],
-              },
-            ],
-          },
-        };
+        if (!taskValidate.receiveContentToBeProcessedTask(body)) {
+          const message = `Data validation failed for queue message ID: ${brokeredMessage.messageId}`;
+          logger.error(message);
+          throw Boom.internal(message);
+        }
+
         try {
-          await repository.saveBatch(value, data.accountId);
+          const records = await csvValidator.validateBatch(body.data);
+          if (!records.success) {
+            if (records.error.statusCode !== 400) {
+              throw new Boom.Boom(records.error.message, {
+                statusCode: records.error.statusCode,
+              });
+            }
+            const value: BulkSubmission = {
+              id: body.data.batchId,
+              state: {
+                status: 'FailedCsvValidation',
+                timestamp: new Date(),
+                error: records.error.message,
+              },
+            };
+            await repository.saveBatch(value, body.data.accountId);
+          } else {
+            records.value.rows.map(async (submission: BulkSubmissionCsvRow) => {
+              try {
+                // TODO: send HTTP request to annex-vii validate endpoint
+                console.log(submission);
+              } catch (err) {
+                logger.error('Error receiving response', { error: err });
+              }
+            });
+
+            const value: BulkSubmission = {
+              id: body.data.batchId,
+              state: {
+                status: 'PassedValidation',
+                timestamp: new Date(),
+                drafts: [
+                  {
+                    id: uuidv4(),
+                  },
+                ],
+              },
+            };
+            await repository.saveBatch(value, body.data.accountId);
+          }
         } catch (error) {
           logger.error('Unknown error', {
-            batchId: data.batchId,
-            accountId: data.accountId,
+            batchId: body.data.batchId,
+            accountId: body.data.accountId,
             error: error,
           });
+
+          const value: BulkSubmission = {
+            id: body.data.batchId,
+            state: {
+              status: 'FailedValidation',
+              timestamp: new Date(),
+              rowErrors: [
+                {
+                  rowNumber: 3,
+                  errorAmount: 9,
+                  errorDetails: [
+                    'Enter a uniqure reference',
+                    'Enter a second EWC code in correct format',
+                    'Waste description must be less than 100 characheters',
+                    'Enter a real phone number for the importer',
+                    'Enter a real collection date',
+                    'Enter the first carrier country',
+                    'Enter the first carrier email address',
+                    'Enter the first recovery facility or laboratory address',
+                    'Enter the first recovery code of the first laboratory facility',
+                  ],
+                },
+                {
+                  rowNumber: 12,
+                  errorAmount: 6,
+                  errorDetails: [
+                    'Enter a real phone number for the importer',
+                    'Enter a real collection date',
+                    'Enter the first carrier country',
+                    'Enter the first carrier email address',
+                    'Enter the first recovery facility or laboratory address',
+                    'Enter the first recovery code of the first laboratory facility',
+                  ],
+                },
+                {
+                  rowNumber: 24,
+                  errorAmount: 5,
+                  errorDetails: [
+                    'Enter a uniqure reference',
+                    'Enter a second EWC code in correct format',
+                    'Waste description must be less than 100 characheters',
+                    'Enter a real phone number for the importer',
+                    'Enter a real collection date',
+                  ],
+                },
+                {
+                  rowNumber: 34,
+                  errorAmount: 1,
+                  errorDetails: [
+                    'Waste description must be less than 100 characheters',
+                  ],
+                },
+              ],
+              columnErrors: [
+                {
+                  errorAmount: 9,
+                  columnName: 'Organisation contact person phone number',
+                  errorDetails: [
+                    {
+                      rowNumber: 2,
+                      errorReason: 'Enter contact phone number',
+                    },
+                    {
+                      rowNumber: 3,
+                      errorReason: 'Enter a valid contact phone number',
+                    },
+                    {
+                      rowNumber: 12,
+                      errorReason: 'Enter contact phone number',
+                    },
+                    {
+                      rowNumber: 24,
+                      errorReason: 'Enter contact phone number',
+                    },
+                    {
+                      rowNumber: 27,
+                      errorReason: 'Enter contact phone number',
+                    },
+                    {
+                      rowNumber: 32,
+                      errorReason: 'Enter a valid contact phone number',
+                    },
+                    {
+                      rowNumber: 41,
+                      errorReason: 'Enter a valid contact phone number',
+                    },
+                    {
+                      rowNumber: 56,
+                      errorReason: 'Enter contact phone number',
+                    },
+                    {
+                      rowNumber: 63,
+                      errorReason: 'Enter a valid contact phone number',
+                    },
+                  ],
+                },
+              ],
+            },
+          };
+
+          try {
+            await repository.saveBatch(value, body.data.accountId);
+          } catch (error) {
+            if (error instanceof Boom.Boom) {
+              logger.error('Error processing task from queue', {
+                batchId: body.data.batchId,
+                accountId: body.data.accountId,
+                error: error,
+              });
+            } else {
+              logger.error('Unknown error', {
+                batchId: body.data.batchId,
+                accountId: body.data.accountId,
+                error: error,
+              });
+            }
+          }
         }
       }
     },

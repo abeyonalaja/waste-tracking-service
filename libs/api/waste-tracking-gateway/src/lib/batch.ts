@@ -1,7 +1,18 @@
-export type BulkSubmissionValidationError = {
+export type BulkSubmissionValidationRowError = {
   rowNumber: number;
   errorAmount: number;
-  errorDescriptions: string[];
+  errorDetails: string[];
+};
+
+export type BulkSubmissionValidationRowErrorDetails = {
+  rowNumber: number;
+  errorReason: string;
+};
+
+export type BulkSubmissionValidationColumnError = {
+  errorAmount: number;
+  columnName: string;
+  errorDetails: BulkSubmissionValidationRowErrorDetails[];
 };
 
 export type SubmissionInBulk = {
@@ -10,7 +21,7 @@ export type SubmissionInBulk = {
 
 export type SubmissionReference = {
   id: string;
-  transactionNumber: string;
+  transactionId: string;
 };
 
 export type BulkSubmissionState =
@@ -19,9 +30,15 @@ export type BulkSubmissionState =
       timestamp: Date;
     }
   | {
+      status: 'FailedCsvValidation';
+      timestamp: Date;
+      error: string;
+    }
+  | {
       status: 'FailedValidation';
       timestamp: Date;
-      errors: BulkSubmissionValidationError[];
+      rowErrors: BulkSubmissionValidationRowError[];
+      columnErrors: BulkSubmissionValidationColumnError[];
     }
   | {
       status: 'PassedValidation';

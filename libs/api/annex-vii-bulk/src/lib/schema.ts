@@ -21,15 +21,37 @@ const bulkSubmissionState: SchemaObject = {
         timestamp: { type: 'timestamp' },
       },
     },
+    FailedCsvValidation: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+        error: { type: 'string' },
+      },
+    },
     FailedValidation: {
       properties: {
         timestamp: { type: 'timestamp' },
-        errors: {
+        rowErrors: {
           elements: {
             properties: {
-              rowNumber: { type: 'float64' },
-              errorAmount: { type: 'float64' },
-              errorDescriptions: { elements: { type: 'string' } },
+              rowNumber: { type: 'uint16' },
+              errorAmount: { type: 'uint16' },
+              errorDetails: { elements: { type: 'string' } },
+            },
+          },
+        },
+        columnErrors: {
+          elements: {
+            properties: {
+              errorAmount: { type: 'uint16' },
+              columnName: { type: 'string' },
+              errorDetails: {
+                elements: {
+                  properties: {
+                    rowNumber: { type: 'uint16' },
+                    errorReason: { type: 'string' },
+                  },
+                },
+              },
             },
           },
         },
@@ -55,7 +77,7 @@ const bulkSubmissionState: SchemaObject = {
           elements: {
             properties: {
               id: { type: 'string' },
-              transactionNumber: { type: 'string' },
+              transactionId: { type: 'string' },
             },
           },
         },
@@ -92,7 +114,11 @@ export const addContentToBatchResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
-    value: bulkSubmission,
+    value: {
+      properties: {
+        batchId: { type: 'string' },
+      },
+    },
   },
 };
 

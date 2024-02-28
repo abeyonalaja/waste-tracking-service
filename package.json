@@ -94,6 +94,7 @@
     "accessible-autocomplete": "^2.0.4",
     "ajv": "^8.12.0",
     "axios": "^1.6.5",
+    "cloudevents": "^8.0.0",
     "commander": "^11.1.0",
     "csv-parse": "^5.5.3",
     "csv-stringify": "^6.4.5",

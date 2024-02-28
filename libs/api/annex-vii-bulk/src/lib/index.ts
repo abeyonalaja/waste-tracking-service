@@ -7,5 +7,7 @@ export type {
   GetBatchResponse,
   UpdateBatchRequest,
   UpdateBatchResponse,
+  BulkSubmissionValidationRowError,
+  BulkSubmissionValidationColumnError,
 } from './dto';
 export * as schema from './schema';
