@@ -1394,39 +1394,33 @@ export class InMemorySubmissionBackend
   ): Promise<NumberOfSubmissions> {
     const numberOfSubmissions: NumberOfSubmissions = {
       completedWithActuals: 0,
-      incomplete: 0,
       completedWithEstimates: 0,
+      incomplete: 0,
     };
 
-    numberOfSubmissions.incomplete = [...this.submissions.keys()].filter(
+    const rawKeys: string[] = [...this.submissions.keys()].filter(
+      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
+    );
+    const rawValues: Submission[] = [];
+    rawKeys.forEach((id) =>
+      rawValues.push(this.submissions.get(id) as Submission)
+    );
+
+    numberOfSubmissions.completedWithActuals = rawValues.filter(
       (i) =>
-        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
-        (JSON.parse(i) as Submission).submissionState.status === 'InProgress'
+        (i.submissionState as SubmissionState).status ===
+          'SubmittedWithActuals' ||
+        (i.submissionState as SubmissionState).status === 'UpdatedWithActuals'
     ).length;
 
-    numberOfSubmissions.completedWithEstimates = [
-      ...this.submissions.keys(),
-    ].filter(
+    numberOfSubmissions.completedWithEstimates = rawValues.filter(
       (i) =>
-        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
-        (JSON.parse(i) as Submission).submissionState.status ===
-          'SubmittedWithEstimates'
+        (i.submissionState as SubmissionState).status ===
+        'SubmittedWithEstimates'
     ).length;
 
-    const submittedStates = [
-      'UpdatedWithActuals',
-      'SubmittedWithEstimates',
-      'SubmittedWithActuals',
-    ];
-
-    numberOfSubmissions.completedWithActuals = [
-      ...this.submissions.keys(),
-    ].filter(
-      (i) =>
-        (JSON.parse(i) as SubmissionRef).accountId === accountId &&
-        submittedStates.includes(
-          (JSON.parse(i) as Submission).submissionState.status
-        )
+    numberOfSubmissions.incomplete = rawValues.filter(
+      (i) => (i.submissionState as SubmissionState).status === 'InProgress'
     ).length;
 
     return Promise.resolve(numberOfSubmissions);
