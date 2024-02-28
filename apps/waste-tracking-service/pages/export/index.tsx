@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { AppLink, Card, Footer, Header, BreadcrumbWrap } from 'components';
-import React, { useEffect } from 'react';
+import {
+  AppLink,
+  Card,
+  Footer,
+  Header,
+  BreadcrumbWrap,
+  NotificationBanner,
+} from 'components';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { useSubmissionContext } from 'contexts';
@@ -31,10 +38,19 @@ export function Index() {
   const router = useRouter();
   const apiConfig = useApiConfig();
   const { setSubmission } = useSubmissionContext();
+  const [context, setContext] = useState<string>('');
 
   useEffect(() => {
     setSubmission({});
   }, [setSubmission]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.context) {
+        setContext(String(router.query.context));
+      }
+    }
+  }, [router.isReady, router.query.context]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +89,13 @@ export function Index() {
         footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
+        {context === 'granted' && (
+          <NotificationBanner
+            type="success"
+            id={`access-banner-granted`}
+            headingText={'Your access has been granted'}
+          />
+        )}
         <UnderlinedH1 size="L">{t('dashboard.title')}</UnderlinedH1>
         <GovUK.GridRow mb={6}>
           <GovUK.GridCol setWidth="one-third">

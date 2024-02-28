@@ -9,6 +9,7 @@ import { DaprLimitedAudienceClient } from '@wts/client/limited-audience';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import jwt from 'hapi-auth-jwt2';
 import jwksRsa from 'jwks-rsa';
+import { LRUCache } from 'lru-cache';
 import * as winston from 'winston';
 import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
 import {
@@ -35,6 +36,7 @@ import {
   PrivateBetaStub,
   privateBetaPlugin,
 } from './modules/private-beta';
+import { LimitedAudienceUserFilter } from './modules/private-beta/user-filter';
 import {
   ReferenceDataBackend,
   ReferenceDataServiceBackend,
@@ -160,6 +162,23 @@ if (audience === undefined) {
 }
 
 const users = process.env['ALLOWED_USERS'];
+let filter =
+  users === undefined || users === '*'
+    ? userFilter.any
+    : userFilter.uniqueReferenceString(users);
+
+if (process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS']) {
+  filter = userFilter.or(
+    filter,
+    new LimitedAudienceUserFilter(
+      new DaprLimitedAudienceClient(
+        new DaprClient(),
+        process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
+      ),
+      new LRUCache({ ttl: 60 * 1000, ttlAutopurge: false, maxSize: 1000 })
+    ).filter
+  );
+}
 
 const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
 
@@ -175,11 +194,7 @@ app.auth.strategy('jwt', 'jwt', {
     jwksUri,
   }),
 
-  validate: validateToken(
-    users === undefined || users === '*'
-      ? userFilter.any
-      : userFilter.uniqueReferenceString(users)
-  ),
+  validate: validateToken(filter),
 
   verifyOptions: {
     audience,

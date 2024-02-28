@@ -1,13 +1,20 @@
 type Credential = {
   uniqueReference: string;
+  dcidSubjectId: string;
 };
 
-export type UserFilter = (credential: Credential) => boolean;
+export type UserFilter = (credential: Credential) => Promise<boolean>;
 
-export const any: UserFilter = () => true;
+export const any: UserFilter = () => Promise.resolve(true);
+export function or(a: UserFilter, b: UserFilter): UserFilter {
+  return async (c) => {
+    const [resA, resB] = await Promise.all([a(c), b(c)]);
+    return resA || resB;
+  };
+}
 
 export function uniqueReferences(set: Set<string>): UserFilter {
-  return ({ uniqueReference }) => set.has(uniqueReference);
+  return ({ uniqueReference }) => Promise.resolve(set.has(uniqueReference));
 }
 
 /**

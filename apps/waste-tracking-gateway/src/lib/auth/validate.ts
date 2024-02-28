@@ -13,12 +13,17 @@ function isValidGuid(value: string): boolean {
 }
 
 export function validateToken(filter: UserFilter) {
-  return function (decoded: object, _: unknown, h: ResponseToolkit) {
+  return async function (decoded: object, _: unknown, h: ResponseToolkit) {
     if (!validateDcidToken(decoded)) {
       return { isValid: false };
     }
 
-    if (!filter({ uniqueReference: decoded.uniqueReference })) {
+    if (
+      !(await filter({
+        uniqueReference: decoded.uniqueReference,
+        dcidSubjectId: decoded.sub,
+      }))
+    ) {
       return { isValid: false, response: h.response().code(403) };
     }
 

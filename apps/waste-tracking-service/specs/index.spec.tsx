@@ -13,6 +13,13 @@ global.fetch = jest.fn(
     }) as Promise<Response>
 );
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    isReady: true,
+    query: { id: '123' },
+  })),
+}));
+
 describe('Landing page', () => {
   it('should render successfully', () => {
     act(() => {
