@@ -73,7 +73,7 @@ secret:
     ADDRESS_APP_ID: 'address.address'
     FEEDBACK_APP_ID: 'feedback.feedback'
     LIMITED_AUDIENCE_APP_ID: 'limited-audience.limited-audience'
-    FEATURE_PRIVATE_AUDIENCE_CHECKS: 'false'
+    FEATURE_PRIVATE_AUDIENCE_CHECKS: ''
     REFERENCE_DATA_APP_ID: 'reference-data.reference-data'
     DCID_CLIENT_ID: ''
     DCID_WELLKNOWN: ''
