@@ -107,7 +107,7 @@ const ToggleText = styled.span`
 export const Accordion = ({
   children,
   showAll = false,
-  expandedAll,
+  expandedAll = true,
   id = 'accordion',
   onToggleShowAll,
 }: Props) => {

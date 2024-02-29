@@ -85,7 +85,7 @@ export function FeedbackForm({
           {t('feedbackForm.improvement.label')}
         </StyledTextArea>
         <CharacterCountHint
-          currentCount={watch('feedback') ? watch('feedback').length : 0}
+          currentCount={watch('feedback')?.length || 0}
           maxCount={1200}
           id="feedback-remaining-characters-hint"
         />

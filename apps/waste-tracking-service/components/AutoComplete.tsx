@@ -46,7 +46,7 @@ export const AutoComplete = ({ id, name, options, value, confirm }: Props) => {
   };
 
   const getSelectItemFromCode = (code) => {
-    const filteredResult: optionType = options.find(
+    const filteredResult: optionType | undefined = options.find(
       (o: optionType) => o.code === code
     );
     return `${filteredResult?.code}: ${filteredResult?.value.description[currentLanguage]}`;

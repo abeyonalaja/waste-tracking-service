@@ -19,7 +19,6 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
         {t('multiples.errorSummaryPage.errorSummary.startParagraph')}
       </GovUK.Paragraph>
       <GovUK.Table
-        caption={null}
         head={
           <GovUK.Table.Row>
             <GovUK.Table.CellHeader setWidth="one-quarter" scope="col">

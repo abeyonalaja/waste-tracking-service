@@ -4,7 +4,7 @@ import { BreakableString } from './BreakableString';
 export const NotificationBanner = ({
   type,
   headingText,
-  id = null,
+  id = undefined,
   children = null,
 }) => {
   const bannerClasses = `govuk-notification-banner ${

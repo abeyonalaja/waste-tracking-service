@@ -132,7 +132,7 @@ export const Header = ({
 }) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
-  const callBackOptions = isSignOutPage ? { callbackUrl } : null;
+  const callBackOptions = isSignOutPage ? { callbackUrl } : undefined;
 
   const signOutDCID = async () => {
     const response = await fetch(`/api/auth/getSignoutEndpoint`);

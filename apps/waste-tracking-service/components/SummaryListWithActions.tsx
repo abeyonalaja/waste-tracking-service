@@ -84,7 +84,7 @@ export const SummaryListWithActions = ({
               {prefixNumbers ? `${index + 1}. ` : ''}
               {title}
             </Title>
-            {actions?.length > 0 && (
+            {actions !== undefined && actions?.length > 0 && (
               <Actions>
                 {actions.map((action) => (
                   <AppLink

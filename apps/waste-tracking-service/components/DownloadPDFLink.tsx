@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 interface Props {
   id?: string;
   submissionId: string;
-  transactionId?: string;
+  transactionId?: string | undefined;
   children?: ReactNode;
 }
 

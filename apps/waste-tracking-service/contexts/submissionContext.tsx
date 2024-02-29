@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ISubmissionContextProps {
-  submission: { id; reference };
+  submission: { id; reference } | null;
   setSubmission: (submission) => void;
 }
 

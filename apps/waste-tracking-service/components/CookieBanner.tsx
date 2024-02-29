@@ -21,8 +21,8 @@ const Message = styled(Main)`
 export const CookieBanner = () => {
   const { t } = useTranslation();
   const [isBannerVisible, setIsBannerVisible] = useState<boolean>(false);
-  const [analyticsConsent, setAnalyticsConsent] = useState<boolean>(null);
-  const cookieName = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME;
+  const [analyticsConsent, setAnalyticsConsent] = useState<boolean>();
+  const cookieName: string = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME || '';
   const [cookies, setCookie] = useCookies([cookieName]);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const CookieBanner = () => {
   }, []);
 
   useEffect(() => {
-    if (analyticsConsent !== null) {
+    if (analyticsConsent !== undefined) {
       const cookieValue: string = JSON.stringify({
         analytics: analyticsConsent,
       });
@@ -47,71 +47,76 @@ export const CookieBanner = () => {
   }, [analyticsConsent]);
 
   return (
-    isBannerVisible && (
-      <Wrap role="region" aria-label={t(`cookie.banner.title`)}>
-        <Message>
-          {analyticsConsent === null ? (
-            <>
-              <GridRow>
-                <GridCol setWidth="two-thirds">
-                  <Heading as="h2" size="M" id="cookie-banner-heading">
-                    {t(`cookie.banner.title`)}
-                  </Heading>
-                  <Paragraph id="cookie-banner-p1">
-                    {t(`cookie.banner.p1`)}
-                  </Paragraph>
-                  <Paragraph id="cookie-banner-p2">
-                    {t(`cookie.banner.p2`)}
-                  </Paragraph>
-                </GridCol>
-              </GridRow>
-              <ButtonGroup>
-                <Button type="button" onClick={() => setAnalyticsConsent(true)}>
-                  {t(`cookie.banner.button.accept`)}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setAnalyticsConsent(false)}
-                >
-                  {t(`cookie.banner.button.reject`)}
-                </Button>
-                <AppLink href={{ pathname: '/help/cookies' }}>
-                  {t(`cookie.banner.button.link`)}
-                </AppLink>
-              </ButtonGroup>
-            </>
-          ) : (
-            <>
-              <GridRow>
-                <GridCol setWidth="two-thirds">
-                  <Paragraph
-                    id={`cookie-banner-confirmation-${
-                      analyticsConsent ? 'approved' : 'rejected'
-                    }`}
-                  >
-                    <Trans
-                      i18nKey="cookie.banner.confirmation"
-                      context={analyticsConsent ? 'approved' : 'rejected'}
-                    >
-                      You have accepted analytics cookies. You can{' '}
-                      <AppLink href={{ pathname: '/help/cookies' }}>
-                        change your cookie settings
-                      </AppLink>{' '}
-                      at any time.
-                    </Trans>
-                  </Paragraph>
+    <>
+      {isBannerVisible && (
+        <Wrap role="region" aria-label={t(`cookie.banner.title`)}>
+          <Message>
+            {analyticsConsent === undefined ? (
+              <>
+                <GridRow>
+                  <GridCol setWidth="two-thirds">
+                    <Heading as="h2" size="M" id="cookie-banner-heading">
+                      {t(`cookie.banner.title`)}
+                    </Heading>
+                    <Paragraph id="cookie-banner-p1">
+                      {t(`cookie.banner.p1`)}
+                    </Paragraph>
+                    <Paragraph id="cookie-banner-p2">
+                      {t(`cookie.banner.p2`)}
+                    </Paragraph>
+                  </GridCol>
+                </GridRow>
+                <ButtonGroup>
                   <Button
                     type="button"
-                    onClick={() => setIsBannerVisible(false)}
+                    onClick={() => setAnalyticsConsent(true)}
                   >
-                    {t(`cookie.banner.button.hide`)}
+                    {t(`cookie.banner.button.accept`)}
                   </Button>
-                </GridCol>
-              </GridRow>
-            </>
-          )}
-        </Message>
-      </Wrap>
-    )
+                  <Button
+                    type="button"
+                    onClick={() => setAnalyticsConsent(false)}
+                  >
+                    {t(`cookie.banner.button.reject`)}
+                  </Button>
+                  <AppLink href={{ pathname: '/help/cookies' }}>
+                    {t(`cookie.banner.button.link`)}
+                  </AppLink>
+                </ButtonGroup>
+              </>
+            ) : (
+              <>
+                <GridRow>
+                  <GridCol setWidth="two-thirds">
+                    <Paragraph
+                      id={`cookie-banner-confirmation-${
+                        analyticsConsent ? 'approved' : 'rejected'
+                      }`}
+                    >
+                      <Trans
+                        i18nKey="cookie.banner.confirmation"
+                        context={analyticsConsent ? 'approved' : 'rejected'}
+                      >
+                        You have accepted analytics cookies. You can{' '}
+                        <AppLink href={{ pathname: '/help/cookies' }}>
+                          change your cookie settings
+                        </AppLink>{' '}
+                        at any time.
+                      </Trans>
+                    </Paragraph>
+                    <Button
+                      type="button"
+                      onClick={() => setIsBannerVisible(false)}
+                    >
+                      {t(`cookie.banner.button.hide`)}
+                    </Button>
+                  </GridCol>
+                </GridRow>
+              </>
+            )}
+          </Message>
+        </Wrap>
+      )}
+    </>
   );
 };

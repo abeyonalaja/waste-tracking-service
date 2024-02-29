@@ -100,16 +100,25 @@ const NextIcon = styled(Icon)`
   margin-right: 0;
 `;
 
-export const Pagination = ({ url, pages, currentPage, totalPages }: Props) => {
+export const Pagination = ({
+  url,
+  pages,
+  currentPage = 0,
+  totalPages = 1,
+}: Props) => {
   const { t } = useTranslation();
 
   const getPaginationToken = (pageNumber) => {
     if (pageNumber === 1) return {};
-    return { paginationToken: encodeURIComponent(pages[pageNumber - 2].token) };
+    if (pages) {
+      return {
+        paginationToken: encodeURIComponent(pages[pageNumber - 2].token),
+      };
+    }
   };
 
   const getPageRange = () => {
-    const range = [];
+    const range: Array<string | number> = [];
     const maxPagesToShow = 5;
     const totalPagesInRange = Math.min(totalPages, maxPagesToShow);
 

@@ -38,8 +38,17 @@ export function Index() {
   const router = useRouter();
   const apiConfig = useApiConfig();
   const { setSubmission } = useSubmissionContext();
+
+  const [numberOfCompleteSubmissions, setNumberOfCompleteSubmissions] =
+    React.useState<number>(0);
+  const [numberOfCompleteWithEstimates, setNumberOfCompleteWithEstimates] =
+    React.useState<number>(0);
+  const [numberOfIncompleteSubmissions, setNumberOfIncompleteSubmissions] =
+    React.useState<number>(0);
+
   const [context, setContext] = useState<string>('');
 
+  const [numberOfTemplates, setNumberOfTemplates] = React.useState<number>(0);
   useEffect(() => {
     setSubmission({});
   }, [setSubmission]);
@@ -55,28 +64,62 @@ export function Index() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries`,
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/numberOfSubmissions`,
           {
             headers: apiConfig,
           }
-        ).then((response) => {
-          if (response.ok) return response.json();
-          else {
-            if (response.status === 403) {
-              router.push({
-                pathname: `/403/`,
-              });
-            }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setNumberOfCompleteSubmissions(data.completedWithActuals);
+          setNumberOfCompleteWithEstimates(data.completedWithEstimates);
+          setNumberOfIncompleteSubmissions(data.incomplete);
+        } else {
+          if (response.status === 403) {
+            router.push({
+              pathname: `/403/`,
+            });
           }
-        });
+        }
       } catch (e) {
         console.error(e);
       }
     };
+
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/numberOfTemplates`,
+          {
+            headers: apiConfig,
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setNumberOfTemplates(data);
+        } else {
+          if (response.status === 403) {
+            router.push({
+              pathname: `/403/`,
+            });
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const maxValue = 999;
+  const maxValueReached = '999+'; // display this in case more than 999 records exist
   const { t } = useTranslation();
   return (
     <>
@@ -121,7 +164,7 @@ export function Index() {
                       query: { context: 'use' },
                     }}
                   >
-                    {t('exportJourney.exportHome.useTemplateToCreatRecord')}
+                    {t('exportJourney.exportHome.useTemplateToCreateRecord')}
                   </AppLink>
                 </GovUK.ListItem>
                 {process.env.NEXT_PUBLIC_MULTIPLES_ENABLED === 'true' && (
@@ -142,7 +185,13 @@ export function Index() {
                     }}
                   >
                     {' '}
-                    {t('exportJourney.exportHome.manageIncompleteRecords')}
+                    {t('exportJourney.exportHome.manageIncompleteRecords', {
+                      countRecords:
+                        numberOfIncompleteSubmissions > maxValue
+                          ? maxValueReached
+                          : numberOfIncompleteSubmissions,
+                      plural: numberOfIncompleteSubmissions > 1 ? 's' : '',
+                    })}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
@@ -160,7 +209,12 @@ export function Index() {
                       pathname: `/export/estimated`,
                     }}
                   >
-                    {t('exportJourney.exportHome.updateRecordWithActuals')}
+                    {t('exportJourney.exportHome.updateRecordWithActuals', {
+                      countRecords:
+                        numberOfCompleteWithEstimates > maxValue
+                          ? maxValueReached
+                          : numberOfCompleteWithEstimates,
+                    })}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
@@ -178,7 +232,12 @@ export function Index() {
                       pathname: `/export/submitted`,
                     }}
                   >
-                    {t('exportJourney.exportHome.viewAllRecords')}
+                    {t('exportJourney.exportHome.viewAllRecords', {
+                      countRecords:
+                        numberOfCompleteSubmissions > maxValue
+                          ? maxValueReached
+                          : numberOfCompleteSubmissions,
+                    })}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>
@@ -208,7 +267,13 @@ export function Index() {
                       pathname: `/export/templates`,
                     }}
                   >
-                    {t('templates.manageLink')}
+                    {t('templates.manageLink', {
+                      countRecords:
+                        numberOfTemplates > maxValue
+                          ? maxValueReached
+                          : numberOfTemplates,
+                      plural: numberOfTemplates > 1 ? 's' : '',
+                    })}
                   </AppLink>
                 </GovUK.ListItem>
               </GovUK.UnorderedList>

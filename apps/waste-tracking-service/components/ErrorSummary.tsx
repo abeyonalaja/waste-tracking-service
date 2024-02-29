@@ -14,30 +14,28 @@ import {
   FOCUS_WIDTH,
   MEDIA_QUERIES,
   RESPONSIVE_4,
+  RESPONSIVE_8,
 } from '@govuk-react/constants';
-
-import { spacing } from '@govuk-react/lib';
 import { AppLink } from './AppLink';
 
-const StyledErrorSummary = styled('div')(
-  {
-    color: TEXT_COLOUR,
-    padding: RESPONSIVE_4.mobile,
-    border: `${BORDER_WIDTH_MOBILE} solid ${ERROR_COLOUR}`,
-    '&:focus': {
-      outline: `${FOCUS_WIDTH} solid ${FOCUS_COLOUR}`,
-      outlineOffset: '0',
-    },
-    [MEDIA_QUERIES.LARGESCREEN]: {
-      padding: RESPONSIVE_4.tablet,
-      border: `${BORDER_WIDTH} solid ${ERROR_COLOUR}`,
-    },
+const StyledErrorSummary = styled('div')({
+  color: TEXT_COLOUR,
+  padding: RESPONSIVE_4.mobile,
+  border: `${BORDER_WIDTH_MOBILE} solid ${ERROR_COLOUR}`,
+  marginBottom: RESPONSIVE_8.mobile,
+  '&:focus': {
+    outline: `${FOCUS_WIDTH} solid ${FOCUS_COLOUR}`,
+    outlineOffset: '0',
   },
-  spacing.withWhiteSpace({ marginBottom: 6 })
-);
+  [MEDIA_QUERIES.LARGESCREEN]: {
+    padding: RESPONSIVE_4.tablet,
+    border: `${BORDER_WIDTH} solid ${ERROR_COLOUR}`,
+    marginBottom: RESPONSIVE_8.tablet,
+  },
+});
 
 export interface ErrorSummaryProps {
-  onHandleErrorClick?: (targetName: string, e?) => void;
+  onHandleErrorClick?: (targetName: string | undefined, e?) => void;
   heading?: string;
   description?: string;
   errors?: {
@@ -46,7 +44,7 @@ export interface ErrorSummaryProps {
   }[];
 }
 
-const handleJumpToError = (targetName: string, e?) => {
+const handleJumpToError = (targetName?: string, e?) => {
   e.preventDefault();
   const targetElement = document.querySelector(
     `[name="${targetName}"]`
