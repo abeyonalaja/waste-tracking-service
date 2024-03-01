@@ -11,7 +11,7 @@ secret:
   env:
     IS_MULTIPLE_UPLOAD_ENABLED: 'true'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'true'
-    FEATURE_PRIVATE_AUDIENCE_CHECKS: ''
+    FEATURE_PRIVATE_AUDIENCE_CHECKS: 'false'
 ingress:
   enabled: true
   className: 'nginx'
