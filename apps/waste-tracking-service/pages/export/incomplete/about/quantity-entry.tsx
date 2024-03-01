@@ -9,6 +9,8 @@ import {
   Loading,
   SaveReturnButton,
   SubmissionNotFound,
+  Paragraph,
+  AppLink,
 } from 'components';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 
@@ -25,7 +27,10 @@ import useApiConfig from 'utils/useApiConfig';
 
 const StyledInputWrap = styled.div`
   margin-bottom: 15px;
-  margin-left: 55px;
+`;
+
+const StyledLink = styled(AppLink)`
+  margin-bottom: 40px;
 `;
 
 const BreadCrumbs = ({ id }) => {
@@ -68,9 +73,19 @@ const QuantityEntry = () => {
     quantityVolumeError?: string;
   }>({});
 
+  function filterUndefinedErrors(errors) {
+    return Object.keys(errors).reduce((acc, key) => {
+      if (errors[key] !== undefined) {
+        acc[key] = errors[key];
+      }
+      return acc;
+    }, {});
+  }
+
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
+      setQuantityType(router.query.weightOrVolume);
     }
   }, [router.isReady, router.query.id]);
 
@@ -113,7 +128,7 @@ const QuantityEntry = () => {
                 setBulkWaste(false);
                 setQuantityType('Weight');
               }
-
+              setQuantityType(router.query.weightOrVolume);
               setIsLoading(false);
               setIsError(false);
             }
@@ -147,8 +162,9 @@ const QuantityEntry = () => {
           'cubic metres'
         ),
       };
-      if (isNotEmpty(newErrors)) {
-        setErrors(newErrors);
+      const onlyRealErrors = filterUndefinedErrors(newErrors);
+      if (isNotEmpty(onlyRealErrors)) {
+        setErrors(onlyRealErrors);
       } else {
         setErrors(null);
 
@@ -195,15 +211,20 @@ const QuantityEntry = () => {
     [id, quantityType, weight, volume, estimate, bulkWaste]
   );
 
+  function changetoActual(event) {
+    event.preventDefault();
+    setEstimate(false);
+  }
+  function changetoEstimate(event) {
+    event.preventDefault();
+    setEstimate(true);
+  }
+
   return (
     <>
       <Head>
         <title>
-          {bulkWaste
-            ? estimate
-              ? t('exportJourney.quantityValue.Estimate.title')
-              : t('exportJourney.quantityValue.Actual.title')
-            : estimate
+          {estimate
             ? t('exportJourney.quantityValueSmall.Estimate.title')
             : t('exportJourney.quantityValueSmall.Actual.title')}
         </title>
@@ -232,17 +253,42 @@ const QuantityEntry = () => {
                 <GovUK.Caption size="L">
                   {t('exportJourney.quantity.caption')}
                 </GovUK.Caption>
-                {bulkWaste && (
-                  <form onSubmit={handleSubmit}>
-                    <GovUK.Fieldset>
-                      <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                        {estimate
-                          ? t('exportJourney.quantityValue.Estimate.title')
-                          : t('exportJourney.quantityValue.Actual.title')}
-                      </GovUK.Fieldset.Legend>
+                {bulkWaste && quantityType === 'Weight' && (
+                  <>
+                    <GovUK.Heading size="LARGE">
+                      {estimate
+                        ? t(
+                            'exportJourney.quantity.entry.bulk.estimateWeight.title'
+                          )
+                        : t(
+                            'exportJourney.quantity.entry.bulk.actualWeight.title'
+                          )}
+                    </GovUK.Heading>
+                    {!estimate ? (
+                      <Paragraph>
+                        {t(
+                          'exportJourney.quantity.entry.bulk.actualWeight.intro'
+                        )}
+                        <AppLink href="#" onClick={changetoEstimate}>
+                          {t('exportJourney.quantity.entry.switchToEstimate')}
+                        </AppLink>
+                        .
+                      </Paragraph>
+                    ) : (
                       <GovUK.Paragraph>
-                        {t('exportJourney.quantityValue.intro')}
+                        {t(
+                          'exportJourney.quantity.entry.bulk.estimateWeight.intro'
+                        )}
                       </GovUK.Paragraph>
+                    )}
+                    {estimate && (
+                      <StyledInputWrap>
+                        <GovUK.WarningText>
+                          {t('exportJourney.quantity.entry.bulk.warning')}
+                        </GovUK.WarningText>
+                      </StyledInputWrap>
+                    )}
+                    <form onSubmit={handleSubmit}>
                       <GovUK.MultiChoice
                         mb={6}
                         label=""
@@ -251,59 +297,124 @@ const QuantityEntry = () => {
                           touched: !!errors?.quantityTypeError,
                         }}
                       >
-                        <GovUK.Radio
-                          name="quantityType"
-                          id="quantityTypeYes"
-                          checked={quantityType === 'Weight'}
-                          onChange={() => setQuantityType('Weight')}
-                          value="Weight"
-                        >
-                          {t('exportJourney.quantityValue.weightLabel')}
-                        </GovUK.Radio>
-                        <StyledInputWrap>
-                          <InputWithSuffix
-                            id="valueWeight"
-                            label="Weight"
-                            labelHidden={true}
-                            onChange={(e) => setWeight(e.target.value)}
-                            value={weight}
-                            errorMessage={errors?.quantityWeightError}
-                            suffix={t('weight.tonnes')}
-                            maxLength={10}
-                            hint={t('exportJourney.quantityValue.inputHint')}
-                          />
-                        </StyledInputWrap>
-                        <GovUK.Radio
-                          name="quantityType"
-                          id="quantityTypeEstimate"
-                          checked={quantityType === 'Volume'}
-                          onChange={() => setQuantityType('Volume')}
-                          value="Volume"
-                        >
-                          {t('exportJourney.quantityValue.volumeLabel')}
-                        </GovUK.Radio>
-                        <StyledInputWrap>
-                          <InputWithSuffix
-                            id="valueVolume"
-                            label="Volume"
-                            labelHidden={true}
-                            onChange={(e) => setVolume(e.target.value)}
-                            value={volume}
-                            errorMessage={errors?.quantityVolumeError}
-                            suffix={t('volume.m3')}
-                            maxLength={10}
-                            hint={t('exportJourney.quantityValue.inputHint')}
-                          />
-                        </StyledInputWrap>
+                        <InputWithSuffix
+                          id="valueWeight"
+                          label={
+                            estimate
+                              ? t(
+                                  'exportJourney.quantity.entry.bulk.estimateWeightInputLabel'
+                                )
+                              : t(
+                                  'exportJourney.quantity.entry.bulk.actualWeightInputLabel'
+                                )
+                          }
+                          onChange={(e) => setWeight(e.target.value)}
+                          value={weight}
+                          errorMessage={errors?.quantityWeightError}
+                          suffix={t('weight.tonnes')}
+                          maxLength={10}
+                          hint={t('exportJourney.quantityValue.inputHint')}
+                        />
+                        {estimate && (
+                          <ButtonGroup>
+                            <StyledLink href="#" onClick={changetoActual}>
+                              {t(
+                                'exportJourney.quantity.entry.weight.switchToActual'
+                              )}
+                            </StyledLink>
+                          </ButtonGroup>
+                        )}
                       </GovUK.MultiChoice>
-                    </GovUK.Fieldset>
-                    <ButtonGroup>
-                      <GovUK.Button id="saveButton">
-                        {t('saveButton')}
-                      </GovUK.Button>
-                      <SaveReturnButton onClick={handleLinkSubmit} />
-                    </ButtonGroup>
-                  </form>
+
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton onClick={handleLinkSubmit} />
+                      </ButtonGroup>
+                    </form>
+                  </>
+                )}
+                {bulkWaste && quantityType === 'Volume' && (
+                  <>
+                    <GovUK.Heading size="LARGE">
+                      {estimate
+                        ? t(
+                            'exportJourney.quantity.entry.bulk.estimateVolume.title'
+                          )
+                        : t(
+                            'exportJourney.quantity.entry.bulk.actualVolume.title'
+                          )}
+                    </GovUK.Heading>
+                    {!estimate ? (
+                      <Paragraph>
+                        {t(
+                          'exportJourney.quantity.entry.bulk.actualVolume.intro'
+                        )}
+                        <AppLink href="#" onClick={changetoEstimate}>
+                          {t('exportJourney.quantity.entry.switchToEstimate')}
+                        </AppLink>
+                        .
+                      </Paragraph>
+                    ) : (
+                      <GovUK.Paragraph>
+                        {t(
+                          'exportJourney.quantity.entry.bulk.estimateVolume.intro'
+                        )}
+                      </GovUK.Paragraph>
+                    )}
+                    {estimate && (
+                      <StyledInputWrap>
+                        <GovUK.WarningText>
+                          {t('exportJourney.quantity.entry.bulk.warning')}
+                        </GovUK.WarningText>
+                      </StyledInputWrap>
+                    )}
+                    <form onSubmit={handleSubmit}>
+                      <GovUK.MultiChoice
+                        mb={6}
+                        label=""
+                        meta={{
+                          error: errors?.quantityTypeError,
+                          touched: !!errors?.quantityTypeError,
+                        }}
+                      >
+                        <InputWithSuffix
+                          id="valueVolume"
+                          label={
+                            estimate
+                              ? t(
+                                  'exportJourney.quantity.entry.bulk.estimateVolumeInputLabel'
+                                )
+                              : t(
+                                  'exportJourney.quantity.entry.bulk.actualVolumeInputLabel'
+                                )
+                          }
+                          onChange={(e) => setVolume(e.target.value)}
+                          value={volume}
+                          errorMessage={errors?.quantityVolumeError}
+                          suffix={t('volume.m3')}
+                          maxLength={10}
+                          hint={t('exportJourney.quantityValue.inputHint')}
+                        />
+                        {estimate && (
+                          <ButtonGroup>
+                            <StyledLink href="#" onClick={changetoActual}>
+                              {t(
+                                'exportJourney.quantity.entry.volume.switchToActual'
+                              )}
+                            </StyledLink>
+                          </ButtonGroup>
+                        )}
+                      </GovUK.MultiChoice>
+                      <ButtonGroup>
+                        <GovUK.Button id="saveButton">
+                          {t('saveButton')}
+                        </GovUK.Button>
+                        <SaveReturnButton onClick={handleLinkSubmit} />
+                      </ButtonGroup>
+                    </form>
+                  </>
                 )}
                 {!bulkWaste && (
                   <>
@@ -312,17 +423,38 @@ const QuantityEntry = () => {
                         ? t('exportJourney.quantityValueSmall.Estimate.title')
                         : t('exportJourney.quantityValueSmall.Actual.title')}
                     </GovUK.Heading>
-                    <GovUK.Paragraph>
-                      {estimate
-                        ? t('exportJourney.quantityValueSmall.Estimate.intro')
-                        : t('exportJourney.quantityValueSmall.Actual.intro')}
-                    </GovUK.Paragraph>
+                    {!estimate ? (
+                      <Paragraph>
+                        {t('exportJourney.quantityValueSmall.Actual.intro')}
+                        <AppLink href="#" onClick={changetoEstimate}>
+                          {t('exportJourney.quantity.entry.switchToEstimate')}
+                        </AppLink>
+                        .
+                      </Paragraph>
+                    ) : (
+                      <GovUK.Paragraph>
+                        {t('exportJourney.quantityValueSmall.Estimate.intro')}
+                      </GovUK.Paragraph>
+                    )}
+                    {estimate && (
+                      <StyledInputWrap>
+                        <GovUK.WarningText>
+                          {t('exportJourney.quantity.entry.bulk.warning')}
+                        </GovUK.WarningText>
+                      </StyledInputWrap>
+                    )}
                     <form onSubmit={handleSubmit}>
                       <InputWithSuffix
                         id="valueWeight"
-                        label={t(
-                          'exportJourney.quantityValueSmall.weightLabel'
-                        )}
+                        label={
+                          estimate
+                            ? t(
+                                'exportJourney.quantityValueSmall.weightLabelEstimate'
+                              )
+                            : t(
+                                'exportJourney.quantityValueSmall.weightLabelActual'
+                              )
+                        }
                         onChange={(e) => setWeight(e.target.value)}
                         value={weight}
                         errorMessage={errors?.quantityWeightError}
@@ -330,6 +462,15 @@ const QuantityEntry = () => {
                         maxLength={10}
                         hint={t('exportJourney.quantityValue.inputHint')}
                       />
+                      {estimate && (
+                        <ButtonGroup>
+                          <StyledLink href="#" onClick={changetoActual}>
+                            {t(
+                              'exportJourney.quantity.entry.weight.switchToActual'
+                            )}
+                          </StyledLink>
+                        </ButtonGroup>
+                      )}
                       <ButtonGroup>
                         <GovUK.Button id="saveButton">
                           {t('saveButton')}

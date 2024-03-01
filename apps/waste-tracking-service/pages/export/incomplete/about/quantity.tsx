@@ -7,6 +7,7 @@ import {
   Footer,
   Header,
   Loading,
+  RadiosDivider,
   SaveReturnButton,
   SubmissionNotFound,
 } from 'components';
@@ -14,13 +15,16 @@ import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
-import { isNotEmpty, validateQuantityType } from 'utils/validators';
+import {
+  isNotEmpty,
+  validateQuantityType,
+  validateQuantityWeightOrVolume,
+} from 'utils/validators';
 import {
   PutWasteQuantityRequest,
   Submission,
 } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
-
 const Quantity = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -32,9 +36,11 @@ const Quantity = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const apiConfig = useApiConfig();
+  const [weightOrVolume, setWeightOrVolume] = useState<string>();
 
   const [errors, setErrors] = useState<{
     quantityTypeError?: string;
+    weightOrVolumeError?: string;
   }>({});
 
   useEffect(() => {
@@ -50,8 +56,17 @@ const Quantity = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
+      const quantityTypeError = validateQuantityType(quantityType, bulkWaste);
+
       const newErrors = {
-        quantityTypeError: validateQuantityType(quantityType, bulkWaste),
+        quantityTypeError: quantityTypeError,
+        weightOrVolumeError: quantityTypeError
+          ? undefined
+          : validateQuantityWeightOrVolume(
+              weightOrVolume,
+              quantityType,
+              bulkWaste
+            ),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -89,7 +104,7 @@ const Quantity = () => {
                       : `/export/incomplete/about/quantity-entry`;
                   router.push({
                     pathname: path,
-                    query: { id },
+                    query: { id, weightOrVolume: weightOrVolume },
                   });
                 }
               });
@@ -103,12 +118,12 @@ const Quantity = () => {
               : `/export/incomplete/about/quantity-entry`;
           router.push({
             pathname: path,
-            query: { id },
+            query: { id, weightOrVolume: weightOrVolume },
           });
         }
       }
     },
-    [id, quantityType, data]
+    [id, weightOrVolume, quantityType, data]
   );
 
   useEffect(() => {
@@ -146,6 +161,31 @@ const Quantity = () => {
                   ? null
                   : data.wasteQuantity?.value.type
               );
+              // for the weightOrVolume variable, we check if the parent object has setted it, i.e. we have to populate
+              // the radio buttons with the correct value
+              if ('value' in data.wasteQuantity) {
+                const actualOrEstimate = data.wasteQuantity.value?.type;
+                switch (actualOrEstimate) {
+                  case 'ActualData':
+                    // if actualData array is not empty and the type is ActualData, i.e. we have
+                    // entered actual data, we populate our variable with volume or weight based on the actual data
+                    if (data.wasteQuantity?.value?.actualData !== undefined) {
+                      setWeightOrVolume(
+                        data.wasteQuantity?.value?.actualData?.quantityType
+                      );
+                    }
+                    break;
+                  case 'EstimateData':
+                    // if estimateData array is not empty and the type is EstimateData, i.e. we have
+                    // entered estimate data, we populate our variable with volume or weight based on the estimate data
+                    if (data.wasteQuantity?.value?.estimateData !== undefined) {
+                      setWeightOrVolume(
+                        data.wasteQuantity?.value?.estimateData?.quantityType
+                      );
+                    }
+                    break;
+                }
+              }
               if (
                 (data.wasteDescription?.status === 'Started' ||
                   data.wasteDescription?.status === 'Complete') &&
@@ -216,39 +256,94 @@ const Quantity = () => {
                 <form onSubmit={handleSubmit}>
                   <GovUK.Fieldset>
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                      {bulkWaste
-                        ? t('exportJourney.quantity.bulk.title')
-                        : t('exportJourney.quantity.small.title')}
+                      {t('exportJourney.quantity.title')}
                     </GovUK.Fieldset.Legend>
                     <GovUK.Paragraph>
-                      {t('exportJourney.quantity.intro')}
+                      {t('exportJourney.quantity.paragraph')}
                     </GovUK.Paragraph>
                     <GovUK.MultiChoice
                       mb={6}
                       label=""
                       meta={{
-                        error: errors?.quantityTypeError,
-                        touched: !!errors?.quantityTypeError,
+                        error:
+                          errors?.quantityTypeError ||
+                          errors?.weightOrVolumeError,
+                        touched:
+                          !!errors?.quantityTypeError ||
+                          !!errors?.weightOrVolumeError,
                       }}
                     >
                       <GovUK.Radio
                         name="quantityType"
                         id="quantityTypeYes"
-                        checked={quantityType === 'ActualData'}
-                        onChange={() => setQuantityType('ActualData')}
+                        checked={
+                          quantityType === 'ActualData' &&
+                          weightOrVolume === 'Weight'
+                        }
+                        onChange={() => {
+                          setQuantityType('ActualData');
+                          setWeightOrVolume('Weight');
+                        }}
                         value="ActualData"
                       >
-                        {t('exportJourney.quantity.radioYes')}
+                        {bulkWaste
+                          ? t('exportJourney.quantity.bulk.actualWeight')
+                          : t('exportJourney.quantity.small.actualWeight')}
                       </GovUK.Radio>
                       <GovUK.Radio
                         name="quantityType"
                         id="quantityTypeEstimate"
-                        checked={quantityType === 'EstimateData'}
-                        onChange={() => setQuantityType('EstimateData')}
+                        checked={
+                          quantityType === 'EstimateData' &&
+                          weightOrVolume === 'Weight'
+                        }
+                        onChange={() => {
+                          setQuantityType('EstimateData');
+                          setWeightOrVolume('Weight');
+                        }}
                         value="EstimateData"
                       >
-                        {t('exportJourney.quantity.radioEstimate')}
+                        {bulkWaste
+                          ? t('exportJourney.quantity.bulk.estimateWeight')
+                          : t('exportJourney.quantity.small.estimateWeight')}
                       </GovUK.Radio>
+                      {bulkWaste && (
+                        <>
+                          <GovUK.Radio
+                            name="quantityType"
+                            id="quantityTypeYes"
+                            checked={
+                              quantityType === 'ActualData' &&
+                              weightOrVolume === 'Volume'
+                            }
+                            onChange={() => {
+                              setQuantityType('ActualData');
+                              setWeightOrVolume('Volume');
+                            }}
+                            value="ActualDataVolume"
+                          >
+                            {t('exportJourney.quantity.bulk.actualVolume')}
+                          </GovUK.Radio>
+                          <GovUK.Radio
+                            name="quantityType"
+                            id="quantityTypeEstimate"
+                            checked={
+                              quantityType === 'EstimateData' &&
+                              weightOrVolume === 'Volume'
+                            }
+                            onChange={() => {
+                              setQuantityType('EstimateData');
+                              setWeightOrVolume('Volume');
+                            }}
+                            value="EstimateDataVolume"
+                          >
+                            {t('exportJourney.quantity.bulk.estimateVolume')}
+                          </GovUK.Radio>
+                        </>
+                      )}
+                      <RadiosDivider>
+                        {t('exportJourney.quantity.radioDivisor')}
+                      </RadiosDivider>
                       <GovUK.Radio
                         name="quantityType"
                         id="quantityTypeNo"
@@ -256,7 +351,7 @@ const Quantity = () => {
                         onChange={() => setQuantityType('NotApplicable')}
                         value="NotApplicable"
                       >
-                        {t('exportJourney.quantity.radioNo')}
+                        {t('exportJourney.quantity.dontKnow')}
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>

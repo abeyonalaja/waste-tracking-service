@@ -225,6 +225,23 @@ export const validateWeightOrVolume: (
     return t('validation.quantity.amount.actual');
 };
 
+export const validateQuantityWeightOrVolume: (
+  weightOrVolume?: string,
+  quantityType?: string,
+  isBulkWaste?: boolean
+) => string | undefined = (weightOrVolume, quantityType, isBulkWaste) => {
+  if (quantityType === 'NotApplicable') {
+    return;
+  }
+  if (weightOrVolume === undefined) {
+    if (isBulkWaste) {
+      return t('validation.quantity.type.bulk');
+    } else {
+      return t('validation.quantity.type.small');
+    }
+  }
+};
+
 export const validateQuantityValue: (
   quantityType: boolean,
   quantityValue: string,
