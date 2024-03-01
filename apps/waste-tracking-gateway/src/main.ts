@@ -167,7 +167,10 @@ let filter =
     ? userFilter.any
     : userFilter.uniqueReferenceString(users);
 
-if (process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS']) {
+if (
+  process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS'] &&
+  process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS'] === 'true'
+) {
   filter = userFilter.or(
     filter,
     new LimitedAudienceUserFilter(
