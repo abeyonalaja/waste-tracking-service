@@ -38,6 +38,7 @@ export {
   setDraftRecoveryFacilityDetails,
   deleteDraftRecoveryFacilityDetails,
   getNumberOfSubmissions,
+  validateSubmissions,
 } from './submission.dto';
 
 export {
@@ -173,6 +174,9 @@ export type {
   GetNumberOfSubmissionsRequest,
   GetNumberOfSubmissionsResponse,
   NumberOfSubmissions,
+  ValidateSubmissionsRequest,
+  ValidateSubmissionsResponse,
+  CustomerReference,
 } from './submission.dto';
 
 export type {
@@ -200,3 +204,5 @@ export type {
 export * as submissionBaseSchema from './submissionBase.schema';
 export * as submissionSchema from './submission.schema';
 export * as templateSchema from './template.schema';
+
+export * as validation from './validation';

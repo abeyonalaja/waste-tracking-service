@@ -15,8 +15,42 @@ export type BulkSubmissionValidationColumnError = {
   errorDetails: BulkSubmissionValidationRowErrorDetails[];
 };
 
-export type SubmissionInBulk = {
-  id: string;
+type EwcCode = { code: string };
+
+type WasteDescription = {
+  wasteCode:
+    | { type: 'NotApplicable' }
+    | {
+        type: 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB';
+        code: string;
+      };
+  ewcCodes: EwcCode[];
+  nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };
+  description: string;
+};
+
+type WasteQuantity =
+  | {
+      type: 'NotApplicable';
+    }
+  | {
+      type: 'EstimateData' | 'ActualData';
+      estimateData: {
+        quantityType?: 'Volume' | 'Weight';
+        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+        value?: number;
+      };
+      actualData: {
+        quantityType?: 'Volume' | 'Weight';
+        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+        value?: number;
+      };
+    };
+
+export type PartialSubmission = {
+  reference: string;
+  wasteDescription: WasteDescription;
+  wasteQuantity: WasteQuantity;
 };
 
 export type SubmissionReference = {
@@ -43,7 +77,8 @@ export type BulkSubmissionState =
   | {
       status: 'PassedValidation';
       timestamp: Date;
-      drafts: SubmissionInBulk[];
+      hasEstimates: boolean;
+      submissions: PartialSubmission[];
     }
   | {
       status: 'Submitted';

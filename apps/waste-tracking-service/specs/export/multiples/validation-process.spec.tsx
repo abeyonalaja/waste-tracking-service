@@ -55,7 +55,7 @@ const loadingStateData = {
 const successfulValidationData = {
   data: {
     state: {
-      status: 'Submitted',
+      status: 'PassedValidation',
     },
   },
 };

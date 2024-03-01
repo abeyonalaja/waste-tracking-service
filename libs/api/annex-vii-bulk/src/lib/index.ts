@@ -9,5 +9,10 @@ export type {
   UpdateBatchResponse,
   BulkSubmissionValidationRowError,
   BulkSubmissionValidationColumnError,
+  SubmissionFlattened,
+  CustomerReferenceFlattened,
+  WasteDescriptionFlattened,
+  WasteQuantityFlattened,
+  PartialSubmission,
 } from './dto';
 export * as schema from './schema';

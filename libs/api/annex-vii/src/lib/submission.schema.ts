@@ -593,3 +593,189 @@ export const getNumberOfSubmissionsResponse: SchemaObject = {
     },
   },
 };
+
+export const wasteDescription: SchemaObject = {
+  properties: {
+    wasteCode: {
+      discriminator: 'type',
+      mapping: {
+        NotApplicable: { properties: {} },
+        BaselAnnexIX: { properties: { code: { type: 'string' } } },
+        OECD: { properties: { code: { type: 'string' } } },
+        AnnexIIIA: { properties: { code: { type: 'string' } } },
+        AnnexIIIB: { properties: { code: { type: 'string' } } },
+      },
+    },
+    ewcCodes: {
+      elements: {
+        properties: {
+          code: {
+            type: 'string',
+          },
+        },
+      },
+    },
+    description: { type: 'string' },
+  },
+  optionalProperties: {
+    nationalCode: {
+      discriminator: 'provided',
+      mapping: {
+        Yes: { properties: { value: { type: 'string' } } },
+        No: { properties: {} },
+      },
+    },
+  },
+};
+
+export const wasteQuantity: SchemaObject = {
+  discriminator: 'type',
+  mapping: {
+    NotApplicable: { properties: {} },
+    EstimateData: {
+      properties: {
+        estimateData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+        actualData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+      },
+    },
+    ActualData: {
+      properties: {
+        estimateData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+        actualData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const validateSubmissionsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    values: {
+      elements: {
+        properties: {
+          reference: { type: 'string' },
+          baselAnnexIXCode: { type: 'string' },
+          oecdCode: { type: 'string' },
+          annexIIIACode: { type: 'string' },
+          annexIIIBCode: { type: 'string' },
+          laboratory: { type: 'string' },
+          ewcCodes: { type: 'string' },
+          nationalCode: { type: 'string' },
+          wasteDescription: { type: 'string' },
+          wasteQuantityTonnes: { type: 'string' },
+          wasteQuantityCubicMetres: { type: 'string' },
+          wasteQuantityKilograms: { type: 'string' },
+          estimatedOrActualWasteQuantity: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
+const validationResult: SchemaObject = {
+  properties: {
+    valid: { type: 'boolean' },
+    accountId: { type: 'string' },
+    values: {
+      elements: {
+        optionalProperties: {
+          reference: { type: 'string' },
+          wasteDescription: wasteDescription,
+          wasteQuantity: wasteQuantity,
+          index: { type: 'uint16' },
+          fieldFormatErrors: {
+            elements: {
+              properties: {
+                field: {
+                  enum: [
+                    'CustomerReference',
+                    'WasteDescription',
+                    'WasteQuantity',
+                    'ExporterDetail',
+                    'ImporterDetail',
+                    'CollectionDate',
+                    'Carriers',
+                    'CollectionDetail',
+                    'UkExitLocation',
+                    'TransitCountries',
+                    'RecoveryFacilityDetail',
+                  ],
+                },
+                message: { type: 'string' },
+              },
+            },
+          },
+          invalidStructureErrors: {
+            elements: {
+              properties: {
+                fields: {
+                  elements: {
+                    properties: {
+                      field: {
+                        enum: [
+                          'CustomerReference',
+                          'WasteDescription',
+                          'WasteQuantity',
+                          'ExporterDetail',
+                          'ImporterDetail',
+                          'CollectionDate',
+                          'Carriers',
+                          'CollectionDetail',
+                          'UkExitLocation',
+                          'TransitCountries',
+                          'RecoveryFacilityDetail',
+                        ],
+                      },
+                      message: { type: 'string' },
+                    },
+                  },
+                },
+                message: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const validateSubmissionsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: validationResult,
+  },
+};

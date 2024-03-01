@@ -1,5 +1,7 @@
 import { SectionSummary } from '@wts/api/common';
 
+type EwcCode = { code: string };
+
 export type WasteDescriptionData = {
   wasteCode:
     | { type: 'NotApplicable' }
@@ -7,7 +9,7 @@ export type WasteDescriptionData = {
         type: 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB';
         code: string;
       };
-  ewcCodes: object[];
+  ewcCodes: EwcCode[];
   nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
 };

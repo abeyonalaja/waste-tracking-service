@@ -222,9 +222,37 @@ describe('getBatchResponse', () => {
         state: {
           status: 'PassedValidation',
           timestamp: new Date(),
-          drafts: [
+          hasEstimates: false,
+          submissions: [
             {
-              id: faker.datatype.uuid(),
+              reference: 'testRef',
+              wasteDescription: {
+                wasteCode: {
+                  type: 'AnnexIIIA',
+                  code: 'B1010 and B1050',
+                },
+                ewcCodes: [
+                  {
+                    code: '010101',
+                  },
+                  {
+                    code: '010102',
+                  },
+                ],
+                nationalCode: {
+                  provided: 'No',
+                },
+                description: 'test',
+              },
+              wasteQuantity: {
+                type: 'ActualData',
+                estimateData: {},
+                actualData: {
+                  quantityType: 'Weight',
+                  unit: 'Tonne',
+                  value: 2,
+                },
+              },
             },
           ],
         },

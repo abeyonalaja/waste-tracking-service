@@ -1,5 +1,6 @@
 import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
+import { Submission } from '@wts/api/annex-vii';
 
 export type BulkSubmissionValidationRowError = {
   rowNumber: number;
@@ -18,8 +19,10 @@ export type BulkSubmissionValidationColumnError = {
   errorDetails: BulkSubmissionValidationRowErrorDetails[];
 };
 
-export type Submission = {
-  id: string;
+export type PartialSubmission = {
+  reference: Submission['reference'];
+  wasteDescription: Submission['wasteDescription'];
+  wasteQuantity: Submission['wasteQuantity'];
 };
 
 export type SubmissionReference = {
@@ -46,7 +49,8 @@ export type BulkSubmissionState =
   | {
       status: 'PassedValidation';
       timestamp: Date;
-      drafts: Submission[];
+      hasEstimates: boolean;
+      submissions: PartialSubmission[];
     }
   | {
       status: 'Submitted';
@@ -108,3 +112,29 @@ export const updateBatch: Method = {
   name: 'updateBatch',
   httpVerb: 'POST',
 };
+
+export type CustomerReferenceFlattened = {
+  reference: string;
+};
+
+export type WasteDescriptionFlattened = {
+  baselAnnexIXCode: string;
+  oecdCode: string;
+  annexIIIACode: string;
+  annexIIIBCode: string;
+  laboratory: string;
+  ewcCodes: string;
+  nationalCode: string;
+  wasteDescription: string;
+};
+
+export type WasteQuantityFlattened = {
+  wasteQuantityTonnes: string;
+  wasteQuantityCubicMetres: string;
+  wasteQuantityKilograms: string;
+  estimatedOrActualWasteQuantity: string;
+};
+
+export type SubmissionFlattened = CustomerReferenceFlattened &
+  WasteDescriptionFlattened &
+  WasteQuantityFlattened;

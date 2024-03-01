@@ -158,6 +158,9 @@ import {
   GetNumberOfTemplatesResponse,
   GetNumberOfSubmissionsRequest,
   GetNumberOfSubmissionsResponse,
+  ValidateSubmissionsRequest,
+  ValidateSubmissionsResponse,
+  validateSubmissions,
 } from '@wts/api/annex-vii';
 
 export class DaprAnnexViiClient {
@@ -910,5 +913,16 @@ export class DaprAnnexViiClient {
       HttpMethod.POST,
       req
     )) as GetNumberOfSubmissionsResponse;
+  }
+
+  async validateSubmissions(
+    req: ValidateSubmissionsRequest
+  ): Promise<ValidateSubmissionsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      validateSubmissions.name,
+      HttpMethod.POST,
+      req
+    )) as ValidateSubmissionsResponse;
   }
 }

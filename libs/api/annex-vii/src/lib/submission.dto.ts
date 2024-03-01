@@ -17,6 +17,7 @@ import {
   ExitLocationData,
   RecoveryFacilityData,
 } from './submissionBase.dto';
+import { ValidationResult } from './validation';
 
 export type CustomerReference = string;
 
@@ -25,13 +26,13 @@ type WasteQuantityData =
       type: 'NotApplicable';
     }
   | {
-      type?: 'EstimateData' | 'ActualData';
-      estimateData?: {
+      type: 'EstimateData' | 'ActualData';
+      estimateData: {
         quantityType?: 'Volume' | 'Weight';
         unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
         value?: number;
       };
-      actualData?: {
+      actualData: {
         quantityType?: 'Volume' | 'Weight';
         unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
         value?: number;
@@ -43,7 +44,19 @@ export type DraftWasteQuantity =
   | { status: 'NotStarted' }
   | {
       status: 'Started';
-      value?: WasteQuantityData;
+      value?: {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        estimateData?: {
+          quantityType?: 'Volume' | 'Weight';
+          unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+          value?: number;
+        };
+        actualData?: {
+          quantityType?: 'Volume' | 'Weight';
+          unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+          value?: number;
+        };
+      };
     }
   | {
       status: 'Complete';
@@ -392,5 +405,40 @@ export const setDraftRecoveryFacilityDetails: Method = {
 };
 export const deleteDraftRecoveryFacilityDetails: Method = {
   name: 'deleteDraftRecoveryFacilityDetails',
+  httpVerb: 'POST',
+};
+
+export type CustomerReferenceFlattened = {
+  reference: string;
+};
+
+export type WasteDescriptionFlattened = {
+  baselAnnexIXCode: string;
+  oecdCode: string;
+  annexIIIACode: string;
+  annexIIIBCode: string;
+  laboratory: string;
+  ewcCodes: string;
+  nationalCode: string;
+  wasteDescription: string;
+};
+
+export type WasteQuantityFlattened = {
+  wasteQuantityTonnes: string;
+  wasteQuantityCubicMetres: string;
+  wasteQuantityKilograms: string;
+  estimatedOrActualWasteQuantity: string;
+};
+
+export type SubmissionFlattened = CustomerReferenceFlattened &
+  WasteDescriptionFlattened &
+  WasteQuantityFlattened;
+
+export type ValidateSubmissionsRequest = AccountIdRequest & {
+  values: SubmissionFlattened[];
+};
+export type ValidateSubmissionsResponse = Response<ValidationResult>;
+export const validateSubmissions: Method = {
+  name: 'validateSubmissions',
   httpVerb: 'POST',
 };

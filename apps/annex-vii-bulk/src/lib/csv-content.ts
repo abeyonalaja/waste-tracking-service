@@ -1,98 +1,73 @@
 export type BulkSubmissionCsvRow = {
   reference: string;
-  baselAnnexIXCode?: string;
-  oedcCode?: string;
-  annexIIIACode?: string;
-  annexIIIBCode?: string;
-  laboratory?: 'yes';
+  baselAnnexIXCode: string;
+  oecdCode: string;
+  annexIIIACode: string;
+  annexIIIBCode: string;
+  laboratory: string;
   ewcCodes: string;
-  nationalCode?: string;
+  nationalCode: string;
   wasteDescription: string;
-  wasteQuantityTonnes?: number;
-  wasteQuantityCubicMetres?: number;
-  wasteQuantityKilograms?: number;
-  estimatedOrActualWasteQuantity: 'Estimated' | 'Actual';
+  wasteQuantityTonnes: string;
+  wasteQuantityCubicMetres: string;
+  wasteQuantityKilograms: string;
+  estimatedOrActualWasteQuantity: string;
   shippingDate: string;
   exporterOrganisationName: string;
   exporterAddress: string;
   exporterPostcode: string;
   exporterContactFullname: string;
   exporterContactPhoneNumber: string;
-  exporterFaxNumber?: string;
+  exporterFaxNumber: string;
   exporterEmailAddress: string;
   importerOrganisationName: string;
   importerAddress: string;
   importerContactFullname: string;
   importerContactPhoneNumber: string;
-  importerFaxNumber?: string;
+  importerFaxNumber: string;
   importerEmailAddress: string;
   wasteCollectionDate: string;
-  estimatedOrActualCollectionDate: 'Estimated' | 'Actual';
+  estimatedOrActualCollectionDate: string;
   firstCarrierOrganisationName: string;
   firstCarrierAddress: string;
   firstCarrierPostcode: string;
   firstCarrierContactFullname: string;
   firstCarrierContactPhoneNumber: string;
-  firstCarrierFaxNumber?: string;
+  firstCarrierFaxNumber: string;
   firstCarrierEmailAddress: string;
-  firstCarrierMeansOfTransport:
-    | 'road'
-    | 'rail'
-    | 'sea'
-    | 'air'
-    | 'inland waterways';
+  firstCarrierMeansOfTransport: string;
   firstCarrierMeansOfTransportDetails: string;
   secondCarrierOrganisationName: string;
   secondCarrierAddress: string;
   secondCarrierContactFullname: string;
   secondCarrierContactPhoneNumber: string;
-  secondCarrierFaxNumber?: string;
+  secondCarrierFaxNumber: string;
   secondCarrierEmailAddress: string;
-  secondCarrierMeansOfTransport:
-    | 'road'
-    | 'rail'
-    | 'sea'
-    | 'air'
-    | 'inland waterways';
+  secondCarrierMeansOfTransport: string;
   secondCarrierMeansOfTransportDetails: string;
   thirdCarrierOrganisationName: string;
   thirdCarrierAddress: string;
   thirdCarrierContactFullname: string;
   thirdCarrierContactPhoneNumber: string;
-  thirdCarrierFaxNumber?: string;
+  thirdCarrierFaxNumber: string;
   thirdCarrierEmailAddress: string;
-  thirdCarrierMeansOfTransport:
-    | 'road'
-    | 'rail'
-    | 'sea'
-    | 'air'
-    | 'inland waterways';
+  thirdCarrierMeansOfTransport: string;
   thirdCarrierMeansOfTransportDetails: string;
   fourthCarrierOrganisationName: string;
   fourthCarrierAddress: string;
   fourthCarrierContactFullname: string;
   fourthCarrierContactPhoneNumber: string;
-  fourthCarrierFaxNumber?: string;
+  fourthCarrierFaxNumber: string;
   fourthCarrierEmailAddress: string;
-  fourthCarrierMeansOfTransport:
-    | 'road'
-    | 'rail'
-    | 'sea'
-    | 'air'
-    | 'inland waterways';
+  fourthCarrierMeansOfTransport: string;
   fourthCarrierMeansOfTransportDetails: string;
   fifthCarrierOrganisationName: string;
   fifthCarrierAddress: string;
   fifthCarrierContactFullname: string;
   fifthCarrierContactPhoneNumber: string;
-  fifthCarrierFaxNumber?: string;
+  fifthCarrierFaxNumber: string;
   fifthCarrierEmailAddress: string;
-  fifthCarrierMeansOfTransport:
-    | 'road'
-    | 'rail'
-    | 'sea'
-    | 'air'
-    | 'inland waterways';
+  fifthCarrierMeansOfTransport: string;
   fifthCarrierMeansOfTransportDetails: string;
   whereWasteLeavesUk: string;
   transitCountries: string;
@@ -100,49 +75,49 @@ export type BulkSubmissionCsvRow = {
   interimSiteAddress: string;
   interimSiteContactFullname: string;
   interimSiteContactPhoneNumber: string;
-  interimSiteFaxNumber?: string;
+  interimSiteFaxNumber: string;
   interimSiteEmailAddress: string;
   interimSiteRecoveryCode: string;
   laboratoryOrganisationName: string;
   laboratoryAddress: string;
   laboratoryContactFullname: string;
   laboratoryContactPhoneNumber: string;
-  laboratoryFaxNumber?: string;
+  laboratoryFaxNumber: string;
   laboratoryEmailAddress: string;
   laboratoryDisposalCode: string;
   firstRecoveryFacilityOrganisationName: string;
   firstRecoveryFacilityAddress: string;
   firstRecoveryFacilityContactFullname: string;
   firstRecoveryFacilityContactPhoneNumber: string;
-  firstRecoveryFacilityFaxNumber?: string;
+  firstRecoveryFacilityFaxNumber: string;
   firstRecoveryFacilityEmailAddress: string;
   firstRecoveryFacilityRecoveryCode: string;
   secondRecoveryFacilityOrganisationName: string;
   secondRecoveryFacilityAddress: string;
   secondRecoveryFacilityContactFullname: string;
   secondRecoveryFacilityContactPhoneNumber: string;
-  secondRecoveryFacilityFaxNumber?: string;
+  secondRecoveryFacilityFaxNumber: string;
   secondRecoveryFacilityEmailAddress: string;
   secondRecoveryFacilityRecoveryCode: string;
   thirdRecoveryFacilityOrganisationName: string;
   thirdRecoveryFacilityAddress: string;
   thirdRecoveryFacilityContactFullname: string;
   thirdRecoveryFacilityContactPhoneNumber: string;
-  thirdRecoveryFacilityFaxNumber?: string;
+  thirdRecoveryFacilityFaxNumber: string;
   thirdRecoveryFacilityEmailAddress: string;
   thirdRecoveryFacilityRecoveryCode: string;
   fourthRecoveryFacilityOrganisationName: string;
   fourthRecoveryFacilityAddress: string;
   fourthRecoveryFacilityContactFullname: string;
   fourthRecoveryFacilityContactPhoneNumber: string;
-  fourthRecoveryFacilityFaxNumber?: string;
+  fourthRecoveryFacilityFaxNumber: string;
   fourthRecoveryFacilityEmailAddress: string;
   fourthRecoveryFacilityRecoveryCode: string;
   fifthRecoveryFacilityOrganisationName: string;
   fifthRecoveryFacilityAddress: string;
   fifthRecoveryFacilityContactFullname: string;
   fifthRecoveryFacilityContactPhoneNumber: string;
-  fifthRecoveryFacilityFaxNumber?: string;
+  fifthRecoveryFacilityFaxNumber: string;
   fifthRecoveryFacilityEmailAddress: string;
   fifthRecoveryFacilityRecoveryCode: string;
 };
@@ -150,7 +125,7 @@ export type BulkSubmissionCsvRow = {
 export const headersFormatted = [
   'reference',
   'baselAnnexIXCode',
-  'oedcCode',
+  'oecdCode',
   'annexIIIACode',
   'annexIIIBCode',
   'laboratory',

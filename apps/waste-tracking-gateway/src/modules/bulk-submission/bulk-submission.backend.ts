@@ -220,9 +220,61 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
           state: {
             status: 'PassedValidation',
             timestamp: timestamp,
-            drafts: [
+            hasEstimates: true,
+            submissions: [
               {
-                id: uuidv4(),
+                reference: 'ref1',
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'NotApplicable',
+                  },
+                  ewcCodes: [
+                    {
+                      code: '101213',
+                    },
+                  ],
+                  nationalCode: {
+                    provided: 'Yes',
+                    value: 'NatCode',
+                  },
+                  description: 'WasteDescription',
+                },
+                wasteQuantity: {
+                  type: 'ActualData',
+                  estimateData: {},
+                  actualData: {
+                    quantityType: 'Weight',
+                    unit: 'Kilogram',
+                    value: 12.5,
+                  },
+                },
+              },
+              {
+                reference: 'ref2',
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'BaselAnnexIX',
+                    code: 'B1010',
+                  },
+                  ewcCodes: [
+                    {
+                      code: '101213',
+                    },
+                  ],
+                  nationalCode: {
+                    provided: 'No',
+                  },
+                  description: 'WasteDescription',
+                },
+                wasteQuantity: {
+                  type: 'EstimateData',
+                  estimateData: {
+                    quantityType: 'Volume',
+                    unit: 'Cubic Metre',
+                    value: 10,
+                  },
+                  actualData: {},
+                },
               },
             ],
           },

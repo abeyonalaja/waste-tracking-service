@@ -13,6 +13,91 @@ const errorResponseValue: SchemaObject = {
   },
 };
 
+export const wasteDescription: SchemaObject = {
+  properties: {
+    wasteCode: {
+      discriminator: 'type',
+      mapping: {
+        NotApplicable: { properties: {} },
+        BaselAnnexIX: { properties: { code: { type: 'string' } } },
+        OECD: { properties: { code: { type: 'string' } } },
+        AnnexIIIA: { properties: { code: { type: 'string' } } },
+        AnnexIIIB: { properties: { code: { type: 'string' } } },
+      },
+    },
+    ewcCodes: {
+      elements: {
+        properties: {
+          code: {
+            type: 'string',
+          },
+        },
+      },
+    },
+    description: { type: 'string' },
+  },
+  optionalProperties: {
+    nationalCode: {
+      discriminator: 'provided',
+      mapping: {
+        Yes: { properties: { value: { type: 'string' } } },
+        No: { properties: {} },
+      },
+    },
+  },
+};
+
+export const wasteQuantity: SchemaObject = {
+  discriminator: 'type',
+  mapping: {
+    NotApplicable: { properties: {} },
+    EstimateData: {
+      properties: {
+        estimateData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+        actualData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+      },
+    },
+    ActualData: {
+      properties: {
+        estimateData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+        actualData: {
+          optionalProperties: {
+            quantityType: { enum: ['Volume', 'Weight'] },
+            unit: {
+              enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+            },
+            value: { type: 'float64' },
+          },
+        },
+      },
+    },
+  },
+};
+
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -60,10 +145,13 @@ const bulkSubmissionState: SchemaObject = {
     PassedValidation: {
       properties: {
         timestamp: { type: 'timestamp' },
-        drafts: {
+        hasEstimates: { type: 'boolean' },
+        submissions: {
           elements: {
             properties: {
-              id: { type: 'string' },
+              reference: { type: 'string' },
+              wasteDescription: wasteDescription,
+              wasteQuantity: wasteQuantity,
             },
           },
         },

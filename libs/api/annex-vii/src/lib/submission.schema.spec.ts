@@ -10,6 +10,8 @@ import {
   SetDraftWasteQuantityByIdRequest,
   SetDraftSubmissionConfirmationByIdRequest,
   SetDraftSubmissionDeclarationByIdRequest,
+  ValidateSubmissionsRequest,
+  ValidateSubmissionsResponse,
 } from './submission.dto';
 import {
   deleteDraftRequest,
@@ -21,6 +23,8 @@ import {
   setDraftCollectionDateByIdRequest,
   setDraftSubmissionConfirmationByIdRequest,
   setDraftSubmissionDeclarationByIdRequest,
+  validateSubmissionsRequest,
+  validateSubmissionsResponse,
 } from './submission.schema';
 
 const ajv = new Ajv();
@@ -340,6 +344,87 @@ describe('setDraftSubmissionDeclarationByIdRequest', () => {
       accountId: faker.datatype.uuid(),
       value: {
         status: 'Complete',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('validateSubmissionsRequest', () => {
+  const validate = ajv.compile<ValidateSubmissionsRequest>(
+    validateSubmissionsRequest
+  );
+
+  it('is compatible with dto values', () => {
+    const value: ValidateSubmissionsRequest = {
+      accountId: faker.datatype.uuid(),
+      values: [
+        {
+          reference: 'testRef',
+          baselAnnexIXCode: '',
+          oecdCode: '',
+          annexIIIACode: 'B1010;B1050',
+          annexIIIBCode: '',
+          laboratory: '',
+          ewcCodes: '010101;010102',
+          nationalCode: '',
+          wasteDescription: 'test',
+          wasteQuantityTonnes: '',
+          wasteQuantityCubicMetres: '1.2',
+          wasteQuantityKilograms: '',
+          estimatedOrActualWasteQuantity: 'Actual',
+        },
+      ],
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('validateSubmissionsResponse', () => {
+  const validate = ajv.compile<ValidateSubmissionsResponse>(
+    validateSubmissionsResponse
+  );
+
+  it('is compatible with dto values', () => {
+    const value: ValidateSubmissionsResponse = {
+      success: true,
+      value: {
+        valid: true,
+        accountId: faker.datatype.uuid(),
+        values: [
+          {
+            reference: 'testRef',
+            wasteDescription: {
+              wasteCode: {
+                type: 'AnnexIIIA',
+                code: 'B1010 and B1050',
+              },
+              ewcCodes: [
+                {
+                  code: '010101',
+                },
+                {
+                  code: '010102',
+                },
+              ],
+              nationalCode: {
+                provided: 'No',
+              },
+              description: 'test',
+            },
+            wasteQuantity: {
+              type: 'ActualData',
+              estimateData: {},
+              actualData: {
+                quantityType: 'Weight',
+                unit: 'Tonne',
+                value: 2,
+              },
+            },
+          },
+        ],
       },
     };
 

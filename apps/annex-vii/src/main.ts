@@ -9,7 +9,8 @@ import {
   TemplateController,
   parseDraft,
   parseTemplate,
-  validate,
+  validateDraft,
+  validateSubmission,
 } from './controller';
 import { CosmosClient } from '@azure/cosmos';
 import {
@@ -19,6 +20,8 @@ import {
 } from '@azure/identity';
 import { CosmosDraftRepository } from './data';
 import CosmosTemplateRepository from './data/cosmos-templates';
+import SubmissionController from './controller/submission-controller';
+import { DaprReferenceDataClient } from '@wts/client/reference-data';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -71,6 +74,14 @@ const templateController = new TemplateController(
     process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
     process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
     logger
+  ),
+  logger
+);
+
+const submissionController = new SubmissionController(
+  new DaprReferenceDataClient(
+    server.client,
+    process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
   ),
   logger
 );
@@ -134,7 +145,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateDraftFromTemplateRequest;
-    if (!validate.createDraftFromTemplateRequest(request)) {
+    if (!validateDraft.createDraftFromTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -168,7 +179,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CancelDraftByIdRequest;
-    if (!validate.setDraftSubmissionCancellationByIdRequest(request)) {
+    if (!validateDraft.setDraftSubmissionCancellationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -204,7 +215,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.SetDraftCustomerReferenceByIdRequest;
-    if (!validate.setDraftCustomerReferenceByIdRequest(request)) {
+    if (!validateDraft.setDraftCustomerReferenceByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -238,7 +249,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftWasteDescriptionByIdRequest;
-    if (!validate.setDraftWasteDescriptionByIdRequest(request)) {
+    if (!validateDraft.setDraftWasteDescriptionByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -272,7 +283,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftWasteQuantityByIdRequest;
-    if (!validate.setDraftWasteQuantityByIdRequest(request)) {
+    if (!validateDraft.setDraftWasteQuantityByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -306,7 +317,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftExporterDetailByIdRequest;
-    if (!validate.setDraftExporterDetailByIdRequest(request)) {
+    if (!validateDraft.setDraftExporterDetailByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -340,7 +351,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftImporterDetailByIdRequest;
-    if (!validate.setDraftImporterDetailByIdRequest(request)) {
+    if (!validateDraft.setDraftImporterDetailByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -374,7 +385,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftCollectionDateByIdRequest;
-    if (!validate.setDraftCollectionDateByIdRequest(request)) {
+    if (!validateDraft.setDraftCollectionDateByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -425,7 +436,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateDraftCarriersRequest;
-    if (!validate.createDraftCarriersRequest(request)) {
+    if (!validateDraft.createDraftCarriersRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -442,7 +453,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftCarriersRequest;
-    if (!validate.setDraftCarriersRequest(request)) {
+    if (!validateDraft.setDraftCarriersRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -493,7 +504,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftCollectionDetailRequest;
-    if (!validate.setDraftCollectionDetailRequest(request)) {
+    if (!validateDraft.setDraftCollectionDetailRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -527,7 +538,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftExitLocationByIdRequest;
-    if (!validate.setDraftExitLocationByIdRequest(request)) {
+    if (!validateDraft.setDraftExitLocationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -561,7 +572,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftTransitCountriesRequest;
-    if (!validate.setDraftTransitCountriesRequest(request)) {
+    if (!validateDraft.setDraftTransitCountriesRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -614,7 +625,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.CreateDraftRecoveryFacilityDetailsRequest;
-    if (!validate.createDraftRecoveryFacilityDetailsRequest(request)) {
+    if (!validateDraft.createDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -633,7 +644,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.SetDraftRecoveryFacilityDetailsRequest;
-    if (!validate.setDraftRecoveryFacilityDetailsRequest(request)) {
+    if (!validateDraft.setDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -686,7 +697,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.SetDraftSubmissionConfirmationByIdRequest;
-    if (!validate.setDraftSubmissionConfirmationByIdRequest(request)) {
+    if (!validateDraft.setDraftSubmissionConfirmationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -722,7 +733,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.SetDraftSubmissionDeclarationByIdRequest;
-    if (!validate.setDraftSubmissionDeclarationByIdRequest(request)) {
+    if (!validateDraft.setDraftSubmissionDeclarationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -790,7 +801,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateTemplateRequest;
-    if (!validate.createTemplateRequest(request)) {
+    if (!validateDraft.createTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -807,7 +818,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateTemplateFromSubmissionRequest;
-    if (!validate.createTemplateFromSubmissionRequest(request)) {
+    if (!validateDraft.createTemplateFromSubmissionRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -824,7 +835,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateTemplateFromTemplateRequest;
-    if (!validate.createTemplateFromTemplateRequest(request)) {
+    if (!validateDraft.createTemplateFromTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -841,7 +852,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.UpdateTemplateRequest;
-    if (!validate.updateTemplateRequest(request)) {
+    if (!validateDraft.updateTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -858,7 +869,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.DeleteTemplateRequest;
-    if (!validate.deleteTemplateRequest(request)) {
+    if (!validateDraft.deleteTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -892,7 +903,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftWasteDescriptionByIdRequest;
-    if (!validate.setDraftWasteDescriptionByIdRequest(request)) {
+    if (!validateDraft.setDraftWasteDescriptionByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -926,7 +937,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftExporterDetailByIdRequest;
-    if (!validate.setDraftExporterDetailByIdRequest(request)) {
+    if (!validateDraft.setDraftExporterDetailByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -960,7 +971,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftImporterDetailByIdRequest;
-    if (!validate.setDraftImporterDetailByIdRequest(request)) {
+    if (!validateDraft.setDraftImporterDetailByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1011,7 +1022,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.CreateDraftCarriersRequest;
-    if (!validate.createDraftCarriersRequest(request)) {
+    if (!validateDraft.createDraftCarriersRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1028,7 +1039,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftCarriersRequest;
-    if (!validate.setDraftCarriersRequest(request)) {
+    if (!validateDraft.setDraftCarriersRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1079,7 +1090,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftCollectionDetailRequest;
-    if (!validate.setDraftCollectionDetailRequest(request)) {
+    if (!validateDraft.setDraftCollectionDetailRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1113,7 +1124,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftExitLocationByIdRequest;
-    if (!validate.setDraftExitLocationByIdRequest(request)) {
+    if (!validateDraft.setDraftExitLocationByIdRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1147,7 +1158,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(body) as api.SetDraftTransitCountriesRequest;
-    if (!validate.setDraftTransitCountriesRequest(request)) {
+    if (!validateDraft.setDraftTransitCountriesRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1202,7 +1213,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.CreateDraftRecoveryFacilityDetailsRequest;
-    if (!validate.createDraftRecoveryFacilityDetailsRequest(request)) {
+    if (!validateDraft.createDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1223,7 +1234,7 @@ await server.invoker.listen(
     const request = JSON.parse(
       body
     ) as api.SetDraftRecoveryFacilityDetailsRequest;
-    if (!validate.setDraftRecoveryFacilityDetailsRequest(request)) {
+    if (!validateDraft.setDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
@@ -1264,6 +1275,23 @@ await server.invoker.listen(
     }
 
     return await draftController.getNumberOfSubmissions(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.validateSubmissions.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.ValidateSubmissionsRequest;
+    if (!validateSubmission.validateSubmissionsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await submissionController.validateSubmissions(request);
   },
   { method: HttpMethod.POST }
 );

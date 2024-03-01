@@ -73,6 +73,7 @@ secret:
     COSMOS_DRAFTS_CONTAINER_NAME: 'drafts'
     COSMOS_SUBMISSIONS_CONTAINER_NAME: 'submissions'
     COSMOS_TEMPLATES_CONTAINER_NAME: 'templates'
+    REFERENCE_DATA_APP_ID: 'reference-data.reference-data'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:

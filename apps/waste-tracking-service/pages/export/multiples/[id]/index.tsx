@@ -17,7 +17,11 @@ export default function Index() {
       return;
     }
 
-    if (uploadStatus === 'Submitted' || uploadStatus === 'FailedValidation') {
+    if (
+      uploadStatus === 'Submitted' ||
+      uploadStatus === 'PassedValidation' ||
+      uploadStatus === 'FailedValidation'
+    ) {
       return;
     }
 
@@ -50,7 +54,7 @@ export default function Index() {
         return;
       }
 
-      if (uploadStatus === 'Submitted') {
+      if (uploadStatus === 'PassedValidation') {
         safePush(`/export/multiples/${router.query.id}/submit`);
         return;
       }

@@ -73,6 +73,7 @@ secret:
     COSMOS_DRAFTS_CONTAINER_NAME: 'drafts'
     SERVICE_BUS_HOST_NAME: ''
     TASKS_QUEUE_NAME: 'annex-vii-bulk-tasks'
+    ANNEX_VII_APP_ID: 'annex-vii.annex-vii'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
