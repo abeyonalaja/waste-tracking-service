@@ -43,7 +43,7 @@ const BreadCrumbs = ({ id }) => {
         onClick={() => {
           router.push({
             pathname: `/export/incomplete/about/quantity`,
-            query: { id },
+            query: { id, context: router.query.context },
           });
         }}
       >
@@ -289,43 +289,34 @@ const QuantityEntry = () => {
                       </StyledInputWrap>
                     )}
                     <form onSubmit={handleSubmit}>
-                      <GovUK.MultiChoice
-                        mb={6}
-                        label=""
-                        meta={{
-                          error: errors?.quantityTypeError,
-                          touched: !!errors?.quantityTypeError,
-                        }}
-                      >
-                        <InputWithSuffix
-                          id="valueWeight"
-                          label={
-                            estimate
-                              ? t(
-                                  'exportJourney.quantity.entry.bulk.estimateWeightInputLabel'
-                                )
-                              : t(
-                                  'exportJourney.quantity.entry.bulk.actualWeightInputLabel'
-                                )
-                          }
-                          onChange={(e) => setWeight(e.target.value)}
-                          value={weight}
-                          errorMessage={errors?.quantityWeightError}
-                          suffix={t('weight.tonnes')}
-                          maxLength={10}
-                          hint={t('exportJourney.quantityValue.inputHint')}
-                        />
-                        {estimate && (
-                          <ButtonGroup>
-                            <StyledLink href="#" onClick={changetoActual}>
-                              {t(
-                                'exportJourney.quantity.entry.weight.switchToActual'
-                              )}
-                            </StyledLink>
-                          </ButtonGroup>
-                        )}
-                      </GovUK.MultiChoice>
-
+                      <InputWithSuffix
+                        id="valueWeight"
+                        name="quantityWeightError"
+                        label={
+                          estimate
+                            ? t(
+                                'exportJourney.quantity.entry.bulk.estimateWeightInputLabel'
+                              )
+                            : t(
+                                'exportJourney.quantity.entry.bulk.actualWeightInputLabel'
+                              )
+                        }
+                        onChange={(e) => setWeight(e.target.value)}
+                        value={weight}
+                        errorMessage={errors?.quantityWeightError}
+                        suffix={t('weight.tonnes')}
+                        maxLength={10}
+                        hint={t('exportJourney.quantityValue.inputHint')}
+                      />
+                      {estimate && (
+                        <ButtonGroup>
+                          <StyledLink href="#" onClick={changetoActual}>
+                            {t(
+                              'exportJourney.quantity.entry.weight.switchToActual'
+                            )}
+                          </StyledLink>
+                        </ButtonGroup>
+                      )}
                       <ButtonGroup>
                         <GovUK.Button id="saveButton">
                           {t('saveButton')}
@@ -371,42 +362,34 @@ const QuantityEntry = () => {
                       </StyledInputWrap>
                     )}
                     <form onSubmit={handleSubmit}>
-                      <GovUK.MultiChoice
-                        mb={6}
-                        label=""
-                        meta={{
-                          error: errors?.quantityTypeError,
-                          touched: !!errors?.quantityTypeError,
-                        }}
-                      >
-                        <InputWithSuffix
-                          id="valueVolume"
-                          label={
-                            estimate
-                              ? t(
-                                  'exportJourney.quantity.entry.bulk.estimateVolumeInputLabel'
-                                )
-                              : t(
-                                  'exportJourney.quantity.entry.bulk.actualVolumeInputLabel'
-                                )
-                          }
-                          onChange={(e) => setVolume(e.target.value)}
-                          value={volume}
-                          errorMessage={errors?.quantityVolumeError}
-                          suffix={t('volume.m3')}
-                          maxLength={10}
-                          hint={t('exportJourney.quantityValue.inputHint')}
-                        />
-                        {estimate && (
-                          <ButtonGroup>
-                            <StyledLink href="#" onClick={changetoActual}>
-                              {t(
-                                'exportJourney.quantity.entry.volume.switchToActual'
-                              )}
-                            </StyledLink>
-                          </ButtonGroup>
-                        )}
-                      </GovUK.MultiChoice>
+                      <InputWithSuffix
+                        id="valueVolume"
+                        name="quantityVolumeError"
+                        label={
+                          estimate
+                            ? t(
+                                'exportJourney.quantity.entry.bulk.estimateVolumeInputLabel'
+                              )
+                            : t(
+                                'exportJourney.quantity.entry.bulk.actualVolumeInputLabel'
+                              )
+                        }
+                        onChange={(e) => setVolume(e.target.value)}
+                        value={volume}
+                        errorMessage={errors?.quantityVolumeError}
+                        suffix={t('volume.m3')}
+                        maxLength={10}
+                        hint={t('exportJourney.quantityValue.inputHint')}
+                      />
+                      {estimate && (
+                        <ButtonGroup>
+                          <StyledLink href="#" onClick={changetoActual}>
+                            {t(
+                              'exportJourney.quantity.entry.volume.switchToActual'
+                            )}
+                          </StyledLink>
+                        </ButtonGroup>
+                      )}
                       <ButtonGroup>
                         <GovUK.Button id="saveButton">
                           {t('saveButton')}
@@ -446,6 +429,7 @@ const QuantityEntry = () => {
                     <form onSubmit={handleSubmit}>
                       <InputWithSuffix
                         id="valueWeight"
+                        name="quantityWeightError"
                         label={
                           estimate
                             ? t(

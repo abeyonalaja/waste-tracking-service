@@ -206,7 +206,7 @@ export const validateQuantityType: (
   quantityType?: string,
   isBulkWaste?: boolean
 ) => string = (quantityType, isBulkWaste) => {
-  if (quantityType === null) {
+  if (quantityType === undefined) {
     if (isBulkWaste) {
       return t('validation.quantity.type.bulk');
     } else {
@@ -223,23 +223,6 @@ export const validateWeightOrVolume: (
     return t('validation.quantity.amount.estimate');
   if (quantityType === null && !estimate)
     return t('validation.quantity.amount.actual');
-};
-
-export const validateQuantityWeightOrVolume: (
-  weightOrVolume?: string,
-  quantityType?: string,
-  isBulkWaste?: boolean
-) => string | undefined = (weightOrVolume, quantityType, isBulkWaste) => {
-  if (quantityType === 'NotApplicable') {
-    return;
-  }
-  if (weightOrVolume === undefined) {
-    if (isBulkWaste) {
-      return t('validation.quantity.type.bulk');
-    } else {
-      return t('validation.quantity.type.small');
-    }
-  }
 };
 
 export const validateQuantityValue: (

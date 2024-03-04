@@ -15,11 +15,7 @@ import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
-import {
-  isNotEmpty,
-  validateQuantityType,
-  validateQuantityWeightOrVolume,
-} from 'utils/validators';
+import { isNotEmpty, validateQuantityType } from 'utils/validators';
 import {
   PutWasteQuantityRequest,
   Submission,
@@ -28,24 +24,30 @@ import useApiConfig from 'utils/useApiConfig';
 const Quantity = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [id, setId] = useState<string | string[]>(null);
+  const [id, setId] = useState<string>();
   const [data, setData] = useState(null);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);
-  const [quantityType, setQuantityType] = useState(null);
-  const [savedQuantityType, setSavedQuantityType] = useState(null);
+  const [quantityType, setQuantityType] = useState<
+    'ActualData' | 'EstimateData' | 'NotApplicable'
+  >();
+  const [savedQuantityType, setSavedQuantityType] = useState<
+    'ActualData' | 'EstimateData' | 'NotApplicable'
+  >();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const apiConfig = useApiConfig();
-  const [weightOrVolume, setWeightOrVolume] = useState<string>();
+  const [weightOrVolume, setWeightOrVolume] = useState<'Weight' | 'Volume'>();
+  const [savedWeightOrVolume, setSavedWeightOrVolume] = useState<
+    'Weight' | 'Volume'
+  >();
 
   const [errors, setErrors] = useState<{
     quantityTypeError?: string;
-    weightOrVolumeError?: string;
   }>({});
 
   useEffect(() => {
     if (router.isReady) {
-      setId(router.query.id);
+      setId(router.query.id.toString());
     }
   }, [router.isReady, router.query.id]);
 
@@ -56,23 +58,18 @@ const Quantity = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
-      const quantityTypeError = validateQuantityType(quantityType, bulkWaste);
 
       const newErrors = {
-        quantityTypeError: quantityTypeError,
-        weightOrVolumeError: quantityTypeError
-          ? undefined
-          : validateQuantityWeightOrVolume(
-              weightOrVolume,
-              quantityType,
-              bulkWaste
-            ),
+        quantityTypeError: validateQuantityType(quantityType, bulkWaste),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
       } else {
-        setErrors(null);
-        if (savedQuantityType !== quantityType) {
+        setErrors({});
+        if (
+          savedQuantityType !== quantityType ||
+          savedWeightOrVolume !== weightOrVolume
+        ) {
           const newData: PutWasteQuantityRequest = {
             status:
               data.status === 'NotStarted'
@@ -84,6 +81,14 @@ const Quantity = () => {
               type: quantityType,
             },
           };
+
+          if (quantityType === 'ActualData') {
+            newData.value.actualData = { quantityType: weightOrVolume };
+          }
+          if (quantityType === 'EstimateData') {
+            newData.value.estimateData = { quantityType: weightOrVolume };
+          }
+
           try {
             await fetch(
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
@@ -104,7 +109,11 @@ const Quantity = () => {
                       : `/export/incomplete/about/quantity-entry`;
                   router.push({
                     pathname: path,
-                    query: { id, weightOrVolume: weightOrVolume },
+                    query: {
+                      id,
+                      weightOrVolume,
+                      context: router.query.context,
+                    },
                   });
                 }
               });
@@ -118,7 +127,7 @@ const Quantity = () => {
               : `/export/incomplete/about/quantity-entry`;
           router.push({
             pathname: path,
-            query: { id, weightOrVolume: weightOrVolume },
+            query: { id, weightOrVolume, context: router.query.context },
           });
         }
       }
@@ -130,7 +139,7 @@ const Quantity = () => {
     setIsLoading(true);
     setIsError(false);
     const fetchData = async () => {
-      if (id !== null) {
+      if (id !== undefined) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
           {
@@ -152,13 +161,13 @@ const Quantity = () => {
               setQuantityType(
                 data.wasteQuantity?.status === 'CannotStart' ||
                   data.wasteQuantity?.status === 'NotStarted'
-                  ? null
+                  ? undefined
                   : data.wasteQuantity?.value.type
               );
               setSavedQuantityType(
                 data.wasteQuantity?.status === 'CannotStart' ||
                   data.wasteQuantity?.status === 'NotStarted'
-                  ? null
+                  ? undefined
                   : data.wasteQuantity?.value.type
               );
               // for the weightOrVolume variable, we check if the parent object has setted it, i.e. we have to populate
@@ -173,6 +182,9 @@ const Quantity = () => {
                       setWeightOrVolume(
                         data.wasteQuantity?.value?.actualData?.quantityType
                       );
+                      setSavedWeightOrVolume(
+                        data.wasteQuantity?.value?.actualData?.quantityType
+                      );
                     }
                     break;
                   case 'EstimateData':
@@ -180,6 +192,9 @@ const Quantity = () => {
                     // entered estimate data, we populate our variable with volume or weight based on the estimate data
                     if (data.wasteQuantity?.value?.estimateData !== undefined) {
                       setWeightOrVolume(
+                        data.wasteQuantity?.value?.estimateData?.quantityType
+                      );
+                      setSavedWeightOrVolume(
                         data.wasteQuantity?.value?.estimateData?.quantityType
                       );
                     }
@@ -207,9 +222,10 @@ const Quantity = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: router.query.dashboard
-                ? `/export/incomplete/tasklist`
-                : `/export/incomplete/about/description`,
+              pathname:
+                router.query.context === 'tasklist'
+                  ? `/export/incomplete/tasklist`
+                  : `/export/incomplete/about/description`,
               query: { id },
             });
           }}
@@ -265,16 +281,12 @@ const Quantity = () => {
                       mb={6}
                       label=""
                       meta={{
-                        error:
-                          errors?.quantityTypeError ||
-                          errors?.weightOrVolumeError,
-                        touched:
-                          !!errors?.quantityTypeError ||
-                          !!errors?.weightOrVolumeError,
+                        error: errors?.quantityTypeError,
+                        touched: !!errors?.quantityTypeError,
                       }}
                     >
                       <GovUK.Radio
-                        name="quantityType"
+                        name="quantityTypeError"
                         id="quantityTypeYes"
                         checked={
                           quantityType === 'ActualData' &&

@@ -344,7 +344,7 @@ const Tasklist = () => {
                         <AppLink
                           href={{
                             pathname: `/export/incomplete/about/quantity`,
-                            query: { id, dashboard: true },
+                            query: { id, context: 'tasklist' },
                           }}
                         >
                           {t(
