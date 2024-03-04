@@ -73,7 +73,7 @@ Feature: Create template page
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I verify newly created record from template is on top of the table
 
@@ -91,7 +91,7 @@ Feature: Create template page
     And I navigate to Quantity of waste page
     And I complete Quantity of waste sub-section
     When I click the link Return to this draft later
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then I should see draft Annex VII records page
     And I verify newly created record from template is on top of the table
 
@@ -108,8 +108,8 @@ Feature: Create template page
     Then the "task list" page is displayed
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
-    When the quality of small waste page is displayed
-    When I choose "Yes, I know the actual amount" radio button
+    Then the quantity of small waste page is displayed
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the button Save and continue
@@ -140,7 +140,7 @@ Feature: Create template page
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I verify newly created record from template is on top of the table
 
@@ -312,7 +312,7 @@ Feature: Create template page
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I verify newly created record from template is on top of the table
 
@@ -344,7 +344,7 @@ Feature: Create template page
     And I click confirm and submit button
     Then Export submitted page displayed
     And I click Return to export waste from UK button
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "Submitted records" page is displayed
     And I click the first view link
     Then the "Single submitted export" page is displayed
@@ -383,7 +383,7 @@ Feature: Create template page
     And I click confirm and submit button
     Then Export submitted page displayed
     And I click Return to export waste from UK button
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "Submitted records" page is displayed
     And I click Use as template link for the first record
     Then the "Create template from submitted record" page is displayed

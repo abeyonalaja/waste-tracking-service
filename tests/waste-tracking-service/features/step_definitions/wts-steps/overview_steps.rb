@@ -23,7 +23,8 @@ end
 
 And(/^I can see links for each sections$/) do
   expect(page).to have_link Translations.value('exportJourney.submitAnExport.title')
-  expect(page).to have_link Translations.value('exportJourney.incompleteAnnexSeven.title')
+  # expect(page).to have_text Translations.value('exportJourney.incompleteAnnexSeven.title')
+  expect(page).to have_link(href: '/export/incomplete')
   expect(page).to have_link Translations.value 'exportJourney.exportSubmitted.updateAnnexRecordWithActuals'
   expect(page).to have_link Translations.value 'exportJourney.exportSubmitted.viewSubmittedRecords'
 end
@@ -41,4 +42,20 @@ end
 def add_custom_cookie(key, value)
   browser = page.driver.browser
   browser.manage.add_cookie name: key, value: value
+end
+
+When(/^I click the incomplete records link$/) do
+  click_link(href: '/export/incomplete')
+end
+
+And(/^I click the submitted with actual links$/) do
+  click_link(href: '/export/submitted')
+end
+
+And(/^I click the submitted with estimated links$/) do
+  click_link(href: '/export/estimated')
+end
+
+And(/^I click Manage your Annex VII record templates link$/) do
+  click_link(href: '/export/templates')
 end

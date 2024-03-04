@@ -36,7 +36,7 @@ Feature: Submitted with estimates page
     And I should see export submitted page is correctly translated
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I see message that there are no exports with estimates
 
@@ -72,7 +72,7 @@ Feature: Submitted with estimates page
     Then I should see export submitted page with estimates correctly translated
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I can see Update with actual page correctly translated
       #check pagination
@@ -114,7 +114,7 @@ Feature: Submitted with estimates page
     Then I should see export submitted page with estimates correctly translated
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I click the first update link
     Then the "Update annex record" page is displayed
@@ -159,7 +159,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     When I click the first update link
     Then the "Update annex record" page is displayed
@@ -196,7 +196,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -232,7 +232,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -256,12 +256,12 @@ Feature: Submitted with estimates page
     When I click "Back" link should display "Update with actual" page
     Then I should not see updated with actual exports on update with actual page
     When I click Export waste from the UK from the breadcrumb
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "Submitted records" page is displayed
     And I verify reference section is filled with reference
     And I should see update collection date and waste code and transaction reference
 
-  Scenario: User can update estimated quantity in cubic meters and collection date and confirm the changes, export should be in submitted lists
+  Scenario: User can update estimated quantity in tonnes   and collection date and confirm the changes, export should be in submitted lists
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     Then task list page is displayed
@@ -292,7 +292,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -321,7 +321,7 @@ Feature: Submitted with estimates page
     And I should see export update submitted page correctly translated
     And I should see the transaction number remains same
     When I click the "Create a green list waste movement record" link
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I should see submitted records page is correctly translated
     And I should see correct collection date and waste code and transaction reference
@@ -359,7 +359,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -407,7 +407,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     When I click the first update link
     And I expand About the waste section
@@ -450,7 +450,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -497,7 +497,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -540,7 +540,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -586,7 +586,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -632,7 +632,7 @@ Feature: Submitted with estimates page
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference

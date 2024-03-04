@@ -323,7 +323,7 @@ const Quantity = () => {
                         <>
                           <GovUK.Radio
                             name="quantityType"
-                            id="quantityTypeYes"
+                            id="quantityTypeVolumeYes"
                             checked={
                               quantityType === 'ActualData' &&
                               weightOrVolume === 'Volume'
@@ -338,7 +338,7 @@ const Quantity = () => {
                           </GovUK.Radio>
                           <GovUK.Radio
                             name="quantityType"
-                            id="quantityTypeEstimate"
+                            id="quantityTypeVolumeEstimate"
                             checked={
                               quantityType === 'EstimateData' &&
                               weightOrVolume === 'Volume'

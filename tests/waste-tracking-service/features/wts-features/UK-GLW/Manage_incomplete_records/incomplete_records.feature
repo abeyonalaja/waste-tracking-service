@@ -6,7 +6,7 @@ Feature: Incomplete records
   @translation @ignore
   Scenario: User can navigate to empty incomplete Annex VII page
     Given I login to waste tracking portal
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then I should see empty draft Annex VII page
 
   @translation @retry
@@ -15,7 +15,7 @@ Feature: Incomplete records
     And I navigate to the task list page with reference
     When I click the link Return to this draft later
     Then the "Export waste from uk" page is displayed
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then I should see draft Annex VII records page
     And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
@@ -41,7 +41,7 @@ Feature: Incomplete records
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the link Return to this draft later
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then I should see draft Annex VII records page
     And I should see draft records page correctly translated
     Then I should see my draft application saved on the top
@@ -67,7 +67,7 @@ Feature: Incomplete records
     And I navigate to Quantity of waste page
     When I click the Save and return to draft
     When I click the link Return to this draft later
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then I should see draft Annex VII records page
     And I should see draft records page correctly translated
     Then I should see my draft application saved on the top

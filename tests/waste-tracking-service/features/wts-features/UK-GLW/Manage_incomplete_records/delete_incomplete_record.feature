@@ -14,7 +14,7 @@ Feature: Delete incomplete records page
     Then the "task list" page is displayed
     And I click Export waste from UK breadcrumb
     Then the "Export waste from uk" page is displayed
-    And I click the "Manage incomplete Annex VII records" link
+    And I click the incomplete records link
     Then the "Draft records" page is displayed
     And I click delete link for the first record on the page
     Then the "Confirmation delete annex record" page is displayed
@@ -35,7 +35,7 @@ Feature: Delete incomplete records page
     Then the "task list" page is displayed
     And I click Export waste from UK breadcrumb
     Then the "Export waste from uk" page is displayed
-    And I click the "Manage incomplete Annex VII records" link
+    And I click the incomplete records link
     Then the "Draft records" page is displayed
     And I click delete link for the first record on the page
     Then the "Confirmation delete annex record" page is displayed
@@ -54,7 +54,7 @@ Feature: Delete incomplete records page
     Then the "task list" page is displayed
     And I click Export waste from UK breadcrumb
     Then the "Export waste from uk" page is displayed
-    And I click the "Manage incomplete Annex VII records" link
+    And I click the incomplete records link
     Then the "Draft records" page is displayed
     And I click delete link for the first record on the page
     Then the "Confirmation delete annex record" page is displayed

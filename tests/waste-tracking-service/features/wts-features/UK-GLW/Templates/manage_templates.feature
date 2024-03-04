@@ -6,13 +6,13 @@ Feature: Manage templates page
   @ignore
   Scenario: User navigates to Manage templates page and verifies there are no records
     Given I login to waste tracking portal
-    And I click the "Manage your Annex VII record templates" link
+    And I click Manage your Annex VII record templates link
     Then Manage your templates page is displayed with no records
 
   @translation
   Scenario: User creates template from Manage Templates page and verifies that order of the records is correct
     Given I login to waste tracking portal
-    And I click the "Manage your Annex VII record templates" link
+    And I click Manage your Annex VII record templates link
     Then the "Manage templates" page is displayed
     When I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed
@@ -31,7 +31,7 @@ Feature: Manage templates page
     Then I remain on the Create new record template page with an "Enter a name for the template" error message displayed
     And I fill out the name and description fields
     And I click the cancel button
-    And I click the "Manage your Annex VII record templates" link
+    And I click Manage your Annex VII record templates link
     Then I verify that record is not created
 
   Scenario: User tries to create template with name that already exist

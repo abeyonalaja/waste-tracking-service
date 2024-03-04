@@ -32,7 +32,7 @@ Feature:Submitted records
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I should see submitted records page is correctly translated
     #check pagination
@@ -82,7 +82,7 @@ Feature:Submitted records
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     And I should see submitted records page is correctly translated
     #check pagination

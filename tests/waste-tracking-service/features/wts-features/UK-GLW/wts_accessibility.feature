@@ -78,7 +78,7 @@ Feature: Automation to check accessibility tool
     And I navigate to the task list page with reference
     And I complete Waste codes and description task
     When I click the "Quantity of waste" link
-    And I choose "Yes, I know the actual amount" radio button
+    And I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -622,7 +622,7 @@ Feature: Automation to check accessibility tool
     And Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "View all submitted Annex VII records" link
+    And I click the submitted with actual links
     Then the "submitted records" page is displayed
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -684,7 +684,7 @@ Feature: Automation to check accessibility tool
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     When I click the link Return to this draft later
-    When I click the "Manage incomplete Annex VII records" link
+    When I click the incomplete records link
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
@@ -789,7 +789,7 @@ Feature: Automation to check accessibility tool
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     When I click the first update link
     Then the "Update annex record" page is displayed
@@ -830,7 +830,7 @@ Feature: Automation to check accessibility tool
     Then Export submitted page displayed
     And I click Return to export waste from UK button
     Then the "Export waste from uk" page is displayed
-    And I click the "Update an Annex VII record with actual details" link
+    And I click the submitted with estimated links
     Then the "Update with actual" page is displayed
     And I verify reference section is filled with reference
     And I should see correct date and waste code and transaction reference
@@ -843,7 +843,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Manage Templates page
     Given I login to waste tracking portal
-    And I click the "Manage your Annex VII record templates" link
+    And I click Manage your Annex VII record templates link
     Then the "Manage templates" page is displayed
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
@@ -852,7 +852,7 @@ Feature: Automation to check accessibility tool
 
   Scenario: Check WTS Accessibility for - Create Template page
     Given I login to waste tracking portal
-    And I click the "Manage your Annex VII record templates" link
+    And I click Manage your Annex VII record templates link
     Then the "Manage templates" page is displayed
     And I click the "Create a new Annex VII record template" link
     Then the "Create new record template" page is displayed

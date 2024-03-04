@@ -48,7 +48,7 @@ Feature: Final checks section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then I click the "Quantity of waste" link
-    And I choose "No, I do not know the amount yet" radio button
+    And I choose "I don't know the amount yet" radio button
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "IN PROGRESS"
     Then the task "Check your report" should be "CANNOT START YET"

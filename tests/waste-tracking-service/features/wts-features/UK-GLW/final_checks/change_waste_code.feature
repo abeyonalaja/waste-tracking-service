@@ -85,8 +85,8 @@ Feature: Final checks - change waste code
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     When I click the button Save and continue
-    When the quality of small waste page is displayed
-    When I choose "Yes, I know the actual amount" radio button
+    When the quantity of small waste page is displayed
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the button Save and continue

@@ -3,17 +3,14 @@ Feature: Quantity of waste page
   SO THAT the weight or volume of the waste can be calculated and recorded
 
   @translation
-  Scenario: Launch quantity of waste page from task list page
+  Scenario: Launch quantity of waste page from task list page for bulk waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I complete Waste codes and description task
     And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    When the quality of waste page is displayed
+    When the quantity of bulk waste page is displayed
     Then I should see quantity of waste correctly translated
-    Then I have options "Yes, I know the actual amount"
-    And I have options "No, I will enter an estimate"
-    And I have options "No, I do not know the amount yet"
     And I click "Back" link should display "task list" page
 
   Scenario: Launch quantity of waste page after entering description of the waste
@@ -21,83 +18,106 @@ Feature: Quantity of waste page
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I click the button Save and continue
-    When the quality of waste page is displayed
+    When the quantity of bulk waste page is displayed
     And I click "Back" link should display "Describe the waste" page
 
-  @translation
-  Scenario: Display actual quantity unit options for waste
+  Scenario: Launch quantity of waste page and click I dont know yet option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I click the button Save and continue
+    When the quantity of bulk waste page is displayed
+    Then I choose "I don't know the amount yet" radio button
+    And I click the button Save and continue
+    Then the task "Quantity of waste" should be "IN PROGRESS"
+
+  @translation
+  Scenario: User can navigate to estimate bulk quantity page from Actual bulk quantity page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
     Then the What is the actual net weight of the waste is displayed
     And I should see net weight page is correctly translated
-    Then I have options "Weight in tonnes"
-    And I have options "Volume in cubic metres"
-    And I click "Back" link should display "Quantity of waste" page
-    When I choose "No, I will enter an estimate" radio button
-    And I click the button Save and continue
-    Then the What is the estimate net weight of the waste is displayed
-    And I should see estimate net weight page is correctly translated
-    Then I have options "Weight in tonnes"
-    And I have options "Volume in cubic metres"
+    When I click the "enter an estimate instead" link
+    Then the What is the estimate net bulk tonne weight of the waste is displayed
+    And I should see estimate net bulk tonne weight page is correctly translated
+    And I click "Back" link should display "Quantity of bulk waste" page
+    And I click "Back" link should display "Describe the waste" page
 
   @translation
-  Scenario: Display estimated quantity unit options for waste
+  Scenario: User can navigate to Actual bulk quantity page Actual volume from estimate bulk quantity page Estimated volume
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "No, I will enter an estimate" radio button
+    When I choose "Estimated volume (m³)" radio button
     And I click the button Save and continue
-    Then the What is the estimate net weight of the waste is displayed
-    And I should see estimate net weight page is correctly translated
-    Then I have options "Weight in tonnes"
-    And I have options "Volume in cubic metres"
+    Then the What is the estimate net volume of the waste is displayed
+    And I should see estimate net volume page is correctly translated
+    When I click the "Enter an actual volume instead" link
+    Then the What is the actual net volume of the waste is displayed
+    And I should see actual net volume page is correctly translated
+    And I click "Back" link should display "Quantity of bulk waste" page
+    And I click "Back" link should display "Describe the waste" page
 
   Scenario: Entering the actual unit amount weight for the waste quantity and About waste section is updated
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
-    And I choose "Weight in tonnes" radio button
     And I enter valid weight in tonnes
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    Then I should see quantity option "Yes, I know the actual amount" is selected
+    Then I should see quantity option "Actual weight (tonnes)" is selected
     And I click the button Save and continue
     Then I should see previously entered weight in tonnes pre-populated
 
-  Scenario: Changing the quantity of waste from net to estimate after saving the initial entry
+  Scenario: Changing the quantity of waste from actual tonnes to estimate volume after saving the initial entry
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
-    And I choose "Weight in tonnes" radio button
     And I enter valid weight in tonnes
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    And I choose "No, I will enter an estimate" radio button
+    And I choose "Estimated volume (m³)" radio button
     And I click the button Save and continue
-    And I choose "Volume in cubic metres" radio button
     And I enter valid weight in cubic meters
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
     And I have 1 of 5 sections completed
     When I click the "Quantity of waste" link
-    Then I should see quantity option "No, I will enter an estimate" is selected
+    Then I should see quantity option "Estimated volume (m³)" is selected
     And I click the button Save and continue
     Then I should see previously entered weight in cubic meters pre-populated
+
+  Scenario:User can choose Actual bulk waste page from estimated bulk waste page and back link should navigate the user to quantity of waste page
+    Given I login to waste tracking portal
+    And I navigate to whats the waste code page
+    When I choose "Basel Annex IX" radio button
+    And select a first option as waste code description
+    And I click the Save and return to draft
+    And I click the "Quantity of waste" link
+    Then the quantity of small waste page is displayed
+    When I choose "Estimated weight (tonnes)" radio button
+    When I click the button Save and continue
+    Then the What is the estimate net bulk tonne weight of the waste is displayed
+    When I click the "Enter an actual weight instead" link
+    Then What is the actual net bulk tonne weight of the waste is displayed
+    And I click "Back" link should display "Quantity of bulk Waste" page
+    And I click "Back" link should display "Task list" page
+    Then the task "Quantity of waste" should be "IN PROGRESS"
 
   Scenario: Unknown waste quantity amount
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "No, I do not know the amount yet" radio button
+    When I choose "I don't know the amount yet" radio button
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
@@ -105,7 +125,7 @@ Feature: Quantity of waste page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual volume (m³)" radio button
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
@@ -115,123 +135,182 @@ Feature: Quantity of waste page
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
     When I click the button Save and continue
-    Then the quality of waste page is displayed
+    Then the quantity of bulk waste page is displayed
     And I click the button Save and continue
-    Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
+    Then I remain on the Quantity of bulk waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Quantity of waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
+    Then I remain on the Quantity of bulk waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
 
   Scenario: User can't continue without entering quantity of units option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
     Then the What is the actual net weight of the waste is displayed
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter quantity" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the actual net weight or volume of waste" error message displayed
-    When I choose "Weight in tonnes" radio button
+    Then I remain on the Actual bulk tonne weight page with an "Enter quantity" error message displayed
+    When I click the "enter an estimate instead" link
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the weight in tonnes" error message displayed
-    When I choose "Volume in cubic metres" radio button
+    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity" error message displayed
+    And I click "Back" link should display "Quantity of bulk waste" page
+    When I choose "Actual volume (m³)" radio button
     And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
+    Then the What is the actual net volume of the waste is displayed
+    When I click the button Save and continue
+    Then I remain on the Actual bulk volume weight page with an "Enter quantity" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the volume in cubic metres" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "Enter quantity" error message displayed
+    When I click the "enter an estimate instead" link
+    And I click the button Save and continue
+    Then I remain on the Estimate bulk volume weight page with an "Enter quantity" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Estimate bulk volume weight page with an "Enter quantity" error message displayed
 
   Scenario: User can't enter special character in quantity of units option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
-    When I choose "Volume in cubic metres" radio button
-    And I enter invalid weight in cubic meters
-    And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
-    And I enter invalid weight in cubic meters
-    And I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the volume using only numbers" error message displayed
-    When I choose "Weight in tonnes" radio button
-    And I enter invalid weight in tonnes
-    And I click the button Save and continue
-    Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
     When I enter invalid weight in tonnes
+    And I click the button Save and continue
+    Then I remain on the Actual bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
     And I click the Save and return to draft
-    Then I remain on the Net weight page with an "Enter the weight using only numbers" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    When I enter zero weight in tonnes
+    And I click the button Save and continue
+    Then I remain on the Actual bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    And I click the Save and return to draft
+    Then I remain on the Actual bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    When I click the "enter an estimate instead" link
+    When I enter invalid weight in tonnes
+    And I click the button Save and continue
+    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    When I enter zero weight in tonnes
+    And I click the button Save and continue
+    Then I remain on the Estimate bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Estimate bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    And I click "Back" link should display "Quantity of bulk waste" page
+    When I choose "Actual volume (m³)" radio button
+    And I click the button Save and continue
+    Then the What is the actual net volume of the waste is displayed
+    And I enter invalid weight in cubic meters
+    When I click the button Save and continue
+    Then I remain on the Actual bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Actual bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    And I enter zero weight in cubic meters
+    When I click the button Save and continue
+    Then I remain on the Actual bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Actual bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    When I click the "enter an estimate instead" link
+    And I click the button Save and continue
+    And I wait for a second
+    And I enter invalid weight in cubic meters
+    And I click the button Save and continue
+    Then I remain on the Estimate bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Estimate bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    And I enter zero weight in cubic meters
+    When I click the button Save and continue
+    Then I remain on the Estimate bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    When I click the Save and return to draft
+    Then I remain on the Estimate bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
 
     ######## Small waste
   @translation
-  Scenario: Check Small waste quantity page should display correctly
-    Given I login to waste tracking portal
-    And I navigate to the task list page with reference
-    And I complete Waste codes and description task with "Not applicable" has waste code
-    And I wait for a second
-    And the task "Waste codes and description" should be "COMPLETED"
-    When I click the "Quantity of waste" link
-    Then the quality of small waste page is displayed
-    And I should see quantity of small waste correctly translated
-    Then I have options "Yes, I know the actual amount"
-    And I have options "No, I will enter an estimate"
-    And I have options "No, I do not know the amount yet"
-    And I click "Back" link should display "task list" page
-
   Scenario:Launch quantity of waste page after entering description of the waste for small waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
-    And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I click the button Save and continue
-    When the quality of small waste page is displayed
+    And I click the "Waste codes and description" link
+    And I complete the Waste code and description task with small waste
+    Then the quantity of small waste page is displayed
+    And I should see quantity of small waste correctly translated
     And I click "Back" link should display "Describe the waste" page
+
+  Scenario:Launch quantity of waste page for small waste and click I dont know yet option
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I click the "Waste codes and description" link
+    And I complete the Waste code and description task with small waste
+    When the quantity of small waste page is displayed
+    And I choose "I don't know the amount yet" radio button
+    And I click the button Save and continue
+    Then the task "Quantity of waste" should be "IN PROGRESS"
 
   @translation
   Scenario:Display actual quantity unit option for small waste
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
+    Then the quantity of small waste page is displayed
     When I click the button Save and continue
-    And I choose "Yes, I know the actual amount" radio button
+    And I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     Then What is the actual net weight of the small weight waste is displayed
     And I should see net small weight page is correctly translated
-    Then I have options "Weight in kilograms"
     And I click "Back" link should display "Quantity of small waste" page
-    When I choose "No, I will enter an estimate" radio button
+    When I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     Then the What is the estimate net weight of the small weight waste is displayed
     And I should see estimate net small weight page is correctly translated
-    Then I have options "Weight in kilograms"
 
-  Scenario:User can choose don't know the amount option and navigate to task list page, status should remain In progress
+  Scenario:User can choose estimated small waste page from actual small waste page and back link should navigate the user to quantity of waste page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "No, I do not know the amount yet" radio button
+    Then the quantity of small waste page is displayed
+    When I choose "Actual weight (kilograms)" radio button
     When I click the button Save and continue
+    Then What is the actual net weight of the small weight waste is displayed
+    When I click the "enter an estimate instead" link
+    Then the What is the estimate net weight of the small weight waste is displayed
+    And I click "Back" link should display "Quantity of small Waste" page
+    And I click "Back" link should display "Describe the waste" page
+
+  Scenario:User can choose Actual small waste page from estimated small waste page and back link should navigate the user to quantity of waste page
+    Given I login to waste tracking portal
+    And I navigate to whats the waste code page
+    When I choose "Not applicable" radio button
+    And I click the Save and return to draft
+    And I click the "Quantity of waste" link
+    Then the quantity of small waste page is displayed
+    When I choose "Estimated weight (kilograms)" radio button
+    When I click the button Save and continue
+    Then the What is the estimate net weight of the small weight waste is displayed
+    When I click the "Enter an actual weight instead" link
+    Then What is the actual net weight of the small weight waste is displayed
+    And I click "Back" link should display "Quantity of small Waste" page
+    And I click "Back" link should display "Task list" page
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
-  Scenario:Small weight enter should display correctly
+  Scenario:User can check quantity of waste from actual to estimated
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    And I choose "No, I will enter an estimate" radio button
+    And I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the button Save and continue
     Then the task "Quantity of waste" should be "COMPLETED"
     And I have 1 of 5 sections completed
     When I click the "Quantity of waste" link
-    Then I should see quantity option "No, I will enter an estimate" is selected
+    Then I should see quantity option "Estimated weight (kilograms)" is selected
     And I click the button Save and continue
     Then I should see previously entered weight in kilograms pre-populated
 
@@ -239,40 +318,40 @@ Feature: Quantity of waste page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    And I choose "No, I will enter an estimate" radio button
+    And I choose "Estimated weight (kilograms)" radio button
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "IN PROGRESS"
-
+  #bug
   Scenario:User can't continue without selecting any option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    Then the quality of small waste page is displayed
+    Then the quantity of small waste page is displayed
     When I click the button Save and continue
     And I remain on the Quantity of small waste page with an "Select yes if you know the actual quantity of waste" error message displayed
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     Then What is the actual net weight of the small weight waste is displayed
     When I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter the weight in kilograms" error message displayed
+    Then I remain on the Net small weight page with an "Enter quantity" error message displayed
     When I click "Back" link should display "Quantity of small waste" page
-    And I choose "No, I will enter an estimate" radio button
+    And I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     Then the What is the estimate net weight of the small weight waste is displayed
     And I click the button Save and continue
-    And I remain on the Estimate small weight page with an "Enter the weight in kilograms" error message displayed
+    And I remain on the Estimate small weight page with an "Enter quantity" error message displayed
 
   Scenario: User change the waste code from Not Applicable to other options then quantity of waste should be rest
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter valid weight in kilograms
     And I click the Save and return to draft
@@ -283,17 +362,16 @@ Feature: Quantity of waste page
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"
     When I click the "Quantity of waste" link
-    Then I should see quantity option "Yes, I know the actual amount" is not selected
-    And I should see quantity option "No, I will enter an estimate" is not selected
+    Then I should see quantity option "Actual weight (kilograms)" is not selected
+    And I should see quantity option "Estimated weight (kilograms)" is not selected
     And I should see quantity option "No, I do not know the amount yet" is not selected
 
   Scenario: User change the waste code from other options to Not applicable then quantity of waste should be rest
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (tonnes)" radio button
     And I click the button Save and continue
-    And I choose "Weight in tonnes" radio button
     And I enter valid weight in tonnes
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "COMPLETED"
@@ -302,31 +380,31 @@ Feature: Quantity of waste page
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"
     When I click the "Quantity of waste" link
-    Then I should see quantity option "Yes, I know the actual amount" is not selected
-    And I should see quantity option "No, I will enter an estimate" is not selected
+    Then I should see quantity option "Actual weight (kilograms)" is not selected
+    And I should see quantity option "Estimated weight (kilograms)" is not selected
     And I should see quantity option "No, I do not know the amount yet" is not selected
 
   Scenario: Small weight user can't enter special character in quantity of units option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter the weight using only numbers" error message displayed
+    Then I remain on the Net small weight page with an "Enter quantity using only numbers" error message displayed
     When I click "Back" link should display "Quantity of small waste" page
-    And I choose "No, I will enter an estimate" radio button
+    And I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Estimate small weight page with an "Enter the weight using only numbers" error message displayed
+    Then I remain on the Estimate small weight page with an "Enter quantity using only numbers" error message displayed
 
   Scenario: Small weight user can't enter more than 25kgs
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
-    When I choose "Yes, I know the actual amount" radio button
+    When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter weight more than 25 kilograms
     And I click the button Save and continue

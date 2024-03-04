@@ -1,4 +1,3 @@
-
 Feature: Check your report page
   AS A Waste Practitioner
   I NEED to have a final section
@@ -286,8 +285,9 @@ Feature: Check your report page
     Then I should see previously entered waste description details
     When I click the Save and return to draft
     And I click the "Check your record" link
+    #quantity of waste
     When I click Waste quantity Change link
-    Then I should see quantity option "Yes, I know the actual amount" is selected
+    Then I should see quantity option "Actual weight (tonnes)" is selected
 
   Scenario: User can navigate to Exporter and Importer from check your report page using change link
     Given I login to waste tracking portal

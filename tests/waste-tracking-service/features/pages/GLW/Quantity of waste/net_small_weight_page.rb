@@ -7,7 +7,7 @@ class NetSmallWeightPage < GenericPage
 
   TITLE = Translations.value 'exportJourney.quantityValueSmall.Actual.title'
   SUB_TEXT = Translations.value 'exportJourney.quantityValueSmall.Actual.intro'
-  WEIGHT_IN_KG = Translations.value 'exportJourney.quantityValueSmall.weightLabel'
+  WEIGHT_IN_KG = Translations.value 'exportJourney.quantityValueSmall.weightLabelActual'
   HELPER_TEXT = Translations.value 'exportJourney.quantityValue.inputHint'
   CAPTION = Translations.value 'exportJourney.quantity.caption'
 

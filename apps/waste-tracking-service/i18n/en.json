@@ -650,7 +650,7 @@
   "validation.quantity.amount.estimate": "Enter the estimated net weight or volume of waste",
   "validation.quantity.value": "Enter quantity",
   "validation.quantity.value.numbers": "Enter quantity using only numbers",
-  "validation.quantity.value.invalid": "The quantity needs to be greater than O",
+  "validation.quantity.value.invalid": "The quantity needs to be greater than 0",
   "validation.quantity.value.invalid.small": "Enter a weight 25kg or under",
   "validation.date.collection.select": "Select yes if you know when the waste will be collected",
   "validation.date.invalid": "Enter a real date",
