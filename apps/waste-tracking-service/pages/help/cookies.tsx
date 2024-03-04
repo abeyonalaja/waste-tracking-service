@@ -144,11 +144,14 @@ const Cookies = () => {
                 <GovUK.Table.Cell>15 minutes</GovUK.Table.Cell>
               </GovUK.Table.Row>
             </GovUK.Table>
+            <GovUK.Heading size="M" as="h2" id="heading-essential-cookies">
+              {t('cookie.page.changeSettings')}
+            </GovUK.Heading>
             <form onSubmit={handleSave}>
               <GovUK.Fieldset>
                 <GovUK.MultiChoice mb={6} label="">
-                  <GovUK.Fieldset.Legend size="M">
-                    {t('cookie.page.analyticHeading')}
+                  <GovUK.Fieldset.Legend mb={5} size="S">
+                    {t('cookie.page.analytics.heading')}
                   </GovUK.Fieldset.Legend>
                   <Radio
                     name="radios-analytics"
@@ -156,7 +159,7 @@ const Cookies = () => {
                     checked={analyticsConsent}
                     onChange={() => setAnalyticsConsent(true)}
                   >
-                    Use cookies that measure my website use
+                    {t('cookie.page.analytics.yes')}
                   </Radio>
                   <Radio
                     name="radios-analytics"
@@ -164,7 +167,7 @@ const Cookies = () => {
                     checked={!analyticsConsent}
                     onChange={() => setAnalyticsConsent(false)}
                   >
-                    Do not use cookies that measure my website use
+                    {t('cookie.page.analytics.no')}
                   </Radio>
                 </GovUK.MultiChoice>
               </GovUK.Fieldset>
