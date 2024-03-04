@@ -234,7 +234,7 @@ export const validateQuantityValue: (
 ) => string = (quantityType, quantityValue, label, bulk, unit) => {
   if (!quantityType) return;
   if (quantityType) {
-    if (quantityValue === '') {
+    if (quantityValue === undefined || quantityValue === '') {
       return t('validation.quantity.value', {
         label: label.toLowerCase(),
         unit: unit,
