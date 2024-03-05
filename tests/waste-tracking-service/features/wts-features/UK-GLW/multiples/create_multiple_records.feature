@@ -17,6 +17,6 @@ Feature: Create multiple records
     Given I login to waste tracking portal
     When Export waste from UK page is displayed
     And I click the "Create multiple Annex VII records" link
-    Then I should see glw csv helper page is display
+    Then I should see glw csv helper page is displayed
 
 

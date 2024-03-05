@@ -15,7 +15,7 @@ Feature: GLW multiple
     Given I login to waste tracking portal
     And I navigate to upload glw csv
     When I click the upload button
-    Then I remain on the Create Multiple Records page with an "Select a file to upload" error message displayed
+    Then I remain on the Create Multiple Records page with an "Upload a CSV file" error message displayed
 
   Scenario: User can navigate to glw declaration page and click back button
     Given I login to waste tracking portal
@@ -74,7 +74,7 @@ Feature: GLW multiple
     And I click the upload button
     Then I should see glw csv error page is displayed
     And I click the upload button
-    Then I remain on the Glw upload error page with an "Select a file to upload" error message displayed
+    Then I remain on the Glw upload error page with an "Upload a CSV file" error message displayed
 
   Scenario: User can navigate to review guidance page from glw csv error details page
     Given I login to waste tracking portal
