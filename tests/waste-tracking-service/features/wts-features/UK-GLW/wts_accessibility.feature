@@ -38,48 +38,165 @@ Feature: Automation to check accessibility tool
   Scenario: Check WTS Accessibility for - EWC code page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
-    Then the page should be axe clean according to: wcag2aa
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
   Scenario: Check WTS Accessibility for - EWC code error page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
     And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2aa
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
   Scenario: Check WTS Accessibility for - EWC code list page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
     And I enter valid ewc code
     And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2aa
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for -National code page
+  Scenario: Check WTS Accessibility for - National code page
     Given I login to waste tracking portal
     Then I navigate to National Code page
     When I choose "Yes" radio button
-    Then the page should be axe clean according to: wcag2aa
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for -Describe the waste page
+  Scenario: Check WTS Accessibility for - Describe the waste page
     Given I login to waste tracking portal
     And I navigate on the Describe the waste
     When I click the button Save and continue
-    Then the page should be axe clean according to: wcag2aa
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for - net weight or volume of the waste
+  Scenario: Check WTS Accessibility for - quantity of waste for bulk page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I complete Waste codes and description task
+    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    And I click the button Save and continue
-    Then the page should be axe clean according to: wcag2aa
+    When the quantity of bulk waste page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
 
-  Scenario: Check WTS Accessibility for - actual net weight or volume of the waste
+  Scenario: Check WTS Accessibility for - quantity of waste for bulk page error validation
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I complete Waste codes and description task
+    And the task "Waste codes and description" should be "COMPLETED"
     When I click the "Quantity of waste" link
-    And I choose "Actual weight (tonnes)" radio button
+    When the quantity of bulk waste page is displayed
     And I click the button Save and continue
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - quantity of waste for small page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I click the "Waste codes and description" link
+    And I complete the Waste code and description task with small waste
+    Then the quantity of small waste page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - quantity of waste for small page error validation
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I click the "Waste codes and description" link
+    And I complete the Waste code and description task with small waste
+    Then the quantity of small waste page is displayed
+    And I click the button Save and continue
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - actual weight tonnes page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    When I choose "Actual weight (tonnes)" radio button
+    And I click the button Save and continue
+    Then the What is the actual net weight of the waste is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - estimated weight tonnes page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    When I choose "Estimated weight (tonnes)" radio button
+    And I click the button Save and continue
+    Then the What is the estimate net bulk tonne weight of the waste is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - estimated volume cubic metres page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    When I choose "Estimated volume (m³)" radio button
+    And I click the button Save and continue
+    Then the What is the estimate net volume of the waste is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - actual volume cubic metres page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page
+    When I choose "Actual volume (m³)" radio button
+    And I click the button Save and continue
+    Then the What is the actual net volume of the waste is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - actual weight kilograms page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page with "Not applicable" has waste code
+    Then the quantity of small waste page is displayed
+    And I choose "Actual weight (kilograms)" radio button
+    And I click the button Save and continue
+    Then What is the actual net weight of the small weight waste is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - estimated weight kilograms page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I navigate to Quantity of waste page with "Not applicable" has waste code
+    Then the quantity of small waste page is displayed
+    When I choose "Estimated weight (kilograms)" radio button
+    And I click the button Save and continue
+    Then the What is the estimate net weight of the small weight waste is displayed
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
