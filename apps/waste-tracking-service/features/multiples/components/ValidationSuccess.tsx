@@ -23,6 +23,7 @@ export function ValidationSuccess({
   return (
     <div id="upload-page-success">
       <NotificationBanner
+        headingLevel={1}
         type="success"
         id="success-banner-csv-upload"
         headingText={t(

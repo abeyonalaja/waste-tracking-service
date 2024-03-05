@@ -131,7 +131,7 @@ const Guidance = () => {
               does not include colours, freeze panes or pre-populated dropdowns,
               as these features do not work on all systems.
             </GovUK.Paragraph>
-            <GovUK.H4 size="SMALL">Get help with technical issues</GovUK.H4>
+            <GovUK.H3 size="SMALL">Get help with technical issues</GovUK.H3>
             <GovUK.Paragraph>
               You can contact the waste tracking service support team if you
               need help with a technical issue, such as:
@@ -149,7 +149,7 @@ const Guidance = () => {
               You can contact the waste tracking service support team by
               emailing wastetracking@defra.gov.uk
             </GovUK.Paragraph>
-            <GovUK.H4 size="SMALL">Get help with regulatory issues</GovUK.H4>
+            <GovUK.H3 size="SMALL">Get help with regulatory issues</GovUK.H3>
             <GovUK.Paragraph>
               The waste tracking service support team will not be able to answer
               regulatory questions. You should contact your relevant regulatory
@@ -199,7 +199,7 @@ const Guidance = () => {
             <GovUK.H2 size="MEDIUM">
               <a id="waste">Waste codes and description</a>
             </GovUK.H2>
-            <GovUK.H4 size="SMALL">Waste codes</GovUK.H4>
+            <GovUK.H3 size="SMALL">Waste codes</GovUK.H3>
             <GovUK.Paragraph>
               Not all waste codes will apply to your waste export. Enter all the
               waste codes (opens in new tab) that are relevant to your shipment
@@ -211,7 +211,10 @@ const Guidance = () => {
                 <TableHeader setWidth="50%" id="table-heading-waste-code-type">
                   Waste code type
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-code-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
@@ -271,7 +274,7 @@ const Guidance = () => {
               </GovUK.Table.Row>
             </GovUK.Table>
 
-            <GovUK.H4 size="SMALL">Waste description</GovUK.H4>
+            <GovUK.H3 size="SMALL">Waste description</GovUK.H3>
 
             <GovUK.Paragraph>
               Enter a description. Give the usual description of the waste. For
@@ -286,7 +289,7 @@ const Guidance = () => {
               <a id="quantity">Quantity of waste and description</a>
             </GovUK.H2>
 
-            <GovUK.H4 size="SMALL">Waste quantity</GovUK.H4>
+            <GovUK.H3 size="SMALL">Waste quantity</GovUK.H3>
             <GovUK.Paragraph>
               Provide the waste quantity either in tonnes or in cubic metres.
               You do not need to provide both.
@@ -298,10 +301,16 @@ const Guidance = () => {
 
             <GovUK.Table>
               <GovUK.Table.Row>
-                <TableHeader setWidth="50%" id="table-heading-waste-code-type">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-quantity-type"
+                >
                   Waste details
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-quantity-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
@@ -355,7 +364,7 @@ const Guidance = () => {
               </GovUK.Table.Row>
             </GovUK.Table>
 
-            <GovUK.H4 size="SMALL">Waste collection (shipping) date</GovUK.H4>
+            <GovUK.H3 size="SMALL">Waste collection (shipping) date</GovUK.H3>
 
             <GovUK.Paragraph>
               Enter the date the waste will be collected. The collection date is
@@ -379,9 +388,9 @@ const Guidance = () => {
             <GovUK.H2 size="MEDIUM">
               <a id="exporter">Exporter and importer details</a>
             </GovUK.H2>
-            <GovUK.H4 size="SMALL">
+            <GovUK.H3 size="SMALL">
               Exporter (person who organises the shipment) details
-            </GovUK.H4>
+            </GovUK.H3>
 
             <GovUK.Paragraph>
               The exporter is also known as the person who organises the
@@ -392,16 +401,22 @@ const Guidance = () => {
               confirmation email of your submitted exports.
             </GovUK.Paragraph>
 
-            <GovUK.H4 size="SMALL">
+            <GovUK.H3 size="SMALL">
               Exporter address and contact details
-            </GovUK.H4>
+            </GovUK.H3>
 
             <GovUK.Table>
               <GovUK.Table.Row>
-                <TableHeader setWidth="50%" id="table-heading-waste-code-type">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-exporter-type"
+                >
                   Exporter (person who organises the shipment) details
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-exporter-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
@@ -464,22 +479,28 @@ const Guidance = () => {
               </GovUK.Table.Row>
             </GovUK.Table>
 
-            <GovUK.H4 size="SMALL">Importer (consignee) details</GovUK.H4>
+            <GovUK.H3 size="SMALL">Importer (consignee) details</GovUK.H3>
 
             <GovUK.Paragraph>
               The importer is also known as the consignee. This section must be
               completed in full.
             </GovUK.Paragraph>
-            <GovUK.H4 size="SMALL">
+            <GovUK.H3 size="SMALL">
               Importer (consignee) address and contact details
-            </GovUK.H4>
+            </GovUK.H3>
 
             <GovUK.Table>
               <GovUK.Table.Row>
-                <TableHeader setWidth="50%" id="table-heading-waste-code-type">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-importer-type"
+                >
                   Importer (consignee) details
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-exporter-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
@@ -547,7 +568,7 @@ const Guidance = () => {
             <GovUK.H2 size="MEDIUM">
               <a id="journey">Journey of waste</a>
             </GovUK.H2>
-            <GovUK.H4 size="SMALL">Waste carrier details</GovUK.H4>
+            <GovUK.H3 size="SMALL">Waste carrier details</GovUK.H3>
             <GovUK.Paragraph>
               You can enter up to 5 sets of information for any carriers
               involved in the transportation of your waste. If you do not have a
@@ -560,16 +581,22 @@ const Guidance = () => {
               cannot leave any cells blank.
             </GovUK.Paragraph>
 
-            <GovUK.H4 size="SMALL">
+            <GovUK.H3 size="SMALL">
               Waste carrier address and contact details
-            </GovUK.H4>
+            </GovUK.H3>
 
             <GovUK.Table>
               <GovUK.Table.Row>
-                <TableHeader setWidth="50%" id="table-heading-waste-code-type">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-carrier-type"
+                >
                   Waste carrier details
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-carrier-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
@@ -695,10 +722,16 @@ const Guidance = () => {
 
             <GovUK.Table>
               <GovUK.Table.Row>
-                <TableHeader setWidth="50%" id="table-heading-waste-code-type">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-treatment-type"
+                >
                   Interim site, recovery facility or laboratory details
                 </TableHeader>
-                <TableHeader setWidth="50%" id="table-heading-answer-format">
+                <TableHeader
+                  setWidth="50%"
+                  id="table-heading-waste-treatment-answer"
+                >
                   Answer format
                 </TableHeader>
               </GovUK.Table.Row>
