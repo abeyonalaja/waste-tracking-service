@@ -11,11 +11,11 @@ Before do |scenario|
   Log.info("Started: #{scenario.name} - #{@feature_name} feature")
   Log.console("STARTING FEATURE: #{@feature_name} for current process #{@current_process}")
   TestStatus.reset_test_status
-  TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'True')
+  TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'true')
 end
 
 Before('@csv_helper') do
-  TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'False')
+  TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'false')
 end
 
 Before('not @cookies') do

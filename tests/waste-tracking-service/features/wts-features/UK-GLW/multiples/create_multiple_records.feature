@@ -11,12 +11,14 @@ Feature: Create multiple records
     And I click the "How to create a multiple Annex VII record CSV template" link
     Then I should see multi Annex guidance page is display
 
-  @csv_helper @ignore
-    #defect need to be fixed
+  @csv_helper
   Scenario: User can see glw csv bounceback page
     Given I login to waste tracking portal
     When Export waste from UK page is displayed
     And I click the "Create multiple Annex VII records" link
     Then I should see glw csv helper page is displayed
+    And I should see glw csv helper page translated
+    And I click Continue button
+    Then I should see "Create multiple records" page is displayed
 
 
