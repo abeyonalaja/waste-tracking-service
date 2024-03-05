@@ -254,7 +254,7 @@
   "exportJourney.quantityValueSmall.Estimate.title": "What is the estimated net weight of the waste?",
   "exportJourney.quantityValueSmall.Actual.intro": "This must be 25kg or under. Do not include the weight of the container or vehicle. If the weight might change, ",
   "exportJourney.quantityValueSmall.Estimate.intro": "This must be 25kg or under. Do not include the weight of the container or vehicle.",
-  "exportJourney.quantityValueSmall.weightLabelActual": "Weight in kilograms",
+  "exportJourney.quantityValueSmall.weightLabelActual": "Weight, in kilograms",
   "exportJourney.quantityValueSmall.weightLabelEstimate": "Estimated weight, in kilograms",
   "exportJourney.recoveryFacilities.addHint": "You can add up to {{n}} more.",
   "exportJourney.recoveryFacilities.addLegend": "Do you need to add another recovery facility?",

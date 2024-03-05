@@ -7,8 +7,9 @@ class ViewCookiesPage < GenericPage
   PARAGRAPH1 = Translations.value 'cookie.page.p1'
   PARAGRAPH2 = Translations.value 'cookie.page.p2'
   PARAGRAPH3 = Translations.value 'cookie.page.p3'
-  ESSENTIAL_COOKIES = Translations.value 'cookie.page.essentialHeading'
-  ANALYTICS_COOKIES = Translations.value 'cookie.page.analyticHeading'
+  CHANGE_YOUR_COOKIES_SETTINGS = Translations.value 'cookie.page.essentialHeading'
+  ANALYTICS_HEADING = Translations.value 'cookie.page.analytics.heading'
+  ANALYTICS_COOKIES = Translations.value 'cookie.page.changeSettings'
   ACCEPT_ANALYTICAL_BUTTON = Translations.value 'cookie.banner.button.accept'
   REJECT_ANALYTICAL_BUTTON = Translations.value 'cookie.banner.button.reject'
   HIDE_COOKIES_MESSAGE_BUTTON = Translations.value 'cookie.banner.button.hide'
@@ -20,7 +21,8 @@ class ViewCookiesPage < GenericPage
     expect(self).to have_text PARAGRAPH1
     expect(self).to have_text PARAGRAPH2
     expect(self).to have_text PARAGRAPH3
-    expect(self).to have_text ESSENTIAL_COOKIES
+    expect(self).to have_text CHANGE_YOUR_COOKIES_SETTINGS
+    expect(self).to have_text ANALYTICS_HEADING
     expect(self).to have_text ANALYTICS_COOKIES
   end
 
