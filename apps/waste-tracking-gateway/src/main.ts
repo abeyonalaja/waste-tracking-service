@@ -178,7 +178,12 @@ if (
         new DaprClient(),
         process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
       ),
-      new LRUCache({ ttl: 60 * 1000, ttlAutopurge: false, maxSize: 1000 })
+      new LRUCache({
+        ttl: 60 * 1000,
+        ttlAutopurge: false,
+        maxSize: 1000,
+        sizeCalculation: () => 1,
+      })
     ).filter
   );
 }
