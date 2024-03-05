@@ -95,7 +95,7 @@ describe('Quantity entry page', () => {
       render(<QuantityEntry />);
     });
 
-    const weight = screen.getByLabelText('Weight in kilograms');
+    const weight = screen.getByLabelText('Weight, in kilograms');
     fireEvent.change(weight, { target: { value: '26' } });
 
     const submitButton = screen.getByText('Save and continue');
