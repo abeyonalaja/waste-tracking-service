@@ -18,6 +18,8 @@ RUN set -x \
 
 WORKDIR /app
 COPY --chown=node:node dist/apps/waste-tracking-service/.next ./.next
+COPY --chown=node:node dist/apps/waste-tracking-service/.nx-helpers ./.nx-helpers
+COPY --chown=node:node dist/apps/waste-tracking-service/next.config.js ./
 COPY --chown=node:node dist/apps/waste-tracking-service/public ./public
 COPY --chown=node:node dist/apps/waste-tracking-service/package*.json ./
 
