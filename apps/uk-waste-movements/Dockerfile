@@ -8,6 +8,8 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 WORKDIR /app
 COPY --chown=node:node dist/apps/uk-waste-movements/.next ./.next
+COPY --chown=node:node dist/apps/uk-waste-movements/.nx-helpers ./.nx-helpers
+COPY --chown=node:node dist/apps/uk-waste-movements/next.config.js ./
 COPY --chown=node:node dist/apps/uk-waste-movements/public ./public
 COPY --chown=node:node dist/apps/uk-waste-movements/package*.json ./
 
