@@ -10,7 +10,7 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  basePath: '/ukwm',
+  basePath: '/move-waste',
 };
 
 const plugins = [

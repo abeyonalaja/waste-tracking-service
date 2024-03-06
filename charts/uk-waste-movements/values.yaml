@@ -88,6 +88,6 @@ ingress:
   hosts:
     - host: 'wts-uksbe-snd.azure.defra.cloud'
       paths:
-        - path: /ukwm
+        - path: /move-waste
           pathType: Prefix
   labels: {}

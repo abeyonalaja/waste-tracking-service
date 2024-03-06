@@ -8,8 +8,8 @@ export const metadata = {
 
 export default function Index() {
   const breadcrumbItems = [
-    { text: 'Home', href: '/ukwm' },
-    { text: 'Move waste in the UK', href: '/ukwm/en/move-waste' },
+    { text: 'Home', href: '/move-waste' },
+    { text: 'Move waste in the UK', href: '/move-waste/en/move-waste' },
   ];
   const t = function (text: string) {
     return text;
