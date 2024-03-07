@@ -60,7 +60,7 @@ const Quantity = () => {
       e.preventDefault();
 
       const newErrors = {
-        quantityTypeError: validateQuantityType(quantityType, bulkWaste),
+        quantityTypeError: validateQuantityType(quantityType),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);

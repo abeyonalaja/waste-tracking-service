@@ -202,16 +202,11 @@ export const validateFullName: (fullName?: string) => string = (fullName) => {
     return t('validation.fullName.empty');
 };
 
-export const validateQuantityType: (
-  quantityType?: string,
-  isBulkWaste?: boolean
-) => string = (quantityType, isBulkWaste) => {
+export const validateQuantityType: (quantityType?: string) => string = (
+  quantityType
+) => {
   if (quantityType === undefined) {
-    if (isBulkWaste) {
-      return t('validation.quantity.type.bulk');
-    } else {
-      return t('validation.quantity.type.small');
-    }
+    return t('validation.quantity.type.smallAndBulk');
   }
 };
 
