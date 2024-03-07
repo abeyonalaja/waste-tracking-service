@@ -129,7 +129,6 @@ Feature: Quantity of waste page
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "IN PROGRESS"
 
-    #check the error message
   Scenario: User can't continue without selecting quantity of waste option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
@@ -137,9 +136,9 @@ Feature: Quantity of waste page
     When I click the button Save and continue
     Then the quantity of bulk waste page is displayed
     And I click the button Save and continue
-    Then I remain on the Quantity of bulk waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
+    Then I remain on the Quantity of bulk waste page with an "Select the quantity of waste" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Quantity of bulk waste page with an "Select yes if you know the actual or estimated amount of waste" error message displayed
+    Then I remain on the Quantity of bulk waste page with an "Select the quantity of waste" error message displayed
 
   Scenario: User can't continue without entering quantity of units option
     Given I login to waste tracking portal
@@ -327,14 +326,14 @@ Feature: Quantity of waste page
     And I choose "Estimated weight (kilograms)" radio button
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "IN PROGRESS"
-  #bug
+
   Scenario:User can't continue without selecting any option
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
     Then the quantity of small waste page is displayed
     When I click the button Save and continue
-    And I remain on the Quantity of small waste page with an "Select yes if you know the actual quantity of waste" error message displayed
+    And I remain on the Quantity of small waste page with an "Select the quantity of waste" error message displayed
     When I choose "Actual weight (kilograms)" radio button
     And I click the button Save and continue
     Then What is the actual net weight of the small weight waste is displayed
