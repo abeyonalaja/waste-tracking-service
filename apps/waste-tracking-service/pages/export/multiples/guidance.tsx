@@ -499,7 +499,7 @@ const Guidance = () => {
                 </TableHeader>
                 <TableHeader
                   setWidth="50%"
-                  id="table-heading-waste-exporter-answer"
+                  id="table-heading-waste-importer-answer"
                 >
                   Answer format
                 </TableHeader>

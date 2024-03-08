@@ -67,19 +67,22 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
       {description && <Paragraph mb={3}>{description}</Paragraph>}
       {errors.length > 0 && (
         <UnorderedList mb={0} listStyleType="none">
-          {errors.map((error) => (
-            <ListItem key={error.targetName}>
-              <AppLink
-                id={'error-link-' + error.targetName}
-                href={'#'}
-                isBold={true}
-                colour={'red'}
-                onClick={(e) => onHandleErrorClick(error.targetName, e)}
-              >
-                {error.text}
-              </AppLink>
-            </ListItem>
-          ))}
+          {errors.map(
+            (error) =>
+              error.text && (
+                <ListItem key={error.targetName}>
+                  <AppLink
+                    id={'error-link-' + error.targetName}
+                    href={'#'}
+                    isBold={true}
+                    colour={'red'}
+                    onClick={(e) => onHandleErrorClick(error.targetName, e)}
+                  >
+                    {error.text}
+                  </AppLink>
+                </ListItem>
+              )
+          )}
         </UnorderedList>
       )}
     </StyledErrorSummary>

@@ -1232,7 +1232,7 @@ Feature: Automation to check accessibility tool
     And I click the upload button
     Then I should see glw csv error page is displayed
     And I click the upload button
-    Then I remain on the Glw upload error page with an "Select a file to upload" error message displayed
+    Then I remain on the Glw upload error page with an "Upload a CSV file" error message displayed
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label

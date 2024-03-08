@@ -14,7 +14,9 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
 
   return (
     <>
-      <GovUK.H3>{t('multiples.errorSummaryPage.errorSummary.title')}</GovUK.H3>
+      <GovUK.H2 size="M">
+        {t('multiples.errorSummaryPage.errorSummary.title')}
+      </GovUK.H2>
       <GovUK.Paragraph>
         {t('multiples.errorSummaryPage.errorSummary.startParagraph')}
       </GovUK.Paragraph>
@@ -33,8 +35,8 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
           </GovUK.Table.Row>
         }
       >
-        {errors.map((row, index) => (
-          <GovUK.Table.Row key={`error-summary-row-${index}`}>
+        {errors.map((row) => (
+          <GovUK.Table.Row key={`error-summary-row-${row.rowNumber}`}>
             <GovUK.Table.Cell>
               <strong>{row.rowNumber}</strong>
             </GovUK.Table.Cell>
@@ -48,7 +50,7 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
             <GovUK.Table.Cell>
               <AppLink
                 href={`/export/multiples/${router.query.id}/errors/${row.rowNumber}`}
-                id={`action-view-error-`}
+                id={`action-view-error-${row.rowNumber}`}
               >
                 {t('multiples.errorSummaryPage.errorSummaryTable.actionLink')}
               </AppLink>
