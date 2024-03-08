@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { GridRow } from '../components';
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { useTranslation } from '../../utils/useTranslation';
 
 export const metadata = {
   title: 'UK waste movements',
@@ -11,9 +12,7 @@ export default function Index() {
     { text: 'Home', href: '/move-waste' },
     { text: 'Move waste in the UK', href: '/move-waste/en/move-waste' },
   ];
-  const t = function (text: string) {
-    return text;
-  };
+  const { t } = useTranslation('moveWastePage');
   return (
     <>
       <GovUK.Breadcrumbs items={breadcrumbItems} />

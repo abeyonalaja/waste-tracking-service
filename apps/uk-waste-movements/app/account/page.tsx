@@ -1,14 +1,13 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { GridRow, LinkCard } from '../components';
+import { useTranslation } from '../../utils/useTranslation';
 
 export const metadata = {
   title: 'UK waste movements',
 };
 
 export default function Index() {
-  const t = function (text: string) {
-    return text;
-  };
+  const { t } = useTranslation('accountPage');
   return (
     <>
       <GovUK.GridRow>

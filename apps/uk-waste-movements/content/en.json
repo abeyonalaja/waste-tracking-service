@@ -3,6 +3,12 @@
     "title": "UK waste movements",
     "phaseBanner": "This is a new service"
   },
+  "404": {
+    "title": "Page not found",
+    "paragraph1": "If you typed the web address, check it is correct.",
+    "paragraph2": "If you pasted the web address, check you copied the entire address.",
+    "link": "Go to your account"
+  },
   "startPage": {
     "title": "Sign into your Defra waste tracking service account",
     "description": "If you move waste in the UK, or export Annex VII waste outside the UK, sign into your waste tracking account to create your digital waste records and manage all your records from one place.",

@@ -1,13 +1,13 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { useTranslation } from '../utils/useTranslation';
 
 export const metadata = {
   title: 'UK waste movements',
 };
 
 export default async function Index() {
-  const t = function (text: string) {
-    return text;
-  };
+  const { t } = useTranslation('startPage');
+
   return (
     <>
       <GovUK.GridRow>
@@ -31,7 +31,11 @@ export default async function Index() {
               {t('serviceFeatures.listElementFour')}
             </GovUK.ListItem>
           </GovUK.List>
-          <GovUK.Button start={true} text={t('buttonStartNow')} />
+          <GovUK.Button
+            start={true}
+            text={t('buttonStartNow')}
+            href={'move-waste/account'}
+          />
           <GovUK.Heading size={'m'} level={2}>
             {t('beforeYouStart.title')}
           </GovUK.Heading>
