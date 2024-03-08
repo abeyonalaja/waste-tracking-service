@@ -19,7 +19,7 @@ module WasteCarrierBulkWasteController
     waste_carrier_contact_details_page.check_page_displayed
     waste_carrier_contact_details_page.enter_organisation_contact 'Nick Pope'
     waste_carrier_contact_details_page.enter_email 'sample@mail.com'
-    waste_carrier_contact_details_page.enter_phone_number '+441234567891'
+    waste_carrier_contact_details_page.enter_phone_number '+359-8988-1(434)5'
     waste_carrier_contact_details_page.save_and_continue
     how_will_the_waste_carrier_transport_the_waste_page.check_page_displayed
     how_will_the_waste_carrier_transport_the_waste_page.choose_option 'Road'
@@ -40,7 +40,7 @@ module WasteCarrierBulkWasteController
         waste_carrier_contact_details_page.check_page_title(i + 1)
         waste_carrier_contact_details_page.enter_organisation_contact 'Nick Pope'
         waste_carrier_contact_details_page.enter_email 'sample@mail.com'
-        waste_carrier_contact_details_page.enter_phone_number '+441234567891'
+        waste_carrier_contact_details_page.enter_phone_number '+359-8988-1(434)5'
         waste_carrier_contact_details_page.save_and_continue
         how_will_the_waste_carrier_transport_the_waste_page.check_page_displayed
         how_will_the_waste_carrier_transport_the_waste_page.choose_option 'Road'

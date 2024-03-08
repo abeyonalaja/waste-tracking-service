@@ -14,9 +14,10 @@ module CommonComponents
   ORG_NAME = Faker::Company.name.gsub(/\W/, '')
   NAME = Faker::Name.name
   EMAIL = Faker::Internet.email
-  PHONE_NUMBER = '08123456789'
+  PHONE_NUMBER = '00359-8988-1(434)5'
+  INVALID_PHONE_NUMBER = '+359123123359-8988-11'
   FAX_NUMBER = '01234567890'
-  INVALID_FAX = '0123456789'
+  INVALID_FAX = '1234567891'
   phone = '08001234567'
   COUNTRY = 'ENGLAND'
   NEW_COUNTRY = 'WALES'
@@ -63,6 +64,11 @@ module CommonComponents
   def enter_phone_number(page)
     fill_in PHONE_ID, with: PHONE_NUMBER, visible: false
     TestStatus.set_test_status("#{page}_phone_number".to_sym, PHONE_NUMBER)
+  end
+
+  def enter_invalid_phone_number(page)
+    fill_in PHONE_ID, with: INVALID_PHONE_NUMBER, visible: false
+    TestStatus.set_test_status("#{page}_phone_number".to_sym, INVALID_PHONE_NUMBER)
   end
 
   def enter_fax_number(page)

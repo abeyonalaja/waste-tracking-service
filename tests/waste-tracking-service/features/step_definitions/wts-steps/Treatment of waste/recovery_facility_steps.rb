@@ -140,3 +140,9 @@ Then(/^I should see previously entered recovery contact details$/) do
   expect(RecoveryFacilityContactDetailsPage.new).to have_email TestStatus.test_status('recovery_facility_email'.to_sym)
   expect(RecoveryFacilityContactDetailsPage.new).to have_phone_number TestStatus.test_status('recovery_facility_phone_number'.to_sym)
 end
+
+When(/^I enter invalid phone number for recovery facility details$/) do
+  RecoveryFacilityContactDetailsPage.new.enter_full_name '1st_recovery_facility'
+  RecoveryFacilityContactDetailsPage.new.enter_email '1st_recovery_facility'
+  RecoveryFacilityContactDetailsPage.new.enter_invalid_phone_number '1st_recovery_facility'
+end

@@ -41,3 +41,9 @@ end
 Then(/^I should see disposal code details pre\-populated$/) do
   expect(DisposalCodePage.new).to have_disposal_code TestStatus.test_status(:laboratory_disposal_code)
 end
+
+When(/^I enter invalid phone number for laboratory details$/) do
+  LaboratoryContactDetailsPage.new.enter_full_name 'laboratory_contact_details'
+  LaboratoryContactDetailsPage.new.enter_email 'laboratory_contact_details'
+  LaboratoryContactDetailsPage.new.enter_invalid_phone_number 'laboratory_contact_details'
+end

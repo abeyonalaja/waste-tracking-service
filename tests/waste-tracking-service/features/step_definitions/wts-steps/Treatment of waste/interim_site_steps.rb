@@ -46,3 +46,9 @@ And(/^I click description link$/) do
   xpath = "//span[text()='#{Translations.value('exportJourney.interimSite.summary')}']"
   InterimSiteRecoveryCodePage.new.interim_site_link xpath
 end
+
+And(/^I enter invalid phone number for interim site$/) do
+  InterimSiteContactDetailsPage.new.enter_full_name 'interim_site_contact'
+  InterimSiteContactDetailsPage.new.enter_email 'interim_site_contact'
+  InterimSiteContactDetailsPage.new.enter_invalid_phone_number 'interim_site_contact'
+end

@@ -8,7 +8,7 @@ end
 And(/^I complete the Whats is the waste carriers contact details page$/) do
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-8988-1(434)5'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
 end
 
@@ -55,5 +55,12 @@ end
 
 And(/^I enter not valid international fax number$/) do
   WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number ''
-  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number '+123456789123654789123'
+  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number '+1234567891236547891233'
+end
+
+And(/^I enter invalid phone number for waste carrier's contact$/) do
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+44123123359-8988-101'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
 end

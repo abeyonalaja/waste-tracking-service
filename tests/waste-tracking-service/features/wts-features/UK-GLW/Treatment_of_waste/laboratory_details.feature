@@ -19,6 +19,19 @@ Feature: Laboratory details page
     Then task list page is displayed
     Then the task "Laboratory details" should be "COMPLETED"
 
+  Scenario: User enters invalid phone number on Laboratory contact details page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I complete Waste codes and description task with "Not applicable" has waste code
+    Then the task "Waste codes and description" should be "COMPLETED"
+    And the task "Laboratory details" should be "NOT STARTED"
+    When I click the "Laboratory details" link
+    When I complete laboratory address details
+    Then the "Laboratory contact details" page is displayed
+    When I enter invalid phone number for laboratory details
+    And I click the button Save and continue
+    And I remain on the Laboratory contact details page with an "Enter a real phone number" error message displayed
+
   Scenario: User can't continue without completing mandatory data in laboratory details pages
     Given I login to waste tracking portal
     When I navigate to the task list page with reference

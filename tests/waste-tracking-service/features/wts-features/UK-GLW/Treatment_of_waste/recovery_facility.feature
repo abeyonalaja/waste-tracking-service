@@ -86,6 +86,21 @@ Feature: Recovery Facility page
     And I remain on the recovery facility contact details page with an "Enter a real email address" error message displayed
     And I remain on the recovery facility contact details page with an "Enter a real phone number" error message displayed
 
+  Scenario: User enters invalid phone number on recovery facility contact details page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I complete Waste codes and description task
+    When I click the "Recovery facility" link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "No" radio button
+    And I click the button Save and continue
+    Then the "Recovery facility address" page is displayed
+    When I complete recovery facility address page
+    And I click the button Save and continue
+    When I enter invalid phone number for recovery facility details
+    And I click the button Save and continue
+    And I remain on the recovery facility contact details page with an "Enter a real phone number" error message displayed
+
   Scenario: User can't continue without recovery code page
     Given I login to waste tracking portal
     And I navigate to the task list page with reference

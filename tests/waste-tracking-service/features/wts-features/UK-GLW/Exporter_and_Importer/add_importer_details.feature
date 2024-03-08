@@ -108,3 +108,15 @@ Feature: Add Importer details page
     And I enter invalid international fax code
     And I click the button Save and continue
     Then I remain on the Importer contact details page with an "Enter a real fax number" error message displayed
+
+  Scenario: User enters invalid phone number on Importer details page
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Importer details" link
+    Then the "who is the importer" page is displayed
+    And I complete who is the importer page
+    And I click the button Save and continue
+    Then the "Importer contact details" page is displayed
+    And I enter invalid phone number
+    And I click the button Save and continue
+    Then I remain on the Importer contact details page with an "Enter a real phone number" error message displayed

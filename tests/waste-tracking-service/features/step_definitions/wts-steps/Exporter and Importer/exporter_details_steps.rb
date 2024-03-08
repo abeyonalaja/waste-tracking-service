@@ -40,5 +40,5 @@ end
 
 And(/^I enter invalid international fax code$/) do
   ExporterDetailsPage.new.enter_invalid_fax ''
-  ExporterDetailsPage.new.enter_invalid_international_fax '+123456789123654789123'
+  ExporterDetailsPage.new.enter_invalid_international_fax '+1234567891236547891233'
 end

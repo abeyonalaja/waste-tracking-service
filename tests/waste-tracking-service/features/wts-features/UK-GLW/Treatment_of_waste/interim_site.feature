@@ -167,6 +167,21 @@ Feature: Interim site page
     Then I remain on the Interim site contact details page with an "Enter an email address" error message displayed
     Then I remain on the Interim site contact details page with an "Enter a phone number" error message displayed
 
+  Scenario: User enters invalid phone number on Interim address contacts details page
+    Given I login to waste tracking portal
+    And I navigate to the task list page with reference
+    And I complete Waste codes and description task
+    When I click the "Recovery facility" link
+    Then the "Confirmation Interim Site" page is displayed
+    And I choose "Yes" radio button
+    And I click the button Save and continue
+    Then the "Interim site address" page is displayed
+    And I complete the Interim site address page
+    And I click the button Save and continue
+    Then the "Interim site contact details" page is displayed
+    And I enter invalid phone number for interim site
+    And I click the button Save and continue
+    Then I remain on the Interim site contact details page with an "Enter a real phone number" error message displayed
 
   Scenario: Error validation on Interim recovery code page
     Given I login to waste tracking portal

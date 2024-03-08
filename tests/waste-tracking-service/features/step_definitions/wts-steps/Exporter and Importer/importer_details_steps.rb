@@ -23,11 +23,11 @@ end
 And(/^I complete Importer contact details page$/) do
   ImporterContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
-  ImporterContactDetailsPage.new.enter_phone_number '+441234567891'
+  ImporterContactDetailsPage.new.enter_phone_number '+359-8988-1(434)5'
   ImporterContactDetailsPage.new.enter_fax_number '12345678910'
   TestStatus.set_test_status(:importer_org_contact, 'John Arnold')
   TestStatus.set_test_status(:importer_email, 'mail@mail.com')
-  TestStatus.set_test_status(:importer_phone_number, '+441234567891')
+  TestStatus.set_test_status(:importer_phone_number, '+359-8988-1(434)5')
   TestStatus.set_test_status(:importer_fax_number, '12345678910')
 end
 
@@ -42,4 +42,10 @@ Then(/^I verify that previously entered details are pre\-populated on the Import
   expect(ImporterContactDetailsPage.new).to have_reference_email TestStatus.test_status(:email)
   expect(ImporterContactDetailsPage.new).to have_reference_phone_number TestStatus.test_status(:phone_number)
   expect(ImporterContactDetailsPage.new).to have_reference_fax_number TestStatus.test_status(:fax_number)
+end
+
+And(/^I enter invalid phone number$/) do
+  ImporterContactDetailsPage.new.enter_organisation_contact 'John Arnold'
+  ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
+  ImporterContactDetailsPage.new.enter_phone_number '+359-8988-1434512345634'
 end
