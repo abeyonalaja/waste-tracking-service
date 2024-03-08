@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmissionContextProvider } from '../contexts/submissionContext';
 import { useCookies } from 'react-cookie';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
-export default function Layout({ children }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   const [cookies] = useCookies(['cookieConsent']);
-  const analyticsEnabled =
-    cookies.cookieConsent?.analytics &&
-    process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT;
+  const [gaId, setGaId] = useState(null);
+  const analyticsEnabled = cookies.cookieConsent?.analytics && gaId;
+
+  useEffect(() => {
+    async function getGaId() {
+      try {
+        const res = await fetch('/api/env');
+        const data = await res.json();
+        setGaId(data.GOOGLE_ANALYTICS_ACCOUNT);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    getGaId();
+  }, []);
 
   return (
     <SubmissionContextProvider>
-      {analyticsEnabled && (
-        <GoogleAnalytics
-          gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT}
-        />
-      )}
-
+      {analyticsEnabled && <GoogleAnalytics gaId={gaId} />}
       {children}
     </SubmissionContextProvider>
   );
