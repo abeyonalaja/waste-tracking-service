@@ -9,6 +9,7 @@ import {
   NotificationBanner,
   Paragraph,
 } from 'components';
+import { useRouter } from 'next/router';
 import React, { FormEvent, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Radio } from 'govuk-react';
@@ -17,9 +18,8 @@ import { add } from 'date-fns';
 
 const Cookies = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [analyticsConsent, setAnalyticsConsent] = useState<boolean>(false);
-  const [showNotification, setShowNotification] = useState<boolean>(false);
-
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME;
   const [cookies, setCookie] = useCookies([cookieName]);
 
@@ -29,13 +29,15 @@ const Cookies = () => {
     } else {
       setAnalyticsConsent(false);
     }
-  }, [cookies]);
+  }, [cookies, cookieName]);
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault();
+
     const cookieValue: string = JSON.stringify({
       analytics: analyticsConsent,
     });
+
     setCookie(cookieName, cookieValue, {
       path: '/',
       sameSite: true,
@@ -43,8 +45,8 @@ const Cookies = () => {
         years: 1,
       }),
     });
-    setShowNotification(true);
-    window.scrollTo(0, 0);
+
+    window.location.replace('/help/cookies?updated=true');
   };
 
   const BreadCrumbs = () => {
@@ -77,7 +79,7 @@ const Cookies = () => {
       >
         <GovUK.GridRow>
           <GovUK.GridCol setWidth="two-thirds">
-            {showNotification && (
+            {router.query.updated && (
               <NotificationBanner
                 type="success"
                 headingText={t('cookie.page.saved')}
