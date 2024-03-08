@@ -30,7 +30,7 @@ import {
   validateEmail,
   validateFieldNotEmpty,
   validateFullName,
-  validatePhone,
+  validateInternationalPhone,
   validateFax,
 } from 'utils/validators';
 
@@ -317,7 +317,9 @@ const Laboratory = () => {
           newErrors = {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
-            phoneNumber: validatePhone(contactDetails?.phoneNumber),
+            phoneNumber: validateInternationalPhone(
+              contactDetails?.phoneNumber
+            ),
             faxNumber: validateFax(contactDetails?.faxNumber),
           };
 

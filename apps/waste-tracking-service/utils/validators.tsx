@@ -143,7 +143,7 @@ export const validateFax: (fax?: string, allowNull?: boolean) => string = (
     return;
   }
   const regex = new RegExp('^([0-9]{11})$');
-  const regexInternational = new RegExp('^\\+(\\d{1,20})$');
+  const regexInternational = new RegExp('^(\\+|0|00)[0-9 ()\\-]{1,20}[0-9]$');
   if (!regex.test(fax) && !regexInternational.test(fax)) {
     return t('validation.fax.invalid');
   }
@@ -157,7 +157,7 @@ export const validateInternationalPhone: (
     return;
   }
   if (phone?.length === 0) return t('validation.phone.empty');
-  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 \\-]{7,32}$');
+  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 ()\\-]{7,17}[0-9]$');
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
   }
