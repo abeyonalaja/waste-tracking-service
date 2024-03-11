@@ -52,3 +52,5 @@ apps/address/mnt/
 reports/
 .env.local
 /.nx
+/.vs
+/migrations.json
