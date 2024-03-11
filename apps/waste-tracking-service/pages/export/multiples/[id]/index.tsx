@@ -46,7 +46,8 @@ export default function Index() {
       const uploadStatus = apiData.data.state.status || null;
 
       if (uploadStatus === 'FailedCsvValidation') {
-        safePush(`/export/multiples/?columnsError=true`);
+        const errorMessage = apiData.data.state.error;
+        safePush(`/export/multiples/?error=${errorMessage}`);
       }
 
       if (uploadStatus === 'FailedValidation') {

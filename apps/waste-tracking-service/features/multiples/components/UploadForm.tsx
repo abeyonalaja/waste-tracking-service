@@ -35,10 +35,11 @@ export function UploadForm({
   const apiConfig = useApiConfig();
   const { t } = useTranslation();
   const [file, setFile] = useState<File>(null);
+
   const [validationErrors, setValidationErrors] =
     useState<ValidationErrorsType>(
-      router.query.columnsError
-        ? { file: 'Csv record inconsistent columns' }
+      router.query.error
+        ? { file: router.query.error.toString().replace(/_/g, ' ') }
         : {}
     );
 
