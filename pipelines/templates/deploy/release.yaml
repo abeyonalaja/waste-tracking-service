@@ -11,24 +11,26 @@ parameters:
       - address
       - annex-vii
       - annex-vii-bulk
+      - app-green-list-waste
+      - app-waste-tracking-service
       - feedback
       - limited-audience
       - reference-data
       - uk-waste-movements
       - waste-tracking-gateway
-      - app-green-list-waste
   - name: appNameTag
     type: string
     values:
       - address
       - annex_vii
       - annex_vii_bulk
+      - app_green_list_waste
+      - app_waste_tracking_service
       - feedback
       - limited_audience
       - reference_data
       - uk_waste_movements
       - waste_tracking_gateway
-      - app_green_list_waste
   - name: deployChart
     type: string
     default: ''

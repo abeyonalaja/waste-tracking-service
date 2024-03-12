@@ -1,15 +1,30 @@
+import { ReactNode } from 'react';
+
 type Props = {
+  footerLinks?: Array<ReactNode>;
   testId?: string;
 };
 
-export const Footer = ({ testId }: Props) => {
+export const Footer = ({ footerLinks, testId }: Props) => {
   return (
     <footer className="govuk-footer" role="contentinfo" data-testid={testId}>
       <div className="govuk-width-container">
         <div className="govuk-footer__meta">
           <div className="govuk-footer__meta-item govuk-footer__meta-item--grow">
-            <h2 className="govuk-visually-hidden">Support links</h2>
-
+            {footerLinks && (
+              <ul className="govuk-footer__inline-list">
+                {footerLinks.map((footerLink, index) => {
+                  return (
+                    <li
+                      className={'govuk-footer__inline-list-item'}
+                      key={`footer-link-${index}`}
+                    >
+                      {footerLink}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             <svg
               aria-hidden="true"
               focusable="false"

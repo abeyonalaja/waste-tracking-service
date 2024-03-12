@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,app-green-list-waste,waste-tracking-gateway"
+                        affected="address,annex-vii,annex-vii-bulk,app-green-list-waste,app-waste-tracking-service,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-gateway"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,app-green-list-waste,waste-tracking-gateway
+        value: address,annex-vii,annex-vii-bulk,app-green-list-waste,app-waste-tracking-service,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-gateway
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -145,6 +145,22 @@ jobs:
                       echo "Deploy annex-vii-bulk: false"
                       echo "##vso[task.setvariable variable=deployAnnexViiBulk;isoutput=true]false"
                     fi
+                    if [[ $affected = *'app-green-list-waste'* ]]
+                    then
+                      echo "Deploy app-green-list-waste: true"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]true"
+                    else
+                      echo "Deploy app-green-list-waste: false"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'app-waste-tracking-service'* ]]
+                    then
+                      echo "Deploy app-waste-tracking-service: true"
+                      echo "##vso[task.setvariable variable=deployAppWasteTrackingService;isoutput=true]true"
+                    else
+                      echo "Deploy app-waste-tracking-service: false"
+                      echo "##vso[task.setvariable variable=deployAppWasteTrackingService;isoutput=true]false"
+                    fi
                     if [[ $affected = *'feedback'* ]]
                     then
                       echo "Deploy feedback: true"
@@ -185,14 +201,6 @@ jobs:
                       echo "Deploy waste-tracking-gateway: false"
                       echo "##vso[task.setvariable variable=deployWasteTrackingGateway;isoutput=true]false"
                     fi
-                    if [[ $affected = *'app-green-list-waste'* ]]
-                    then
-                      echo "Deploy app-green-list-waste: true"
-                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]true"
-                    else
-                      echo "Deploy app-green-list-waste: false"
-                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]false"
-                    fi
                   displayName: Helm chart deployment triggers
                   name: chart_triggers
 
@@ -226,6 +234,46 @@ jobs:
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployAnnexViiBulk'], true)
+
+                - ${{ elseif eq(app, 'app-green-list-waste')}}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidClientSecret: $(dcidClientSecret)
+                        dcidPolicy: $(dcidPolicy)
+                        dcidRedirect: $(dcidRedirect)
+                        dcidServiceId: $(dcidServiceId)
+                        dcidTenant: $(dcidTenant)
+                        dcidWellKnown: $(dcidWellKnown)
+                        nextAuthSecret: $(nextAuthSecret)
+                        nextAuthUrl: $(nextAuthUrl)
+                        nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployAppGreenListWaste'], true)
+
+                - ${{ elseif eq(app, 'app-waste-tracking-service')}}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidClientSecret: $(dcidClientSecret)
+                        dcidPolicy: $(dcidPolicy)
+                        dcidRedirect: $(dcidRedirect)
+                        dcidServiceId: $(dcidServiceId)
+                        dcidTenant: $(dcidTenant)
+                        dcidWellKnown: $(dcidWellKnown)
+                        nextAuthSecret: $(nextAuthSecret)
+                        nextAuthUrl: $(nextAuthUrl)
+                        nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployAppWasteTrackingService'], true)
 
                 - ${{ elseif eq(app, 'feedback') }}:
                     - template: deploy/${{ app }}.yaml
@@ -281,26 +329,6 @@ jobs:
                         allowedUsers: $(allowedUsers)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployWasteTrackingGateway'], true)
-
-                - ${{ elseif eq(app, 'app-green-list-waste')}}:
-                    - template: deploy/${{ app }}.yaml
-                      parameters:
-                        serviceConnection: ${{ parameters.acrServiceConnection }}
-                        containerRegistryName: ${{ parameters.containerRegistryName }}
-                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
-                        appInsightsConnectionString: $(appInsightsConnectionString)
-                        dcidClientId: $(dcidClientId)
-                        dcidClientSecret: $(dcidClientSecret)
-                        dcidPolicy: $(dcidPolicy)
-                        dcidRedirect: $(dcidRedirect)
-                        dcidServiceId: $(dcidServiceId)
-                        dcidTenant: $(dcidTenant)
-                        dcidWellKnown: $(dcidWellKnown)
-                        nextAuthSecret: $(nextAuthSecret)
-                        nextAuthUrl: $(nextAuthUrl)
-                        nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
-                        ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployAppGreenListWaste'], true)
 
                 - ${{ else }}:
                     - bash: |

@@ -11,12 +11,13 @@ parameters:
       - address
       - annex-vii
       - annex-vii-bulk
+      - app-green-list-waste
+      - app-waste-tracking-service
       - feedback
       - limited-audience
       - reference-data
       - uk-waste-movements
       - waste-tracking-gateway
-      - app-green-list-waste
   - name: tag
     type: string
     default: ''

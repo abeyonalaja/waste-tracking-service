@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 export default {
-  displayName: 'app',
+  displayName: 'app-green-list-waste',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nrwl/react/plugins/jest',

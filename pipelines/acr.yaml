@@ -13,6 +13,10 @@ parameters:
         nameTag: annex_vii
       - name: annex-vii-bulk
         nameTag: annex_vii_bulk
+      - name: app-green-list-waste
+        nameTag: app_green_list_waste
+      - name: app-waste-tracking-service
+        nameTag: app_waste_tracking_service
       - name: feedback
         nameTag: feedback
       - name: limited-audience
@@ -23,8 +27,6 @@ parameters:
         nameTag: uk_waste_movements
       - name: waste-tracking-gateway
         nameTag: waste_tracking_gateway
-      - name: app-green-list-waste
-        nameTag: app_green_list_waste
 
   - name: artifacts
     type: object

@@ -1,9 +1,18 @@
+import { ReactNode } from 'react';
+
 type Props = {
   serviceName?: string;
+  serviceNameLink?: ReactNode;
+  navigation?: ReactNode;
   testId?: string;
 };
 
-export const Header = ({ serviceName, testId }: Props) => {
+export const Header = ({
+  serviceName,
+  serviceNameLink,
+  navigation,
+  testId,
+}: Props) => {
   return (
     <header className="govuk-header" role="banner" data-testid={testId}>
       <div className="govuk-header__container govuk-width-container">
@@ -28,7 +37,7 @@ export const Header = ({ serviceName, testId }: Props) => {
           </a>
         </div>
         <div className="govuk-header__content">
-          {serviceName && (
+          {!serviceNameLink && serviceName && (
             <a
               href="/"
               className="govuk-header__link govuk-header__service-name"
@@ -36,7 +45,9 @@ export const Header = ({ serviceName, testId }: Props) => {
               {serviceName}
             </a>
           )}
+          {serviceNameLink}
         </div>
+        {navigation}
       </div>
     </header>
   );
