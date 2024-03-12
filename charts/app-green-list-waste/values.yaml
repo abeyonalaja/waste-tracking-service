@@ -10,7 +10,7 @@ replicaCount: 2
 
 # Profile of the image used to create the pod containers
 image:
-  repository: SSVWTSINFCR5401.azurecr.io/wts/waste-tracking-service
+  repository: SSVWTSINFCR5401.azurecr.io/wts/app-green-list-waste
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 'main'
@@ -100,6 +100,6 @@ ingress:
   hosts:
     - host: 'wts-uksbe-snd.azure.defra.cloud'
       paths:
-        - path: /
+        - path: /export-annex-VII-waste
           pathType: Prefix
   labels: {}

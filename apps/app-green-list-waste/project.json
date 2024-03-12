@@ -1,7 +1,7 @@
 {
-  "name": "waste-tracking-service",
+  "name": "app-green-list-waste",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/waste-tracking-service",
+  "sourceRoot": "apps/app-green-list-waste",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,13 +9,13 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "root": "apps/waste-tracking-service",
-        "outputPath": "dist/apps/waste-tracking-service",
+        "root": "apps/app-green-list-waste",
+        "outputPath": "dist/apps/app-green-list-waste",
         "generateLockfile": true
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/waste-tracking-service"
+          "outputPath": "apps/app-green-list-waste"
         },
         "production": {}
       }
@@ -24,16 +24,16 @@
       "executor": "@nrwl/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "waste-tracking-service:build",
+        "buildTarget": "app-green-list-waste:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "waste-tracking-service:build:development",
+          "buildTarget": "app-green-list-waste:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "waste-tracking-service:build:production",
+          "buildTarget": "app-green-list-waste:build:production",
           "dev": false
         }
       }
@@ -41,14 +41,14 @@
     "export": {
       "executor": "@nrwl/next:export",
       "options": {
-        "buildTarget": "waste-tracking-service:build:production"
+        "buildTarget": "app-green-list-waste:build:production"
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/waste-tracking-service/jest.config.ts",
+        "jestConfig": "apps/app-green-list-waste/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -62,7 +62,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/waste-tracking-service/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/app-green-list-waste/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "container": {
@@ -71,7 +71,7 @@
       "options": {
         "engine": "docker",
         "metadata": {
-          "images": ["wts/waste-tracking-service"],
+          "images": ["wts/app-green-list-waste"],
           "load": true,
           "tags": [
             "type=ref,event=branch",

@@ -1,6 +1,6 @@
 apiVersion: v2
-name: waste-tracking-service
-description: A Helm chart for Waste Tracking Service
+name: app-green-list-waste
+description: A Helm chart for Green List Waste
 
 # A chart can be either an 'application' or a 'library' chart.
 #

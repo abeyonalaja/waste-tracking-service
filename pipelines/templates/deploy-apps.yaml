@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-service,waste-tracking-gateway"
+                        affected="address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,app-green-list-waste,waste-tracking-gateway"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-service,waste-tracking-gateway
+        value: address,annex-vii,annex-vii-bulk,feedback,limited-audience,reference-data,uk-waste-movements,app-green-list-waste,waste-tracking-gateway
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -185,13 +185,13 @@ jobs:
                       echo "Deploy waste-tracking-gateway: false"
                       echo "##vso[task.setvariable variable=deployWasteTrackingGateway;isoutput=true]false"
                     fi
-                    if [[ $affected = *'waste-tracking-service'* ]]
+                    if [[ $affected = *'app-green-list-waste'* ]]
                     then
-                      echo "Deploy waste-tracking-service: true"
-                      echo "##vso[task.setvariable variable=deployWasteTrackingService;isoutput=true]true"
+                      echo "Deploy app-green-list-waste: true"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]true"
                     else
-                      echo "Deploy waste-tracking-service: false"
-                      echo "##vso[task.setvariable variable=deployWasteTrackingService;isoutput=true]false"
+                      echo "Deploy app-green-list-waste: false"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]false"
                     fi
                   displayName: Helm chart deployment triggers
                   name: chart_triggers
@@ -282,7 +282,7 @@ jobs:
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployWasteTrackingGateway'], true)
 
-                - ${{ elseif eq(app, 'waste-tracking-service')}}:
+                - ${{ elseif eq(app, 'app-green-list-waste')}}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
@@ -300,7 +300,7 @@ jobs:
                         nextAuthUrl: $(nextAuthUrl)
                         nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployWasteTrackingService'], true)
+                          deployChart: eq(variables['chart_triggers.deployAppGreenListWaste'], true)
 
                 - ${{ else }}:
                     - bash: |

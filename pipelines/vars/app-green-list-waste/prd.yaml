@@ -1,16 +1,16 @@
 image:
-  tag: 'main'
+  tag: '1.1.0'
 resources:
   requests:
-    cpu: 25m
-    memory: 128Mi
+    cpu: 100m
+    memory: 512Mi
   limits:
-    cpu: 50m
-    memory: 256Mi
+    cpu: 150m
+    memory: 1024Mi
 secret:
   env:
-    NEXT_PUBLIC_MULTIPLES_ENABLED: 'true'
-    NEXT_PUBLIC_LANGUAGES_ENABLED: 'true'
+    NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'
+    NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'
@@ -18,7 +18,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   hosts:
-    - host: 'wts-uksbe-dev.azure.defra.cloud'
+    - host: 'wts-uksbe-prd.azure.defra.cloud'
       paths:
-        - path: /
+        - path: /export-annex-VII-waste
           pathType: Prefix

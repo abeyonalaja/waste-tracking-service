@@ -23,8 +23,8 @@ parameters:
         nameTag: uk_waste_movements
       - name: waste-tracking-gateway
         nameTag: waste_tracking_gateway
-      - name: waste-tracking-service
-        nameTag: waste_tracking_service
+      - name: app-green-list-waste
+        nameTag: app_green_list_waste
 
   - name: artifacts
     type: object

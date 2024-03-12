@@ -16,6 +16,8 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  basePath:
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '',
   experimental: {
     instrumentationHook: true,
   },

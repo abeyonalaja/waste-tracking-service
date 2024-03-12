@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "waste-tracking-service.name" -}}
+{{- define "app-green-list-waste.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "waste-tracking-service.fullname" -}}
+{{- define "app-green-list-waste.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "waste-tracking-service.chart" -}}
+{{- define "app-green-list-waste.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "waste-tracking-service.labels" -}}
-helm.sh/chart: {{ include "waste-tracking-service.chart" . }}
-{{ include "waste-tracking-service.selectorLabels" . }}
+{{- define "app-green-list-waste.labels" -}}
+helm.sh/chart: {{ include "app-green-list-waste.chart" . }}
+{{ include "app-green-list-waste.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "waste-tracking-service.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "waste-tracking-service.name" . }}
+{{- define "app-green-list-waste.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "app-green-list-waste.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "waste-tracking-service.serviceAccountName" -}}
+{{- define "app-green-list-waste.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "waste-tracking-service.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "app-green-list-waste.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,15 +64,15 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret to use
 */}}
-{{- define "waste-tracking-service.secretName" -}}
-{{- default (include "waste-tracking-service.fullname" .) .Values.secret.name }}
+{{- define "app-green-list-waste.secretName" -}}
+{{- default (include "app-green-list-waste.fullname" .) .Values.secret.name }}
 {{- end }}
 
 {{/*
 Create the environment variables to use
 */}}
-{{- define "waste-tracking-service.env"}}
-{{- $secretName := default (include "waste-tracking-service.secretName" .) }}
+{{- define "app-green-list-waste.env"}}
+{{- $secretName := default (include "app-green-list-waste.secretName" .) }}
 {{- range $name, $value := .Values.secret.env }}
 - name: {{ $name }}
   valueFrom:

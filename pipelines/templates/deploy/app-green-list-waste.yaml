@@ -7,10 +7,10 @@ parameters:
     default: ''
   - name: appName
     type: string
-    default: 'waste-tracking-service'
+    default: 'app-green-list-waste'
   - name: appNameTag
     type: string
-    default: 'waste_tracking_service'
+    default: 'app_green_list_waste'
   - name: valuesFilePath
     type: string
     default: ''

@@ -19,9 +19,23 @@
       ],
       "@wts/api/common": ["../../libs/api/common/src/index.ts"],
       "@wts/api/annex-vii-bulk": ["../../libs/api/annex-vii-bulk/src/index.ts"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": false
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "../../dist/apps/app-green-list-waste/.next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "jest.config.ts",

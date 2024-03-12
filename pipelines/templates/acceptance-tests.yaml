@@ -40,7 +40,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: startPageUrl
-        value: https://track-waste-${{ lower(parameters.environment) }}.azure.defra.cloud/
+        value: https://track-waste-${{ lower(parameters.environment) }}.azure.defra.cloud/export-annex-VII-waste
 
     steps:
       - task: UseRubyVersion@0

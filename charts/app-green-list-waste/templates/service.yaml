@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "waste-tracking-service.fullname" . }}
+  name: {{ include "app-green-list-waste.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "waste-tracking-service.labels" . | nindent 4 }}
+    {{- include "app-green-list-waste.labels" . | nindent 4 }}
     {{- range $name, $value := .Values.service.labels }}
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    {{- include "waste-tracking-service.selectorLabels" . | nindent 4 }}
+    {{- include "app-green-list-waste.selectorLabels" . | nindent 4 }}

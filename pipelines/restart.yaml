@@ -24,7 +24,7 @@ parameters:
       - reference-data
       - uk-waste-movements
       - waste-tracking-gateway
-      - waste-tracking-service
+      - app-green-list-waste
 
 jobs:
   - deployment: restart_deployments

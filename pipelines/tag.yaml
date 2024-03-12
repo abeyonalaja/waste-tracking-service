@@ -6,7 +6,7 @@ pool: DEFRA-COMMON-ubuntu2004-SSV3
 parameters:
   - name: appName
     type: string
-    default: waste-tracking-service
+    default: app-green-list-waste
     values:
       - address
       - annex-vii
@@ -16,7 +16,7 @@ parameters:
       - reference-data
       - uk-waste-movements
       - waste-tracking-gateway
-      - waste-tracking-service
+      - app-green-list-waste
   - name: tag
     type: string
     default: ''

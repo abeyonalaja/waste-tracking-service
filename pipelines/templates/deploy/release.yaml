@@ -16,7 +16,7 @@ parameters:
       - reference-data
       - uk-waste-movements
       - waste-tracking-gateway
-      - waste-tracking-service
+      - app-green-list-waste
   - name: appNameTag
     type: string
     values:
@@ -28,7 +28,7 @@ parameters:
       - reference_data
       - uk_waste_movements
       - waste_tracking_gateway
-      - waste_tracking_service
+      - app_green_list_waste
   - name: deployChart
     type: string
     default: ''

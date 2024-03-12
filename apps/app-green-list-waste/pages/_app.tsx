@@ -27,7 +27,15 @@ export default function App({
   } else {
     return (
       <Layout>
-        <SessionProvider session={session} refetchInterval={60}>
+        <SessionProvider
+          session={session}
+          refetchInterval={60}
+          basePath={
+            process.env['NODE_ENV'] === 'production'
+              ? '/export-annex-VII-waste/api/auth'
+              : '/api/auth'
+          }
+        >
           <CookiesProvider>
             <QueryClientProvider client={queryClient}>
               {Component.auth ? (
