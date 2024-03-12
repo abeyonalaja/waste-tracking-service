@@ -8,10 +8,9 @@ import { DaprFeedbackClient } from '@wts/client/feedback';
 import { DaprLimitedAudienceClient } from '@wts/client/limited-audience';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import jwt from 'hapi-auth-jwt2';
-import jwksRsa from 'jwks-rsa';
 import { LRUCache } from 'lru-cache';
 import * as winston from 'winston';
-import { getWellKnownParams, userFilter, validateToken } from './lib/auth';
+import { configureStrategy, getWellKnownParams, userFilter } from './lib/auth';
 import {
   AddressBackend,
   AddressServiceBackend,
@@ -36,7 +35,6 @@ import {
   PrivateBetaStub,
   privateBetaPlugin,
 } from './modules/private-beta';
-import { LimitedAudienceUserFilter } from './modules/private-beta/user-filter';
 import {
   ReferenceDataBackend,
   ReferenceDataServiceBackend,
@@ -142,6 +140,12 @@ if (process.env['NODE_ENV'] === 'development') {
         client,
         process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
       ),
+      new LRUCache({
+        ttl: 60 * 1000,
+        ttlAutopurge: false,
+        maxSize: 1000,
+        sizeCalculation: () => 1,
+      }),
       logger
     ),
   };
@@ -161,57 +165,36 @@ if (audience === undefined) {
   process.exit(1);
 }
 
-const users = process.env['ALLOWED_USERS'];
+const users = process.env['ALLOWED_USERS'] || '*';
 let filter =
-  users === undefined || users === '*'
+  users === '*'
     ? userFilter.any
+    : users === 'none'
+    ? userFilter.none
     : userFilter.uniqueReferenceString(users);
 
 if (
   process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS'] &&
   process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS'] === 'true'
 ) {
-  filter = userFilter.or(
-    filter,
-    new LimitedAudienceUserFilter(
-      new DaprLimitedAudienceClient(
-        new DaprClient(),
-        process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
-      ),
-      new LRUCache({
-        ttl: 60 * 1000,
-        ttlAutopurge: false,
-        maxSize: 1000,
-        sizeCalculation: () => 1,
-      })
-    ).filter
-  );
+  filter = userFilter.or(filter, backend.privateBeta.userFilter);
 }
 
 const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
 
-app.auth.strategy('jwt', 'jwt', {
-  complete: true,
-  headerKey: 'authorization',
-  tokenType: 'Bearer',
+app.auth.strategy(
+  'private-beta',
+  'jwt',
+  configureStrategy(filter, { audience, issuer, jwksUri })
+);
 
-  key: jwksRsa.hapiJwt2KeyAsync({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 2,
-    jwksUri,
-  }),
+app.auth.strategy(
+  'authenticated',
+  'jwt',
+  configureStrategy(userFilter.any, { audience, issuer, jwksUri })
+);
 
-  validate: validateToken(filter),
-
-  verifyOptions: {
-    audience,
-    issuer,
-    algorithms: ['RS256'],
-  },
-});
-
-app.auth.default('jwt');
+app.auth.default('private-beta');
 
 await app.register({
   plugin: submissionPlugin,

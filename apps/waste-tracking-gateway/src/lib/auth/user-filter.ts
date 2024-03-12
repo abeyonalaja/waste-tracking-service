@@ -6,6 +6,8 @@ type Credential = {
 export type UserFilter = (credential: Credential) => Promise<boolean>;
 
 export const any: UserFilter = () => Promise.resolve(true);
+export const none: UserFilter = () => Promise.resolve(false);
+
 export function or(a: UserFilter, b: UserFilter): UserFilter {
   return async (c) => {
     const [resA, resB] = await Promise.all([a(c), b(c)]);

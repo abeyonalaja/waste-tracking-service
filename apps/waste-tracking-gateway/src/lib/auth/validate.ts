@@ -1,10 +1,10 @@
 import { ResponseToolkit } from '@hapi/hapi';
 import Ajv from 'ajv/dist/jtd';
-import { schema } from '.';
+import { dcidToken as dcidTokenSchema } from './dcid-token.schema';
 import { UserFilter } from './user-filter';
 
 const ajv = new Ajv();
-const validateDcidToken = ajv.compile(schema.dcidToken);
+const validateDcidToken = ajv.compile(dcidTokenSchema);
 
 const uuidRegex =
   /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/;
