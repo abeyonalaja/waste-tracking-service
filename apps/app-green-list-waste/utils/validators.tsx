@@ -1,6 +1,6 @@
+import { isPast, isValid } from 'date-fns';
 import aOrAn from './aOrAn';
 import i18next from 'i18next';
-import { isPast, isValid } from 'date-fns';
 
 const t = i18next.t;
 
