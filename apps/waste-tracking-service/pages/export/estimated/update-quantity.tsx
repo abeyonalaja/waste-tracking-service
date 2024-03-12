@@ -321,7 +321,7 @@ const QuantityEntry = () => {
                       <InputWithSuffix
                         id="valueWeight"
                         label={t(
-                          'exportJourney.quantityValueSmall.weightLabel'
+                          'exportJourney.quantityValueSmall.weightLabelActual'
                         )}
                         onChange={(e) => setWeight(e.target.value)}
                         value={weight}

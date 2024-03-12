@@ -200,6 +200,7 @@ const UpdateAnnex7 = () => {
     });
     setType(null);
     setReason(null);
+    setShowNotification(false);
     dispatchUpdateAnnex7Page({ type: 'ERRORS_UPDATE', payload: null });
   };
 
@@ -209,9 +210,11 @@ const UpdateAnnex7 = () => {
       type: 'SHOW_VIEW',
       payload: VIEWS.CONFIRM,
     });
+    setType(null); // reset the type, so the radio button is unchecked if user tries to cancel another record
     e.preventDefault();
   };
   const handleConfirmSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     const newErrors = {
       type: validateConfirmCancelDocument(type),
       reason: validateConfirmCancelReason(type, reason),
@@ -256,7 +259,6 @@ const UpdateAnnex7 = () => {
         console.error(e);
       }
     }
-    e.preventDefault();
   };
 
   const handleDeleteClick = () => {
