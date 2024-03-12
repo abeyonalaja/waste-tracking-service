@@ -18,6 +18,9 @@ export interface DCIDSession extends Session {
   token?: string;
 }
 
+const baseUrl =
+  process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+
 const refreshAccessToken = async (token) => {
   let tokenEndpoint;
   const fetchData = async () => {
@@ -87,8 +90,8 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 15, // 15 minutes
   },
   pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
+    signIn: `${baseUrl}/auth/signin`,
+    signOut: `${baseUrl}/auth/signout`,
   },
   callbacks: {
     async jwt({ token, account, profile }) {

@@ -30,7 +30,12 @@ export default class CustomDocument extends Document {
 
   render() {
     return (
-      <Html className="govuk-template" lang="en">
+      <Html
+        className={`govuk-template ${
+          process.env['NODE_ENV'] !== 'production' ? 'env-local' : ''
+        }`}
+        lang="en"
+      >
         <Head>{this.props.styles}</Head>
         <body className="govuk-template__body">
           <Main />

@@ -12,10 +12,13 @@ export default function Layout({ children }: LayoutProps) {
   const [gaId, setGaId] = useState(null);
   const analyticsEnabled = cookies.cookieConsent?.analytics && gaId;
 
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+
   useEffect(() => {
     async function getGaId() {
       try {
-        const res = await fetch('/api/env');
+        const res = await fetch(`${baseUrl}/api/env`);
         const data = await res.json();
         setGaId(data.GOOGLE_ANALYTICS_ACCOUNT);
       } catch (err) {

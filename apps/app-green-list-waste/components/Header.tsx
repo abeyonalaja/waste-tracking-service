@@ -134,8 +134,11 @@ export const Header = ({
   const { data: session } = useSession();
   const callBackOptions = isSignOutPage ? { callbackUrl } : undefined;
 
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+
   const signOutDCID = async () => {
-    const response = await fetch(`/api/auth/getSignoutEndpoint`);
+    const response = await fetch(`${baseUrl}/api/auth/getSignoutEndpoint`);
     const dcidConfig = await response.json();
     await signOut();
     window.location.assign(dcidConfig.url);
@@ -143,7 +146,7 @@ export const Header = ({
 
   const dcidProfile = async (e) => {
     e.preventDefault();
-    const response = await fetch(`/api/auth/getProfileURL`);
+    const response = await fetch(`${baseUrl}/api/auth/getProfileURL`);
     const dcidProfileUrl = await response.json();
     window.location.assign(dcidProfileUrl.url);
   };
