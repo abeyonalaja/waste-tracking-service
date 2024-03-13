@@ -70,6 +70,7 @@ const TemplateCreate = () => {
             });
         } catch (e) {
           console.error(e);
+          router.push('/500');
         }
       }
     },
