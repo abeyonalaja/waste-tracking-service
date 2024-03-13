@@ -12,9 +12,11 @@ export type BulkSubmissionCsvRow = {
   wasteQuantityCubicMetres: string;
   wasteQuantityKilograms: string;
   estimatedOrActualWasteQuantity: string;
-  shippingDate: string;
   exporterOrganisationName: string;
-  exporterAddress: string;
+  exporterAddressLine1: string;
+  exporterAddressLine2: string;
+  exporterTownOrCity: string;
+  exporterCountry: string;
   exporterPostcode: string;
   exporterContactFullname: string;
   exporterContactPhoneNumber: string;
@@ -22,6 +24,7 @@ export type BulkSubmissionCsvRow = {
   exporterEmailAddress: string;
   importerOrganisationName: string;
   importerAddress: string;
+  importerCountry: string;
   importerContactFullname: string;
   importerContactPhoneNumber: string;
   importerFaxNumber: string;
@@ -30,7 +33,7 @@ export type BulkSubmissionCsvRow = {
   estimatedOrActualCollectionDate: string;
   firstCarrierOrganisationName: string;
   firstCarrierAddress: string;
-  firstCarrierPostcode: string;
+  firstCarrierCountry: string;
   firstCarrierContactFullname: string;
   firstCarrierContactPhoneNumber: string;
   firstCarrierFaxNumber: string;
@@ -39,6 +42,7 @@ export type BulkSubmissionCsvRow = {
   firstCarrierMeansOfTransportDetails: string;
   secondCarrierOrganisationName: string;
   secondCarrierAddress: string;
+  secondCarrierCountry: string;
   secondCarrierContactFullname: string;
   secondCarrierContactPhoneNumber: string;
   secondCarrierFaxNumber: string;
@@ -47,6 +51,7 @@ export type BulkSubmissionCsvRow = {
   secondCarrierMeansOfTransportDetails: string;
   thirdCarrierOrganisationName: string;
   thirdCarrierAddress: string;
+  thirdCarrierCountry: string;
   thirdCarrierContactFullname: string;
   thirdCarrierContactPhoneNumber: string;
   thirdCarrierFaxNumber: string;
@@ -55,6 +60,7 @@ export type BulkSubmissionCsvRow = {
   thirdCarrierMeansOfTransportDetails: string;
   fourthCarrierOrganisationName: string;
   fourthCarrierAddress: string;
+  fourthCarrierCountry: string;
   fourthCarrierContactFullname: string;
   fourthCarrierContactPhoneNumber: string;
   fourthCarrierFaxNumber: string;
@@ -63,16 +69,28 @@ export type BulkSubmissionCsvRow = {
   fourthCarrierMeansOfTransportDetails: string;
   fifthCarrierOrganisationName: string;
   fifthCarrierAddress: string;
+  fifthCarrierCountry: string;
   fifthCarrierContactFullname: string;
   fifthCarrierContactPhoneNumber: string;
   fifthCarrierFaxNumber: string;
   fifthCarrierEmailAddress: string;
   fifthCarrierMeansOfTransport: string;
   fifthCarrierMeansOfTransportDetails: string;
+  wasteCollectionOrganisationName: string;
+  wasteCollectionAddressLine1: string;
+  wasteCollectionAddressLine2: string;
+  wasteCollectionTownOrCity: string;
+  wasteCollectionCountry: string;
+  wasteCollectionPostcode: string;
+  wasteCollectionContactFullName: string;
+  wasteCollectionContactPhoneNumber: string;
+  wasteCollectionFaxNumber: string;
+  wasteCollectionEmailAddress: string;
   whereWasteLeavesUk: string;
   transitCountries: string;
   interimSiteOrganisationName: string;
   interimSiteAddress: string;
+  interimSiteCountry: string;
   interimSiteContactFullname: string;
   interimSiteContactPhoneNumber: string;
   interimSiteFaxNumber: string;
@@ -80,6 +98,7 @@ export type BulkSubmissionCsvRow = {
   interimSiteRecoveryCode: string;
   laboratoryOrganisationName: string;
   laboratoryAddress: string;
+  laboratoryCountry: string;
   laboratoryContactFullname: string;
   laboratoryContactPhoneNumber: string;
   laboratoryFaxNumber: string;
@@ -87,6 +106,7 @@ export type BulkSubmissionCsvRow = {
   laboratoryDisposalCode: string;
   firstRecoveryFacilityOrganisationName: string;
   firstRecoveryFacilityAddress: string;
+  firstRecoveryFacilityCountry: string;
   firstRecoveryFacilityContactFullname: string;
   firstRecoveryFacilityContactPhoneNumber: string;
   firstRecoveryFacilityFaxNumber: string;
@@ -94,6 +114,7 @@ export type BulkSubmissionCsvRow = {
   firstRecoveryFacilityRecoveryCode: string;
   secondRecoveryFacilityOrganisationName: string;
   secondRecoveryFacilityAddress: string;
+  secondRecoveryFacilityCountry: string;
   secondRecoveryFacilityContactFullname: string;
   secondRecoveryFacilityContactPhoneNumber: string;
   secondRecoveryFacilityFaxNumber: string;
@@ -101,6 +122,7 @@ export type BulkSubmissionCsvRow = {
   secondRecoveryFacilityRecoveryCode: string;
   thirdRecoveryFacilityOrganisationName: string;
   thirdRecoveryFacilityAddress: string;
+  thirdRecoveryFacilityCountry: string;
   thirdRecoveryFacilityContactFullname: string;
   thirdRecoveryFacilityContactPhoneNumber: string;
   thirdRecoveryFacilityFaxNumber: string;
@@ -108,6 +130,7 @@ export type BulkSubmissionCsvRow = {
   thirdRecoveryFacilityRecoveryCode: string;
   fourthRecoveryFacilityOrganisationName: string;
   fourthRecoveryFacilityAddress: string;
+  fourthRecoveryFacilityCountry: string;
   fourthRecoveryFacilityContactFullname: string;
   fourthRecoveryFacilityContactPhoneNumber: string;
   fourthRecoveryFacilityFaxNumber: string;
@@ -115,6 +138,7 @@ export type BulkSubmissionCsvRow = {
   fourthRecoveryFacilityRecoveryCode: string;
   fifthRecoveryFacilityOrganisationName: string;
   fifthRecoveryFacilityAddress: string;
+  fifthRecoveryFacilityCountry: string;
   fifthRecoveryFacilityContactFullname: string;
   fifthRecoveryFacilityContactPhoneNumber: string;
   fifthRecoveryFacilityFaxNumber: string;
@@ -136,9 +160,11 @@ export const headersFormatted = [
   'wasteQuantityCubicMetres',
   'wasteQuantityKilograms',
   'estimatedOrActualWasteQuantity',
-  'shippingDate',
   'exporterOrganisationName',
-  'exporterAddress',
+  'exporterAddressLine1',
+  'exporterAddressLine2',
+  'exporterTownOrCity',
+  'exporterCountry',
   'exporterPostcode',
   'exporterContactFullname',
   'exporterContactPhoneNumber',
@@ -146,6 +172,7 @@ export const headersFormatted = [
   'exporterEmailAddress',
   'importerOrganisationName',
   'importerAddress',
+  'importerCountry',
   'importerContactFullname',
   'importerContactPhoneNumber',
   'importerFaxNumber',
@@ -154,7 +181,7 @@ export const headersFormatted = [
   'estimatedOrActualCollectionDate',
   'firstCarrierOrganisationName',
   'firstCarrierAddress',
-  'firstCarrierPostcode',
+  'firstCarrierCountry',
   'firstCarrierContactFullname',
   'firstCarrierContactPhoneNumber',
   'firstCarrierFaxNumber',
@@ -163,6 +190,7 @@ export const headersFormatted = [
   'firstCarrierMeansOfTransportDetails',
   'secondCarrierOrganisationName',
   'secondCarrierAddress',
+  'secondCarrierCountry',
   'secondCarrierContactFullname',
   'secondCarrierContactPhoneNumber',
   'secondCarrierFaxNumber',
@@ -171,6 +199,7 @@ export const headersFormatted = [
   'secondCarrierMeansOfTransportDetails',
   'thirdCarrierOrganisationName',
   'thirdCarrierAddress',
+  'thirdCarrierCountry',
   'thirdCarrierContactFullname',
   'thirdCarrierContactPhoneNumber',
   'thirdCarrierFaxNumber',
@@ -179,6 +208,7 @@ export const headersFormatted = [
   'thirdCarrierMeansOfTransportDetails',
   'fourthCarrierOrganisationName',
   'fourthCarrierAddress',
+  'fourthCarrierCountry',
   'fourthCarrierContactFullname',
   'fourthCarrierContactPhoneNumber',
   'fourthCarrierFaxNumber',
@@ -187,16 +217,28 @@ export const headersFormatted = [
   'fourthCarrierMeansOfTransportDetails',
   'fifthCarrierOrganisationName',
   'fifthCarrierAddress',
+  'fifthCarrierCountry',
   'fifthCarrierContactFullname',
   'fifthCarrierContactPhoneNumber',
   'fifthCarrierFaxNumber',
   'fifthCarrierEmailAddress',
   'fifthCarrierMeansOfTransport',
   'fifthCarrierMeansOfTransportDetails',
+  'wasteCollectionOrganisationName',
+  'wasteCollectionAddressLine1',
+  'wasteCollectionAddressLine2',
+  'wasteCollectionTownOrCity',
+  'wasteCollectionCountry',
+  'wasteCollectionPostcode',
+  'wasteCollectionContactFullName',
+  'wasteCollectionContactPhoneNumber',
+  'wasteCollectionFaxNumber',
+  'wasteCollectionEmailAddress',
   'whereWasteLeavesUk',
   'transitCountries',
   'interimSiteOrganisationName',
   'interimSiteAddress',
+  'interimSiteCountry',
   'interimSiteContactFullname',
   'interimSiteContactPhoneNumber',
   'interimSiteFaxNumber',
@@ -204,6 +246,7 @@ export const headersFormatted = [
   'interimSiteRecoveryCode',
   'laboratoryOrganisationName',
   'laboratoryAddress',
+  'laboratoryCountry',
   'laboratoryContactFullname',
   'laboratoryContactPhoneNumber',
   'laboratoryFaxNumber',
@@ -211,6 +254,7 @@ export const headersFormatted = [
   'laboratoryDisposalCode',
   'firstRecoveryFacilityOrganisationName',
   'firstRecoveryFacilityAddress',
+  'firstRecoveryFacilityCountry',
   'firstRecoveryFacilityContactFullname',
   'firstRecoveryFacilityContactPhoneNumber',
   'firstRecoveryFacilityFaxNumber',
@@ -218,6 +262,7 @@ export const headersFormatted = [
   'firstRecoveryFacilityRecoveryCode',
   'secondRecoveryFacilityOrganisationName',
   'secondRecoveryFacilityAddress',
+  'secondRecoveryFacilityCountry',
   'secondRecoveryFacilityContactFullname',
   'secondRecoveryFacilityContactPhoneNumber',
   'secondRecoveryFacilityFaxNumber',
@@ -225,6 +270,7 @@ export const headersFormatted = [
   'secondRecoveryFacilityRecoveryCode',
   'thirdRecoveryFacilityOrganisationName',
   'thirdRecoveryFacilityAddress',
+  'thirdRecoveryFacilityCountry',
   'thirdRecoveryFacilityContactFullname',
   'thirdRecoveryFacilityContactPhoneNumber',
   'thirdRecoveryFacilityFaxNumber',
@@ -232,6 +278,7 @@ export const headersFormatted = [
   'thirdRecoveryFacilityRecoveryCode',
   'fourthRecoveryFacilityOrganisationName',
   'fourthRecoveryFacilityAddress',
+  'fourthRecoveryFacilityCountry',
   'fourthRecoveryFacilityContactFullname',
   'fourthRecoveryFacilityContactPhoneNumber',
   'fourthRecoveryFacilityFaxNumber',
@@ -239,6 +286,7 @@ export const headersFormatted = [
   'fourthRecoveryFacilityRecoveryCode',
   'fifthRecoveryFacilityOrganisationName',
   'fifthRecoveryFacilityAddress',
+  'fifthRecoveryFacilityCountry',
   'fifthRecoveryFacilityContactFullname',
   'fifthRecoveryFacilityContactPhoneNumber',
   'fifthRecoveryFacilityFaxNumber',
