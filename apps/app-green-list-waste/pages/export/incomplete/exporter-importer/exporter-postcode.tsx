@@ -59,14 +59,17 @@ const ExporterPostcode = () => {
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/addresses?postcode=${postcode}&buildingNameOrNumber=${buildingNameOrNumber}`,
-
             {
               method: 'GET',
               headers: apiConfig,
             }
           )
             .then((response) => {
-              if (response.ok) return response.json();
+              if (response.ok) {
+                return response.json();
+              } else {
+                router.push('/500');
+              }
             })
             .then((data) => {
               if (data !== undefined) {
