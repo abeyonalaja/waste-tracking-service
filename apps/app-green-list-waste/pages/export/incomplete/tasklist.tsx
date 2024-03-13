@@ -7,6 +7,7 @@ import {
   AppLink,
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   DocumentStatus,
   Paragraph,
@@ -233,18 +234,18 @@ const Tasklist = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/" id="index-link">
+          <BreadCrumbLink href="/" id="index-link">
             {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export" id="glw-index-link">
+          </BreadCrumbLink>
+          <BreadCrumbLink href="/export" id="glw-index-link">
             {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link
+          </BreadCrumbLink>
+          <BreadCrumbLink
             id="add-reference-link"
             href={`/export/incomplete/reference?id=${id}`}
           >
             {t('yourReference.breadcrumb')}
-          </GovUK.Breadcrumbs.Link>
+          </BreadCrumbLink>
           <GovUK.Breadcrumbs.Link>
             {t('exportJourney.submitAnExport.title')}
           </GovUK.Breadcrumbs.Link>

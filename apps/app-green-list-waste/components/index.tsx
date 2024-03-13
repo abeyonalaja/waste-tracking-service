@@ -4,6 +4,7 @@ import { Address } from './Address';
 import { AppLink } from './AppLink';
 import { AutoComplete } from './AutoComplete';
 import { BreakableString } from './BreakableString';
+import { BreadCrumbLink } from './BreadCrumbLink';
 import { BreadcrumbWrap } from './BreadcrumbWrap';
 import { ButtonGroup } from './ButtonGroup';
 import { Card } from './Card';
@@ -44,6 +45,7 @@ export {
   AppLink,
   AutoComplete,
   BreakableString,
+  BreadCrumbLink,
   BreadcrumbWrap,
   ButtonGroup,
   Card,

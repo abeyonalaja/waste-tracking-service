@@ -1,5 +1,6 @@
 import {
   AppLink,
+  BreadCrumbLink,
   BreadcrumbWrap,
   Footer,
   Header,
@@ -17,9 +18,7 @@ const BreadCrumbs = () => {
   return (
     <BreadcrumbWrap>
       <GovUK.Breadcrumbs>
-        <GovUK.Breadcrumbs.Link href="/">
-          {t('app.parentTitle')}
-        </GovUK.Breadcrumbs.Link>
+        <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
       </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
   );

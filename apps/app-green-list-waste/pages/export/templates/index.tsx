@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   Paragraph,
   SubmissionNotFound,
@@ -258,12 +259,8 @@ const ManageTemplates = () => {
       <BreadcrumbWrap>
         {templatesPage.showView === VIEWS.LIST && (
           <GovUK.Breadcrumbs>
-            <GovUK.Breadcrumbs.Link href="/">
-              {t('app.parentTitle')}
-            </GovUK.Breadcrumbs.Link>
-            <GovUK.Breadcrumbs.Link href="/export">
-              {t('app.title')}
-            </GovUK.Breadcrumbs.Link>
+            <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+            <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
             {context === 'use'
               ? t('templates.useTemplates.title')
               : t('templates.manage.title')}

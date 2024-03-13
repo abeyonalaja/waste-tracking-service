@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   ErrorSummary,
   SubmissionNotFound,
@@ -153,12 +154,10 @@ const ExportSubmitted = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
+          <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
+          <BreadCrumbLink href="/export">
             {t('exportJourney.exportSubmitted.breadcrumb')}
-          </GovUK.Breadcrumbs.Link>
+          </BreadCrumbLink>
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
     );

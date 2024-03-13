@@ -5,6 +5,7 @@ import {
   Card,
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   NotificationBanner,
 } from 'components';
@@ -25,9 +26,7 @@ const BreadCrumbs = () => {
   return (
     <BreadcrumbWrap>
       <GovUK.Breadcrumbs>
-        <GovUK.Breadcrumbs.Link href="/">
-          {t('app.parentTitle')}
-        </GovUK.Breadcrumbs.Link>
+        <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
         <GovUK.Breadcrumbs.Link>{t('app.title')}</GovUK.Breadcrumbs.Link>
       </GovUK.Breadcrumbs>
     </BreadcrumbWrap>

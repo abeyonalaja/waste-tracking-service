@@ -8,13 +8,13 @@ import React, {
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
-
 import { useTranslation } from 'react-i18next';
 
 import {
   AppLink,
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   ButtonGroup,
   ErrorSummary,
@@ -271,12 +271,8 @@ const UpdateAnnex7 = () => {
       <BreadcrumbWrap>
         {updateAnnex7Page.showView === VIEWS.LIST ? (
           <GovUK.Breadcrumbs>
-            <GovUK.Breadcrumbs.Link href="/">
-              {t('app.parentTitle')}
-            </GovUK.Breadcrumbs.Link>
-            <GovUK.Breadcrumbs.Link href="/export">
-              {t('app.title')}
-            </GovUK.Breadcrumbs.Link>
+            <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+            <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
             {t('exportJourney.updateAnnexSeven.title')}
           </GovUK.Breadcrumbs>
         ) : (

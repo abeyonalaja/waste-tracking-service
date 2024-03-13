@@ -15,6 +15,7 @@ import {
   AppLink,
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   ErrorSummary,
   Paragraph,
@@ -261,12 +262,12 @@ const IncompleteAnnex7 = () => {
       <BreadcrumbWrap>
         {incompleteAnnex7Page.showView === VIEWS.LIST ? (
           <GovUK.Breadcrumbs>
-            <GovUK.Breadcrumbs.Link href="/" id="index-link">
+            <BreadCrumbLink href="/" id="index-link">
               {t('app.parentTitle')}
-            </GovUK.Breadcrumbs.Link>
-            <GovUK.Breadcrumbs.Link href="/export" id="glw-index-link">
+            </BreadCrumbLink>
+            <BreadCrumbLink href="/export" id="glw-index-link">
               {t('app.title')}
-            </GovUK.Breadcrumbs.Link>
+            </BreadCrumbLink>
             {t('exportJourney.incompleteAnnexSeven.title')}
           </GovUK.Breadcrumbs>
         ) : (

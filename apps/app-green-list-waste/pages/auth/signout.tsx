@@ -1,6 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { BreadcrumbWrap, Footer, Header, Paragraph, AppLink } from 'components';
+import {
+  BreadCrumbLink,
+  BreadcrumbWrap,
+  Footer,
+  Header,
+  Paragraph,
+  AppLink,
+} from 'components';
 import { signIn, signOut } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
@@ -11,9 +18,7 @@ const BreadCrumbs = () => {
   return (
     <BreadcrumbWrap>
       <GovUK.Breadcrumbs>
-        <GovUK.Breadcrumbs.Link href="/">
-          {t('app.parentTitle')}
-        </GovUK.Breadcrumbs.Link>
+        <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
       </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
   );

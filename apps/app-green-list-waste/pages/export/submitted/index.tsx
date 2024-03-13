@@ -7,6 +7,7 @@ import {
   AppLink,
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   Paragraph,
   Pagination,
@@ -135,12 +136,8 @@ const Index = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
-            {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
+          <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
           {t('exportJourney.submittedAnnexSeven.title')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>

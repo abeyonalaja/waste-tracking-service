@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   ErrorSummary,
   Paragraph,
@@ -131,12 +132,8 @@ export function Reference() {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
-            {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
+          <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
           {t('yourReference.breadcrumb')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
@@ -165,7 +162,6 @@ export function Reference() {
                 }))}
               />
             )}
-
             <GovUK.Heading size="LARGE" id="template-use-title">
               {t('yourReference.title')}
             </GovUK.Heading>

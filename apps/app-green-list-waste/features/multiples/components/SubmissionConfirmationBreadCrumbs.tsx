@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Breadcrumbs } from 'govuk-react';
-import { BreadcrumbWrap } from 'components';
+import { BreadCrumbLink, BreadcrumbWrap } from 'components';
 
 export function SubmissionConfirmationBreadCrumbs() {
   const { t } = useTranslation();
@@ -8,8 +8,8 @@ export function SubmissionConfirmationBreadCrumbs() {
   return (
     <BreadcrumbWrap>
       <Breadcrumbs>
-        <Breadcrumbs.Link href="/">{t('app.parentTitle')}</Breadcrumbs.Link>
-        <Breadcrumbs.Link href="/export">{t('app.title')}</Breadcrumbs.Link>
+        <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+        <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
       </Breadcrumbs>
     </BreadcrumbWrap>
   );

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Footer,
   Header,
+  BreadCrumbLink,
   BreadcrumbWrap,
   Loading,
   Error404Content,
@@ -182,21 +183,17 @@ const TemplateUse = () => {
     return (
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
-          <GovUK.Breadcrumbs.Link href="/">
-            {t('app.parentTitle')}
-          </GovUK.Breadcrumbs.Link>
-          <GovUK.Breadcrumbs.Link href="/export">
-            {t('app.title')}
-          </GovUK.Breadcrumbs.Link>
+          <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
+          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
           {router.query.context === 'manage' && (
-            <GovUK.Breadcrumbs.Link href="/export/templates">
+            <BreadCrumbLink href="/export/templates">
               {t('templates.manage.title')}
-            </GovUK.Breadcrumbs.Link>
+            </BreadCrumbLink>
           )}
           {router.query.context === 'use' && (
-            <GovUK.Breadcrumbs.Link href="/export/templates?context=use">
+            <BreadCrumbLink href="/export/templates?context=use">
               {t('templates.useTemplates.title')}
-            </GovUK.Breadcrumbs.Link>
+            </BreadCrumbLink>
           )}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
