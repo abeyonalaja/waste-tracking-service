@@ -1,11 +1,21 @@
 'use client';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslation } from '../../../utils/useTranslation';
-import { signIn } from 'next-auth/react';
-import React from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Index() {
   const { t } = useTranslation('auth');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
+  useEffect(() => {
+    if (session) {
+      const callbackUrl = searchParams.get('callbackUrl');
+      router.push(callbackUrl !== null ? callbackUrl.toString() : '/account');
+    }
+  }, [session, searchParams]);
   return (
     <>
       <GovUK.GridRow>

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 async function getToken() {
-  const fetchToken = await fetch('/api/auth/getDCIDToken');
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+  const fetchToken = await fetch(`${baseUrl}/api/auth/getDCIDToken`);
   const token = await fetchToken.json();
   return token.token;
 }

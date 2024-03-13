@@ -6,9 +6,11 @@ import { Paragraph } from 'components';
 
 export default function Custom403() {
   const [userRef, setUserRef] = useState<string>(null);
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`/api/auth/getUserUniqueRef`, {
+      const response = await fetch(`${baseUrl}/api/auth/getUserUniqueRef`, {
         method: 'get',
       });
       const jsoned = await response.json();

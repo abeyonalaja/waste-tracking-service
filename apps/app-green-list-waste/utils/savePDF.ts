@@ -2,7 +2,9 @@ export const savePDF = async (
   id: string,
   transactionId: string | undefined = undefined
 ) => {
-  return await fetch(`/api/pdf?id=${id}`)
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+  return await fetch(`${baseUrl}/api/pdf?id=${id}`)
     .then((res) => res.blob())
     .then((readableStream) => {
       const blob = new Blob([readableStream], { type: 'application/pdf' });

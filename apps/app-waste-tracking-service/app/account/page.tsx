@@ -12,7 +12,6 @@ export default function Index() {
     <>
       <GovUK.GridRow>
         <GovUK.GridCol size="full">
-          <GovUK.Caption size={'l'}>{t('company')}</GovUK.Caption>
           <GovUK.Heading size={'l'} level={1}>
             {session?.user?.name}
           </GovUK.Heading>
@@ -25,21 +24,14 @@ export default function Index() {
               <LinkCard
                 title={t('cardOneTitle')}
                 content={t('cardOneContent')}
-                href="#"
+                href="/move-waste"
               />
             </GovUK.GridCol>
             <GovUK.GridCol size="one-third">
               <LinkCard
                 title={t('cardTwoTitle')}
                 content={t('cardTwoContent')}
-                href="#"
-              />
-            </GovUK.GridCol>
-            <GovUK.GridCol size="one-third">
-              <LinkCard
-                title={t('cardThreeTitle')}
-                content={t('cardThreeContent')}
-                href="#"
+                href="/export-annex-VII-waste"
               />
             </GovUK.GridCol>
           </GridRow>

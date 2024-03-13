@@ -20,10 +20,15 @@ async function createPDF(hostname, id, id_token) {
         }
   );
   const protocol = hostname.indexOf('localhost') === 0 ? 'http' : 'https';
+  const baseUrl =
+    process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
   const page = await browser.newPage();
-  await page.goto(`${protocol}://${hostname}/pdf?id=${id}&token=${id_token}`, {
-    waitUntil: 'networkidle0',
-  });
+  await page.goto(
+    `${protocol}://${hostname}${baseUrl}/pdf?id=${id}&token=${id_token}`,
+    {
+      waitUntil: 'networkidle0',
+    }
+  );
   const pdf = await page.pdf({
     format: 'A4',
     margin: { top: 20, left: 25.4, bottom: 20, right: 25.4 },
