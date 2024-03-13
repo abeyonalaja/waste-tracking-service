@@ -219,19 +219,26 @@ const WasteCarriers = () => {
                 type: 'DATA_FETCH_SUCCESS',
                 payload: data,
               });
-              const emptyRecords = data.values?.filter(
-                (site) =>
-                  site.addressDetails === undefined ||
-                  site.contactDetails === undefined
-              );
-              if (emptyRecords === undefined || emptyRecords.length === 0) {
-                createCarrierRecord();
-              } else {
-                const record = emptyRecords.at(-1);
+              if (data.status === 'Started') {
                 dispatchCarrierPage({
-                  type: 'CARRIER_DATA_UPDATE',
-                  payload: record,
+                  type: 'SHOW_VIEW',
+                  payload: VIEWS.LIST,
                 });
+              } else {
+                const emptyRecords = data.values?.filter(
+                  (site) =>
+                    site.addressDetails === undefined ||
+                    site.contactDetails === undefined
+                );
+                if (emptyRecords === undefined || emptyRecords.length === 0) {
+                  createCarrierRecord();
+                } else {
+                  const record = emptyRecords.at(-1);
+                  dispatchCarrierPage({
+                    type: 'CARRIER_DATA_UPDATE',
+                    payload: record,
+                  });
+                }
               }
             }
           });
