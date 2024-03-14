@@ -314,7 +314,7 @@ export const validatePointOfExit: (
 
   if (pointOfExit.length > 50) return t('validation.location.charTooMany');
 
-  const regex = new RegExp('^[a-zA-Z0-9\\\\\\- ]{1,50}$');
+  const regex = new RegExp("^[a-zA-Z0-9\\\\\\- .,']{1,50}$");
   if (!regex.test(pointOfExit)) return t('validation.location.charInvalid');
 };
 
