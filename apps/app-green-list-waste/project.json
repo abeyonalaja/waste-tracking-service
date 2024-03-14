@@ -38,6 +38,13 @@
         }
       }
     },
+    "serve-both": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx serve app-green-list-waste", "nx serve mock-gateway"],
+        "parallel": true
+      }
+    },
     "export": {
       "executor": "@nrwl/next:export",
       "options": {
