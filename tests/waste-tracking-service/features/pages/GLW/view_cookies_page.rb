@@ -9,7 +9,7 @@ class ViewCookiesPage < GenericPage
   PARAGRAPH3 = Translations.value 'cookie.page.p3'
   CHANGE_YOUR_COOKIES_SETTINGS = Translations.value 'cookie.page.essentialHeading'
   ANALYTICS_HEADING = Translations.value 'cookie.page.analytics.heading'
-  ANALYTICS_COOKIES = Translations.value 'cookie.page.changeSettings'
+  ANALYTICS_COOKIES = Translations.value 'cookie.page.Change.Settings'
   ACCEPT_ANALYTICAL_BUTTON = Translations.value 'cookie.banner.button.accept'
   REJECT_ANALYTICAL_BUTTON = Translations.value 'cookie.banner.button.reject'
   HIDE_COOKIES_MESSAGE_BUTTON = Translations.value 'cookie.banner.button.hide'

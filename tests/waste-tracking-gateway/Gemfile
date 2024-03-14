@@ -30,5 +30,5 @@ gem 'report_builder', '1.8'
 gem 'logging', '~>2.3.0'
 gem  'browsermob-proxy'
 gem 'webrick'
-
+gem 'multipart-post', '~> 2.0'
 

@@ -57,6 +57,7 @@
   "cookie.banner.button.link": "View cookies",
   "cookie.banner.button.reject": "Reject analytics cookies",
   "cookie.banner.change.link": "change your cookie settings",
+  "cookie.page.Change.Settings": "Change your cookie settings",
   "cookie.banner.confirmation_accepted": "You have accepted analytics cookies. You can <2>change your cookie settings</2> at any time.",
   "cookie.banner.confirmation_rejected": "You have rejected analytics cookies. You can <2>change your cookie settings</2> at any time.",
   "cookie.banner.p1": "We use some essential cookies to make this service work.",

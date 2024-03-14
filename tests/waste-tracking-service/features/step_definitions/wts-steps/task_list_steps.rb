@@ -61,9 +61,9 @@ And(/^I have (\d+) of 5 sections completed$/) do |completed|
 end
 
 And(/^I click Export waste from UK breadcrumb$/) do
-  click_link('glw-index-link')
+  click_link(href: '/export-annex-VII-waste/export')
 end
 
 And(/^I click Move export or import waste breadcrumb$/) do
-  click_link('index-link')
+  click_link(href: '/export-annex-VII-waste')
 end

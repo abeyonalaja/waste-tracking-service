@@ -45,17 +45,17 @@ def add_custom_cookie(key, value)
 end
 
 When(/^I click the incomplete records link$/) do
-  click_link(href: '/export/incomplete')
+  click_link(href: '/export-annex-VII-waste/export/incomplete')
 end
 
 And(/^I click the submitted with actual links$/) do
-  click_link(href: '/export/submitted')
+  click_link(href: '/export-annex-VII-waste/export/submitted')
 end
 
 And(/^I click the submitted with estimated links$/) do
-  click_link(href: '/export/estimated')
+  click_link(href: '/export-annex-VII-waste/export/estimated')
 end
 
 And(/^I click Manage your Annex VII record templates link$/) do
-  click_link(href: '/export/templates')
+  click_link(href: '/export-annex-VII-waste/export/templates')
 end
