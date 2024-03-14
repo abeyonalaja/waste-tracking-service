@@ -4,11 +4,9 @@
   box-sizing: border-box;
   padding: 15px;
   background-color: govuk-colour('light-grey');
-  display: flex;
-  align-items: stretch;
+  display: block;
   height: 100%;
   text-decoration: none;
-  flex-direction: column;
   border: 1px solid $govuk-border-colour;
   margin-bottom: 20px;
   &:hover {
@@ -28,13 +26,17 @@
   @include govuk-media-query(tablet) {
     padding: 20px;
   }
+  :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .card-title {
   color: $govuk-link-colour;
-  margin: 5px 0 10px;
+  margin: 0 0 10px;
   text-decoration: none;
   @include govuk-media-query(tablet) {
     min-height: 3em;
+    font-size: 1.3rem;
   }
 }

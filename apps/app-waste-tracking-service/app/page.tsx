@@ -2,7 +2,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslation } from '../utils/useTranslation';
 
 export const metadata = {
-  title: 'UK waste movements',
+  title: 'Waste tracking service',
 };
 
 export default async function Index() {

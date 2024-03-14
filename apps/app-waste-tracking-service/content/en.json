@@ -67,15 +67,11 @@
     }
   },
   "accountPage": {
-    "company": "{company}",
-    "name": "{name}",
-    "titleTwo": "Move, export or import waste",
+    "titleTwo": "Move or export waste",
     "cardOneTitle": "Move waste in the UK",
-    "cardOneContent": "Create a digital waste record to move and track hazardous and non-hazardous waste for processing and recovery around the UK.",
-    "cardTwoTitle": "Export waste from the UK",
-    "cardTwoContent": "Create an Annex VII and inform environmental agency officers if you plan to export green list waste.",
-    "cardThreeTitle": "Import waste to the UK",
-    "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
+    "cardOneContent": "Create, update and manage your waste movements to move and track waste for processing and recovery around the UK.",
+    "cardTwoTitle": "Create a green list waste movement record",
+    "cardTwoContent": "Create, update and manage your Annex VII records and inform environmental agency officers if you plan to export green list waste."
   },
   "moveWastePage": {
     "title": "Move waste in the UK",
