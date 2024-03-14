@@ -11,10 +11,12 @@ export default async function handler(
 
     let hostname = req.headers.host || '';
     let protocol = 'https';
+    let baseUrl = '/export-annex-VII-waste';
 
     if (hostname.indexOf('localhost') === 0) {
       hostname = 'localhost:3000';
       protocol = 'http';
+      baseUrl = '';
     }
 
     const apiUrl = `${protocol}://${hostname}/api`;
@@ -33,9 +35,9 @@ export default async function handler(
           ).then((response) => {
             console.log(response);
             if (response.ok) {
-              res.redirect(307, '/export/?context=granted');
+              res.redirect(307, `${baseUrl}/export/?context=granted`);
             } else {
-              res.redirect(307, '/?context=error');
+              res.redirect(307, `${baseUrl}/?context=error`);
             }
           });
         } catch (e) {
@@ -44,7 +46,7 @@ export default async function handler(
       };
       await fetchData();
     } else {
-      res.redirect(307, '/?context=unauthorized');
+      res.redirect(307, `${baseUrl}/?context=unauthorized`);
     }
   } else {
     res.status(401);
