@@ -22,6 +22,7 @@ import {
   validateTownCity,
   validateCountrySelect,
   validateAddress,
+  validatePostcode,
 } from 'utils/validators';
 import { countriesData } from 'utils/countriesData';
 
@@ -115,6 +116,7 @@ const ExporterManual = () => {
         address: validateAddress(address),
         townCity: validateTownCity(townCity),
         country: validateCountrySelect(country),
+        postcode: validatePostcode(postcode, true),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -263,6 +265,10 @@ const ExporterManual = () => {
                         value: postcode,
                         maxLength: 8,
                         onChange: (e) => setPostcode(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.postcode,
+                        touched: !!errors?.postcode,
                       }}
                     >
                       {t('address.postcodeOptional')}

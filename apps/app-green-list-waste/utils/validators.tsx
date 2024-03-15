@@ -95,7 +95,13 @@ export const validateWasteDescriptionTemplate: (
   if (description?.length > 100) return t('validation.description.tooLong');
 };
 
-export const validatePostcode: (postcode?: string) => string = (postcode) => {
+export const validatePostcode: (
+  postcode?: string,
+  allowNull?: boolean
+) => string = (postcode, allowNull = false) => {
+  if (allowNull && (postcode === undefined || postcode === '')) {
+    return;
+  }
   if (postcode?.length === 0) return t('validation.postcode.empty');
   const regex = new RegExp(
     '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$'
@@ -171,7 +177,8 @@ export const validateSelectAddress: (address?: string) => string = (
 };
 
 export const validateTownCity: (townCity?: string) => string = (townCity) => {
-  if (townCity?.length === 0 || townCity === undefined)
+  if (townCity?.length === 0 || townCity === undefined || !townCity.trim())
+    // trim returns true / false and in this way we check if string contains only spaces
     return t('validation.address.townCity.empty');
 };
 export const validateCountrySelect: (country?: string) => string = (
@@ -187,7 +194,8 @@ export const validateCountry: (country?: string) => string = (country) => {
 };
 
 export const validateAddress: (address?: string) => string = (address) => {
-  if (address?.length === 0 || address === undefined)
+  if (address?.length === 0 || address === undefined || !address.trim())
+    // trim returns true / false and in this way we check if string contains only spaces
     return t('validation.address.empty');
 };
 

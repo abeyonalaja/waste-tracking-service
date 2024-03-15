@@ -13,11 +13,13 @@ import {
   ButtonGroup,
   SaveReturnButton,
   RadioList,
+  ErrorSummary,
 } from 'components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import { countriesData } from 'utils/countriesData';
 import useApiConfig from 'utils/useApiConfig';
+import { isNotEmpty, validatePostcode } from 'utils/validators';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -48,6 +50,10 @@ const ExporterManual = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+
+  const [errors, setErrors] = useState<{
+    postcode?: string;
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,39 +105,48 @@ const ExporterManual = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      const body = {
-        ...data,
-        status: 'Started',
-        exporterAddress: {
-          addressLine1: address || '',
-          addressLine2: address2 || '',
-          townCity: townCity || '',
-          country: country || '',
-          postcode: postcode || '',
-        },
+      const newErrors = {
+        postcode: validatePostcode(postcode, true),
       };
-      try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
-          {
-            method: 'PUT',
-            headers: apiConfig,
-            body: JSON.stringify(body),
-          }
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              router.push({
-                pathname: `/export/templates/exporter-importer/exporter-address`,
-                query: { templateId },
-              });
+      if (isNotEmpty(newErrors)) {
+        setErrors(newErrors);
+      } else {
+        setErrors(null);
+        const body = {
+          ...data,
+          status: 'Started',
+          exporterAddress: {
+            addressLine1: address || '',
+            addressLine2: address2 || '',
+            townCity: townCity || '',
+            country: country || '',
+            postcode: postcode || '',
+          },
+        };
+
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
+            {
+              method: 'PUT',
+              headers: apiConfig,
+              body: JSON.stringify(body),
             }
-          });
-      } catch (e) {
-        console.error(e);
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                router.push({
+                  pathname: `/export/templates/exporter-importer/exporter-address`,
+                  query: { templateId },
+                });
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
       }
     },
     [townCity, country, address, data, address2, postcode, templateId, router]
@@ -169,6 +184,15 @@ const ExporterManual = () => {
             {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
+                {errors && !!Object.keys(errors).length && (
+                  <ErrorSummary
+                    heading={t('errorSummary.title')}
+                    errors={Object.keys(errors).map((key) => ({
+                      targetName: key,
+                      text: errors[key],
+                    }))}
+                  />
+                )}
                 <GovUK.Caption size="L">
                   {t('exportJourney.exporterDetails.caption')}
                 </GovUK.Caption>
@@ -220,6 +244,10 @@ const ExporterManual = () => {
                         value: postcode,
                         maxLength: 8,
                         onChange: (e) => setPostcode(e.target.value),
+                      }}
+                      meta={{
+                        error: errors?.postcode,
+                        touched: !!errors?.postcode,
                       }}
                     >
                       {t('address.postcodeOptional')}
