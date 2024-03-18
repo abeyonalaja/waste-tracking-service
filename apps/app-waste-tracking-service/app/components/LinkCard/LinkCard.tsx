@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './LinkCard.module.scss';
-import Link from 'next/link';
+import { Link } from '../index';
 
 interface Props {
   title?: string;

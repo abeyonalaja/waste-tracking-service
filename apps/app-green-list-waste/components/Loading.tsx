@@ -7,6 +7,7 @@ import 'i18n/config';
 interface Props {
   size?: string;
   testId?: string;
+  children?: React.ReactNode;
 }
 
 const LoadingStyled = styled(LoadingBox)<{ $size?: string }>`
@@ -38,7 +39,7 @@ export const Loading = ({ size, testId }: Props) => {
       aria-busy="true"
       title={t('loading')}
     >
-      {}
+      {null}
     </LoadingStyled>
   );
 };

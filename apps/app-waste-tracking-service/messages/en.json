@@ -1,7 +1,26 @@
 {
-  "app": {
-    "title": "UK waste movements (Welsh)",
-    "phaseBanner": "This is a new service"
+  "404": {
+    "title": "Page not found",
+    "paragraph1": "If you typed the web address, check it is correct.",
+    "paragraph2": "If you pasted the web address, check you copied the entire address.",
+    "link": "Go to your account"
+  },
+  "accountPage": {
+    "title": "Move or export waste",
+    "cards": {
+      "UKWM": {
+        "title": "Move waste in the UK",
+        "description": "Create, update and manage your waste movements to move and track waste for processing and recovery around the UK."
+      },
+      "GLW": {
+        "title": "Create a green list waste movement record",
+        "description": "Create, update and manage your Annex VII records and inform environmental agency officers if you plan to export green list waste."
+      }
+    }
+  },
+  "signinPage": {
+    "title": "You need to sign in to access this page",
+    "button": "Sign in or create an account"
   },
   "startPage": {
     "title": "Sign into your Defra waste tracking service account",
@@ -55,23 +74,5 @@
       "linkThree": "DEARA ( Department of Agriculture, Environment and Rural Affairs) waste policy tracker",
       "linkFour": "Business Cymru Waste Legislation"
     }
-  },
-  "accountPage": {
-    "company": "{company}",
-    "name": "{name}",
-    "titleTwo": "Move, export or import waste",
-    "cardOneTitle": "Move waste in the UK",
-    "cardOneContent": "Create a digital waste record to move and track hazardous and non-hazardous waste for processing and recovery around the UK.",
-    "cardTwoTitle": "Export waste from the UK",
-    "cardTwoContent": "Create an Annex VII and inform environmental agency officers if you plan to export green list waste.",
-    "cardThreeTitle": "Import waste to the UK",
-    "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
-  },
-  "moveWastePage": {
-    "title": "Move waste in the UK",
-    "name": "{name}",
-    "titleTwo": "Move, export or import waste",
-    "cardOneTitle": "Start a new waste movement",
-    "cardOneContent": "Create multiple new waste movements"
   }
 }

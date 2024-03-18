@@ -78,7 +78,7 @@ export const TextareaCharCount = ({
             onChange: handleChange,
           }}
         >
-          {}
+          {null}
         </StyledTextArea>
         <StyledHint error={error} id={`${id}-character-remaining-text`}>
           {message}

@@ -46,6 +46,7 @@ const refreshAccessToken = async (token: DCIDToken) => {
       cache: 'force-cache',
       method: 'get',
     });
+
     const dcidConfig = await response.json();
     tokenEndpoint = dcidConfig.token_endpoint;
   };

@@ -261,7 +261,7 @@ const CollectionDate = () => {
                                 }),
                             }}
                           >
-                            {}
+                            {null}
                           </GovUK.DateField>
                         </ConditionalRadioWrap>
                       )}
@@ -304,7 +304,7 @@ const CollectionDate = () => {
                                 }),
                             }}
                           >
-                            {}
+                            {null}
                           </GovUK.DateField>
                         </ConditionalRadioWrap>
                       )}

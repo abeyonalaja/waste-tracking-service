@@ -1,6 +1,21 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { LinkCard } from './LinkCard';
+import { NextIntlClientProvider } from 'next-intl';
+
+jest.mock('next/navigation', () => ({
+  usePathname: () => '/',
+  useRouter: () => ({
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    push: jest.fn(),
+    prefetch: jest.fn(),
+    replace: jest.fn(),
+  }),
+  useParams: () => ({ locale: 'en' }),
+  useSelectedLayoutSegment: () => ({ locale: 'en' }),
+}));
 
 describe('LinkCard component', () => {
   test('renders with title, content, and href', () => {
@@ -9,7 +24,11 @@ describe('LinkCard component', () => {
       content: 'Test Content',
       href: '/test-href',
     };
-    render(<LinkCard {...props} />);
+    render(
+      <NextIntlClientProvider locale="en">
+        <LinkCard {...props} />
+      </NextIntlClientProvider>
+    );
 
     expect(screen.getByText(props.title)).toBeDefined();
     expect(screen.getByText(props.content)).toBeDefined();
@@ -24,7 +43,11 @@ describe('LinkCard component', () => {
       title: 'Test Title',
       content: 'Test Content',
     };
-    render(<LinkCard {...props} />);
+    render(
+      <NextIntlClientProvider locale="en">
+        <LinkCard {...props} />
+      </NextIntlClientProvider>
+    );
 
     const linkElement = screen.getByRole('link');
     expect(linkElement.getAttribute('href')).toBe('#');

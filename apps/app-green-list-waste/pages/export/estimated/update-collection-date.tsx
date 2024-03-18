@@ -219,7 +219,7 @@ const CollectionDate = () => {
                           }),
                       }}
                     >
-                      {}
+                      {null}
                     </GovUK.DateField>
                   </GovUK.Fieldset>
                   <ButtonGroup>

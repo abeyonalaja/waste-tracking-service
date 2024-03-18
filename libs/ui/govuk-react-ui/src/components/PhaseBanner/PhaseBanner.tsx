@@ -7,11 +7,11 @@ type Props = {
   testId?: string;
 };
 
-export const PhaseBanner = ({ children, testId }: Props) => {
+export const PhaseBanner = ({ children, tag, testId }: Props) => {
   return (
     <div className="govuk-phase-banner" data-testid={testId}>
       <p className="govuk-phase-banner__content">
-        <Tag classes={`govuk-phase-banner__content__tag`}>Beta</Tag>
+        <Tag classes={`govuk-phase-banner__content__tag`}>{tag}</Tag>
         <span className="govuk-phase-banner__text">{children}</span>
       </p>
     </div>
