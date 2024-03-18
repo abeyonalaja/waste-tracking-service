@@ -144,8 +144,8 @@ const ExporterAddressEdit = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/exporter-importer/exporter-details`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/exporter-importer/exporter-details`;
                 router.push({
                   pathname: path,
                   query: { id },

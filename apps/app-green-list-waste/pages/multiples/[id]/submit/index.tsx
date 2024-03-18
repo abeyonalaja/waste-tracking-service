@@ -53,7 +53,7 @@ export default function Submit() {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/export/multiples/${router.query.id}/submit/cancel`);
+            router.push(`/multiples/${router.query.id}/submit/cancel`);
           }}
         >
           {t('Back')}

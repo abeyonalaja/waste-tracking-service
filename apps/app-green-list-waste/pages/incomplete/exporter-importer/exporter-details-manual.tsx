@@ -148,8 +148,8 @@ const ExporterManual = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/exporter-importer/exporter-address`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/exporter-importer/exporter-address`;
                 router.push({
                   pathname: path,
                   query: { id },

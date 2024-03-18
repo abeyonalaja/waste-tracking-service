@@ -250,7 +250,7 @@ const WasteCarriers = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -353,7 +353,7 @@ const WasteCarriers = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/templates/tasklist`,
+                    pathname: `/templates/tasklist`,
                     query: { templateId },
                   });
                 } else {
@@ -426,7 +426,7 @@ const WasteCarriers = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/templates/tasklist`,
+            pathname: `/templates/tasklist`,
             query: { templateId },
           });
         } else {
@@ -479,7 +479,7 @@ const WasteCarriers = () => {
       dispatchCarrierPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalCarrier === 'No') {
         router.push({
-          pathname: `/export/templates/journey/collection-details`,
+          pathname: `/templates/journey/collection-details`,
           query: { templateId },
         });
       } else {
@@ -574,7 +574,7 @@ const WasteCarriers = () => {
               carrierPage.showView === VIEWS.LIST
             ) {
               router.push({
-                pathname: `/export/templates/tasklist`,
+                pathname: `/templates/tasklist`,
                 query: { templateId },
               });
             } else {
@@ -922,7 +922,7 @@ const WasteCarriers = () => {
                             id="saveButton"
                             onClick={() => {
                               router.push({
-                                pathname: `/export/templates/journey/collection-details`,
+                                pathname: `/templates/journey/collection-details`,
                                 query: { templateId },
                               });
                             }}

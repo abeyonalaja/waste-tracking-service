@@ -103,7 +103,7 @@ export function SubmissionConfirmation({
         </AppLink>
         <span>{t('multiples.confirmation.legalStatementp2')}</span>
       </Paragraph>
-      <StyledLinkAsButton href="/export">
+      <StyledLinkAsButton href="/">
         {t('multiples.confirmation.returnButton')}
       </StyledLinkAsButton>
     </>

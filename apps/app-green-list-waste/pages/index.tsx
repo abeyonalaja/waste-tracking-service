@@ -131,6 +131,15 @@ export function Index() {
         footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
+        {context === 'unauthorized' && (
+          <NotificationBanner
+            type="important"
+            id={`access-banner-unauthorized`}
+            headingText={
+              'You need to be signed into your Defra account in order to activate your invitation'
+            }
+          />
+        )}
         {context === 'granted' && (
           <NotificationBanner
             type="success"
@@ -149,7 +158,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/incomplete/reference`,
+                      pathname: `/incomplete/reference`,
                     }}
                     id="your-reference"
                   >
@@ -159,7 +168,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/templates`,
+                      pathname: `/templates`,
                       query: { context: 'use' },
                     }}
                   >
@@ -170,7 +179,7 @@ export function Index() {
                   <GovUK.ListItem>
                     <AppLink
                       href={{
-                        pathname: `/export/multiples/`,
+                        pathname: `/multiples/`,
                       }}
                     >
                       {t('exportJourney.exportHome.createMultipleRecords')}
@@ -180,7 +189,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: '/export/incomplete',
+                      pathname: '/incomplete',
                     }}
                   >
                     {' '}
@@ -205,7 +214,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/estimated`,
+                      pathname: `/estimated`,
                     }}
                   >
                     {t('exportJourney.exportHome.updateRecordWithActuals', {
@@ -228,7 +237,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/submitted`,
+                      pathname: `/submitted`,
                     }}
                   >
                     {t('exportJourney.exportHome.viewAllRecords', {
@@ -253,7 +262,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/templates/create`,
+                      pathname: `/templates/create`,
                       query: { context: 'dashboard' },
                     }}
                   >
@@ -263,7 +272,7 @@ export function Index() {
                 <GovUK.ListItem>
                   <AppLink
                     href={{
-                      pathname: `/export/templates`,
+                      pathname: `/templates`,
                     }}
                   >
                     {t('templates.manageLink', {
@@ -288,7 +297,7 @@ export function Index() {
                   <GovUK.ListItem>
                     <AppLink
                       href={{
-                        pathname: `/export/multiples/guidance`,
+                        pathname: `/multiples/guidance`,
                       }}
                     >
                       {t('export.homepage.multiples.guidance.link')}
@@ -305,4 +314,3 @@ export function Index() {
 }
 
 export default Index;
-Index.auth = true;

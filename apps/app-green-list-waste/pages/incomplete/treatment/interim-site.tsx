@@ -169,8 +169,8 @@ const InterimSiteDetails = () => {
         if (hasInterimSite === 'Yes') {
           router.push({
             pathname: returnToDraft
-              ? `/export/incomplete/tasklist`
-              : `/export/incomplete/treatment/interim-site-details`,
+              ? `/incomplete/tasklist`
+              : `/incomplete/treatment/interim-site-details`,
             query: { id },
           });
         } else {
@@ -179,8 +179,8 @@ const InterimSiteDetails = () => {
           } else {
             router.push({
               pathname: returnToDraft
-                ? `/export/incomplete/tasklist`
-                : `/export/incomplete/treatment/recovery-facility-details`,
+                ? `/incomplete/tasklist`
+                : `/incomplete/treatment/recovery-facility-details`,
               query: { id },
             });
           }
@@ -201,8 +201,8 @@ const InterimSiteDetails = () => {
       ).then(() => {
         router.push({
           pathname: returnToDraft
-            ? `/export/incomplete/tasklist`
-            : `/export/incomplete/treatment/recovery-facility-details`,
+            ? `/incomplete/tasklist`
+            : `/incomplete/treatment/recovery-facility-details`,
           query: { id },
         });
       });
@@ -218,7 +218,7 @@ const InterimSiteDetails = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/incomplete/tasklist`,
+              pathname: `/incomplete/tasklist`,
               query: { id },
             });
           }}

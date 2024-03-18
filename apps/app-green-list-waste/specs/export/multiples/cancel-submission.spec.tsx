@@ -48,7 +48,7 @@ describe('Cancel Submission page', () => {
     const button = screen.getByRole('button', { name: 'Confirm and cancel' });
     await userEvent.click(button);
 
-    expect(useRouter().push).toHaveBeenCalledWith('/export/multiples/');
+    expect(useRouter().push).toHaveBeenCalledWith('/multiples/');
   });
 
   it('Navigates the user back when bread crumbs back button is clicked', async () => {

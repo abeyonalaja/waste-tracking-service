@@ -47,16 +47,16 @@ export default function Index() {
 
       if (uploadStatus === 'FailedCsvValidation') {
         const errorMessage = apiData.data.state.error;
-        safePush(`/export/multiples/?error=${errorMessage}`);
+        safePush(`/multiples/?error=${errorMessage}`);
       }
 
       if (uploadStatus === 'FailedValidation') {
-        safePush(`/export/multiples/${router.query.id}/errors?errors=true`);
+        safePush(`/multiples/${router.query.id}/errors?errors=true`);
         return;
       }
 
       if (uploadStatus === 'PassedValidation') {
-        safePush(`/export/multiples/${router.query.id}/submit`);
+        safePush(`/multiples/${router.query.id}/submit`);
         return;
       }
     }

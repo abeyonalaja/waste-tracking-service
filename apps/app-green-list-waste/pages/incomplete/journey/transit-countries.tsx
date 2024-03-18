@@ -218,7 +218,7 @@ const TransitCountries = () => {
               if (data !== undefined) {
                 if (wasteTransitPage.provided === 'No' || returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -256,7 +256,7 @@ const TransitCountries = () => {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         if (additionalProvided === 'No') {
           router.push({
-            pathname: `/export/incomplete/tasklist`,
+            pathname: `/incomplete/tasklist`,
             query: { id },
           });
         } else {
@@ -293,7 +293,7 @@ const TransitCountries = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/incomplete/tasklist`,
+            pathname: `/incomplete/tasklist`,
             query: { id },
           });
         } else {
@@ -364,7 +364,7 @@ const TransitCountries = () => {
             }
             if (returnToDraft) {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             } else {
@@ -437,8 +437,8 @@ const TransitCountries = () => {
             } else {
               router.push({
                 pathname: router.query.dashboard
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/journey/exit-location`,
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/journey/exit-location`,
                 query: { id },
               });
             }

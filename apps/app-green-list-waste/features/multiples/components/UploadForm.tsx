@@ -67,7 +67,7 @@ export function UploadForm({
     },
 
     onSuccess: async (data) => {
-      router.push(`/export/multiples/${data.data.id}?filename=${file.name}`);
+      router.push(`/multiples/${data.data.id}?filename=${file.name}`);
     },
     onError: async (error: AxiosError<UploadErrorResponse>) => {
       if (setShowNotificationBanner) {

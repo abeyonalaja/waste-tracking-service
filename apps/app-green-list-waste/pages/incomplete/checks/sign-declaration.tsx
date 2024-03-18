@@ -141,7 +141,7 @@ const SignDeclaration = () => {
         .then((data) => {
           if (data !== undefined) {
             router.push({
-              pathname: `/export/submitted/export-submitted`,
+              pathname: `/submitted/export-submitted`,
               query: { id },
             });
           }
@@ -151,7 +151,7 @@ const SignDeclaration = () => {
   );
 
   if (signDeclarationPage.data?.submissionDeclaration.status === 'Complete') {
-    router.push('/export');
+    router.push('/');
   }
 
   const BreadCrumbs = () => {
@@ -233,7 +233,7 @@ const SignDeclaration = () => {
                   <SaveReturnButton
                     onClick={() =>
                       router.push({
-                        pathname: `/export/incomplete/tasklist`,
+                        pathname: `/incomplete/tasklist`,
                         query: { id },
                       })
                     }

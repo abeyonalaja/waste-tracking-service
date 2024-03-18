@@ -9,7 +9,7 @@ export function UploadBreadCrumbs() {
     <BreadcrumbWrap>
       <Breadcrumbs>
         <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-        <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+        <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
         {t('multiples.guidance.heading')}
       </Breadcrumbs>
     </BreadcrumbWrap>

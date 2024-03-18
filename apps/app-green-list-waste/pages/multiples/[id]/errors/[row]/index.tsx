@@ -68,7 +68,7 @@ export default function RowErrors() {
         </GovUK.H2>
         <Paragraph>
           {t('multiples.errorSummaryPage.errorList.heading')}
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             {t('multiples.errorSummaryPage.linkGuidanceText')}
           </AppLink>
         </Paragraph>

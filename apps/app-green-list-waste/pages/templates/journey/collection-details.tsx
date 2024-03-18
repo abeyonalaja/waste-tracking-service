@@ -491,7 +491,7 @@ const CollectionDetails = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: `/export/templates/journey/exit-location`,
+                  pathname: `/templates/journey/exit-location`,
                   query: { templateId },
                 });
               }
@@ -568,7 +568,7 @@ const CollectionDetails = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -612,7 +612,7 @@ const CollectionDetails = () => {
               });
             } else {
               router.push({
-                pathname: `/export/templates/tasklist`,
+                pathname: `/templates/tasklist`,
                 query: { templateId },
               });
             }
@@ -1096,7 +1096,7 @@ const CollectionDetails = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             router.push({
-                              pathname: `/export/templates/tasklist`,
+                              pathname: `/templates/tasklist`,
                               query: { templateId },
                             });
                           }}

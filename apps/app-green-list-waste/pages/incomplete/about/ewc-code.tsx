@@ -324,7 +324,7 @@ const EwcCodes = () => {
               if (data !== undefined) {
                 if (ewcCodePage.provided === 'No' || returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -399,8 +399,8 @@ const EwcCodes = () => {
         if (hasEWCCode === 'No') {
           router.push({
             pathname: returnToDraft
-              ? `/export/incomplete/tasklist`
-              : `/export/incomplete/about/national-code`,
+              ? `/incomplete/tasklist`
+              : `/incomplete/about/national-code`,
             query: { id },
           });
         } else {
@@ -440,7 +440,7 @@ const EwcCodes = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/incomplete/tasklist`,
+            pathname: `/incomplete/tasklist`,
             query: { id },
           });
         } else {
@@ -497,7 +497,7 @@ const EwcCodes = () => {
             }
             if (returnToDraft) {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             } else {
@@ -550,8 +550,8 @@ const EwcCodes = () => {
             } else {
               router.push({
                 pathname: router.query.dashboard
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/about/waste-code`,
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/about/waste-code`,
                 query: { id },
               });
             }
@@ -641,7 +641,7 @@ const EwcCodes = () => {
                               id="saveButton"
                               onClick={() =>
                                 router.push({
-                                  pathname: `/export/incomplete/about/national-code`,
+                                  pathname: `/incomplete/about/national-code`,
                                   query: { id },
                                 })
                               }
@@ -651,7 +651,7 @@ const EwcCodes = () => {
                             <SaveReturnButton
                               onClick={() =>
                                 router.push({
-                                  pathname: `/export/incomplete/tasklist`,
+                                  pathname: `/incomplete/tasklist`,
                                   query: { id },
                                 })
                               }

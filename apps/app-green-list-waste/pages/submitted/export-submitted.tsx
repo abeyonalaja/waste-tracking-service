@@ -155,7 +155,7 @@ const ExportSubmitted = () => {
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
           <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export">
+          <BreadCrumbLink href="/">
             {t('exportJourney.exportSubmitted.breadcrumb')}
           </BreadCrumbLink>
         </GovUK.Breadcrumbs>
@@ -274,7 +274,7 @@ const ExportSubmitted = () => {
                 <SaveReturnButton
                   onClick={() =>
                     router.push({
-                      pathname: '/export',
+                      pathname: '/',
                     })
                   }
                 >
@@ -289,7 +289,7 @@ const ExportSubmitted = () => {
               <GovUK.ListItem>
                 <AppLink
                   href={{
-                    pathname: `/export/templates/create-from-record`,
+                    pathname: `/templates/create-from-record`,
                     query: { id, context: 'created' },
                   }}
                 >

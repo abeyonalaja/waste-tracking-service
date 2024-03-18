@@ -333,7 +333,7 @@ const EwcCodes = () => {
           }
         } else {
           router.push({
-            pathname: `/export/templates/about/national-code`,
+            pathname: `/templates/about/national-code`,
             query: { templateId },
           });
         }
@@ -388,7 +388,7 @@ const EwcCodes = () => {
 
         if (hasEWCCode === 'No') {
           router.push({
-            pathname: `/export/templates/about/national-code`,
+            pathname: `/templates/about/national-code`,
             query: { templateId },
           });
         } else if (hasEWCCode === 'Yes') {
@@ -400,7 +400,7 @@ const EwcCodes = () => {
           updateEwcData(ewcCodes, false);
         } else {
           router.push({
-            pathname: `/export/templates/about/national-code`,
+            pathname: `/templates/about/national-code`,
             query: { templateId },
           });
         }
@@ -429,7 +429,7 @@ const EwcCodes = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/templates/tasklist`,
+            pathname: `/templates/tasklist`,
             query: { templateId },
           });
         } else {
@@ -488,7 +488,7 @@ const EwcCodes = () => {
             }
             if (returnToDraft) {
               router.push({
-                pathname: `/export/templates/tasklist`,
+                pathname: `/templates/tasklist`,
                 query: { templateId },
               });
             } else {
@@ -530,7 +530,7 @@ const EwcCodes = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -549,8 +549,8 @@ const EwcCodes = () => {
             } else {
               router.push({
                 pathname: router.query.dashboard
-                  ? `/export/templates/tasklist`
-                  : `/export/templates/about/waste-code`,
+                  ? `/templates/tasklist`
+                  : `/templates/about/waste-code`,
                 query: { templateId },
               });
             }
@@ -640,7 +640,7 @@ const EwcCodes = () => {
                               id="saveButton"
                               onClick={() =>
                                 router.push({
-                                  pathname: `/export/templates/about/national-code`,
+                                  pathname: `/templates/about/national-code`,
                                   query: { templateId },
                                 })
                               }
@@ -650,7 +650,7 @@ const EwcCodes = () => {
                             <SaveReturnButton
                               onClick={() =>
                                 router.push({
-                                  pathname: `/export/templates/tasklist`,
+                                  pathname: `/templates/tasklist`,
                                   query: { templateId },
                                 })
                               }

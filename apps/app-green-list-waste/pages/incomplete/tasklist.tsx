@@ -237,12 +237,12 @@ const Tasklist = () => {
           <BreadCrumbLink href="/" id="index-link">
             {t('app.parentTitle')}
           </BreadCrumbLink>
-          <BreadCrumbLink href="/export" id="glw-index-link">
+          <BreadCrumbLink href="/" id="glw-index-link">
             {t('app.title')}
           </BreadCrumbLink>
           <BreadCrumbLink
             id="add-reference-link"
-            href={`/export/incomplete/reference?id=${id}`}
+            href={`/incomplete/reference?id=${id}`}
           >
             {t('yourReference.breadcrumb')}
           </BreadCrumbLink>
@@ -318,7 +318,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/about/waste-code`,
+                          pathname: `/incomplete/about/waste-code`,
                           query: { id },
                         }}
                       >
@@ -344,7 +344,7 @@ const Tasklist = () => {
                       ) : (
                         <AppLink
                           href={{
-                            pathname: `/export/incomplete/about/quantity`,
+                            pathname: `/incomplete/about/quantity`,
                             query: { id, context: 'tasklist' },
                           }}
                         >
@@ -375,11 +375,11 @@ const Tasklist = () => {
                           pathname:
                             tasklistPage.data?.exporterDetail.status ===
                             'Complete'
-                              ? `/export/incomplete/exporter-importer/exporter-address`
+                              ? `/incomplete/exporter-importer/exporter-address`
                               : tasklistPage.data?.exporterDetail.status ===
                                 'Started'
-                              ? `/export/incomplete/exporter-importer/exporter-details-manual`
-                              : `/export/incomplete/exporter-importer/exporter-postcode`,
+                              ? `/incomplete/exporter-importer/exporter-details-manual`
+                              : `/incomplete/exporter-importer/exporter-postcode`,
                           query: { id, dashboard: true },
                         }}
                         id="exporter-details"
@@ -400,7 +400,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/importer-details`,
+                          pathname: `/incomplete/exporter-importer/importer-details`,
                           query: { id },
                         }}
                         id="importer-details"
@@ -428,7 +428,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/journey/collection-date`,
+                          pathname: `/incomplete/journey/collection-date`,
                           query: { id, dashboard: true },
                         }}
                         id="collection-date"
@@ -449,7 +449,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/journey/waste-carriers`,
+                          pathname: `/incomplete/journey/waste-carriers`,
                           query: { id },
                         }}
                         id="waste-carriers"
@@ -470,7 +470,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/journey/collection-details`,
+                          pathname: `/incomplete/journey/collection-details`,
                           query: { id, dashboard: true },
                         }}
                         id="collection-details"
@@ -491,7 +491,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/journey/exit-location`,
+                          pathname: `/incomplete/journey/exit-location`,
                           query: { id, dashboard: true },
                         }}
                         id="location-waste-leaves-the-uk"
@@ -512,7 +512,7 @@ const Tasklist = () => {
                     <TaskName>
                       <AppLink
                         href={{
-                          pathname: `/export/incomplete/journey/transit-countries`,
+                          pathname: `/incomplete/journey/transit-countries`,
                           query: { id, dashboard: true },
                         }}
                         id="countries-waste-will-travel-through"
@@ -552,7 +552,7 @@ const Tasklist = () => {
                           <AppLink
                             id="recovery-facility-or-laboratory"
                             href={{
-                              pathname: `/export/incomplete/treatment/laboratory`,
+                              pathname: `/incomplete/treatment/laboratory`,
                               query: { id, dashboard: true },
                             }}
                           >
@@ -572,7 +572,7 @@ const Tasklist = () => {
                           <AppLink
                             id="recovery-facility-or-laboratory"
                             href={{
-                              pathname: `/export/incomplete/treatment/interim-site`,
+                              pathname: `/incomplete/treatment/interim-site`,
                               query: { id, dashboard: true },
                             }}
                           >
@@ -605,7 +605,7 @@ const Tasklist = () => {
                       'CannotStart' ? (
                         <AppLink
                           href={{
-                            pathname: `/export/incomplete/checks/check-your-report`,
+                            pathname: `/incomplete/checks/check-your-report`,
                             query: { id, dashboard: true },
                           }}
                         >
@@ -635,7 +635,7 @@ const Tasklist = () => {
                       'CannotStart' ? (
                         <AppLink
                           href={{
-                            pathname: `/export/incomplete/checks/sign-declaration`,
+                            pathname: `/incomplete/checks/sign-declaration`,
                             query: { id, dashboard: true },
                           }}
                         >

@@ -149,7 +149,7 @@ const WasteCode = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -211,7 +211,7 @@ const WasteCode = () => {
               .then((data) => {
                 if (data !== undefined) {
                   router.push({
-                    pathname: `/export/templates/about/ewc-code`,
+                    pathname: `/templates/about/ewc-code`,
                     query: { templateId },
                   });
                 }
@@ -221,7 +221,7 @@ const WasteCode = () => {
           }
         } else {
           router.push({
-            pathname: `/export/templates/about/ewc-code`,
+            pathname: `/templates/about/ewc-code`,
             query: { templateId },
           });
         }
@@ -247,7 +247,7 @@ const WasteCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/templates/tasklist`,
+              pathname: `/templates/tasklist`,
               query: { templateId },
             });
           }}

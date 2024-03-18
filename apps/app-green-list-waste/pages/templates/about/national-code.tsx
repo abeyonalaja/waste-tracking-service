@@ -126,7 +126,7 @@ const NationalCode = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -163,7 +163,7 @@ const NationalCode = () => {
               .then((data) => {
                 if (data !== undefined) {
                   router.push({
-                    pathname: `/export/templates/about/description`,
+                    pathname: `/templates/about/description`,
                     query: { templateId },
                   });
                 }
@@ -174,7 +174,7 @@ const NationalCode = () => {
         }
       } else {
         router.push({
-          pathname: `/export/templates/about/description`,
+          pathname: `/templates/about/description`,
           query: { templateId },
         });
       }
@@ -189,7 +189,7 @@ const NationalCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: '/export/templates/about/ewc-code',
+              pathname: '/templates/about/ewc-code',
               query: { templateId },
             });
           }}

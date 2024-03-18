@@ -20,7 +20,7 @@ const SignIn = () => {
         pathname:
           router.query.callbackUrl !== undefined
             ? router.query.callbackUrl.toString()
-            : '/export',
+            : '/',
       });
     }
   }, [session, router.isReady, router.query]);

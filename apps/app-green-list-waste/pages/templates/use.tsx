@@ -167,7 +167,7 @@ const TemplateUse = () => {
             .then((data) => {
               const { id } = data;
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id, context: 'createdFromTemplate' },
               });
             });
@@ -184,14 +184,14 @@ const TemplateUse = () => {
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
           <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+          <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
           {router.query.context === 'manage' && (
-            <BreadCrumbLink href="/export/templates">
+            <BreadCrumbLink href="/templates">
               {t('templates.manage.title')}
             </BreadCrumbLink>
           )}
           {router.query.context === 'use' && (
-            <BreadCrumbLink href="/export/templates?context=use">
+            <BreadCrumbLink href="/templates?context=use">
               {t('templates.useTemplates.title')}
             </BreadCrumbLink>
           )}

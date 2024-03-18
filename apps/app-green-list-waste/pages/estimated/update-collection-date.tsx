@@ -64,7 +64,7 @@ const CollectionDate = () => {
             if (data !== undefined) {
               if (data.collectionDate.value.type === 'ActualDate') {
                 router.push({
-                  pathname: `/export/estimated/update`,
+                  pathname: `/estimated/update`,
                   query: { id },
                 });
               }
@@ -121,7 +121,7 @@ const CollectionDate = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: `/export/estimated/update`,
+                  pathname: `/estimated/update`,
                   query: { id, success: 'true' },
                 });
               }
@@ -142,7 +142,7 @@ const CollectionDate = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/estimated/update`,
+              pathname: `/estimated/update`,
               query: { id },
             });
           }}
@@ -231,7 +231,7 @@ const CollectionDate = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         router.push({
-                          pathname: `/export/estimated/update`,
+                          pathname: `/estimated/update`,
                           query: { id },
                         });
                       }}

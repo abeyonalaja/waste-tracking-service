@@ -164,8 +164,8 @@ const ExitLocation = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/templates/tasklist`
-                  : `/export/templates/journey/transit-countries`;
+                  ? `/templates/tasklist`
+                  : `/templates/journey/transit-countries`;
                 router.push({
                   pathname: path,
                   query: { templateId },
@@ -183,7 +183,7 @@ const ExitLocation = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -195,7 +195,7 @@ const ExitLocation = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/templates/tasklist`,
+              pathname: `/templates/tasklist`,
               query: { templateId },
             });
           }}

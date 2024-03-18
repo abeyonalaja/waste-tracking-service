@@ -265,7 +265,7 @@ const IncompleteAnnex7 = () => {
             <BreadCrumbLink href="/" id="index-link">
               {t('app.parentTitle')}
             </BreadCrumbLink>
-            <BreadCrumbLink href="/export" id="glw-index-link">
+            <BreadCrumbLink href="/" id="glw-index-link">
               {t('app.title')}
             </BreadCrumbLink>
             {t('exportJourney.incompleteAnnexSeven.title')}
@@ -426,7 +426,7 @@ const IncompleteAnnex7 = () => {
                               <AppLink
                                 id={'continue-link-' + index}
                                 href={{
-                                  pathname: '/export/incomplete/tasklist',
+                                  pathname: '/incomplete/tasklist',
                                   query: { id: item.id },
                                 }}
                               >
@@ -446,7 +446,7 @@ const IncompleteAnnex7 = () => {
                       ))}
                     </GovUK.Table>
                     <Pagination
-                      url="/export/incomplete"
+                      url="/incomplete"
                       pages={incompleteAnnex7Page.data.pages}
                       currentPage={incompleteAnnex7Page.data.currentPage}
                       totalPages={incompleteAnnex7Page.data.totalPages}

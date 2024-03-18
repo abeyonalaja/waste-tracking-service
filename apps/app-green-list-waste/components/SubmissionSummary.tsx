@@ -169,7 +169,7 @@ export const SubmissionSummary = ({
                   <AppLink
                     id="your-reference-change"
                     href={{
-                      pathname: `/export/incomplete/reference`,
+                      pathname: `/incomplete/reference`,
                       query: { id: data.id },
                     }}
                   >
@@ -225,7 +225,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-code-type-change"
                         href={{
-                          pathname: `/export/incomplete/about/waste-code-warning`,
+                          pathname: `/incomplete/about/waste-code-warning`,
                           query: { id: data.id },
                         }}
                       >
@@ -263,7 +263,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="ewc-codes-change"
                         href={{
-                          pathname: `/export/incomplete/about/ewc-code`,
+                          pathname: `/incomplete/about/ewc-code`,
                           query: { id: data.id },
                         }}
                       >
@@ -295,7 +295,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="national-code-change"
                         href={{
-                          pathname: `/export/incomplete/about/national-code`,
+                          pathname: `/incomplete/about/national-code`,
                           query: { id: data.id },
                         }}
                       >
@@ -319,7 +319,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-destription-change"
                         href={{
-                          pathname: `/export/incomplete/about/description`,
+                          pathname: `/incomplete/about/description`,
                           query: { id: data.id },
                         }}
                       >
@@ -381,7 +381,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id="waste-quanitity-change"
                             href={{
-                              pathname: `/export/incomplete/about/quantity`,
+                              pathname: `/incomplete/about/quantity`,
                               query: { id: data.id },
                             }}
                           >
@@ -396,7 +396,7 @@ export const SubmissionSummary = ({
                             <AppLink
                               id="update-estimated-quantity"
                               href={{
-                                pathname: `/export/estimated/update-quantity`,
+                                pathname: `/estimated/update-quantity`,
                                 query: { id: data.id },
                               }}
                             >
@@ -439,7 +439,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exporter-address-change"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/exporter-details-manual`,
+                          pathname: `/incomplete/exporter-importer/exporter-details-manual`,
                           query: { id: data.id },
                         }}
                       >
@@ -472,7 +472,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exporter-organisation-name-change"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/exporter-details`,
+                          pathname: `/incomplete/exporter-importer/exporter-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -554,7 +554,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="importer-details-change"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/importer-details`,
+                          pathname: `/incomplete/exporter-importer/importer-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -591,7 +591,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="importer-contact-details-change"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/importer-contact-details`,
+                          pathname: `/incomplete/exporter-importer/importer-contact-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -694,7 +694,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="collection-date-change"
                         href={{
-                          pathname: `/export/incomplete/journey/collection-date`,
+                          pathname: `/incomplete/journey/collection-date`,
                           query: { id: data.id },
                         }}
                       >
@@ -710,7 +710,7 @@ export const SubmissionSummary = ({
                         <AppLink
                           id="collection-date-update"
                           href={{
-                            pathname: `/export/estimated/update-collection-date`,
+                            pathname: `/estimated/update-collection-date`,
                             query: { id: data.id },
                           }}
                         >
@@ -753,7 +753,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-change' + index}
                             href={{
-                              pathname: `/export/incomplete/journey/waste-carriers`,
+                              pathname: `/incomplete/journey/waste-carriers`,
                               query: { id: data.id, carrierId: item.id },
                             }}
                           >
@@ -791,7 +791,7 @@ export const SubmissionSummary = ({
                           <AppLink
                             id={'carrier-contact-details-change' + index}
                             href={{
-                              pathname: `/export/incomplete/journey/waste-carriers`,
+                              pathname: `/incomplete/journey/waste-carriers`,
                               query: {
                                 id: data.id,
                                 carrierId: item.id,
@@ -853,7 +853,7 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-change' + index}
                                 href={{
-                                  pathname: `/export/incomplete/journey/waste-carriers`,
+                                  pathname: `/incomplete/journey/waste-carriers`,
                                   query: {
                                     id: data.id,
                                     carrierId: item.id,
@@ -901,7 +901,7 @@ export const SubmissionSummary = ({
                               <AppLink
                                 id={'carrier-type-details-change' + index}
                                 href={{
-                                  pathname: `/export/incomplete/journey/waste-carriers`,
+                                  pathname: `/incomplete/journey/waste-carriers`,
                                   query: {
                                     id: data.id,
                                     carrierId: item.id,
@@ -945,7 +945,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-collection-address-change"
                         href={{
-                          pathname: `/export/incomplete/journey/collection-details`,
+                          pathname: `/incomplete/journey/collection-details`,
                           query: { id: data.id, page: 'MANUAL_ADDRESS' },
                         }}
                       >
@@ -977,7 +977,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="waste-collection-full-name-change"
                         href={{
-                          pathname: `/export/incomplete/journey/collection-details`,
+                          pathname: `/incomplete/journey/collection-details`,
                           query: { id: data.id },
                         }}
                       >
@@ -1056,7 +1056,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="exit-location-change"
                         href={{
-                          pathname: `/export/incomplete/journey/exit-location`,
+                          pathname: `/incomplete/journey/exit-location`,
                           query: { id: data.id },
                         }}
                       >
@@ -1101,7 +1101,7 @@ export const SubmissionSummary = ({
                       <AppLink
                         id="transit-countries-change"
                         href={{
-                          pathname: `/export/incomplete/journey/transit-countries`,
+                          pathname: `/incomplete/journey/transit-countries`,
                           query: { id: data.id },
                         }}
                       >
@@ -1239,7 +1239,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `/export/incomplete/treatment${url}`,
+                  pathname: `/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'ADDRESS_DETAILS' },
                 }}
                 id={`${type.toLowerCase()}-change-address-${index}`}
@@ -1279,7 +1279,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `/export/incomplete/treatment${url}`,
+                  pathname: `/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'CONTACT_DETAILS' },
                 }}
                 id={`${type.toLowerCase()}-change-contact-${index}`}
@@ -1332,7 +1332,7 @@ const SiteDetails = ({
             <Actions>
               <AppLink
                 href={{
-                  pathname: `/export/incomplete/treatment${url}`,
+                  pathname: `/incomplete/treatment${url}`,
                   query: { id, site: site.id, page: 'RECOVERY_CODE' },
                 }}
                 id={`${type.toLowerCase()}-change-code-${index}`}

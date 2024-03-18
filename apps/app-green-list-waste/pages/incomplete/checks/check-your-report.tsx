@@ -175,8 +175,8 @@ const CheckYourReport = () => {
         .then((data) => {
           if (data !== undefined) {
             const path = returnToDraft
-              ? `/export/incomplete/tasklist`
-              : `/export/incomplete/checks/sign-declaration`;
+              ? `/incomplete/tasklist`
+              : `/incomplete/checks/sign-declaration`;
             router.push({
               pathname: path,
               query: { id },
@@ -259,7 +259,7 @@ const CheckYourReport = () => {
               <SaveReturnButton
                 onClick={() =>
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   })
                 }

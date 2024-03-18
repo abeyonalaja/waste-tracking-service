@@ -492,7 +492,7 @@ const RecoveryFacilityDetails = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -556,7 +556,7 @@ const RecoveryFacilityDetails = () => {
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalFacility === 'No') {
         router.push({
-          pathname: `/export/incomplete/tasklist`,
+          pathname: `/incomplete/tasklist`,
           query: { id },
         });
       } else {
@@ -651,7 +651,7 @@ const RecoveryFacilityDetails = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/incomplete/tasklist`,
+            pathname: `/incomplete/tasklist`,
             query: { id },
           });
         } else {
@@ -717,7 +717,7 @@ const RecoveryFacilityDetails = () => {
           onClick={() => {
             if (startPage === recoveryPage.showView) {
               router.push({
-                pathname: `/export/incomplete/treatment/interim-site`,
+                pathname: `/incomplete/treatment/interim-site`,
                 query: { id },
               });
             } else {
@@ -1145,7 +1145,7 @@ const RecoveryFacilityDetails = () => {
                           <SaveReturnButton
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/tasklist`,
+                                pathname: `/incomplete/tasklist`,
                                 query: { id },
                               });
                             }}
@@ -1163,7 +1163,7 @@ const RecoveryFacilityDetails = () => {
                             id="saveButton"
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/tasklist`,
+                                pathname: `/incomplete/tasklist`,
                                 query: { id },
                               });
                             }}
@@ -1173,7 +1173,7 @@ const RecoveryFacilityDetails = () => {
                           <SaveReturnButton
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/tasklist`,
+                                pathname: `/incomplete/tasklist`,
                                 query: { id },
                               });
                             }}

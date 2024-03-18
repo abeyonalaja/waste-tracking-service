@@ -422,7 +422,7 @@ const WasteCarriers = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -506,7 +506,7 @@ const WasteCarriers = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/incomplete/tasklist`,
+            pathname: `/incomplete/tasklist`,
             query: { id },
           });
         } else {
@@ -558,7 +558,7 @@ const WasteCarriers = () => {
       dispatchCarrierPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalCarrier === 'No') {
         router.push({
-          pathname: `/export/incomplete/journey/collection-details`,
+          pathname: `/incomplete/journey/collection-details`,
           query: { id },
         });
       } else {
@@ -675,7 +675,7 @@ const WasteCarriers = () => {
               carrierPage.showView === VIEWS.LIST
             ) {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             } else {
@@ -1164,7 +1164,7 @@ const WasteCarriers = () => {
                           <SaveReturnButton
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/tasklist`,
+                                pathname: `/incomplete/tasklist`,
                                 query: { id },
                               });
                             }}
@@ -1184,7 +1184,7 @@ const WasteCarriers = () => {
                             id="saveButton"
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/journey/collection-details`,
+                                pathname: `/incomplete/journey/collection-details`,
                                 query: { id },
                               });
                             }}
@@ -1194,7 +1194,7 @@ const WasteCarriers = () => {
                           <SaveReturnButton
                             onClick={() => {
                               router.push({
-                                pathname: `/export/incomplete/tasklist`,
+                                pathname: `/incomplete/tasklist`,
                                 query: { id },
                               });
                             }}

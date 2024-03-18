@@ -30,7 +30,7 @@ const BreadCrumbs = () => {
     <BreadcrumbWrap>
       <GovUK.Breadcrumbs>
         <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-        <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+        <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
         {t('export.homepage.multiples.guidance.link')}
       </GovUK.Breadcrumbs>
     </BreadcrumbWrap>
@@ -44,7 +44,7 @@ const Guidance = () => {
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MULTIPLES_ENABLED !== 'true') {
       router.push({
-        pathname: `/export/`,
+        pathname: `/`,
       });
     }
   }, []);

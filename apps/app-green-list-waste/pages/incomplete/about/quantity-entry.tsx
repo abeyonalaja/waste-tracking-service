@@ -42,7 +42,7 @@ const BreadCrumbs = ({ id }) => {
         href="#"
         onClick={() => {
           router.push({
-            pathname: `/export/incomplete/about/quantity`,
+            pathname: `/incomplete/about/quantity`,
             query: { id, context: router.query.context },
           });
         }}
@@ -198,7 +198,7 @@ const QuantityEntry = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: `/export/incomplete/tasklist`,
+                  pathname: `/incomplete/tasklist`,
                   query: { id },
                 });
               }

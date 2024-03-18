@@ -67,7 +67,7 @@ export function Reference() {
             body: JSON.stringify(reference.trim()),
           }).then(() => {
             router.push({
-              pathname: `/export/incomplete/tasklist`,
+              pathname: `/incomplete/tasklist`,
               query: { id },
             });
           });
@@ -101,7 +101,7 @@ export function Reference() {
                 reference,
               });
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             });
@@ -133,7 +133,7 @@ export function Reference() {
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
           <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+          <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
           {t('yourReference.breadcrumb')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>

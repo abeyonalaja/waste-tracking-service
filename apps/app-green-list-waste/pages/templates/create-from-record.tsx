@@ -110,13 +110,13 @@ const TemplateCreateFromRecord = () => {
     if (router.isReady) {
       setId(router.query.id);
       if (router.query.context === 'created') {
-        setReturnUrl('/export/submitted/export-submitted');
+        setReturnUrl('/submitted/export-submitted');
       }
       if (router.query.context === 'view') {
-        setReturnUrl('/export/submitted/view');
+        setReturnUrl('/submitted/view');
       }
       if (router.query.context === 'index') {
-        setReturnUrl('/export/submitted');
+        setReturnUrl('/submitted');
       }
     }
   }, [router.isReady, router.query.id, router.query.context]);
@@ -183,7 +183,7 @@ const TemplateCreateFromRecord = () => {
                 setErrors(newErrors);
               } else {
                 router.push({
-                  pathname: `/export/templates/tasklist`,
+                  pathname: `/templates/tasklist`,
                   query: { templateId: data.id, context: 'created' },
                 });
               }

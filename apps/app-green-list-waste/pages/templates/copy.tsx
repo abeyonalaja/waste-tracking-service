@@ -173,7 +173,7 @@ const TemplateCopy = () => {
                 setErrors(newErrors);
               } else {
                 router.push({
-                  pathname: `/export/templates/tasklist`,
+                  pathname: `/templates/tasklist`,
                   query: { templateId: data.id, context: 'copied' },
                 });
               }
@@ -193,7 +193,7 @@ const TemplateCopy = () => {
           href="#"
           onClick={(e) => {
             router.push({
-              pathname: `/export/templates`,
+              pathname: `/templates`,
             });
             e.preventDefault();
           }}
@@ -289,7 +289,7 @@ const TemplateCopy = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             router.push({
-                              pathname: `/export/templates`,
+                              pathname: `/templates`,
                             });
                           }}
                         >

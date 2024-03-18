@@ -272,7 +272,7 @@ const UpdateAnnex7 = () => {
         {updateAnnex7Page.showView === VIEWS.LIST ? (
           <GovUK.Breadcrumbs>
             <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-            <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+            <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
             {t('exportJourney.updateAnnexSeven.title')}
           </GovUK.Breadcrumbs>
         ) : (
@@ -470,7 +470,7 @@ const UpdateAnnex7 = () => {
                                   <AppLink
                                     id={'update-' + index}
                                     href={{
-                                      pathname: '/export/estimated/update',
+                                      pathname: '/estimated/update',
                                       query: { id: item.id },
                                     }}
                                   >
@@ -490,7 +490,7 @@ const UpdateAnnex7 = () => {
                           ))}
                         </GovUK.Table>
                         <Pagination
-                          url="/export/estimated"
+                          url="/estimated"
                           pages={updateAnnex7Page.data.pages}
                           currentPage={updateAnnex7Page.data.currentPage}
                           totalPages={updateAnnex7Page.data.totalPages}

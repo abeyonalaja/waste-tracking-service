@@ -32,7 +32,7 @@ const BreadCrumbs = ({ id }) => {
         href="#"
         onClick={() => {
           router.push({
-            pathname: `/export/estimated/update`,
+            pathname: `/estimated/update`,
             query: { id },
           });
         }}
@@ -168,7 +168,7 @@ const QuantityEntry = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: `/export/estimated/update`,
+                  pathname: `/estimated/update`,
                   query: { id, success: 'true' },
                 });
               }
@@ -299,7 +299,7 @@ const QuantityEntry = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           router.push({
-                            pathname: `/export/estimated/update`,
+                            pathname: `/estimated/update`,
                             query: { id },
                           });
                         }}
@@ -338,7 +338,7 @@ const QuantityEntry = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             router.push({
-                              pathname: `/export/estimated/update`,
+                              pathname: `/estimated/update`,
                               query: { id },
                             });
                           }}

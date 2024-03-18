@@ -400,12 +400,12 @@ const Laboratory = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else if (form === 'code') {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -490,7 +490,7 @@ const Laboratory = () => {
           onClick={() => {
             if (startPage === laboratoryPage.showView) {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             } else {

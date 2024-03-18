@@ -174,7 +174,7 @@ const TemplateEdit = () => {
                 setErrors(newErrors);
               } else {
                 router.push({
-                  pathname: `/export/templates/tasklist`,
+                  pathname: `/templates/tasklist`,
                   query: { templateId: data.id },
                 });
               }
@@ -194,7 +194,7 @@ const TemplateEdit = () => {
           href="#"
           onClick={(e) => {
             router.push({
-              pathname: `/export/templates/tasklist`,
+              pathname: `/templates/tasklist`,
               query: { templateId },
             });
             e.preventDefault();
@@ -289,7 +289,7 @@ const TemplateEdit = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             router.push({
-                              pathname: `/export/templates/tasklist`,
+                              pathname: `/templates/tasklist`,
                               query: { templateId },
                             });
                           }}

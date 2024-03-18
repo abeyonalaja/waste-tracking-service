@@ -235,8 +235,8 @@ const TemplateTasklist = () => {
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
           <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export/templates">
+          <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
+          <BreadCrumbLink href="/templates">
             {t('templates.manage.title')}
           </BreadCrumbLink>
         </GovUK.Breadcrumbs>
@@ -328,7 +328,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/edit`,
+                                  pathname: `/templates/edit`,
                                   query: { templateId },
                                 }}
                               >
@@ -356,7 +356,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/about/waste-code`,
+                                  pathname: `/templates/about/waste-code`,
                                   query: { templateId },
                                 }}
                               >
@@ -388,11 +388,11 @@ const TemplateTasklist = () => {
                                   pathname:
                                     templatePage.data?.exporterDetail.status ===
                                     'Complete'
-                                      ? `/export/templates/exporter-importer/exporter-address`
+                                      ? `/templates/exporter-importer/exporter-address`
                                       : templatePage.data?.exporterDetail
                                           .status === 'Started'
-                                      ? `/export/templates/exporter-importer/exporter-details-manual`
-                                      : `/export/templates/exporter-importer/exporter-postcode`,
+                                      ? `/templates/exporter-importer/exporter-details-manual`
+                                      : `/templates/exporter-importer/exporter-postcode`,
                                   query: { templateId, templates: true },
                                 }}
                                 id="exporter-details"
@@ -415,7 +415,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/exporter-importer/importer-details`,
+                                  pathname: `/templates/exporter-importer/importer-details`,
                                   query: { templateId },
                                 }}
                                 id="importer-details"
@@ -447,7 +447,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/journey/waste-carriers`,
+                                  pathname: `/templates/journey/waste-carriers`,
                                   query: { templateId },
                                 }}
                                 id="waste-carriers"
@@ -468,7 +468,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/journey/collection-details`,
+                                  pathname: `/templates/journey/collection-details`,
                                   query: { templateId, dashboard: true },
                                 }}
                                 id="collection-details"
@@ -491,7 +491,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/journey/exit-location`,
+                                  pathname: `/templates/journey/exit-location`,
                                   query: { templateId, dashboard: true },
                                 }}
                                 id="location-waste-leaves-the-uk"
@@ -514,7 +514,7 @@ const TemplateTasklist = () => {
                             <TaskName>
                               <AppLink
                                 href={{
-                                  pathname: `/export/templates/journey/transit-countries`,
+                                  pathname: `/templates/journey/transit-countries`,
                                   query: { templateId, dashboard: true },
                                 }}
                                 id="countries-waste-will-travel-through"
@@ -558,7 +558,7 @@ const TemplateTasklist = () => {
                                   <AppLink
                                     id="recovery-facility-or-laboratory"
                                     href={{
-                                      pathname: `/export/templates/treatment/laboratory`,
+                                      pathname: `/templates/treatment/laboratory`,
                                       query: { templateId, dashboard: true },
                                     }}
                                   >
@@ -578,7 +578,7 @@ const TemplateTasklist = () => {
                                   <AppLink
                                     id="recovery-facility-or-laboratory"
                                     href={{
-                                      pathname: `/export/templates/treatment/interim-site`,
+                                      pathname: `/templates/treatment/interim-site`,
                                       query: { templateId, dashboard: true },
                                     }}
                                   >
@@ -606,7 +606,7 @@ const TemplateTasklist = () => {
                         href="#"
                         onClick={(e) => {
                           router.push({
-                            pathname: `/export/templates`,
+                            pathname: `/templates`,
                           });
                           e.preventDefault();
                         }}
@@ -637,7 +637,7 @@ const TemplateTasklist = () => {
                     <AppLink
                       id="template-tasklist-link-use"
                       href={{
-                        pathname: `/export/templates/use`,
+                        pathname: `/templates/use`,
                         query: { templateId },
                       }}
                     >
@@ -648,7 +648,7 @@ const TemplateTasklist = () => {
                     <AppLink
                       id="template-tasklist-link-copy"
                       href={{
-                        pathname: `/export/templates/copy`,
+                        pathname: `/templates/copy`,
                         query: { templateId },
                       }}
                     >
@@ -659,7 +659,7 @@ const TemplateTasklist = () => {
                     <AppLink
                       id="template-tasklist-link-delete"
                       href={{
-                        pathname: `/export/templates`,
+                        pathname: `/templates`,
                         query: { templateId },
                       }}
                     >
@@ -670,7 +670,7 @@ const TemplateTasklist = () => {
                     <AppLink
                       id="template-tasklist-link-manage"
                       href={{
-                        pathname: `/export/templates`,
+                        pathname: `/templates`,
                       }}
                     >
                       {t('templates.taskList.actionLink.manage')}

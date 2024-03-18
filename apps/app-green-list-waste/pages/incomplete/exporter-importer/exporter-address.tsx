@@ -140,8 +140,8 @@ const ExporterAddress = () => {
   const handleSubmit = useCallback(
     (e: FormEvent, returnToDraft = false) => {
       const path = returnToDraft
-        ? `/export/incomplete/tasklist`
-        : `/export/incomplete/exporter-importer/exporter-details`;
+        ? `/incomplete/tasklist`
+        : `/incomplete/exporter-importer/exporter-details`;
       router.push({
         pathname: path,
         query: { id },
@@ -202,7 +202,7 @@ const ExporterAddress = () => {
                       <AppLink
                         id="address-change-link"
                         href={{
-                          pathname: `/export/incomplete/exporter-importer/exporter-details-manual`,
+                          pathname: `/incomplete/exporter-importer/exporter-details-manual`,
                           query: { id },
                         }}
                       >

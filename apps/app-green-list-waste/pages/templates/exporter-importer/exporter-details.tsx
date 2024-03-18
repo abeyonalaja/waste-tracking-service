@@ -107,7 +107,7 @@ const ExporterDetails = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -154,7 +154,7 @@ const ExporterDetails = () => {
             })
             .then((data) => {
               if (data !== undefined) {
-                const path = `/export/templates/exporter-importer/importer-details`;
+                const path = `/templates/exporter-importer/importer-details`;
                 router.push({
                   pathname: path,
                   query: { templateId },

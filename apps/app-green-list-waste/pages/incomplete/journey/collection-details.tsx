@@ -404,7 +404,7 @@ const CollectionDetails = () => {
                 });
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -470,8 +470,8 @@ const CollectionDetails = () => {
               if (data !== undefined) {
                 router.push({
                   pathname: returnToDraft
-                    ? `/export/incomplete/tasklist`
-                    : `/export/incomplete/journey/exit-location`,
+                    ? `/incomplete/tasklist`
+                    : `/incomplete/journey/exit-location`,
                   query: { id },
                 });
               }
@@ -526,7 +526,7 @@ const CollectionDetails = () => {
                 });
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else {
@@ -601,7 +601,7 @@ const CollectionDetails = () => {
               });
             } else {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             }
@@ -715,7 +715,7 @@ const CollectionDetails = () => {
                         <SaveReturnButton
                           onClick={() =>
                             router.push({
-                              pathname: `/export/incomplete/tasklist`,
+                              pathname: `/incomplete/tasklist`,
                               query: { id },
                             })
                           }
@@ -1100,7 +1100,7 @@ const CollectionDetails = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             router.push({
-                              pathname: `/export/incomplete/tasklist`,
+                              pathname: `/incomplete/tasklist`,
                               query: { id },
                             });
                           }}

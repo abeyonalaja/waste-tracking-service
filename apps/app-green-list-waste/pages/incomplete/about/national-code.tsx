@@ -133,7 +133,7 @@ const NationalCode = () => {
 
       if (hasNationalCode === undefined) {
         router.push({
-          pathname: `/export/incomplete/about/description`,
+          pathname: `/incomplete/about/description`,
           query: { id },
         });
       }
@@ -161,8 +161,8 @@ const NationalCode = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/about/description`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/about/description`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -184,7 +184,7 @@ const NationalCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/incomplete/about/ewc-code`,
+              pathname: `/incomplete/about/ewc-code`,
               query: { id },
             });
           }}

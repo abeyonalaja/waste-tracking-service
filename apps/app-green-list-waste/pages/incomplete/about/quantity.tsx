@@ -105,8 +105,8 @@ const Quantity = () => {
                 if (data !== undefined) {
                   const path =
                     returnToDraft || quantityType === 'NotApplicable'
-                      ? `/export/incomplete/tasklist`
-                      : `/export/incomplete/about/quantity-entry`;
+                      ? `/incomplete/tasklist`
+                      : `/incomplete/about/quantity-entry`;
                   router.push({
                     pathname: path,
                     query: {
@@ -123,8 +123,8 @@ const Quantity = () => {
         } else {
           const path =
             returnToDraft || quantityType === 'NotApplicable'
-              ? `/export/incomplete/tasklist`
-              : `/export/incomplete/about/quantity-entry`;
+              ? `/incomplete/tasklist`
+              : `/incomplete/about/quantity-entry`;
           router.push({
             pathname: path,
             query: { id, weightOrVolume, context: router.query.context },
@@ -224,8 +224,8 @@ const Quantity = () => {
             router.push({
               pathname:
                 router.query.context === 'tasklist'
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/about/description`,
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/about/description`,
               query: { id },
             });
           }}

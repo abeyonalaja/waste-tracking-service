@@ -76,7 +76,7 @@ const ExporterPostcode = () => {
                 if (data.length === 1) {
                   putAddress(
                     JSON.stringify(data[0]),
-                    '/export/templates/exporter-importer/exporter-address-edit'
+                    '/templates/exporter-importer/exporter-address-edit'
                   );
                 } else {
                   setAddresses(data);
@@ -94,7 +94,7 @@ const ExporterPostcode = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -112,8 +112,8 @@ const ExporterPostcode = () => {
         putAddress(
           selectedAddress,
           returnToDraft
-            ? `/export/templates/tasklist`
-            : `/export/templates/exporter-importer/exporter-address`
+            ? `/templates/tasklist`
+            : `/templates/exporter-importer/exporter-address`
         );
       }
       e.preventDefault();
@@ -165,7 +165,7 @@ const ExporterPostcode = () => {
               setAddresses(null);
             } else {
               router.push({
-                pathname: `/export/templates/tasklist`,
+                pathname: `/templates/tasklist`,
                 query: { templateId },
               });
             }

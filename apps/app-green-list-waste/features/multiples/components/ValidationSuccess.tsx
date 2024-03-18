@@ -40,7 +40,7 @@ export function ValidationSuccess({
         <GovUK.Button
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/export/multiples/${router.query.id}/submit/confirm`);
+            router.push(`/multiples/${router.query.id}/submit/confirm`);
           }}
           id="continueButton"
         >
@@ -49,7 +49,7 @@ export function ValidationSuccess({
         <SaveReturnButton
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/export/multiples/${router.query.id}/submit/cancel`);
+            router.push(`/multiples/${router.query.id}/submit/cancel`);
           }}
         >
           {t('cancelButton')}

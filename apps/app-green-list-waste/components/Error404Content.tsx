@@ -13,7 +13,7 @@ export const Error404Content = () => {
       <p>
         <AppLink
           href={{
-            pathname: '/export',
+            pathname: '/',
           }}
         >
           {t('404.link')}

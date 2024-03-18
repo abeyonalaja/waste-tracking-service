@@ -33,9 +33,8 @@ export default async function handler(
               },
             }
           ).then((response) => {
-            console.log(response);
             if (response.ok) {
-              res.redirect(307, `${baseUrl}/export/?context=granted`);
+              res.redirect(307, `${baseUrl}/?context=granted`);
             } else {
               res.redirect(307, `${baseUrl}/?context=error`);
             }

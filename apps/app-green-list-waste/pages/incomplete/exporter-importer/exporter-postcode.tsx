@@ -76,7 +76,7 @@ const ExporterPostcode = () => {
                 if (data.length === 1) {
                   putAddress(
                     JSON.stringify(data[0]),
-                    '/export/incomplete/exporter-importer/exporter-address-edit'
+                    '/incomplete/exporter-importer/exporter-address-edit'
                   );
                 } else {
                   setAddresses(data);
@@ -109,8 +109,8 @@ const ExporterPostcode = () => {
         putAddress(
           selectedAddress,
           returnToDraft
-            ? `/export/incomplete/tasklist`
-            : `/export/incomplete/exporter-importer/exporter-address`
+            ? `/incomplete/tasklist`
+            : `/incomplete/exporter-importer/exporter-address`
         );
       }
       e.preventDefault();
@@ -163,7 +163,7 @@ const ExporterPostcode = () => {
               setAddresses(null);
             } else {
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               });
             }
@@ -323,7 +323,7 @@ const ExporterPostcode = () => {
                   <SaveReturnButton
                     onClick={() =>
                       router.push({
-                        pathname: `/export/incomplete/tasklist`,
+                        pathname: `/incomplete/tasklist`,
                         query: { id },
                       })
                     }

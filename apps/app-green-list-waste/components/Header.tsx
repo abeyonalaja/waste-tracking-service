@@ -127,7 +127,7 @@ const PhaseBannerWrapper = styled.div`
 
 export const Header = ({
   isSignOutPage = false,
-  callbackUrl = '/export',
+  callbackUrl = '/',
   showPhaseBanner = true,
 }) => {
   const { t } = useTranslation();
@@ -203,7 +203,7 @@ export const Header = ({
           {showPhaseBanner && (
             <PhaseBanner level={t('tag')}>
               {t('header.serviceBanner-1')}
-              <AppLink href={'/export/feedback'} fontSize={16}>
+              <AppLink href={'/feedback'} fontSize={16}>
                 {t('header.serviceBanner-link')}
               </AppLink>
               {t('header.serviceBanner-2')}

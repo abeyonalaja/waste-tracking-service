@@ -49,7 +49,7 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
             </GovUK.Table.Cell>
             <GovUK.Table.Cell>
               <AppLink
-                href={`/export/multiples/${router.query.id}/errors/${row.rowNumber}`}
+                href={`/multiples/${router.query.id}/errors/${row.rowNumber}`}
                 id={`action-view-error-${row.rowNumber}`}
               >
                 {t('multiples.errorSummaryPage.errorSummaryTable.actionLink')}

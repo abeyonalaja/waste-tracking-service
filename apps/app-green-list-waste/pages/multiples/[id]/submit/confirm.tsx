@@ -45,7 +45,7 @@ export default function Confirm() {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/export/multiples/${router.query.id}/submit/`);
+            router.push(`/multiples/${router.query.id}/submit/`);
           }}
         >
           {t('Back')}

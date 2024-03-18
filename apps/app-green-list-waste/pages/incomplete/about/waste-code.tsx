@@ -238,8 +238,8 @@ const WasteCode = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/about/ewc-code`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/about/ewc-code`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -271,7 +271,7 @@ const WasteCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/incomplete/tasklist`,
+              pathname: `/incomplete/tasklist`,
               query: { id },
             });
           }}

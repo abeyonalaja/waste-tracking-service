@@ -26,7 +26,7 @@ const BreadCrumbs = () => {
 
 const SignOut = () => {
   const router = useRouter();
-  const [callbackUrl, setCallbackUrl] = useState<string>('/export');
+  const [callbackUrl, setCallbackUrl] = useState<string>('/');
 
   useEffect(() => {
     if (router.isReady) {

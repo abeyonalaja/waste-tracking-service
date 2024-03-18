@@ -137,7 +137,7 @@ const Index = () => {
       <BreadcrumbWrap>
         <GovUK.Breadcrumbs>
           <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-          <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+          <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
           {t('exportJourney.submittedAnnexSeven.title')}
         </GovUK.Breadcrumbs>
       </BreadcrumbWrap>
@@ -296,7 +296,7 @@ const Index = () => {
                               <AppLink
                                 id={'view-link-' + index}
                                 href={{
-                                  pathname: `/export/submitted/view`,
+                                  pathname: `/submitted/view`,
                                   query: { id: item.id },
                                 }}
                               >
@@ -306,7 +306,7 @@ const Index = () => {
                             <AppLink
                               id={'create-from-record-link-' + index}
                               href={{
-                                pathname: `/export/templates/create-from-record`,
+                                pathname: `/templates/create-from-record`,
                                 query: { id: item.id, context: 'index' },
                               }}
                             >
@@ -317,7 +317,7 @@ const Index = () => {
                       ))}
                     </GovUK.Table>
                     <Pagination
-                      url="/export/submitted"
+                      url="/submitted"
                       pages={submittedAnnex7Page.data.pages}
                       currentPage={submittedAnnex7Page.data.currentPage}
                       totalPages={submittedAnnex7Page.data.totalPages}

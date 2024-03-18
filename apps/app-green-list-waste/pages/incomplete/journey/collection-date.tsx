@@ -139,8 +139,8 @@ const CollectionDate = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/journey/waste-carriers`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/journey/waste-carriers`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -163,8 +163,8 @@ const CollectionDate = () => {
           onClick={() => {
             router.push({
               pathname: router.query.dashboard
-                ? `/export/incomplete/tasklist`
-                : `/export/incomplete/about/description`,
+                ? `/incomplete/tasklist`
+                : `/incomplete/about/description`,
               query: { id },
             });
           }}

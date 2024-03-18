@@ -166,7 +166,7 @@ export const GuidanceInteruption = ({
       </GovUK.Paragraph>
       <DocumentSection>
         <Thumbnail>
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             <GovUK.VisuallyHidden>
               {t('multiples.guidance.document.html.link')}
             </GovUK.VisuallyHidden>
@@ -186,7 +186,7 @@ export const GuidanceInteruption = ({
           </AppLink>
         </Thumbnail>
         <Details>
-          <WhiteAppLink href={'/export/multiples/guidance'} target="_blank">
+          <WhiteAppLink href={'/multiples/guidance'} target="_blank">
             {t('multiples.guidance.document.html.link')}
           </WhiteAppLink>
           <DetailsParagraph>

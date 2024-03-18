@@ -116,7 +116,7 @@ const UpdateRecord = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/estimated`,
+              pathname: `/estimated`,
             });
           }}
         >
@@ -192,7 +192,7 @@ const UpdateRecord = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           router.push({
-                            pathname: `/export/submitted/export-submitted`,
+                            pathname: `/submitted/export-submitted`,
                             query: { id },
                           });
                         }}
@@ -205,7 +205,7 @@ const UpdateRecord = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         router.push({
-                          pathname: `/export/estimated`,
+                          pathname: `/estimated`,
                         });
                       }}
                     >

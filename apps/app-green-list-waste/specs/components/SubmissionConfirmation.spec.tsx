@@ -169,6 +169,6 @@ describe('SubmissionConfirmation component', () => {
       name: 'Return to export waste from the UK',
     });
 
-    expect(link).toHaveAttribute('href', '/export');
+    expect(link).toHaveAttribute('href', '/');
   });
 });

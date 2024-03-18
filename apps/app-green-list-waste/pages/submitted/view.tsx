@@ -122,7 +122,7 @@ const ViewRecord = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/submitted`,
+              pathname: `/submitted`,
             });
           }}
         >
@@ -175,7 +175,7 @@ const ViewRecord = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         router.push({
-                          pathname: `/export/submitted`,
+                          pathname: `/submitted`,
                         });
                       }}
                     >
@@ -199,7 +199,7 @@ const ViewRecord = () => {
                   </Paragraph>
                   <AppLink
                     href={{
-                      pathname: `/export/templates/create-from-record`,
+                      pathname: `/templates/create-from-record`,
                       query: { id, context: 'view' },
                     }}
                   >

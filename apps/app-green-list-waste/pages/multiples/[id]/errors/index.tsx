@@ -55,7 +55,7 @@ export default function Index() {
             queryClient.removeQueries({
               queryKey: ['multiples'],
             });
-            router.push(`/export/multiples/`);
+            router.push(`/multiples/`);
           }}
         >
           {t('Back')}
@@ -80,7 +80,7 @@ export default function Index() {
         </GovUK.Paragraph>
         <Paragraph>
           {t('multiples.errorSummaryPage.linkParagraphStart')}
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             {t('multiples.errorSummaryPage.linkGuidanceText')}
           </AppLink>
           {t('multiples.errorSummaryPage.linkParagraphEnd')}

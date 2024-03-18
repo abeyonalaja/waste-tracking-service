@@ -398,12 +398,12 @@ const Laboratory = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/templates/tasklist`,
+                    pathname: `/templates/tasklist`,
                     query: { templateId },
                   });
                 } else if (form === 'code') {
                   router.push({
-                    pathname: `/export/templates/tasklist`,
+                    pathname: `/templates/tasklist`,
                     query: { templateId },
                   });
                 } else {
@@ -483,7 +483,7 @@ const Laboratory = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -496,7 +496,7 @@ const Laboratory = () => {
           onClick={() => {
             if (startPage === laboratoryPage.showView) {
               router.push({
-                pathname: `/export/templates/tasklist`,
+                pathname: `/templates/tasklist`,
                 query: { templateId },
               });
             } else {

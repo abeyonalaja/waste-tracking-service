@@ -63,7 +63,7 @@ const TemplateCreate = () => {
                 setErrors(newErrors);
               } else {
                 router.push({
-                  pathname: `/export/templates/tasklist`,
+                  pathname: `/templates/tasklist`,
                   query: { templateId: data.id, context: 'created' },
                 });
               }
@@ -85,9 +85,7 @@ const TemplateCreate = () => {
           onClick={(e) => {
             router.push({
               pathname:
-                router.query.context === 'dashboard'
-                  ? `/export/`
-                  : `/export/templates`,
+                router.query.context === 'dashboard' ? `/` : `/templates`,
             });
             e.preventDefault();
           }}
@@ -173,8 +171,8 @@ const TemplateCreate = () => {
                         router.push({
                           pathname:
                             router.query.context === 'dashboard'
-                              ? `/export/`
-                              : `/export/templates`,
+                              ? `/`
+                              : `/templates`,
                         });
                       }}
                     >

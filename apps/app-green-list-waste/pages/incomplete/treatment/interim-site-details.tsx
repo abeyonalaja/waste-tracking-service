@@ -403,12 +403,12 @@ const InterimSiteDetails = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/incomplete/tasklist`,
+                    pathname: `/incomplete/tasklist`,
                     query: { id },
                   });
                 } else if (form === 'code') {
                   router.push({
-                    pathname: `/export/incomplete/treatment/recovery-facility-details`,
+                    pathname: `/incomplete/treatment/recovery-facility-details`,
                     query: { id },
                   });
                 } else {
@@ -494,7 +494,7 @@ const InterimSiteDetails = () => {
           onClick={() => {
             if (startPage === interimPage.showView) {
               router.push({
-                pathname: `/export/incomplete/treatment/interim-site`,
+                pathname: `/incomplete/treatment/interim-site`,
                 query: { id },
               });
             } else {

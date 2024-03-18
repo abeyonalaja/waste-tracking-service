@@ -164,8 +164,8 @@ const InterimSiteDetails = () => {
         if (hasInterimSite === 'Yes') {
           router.push({
             pathname: returnToDraft
-              ? `/export/templates/tasklist`
-              : `/export/templates/treatment/interim-site-details`,
+              ? `/templates/tasklist`
+              : `/templates/treatment/interim-site-details`,
             query: { templateId },
           });
         } else {
@@ -174,8 +174,8 @@ const InterimSiteDetails = () => {
           } else {
             router.push({
               pathname: returnToDraft
-                ? `/export/templates/tasklist`
-                : `/export/templates/treatment/recovery-facility-details`,
+                ? `/templates/tasklist`
+                : `/templates/treatment/recovery-facility-details`,
               query: { templateId },
             });
           }
@@ -196,8 +196,8 @@ const InterimSiteDetails = () => {
       ).then(() => {
         router.push({
           pathname: returnToDraft
-            ? `/export/templates/tasklist`
-            : `/export/templates/treatment/recovery-facility-details`,
+            ? `/templates/tasklist`
+            : `/templates/treatment/recovery-facility-details`,
           query: { templateId },
         });
       });
@@ -209,7 +209,7 @@ const InterimSiteDetails = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -221,7 +221,7 @@ const InterimSiteDetails = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/templates/tasklist`,
+              pathname: `/templates/tasklist`,
               query: { templateId },
             });
           }}

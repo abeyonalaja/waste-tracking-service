@@ -127,9 +127,7 @@ describe('Validation Process page', () => {
     });
 
     await waitFor(() => {
-      expect(useRouter().push).toHaveBeenCalledWith(
-        '/export/multiples/1234/submit'
-      );
+      expect(useRouter().push).toHaveBeenCalledWith('/multiples/1234/submit');
     });
   });
 
@@ -146,7 +144,7 @@ describe('Validation Process page', () => {
 
     await waitFor(() => {
       expect(useRouter().push).toHaveBeenCalledWith(
-        '/export/multiples/1234/errors?errors=true'
+        '/multiples/1234/errors?errors=true'
       );
     });
   });

@@ -185,7 +185,7 @@ const Description = () => {
             .then((data) => {
               if (data !== undefined) {
                 router.push({
-                  pathname: `/export/templates/tasklist`,
+                  pathname: `/templates/tasklist`,
                   query: { templateId, context: 'updated' },
                 });
               }
@@ -201,7 +201,7 @@ const Description = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -213,7 +213,7 @@ const Description = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/templates/about/national-code`,
+              pathname: `/templates/about/national-code`,
               query: { templateId },
             });
           }}

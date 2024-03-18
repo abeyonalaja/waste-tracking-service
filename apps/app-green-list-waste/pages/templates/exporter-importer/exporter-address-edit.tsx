@@ -143,8 +143,8 @@ const ExporterAddressEdit = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/templates/tasklist`
-                  : `/export/templates/exporter-importer/exporter-details`;
+                  ? `/templates/tasklist`
+                  : `/templates/exporter-importer/exporter-details`;
                 router.push({
                   pathname: path,
                   query: { templateId },

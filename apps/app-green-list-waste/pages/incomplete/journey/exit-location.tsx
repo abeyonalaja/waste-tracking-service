@@ -168,8 +168,8 @@ const ExitLocation = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/journey/transit-countries`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/journey/transit-countries`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -191,7 +191,7 @@ const ExitLocation = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/incomplete/tasklist`,
+              pathname: `/incomplete/tasklist`,
               query: { id },
             });
           }}

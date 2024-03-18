@@ -9,7 +9,7 @@ export function SubmissionConfirmationBreadCrumbs() {
     <BreadcrumbWrap>
       <Breadcrumbs>
         <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-        <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+        <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
       </Breadcrumbs>
     </BreadcrumbWrap>
   );

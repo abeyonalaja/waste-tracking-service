@@ -188,7 +188,7 @@ const TransitCountries = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -222,7 +222,7 @@ const TransitCountries = () => {
               if (data !== undefined) {
                 if (wasteTransitPage.provided === 'No' || returnToDraft) {
                   router.push({
-                    pathname: `/export/templates/tasklist`,
+                    pathname: `/templates/tasklist`,
                     query: { templateId },
                   });
                 } else {
@@ -257,7 +257,7 @@ const TransitCountries = () => {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: null });
         if (additionalProvided === 'No') {
           router.push({
-            pathname: `/export/templates/tasklist`,
+            pathname: `/templates/tasklist`,
             query: { templateId },
           });
         } else {
@@ -418,8 +418,8 @@ const TransitCountries = () => {
             } else {
               router.push({
                 pathname: router.query.dashboard
-                  ? `/export/templates/tasklist`
-                  : `/export/templates/journey/exit-location`,
+                  ? `/templates/tasklist`
+                  : `/templates/journey/exit-location`,
                 query: { templateId },
               });
             }

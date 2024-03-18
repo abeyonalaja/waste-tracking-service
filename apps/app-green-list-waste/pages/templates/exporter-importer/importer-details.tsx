@@ -78,7 +78,7 @@ const ImporterDetails = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -113,8 +113,8 @@ const ImporterDetails = () => {
           .then((data) => {
             if (data !== undefined) {
               const path = returnToDraft
-                ? `/export/templates/tasklist`
-                : `/export/templates/exporter-importer/importer-contact-details`;
+                ? `/templates/tasklist`
+                : `/templates/exporter-importer/importer-contact-details`;
               router.push({
                 pathname: path,
                 query: { templateId },

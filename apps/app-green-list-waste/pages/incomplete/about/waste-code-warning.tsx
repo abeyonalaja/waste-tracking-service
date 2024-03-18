@@ -76,7 +76,7 @@ const WasteCodeWarning = () => {
             id="saveButton"
             onClick={() =>
               router.push({
-                pathname: `/export/incomplete/about/waste-code`,
+                pathname: `/incomplete/about/waste-code`,
                 query: { id },
               })
             }
@@ -86,7 +86,7 @@ const WasteCodeWarning = () => {
           <SaveReturnButton
             onClick={() =>
               router.push({
-                pathname: `/export/incomplete/tasklist`,
+                pathname: `/incomplete/tasklist`,
                 query: { id },
               })
             }

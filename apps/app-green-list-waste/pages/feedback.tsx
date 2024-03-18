@@ -154,7 +154,7 @@ export default function Feedback() {
                 type="success"
                 headingText={t('feedback.success.bannerHeading')}
               >
-                <AppLink colour={'green'} href="/export" target="_self">
+                <AppLink colour={'green'} href="/" target="_self">
                   {t('feedback.returnLink')}
                 </AppLink>
               </NotificationBanner>
@@ -165,7 +165,7 @@ export default function Feedback() {
                 headingText={t('feedback.error.bannerHeading')}
               >
                 <StyledSpan>{t('feedback.error.bannerContent')}</StyledSpan>
-                <AppLink href="/export" target="_self">
+                <AppLink href="/" target="_self">
                   {t('feedback.returnLink')}
                 </AppLink>
               </NotificationBanner>

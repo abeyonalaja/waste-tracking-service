@@ -174,8 +174,8 @@ const Description = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/about/quantity`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/about/quantity`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -197,7 +197,7 @@ const Description = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/export/incomplete/about/national-code`,
+              pathname: `/incomplete/about/national-code`,
               query: { id },
             });
           }}

@@ -32,7 +32,7 @@ export default function Cancel() {
             queryClient.removeQueries({
               queryKey: ['multiples'],
             });
-            router.push(`/export/multiples/`);
+            router.push(`/multiples/`);
           }}
         >
           {t('multiples.cancel.confirmButton')}

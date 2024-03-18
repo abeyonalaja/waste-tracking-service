@@ -497,7 +497,7 @@ const RecoveryFacilityDetails = () => {
 
                 if (returnToDraft) {
                   router.push({
-                    pathname: `/export/templates/tasklist`,
+                    pathname: `/templates/tasklist`,
                     query: { templateId },
                   });
                 } else {
@@ -561,7 +561,7 @@ const RecoveryFacilityDetails = () => {
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalFacility === 'No') {
         router.push({
-          pathname: `/export/templates/tasklist`,
+          pathname: `/templates/tasklist`,
           query: { templateId },
         });
       } else {
@@ -661,7 +661,7 @@ const RecoveryFacilityDetails = () => {
           callBack();
         } else if (confirmRemove === 'No' && returnToDraft) {
           router.push({
-            pathname: `/export/templates/tasklist`,
+            pathname: `/templates/tasklist`,
             query: { templateId },
           });
         } else {
@@ -718,7 +718,7 @@ const RecoveryFacilityDetails = () => {
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
-      pathname: `/export/templates/tasklist`,
+      pathname: `/templates/tasklist`,
       query: { templateId },
     });
   };
@@ -731,7 +731,7 @@ const RecoveryFacilityDetails = () => {
           onClick={() => {
             if (startPage === recoveryPage.showView) {
               router.push({
-                pathname: `/export/templates/treatment/interim-site`,
+                pathname: `/templates/treatment/interim-site`,
                 query: { templateId },
               });
             } else {
@@ -1148,7 +1148,7 @@ const RecoveryFacilityDetails = () => {
                             id="saveButton"
                             onClick={() => {
                               router.push({
-                                pathname: `/export/templates/tasklist`,
+                                pathname: `/templates/tasklist`,
                                 query: { templateId },
                               });
                             }}

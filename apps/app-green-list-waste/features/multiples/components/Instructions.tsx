@@ -59,7 +59,7 @@ export function Instructions() {
       <GovUK.OrderedList>
         <GovUK.ListItem>
           {t('multiples.guidance.listItemOne.start')}{' '}
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             {t('multiples.guidance.listItemOne.link')}
           </AppLink>{' '}
           {t('multiples.guidance.listItemOne.end')}
@@ -84,7 +84,7 @@ export function Instructions() {
 
       <DocumentSection>
         <Thumbnail>
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             <GovUK.VisuallyHidden>
               {t('multiples.guidance.document.html.link')}
             </GovUK.VisuallyHidden>
@@ -104,7 +104,7 @@ export function Instructions() {
           </AppLink>
         </Thumbnail>
         <Details>
-          <AppLink href={'/export/multiples/guidance'} target="_blank">
+          <AppLink href={'/multiples/guidance'} target="_blank">
             {t('multiples.guidance.document.html.link')}
           </AppLink>
           <DetailsParagraph>

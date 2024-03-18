@@ -243,7 +243,7 @@ const ManageTemplates = () => {
               setConfirmRemove(null);
               setShowBanner(true);
               dispatchTemplatePage({ type: 'ERRORS_UPDATE', payload: null });
-              router.replace('/export/templates', undefined, { shallow: true });
+              router.replace('/templates', undefined, { shallow: true });
             });
           } catch (e) {
             console.error(e);
@@ -260,7 +260,7 @@ const ManageTemplates = () => {
         {templatesPage.showView === VIEWS.LIST && (
           <GovUK.Breadcrumbs>
             <BreadCrumbLink href="/">{t('app.parentTitle')}</BreadCrumbLink>
-            <BreadCrumbLink href="/export">{t('app.title')}</BreadCrumbLink>
+            <BreadCrumbLink href="/">{t('app.title')}</BreadCrumbLink>
             {context === 'use'
               ? t('templates.useTemplates.title')
               : t('templates.manage.title')}
@@ -348,7 +348,7 @@ const ManageTemplates = () => {
                       <GovUK.ListItem>
                         <AppLink
                           href={{
-                            pathname: `/export/templates/create`,
+                            pathname: `/templates/create`,
                           }}
                         >
                           {t('templates.createLink')}
@@ -395,7 +395,7 @@ const ManageTemplates = () => {
                                   id={'template-link-tasklist-' + index}
                                   isBold={true}
                                   href={{
-                                    pathname: '/export/templates/tasklist',
+                                    pathname: '/templates/tasklist',
                                     query: {
                                       templateId: item.id,
                                       context: 'manage',
@@ -420,7 +420,7 @@ const ManageTemplates = () => {
                                   <AppLink
                                     id={'template-link-use-' + index}
                                     href={{
-                                      pathname: '/export/templates/use',
+                                      pathname: '/templates/use',
                                       query: {
                                         templateId: item.id,
                                         context:
@@ -437,7 +437,7 @@ const ManageTemplates = () => {
                                       <AppLink
                                         id={'template-link-copy-' + index}
                                         href={{
-                                          pathname: '/export/templates/copy',
+                                          pathname: '/templates/copy',
                                           query: {
                                             templateId: item.id,
                                             context: 'manage',
@@ -461,7 +461,7 @@ const ManageTemplates = () => {
                           ))}
                         </GovUK.Table>
                         <Pagination
-                          url="/export/templates"
+                          url="/templates"
                           pages={templatesPage.data.pages}
                           currentPage={templatesPage.data.currentPage}
                           totalPages={templatesPage.data.totalPages}

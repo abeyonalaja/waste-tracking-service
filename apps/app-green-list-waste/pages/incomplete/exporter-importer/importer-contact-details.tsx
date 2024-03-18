@@ -137,8 +137,8 @@ const ImporterContactDetails = () => {
             .then((data) => {
               if (data !== undefined) {
                 const path = returnToDraft
-                  ? `/export/incomplete/tasklist`
-                  : `/export/incomplete/tasklist`;
+                  ? `/incomplete/tasklist`
+                  : `/incomplete/tasklist`;
                 router.push({
                   pathname: path,
                   query: { id },
