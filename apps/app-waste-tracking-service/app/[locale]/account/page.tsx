@@ -22,14 +22,14 @@ export default function Index() {
             <LinkCard
               title={t('cards.UKWM.title')}
               content={t('cards.UKWM.description')}
-              href="/move-waste"
+              href="../move-waste"
             />
           </GovUK.GridCol>
           <GovUK.GridCol size="one-third">
             <LinkCard
               title={t('cards.GLW.title')}
               content={t('cards.GLW.description')}
-              href="/export-annex-VII-waste"
+              href="../export-annex-VII-waste"
             />
           </GovUK.GridCol>
         </GridRow>
