@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from 'jest-utils';
 import { screen } from '@testing-library/dom';
-import Reference from 'pages/export/incomplete/reference';
+import Reference from 'pages/incomplete/reference';
 
 jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),

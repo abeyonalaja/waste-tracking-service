@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, act, screen } from 'jest-utils';
 import userEvent from '@testing-library/user-event';
-import Cancel from '../../../pages/export/multiples/[id]/submit/cancel';
+import Cancel from '../../../pages/multiples/[id]/submit/cancel';
 import { useRouter } from 'next/router';
 
 global.fetch = jest.fn(

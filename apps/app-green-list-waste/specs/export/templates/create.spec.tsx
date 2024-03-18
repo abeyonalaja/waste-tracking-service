@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from 'jest-utils';
-import TemplateCreate from 'pages/export/templates/create';
+import TemplateCreate from 'pages/templates/create';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

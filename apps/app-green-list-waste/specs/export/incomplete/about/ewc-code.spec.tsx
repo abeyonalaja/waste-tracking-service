@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import EwcCodes from 'pages/export/incomplete/about/ewc-code';
+import EwcCodes from 'pages/incomplete/about/ewc-code';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

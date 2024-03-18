@@ -28,7 +28,7 @@ import styled from 'styled-components';
 
 import { validateConfirmRemoveDocument, isNotEmpty } from 'utils/validators';
 import { formatDate } from 'utils/formatDate';
-import useRefDataLookup from '../../../utils/useRefDataLookup';
+import useRefDataLookup from '../../utils/useRefDataLookup';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {

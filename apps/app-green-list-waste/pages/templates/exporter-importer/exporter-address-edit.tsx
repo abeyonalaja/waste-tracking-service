@@ -24,7 +24,7 @@ import {
   validateAddress,
 } from 'utils/validators';
 
-import { countriesData } from '../../../../utils/countriesData';
+import { countriesData } from '../../../utils/countriesData';
 import useApiConfig from 'utils/useApiConfig';
 
 const AddressInput = styled(GovUK.InputField)`

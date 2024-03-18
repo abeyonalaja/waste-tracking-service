@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import NationalCode from 'pages/export/incomplete/about/national-code';
+import NationalCode from 'pages/incomplete/about/national-code';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

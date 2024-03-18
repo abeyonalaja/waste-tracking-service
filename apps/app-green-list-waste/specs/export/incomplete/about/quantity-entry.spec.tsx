@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import QuantityEntry from 'pages/export/incomplete/about/quantity-entry';
+import QuantityEntry from 'pages/incomplete/about/quantity-entry';
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
     isReady: true,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act, screen, fireEvent } from 'jest-utils';
-import RecoveryFacility from 'pages/export/incomplete/treatment/recovery-facility-details';
+import RecoveryFacility from 'pages/incomplete/treatment/recovery-facility-details';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, act, waitFor } from 'jest-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
-import Feedback from 'pages/export/feedback';
+import Feedback from 'pages/feedback';
 
 jest.mock('next-auth/jwt', () => ({
   getToken: jest.fn(() => Promise.resolve({ id_token: 'dummytoken' })),

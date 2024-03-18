@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import ImporterDetails from 'pages/export/incomplete/exporter-importer/importer-details';
+import ImporterDetails from 'pages/incomplete/exporter-importer/importer-details';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

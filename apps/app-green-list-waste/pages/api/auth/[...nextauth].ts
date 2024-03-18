@@ -19,7 +19,7 @@ export interface DCIDSession extends Session {
 }
 
 const baseUrl =
-  process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
+  process.env['NODE_ENV'] !== 'development' ? '/export-annex-VII-waste' : '';
 
 const refreshAccessToken = async (token) => {
   let tokenEndpoint;

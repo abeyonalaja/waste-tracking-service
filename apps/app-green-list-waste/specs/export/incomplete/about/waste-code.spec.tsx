@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from 'jest-utils';
-import WasteCode from 'pages/export/incomplete/about/waste-code';
+import WasteCode from 'pages/incomplete/about/waste-code';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

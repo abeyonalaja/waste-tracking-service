@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, act } from 'jest-utils';
-import TemplateTasklist from 'pages/export/templates/tasklist';
+import TemplateTasklist from 'pages/templates/tasklist';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import TransitCountries from 'pages/export/incomplete/journey/transit-countries';
+import TransitCountries from 'pages/incomplete/journey/transit-countries';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

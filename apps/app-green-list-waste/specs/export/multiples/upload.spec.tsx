@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, act } from 'jest-utils';
 import { waitFor } from '@testing-library/react';
 import * as ReactQuery from '@tanstack/react-query';
-import Index from '../../../pages/export/multiples/[id]/submit/submitted';
+import Index from '../../../pages/multiples/[id]/submit/submitted';
 import { useRouter } from 'next/router';
 
 global.fetch = jest.fn(

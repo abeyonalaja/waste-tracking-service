@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act, screen, fireEvent } from 'jest-utils';
-import WasteCarriers from 'pages/export/incomplete/journey/waste-carriers';
+import WasteCarriers from 'pages/incomplete/journey/waste-carriers';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

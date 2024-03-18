@@ -18,7 +18,7 @@ import styled from 'styled-components';
 import { format } from 'date-fns';
 import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
 
-import useRefDataLookup from '../../../utils/useRefDataLookup';
+import useRefDataLookup from '../../utils/useRefDataLookup';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {

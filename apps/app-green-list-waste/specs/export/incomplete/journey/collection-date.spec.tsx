@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import CollectionDate from 'pages/export/incomplete/journey/collection-date';
+import CollectionDate from 'pages/incomplete/journey/collection-date';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, act } from 'jest-utils';
-import ExitLocation from 'pages/export/incomplete/journey/exit-location';
+import ExitLocation from 'pages/incomplete/journey/exit-location';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(() => ({
