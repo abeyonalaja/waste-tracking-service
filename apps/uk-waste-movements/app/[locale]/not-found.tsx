@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import { useTranslation } from '../utils/useTranslation';
+import { Link } from '../components/';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import React from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function NotFound() {
-  const { t } = useTranslation('404');
+  const t = useTranslations('404');
+
   return (
     <>
       <GovUK.Heading size="l">{t('title')}</GovUK.Heading>
