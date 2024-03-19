@@ -2,6 +2,8 @@ import {
   ListCountriesResponse,
   ListDisposalCodesResponse,
   ListEWCCodesResponse,
+  ListHazardousCodesResponse,
+  ListPopsResponse,
   ListRecoveryCodesResponse,
   ListWasteCodesResponse,
 } from '@wts/api/waste-tracking-gateway';
@@ -34,4 +36,16 @@ export async function listDisposalCodes(
 ): Promise<ListDisposalCodesResponse> {
   const disposalCodes: ListDisposalCodesResponse = db.disposalCodes;
   return disposalCodes;
+}
+
+export async function listHazardousCodes(
+  db: DB
+): Promise<ListHazardousCodesResponse> {
+  const hazardousCodes: ListHazardousCodesResponse = db.hazarodusCodes;
+  return hazardousCodes;
+}
+
+export async function listPops(db: DB): Promise<ListPopsResponse> {
+  const pops: ListPopsResponse = db.pops;
+  return pops;
 }

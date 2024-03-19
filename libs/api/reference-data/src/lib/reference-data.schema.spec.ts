@@ -3,6 +3,8 @@ import {
   GetCountriesResponse,
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
+  GetHazardousCodesResponse,
+  GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
 } from './reference-data.dto';
@@ -10,6 +12,8 @@ import {
   getCountriesResponse,
   getDisposalCodesResponse,
   getEWCCodesResponse,
+  getHazardousCodesResponse,
+  getPopsResponse,
   getRecoveryCodesResponse,
   getWasteCodesResponse,
 } from './reference-data.schema';
@@ -171,6 +175,73 @@ describe('Reference-Data tests', () => {
                 en: 'Metal and metal-alloy wastes in metallic, non-dispersible form',
                 cy: 'The same but in Welsh',
               },
+            },
+          },
+        ],
+      };
+
+      expect(validate(value)).toBe(true);
+    });
+
+    it('is compatible with error value', () => {
+      validate({
+        success: false,
+        error: {
+          statusCode: 400,
+          name: 'BadRequest',
+          message: 'Bad request',
+        },
+      });
+    });
+  });
+
+  describe('GetHazardousCodesResponse', () => {
+    const validate = ajv.compile<GetHazardousCodesResponse>(
+      getHazardousCodesResponse
+    );
+
+    it('getHazardousCodes is compatible with success value', () => {
+      const value: GetHazardousCodesResponse = {
+        success: true,
+        value: [
+          {
+            code: 'HP1',
+            value: {
+              description: {
+                en: 'Explosive',
+                cy: 'Ffrwydron',
+              },
+            },
+          },
+        ],
+      };
+
+      expect(validate(value)).toBe(true);
+    });
+
+    it('is compatible with error value', () => {
+      validate({
+        success: false,
+        error: {
+          statusCode: 400,
+          name: 'BadRequest',
+          message: 'Bad request',
+        },
+      });
+    });
+  });
+
+  describe('GetPopsResponse', () => {
+    const validate = ajv.compile<GetPopsResponse>(getPopsResponse);
+
+    it('getPops is compatible with success value', () => {
+      const value: GetPopsResponse = {
+        success: true,
+        value: [
+          {
+            name: {
+              en: 'Pentabromodiphenyl ether',
+              cy: 'Ether Pentabromodiphenyl',
             },
           },
         ],

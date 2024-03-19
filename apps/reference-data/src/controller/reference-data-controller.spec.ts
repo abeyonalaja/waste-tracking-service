@@ -146,6 +146,51 @@ describe(ReferenceDataController, () => {
 
       expect(response.value[0].code).toEqual('D1');
     });
+
+    it('listHazardousCodes', async () => {
+      const value = [
+        {
+          code: 'HP1',
+          value: {
+            description: {
+              en: 'English Description',
+              cy: 'Welsh Description',
+            },
+          },
+        },
+      ];
+
+      mockRepository.getList.mockResolvedValueOnce(value);
+
+      const response = await subject.getHazardousCodes(null);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value[0].code).toEqual('HP1');
+    });
+
+    it('listPops', async () => {
+      const value = [
+        {
+          name: {
+            en: 'Endosulfan',
+            cy: 'Endosulfan',
+          },
+        },
+      ];
+
+      mockRepository.getList.mockResolvedValueOnce(value);
+
+      const response = await subject.getPops(null);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value[0].name.en).toEqual('Endosulfan');
+    });
   });
 
   describe('Create Codes', () => {
@@ -257,6 +302,47 @@ describe(ReferenceDataController, () => {
       }
 
       expect(mockRepository.saveList).toBeCalledWith('disposal-codes', value);
+    });
+
+    it('createHazardousCodes', async () => {
+      const value = [
+        {
+          code: 'HP1',
+          value: {
+            description: {
+              en: 'English Description',
+              cy: 'Welsh Description',
+            },
+          },
+        },
+      ];
+
+      const response = await subject.createHazardousCodes(value);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.saveList).toBeCalledWith('hazardous-codes', value);
+    });
+
+    it('createPops', async () => {
+      const value = [
+        {
+          name: {
+            en: 'Endosulfan',
+            cy: 'Endosulfan',
+          },
+        },
+      ];
+
+      const response = await subject.createPops(value);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.saveList).toBeCalledWith('pops', value);
     });
   });
 });

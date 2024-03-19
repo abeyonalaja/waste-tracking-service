@@ -17,6 +17,8 @@ const mockBackend = {
   listCountries: jest.fn<() => Promise<api.ListCountriesResponse>>(),
   listRecoveryCodes: jest.fn<() => Promise<api.ListRecoveryCodesResponse>>(),
   listDisposalCodes: jest.fn<() => Promise<api.ListDisposalCodesResponse>>(),
+  listHazardousCodes: jest.fn<() => Promise<api.ListHazardousCodesResponse>>(),
+  listPops: jest.fn<() => Promise<api.ListPopsResponse>>(),
 };
 
 const app = server({

@@ -4,11 +4,15 @@ export {
   getCountries,
   getRecoveryCodes,
   getDisposalCodes,
+  getHazardousCodes,
+  getPops,
   createWasteCodes,
   createEWCCodes,
   createCountries,
   createRecoveryCodes,
   createDisposalCodes,
+  createHazardousCodes,
+  createPops,
 } from './reference-data.dto';
 
 export type {
@@ -16,11 +20,14 @@ export type {
   WasteCodeType,
   Country,
   RecoveryCode,
+  Pop,
   GetWasteCodesResponse,
   GetEWCCodesResponse,
   GetCountriesResponse,
   GetRecoveryCodesResponse,
   GetDisposalCodesResponse,
+  GetHazardousCodesResponse,
+  GetPopsResponse,
   CreateWasteCodesRequest,
   CreateWasteCodesResponse,
   CreateEWCCodesRequest,
@@ -31,6 +38,10 @@ export type {
   CreateRecoveryCodesResponse,
   CreateDisposalCodesRequest,
   CreateDisposalCodesResponse,
+  CreateHazardousCodesRequest,
+  CreateHazardousCodesResponse,
+  CreatePopsRequest,
+  CreatePopsResponse,
 } from './reference-data.dto';
 
 export * as referenceDataSchema from './reference-data.schema';

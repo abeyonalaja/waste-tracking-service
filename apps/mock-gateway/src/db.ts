@@ -8,6 +8,8 @@ import {
   ListRecoveryCodesResponse,
   ListDisposalCodesResponse,
   BulkSubmission,
+  ListHazardousCodesResponse,
+  ListPopsResponse,
 } from '@wts/api/waste-tracking-gateway';
 
 export type SubmissionWithAccount = Submission & { accountId: string };
@@ -23,6 +25,8 @@ export interface DB {
   countries: ListCountriesResponse;
   recoveryCodes: ListRecoveryCodesResponse;
   disposalCodes: ListDisposalCodesResponse;
+  hazarodusCodes: ListHazardousCodesResponse;
+  pops: ListPopsResponse;
   batches: BulkWithAccount[];
 }
 
@@ -788,6 +792,316 @@ export const db: DB = {
           en: 'Storage pending any of the operations numbered D01 to D14 (excluding temporary storage, pending collection, on the site where it is produced)',
           cy: "Storio hyd nes y bydd unrhyw un o'r gweithrediadau wedi'u rhifo D01 i D14 (ac eithrio storio dros dro, hyd nes y bydd casgliad, ar y safle lle mae'n cael ei gynhyrchu)",
         },
+      },
+    },
+  ],
+  hazarodusCodes: [
+    {
+      code: 'HP1',
+      value: {
+        description: {
+          en: 'Explosive',
+          cy: 'Ffrwydron',
+        },
+      },
+    },
+    {
+      code: 'HP2',
+      value: {
+        description: {
+          en: 'Oxidising',
+          cy: 'Ocsideiddio',
+        },
+      },
+    },
+    {
+      code: 'HP3',
+      value: {
+        description: {
+          en: 'Flammable',
+          cy: 'Fflamadwy',
+        },
+      },
+    },
+    {
+      code: 'HP4',
+      value: {
+        description: {
+          en: 'Irritant',
+          cy: 'Llidiog',
+        },
+      },
+    },
+    {
+      code: 'HP5',
+      value: {
+        description: {
+          en: 'Harmful',
+          cy: 'Niweidiol',
+        },
+      },
+    },
+    {
+      code: 'HP6',
+      value: {
+        description: {
+          en: 'Toxic',
+          cy: 'Gwenwynig',
+        },
+      },
+    },
+    {
+      code: 'HP7',
+      value: {
+        description: {
+          en: 'Carcinogenic',
+          cy: 'Carsinogenig',
+        },
+      },
+    },
+    {
+      code: 'HP8',
+      value: {
+        description: {
+          en: 'Corrosive',
+          cy: 'Cyrydol',
+        },
+      },
+    },
+    {
+      code: 'HP9',
+      value: {
+        description: {
+          en: 'Infectious',
+          cy: 'Heintus',
+        },
+      },
+    },
+    {
+      code: 'HP10',
+      value: {
+        description: {
+          en: 'Toxic for reproduction',
+          cy: 'Gwenwynig ar gyfer atgenhedlu',
+        },
+      },
+    },
+    {
+      code: 'HP11',
+      value: {
+        description: {
+          en: 'Mutagenic',
+          cy: 'Mutagening',
+        },
+      },
+    },
+    {
+      code: 'HP12',
+      value: {
+        description: {
+          en: 'Release of an acute toxic gas',
+          cy: 'Rhyddhau nwy gwenwynig acíwt',
+        },
+      },
+    },
+    {
+      code: 'HP13',
+      value: {
+        description: {
+          en: 'Sensitizing',
+          cy: 'Sensiteiddio',
+        },
+      },
+    },
+    {
+      code: 'HP14',
+      value: {
+        description: {
+          en: 'Ecotoxic',
+          cy: 'Ecowenwynig',
+        },
+      },
+    },
+    {
+      code: 'HP15',
+      value: {
+        description: {
+          en: 'Waste capable of exerting a hazardous property listed above not directly displayed by the original waste',
+          cy: "Gwastraff sy'n gallu cyflawni eiddo peryglus a restrir uchod nad yw'n cael ei arddangos yn uniongyrchol gan gwastraff gwreiddiol",
+        },
+      },
+    },
+    {
+      code: 'HP16',
+      value: {
+        description: {
+          en: 'No, none of these hazardous properties apply to the waste',
+          cy: "Na, nid yw'r un o'r nodweddion peryglus hyn yn berthnasol i'r gwastraff",
+        },
+      },
+    },
+  ],
+  pops: [
+    {
+      name: {
+        en: 'Endosulfan',
+        cy: 'Endosulfan',
+      },
+    },
+    {
+      name: {
+        en: 'Tetrabromodiphenyl ether',
+        cy: 'Ether tetrabromodiphenyl',
+      },
+    },
+    {
+      name: {
+        en: 'Pentabromodiphenyl ether',
+        cy: 'Ether Pentabromodiphenyl',
+      },
+    },
+    {
+      name: {
+        en: 'Hexabromodiphenyl ether',
+        cy: 'Ether hexabromodiphenyl',
+      },
+    },
+    {
+      name: {
+        en: 'Heptabromodiphenyl ether',
+        cy: 'Heptabromodiphenyl ether',
+      },
+    },
+    {
+      name: {
+        en: 'Bis(pentabromophenyl) ether (decabromodiphenyl ether, decaBDE)',
+        cy: 'Bis (pentabromophenyl) ether (decabromodiphenyl ether, decaBDE)',
+      },
+    },
+    {
+      name: {
+        en: 'Perfluorooctane sulfonic acid (PFOS) and PFOS derivatives',
+        cy: 'Asid sylffonig perfflworooctan (PFOS) a deilliadau PFOS',
+      },
+    },
+    {
+      name: {
+        en: 'DDT',
+        cy: 'DDT',
+      },
+    },
+    {
+      name: {
+        en: 'Chlordane',
+        cy: 'Clordan',
+      },
+    },
+    {
+      name: {
+        en: 'Hexachlorocyclohexanes, including lindane',
+        cy: 'Hexachlorocyclohexanes, gan gynnwys lindan',
+      },
+    },
+    {
+      name: {
+        en: 'Dieldrin',
+        cy: 'Dieldrin',
+      },
+    },
+    {
+      name: {
+        en: 'Endrin',
+        cy: 'Endrin',
+      },
+    },
+    {
+      name: {
+        en: 'Heptachlor',
+        cy: 'Heptachlor',
+      },
+    },
+    {
+      name: {
+        en: 'Hexachlorobenzene (HCB)',
+        cy: 'Hecsachlorobensen (HCB)',
+      },
+    },
+    {
+      name: {
+        en: 'Chlordecone',
+        cy: 'Clordecone',
+      },
+    },
+    {
+      name: {
+        en: 'Aldrin',
+        cy: 'Aldrin',
+      },
+    },
+    {
+      name: {
+        en: 'Pentachlorobenzene',
+        cy: 'Pentachlorobenzene',
+      },
+    },
+    {
+      name: {
+        en: 'Polychlorinated biphenyls (PCBs)',
+        cy: 'Deuffenylau polyclorinedig (PCBs)',
+      },
+    },
+    {
+      name: {
+        en: 'Mirex',
+        cy: 'Mirex',
+      },
+    },
+    {
+      name: {
+        en: 'Toxaphene',
+        cy: 'Toxaphene',
+      },
+    },
+    {
+      name: {
+        en: 'Hexabromobiphenyl',
+        cy: 'Hexabromobiphenyl',
+      },
+    },
+    {
+      name: {
+        en: 'Hexabromocyclododecane (HBCD)',
+        cy: 'Hexabromocyclododecane (HBCD)',
+      },
+    },
+    {
+      name: {
+        en: 'Hexachlorobutadiene',
+        cy: 'Hecsachlorobiwtadïen',
+      },
+    },
+    {
+      name: {
+        en: 'Pentachlorophenol and its salts and esters',
+        cy: "Pentachlorophenol a'i halwynau a'i esterau",
+      },
+    },
+    {
+      name: {
+        en: 'Polychlorinated naphthalenes',
+        cy: 'Naphthalenes polyclorinedig',
+      },
+    },
+    {
+      name: {
+        en: 'Alkanes C10-C13, chloro (short-chain chlorinated paraffins) (SCCPs)',
+        cy: 'Alcanau C10-C13, cloro (paraffinau clorinedig cadwyn fer) (SCCPs)',
+      },
+    },
+    {
+      name: {
+        en: 'Perfluorooctanoic acid (PFOA), its salts and PFOA-related compounds',
+        cy: "Asid perfflworooctanoic (PFOA), ei halwynau a chyfansoddion sy'n gysylltiedig â PFOA",
       },
     },
   ],

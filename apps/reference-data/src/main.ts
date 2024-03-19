@@ -70,7 +70,6 @@ await server.invoker.listen(
   },
   { method: HttpMethod.POST }
 );
-
 await server.invoker.listen(
   api.getCountries.name,
   async () => {
@@ -91,6 +90,22 @@ await server.invoker.listen(
   api.getDisposalCodes.name,
   async () => {
     return await referenceDataController.getDisposalCodes(null);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getHazardousCodes.name,
+  async () => {
+    return await referenceDataController.getHazardousCodes(null);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getPops.name,
+  async () => {
+    return await referenceDataController.getPops(null);
   },
   { method: HttpMethod.POST }
 );
@@ -176,6 +191,40 @@ await server.invoker.listen(
     }
 
     return await referenceDataController.createDisposalCodes(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createHazardousCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateHazardousCodesRequest;
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await referenceDataController.createHazardousCodes(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createPops.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreatePopsRequest;
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await referenceDataController.createPops(request);
   },
   { method: HttpMethod.POST }
 );

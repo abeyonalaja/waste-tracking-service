@@ -6,6 +6,8 @@ import {
   listEWCCodes,
   listRecoveryCodes,
   listWasteCodes,
+  listHazardousCodes,
+  listPops,
 } from './reference-data.backend';
 import { InternalServerError } from '../../libs/errors';
 
@@ -64,6 +66,28 @@ export default class ReferenceDataPlugin {
     this.server.get(`${this.prefix}/disposal-codes`, async (req, res) => {
       try {
         res.jsonp(await listDisposalCodes(this.db));
+      } catch (error) {
+        console.log('Unknown error', { error: error });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError(`An internal server error occurred`));
+      }
+    });
+
+    this.server.get(`${this.prefix}/hazardous-codes`, async (req, res) => {
+      try {
+        res.jsonp(await listHazardousCodes(this.db));
+      } catch (error) {
+        console.log('Unknown error', { error: error });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError(`An internal server error occurred`));
+      }
+    });
+
+    this.server.get(`${this.prefix}/pops`, async (req, res) => {
+      try {
+        res.jsonp(await listPops(this.db));
       } catch (error) {
         console.log('Unknown error', { error: error });
         return res

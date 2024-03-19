@@ -91,6 +91,38 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'GET',
+      path: '/hazardous-codes',
+      handler: async function () {
+        try {
+          return await backend.listHazardousCodes();
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            return error;
+          }
+          logger.error('Unknown error', { error: error });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/pops',
+      handler: async function () {
+        try {
+          return await backend.listPops();
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            return error;
+          }
+          logger.error('Unknown error', { error: error });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

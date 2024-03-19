@@ -4,6 +4,8 @@ import {
   GetCountriesResponse,
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
+  GetHazardousCodesResponse,
+  GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
 } from '@wts/api/reference-data';
@@ -17,6 +19,8 @@ export interface ReferenceDataBackend {
   listCountries(): Promise<api.ListCountriesResponse>;
   listRecoveryCodes(): Promise<api.ListRecoveryCodesResponse>;
   listDisposalCodes(): Promise<api.ListDisposalCodesResponse>;
+  listHazardousCodes(): Promise<api.ListHazardousCodesResponse>;
+  listPops(): Promise<api.ListPopsResponse>;
 }
 
 /**
@@ -758,6 +762,56 @@ export class ReferenceDataStub implements ReferenceDataBackend {
     },
   ];
 
+  hazarodusCodes: api.WasteCode[] = [
+    {
+      code: 'HP1',
+      value: {
+        description: {
+          en: 'Explosive',
+          cy: 'Ffrwydron',
+        },
+      },
+    },
+    {
+      code: 'HP2',
+      value: {
+        description: {
+          en: 'Oxidising',
+          cy: 'Ocsideiddio',
+        },
+      },
+    },
+    {
+      code: 'HP3',
+      value: {
+        description: {
+          en: 'Flammable',
+          cy: 'Fflamadwy',
+        },
+      },
+    },
+  ];
+  pops: api.Pop[] = [
+    {
+      name: {
+        en: 'Endosulfan',
+        cy: 'Endosulfan',
+      },
+    },
+    {
+      name: {
+        en: 'Tetrabromodiphenyl ether',
+        cy: 'Ether tetrabromodiphenyl',
+      },
+    },
+    {
+      name: {
+        en: 'Pentabromodiphenyl ether',
+        cy: 'Ether Pentabromodiphenyl',
+      },
+    },
+  ];
+
   async listWasteCodes(): Promise<api.ListWasteCodesResponse> {
     return this.wasteCodes;
   }
@@ -776,6 +830,12 @@ export class ReferenceDataStub implements ReferenceDataBackend {
 
   async listDisposalCodes(): Promise<api.ListDisposalCodesResponse> {
     return this.disposalCodes;
+  }
+  async listHazardousCodes(): Promise<api.ListHazardousCodesResponse> {
+    return this.hazarodusCodes;
+  }
+  async listPops(): Promise<api.ListPopsResponse> {
+    return this.pops;
   }
 }
 
@@ -857,6 +917,40 @@ export class ReferenceDataServiceBackend implements ReferenceDataBackend {
     let response: GetDisposalCodesResponse;
     try {
       response = await this.client.getDisposalCodes();
+    } catch (error) {
+      this.logger.error(error);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+    return response.value;
+  }
+
+  async listHazardousCodes(): Promise<api.ListHazardousCodesResponse> {
+    let response: GetHazardousCodesResponse;
+    try {
+      response = await this.client.getHazardousCodes();
+    } catch (error) {
+      this.logger.error(error);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+    return response.value;
+  }
+
+  async listPops(): Promise<api.ListPopsResponse> {
+    let response: GetPopsResponse;
+    try {
+      response = await this.client.getPops();
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();

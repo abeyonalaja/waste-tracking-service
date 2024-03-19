@@ -25,6 +25,16 @@ import {
   CreateRecoveryCodesResponse,
   createDisposalCodes,
   createRecoveryCodes,
+  GetHazardousCodesResponse,
+  getHazardousCodes,
+  GetPopsResponse,
+  getPops,
+  CreateHazardousCodesRequest,
+  CreateHazardousCodesResponse,
+  createHazardousCodes,
+  CreatePopsRequest,
+  CreatePopsResponse,
+  createPops,
 } from '@wts/api/reference-data';
 
 export class DaprReferenceDataClient {
@@ -71,6 +81,22 @@ export class DaprReferenceDataClient {
       getDisposalCodes.name,
       HttpMethod.POST
     )) as GetDisposalCodesResponse;
+  }
+
+  async getHazardousCodes(): Promise<GetHazardousCodesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      getHazardousCodes.name,
+      HttpMethod.POST
+    )) as GetDisposalCodesResponse;
+  }
+
+  async getPops(): Promise<GetPopsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      getPops.name,
+      HttpMethod.POST
+    )) as GetPopsResponse;
   }
 
   async createWasteCodes(
@@ -126,5 +152,25 @@ export class DaprReferenceDataClient {
       HttpMethod.POST,
       req
     )) as CreateDisposalCodesResponse;
+  }
+
+  async createHazardouslCodes(
+    req: CreateHazardousCodesRequest
+  ): Promise<CreateHazardousCodesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      createHazardousCodes.name,
+      HttpMethod.POST,
+      req
+    )) as CreateHazardousCodesResponse;
+  }
+
+  async createPops(req: CreatePopsRequest): Promise<CreatePopsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      createPops.name,
+      HttpMethod.POST,
+      req
+    )) as CreatePopsResponse;
   }
 }

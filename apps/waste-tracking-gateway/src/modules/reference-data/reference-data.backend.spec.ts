@@ -36,4 +36,16 @@ describe(ReferenceDataStub, () => {
     expect(disposalCodes[0]).toHaveProperty('code', 'D1');
     expect(disposalCodes[1]).toHaveProperty('code', 'D2');
   });
+
+  it('returns a list of Hazardous codes', async () => {
+    const hazardousCodes = await subject.listHazardousCodes();
+    expect(hazardousCodes[0]).toHaveProperty('code', 'HP1');
+    expect(hazardousCodes[1]).toHaveProperty('code', 'HP2');
+  });
+
+  it('returns a list of pops', async () => {
+    const pops = await subject.listPops();
+    expect(pops[0]).toHaveProperty('name.en', 'Endosulfan');
+    expect(pops[1]).toHaveProperty('name.en', 'Tetrabromodiphenyl ether');
+  });
 });

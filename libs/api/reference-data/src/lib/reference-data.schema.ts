@@ -145,3 +145,54 @@ export const getDisposalCodesResponse: SchemaObject = {
     },
   },
 };
+
+export const getHazardousCodesResponse: SchemaObject = {
+  properties: {
+    success: {
+      type: 'boolean',
+    },
+  },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      elements: {
+        properties: {
+          code: { type: 'string' },
+          value: {
+            properties: {
+              description: {
+                properties: {
+                  en: { type: 'string' },
+                  cy: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const getPopsResponse: SchemaObject = {
+  properties: {
+    success: {
+      type: 'boolean',
+    },
+  },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      elements: {
+        properties: {
+          name: {
+            properties: {
+              en: { type: 'string' },
+              cy: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};

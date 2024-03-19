@@ -7,7 +7,7 @@ import ReferenceDataDraftRepository, {
   CacheItem,
 } from './cosmos-reference-data';
 import { LRUCache } from 'lru-cache';
-import { Country, RecoveryCode, WasteCode, WasteCodeType } from '../model';
+import { Country, Pop, RecoveryCode, WasteCode, WasteCodeType } from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -283,6 +283,88 @@ describe(ReferenceDataDraftRepository, () => {
               en: 'English Description',
               cy: 'Welsh Description',
             },
+          },
+        },
+      ]);
+      expect(mockRead).toBeCalledTimes(1);
+    });
+
+    it('retrieves list of hazardous codes', async () => {
+      const id = 'hazardous-codes';
+      const mockResponse = {
+        id,
+        value: {
+          type: id,
+          values: [
+            {
+              code: 'HP1',
+              value: {
+                description: {
+                  en: 'English Description',
+                  cy: 'Welsh Description',
+                },
+              },
+            },
+          ],
+        },
+        partitionKey: id,
+        _rid: faker.datatype.string(),
+        _self: faker.datatype.string(),
+        _etag: faker.datatype.string(),
+        _attachments: faker.datatype.string(),
+        _ts: faker.datatype.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
+
+      const result = await subject.getList<WasteCode>(id);
+      expect(result).toEqual([
+        {
+          code: 'HP1',
+          value: {
+            description: {
+              en: 'English Description',
+              cy: 'Welsh Description',
+            },
+          },
+        },
+      ]);
+      expect(mockRead).toBeCalledTimes(1);
+    });
+
+    it('retrieves list of pops', async () => {
+      const id = 'pops';
+      const mockResponse = {
+        id,
+        value: {
+          type: id,
+          values: [
+            {
+              name: {
+                en: 'Endosulfan',
+                cy: 'Endosulfan',
+              },
+            },
+          ],
+        },
+        partitionKey: id,
+        _rid: faker.datatype.string(),
+        _self: faker.datatype.string(),
+        _etag: faker.datatype.string(),
+        _attachments: faker.datatype.string(),
+        _ts: faker.datatype.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
+
+      const result = await subject.getList<Pop>(id);
+      expect(result).toEqual([
+        {
+          name: {
+            en: 'Endosulfan',
+            cy: 'Endosulfan',
           },
         },
       ]);

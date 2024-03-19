@@ -4,3 +4,4 @@ export type WasteCode = api.WasteCode;
 export type WasteCodeType = api.WasteCodeType;
 export type Country = api.Country;
 export type RecoveryCode = api.RecoveryCode;
+export type Pop = api.Pop;

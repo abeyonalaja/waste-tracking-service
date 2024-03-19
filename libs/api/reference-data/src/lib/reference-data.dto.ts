@@ -27,11 +27,17 @@ export type RecoveryCode = {
   };
 };
 
+export type Pop = {
+  name: LanguageDescription;
+};
+
 export type GetWasteCodesResponse = Response<WasteCodeType[]>;
 export type GetEWCCodesResponse = Response<WasteCode[]>;
 export type GetCountriesResponse = Response<Country[]>;
 export type GetRecoveryCodesResponse = Response<RecoveryCode[]>;
 export type GetDisposalCodesResponse = Response<WasteCode[]>;
+export type GetHazardousCodesResponse = Response<WasteCode[]>;
+export type GetPopsResponse = Response<Pop[]>;
 
 export type CreateWasteCodesRequest = WasteCodeType[];
 export type CreateWasteCodesResponse = Response<WasteCodeType[]>;
@@ -43,6 +49,10 @@ export type CreateRecoveryCodesRequest = RecoveryCode[];
 export type CreateRecoveryCodesResponse = Response<RecoveryCode[]>;
 export type CreateDisposalCodesRequest = WasteCode[];
 export type CreateDisposalCodesResponse = Response<WasteCode[]>;
+export type CreateHazardousCodesRequest = WasteCode[];
+export type CreateHazardousCodesResponse = Response<WasteCode[]>;
+export type CreatePopsRequest = Pop[];
+export type CreatePopsResponse = Response<Pop[]>;
 
 export const getWasteCodes: Method = {
   name: 'getWasteCodes',
@@ -69,6 +79,16 @@ export const getDisposalCodes: Method = {
   httpVerb: 'GET',
 };
 
+export const getHazardousCodes: Method = {
+  name: 'getHazardousCodes',
+  httpVerb: 'GET',
+};
+
+export const getPops: Method = {
+  name: 'getPops',
+  httpVerb: 'GET',
+};
+
 export const createWasteCodes: Method = {
   name: 'createWasteCodes',
   httpVerb: 'GET',
@@ -91,5 +111,15 @@ export const createRecoveryCodes: Method = {
 
 export const createDisposalCodes: Method = {
   name: 'createDisposalCodes',
+  httpVerb: 'GET',
+};
+
+export const createHazardousCodes: Method = {
+  name: 'createHazardousCodes',
+  httpVerb: 'GET',
+};
+
+export const createPops: Method = {
+  name: 'createPops',
   httpVerb: 'GET',
 };
