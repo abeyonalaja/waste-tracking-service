@@ -213,6 +213,7 @@ const UpdateAnnex7 = () => {
     setType(null); // reset the type, so the radio button is unchecked if user tries to cancel another record
     e.preventDefault();
   };
+
   const handleConfirmSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const newErrors = {
@@ -245,6 +246,7 @@ const UpdateAnnex7 = () => {
         ).then(() => {
           const newData = updateAnnex7Page.data;
           newData.values = newData.values.filter((wc) => wc.id !== item.id);
+          setShowNotification(true);
           dispatchUpdateAnnex7Page({
             type: 'DATA_FETCH_SUCCESS',
             payload: newData,
@@ -253,16 +255,11 @@ const UpdateAnnex7 = () => {
             type: 'SHOW_VIEW',
             payload: VIEWS.LIST,
           });
-          handleDeleteClick();
         });
       } catch (e) {
         console.error(e);
       }
     }
-  };
-
-  const handleDeleteClick = () => {
-    setShowNotification(!showNotification);
   };
 
   const BreadCrumbs = () => {
