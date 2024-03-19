@@ -21,7 +21,7 @@ import {
   validateFullName,
   validateEmail,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
 } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -106,7 +106,7 @@ const ImporterContactDetails = () => {
         fullName: validateFullName(fullName),
         email: validateEmail(email),
         phone: validateInternationalPhone(phone),
-        fax: validateFax(fax),
+        fax: validateInternationalFax(fax),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);

@@ -1,7 +1,6 @@
 import { isPast, isValid } from 'date-fns';
 import aOrAn from './aOrAn';
 import i18next from 'i18next';
-
 const t = i18next.t;
 
 export function isNotEmpty(obj) {
@@ -134,7 +133,7 @@ export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
   }
   if (phone?.length === 0) return t('validation.phone.empty');
   const regex = new RegExp(
-    '^(?:(?:\\+44\\s*\\d{10})|(?:\\(?0\\d{4}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3}))$'
+    '^((\\+44|00)[0-9 ()-]{8,14}[0-9]|[0][0-9 ()-]{9,13}[0-9])$'
   );
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
@@ -148,9 +147,10 @@ export const validateFax: (fax?: string, allowNull?: boolean) => string = (
   if (allowNull && (fax === undefined || fax === '')) {
     return;
   }
-  const regex = new RegExp('^([0-9]{11})$');
-  const regexInternational = new RegExp('^(\\+|0|00)[0-9 ()\\-]{1,20}[0-9]$');
-  if (!regex.test(fax) && !regexInternational.test(fax)) {
+  const regex = new RegExp(
+    '^(\\+[0-9 ()-]{11,14}[0-9]|[0-9 ()-]{10,13}[0-9])$'
+  );
+  if (!regex.test(fax)) {
     return t('validation.fax.invalid');
   }
 };
@@ -163,9 +163,25 @@ export const validateInternationalPhone: (
     return;
   }
   if (phone?.length === 0) return t('validation.phone.empty');
-  const regex = new RegExp('^(\\+|0|00)[1-9][0-9 ()\\-]{7,17}[0-9]$');
+
+  const regex = new RegExp('^\\+[0-9 ()-]{3,18}[0,9]|[0-9 ()-]{3,19}[0-9]$');
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
+  }
+};
+
+export const validateInternationalFax: (
+  fax?: string,
+  allowNull?: boolean
+) => string = (fax, allowNull = true) => {
+  if (allowNull && (fax === undefined || fax === '')) {
+    return;
+  }
+  const regexInternational = new RegExp(
+    '^\\+[0-9 ()-]{3,18}[0,9]|[0-9 ()-]{3,19}[0-9]$'
+  );
+  if (!regexInternational.test(fax)) {
+    return t('validation.fax.invalid');
   }
 };
 

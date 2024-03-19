@@ -28,7 +28,7 @@ import {
   isNotEmpty,
   validateEmail,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
   validateAddAnotherFacility,
   validateConfirmRemove,
 } from 'utils/validators';
@@ -423,7 +423,10 @@ const RecoveryFacilityDetails = () => {
               contactDetails?.phoneNumber,
               true
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber, true),
+            faxNumber: validateInternationalFax(
+              contactDetails?.faxNumber,
+              true
+            ),
           };
           body = {
             status: 'Started',

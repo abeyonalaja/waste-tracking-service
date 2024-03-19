@@ -31,7 +31,7 @@ import {
   validateFieldNotEmpty,
   validateFullName,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
 } from 'utils/validators';
 
 import i18n from 'i18next';
@@ -281,7 +281,7 @@ const Laboratory = () => {
       fullName: validateFullName(contactDetails?.fullName),
       emailAddress: validateEmail(contactDetails?.emailAddress),
       phoneNumber: validateInternationalPhone(contactDetails?.phoneNumber),
-      faxNumber: validateFax(contactDetails?.faxNumber),
+      faxNumber: validateInternationalFax(contactDetails?.faxNumber),
       disposalCode: validateFieldNotEmpty(
         recoveryFacilityType?.disposalCode,
         ''
@@ -319,16 +319,17 @@ const Laboratory = () => {
           break;
         case 'contact':
           nextView = VIEWS.RECOVERY_CODE;
-
           newErrors = {
             emailAddress: validateEmail(contactDetails?.emailAddress, true),
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber,
               true
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber, true),
+            faxNumber: validateInternationalFax(
+              contactDetails?.faxNumber,
+              true
+            ),
           };
-
           body = {
             status: getStatus(),
             values: [

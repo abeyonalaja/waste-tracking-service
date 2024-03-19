@@ -19,7 +19,7 @@ import styled from 'styled-components';
 import {
   isNotEmpty,
   validateEmail,
-  validateFax,
+  validateInternationalFax,
   validateInternationalPhone,
 } from 'utils/validators';
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
@@ -104,7 +104,7 @@ const ImporterContactDetails = () => {
       const newErrors = {
         email: validateEmail(email, true),
         phone: validateInternationalPhone(phone, true),
-        fax: validateFax(fax, true),
+        fax: validateInternationalFax(fax, true),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);

@@ -32,7 +32,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
   validateRecoveryCode,
   validateAddAnotherFacility,
   validateConfirmRemove,
@@ -414,7 +414,7 @@ const RecoveryFacilityDetails = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber),
+            faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
           body = {
             status: 'Started',

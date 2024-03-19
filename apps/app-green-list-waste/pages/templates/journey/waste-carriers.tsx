@@ -27,13 +27,12 @@ import {
   validateConfirmRemove,
   validateEmail,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
   validateSelection,
 } from 'utils/validators';
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import useApiConfig from 'utils/useApiConfig';
-
 enum VIEWS {
   ADDRESS_DETAILS = 1,
   CONTACT_DETAILS = 2,
@@ -286,7 +285,10 @@ const WasteCarriers = () => {
               contactDetails?.phoneNumber,
               true
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber, true),
+            faxNumber: validateInternationalFax(
+              contactDetails?.faxNumber,
+              true
+            ),
           };
           body = {
             status: 'Started',

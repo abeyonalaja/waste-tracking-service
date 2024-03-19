@@ -66,7 +66,7 @@ describe('Importer contact details page', () => {
     const reference = screen.getByLabelText(
       'Phone numberFor international numbers include the country code'
     );
-    fireEvent.change(reference, { target: { value: '07777222' } });
+    fireEvent.change(reference, { target: { value: '+01' } });
 
     const submitButton = screen.getByText('Save and continue');
     fireEvent.click(submitButton);

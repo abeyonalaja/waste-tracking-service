@@ -31,7 +31,7 @@ import {
   validateFieldNotEmpty,
   validateFullName,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
 } from 'utils/validators';
 
 import i18n from 'i18next';
@@ -320,9 +320,8 @@ const Laboratory = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber),
+            faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
-
           body = {
             status:
               laboratoryPage.data.status === 'NotStarted'

@@ -32,7 +32,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
   validateOrganisationName,
   validateSelection,
   validateTransport,
@@ -328,7 +328,7 @@ const WasteCarriers = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber),
+            faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
           body = {
             status: carrierId

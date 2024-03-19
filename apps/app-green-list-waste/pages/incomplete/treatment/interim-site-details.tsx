@@ -32,7 +32,7 @@ import {
   validateEmail,
   validateFullName,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
   validateRecoveryCode,
   validateFieldNotEmpty,
 } from 'utils/validators';
@@ -321,9 +321,8 @@ const InterimSiteDetails = () => {
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber),
+            faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
-
           body = {
             status:
               interimPage.data.status === 'NotStarted'

@@ -29,12 +29,11 @@ import {
   isNotEmpty,
   validateEmail,
   validateInternationalPhone,
-  validateFax,
+  validateInternationalFax,
 } from 'utils/validators';
 
 import i18n from 'i18next';
 import useApiConfig from 'utils/useApiConfig';
-
 const VIEWS = {
   ADDRESS_DETAILS: 1,
   CONTACT_DETAILS: 2,
@@ -311,9 +310,11 @@ const InterimSiteDetails = () => {
               contactDetails?.phoneNumber,
               true
             ),
-            faxNumber: validateFax(contactDetails?.faxNumber, true),
+            faxNumber: validateInternationalFax(
+              contactDetails?.faxNumber,
+              true
+            ),
           };
-
           body = {
             status:
               interimPage.data.status === 'NotStarted'
