@@ -8,6 +8,11 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANRS9Nfj8z7FYnl+zlxCk1LKUHce6xAl
 -----END PUBLIC KEY-----
 `;
 
+const publicKeyWithoutNewlines = `-----BEGIN PUBLIC KEY----- \
+MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANRS9Nfj8z7FYnl+zlxCk1LKUHce6xAl \
+98eJ4kcF+XsQueRZ0+LcMXKym7MEs5Ii5a7pKNTYcMCGlBm1HqHcPvsCAwEAAQ== \
+-----END PUBLIC KEY-----`;
+
 const token =
   'eyJhbGciOiJSUzI1NiIsImtpZCI6IjY5ZmVkNzg0LTNmNTgtNDUzMS1hNjdmL\
 WJhZjJlZjk1Y2JhNyJ9.eyJjb2hvcnQiOiJVS1dNIiwic3ViIjoiM2YwZjU0NjEt\
@@ -44,5 +49,20 @@ describe(JwtTokenValidator, () => {
     }
 
     expect(result.error).toBe('invalid signature');
+  });
+
+  it('handles public key where newlines have been stripped', async () => {
+    const s = new JwtTokenValidator(publicKeyWithoutNewlines);
+
+    const result = await s.validate(token);
+    expect(result.valid).toBe(true);
+    if (!result.valid) {
+      return;
+    }
+
+    expect(result.payload.content).toBe('UKWM');
+    expect(result.payload.participantId).toBe(
+      '3f0f5461-234d-49a8-b17f-4de57b380d91'
+    );
   });
 });

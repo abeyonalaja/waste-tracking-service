@@ -20,7 +20,30 @@ export interface TokenValidator {
 }
 
 export class JwtTokenValidator implements TokenValidator {
-  constructor(private publicKey: string) {}
+  /**
+   * Azure Pipelines Library does not currently support multiline variables
+   * and so a public key can appear with newlines replaced with spaces. This
+   * function attempts to reconstruct the PEM with newlines.
+   */
+  static formatPublicKey(publicKey: string): string {
+    const re = /-----BEGIN PUBLIC KEY-----\s([\s\S]*)\s-----END PUBLIC KEY/;
+    const results = re.exec(publicKey);
+    if (results === null || results.length < 2) {
+      throw new Error('Unable to parse supplied PEM');
+    }
+
+    return `
+-----BEGIN PUBLIC KEY-----
+${results[1].replace(' ', '\n')}
+-----END PUBLIC KEY-----
+`;
+  }
+
+  publicKey: string;
+
+  constructor(publicKey: string) {
+    this.publicKey = JwtTokenValidator.formatPublicKey(publicKey);
+  }
 
   validate(token: string): Promise<ValidationResult> {
     const publicKey = this.publicKey;
