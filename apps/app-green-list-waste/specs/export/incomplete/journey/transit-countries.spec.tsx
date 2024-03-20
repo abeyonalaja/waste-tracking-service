@@ -17,7 +17,8 @@ global.fetch = jest.fn(
   () =>
     Promise.resolve({
       ok: true,
-      json: () => Promise.resolve({ status: 'NotStarted' }),
+      json: () =>
+        Promise.resolve({ transitCountries: { status: 'NotStarted' } }),
     }) as Promise<Response>
 );
 
@@ -73,8 +74,10 @@ describe('Waste Transit Countries page', () => {
           ok: true,
           json: () =>
             Promise.resolve({
-              status: 'Complete',
-              values: ['Afghanistan (AF)'],
+              transitCountries: {
+                status: 'Complete',
+                values: ['Afghanistan (AF)'],
+              },
             }),
         }) as Promise<Response>
     );

@@ -29,6 +29,8 @@ import {
   validateTransitCountry,
   validateSingleTransitCountry,
   validateConfirmRemove,
+  validateSameAsImporter,
+  validateUniqueCountries,
 } from 'utils/validators';
 import { GetTransitCountriesResponse } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
@@ -49,6 +51,7 @@ type State = {
   errors: {
     hasCountries?: string;
     country?: string;
+    countrySameAsImport?: string;
     changedCountry?: string;
     confirmRemove?: string;
   };
@@ -139,6 +142,7 @@ const TransitCountries = () => {
   const [additionalCountry, setAdditionalCountry] = useState(null);
   const [changeCountry, setChangeCountry] = useState(null);
   const [confirmRemove, setConfirmRemove] = useState(null);
+  const [importerCountry, setImporterCountry] = useState(undefined);
 
   useEffect(() => {
     if (router.isReady) {
@@ -151,7 +155,7 @@ const TransitCountries = () => {
       dispatchWasteTransitPage({ type: 'DATA_FETCH_INIT' });
       if (templateId !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
           { headers: apiConfig }
         )
           .then((response) => {
@@ -162,12 +166,18 @@ const TransitCountries = () => {
           })
           .then((data) => {
             if (data !== undefined) {
+              setImporterCountry(
+                data.importerDetail?.importerAddressDetails?.country
+              );
               dispatchWasteTransitPage({
                 type: 'DATA_FETCH_SUCCESS',
-                payload: data,
+                payload: data.transitCountries,
               });
-              if (data.values === undefined || data.values.length === 0) {
-                if (data.status !== 'NotStarted') {
+              if (
+                data.transitCountries.values === undefined ||
+                data.transitCountries.values.length === 0
+              ) {
+                if (data.transitCountries.status !== 'NotStarted') {
                   dispatchWasteTransitPage({
                     type: 'PROVIDED_UPDATE',
                     payload: 'No',
@@ -183,7 +193,7 @@ const TransitCountries = () => {
       }
     };
     fetchData();
-  }, [router.isReady, templateId]);
+  }, [router.isReady, templateId, importerCountry]);
 
   const handleCancelReturn = (e) => {
     e.preventDefault();
@@ -197,10 +207,14 @@ const TransitCountries = () => {
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
       const hasCountries = wasteTransitPage.provided;
-      const country = wasteTransitPage.data.values;
+      const country =
+        wasteTransitPage.data?.values?.length > 0
+          ? wasteTransitPage.data.values[0]
+          : undefined;
       const newErrors = {
         hasCountries: validateTransitCountries(hasCountries),
         country: validateTransitCountry(hasCountries, country),
+        countrySameAsImport: validateSameAsImporter(country, importerCountry),
       };
       if (isNotEmpty(newErrors)) {
         dispatchWasteTransitPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -249,6 +263,14 @@ const TransitCountries = () => {
         country: validateSingleTransitCountry(
           additionalProvided,
           additionalCountry
+        ),
+        duplicateCountry: validateUniqueCountries(
+          additionalCountry,
+          wasteTransitPage?.data?.values
+        ),
+        countrySameAsImport: validateSameAsImporter(
+          additionalCountry,
+          importerCountry
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -509,7 +531,11 @@ const TransitCountries = () => {
                           {additionalProvided === 'Yes' && (
                             <ConditionalRadioWrap>
                               <GovUK.FormGroup
-                                error={!!wasteTransitPage.errors?.country}
+                                error={
+                                  !!wasteTransitPage.errors?.country ||
+                                  !!wasteTransitPage.errors?.duplicateCountry ||
+                                  !!wasteTransitPage.errors?.countrySameAsImport
+                                }
                               >
                                 <CountrySelector
                                   id={'country'}
@@ -520,7 +546,11 @@ const TransitCountries = () => {
                                   )}
                                   value={''}
                                   onChange={setAdditionalCountry}
-                                  error={wasteTransitPage.errors?.country}
+                                  error={
+                                    wasteTransitPage.errors?.country ||
+                                    wasteTransitPage.errors?.duplicateCountry ||
+                                    wasteTransitPage.errors?.countrySameAsImport
+                                  }
                                   apiConfig={apiConfig}
                                 />
                               </GovUK.FormGroup>
@@ -575,7 +605,10 @@ const TransitCountries = () => {
                           {wasteTransitPage.provided === 'Yes' && (
                             <ConditionalRadioWrap>
                               <GovUK.FormGroup
-                                error={!!wasteTransitPage.errors?.country}
+                                error={
+                                  !!wasteTransitPage.errors?.country ||
+                                  !!wasteTransitPage.errors?.countrySameAsImport
+                                }
                               >
                                 <CountrySelector
                                   id={'country'}
@@ -586,7 +619,10 @@ const TransitCountries = () => {
                                   )}
                                   value={''}
                                   onChange={handleCountrySelect}
-                                  error={wasteTransitPage.errors?.country}
+                                  error={
+                                    wasteTransitPage.errors?.country ||
+                                    wasteTransitPage.errors?.countrySameAsImport
+                                  }
                                   apiConfig={apiConfig}
                                 />
                               </GovUK.FormGroup>

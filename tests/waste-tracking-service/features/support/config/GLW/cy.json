@@ -706,6 +706,8 @@
   "validation.template.name": "The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes",
   "validation.transit.countries.select": "Select yes if there are any other countries the waste will travel through",
   "validation.transit.country.select": "Select or enter country",
+  "validation.transit.country.hasDuplicates": "You have already entered this country",
+  "validation.transit.country.sameAsImporter": "The importer country cannot be the same as the transit country",
   "validation.transport.description": "The {{carrierNumber}} carrier's {{type}} transportation details must be 200 characters or less",
   "validation.transport.select": "Select how the {{carrierNumber}} waste carrier will transport the waste",
   "validation.wasteCode.category": "Select a waste code",

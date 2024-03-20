@@ -484,10 +484,706 @@ export class ReferenceDataStub implements ReferenceDataBackend {
       name: 'American Samoa [AS]',
     },
     {
-      name: 'Andorra [AD]',
+      name: 'AndorrA [AD]',
     },
     {
       name: 'Angola [AO]',
+    },
+    {
+      name: 'Anguilla [AI]',
+    },
+    {
+      name: 'Antarctica [AQ]',
+    },
+    {
+      name: 'Antigua and Barbuda [AG]',
+    },
+    {
+      name: 'Argentina [AR]',
+    },
+    {
+      name: 'Armenia [AM]',
+    },
+    {
+      name: 'Aruba [AW]',
+    },
+    {
+      name: 'Australia [AU]',
+    },
+    {
+      name: 'Austria [AT]',
+    },
+    {
+      name: 'Azerbaijan [AZ]',
+    },
+    {
+      name: 'Bahamas [BS]',
+    },
+    {
+      name: 'Bahrain [BH]',
+    },
+    {
+      name: 'Bangladesh [BD]',
+    },
+    {
+      name: 'Barbados [BB]',
+    },
+    {
+      name: 'Belarus [BY]',
+    },
+    {
+      name: 'Belgium [BE]',
+    },
+    {
+      name: 'Belize [BZ]',
+    },
+    {
+      name: 'Benin [BJ]',
+    },
+    {
+      name: 'Bermuda [BM]',
+    },
+    {
+      name: 'Bhutan [BT]',
+    },
+    {
+      name: 'Bolivia [BO]',
+    },
+    {
+      name: 'Bosnia and Herzegovina [BA]',
+    },
+    {
+      name: 'Botswana [BW]',
+    },
+    {
+      name: 'Bouvet Island [BV]',
+    },
+    {
+      name: 'Brazil [BR]',
+    },
+    {
+      name: 'British Indian Ocean Territory [IO]',
+    },
+    {
+      name: 'Brunei Darussalam [BN]',
+    },
+    {
+      name: 'Bulgaria [BG]',
+    },
+    {
+      name: 'Burkina Faso [BF]',
+    },
+    {
+      name: 'Burundi [BI]',
+    },
+    {
+      name: 'Cambodia [KH]',
+    },
+    {
+      name: 'Cameroon [CM]',
+    },
+    {
+      name: 'Canada [CA]',
+    },
+    {
+      name: 'Cape Verde [CV]',
+    },
+    {
+      name: 'Cayman Islands [KY]',
+    },
+    {
+      name: 'Central African Republic [CF]',
+    },
+    {
+      name: 'Chad [TD]',
+    },
+    {
+      name: 'Chile [CL]',
+    },
+    {
+      name: 'China [CN]',
+    },
+    {
+      name: 'Christmas Island [CX]',
+    },
+    {
+      name: 'Cocos (Keeling) Islands [CC]',
+    },
+    {
+      name: 'Colombia [CO]',
+    },
+    {
+      name: 'Comoros [KM]',
+    },
+    {
+      name: 'Congo [CG]',
+    },
+    {
+      name: 'Congo, The Democratic Republic of the [CD]',
+    },
+    {
+      name: 'Cook Islands [CK]',
+    },
+    {
+      name: 'Costa Rica [CR]',
+    },
+    {
+      name: 'Croatia [HR]',
+    },
+    {
+      name: 'Cuba [CU]',
+    },
+    {
+      name: 'Cyprus [CY]',
+    },
+    {
+      name: 'Czech Republic [CZ]',
+    },
+    {
+      name: 'Denmark [DK]',
+    },
+    {
+      name: 'Djibouti [DJ]',
+    },
+    {
+      name: 'Dominica [DM]',
+    },
+    {
+      name: 'Dominican Republic [DO]',
+    },
+    {
+      name: 'Ecuador [EC]',
+    },
+    {
+      name: 'Egypt [EG]',
+    },
+    {
+      name: 'El Salvador [SV]',
+    },
+    {
+      name: 'Equatorial Guinea [GQ]',
+    },
+    {
+      name: 'Eritrea [ER]',
+    },
+    {
+      name: 'Estonia [EE]',
+    },
+    {
+      name: 'Ethiopia [ET]',
+    },
+    {
+      name: 'Falkland Islands (Malvinas) [FK]',
+    },
+    {
+      name: 'Faroe Islands [FO]',
+    },
+    {
+      name: 'Fiji [FJ]',
+    },
+    {
+      name: 'Finland [FI]',
+    },
+    {
+      name: 'France [FR]',
+    },
+    {
+      name: 'French Guiana [GF]',
+    },
+    {
+      name: 'French Polynesia [PF]',
+    },
+    {
+      name: 'French Southern Territories [TF]',
+    },
+    {
+      name: 'Gabon [GA]',
+    },
+    {
+      name: 'Gambia [GM]',
+    },
+    {
+      name: 'Georgia [GE]',
+    },
+    {
+      name: 'Germany [DE]',
+    },
+    {
+      name: 'Ghana [GH]',
+    },
+    {
+      name: 'Gibraltar [GI]',
+    },
+    {
+      name: 'Greece [GR]',
+    },
+    {
+      name: 'Greenland [GL]',
+    },
+    {
+      name: 'Grenada [GD]',
+    },
+    {
+      name: 'Guadeloupe [GP]',
+    },
+    {
+      name: 'Guam [GU]',
+    },
+    {
+      name: 'Guatemala [GT]',
+    },
+    {
+      name: 'Guernsey [GG]',
+    },
+    {
+      name: 'Guinea [GN]',
+    },
+    {
+      name: 'Guinea-Bissau [GW]',
+    },
+    {
+      name: 'Guyana [GY]',
+    },
+    {
+      name: 'Haiti [HT]',
+    },
+    {
+      name: 'Heard Island and Mcdonald Islands [HM]',
+    },
+    {
+      name: 'Holy See (Vatican City State) [VA]',
+    },
+    {
+      name: 'Honduras [HN]',
+    },
+    {
+      name: 'Hong Kong [HK]',
+    },
+    {
+      name: 'Hungary [HU]',
+    },
+    {
+      name: 'Iceland [IS]',
+    },
+    {
+      name: 'India [IN]',
+    },
+    {
+      name: 'Indonesia [ID]',
+    },
+    {
+      name: 'Iran, Islamic Republic Of [IR]',
+    },
+    {
+      name: 'Iraq [IQ]',
+    },
+    {
+      name: 'Ireland [IE]',
+    },
+    {
+      name: 'Isle of Man [IM]',
+    },
+    {
+      name: 'Israel [IL]',
+    },
+    {
+      name: 'Italy [IT]',
+    },
+    {
+      name: 'Jamaica [JM]',
+    },
+    {
+      name: 'Japan [JP]',
+    },
+    {
+      name: 'Jersey [JE]',
+    },
+    {
+      name: 'Jordan [JO]',
+    },
+    {
+      name: 'Kazakhstan [KZ]',
+    },
+    {
+      name: 'Kenya [KE]',
+    },
+    {
+      name: 'Kiribati [KI]',
+    },
+    {
+      name: 'Korea, Republic of [KR]',
+    },
+    {
+      name: 'Kuwait [KW]',
+    },
+    {
+      name: 'Kyrgyzstan [KG]',
+    },
+    {
+      name: 'Latvia [LV]',
+    },
+    {
+      name: 'Lebanon [LB]',
+    },
+    {
+      name: 'Lesotho [LS]',
+    },
+    {
+      name: 'Liberia [LR]',
+    },
+    {
+      name: 'Libyan Arab Jamahiriya [LY]',
+    },
+    {
+      name: 'Liechtenstein [LI]',
+    },
+    {
+      name: 'Lithuania [LT]',
+    },
+    {
+      name: 'Luxembourg [LU]',
+    },
+    {
+      name: 'Macao [MO]',
+    },
+    {
+      name: 'North Macedonia [MK]',
+    },
+    {
+      name: 'Madagascar [MG]',
+    },
+    {
+      name: 'Malawi [MW]',
+    },
+    {
+      name: 'Malaysia [MY]',
+    },
+    {
+      name: 'Maldives [MV]',
+    },
+    {
+      name: 'Mali [ML]',
+    },
+    {
+      name: 'Malta [MT]',
+    },
+    {
+      name: 'Marshall Islands [MH]',
+    },
+    {
+      name: 'Martinique [MQ]',
+    },
+    {
+      name: 'Mauritania [MR]',
+    },
+    {
+      name: 'Mauritius [MU]',
+    },
+    {
+      name: 'Mayotte [YT]',
+    },
+    {
+      name: 'Mexico [MX]',
+    },
+    {
+      name: 'Micronesia, Federated States of [FM]',
+    },
+    {
+      name: 'Moldova, Republic of [MD]',
+    },
+    {
+      name: 'Monaco [MC]',
+    },
+    {
+      name: 'Mongolia [MN]',
+    },
+    {
+      name: 'Montserrat [MS]',
+    },
+    {
+      name: 'Morocco [MA]',
+    },
+    {
+      name: 'Mozambique [MZ]',
+    },
+    {
+      name: 'Myanmar [MM]',
+    },
+    {
+      name: 'Namibia [NA]',
+    },
+    {
+      name: 'Nauru [NR]',
+    },
+    {
+      name: 'Nepal [NP]',
+    },
+    {
+      name: 'Netherlands [NL]',
+    },
+    {
+      name: 'Netherlands Antilles [AN]',
+    },
+    {
+      name: 'New Caledonia [NC]',
+    },
+    {
+      name: 'New Zealand [NZ]',
+    },
+    {
+      name: 'Nicaragua [NI]',
+    },
+    {
+      name: 'Niger [NE]',
+    },
+    {
+      name: 'Nigeria [NG]',
+    },
+    {
+      name: 'Niue [NU]',
+    },
+    {
+      name: 'Norfolk Island [NF]',
+    },
+    {
+      name: 'Northern Mariana Islands [MP]',
+    },
+    {
+      name: 'Norway [NO]',
+    },
+    {
+      name: 'Oman [OM]',
+    },
+    {
+      name: 'Pakistan [PK]',
+    },
+    {
+      name: 'Palau [PW]',
+    },
+    {
+      name: 'Palestinian Territory, Occupied [PS]',
+    },
+    {
+      name: 'Panama [PA]',
+    },
+    {
+      name: 'Papua New Guinea [PG]',
+    },
+    {
+      name: 'Paraguay [PY]',
+    },
+    {
+      name: 'Peru [PE]',
+    },
+    {
+      name: 'Philippines [PH]',
+    },
+    {
+      name: 'Pitcairn Islands [PN]',
+    },
+    {
+      name: 'Poland [PL]',
+    },
+    {
+      name: 'Portugal [PT]',
+    },
+    {
+      name: 'Puerto Rico [PR]',
+    },
+    {
+      name: 'Qatar [QA]',
+    },
+    {
+      name: 'Reunion [RE]',
+    },
+    {
+      name: 'Romania [RO]',
+    },
+    {
+      name: 'Russian Federation [RU]',
+    },
+    {
+      name: 'Rwanda [RW]',
+    },
+    {
+      name: 'Saint Helena [SH]',
+    },
+    {
+      name: 'Saint Kitts and Nevis [KN]',
+    },
+    {
+      name: 'Saint Lucia [LC]',
+    },
+    {
+      name: 'Saint Pierre and Miquelon [PM]',
+    },
+    {
+      name: 'Saint Vincent and the Grenadines [VC]',
+    },
+    {
+      name: 'Samoa [WS]',
+    },
+    {
+      name: 'San Marino [SM]',
+    },
+    {
+      name: 'Sao Tome and Principe [ST]',
+    },
+    {
+      name: 'Saudi Arabia [SA]',
+    },
+    {
+      name: 'Senegal [SN]',
+    },
+    {
+      name: 'Serbia and Montenegro [CS]',
+    },
+    {
+      name: 'Seychelles [SC]',
+    },
+    {
+      name: 'Sierra Leone [SL]',
+    },
+    {
+      name: 'Singapore [SG]',
+    },
+    {
+      name: 'Slovakia [SK]',
+    },
+    {
+      name: 'Slovenia [SI]',
+    },
+    {
+      name: 'Solomon Islands [SB]',
+    },
+    {
+      name: 'Somalia [SO]',
+    },
+    {
+      name: 'South Africa [ZA]',
+    },
+    {
+      name: 'South Georgia and the South Sandwich Islands [GS]',
+    },
+    {
+      name: 'Spain [ES]',
+    },
+    {
+      name: 'Sri Lanka [LK]',
+    },
+    {
+      name: 'Sudan [SD]',
+    },
+    {
+      name: 'Suriname [SR]',
+    },
+    {
+      name: 'Svalbard and Jan Mayen [SJ]',
+    },
+    {
+      name: 'Swaziland [SZ]',
+    },
+    {
+      name: 'Sweden [SE]',
+    },
+    {
+      name: 'Switzerland [CH]',
+    },
+    {
+      name: 'Syrian Arab Republic [SY]',
+    },
+    {
+      name: 'Taiwan [TW]',
+    },
+    {
+      name: 'Tajikistan [TJ]',
+    },
+    {
+      name: 'Tanzania, United Republic of [TZ]',
+    },
+    {
+      name: 'Thailand [TH]',
+    },
+    {
+      name: 'Timor-Leste [TL]',
+    },
+    {
+      name: 'Togo [TG]',
+    },
+    {
+      name: 'Tokelau [TK]',
+    },
+    {
+      name: 'Tonga [TO]',
+    },
+    {
+      name: 'Trinidad and Tobago [TT]',
+    },
+    {
+      name: 'Tunisia [TN]',
+    },
+    {
+      name: 'Turkey [TR]',
+    },
+    {
+      name: 'Turkmenistan [TM]',
+    },
+    {
+      name: 'Turks and Caicos Islands [TC]',
+    },
+    {
+      name: 'Tuvalu [TV]',
+    },
+    {
+      name: 'Uganda [UG]',
+    },
+    {
+      name: 'Ukraine [UA]',
+    },
+    {
+      name: 'United Arab Emirates [AE]',
+    },
+    {
+      name: 'United States [US]',
+    },
+    {
+      name: 'United States Minor Outlying Islands [UM]',
+    },
+    {
+      name: 'Uruguay [UY]',
+    },
+    {
+      name: 'Uzbekistan [UZ]',
+    },
+    {
+      name: 'Vanuatu [VU]',
+    },
+    {
+      name: 'Venezuela [VE]',
+    },
+    {
+      name: 'Vietnam [VN]',
+    },
+    {
+      name: 'Virgin Islands, British [VG]',
+    },
+    {
+      name: 'Virgin Islands, U.S. [VI]',
+    },
+    {
+      name: 'Wallis and Futuna [WF]',
+    },
+    {
+      name: 'Western Sahara [EH]',
+    },
+    {
+      name: 'Yemen [YE]',
+    },
+    {
+      name: 'Zambia [ZM]',
+    },
+    {
+      name: 'Zimbabwe [ZN]',
     },
   ];
 

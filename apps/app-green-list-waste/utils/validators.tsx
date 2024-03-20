@@ -209,6 +209,13 @@ export const validateCountry: (country?: string) => string = (country) => {
     return t('validation.address.county.empty');
 };
 
+export const validateSameAsImporter: (
+  transitCountry?: string,
+  importerCountry?: string
+) => string = (transitCountry, importerCountry) => {
+  if (transitCountry === importerCountry)
+    return t('validation.transit.country.sameAsImporter');
+};
 export const validateAddress: (address?: string) => string = (address) => {
   if (address?.length === 0 || address === undefined || !address.trim())
     // trim returns true / false and in this way we check if string contains only spaces
@@ -383,6 +390,14 @@ export const validateSingleTransitCountry: (
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
   if (country === null) return t('validation.transit.country.select');
+};
+
+export const validateUniqueCountries: (
+  additionaCountry?: string,
+  countries?: [string]
+) => string | undefined = (additionaCountry, countries) => {
+  if (countries.includes(additionaCountry))
+    return t('validation.transit.country.hasDuplicates');
 };
 
 export const validateConfirmRemove: (

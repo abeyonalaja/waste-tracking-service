@@ -13,6 +13,7 @@ import {
   ErrorSummary,
   SubmissionNotFound,
   Loading,
+  CountrySelector,
 } from 'components';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
@@ -38,7 +39,7 @@ const ImporterDetails = () => {
   const [data, setData] = useState<GetExporterDetailResponse>(null);
 
   const [address, setAddress] = useState<string>('');
-  const [country, setCountry] = useState<string>('');
+  const [country, setCountry] = useState(null);
   const [organisationName, setOrganisationName] = useState<string>('');
   const [errors, setErrors] = useState<{
     organisationName?: string;
@@ -222,22 +223,16 @@ const ImporterDetails = () => {
                     >
                       {t('address')}
                     </GovUK.TextArea>
-                    <AddressInput
-                      mb={6}
-                      input={{
-                        name: 'country',
-                        id: 'country',
-                        value: country || '',
-                        maxLength: 250,
-                        onChange: (e) => setCountry(e.target.value),
-                      }}
-                      meta={{
-                        error: errors?.country,
-                        touched: !!errors?.country,
-                      }}
-                    >
-                      {t('address.country')}
-                    </AddressInput>
+                    <CountrySelector
+                      size={75}
+                      id={'country'}
+                      name={'country'}
+                      label={t('address.country')}
+                      value={country || ''}
+                      onChange={setCountry}
+                      error={errors?.country}
+                      apiConfig={apiConfig}
+                    />
                   </GovUK.FormGroup>
                   <ButtonGroup>
                     <GovUK.Button id="saveButton">
