@@ -673,7 +673,7 @@
   "validation.exit.select": "Select yes if you know where the waste will leave the UK",
   "validation.fax.invalid": "Enter a real fax number",
   "validation.fullName.empty": "Enter a full name",
-  "validation.location.charInvalid": "The location must only include letters a to z, numbers, spaces, hyphens and back slashes",
+  "validation.location.charInvalid": "The location must only include letters a to z, and special characters such as full stops, hyphens, spaces and apostrophes",
   "validation.location.charTooMany": "Enter the location using 50 character or less",
   "validation.location.empty": "Enter the location ",
   "validation.nationalCode.charInvalid": "The code must only include letters a to z, numbers, spaces, hyphens and back slashes",

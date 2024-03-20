@@ -650,7 +650,7 @@
   "validation.exit.select": "Select yes if you know where the waste will leave the UK",
   "validation.location.empty": "Enter the location ",
   "validation.location.charTooMany": "Enter the location using 50 character or less",
-  "validation.location.charInvalid": "The location must only include letters a to z, numbers, spaces, hyphens and back slashes",
+  "validation.location.charInvalid": "The location must only include letters a to z, and special characters such as full stops, hyphens, spaces and apostrophes",
   "validation.transport.select": "Select how the {{carrierNumber}} waste carrier will transport the waste",
   "validation.transport.description": "The {{carrierNumber}} carrier's {{type}} transportation details must be 200 characters or less",
   "validation.transit.countries.select": "Select yes if there are any other countries the waste will travel through",
