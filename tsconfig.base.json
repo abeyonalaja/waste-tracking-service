@@ -23,6 +23,12 @@
       "@wts/api/feedback": ["libs/api/feedback/src/index.ts"],
       "@wts/api/limited-audience": ["libs/api/limited-audience/src/index.ts"],
       "@wts/api/reference-data": ["libs/api/reference-data/src/index.ts"],
+      "@wts/api/service-uk-waste-movements": [
+        "libs/api/service-uk-waste-movements/src/index.ts"
+      ],
+      "@wts/api/service-uk-waste-movements-bulk": [
+        "libs/api/service-uk-waste-movements-bulk/src/index.ts"
+      ],
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
       ],
@@ -34,6 +40,12 @@
         "libs/client/limited-audience/src/index.ts"
       ],
       "@wts/client/reference-data": ["libs/client/reference-data/src/index.ts"],
+      "@wts/client/service-uk-waste-movements": [
+        "libs/client/service-uk-waste-movements/src/index.ts"
+      ],
+      "@wts/client/service-uk-waste-movements-bulk": [
+        "libs/client/service-uk-waste-movements-bulk/src/index.ts"
+      ],
       "@wts/ui/govuk-react-ui": ["libs/ui/govuk-react-ui/src/index.ts"],
       "@wts/util/dapr-winston-logging": [
         "libs/util/dapr-winston-logging/src/index.ts"
