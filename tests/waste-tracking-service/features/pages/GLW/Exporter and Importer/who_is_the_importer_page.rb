@@ -36,11 +36,6 @@ class WhoIsTheImporterPage < GenericPage
     TestStatus.set_test_status(:address, address)
   end
 
-  def enter_country(country)
-    fill_in COUNTRY_FIELD_ID, with: country, visible: false
-    TestStatus.set_test_status(:country, country)
-  end
-
   def has_reference_organisation_name?(organisation_name)
     find(ORGANISATION_NAME_FIELD_ID).value == organisation_name
   end
@@ -51,6 +46,16 @@ class WhoIsTheImporterPage < GenericPage
 
   def has_reference_country?(country)
     find(COUNTRY_FIELD_ID).value == country
+  end
+
+  def select_importer_country
+    index = rand(0..245)
+    country = "country__option--#{index}"
+    first('country', minimum: 1).click
+    first(country, minimum: 1).select_option
+    importer_country = find(COUNTRY_FIELD_ID).value
+    TestStatus.set_test_status(:importer_country, importer_country)
+    Log.info("Importing country is #{importer_country}")
   end
 
 end

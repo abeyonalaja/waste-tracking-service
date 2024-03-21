@@ -3,10 +3,12 @@ Given(/^I login to waste tracking portal$/) do
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
-  click_link('dashboard_link')
+  click_link('Start now')
   HelperMethods.wait_for_a_sec
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
+  WasteTrackingLandingPage.new.check_page_displayed
+  WasteTrackingLandingPage.new.create_green_list_waste_record
   ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
   set_feature_cookies

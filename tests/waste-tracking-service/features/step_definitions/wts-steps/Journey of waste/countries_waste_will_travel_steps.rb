@@ -65,3 +65,9 @@ end
 And(/^I complete the Journey of a waste section with estimated small waste$/) do
   JourneyOfAWasteSmallWasteController.complete Translations.value 'exportJourney.wasteCollectionDate.radioNo'
 end
+
+When(/^I select same country as importing country$/) do
+  CountriesWasteWillTravelPage.new.enter_country_of_waste TestStatus.test_status(:importer_country)
+  sleep 0.5
+  CountriesWasteWillTravelPage.new.select_first_country
+end

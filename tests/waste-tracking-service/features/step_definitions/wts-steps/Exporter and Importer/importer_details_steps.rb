@@ -15,9 +15,7 @@ And(/^I complete who is the importer page$/) do
   address = 'Address,1 street'
   WhoIsTheImporterPage.new.enter_address address
   TestStatus.set_test_status(:importer_address, address)
-  country = 'England'
-  WhoIsTheImporterPage.new.enter_country 'England'
-  TestStatus.set_test_status(:importer_country, country)
+  WhoIsTheImporterPage.new.select_importer_country
 end
 
 And(/^I complete Importer contact details page$/) do

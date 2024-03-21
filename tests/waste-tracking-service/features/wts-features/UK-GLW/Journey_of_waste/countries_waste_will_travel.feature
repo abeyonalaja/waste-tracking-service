@@ -163,3 +163,15 @@ Feature: Countries waste will travel page
     And I click the "Collection date" link
     And I complete the Journey of a waste section
     Then I have 3 of 5 sections completed
+
+  Scenario: Importer country cannot be in the transit countries
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Importer details" link
+    And I complete who is the importer page
+    And I click the Save and return to draft
+    When I click the "Countries waste will travel through" link
+    And I choose "Yes" radio button
+    When I select same country as importing country
+    And I click the button Save and continue
+    Then I remain on the Countries Waste Will Travel page with an "The importer country cannot be the same as the transit country" error message displayed

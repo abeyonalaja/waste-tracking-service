@@ -73,5 +73,3 @@ Feature: Location waste leaves UK
     And I choose "Yes" radio button
     And I click the button Save and continue
     Then I remain on the Location waste leaves the UK page with an "Enter the location" error message displayed
-
-

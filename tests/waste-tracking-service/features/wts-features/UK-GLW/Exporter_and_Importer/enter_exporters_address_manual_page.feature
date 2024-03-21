@@ -53,8 +53,10 @@ Feature: Exporter manual address page
     Given I login to waste tracking portal
     When I navigate to Enter exporter address manual page
     And I verify Enter exporter address manual page is displayed
+    And I enter invalid postcode
     And I click the button Save and continue
     And I remain on the exporter address page with an "Enter a town or city" error message displayed
+    And I remain on the exporter address page with an "Enter a real postcode" error message displayed
     And I remain on the exporter address page with an "Select a country" error message displayed
     And I remain on the exporter address page with an "Enter an address" error message displayed
 

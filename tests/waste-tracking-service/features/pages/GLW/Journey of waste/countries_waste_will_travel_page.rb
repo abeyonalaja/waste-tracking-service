@@ -36,6 +36,10 @@ class CountriesWasteWillTravelPage < GenericPage
     Log.info("Country of waste is #{country_waste_travel}")
   end
 
+  def enter_country_of_waste(country)
+    fill_in 'country', with: country, visible: false
+  end
+
   def option_checked?(selected_option)
     find(yes_or_no.fetch(selected_option), visible: false).checked?
   end
@@ -45,5 +49,9 @@ class CountriesWasteWillTravelPage < GenericPage
       'Yes' => 'hasTransitCountriesYes',
       'No' => 'hasTransitCountriesNo'
     }
+  end
+
+  def select_first_country
+    find('country__option--0').click
   end
 end
