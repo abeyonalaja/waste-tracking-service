@@ -19,11 +19,23 @@ export async function listEWCCodes(db: DB): Promise<ListEWCCodesResponse> {
   return ewcCodes;
 }
 
-export async function listCountries(db: DB): Promise<ListCountriesResponse> {
-  const countries: ListCountriesResponse = db.countries;
-  return countries;
+export async function listCountries(
+  db: DB,
+  includeUk: boolean
+): Promise<ListCountriesResponse> {
+  try {
+    let countries: ListCountriesResponse = db.countries;
+    if (!includeUk) {
+      countries = countries.filter(
+        (country) => !country.name.includes('United Kingdom')
+      );
+    }
+    return countries;
+  } catch (err) {
+    console.error('Unknown error', { error: err });
+    throw new Error('Internal server error');
+  }
 }
-
 export async function listRecoveryCodes(
   db: DB
 ): Promise<ListRecoveryCodesResponse> {

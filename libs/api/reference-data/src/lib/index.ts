@@ -24,6 +24,7 @@ export type {
   GetWasteCodesResponse,
   GetEWCCodesResponse,
   GetCountriesResponse,
+  GetCountriesRequest,
   GetRecoveryCodesResponse,
   GetDisposalCodesResponse,
   GetHazardousCodesResponse,
@@ -44,4 +45,4 @@ export type {
   CreatePopsResponse,
 } from './reference-data.dto';
 
-export * as referenceDataSchema from './reference-data.schema';
+export * as schema from './reference-data.schema';

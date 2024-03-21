@@ -80,19 +80,47 @@ describe(ReferenceDataController, () => {
     });
 
     it('listCountries', async () => {
-      const value = [
+      const valueWithUK = [
+        {
+          name: 'Afghanistan [AF]',
+        },
+        {
+          name: 'United Kingdom (England) [GB-ENG]',
+        },
+      ];
+
+      const valueWithoutUK = [
         {
           name: 'Afghanistan [AF]',
         },
       ];
 
-      mockRepository.getList.mockResolvedValueOnce(value);
+      mockRepository.getList.mockResolvedValueOnce(valueWithUK);
 
-      const response = await subject.getCountries(null);
+      let response = await subject.getCountries({ includeUk: true });
+
       expect(response.success).toBe(true);
       if (!response.success) {
-        return;
+        throw new Error('Expected success to be true');
       }
+
+      expect(response.value.length).toEqual(2);
+
+      expect(response.value[0].name).toEqual('Afghanistan [AF]');
+      expect(response.value[1].name).toEqual(
+        'United Kingdom (England) [GB-ENG]'
+      );
+
+      mockRepository.getList.mockResolvedValueOnce(valueWithoutUK);
+
+      response = await subject.getCountries({ includeUk: false });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        throw new Error('Expected success to be true');
+      }
+
+      expect(response.value.length).toEqual(1);
 
       expect(response.value[0].name).toEqual('Afghanistan [AF]');
     });

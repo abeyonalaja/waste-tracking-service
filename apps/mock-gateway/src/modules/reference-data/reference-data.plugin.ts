@@ -42,13 +42,25 @@ export default class ReferenceDataPlugin {
     });
 
     this.server.get(`${this.prefix}/countries`, async (req, res) => {
+      const includeUkStr = req.query['includeUk'] as string | undefined;
+
+      let includeUk = false;
+      if (includeUkStr) {
+        try {
+          includeUk = JSON.parse(includeUkStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(404)
+            .send("Query parameter 'includeUk' must be of type boolean");
+        }
+      }
+
       try {
-        res.jsonp(await listCountries(this.db));
+        const countries = await listCountries(this.db, includeUk);
+        res.jsonp(countries);
       } catch (error) {
         console.log('Unknown error', { error: error });
-        return res
-          .status(500)
-          .jsonp(new InternalServerError(`An internal server error occurred`));
+        return res.status(500).send('An internal server error occurred');
       }
     });
 

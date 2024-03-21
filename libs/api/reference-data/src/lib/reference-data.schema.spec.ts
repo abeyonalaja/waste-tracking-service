@@ -1,5 +1,6 @@
 import Ajv from 'ajv/dist/jtd';
 import {
+  GetCountriesRequest,
   GetCountriesResponse,
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
@@ -9,6 +10,7 @@ import {
   GetWasteCodesResponse,
 } from './reference-data.dto';
 import {
+  getCountriesRequest,
   getCountriesResponse,
   getDisposalCodesResponse,
   getEWCCodesResponse,
@@ -77,6 +79,41 @@ describe('Reference-Data tests', () => {
             },
           },
         ],
+      };
+
+      expect(validate(value)).toBe(true);
+    });
+
+    it('is compatible with error value', () => {
+      validate({
+        success: false,
+        error: {
+          statusCode: 400,
+          name: 'BadRequest',
+          message: 'Bad request',
+        },
+      });
+    });
+  });
+
+  describe('GetCountriesRequest', () => {
+    const validate = ajv.compile<GetCountriesRequest>(getCountriesRequest);
+
+    it('is compatible with dto values', () => {
+      let value: GetCountriesRequest = {
+        includeUk: true,
+      };
+
+      expect(validate(value)).toBe(true);
+
+      value = {
+        includeUk: false,
+      };
+
+      expect(validate(value)).toBe(true);
+
+      value = {
+        includeUk: undefined,
       };
 
       expect(validate(value)).toBe(true);

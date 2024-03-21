@@ -10,7 +10,7 @@ import {
   WorkloadIdentityCredential,
 } from '@azure/identity';
 import { CosmosClient } from '@azure/cosmos';
-import { ReferenceDataController } from './controller';
+import { ReferenceDataController, parse } from './controller';
 import CosmosReferenceDataRepository from './data/cosmos-reference-data';
 import { LRUCache } from 'lru-cache';
 
@@ -70,10 +70,20 @@ await server.invoker.listen(
   },
   { method: HttpMethod.POST }
 );
+
 await server.invoker.listen(
   api.getCountries.name,
-  async () => {
-    return await referenceDataController.getCountries(null);
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getCountriesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await referenceDataController.getCountries(request);
   },
   { method: HttpMethod.POST }
 );

@@ -5,6 +5,7 @@ import { Logger } from 'winston';
 import { ReferenceDataRepository } from '../data/repository';
 import { Handler } from '@wts/api/common';
 import { Country, RecoveryCode, WasteCode, WasteCodeType, Pop } from '../model';
+import { GetCountriesRequest } from '@wts/api/reference-data';
 
 const wasteCodesId = 'waste-codes';
 const ewcCodesId = 'ewc-codes';
@@ -48,18 +49,24 @@ export default class ReferenceDataController {
     }
   };
 
-  getCountries: Handler<null, api.GetCountriesResponse> = async () => {
-    try {
-      return success(await this.repository.getList<Country>(countriesId));
-    } catch (err) {
-      if (err instanceof Boom.Boom) {
-        return fromBoom(err);
+  getCountries: Handler<GetCountriesRequest, api.GetCountriesResponse> =
+    async ({ includeUk }) => {
+      try {
+        let countries = await this.repository.getList<Country>(countriesId);
+        if (!includeUk) {
+          countries = countries.filter(
+            (country) => !country.name.includes('United Kingdom')
+          );
+        }
+        return success(countries);
+      } catch (err) {
+        if (err instanceof Boom.Boom) {
+          return fromBoom(err);
+        }
+        this.logger.error('Unknown error', { error: err });
+        return fromBoom(Boom.internal());
       }
-
-      this.logger.error('Unknown error', { error: err });
-      return fromBoom(Boom.internal());
-    }
-  };
+    };
 
   getRecoveryCodes: Handler<null, api.GetRecoveryCodesResponse> = async () => {
     try {

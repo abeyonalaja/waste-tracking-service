@@ -31,6 +31,10 @@ export type Pop = {
   name: LanguageDescription;
 };
 
+export type GetCountriesRequest = {
+  includeUk?: boolean;
+};
+
 export type GetWasteCodesResponse = Response<WasteCodeType[]>;
 export type GetEWCCodesResponse = Response<WasteCode[]>;
 export type GetCountriesResponse = Response<Country[]>;

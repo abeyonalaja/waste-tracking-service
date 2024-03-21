@@ -1,4 +1,5 @@
-import { SchemaObject } from 'ajv/dist/jtd';
+import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
+import { GetCountriesRequest } from './reference-data.dto';
 
 export const errorResponseValue: SchemaObject = {
   properties: {
@@ -68,6 +69,12 @@ export const getEWCCodesResponse: SchemaObject = {
         },
       },
     },
+  },
+};
+
+export const getCountriesRequest: JTDSchemaType<GetCountriesRequest> = {
+  optionalProperties: {
+    includeUk: { type: 'boolean' },
   },
 };
 

@@ -1180,6 +1180,18 @@ export const db: DB = {
       name: 'United Arab Emirates [AE]',
     },
     {
+      name: 'United Kingdom (England) [GB-ENG]',
+    },
+    {
+      name: 'United Kingdom (Northern Ireland) [GB-NIR]',
+    },
+    {
+      name: 'United Kingdom (Scotland) [GB-SCT]',
+    },
+    {
+      name: 'United Kingdom (Wales) [GB-WLS]',
+    },
+    {
       name: 'United States [US]',
     },
     {

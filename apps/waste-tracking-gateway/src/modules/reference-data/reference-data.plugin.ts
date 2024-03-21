@@ -47,9 +47,22 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/countries',
-      handler: async function () {
+      handler: async function ({ query }) {
+        const includeUkStr = query['includeUk'] as string | undefined;
+
+        let includeUk = false;
+        if (includeUkStr) {
+          try {
+            includeUk = JSON.parse(includeUkStr.toLowerCase());
+          } catch (err) {
+            return Boom.notFound(
+              "Query parameter 'includeUk' must be of type boolean"
+            );
+          }
+        }
+
         try {
-          return await backend.listCountries();
+          return await backend.listCountries(includeUk);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

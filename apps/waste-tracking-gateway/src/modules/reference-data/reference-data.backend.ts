@@ -16,7 +16,7 @@ import { Logger } from 'winston';
 export interface ReferenceDataBackend {
   listWasteCodes(): Promise<api.ListWasteCodesResponse>;
   listEWCCodes(): Promise<api.ListEWCCodesResponse>;
-  listCountries(): Promise<api.ListCountriesResponse>;
+  listCountries(includeUk?: boolean): Promise<api.ListCountriesResponse>;
   listRecoveryCodes(): Promise<api.ListRecoveryCodesResponse>;
   listDisposalCodes(): Promise<api.ListDisposalCodesResponse>;
   listHazardousCodes(): Promise<api.ListHazardousCodesResponse>;
@@ -1575,10 +1575,10 @@ export class ReferenceDataServiceBackend implements ReferenceDataBackend {
     return response.value;
   }
 
-  async listCountries(): Promise<api.ListCountriesResponse> {
+  async listCountries(includeUk?: boolean): Promise<api.ListCountriesResponse> {
     let response: GetCountriesResponse;
     try {
-      response = await this.client.getCountries();
+      response = await this.client.getCountries({ includeUk });
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();
