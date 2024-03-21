@@ -275,19 +275,19 @@ describe(AnnexViiBulkServiceBackend, () => {
       }
       expect(mockUpdateBatch).toBeCalledWith(request);
     });
-  });
 
-  it('returns successful response', async () => {
-    const request = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-    };
-    mockUpdateBatch.mockResolvedValueOnce({
-      success: true,
-      value: undefined,
+    it('returns successful response', async () => {
+      const request = {
+        id: faker.datatype.uuid(),
+        accountId: faker.datatype.uuid(),
+      };
+      mockUpdateBatch.mockResolvedValueOnce({
+        success: true,
+        value: undefined,
+      });
+
+      expect(await subject.finalizeBatch(request)).toEqual(undefined);
+      expect(mockUpdateBatch).toBeCalledWith(request);
     });
-
-    expect(await subject.finalizeBatch(request)).toEqual(undefined);
-    expect(mockUpdateBatch).toBeCalledWith(request);
   });
 });

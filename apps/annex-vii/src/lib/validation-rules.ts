@@ -1,4 +1,4 @@
-import { WasteCodeType, WasteCode } from '@wts/api/reference-data';
+import { WasteCodeType, WasteCode, Country } from '@wts/api/reference-data';
 import {
   validation,
   FieldFormatError,
@@ -12,7 +12,18 @@ import {
   WasteQuantityFlattened,
   WasteQuantity,
   InvalidAttributeCombinationError,
+  ExporterDetailFlattened,
+  ExporterDetail,
+  ImporterDetailFlattened,
+  ImporterDetail,
 } from '../model';
+
+const fourNationsCountries = [
+  'England',
+  'Scotland',
+  'Wales',
+  'Northern Ireland',
+];
 
 export function validateCustomerReferenceSection(
   value: CustomerReferenceFlattened
@@ -506,4 +517,347 @@ export function validateWasteDescriptionAndQuantityCrossSection(
     };
   }
   return { valid: true };
+}
+
+export function validateExporterDetailSection(
+  value: ExporterDetailFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: ExporterDetail } {
+  const errors: FieldFormatError[] = [];
+  if (
+    !value.exporterOrganisationName ||
+    !value.exporterOrganisationName.trim()
+  ) {
+    errors.push({
+      field: 'ExporterDetail',
+      message:
+        validation.ExporterDetailValidationErrorMessages.emptyOrganisationName,
+    });
+  } else {
+    if (value.exporterOrganisationName.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      });
+    }
+  }
+
+  if (!value.exporterAddressLine1 || !value.exporterAddressLine1.trim()) {
+    errors.push({
+      field: 'ExporterDetail',
+      message:
+        validation.ExporterDetailValidationErrorMessages.emptyAddressLine1,
+    });
+  } else {
+    if (value.exporterAddressLine1.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyAddressLine1,
+      });
+    }
+  }
+
+  if (value.exporterAddressLine2.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'ExporterDetail',
+      message:
+        validation.ExporterDetailValidationErrorMessages
+          .charTooManyAddressLine2,
+    });
+  }
+
+  if (!value.exporterTownOrCity || !value.exporterTownOrCity.trim()) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.emptyTownOrCity,
+    });
+  } else {
+    if (value.exporterTownOrCity.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyTownOrCity,
+      });
+    }
+  }
+
+  if (!value.exporterCountry) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.emptyCountry,
+    });
+  } else {
+    if (!fourNationsCountries.includes(value.exporterCountry)) {
+      errors.push({
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.invalidCountry,
+      });
+    }
+  }
+
+  if (
+    value.exporterPostcode &&
+    !validation.postcodeRegex.test(value.exporterPostcode)
+  ) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.invalidPostcode,
+    });
+  }
+
+  if (!value.exporterContactFullname || !value.exporterContactFullname.trim()) {
+    errors.push({
+      field: 'ExporterDetail',
+      message:
+        validation.ExporterDetailValidationErrorMessages.emptyContactFullName,
+    });
+  } else {
+    if (value.exporterContactFullname.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      });
+    }
+  }
+
+  const reformattedExporterContactPhoneNumber =
+    value.exporterContactPhoneNumber.replace(/'/g, '');
+  if (!reformattedExporterContactPhoneNumber) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.emptyPhone,
+    });
+  } else {
+    if (!validation.phoneRegex.test(reformattedExporterContactPhoneNumber)) {
+      errors.push({
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidPhone,
+      });
+    }
+  }
+
+  const reformattedExporterFaxNumber = value.exporterFaxNumber.replace(
+    /'/g,
+    ''
+  );
+  if (
+    reformattedExporterFaxNumber &&
+    !validation.faxRegex.test(reformattedExporterFaxNumber)
+  ) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.invalidFax,
+    });
+  }
+
+  if (!value.exporterEmailAddress) {
+    errors.push({
+      field: 'ExporterDetail',
+      message: validation.ExporterDetailValidationErrorMessages.emptyEmail,
+    });
+  } else {
+    if (!validation.emailRegex.test(value.exporterEmailAddress)) {
+      errors.push({
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidEmail,
+      });
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      exporterAddress: {
+        addressLine1: value.exporterAddressLine1,
+        addressLine2: !value.exporterAddressLine2
+          ? undefined
+          : value.exporterAddressLine2,
+        townCity: value.exporterTownOrCity,
+        postcode: !value.exporterPostcode ? undefined : value.exporterPostcode,
+        country: value.exporterCountry,
+      },
+      exporterContactDetails: {
+        organisationName: value.exporterOrganisationName,
+        fullName: value.exporterContactFullname,
+        emailAddress: value.exporterEmailAddress,
+        phoneNumber: reformattedExporterContactPhoneNumber,
+        faxNumber: !reformattedExporterFaxNumber
+          ? undefined
+          : reformattedExporterFaxNumber,
+      },
+    },
+  };
+}
+
+export function validateImporterDetailSection(
+  value: ImporterDetailFlattened,
+  countryList: Country[]
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: ImporterDetail } {
+  const errors: FieldFormatError[] = [];
+  if (
+    !value.importerOrganisationName ||
+    !value.importerOrganisationName.trim()
+  ) {
+    errors.push({
+      field: 'ImporterDetail',
+      message:
+        validation.ImporterDetailValidationErrorMessages.emptyOrganisationName,
+    });
+  } else {
+    if (value.importerOrganisationName.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      });
+    }
+  }
+
+  if (!value.importerAddress || !value.importerAddress.trim()) {
+    errors.push({
+      field: 'ImporterDetail',
+      message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
+    });
+  } else {
+    if (value.importerAddress.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.charTooManyAddress,
+      });
+    }
+  }
+
+  if (!value.importerCountry) {
+    errors.push({
+      field: 'ImporterDetail',
+      message: validation.ImporterDetailValidationErrorMessages.emptyCountry,
+    });
+  } else {
+    const filteredCountryList = countryList.filter((c) =>
+      c.name.toUpperCase().includes(value.importerCountry.toUpperCase())
+    );
+    if (filteredCountryList.length !== 1) {
+      errors.push({
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.invalidCountry,
+      });
+    } else {
+      value.importerCountry = filteredCountryList[0].name;
+    }
+  }
+
+  // TODO: country should not be the same as transit country
+  // Cannot be done until transit country section is done
+
+  if (!value.importerContactFullname || !value.importerContactFullname.trim()) {
+    errors.push({
+      field: 'ImporterDetail',
+      message:
+        validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
+    });
+  } else {
+    if (value.importerContactFullname.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      });
+    }
+  }
+
+  const reformattedImporterContactPhoneNumber =
+    value.importerContactPhoneNumber.replace(/'/g, '');
+  if (!reformattedImporterContactPhoneNumber) {
+    errors.push({
+      field: 'ImporterDetail',
+      message: validation.ImporterDetailValidationErrorMessages.emptyPhone,
+    });
+  } else {
+    if (
+      !validation.phoneInternationalRegex.test(
+        reformattedImporterContactPhoneNumber
+      )
+    ) {
+      errors.push({
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
+      });
+    }
+  }
+
+  const reformattedImporterFaxNumber = value.importerFaxNumber.replace(
+    /'/g,
+    ''
+  );
+  if (
+    reformattedImporterFaxNumber &&
+    !validation.faxInternationalRegex.test(reformattedImporterFaxNumber)
+  ) {
+    errors.push({
+      field: 'ImporterDetail',
+      message: validation.ImporterDetailValidationErrorMessages.invalidFax,
+    });
+  }
+
+  if (!value.importerEmailAddress) {
+    errors.push({
+      field: 'ImporterDetail',
+      message: validation.ImporterDetailValidationErrorMessages.emptyEmail,
+    });
+  } else {
+    if (!validation.emailRegex.test(value.importerEmailAddress)) {
+      errors.push({
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+      });
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      importerAddressDetails: {
+        organisationName: value.importerOrganisationName,
+        address: value.importerAddress,
+        country: value.importerCountry,
+      },
+      importerContactDetails: {
+        fullName: value.importerContactFullname,
+        emailAddress: value.importerEmailAddress,
+        phoneNumber: reformattedImporterContactPhoneNumber,
+        faxNumber: !reformattedImporterFaxNumber
+          ? undefined
+          : reformattedImporterFaxNumber,
+      },
+    },
+  };
 }

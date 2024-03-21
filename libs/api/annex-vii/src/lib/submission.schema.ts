@@ -679,6 +679,55 @@ export const wasteQuantity: SchemaObject = {
   },
 };
 
+export const exporterDetail: SchemaObject = {
+  properties: {
+    exporterAddress: {
+      properties: {
+        addressLine1: { type: 'string' },
+        townCity: { type: 'string' },
+        country: { type: 'string' },
+      },
+      optionalProperties: {
+        addressLine2: { type: 'string' },
+        postcode: { type: 'string' },
+      },
+    },
+    exporterContactDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const importerDetail = {
+  properties: {
+    importerAddressDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        address: { type: 'string' },
+        country: { type: 'string' },
+      },
+    },
+    importerContactDetails: {
+      properties: {
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
 export const validateSubmissionsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },
@@ -698,6 +747,23 @@ export const validateSubmissionsRequest: SchemaObject = {
           wasteQuantityCubicMetres: { type: 'string' },
           wasteQuantityKilograms: { type: 'string' },
           estimatedOrActualWasteQuantity: { type: 'string' },
+          exporterOrganisationName: { type: 'string' },
+          exporterAddressLine1: { type: 'string' },
+          exporterAddressLine2: { type: 'string' },
+          exporterTownOrCity: { type: 'string' },
+          exporterCountry: { type: 'string' },
+          exporterPostcode: { type: 'string' },
+          exporterContactFullname: { type: 'string' },
+          exporterContactPhoneNumber: { type: 'string' },
+          exporterFaxNumber: { type: 'string' },
+          exporterEmailAddress: { type: 'string' },
+          importerOrganisationName: { type: 'string' },
+          importerAddress: { type: 'string' },
+          importerCountry: { type: 'string' },
+          importerContactFullname: { type: 'string' },
+          importerContactPhoneNumber: { type: 'string' },
+          importerFaxNumber: { type: 'string' },
+          importerEmailAddress: { type: 'string' },
         },
       },
     },
@@ -714,6 +780,8 @@ const validationResult: SchemaObject = {
           reference: { type: 'string' },
           wasteDescription: wasteDescription,
           wasteQuantity: wasteQuantity,
+          exporterDetail: exporterDetail,
+          importerDetail: importerDetail,
           index: { type: 'uint16' },
           fieldFormatErrors: {
             elements: {

@@ -61,6 +61,7 @@ export default class SubmissionController {
       }
       const wasteCodeList = wasteCodesResponse.value;
       const ewcCodeList = ewcCodesResponse.value;
+      const countryList = countriesResponse.value;
 
       let index = 0;
       const errors: Error[] = [];
@@ -116,11 +117,55 @@ export default class SubmissionController {
           }
         }
 
-        if (reference.valid && wasteDescription.valid && wasteQuantity.valid) {
+        const exporterDetail = validationRules.validateExporterDetailSection({
+          exporterOrganisationName: s.exporterOrganisationName,
+          exporterAddressLine1: s.exporterAddressLine1,
+          exporterAddressLine2: s.exporterAddressLine2,
+          exporterTownOrCity: s.exporterTownOrCity,
+          exporterCountry: s.exporterCountry,
+          exporterPostcode: s.exporterPostcode,
+          exporterContactFullname: s.exporterContactFullname,
+          exporterContactPhoneNumber: s.exporterContactPhoneNumber,
+          exporterFaxNumber: s.exporterFaxNumber,
+          exporterEmailAddress: s.exporterEmailAddress,
+        });
+        if (!exporterDetail.valid) {
+          exporterDetail.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
+        }
+
+        const importerDetail = validationRules.validateImporterDetailSection(
+          {
+            importerOrganisationName: s.importerOrganisationName,
+            importerAddress: s.importerAddress,
+            importerCountry: s.importerCountry,
+            importerContactFullname: s.importerContactFullname,
+            importerContactPhoneNumber: s.importerContactPhoneNumber,
+            importerFaxNumber: s.importerFaxNumber,
+            importerEmailAddress: s.importerEmailAddress,
+          },
+          countryList
+        );
+        if (!importerDetail.valid) {
+          importerDetail.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
+        }
+
+        if (
+          reference.valid &&
+          wasteDescription.valid &&
+          wasteQuantity.valid &&
+          exporterDetail.valid &&
+          importerDetail.valid
+        ) {
           submissions.push({
             reference: reference.value,
             wasteDescription: wasteDescription.value,
             wasteQuantity: wasteQuantity.value,
+            exporterDetail: exporterDetail.value,
+            importerDetail: importerDetail.value,
           });
         } else {
           errors.push({

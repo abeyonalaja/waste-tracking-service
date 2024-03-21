@@ -32,3 +32,7 @@ export const DecimalPlacesChar = {
   min: 0,
   max: 2,
 };
+
+export const FreeTextChar = {
+  max: 250,
+};

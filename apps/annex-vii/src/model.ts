@@ -40,8 +40,12 @@ export type WasteCodeComponent = WasteDescription['wasteCode'];
 export type EwcCodeComponent = WasteDescription['ewcCodes'];
 export type NationalCodeComponent = WasteDescription['nationalCode'];
 export type WasteQuantity = Submission['wasteQuantity'];
+export type ExporterDetail = Submission['exporterDetail'];
+export type ImporterDetail = Submission['importerDetail'];
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type CustomerReferenceFlattened = bulkApi.CustomerReferenceFlattened;
 export type WasteDescriptionFlattened = bulkApi.WasteDescriptionFlattened;
 export type WasteQuantityFlattened = bulkApi.WasteQuantityFlattened;
+export type ExporterDetailFlattened = bulkApi.ExporterDetailFlattened;
+export type ImporterDetailFlattened = bulkApi.ImporterDetailFlattened;

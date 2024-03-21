@@ -430,9 +430,34 @@ export type WasteQuantityFlattened = {
   estimatedOrActualWasteQuantity: string;
 };
 
+export type ExporterDetailFlattened = {
+  exporterOrganisationName: string;
+  exporterAddressLine1: string;
+  exporterAddressLine2: string;
+  exporterTownOrCity: string;
+  exporterCountry: string;
+  exporterPostcode: string;
+  exporterContactFullname: string;
+  exporterContactPhoneNumber: string;
+  exporterFaxNumber: string;
+  exporterEmailAddress: string;
+};
+
+export type ImporterDetailFlattened = {
+  importerOrganisationName: string;
+  importerAddress: string;
+  importerCountry: string;
+  importerContactFullname: string;
+  importerContactPhoneNumber: string;
+  importerFaxNumber: string;
+  importerEmailAddress: string;
+};
+
 export type SubmissionFlattened = CustomerReferenceFlattened &
   WasteDescriptionFlattened &
-  WasteQuantityFlattened;
+  WasteQuantityFlattened &
+  ExporterDetailFlattened &
+  ImporterDetailFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   values: SubmissionFlattened[];

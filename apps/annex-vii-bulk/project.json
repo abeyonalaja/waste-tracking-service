@@ -20,7 +20,7 @@
         "additionalEntryPoints": [
           {
             "entryName": "tracing",
-            "entryPath": "apps/annex-vii/src/tracing.ts"
+            "entryPath": "apps/annex-vii-bulk/src/tracing.ts"
           }
         ]
       },

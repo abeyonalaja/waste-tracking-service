@@ -4,6 +4,7 @@ import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './submission-controller';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
+import { validation } from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -53,6 +54,23 @@ describe(SubmissionController, () => {
             wasteQuantityCubicMetres: '',
             wasteQuantityKilograms: '',
             estimatedOrActualWasteQuantity: 'Actual',
+            exporterOrganisationName: 'Test organisation 1',
+            exporterAddressLine1: '1 Some Street',
+            exporterAddressLine2: '',
+            exporterTownOrCity: 'London',
+            exporterCountry: 'England',
+            exporterPostcode: 'EC2N4AY',
+            exporterContactFullname: 'John Smith',
+            exporterContactPhoneNumber: '07888888888',
+            exporterFaxNumber: '',
+            exporterEmailAddress: 'test1@test.com',
+            importerOrganisationName: 'Test organisation 2',
+            importerAddress: '2 Some Street, Paris, 75002',
+            importerCountry: 'France',
+            importerContactFullname: 'Jane Smith',
+            importerContactPhoneNumber: '0033140000000',
+            importerFaxNumber: '0033140000000',
+            importerEmailAddress: 'test2@test.com',
           },
         ],
       });
@@ -117,6 +135,9 @@ describe(SubmissionController, () => {
           {
             name: 'Afghanistan [AF]',
           },
+          {
+            name: 'France [FR]',
+          },
         ],
       });
       mockClient.getRecoveryCodes.mockResolvedValueOnce({
@@ -166,6 +187,23 @@ describe(SubmissionController, () => {
             wasteQuantityCubicMetres: '',
             wasteQuantityKilograms: '',
             estimatedOrActualWasteQuantity: 'Actual',
+            exporterOrganisationName: 'Test organisation 1',
+            exporterAddressLine1: '1 Some Street',
+            exporterAddressLine2: '',
+            exporterTownOrCity: 'London',
+            exporterCountry: 'England',
+            exporterPostcode: 'EC2N4AY',
+            exporterContactFullname: 'John Smith',
+            exporterContactPhoneNumber: '07888888888',
+            exporterFaxNumber: '',
+            exporterEmailAddress: 'test1@test.com',
+            importerOrganisationName: 'Test organisation 2',
+            importerAddress: '2 Some Street, Paris, 75002',
+            importerCountry: 'France',
+            importerContactFullname: 'Jane Smith',
+            importerContactPhoneNumber: '0033140000000',
+            importerFaxNumber: '0033140000000',
+            importerEmailAddress: 'test2@test.com',
           },
         ],
       });
@@ -212,6 +250,33 @@ describe(SubmissionController, () => {
                 quantityType: 'Weight',
                 unit: 'Tonne',
                 value: 2,
+              },
+            },
+            exporterDetail: {
+              exporterAddress: {
+                addressLine1: '1 Some Street',
+                townCity: 'London',
+                postcode: 'EC2N4AY',
+                country: 'England',
+              },
+              exporterContactDetails: {
+                organisationName: 'Test organisation 1',
+                fullName: 'John Smith',
+                emailAddress: 'test1@test.com',
+                phoneNumber: '07888888888',
+              },
+            },
+            importerDetail: {
+              importerAddressDetails: {
+                organisationName: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              importerContactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+                faxNumber: '0033140000000',
               },
             },
           },
@@ -319,6 +384,23 @@ describe(SubmissionController, () => {
             wasteQuantityCubicMetres: '',
             wasteQuantityKilograms: '2',
             estimatedOrActualWasteQuantity: 'Actuals',
+            exporterOrganisationName: '     ',
+            exporterAddressLine1: '     ',
+            exporterAddressLine2: '',
+            exporterTownOrCity: '     ',
+            exporterCountry: '     ',
+            exporterPostcode: '     ',
+            exporterContactFullname: '     ',
+            exporterContactPhoneNumber: '     ',
+            exporterFaxNumber: '     ',
+            exporterEmailAddress: '     ',
+            importerOrganisationName: '     ',
+            importerAddress: '     ',
+            importerCountry: '     ',
+            importerContactFullname: '     ',
+            importerContactPhoneNumber: '     ',
+            importerFaxNumber: '     ',
+            importerEmailAddress: '     ',
           },
         ],
       });
@@ -343,16 +425,106 @@ describe(SubmissionController, () => {
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
-                message:
-                  'The reference must only include letters a to z, and numbers',
+                message: validation.ReferenceValidationErrorMessages.invalid,
               },
               {
                 field: 'WasteDescription',
-                message: 'Enter Annex IIIA code in correct format',
+                message:
+                  validation.AnnexIIIACodeValidationErrorMessages.invalid,
               },
               {
                 field: 'WasteQuantity',
-                message: "Enter either 'estimate' or 'actual'",
+                message:
+                  validation.WasteQuantityValidationErrorMessages.missingType,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .emptyOrganisationName,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .emptyAddressLine1,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .emptyTownOrCity,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .invalidCountry,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .invalidPostcode,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages
+                    .emptyContactFullName,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages.invalidPhone,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages.invalidFax,
+              },
+              {
+                field: 'ExporterDetail',
+                message:
+                  validation.ExporterDetailValidationErrorMessages.invalidEmail,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages
+                    .emptyOrganisationName,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages.emptyAddress,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages
+                    .invalidCountry,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages
+                    .emptyContactFullName,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages.invalidPhone,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages.invalidFax,
+              },
+              {
+                field: 'ImporterDetail',
+                message:
+                  validation.ImporterDetailValidationErrorMessages.invalidEmail,
               },
             ],
             invalidStructureErrors: [],
@@ -412,6 +584,9 @@ describe(SubmissionController, () => {
           {
             name: 'Afghanistan [AF]',
           },
+          {
+            name: 'France [FR]',
+          },
         ],
       });
       mockClient.getRecoveryCodes.mockResolvedValueOnce({
@@ -461,6 +636,23 @@ describe(SubmissionController, () => {
             wasteQuantityCubicMetres: '',
             wasteQuantityKilograms: '2',
             estimatedOrActualWasteQuantity: 'Actual',
+            exporterOrganisationName: 'Test organisation 1',
+            exporterAddressLine1: '1 Some Street',
+            exporterAddressLine2: '',
+            exporterTownOrCity: 'London',
+            exporterCountry: 'England',
+            exporterPostcode: 'EC2N4AY',
+            exporterContactFullname: 'John Smith',
+            exporterContactPhoneNumber: '07888888888',
+            exporterFaxNumber: '',
+            exporterEmailAddress: 'test1@test.com',
+            importerOrganisationName: 'Test organisation 2',
+            importerAddress: '2 Some Street, Paris, 75002',
+            importerCountry: 'France',
+            importerContactFullname: 'Jane Smith',
+            importerContactPhoneNumber: '0033140000000',
+            importerFaxNumber: '0033140000000',
+            importerEmailAddress: 'test2@test.com',
           },
         ],
       });
@@ -485,15 +677,14 @@ describe(SubmissionController, () => {
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
-                message:
-                  'The reference must only include letters a to z, and numbers',
+                message: validation.ReferenceValidationErrorMessages.invalid,
               },
             ],
             invalidStructureErrors: [
               {
                 fields: ['WasteDescription', 'WasteQuantity'],
                 message:
-                  "Only enter an amount in this cell if you have entered 'Y' in column G for sending waste to a laboratory",
+                  validation.WasteQuantityValidationErrorMessages.laboratory,
               },
             ],
           },

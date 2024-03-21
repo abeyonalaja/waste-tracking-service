@@ -133,7 +133,7 @@ export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
   }
   if (phone?.length === 0) return t('validation.phone.empty');
   const regex = new RegExp(
-    '^((\\+ 44-?|\\+ \\(44-?|\\+\\(44-?|\\+44-?|0044-?|00 44-?|00-44-?|00\\(44-?|00 \\(44)[1-9 -()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
+    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
   );
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
@@ -148,7 +148,7 @@ export const validateFax: (fax?: string, allowNull?: boolean) => string = (
     return;
   }
   const regex = new RegExp(
-    '^((\\+ 44-?|\\+ \\(44-?|\\+\\(44-?|\\+44-?|0044-?|00 44-?|00-44-?|00\\(44-?|00 \\(44)[1-9 -()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
+    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
   );
   if (!regex.test(fax)) {
     return t('validation.fax.invalid');

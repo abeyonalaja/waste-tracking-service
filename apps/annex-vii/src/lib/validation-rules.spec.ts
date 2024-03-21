@@ -1,6 +1,8 @@
 import { WasteDescription, WasteQuantity, validation } from '../model';
 import {
   validateCustomerReferenceSection,
+  validateExporterDetailSection,
+  validateImporterDetailSection,
   validateWasteDescriptionAndQuantityCrossSection,
   validateWasteDescriptionSection,
   validateWasteQuantitySection,
@@ -84,6 +86,15 @@ const ewcCodes = [
         cy: 'Welsh Description',
       },
     },
+  },
+];
+
+const countries = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
   },
 ];
 
@@ -1141,5 +1152,444 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
       fields: ['WasteDescription', 'WasteQuantity'],
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
     });
+  });
+});
+
+describe('validateExporterDetailSection', () => {
+  it('passes ExporterDetail section validation', async () => {
+    let response = validateExporterDetailSection({
+      exporterOrganisationName: 'Test organisation 1',
+      exporterAddressLine1: '1 Some Street',
+      exporterAddressLine2: '',
+      exporterTownOrCity: 'London',
+      exporterCountry: 'England',
+      exporterPostcode: '',
+      exporterContactFullname: 'John Smith',
+      exporterContactPhoneNumber: '00-44788-888 8888',
+      exporterFaxNumber: '',
+      exporterEmailAddress: 'test1@test.com',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      exporterAddress: {
+        addressLine1: '1 Some Street',
+        townCity: 'London',
+        country: 'England',
+      },
+      exporterContactDetails: {
+        organisationName: 'Test organisation 1',
+        fullName: 'John Smith',
+        emailAddress: 'test1@test.com',
+        phoneNumber: '00-44788-888 8888',
+      },
+    });
+
+    response = validateExporterDetailSection({
+      exporterOrganisationName: 'Test organisation 1',
+      exporterAddressLine1: '1 Some Street',
+      exporterAddressLine2: 'Address line',
+      exporterTownOrCity: 'London',
+      exporterCountry: 'England',
+      exporterPostcode: 'EC2N4AY',
+      exporterContactFullname: 'John Smith',
+      exporterContactPhoneNumber: "'00447888888888'",
+      exporterFaxNumber: "'+ (44)78888-88888'",
+      exporterEmailAddress: 'test1@test.com',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      exporterAddress: {
+        addressLine1: '1 Some Street',
+        addressLine2: 'Address line',
+        townCity: 'London',
+        postcode: 'EC2N4AY',
+        country: 'England',
+      },
+      exporterContactDetails: {
+        organisationName: 'Test organisation 1',
+        fullName: 'John Smith',
+        emailAddress: 'test1@test.com',
+        phoneNumber: '00447888888888',
+        faxNumber: '+ (44)78888-88888',
+      },
+    });
+  });
+
+  it('fails ExporterDetail section validation', async () => {
+    let response = validateExporterDetailSection({
+      exporterOrganisationName: '',
+      exporterAddressLine1: '',
+      exporterAddressLine2: '',
+      exporterTownOrCity: '',
+      exporterCountry: '',
+      exporterPostcode: '',
+      exporterContactFullname: '',
+      exporterContactPhoneNumber: '',
+      exporterFaxNumber: '',
+      exporterEmailAddress: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.emptyPhone,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.emptyEmail,
+      },
+    ]);
+
+    response = validateExporterDetailSection({
+      exporterOrganisationName: '     ',
+      exporterAddressLine1: '     ',
+      exporterAddressLine2: '     ',
+      exporterTownOrCity: '     ',
+      exporterCountry: '     ',
+      exporterPostcode: '     ',
+      exporterContactFullname: '     ',
+      exporterContactPhoneNumber: '+34556757895678',
+      exporterFaxNumber: '     ',
+      exporterEmailAddress: '     ',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidEmail,
+      },
+    ]);
+
+    response = validateExporterDetailSection({
+      exporterOrganisationName: faker.datatype.string(251),
+      exporterAddressLine1: faker.datatype.string(251),
+      exporterAddressLine2: faker.datatype.string(251),
+      exporterTownOrCity: faker.datatype.string(251),
+      exporterCountry: faker.datatype.string(251),
+      exporterPostcode: faker.datatype.string(251),
+      exporterContactFullname: faker.datatype.string(251),
+      exporterContactPhoneNumber: faker.datatype.string(30),
+      exporterFaxNumber: faker.datatype.string(30),
+      exporterEmailAddress: faker.datatype.string(30),
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyAddressLine1,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyAddressLine2,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyTownOrCity,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'ExporterDetail',
+        message:
+          validation.ExporterDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'ExporterDetail',
+        message: validation.ExporterDetailValidationErrorMessages.invalidEmail,
+      },
+    ]);
+  });
+});
+
+describe('validateImporterDetailSection', () => {
+  it('passes ImporterDetail section validation', async () => {
+    let response = validateImporterDetailSection(
+      {
+        importerOrganisationName: 'Test organisation 2',
+        importerAddress: '2 Some Street, Paris, 75002',
+        importerCountry: 'France',
+        importerContactFullname: 'Jane Smith',
+        importerContactPhoneNumber: '0033140000000',
+        importerFaxNumber: '',
+        importerEmailAddress: 'test2@test.com',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      importerAddressDetails: {
+        organisationName: 'Test organisation 2',
+        address: '2 Some Street, Paris, 75002',
+        country: 'France [FR]',
+      },
+      importerContactDetails: {
+        fullName: 'Jane Smith',
+        emailAddress: 'test2@test.com',
+        phoneNumber: '0033140000000',
+      },
+    });
+
+    response = validateImporterDetailSection(
+      {
+        importerOrganisationName: 'Test organisation 2',
+        importerAddress: '2 Some Street, Paris, 75002',
+        importerCountry: 'France',
+        importerContactFullname: 'Jane Smith',
+        importerContactPhoneNumber: "'0033140000000'",
+        importerFaxNumber: "'0033140000000'",
+        importerEmailAddress: 'test2@test.com',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      importerAddressDetails: {
+        organisationName: 'Test organisation 2',
+        address: '2 Some Street, Paris, 75002',
+        country: 'France [FR]',
+      },
+      importerContactDetails: {
+        fullName: 'Jane Smith',
+        emailAddress: 'test2@test.com',
+        phoneNumber: '0033140000000',
+        faxNumber: '0033140000000',
+      },
+    });
+  });
+
+  it('fails ImporterDetail section validation', async () => {
+    let response = validateImporterDetailSection(
+      {
+        importerOrganisationName: '',
+        importerAddress: '',
+        importerCountry: '',
+        importerContactFullname: '',
+        importerContactPhoneNumber: '',
+        importerFaxNumber: '',
+        importerEmailAddress: '',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.emptyPhone,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.emptyEmail,
+      },
+    ]);
+
+    response = validateImporterDetailSection(
+      {
+        importerOrganisationName: '     ',
+        importerAddress: '     ',
+        importerCountry: '     ',
+        importerContactFullname: '     ',
+        importerContactPhoneNumber: '     ',
+        importerFaxNumber: '     ',
+        importerEmailAddress: '     ',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+      },
+    ]);
+
+    response = validateImporterDetailSection(
+      {
+        importerOrganisationName: faker.datatype.string(251),
+        importerAddress: faker.datatype.string(251),
+        importerCountry: faker.datatype.string(251),
+        importerContactFullname: faker.datatype.string(251),
+        importerContactPhoneNumber: faker.datatype.string(30),
+        importerFaxNumber: faker.datatype.string(30),
+        importerEmailAddress: faker.datatype.string(30),
+      },
+      countries
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.charTooManyAddress,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'ImporterDetail',
+        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+      },
+    ]);
   });
 });

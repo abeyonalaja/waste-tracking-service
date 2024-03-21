@@ -27,6 +27,8 @@ export type Value = {
   reference: Submission['reference'];
   wasteDescription: Submission['wasteDescription'];
   wasteQuantity: Submission['wasteQuantity'];
+  exporterDetail: Submission['exporterDetail'];
+  importerDetail: Submission['importerDetail'];
 };
 
 export type Error = {

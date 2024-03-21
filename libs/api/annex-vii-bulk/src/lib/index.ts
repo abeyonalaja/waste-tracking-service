@@ -13,6 +13,8 @@ export type {
   CustomerReferenceFlattened,
   WasteDescriptionFlattened,
   WasteQuantityFlattened,
+  ExporterDetailFlattened,
+  ImporterDetailFlattened,
   PartialSubmission,
 } from './dto';
 export * as schema from './schema';

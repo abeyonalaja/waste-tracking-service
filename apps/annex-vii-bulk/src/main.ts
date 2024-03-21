@@ -238,6 +238,23 @@ while (execute) {
                 wasteQuantityKilograms: s.wasteQuantityKilograms,
                 estimatedOrActualWasteQuantity:
                   s.estimatedOrActualWasteQuantity,
+                exporterOrganisationName: s.exporterOrganisationName,
+                exporterAddressLine1: s.exporterAddressLine1,
+                exporterAddressLine2: s.exporterAddressLine2,
+                exporterTownOrCity: s.exporterTownOrCity,
+                exporterCountry: s.exporterCountry,
+                exporterPostcode: s.exporterPostcode,
+                exporterContactFullname: s.exporterContactFullname,
+                exporterContactPhoneNumber: s.exporterContactPhoneNumber,
+                exporterFaxNumber: s.exporterFaxNumber,
+                exporterEmailAddress: s.exporterEmailAddress,
+                importerOrganisationName: s.importerOrganisationName,
+                importerAddress: s.importerAddress,
+                importerCountry: s.importerCountry,
+                importerContactFullname: s.importerContactFullname,
+                importerContactPhoneNumber: s.importerContactPhoneNumber,
+                importerFaxNumber: s.importerFaxNumber,
+                importerEmailAddress: s.importerEmailAddress,
               };
             });
             const submissions: api.PartialSubmission[] = [];

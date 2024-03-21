@@ -4,6 +4,7 @@ import {
   WasteDescriptionChar,
   BulkWasteQuantityValue,
   SmallWasteQuantityValue,
+  FreeTextChar,
 } from './constraints';
 
 export const ReferenceValidationErrorMessages = {
@@ -72,4 +73,43 @@ export const WasteQuantityValidationErrorMessages = {
   missingType: "Enter either 'estimate' or 'actual'",
   laboratory:
     "Only enter an amount in this cell if you have entered 'Y' in column G for sending waste to a laboratory",
+};
+
+export const ExporterDetailValidationErrorMessages = {
+  emptyOrganisationName: 'Enter the exporter organisation name',
+  charTooManyOrganisationName: `The exporter organisation name must be less than ${FreeTextChar.max} characters`,
+  emptyAddressLine1: 'Enter the exporter address',
+  charTooManyAddressLine1: `The exporter address line 1 must be less than ${FreeTextChar.max} characters`,
+  charTooManyAddressLine2: `The exporter address line 2 must be less than ${FreeTextChar.max} characters`,
+  emptyTownOrCity: 'Enter the exporter town or city',
+  charTooManyTownOrCity: `The exporter town or city must be less than ${FreeTextChar.max} characters`,
+  emptyCountry: 'Enter the exporter country',
+  invalidCountry:
+    'The exporter country must only be England, Wales, Scotland or Northern Ireland',
+  invalidPostcode: 'Enter the exporter postcode in the correct format',
+  emptyContactFullName: 'Enter full name of exporter contact',
+  charTooManyContactFullName: `The exporter contact full name must be less than ${FreeTextChar.max} characters`,
+  emptyPhone: 'Enter exporter contact phone number',
+  invalidPhone: 'Enter a real phone number for the exporter',
+  invalidFax: 'Enter a real fax number for the exporter',
+  emptyEmail: 'Enter exporter email address',
+  invalidEmail: 'Enter a real email address for the exporter',
+};
+
+export const ImporterDetailValidationErrorMessages = {
+  emptyOrganisationName: 'Enter the importer organisation name',
+  charTooManyOrganisationName: `The importer organisation name must be less than ${FreeTextChar.max} characters`,
+  emptyAddress: 'Enter the importer address',
+  charTooManyAddress: `The importer address must be less than ${FreeTextChar.max} characters`,
+  emptyCountry: 'Enter the importer country',
+  invalidCountry: 'Enter the importer country in full',
+  invalidCrossSectionCountry:
+    'The importer country cannot be the same as a transit country',
+  emptyContactFullName: 'Enter full name of importer contact',
+  charTooManyContactFullName: `The importer contact full name must be less than ${FreeTextChar.max} characters`,
+  emptyPhone: 'Enter importer contact phone number',
+  invalidPhone: 'Enter a real phone number for the importer',
+  invalidFax: 'Enter a real fax number for the importer',
+  emptyEmail: 'Enter importer email address',
+  invalidEmail: 'Enter a real email address for the importer',
 };
