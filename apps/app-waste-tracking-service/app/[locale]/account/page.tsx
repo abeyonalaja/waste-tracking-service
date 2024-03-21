@@ -25,6 +25,7 @@ export default async function Index() {
           <GridRow display="flex-from-tablet">
             <GovUK.GridCol size="one-third">
               <LinkCard
+                id="link-card-UKWM"
                 title={t('cards.UKWM.title')}
                 content={t('cards.UKWM.description')}
                 href="../move-waste"
@@ -32,6 +33,7 @@ export default async function Index() {
             </GovUK.GridCol>
             <GovUK.GridCol size="one-third">
               <LinkCard
+                id="link-card-GLW"
                 title={t('cards.GLW.title')}
                 content={t('cards.GLW.description')}
                 href="../export-annex-VII-waste"
