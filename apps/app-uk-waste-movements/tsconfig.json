@@ -23,8 +23,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../apps/uk-waste-movements/.next/types/**/*.ts",
-    "../../dist/apps/uk-waste-movements/.next/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "../../dist/apps/app-uk-waste-movements/.next/types/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],

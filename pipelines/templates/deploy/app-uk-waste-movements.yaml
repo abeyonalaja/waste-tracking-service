@@ -7,10 +7,10 @@ parameters:
     default: ''
   - name: appName
     type: string
-    default: 'uk-waste-movements'
+    default: 'app-uk-waste-movements'
   - name: appNameTag
     type: string
-    default: 'uk_waste_movements'
+    default: 'app_uk_waste_movements'
   - name: valuesFilePath
     type: string
     default: ''

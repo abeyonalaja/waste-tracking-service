@@ -12,7 +12,7 @@
       "rules": {
         "@next/next/no-html-link-for-pages": [
           "error",
-          "apps/uk-waste-movements/pages"
+          "apps/app-uk-waste-movements/pages"
         ]
       }
     },

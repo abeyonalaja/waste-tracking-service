@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "uk-waste-movements.fullname" . }}
+  name: {{ include "app-uk-waste-movements.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "uk-waste-movements.labels" . | nindent 4 }}
+    {{- include "app-uk-waste-movements.labels" . | nindent 4 }}
     {{- range $name, $value := .Values.service.labels }}
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    {{- include "uk-waste-movements.selectorLabels" . | nindent 4 }}
+    {{- include "app-uk-waste-movements.selectorLabels" . | nindent 4 }}

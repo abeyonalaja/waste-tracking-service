@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,annex-vii-bulk,app-green-list-waste,app-waste-tracking-service,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-gateway"
+                        affected="address,annex-vii,annex-vii-bulk,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,feedback,limited-audience,reference-data,waste-tracking-gateway"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,annex-vii-bulk,app-green-list-waste,app-waste-tracking-service,feedback,limited-audience,reference-data,uk-waste-movements,waste-tracking-gateway
+        value: address,annex-vii,annex-vii-bulk,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,feedback,limited-audience,reference-data,waste-tracking-gateway
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -153,6 +153,14 @@ jobs:
                       echo "Deploy app-green-list-waste: false"
                       echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]false"
                     fi
+                    if [[ $affected = *'app-uk-waste-movements'* ]]
+                    then
+                      echo "Deploy app-uk-waste-movements: true"
+                      echo "##vso[task.setvariable variable=deployAppUkWasteMovements;isoutput=true]true"
+                    else
+                      echo "Deploy app-uk-waste-movements: false"
+                      echo "##vso[task.setvariable variable=deployAppUkWasteMovements;isoutput=true]false"
+                    fi
                     if [[ $affected = *'app-waste-tracking-service'* ]]
                     then
                       echo "Deploy app-waste-tracking-service: true"
@@ -184,14 +192,6 @@ jobs:
                     else
                       echo "Deploy reference-data: false"
                       echo "##vso[task.setvariable variable=deployReferenceData;isoutput=true]false"
-                    fi
-                    if [[ $affected = *'uk-waste-movements'* ]]
-                    then
-                      echo "Deploy uk-waste-movements: true"
-                      echo "##vso[task.setvariable variable=deployUkWasteMovements;isoutput=true]true"
-                    else
-                      echo "Deploy uk-waste-movements: false"
-                      echo "##vso[task.setvariable variable=deployUkWasteMovements;isoutput=true]false"
                     fi
                     if [[ $affected = *'waste-tracking-gateway'* ]]
                     then
@@ -255,6 +255,16 @@ jobs:
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployAppGreenListWaste'], true)
 
+                - ${{ elseif eq(app, 'app-uk-waste-movements')}}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployAppUkWasteMovements'], true)
+
                 - ${{ elseif eq(app, 'app-waste-tracking-service')}}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
@@ -306,16 +316,6 @@ jobs:
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployReferenceData'], true)
-
-                - ${{ elseif eq(app, 'uk-waste-movements')}}:
-                    - template: deploy/${{ app }}.yaml
-                      parameters:
-                        serviceConnection: ${{ parameters.acrServiceConnection }}
-                        containerRegistryName: ${{ parameters.containerRegistryName }}
-                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
-                        appInsightsConnectionString: $(appInsightsConnectionString)
-                        ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployUkWasteMovements'], true)
 
                 - ${{ elseif eq(app, 'waste-tracking-gateway') }}:
                     - template: deploy/${{ app }}.yaml

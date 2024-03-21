@@ -1,5 +1,5 @@
 apiVersion: v2
-name: uk-waste-movements
+name: app-uk-waste-movements
 description: A Helm chart for UK Waste Movements
 
 # A chart can be either an 'application' or a 'library' chart.

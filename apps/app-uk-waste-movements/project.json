@@ -1,7 +1,7 @@
 {
-  "name": "uk-waste-movements",
+  "name": "app-uk-waste-movements",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/uk-waste-movements",
+  "sourceRoot": "apps/app-uk-waste-movements",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,13 +9,13 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "root": "apps/uk-waste-movements",
-        "outputPath": "dist/apps/uk-waste-movements",
+        "root": "apps/app-uk-waste-movements",
+        "outputPath": "dist/apps/app-uk-waste-movements",
         "generateLockfile": true
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/uk-waste-movements"
+          "outputPath": "apps/app-uk-waste-movements"
         },
         "production": {}
       }
@@ -24,17 +24,17 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "uk-waste-movements:build",
+        "buildTarget": "app-uk-waste-movements:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "uk-waste-movements:build:development",
+          "buildTarget": "app-uk-waste-movements:build:development",
           "dev": true,
           "port": 4201
         },
         "production": {
-          "buildTarget": "uk-waste-movements:build:production",
+          "buildTarget": "app-uk-waste-movements:build:production",
           "dev": false
         }
       }
@@ -42,14 +42,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "uk-waste-movements:build:production"
+        "buildTarget": "app-uk-waste-movements:build:production"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/uk-waste-movements/jest.config.ts",
+        "jestConfig": "apps/app-uk-waste-movements/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -63,7 +63,7 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/uk-waste-movements/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/app-uk-waste-movements/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "container": {
@@ -72,7 +72,7 @@
       "options": {
         "engine": "docker",
         "metadata": {
-          "images": ["wts/uk-waste-movements"],
+          "images": ["wts/app-uk-waste-movements"],
           "load": true,
           "tags": [
             "type=ref,event=branch",

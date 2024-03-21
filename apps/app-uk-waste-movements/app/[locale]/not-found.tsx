@@ -1,4 +1,4 @@
-import { Link } from '../components/';
+import { Link } from '../components';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 
