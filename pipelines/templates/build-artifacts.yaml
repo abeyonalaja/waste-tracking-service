@@ -81,7 +81,7 @@ jobs:
           echo "$affectedCharts" > $(Build.ArtifactStagingDirectory)/runtimeVariables/affectedCharts
           version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
           updatedCharts=$(
-            git diff --name-only $(branch) $(branch)~1 \
+            git diff --name-only $(branch) $(branch)~1 -R -- \
               | grep -Po "(?<=^charts\/)[a-z-]+(?=\/)" \
               | uniq
           )
