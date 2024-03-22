@@ -167,7 +167,6 @@ const QuantityEntry = () => {
         setErrors(onlyRealErrors);
       } else {
         setErrors(null);
-
         const updatedData = {
           status: 'Complete',
           value: {
@@ -178,11 +177,13 @@ const QuantityEntry = () => {
         };
 
         const type = estimate ? 'estimateData' : 'actualData';
+        const valueRounded = Number(
+          parseFloat(quantityType === 'Weight' ? weight : volume).toFixed(2)
+        );
         updatedData.value[type] = {
           quantityType: quantityType,
-          value: parseFloat(quantityType === 'Weight' ? weight : volume),
+          value: valueRounded,
         };
-
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,

@@ -268,7 +268,7 @@ export const validateQuantityValue: (
         unit: unit,
       });
     }
-    const regex = new RegExp('^[0-9]*(\\.[0-9]{0,2})?$');
+    const regex = new RegExp('^[0-9]*(\\.[0-9]{0,10})?$');
     if (!regex.test(quantityValue)) {
       return t('validation.quantity.value.numbers', {
         label: label.toLowerCase(),
