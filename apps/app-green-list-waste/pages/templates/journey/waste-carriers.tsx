@@ -21,6 +21,7 @@ import {
   Loading,
   SummaryCard,
   SummaryList,
+  CountrySelector,
 } from 'components';
 import {
   isNotEmpty,
@@ -549,6 +550,12 @@ const WasteCarriers = () => {
     }
   };
 
+  const onCountryChange = (e) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      country: e,
+    }));
+  };
   const onAddressDetailsChange = (e) => {
     const { name, value } = e.target;
     setAddressDetails((addressDetails) => ({
@@ -664,22 +671,17 @@ const WasteCarriers = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country || '',
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                        meta={{
-                          error: carrierPage.errors?.country,
-                          touched: !!carrierPage.errors?.country,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                      <CountrySelector
+                        id={'country'}
+                        name={'country'}
+                        label={t('address.country')}
+                        value={addressDetails?.country || ''}
+                        size={75}
+                        onChange={onCountryChange}
+                        error={null}
+                        apiConfig={apiConfig}
+                        includeUk={true}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}

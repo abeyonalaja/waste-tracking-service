@@ -15,6 +15,7 @@ type Props = {
   size?: number;
   hint?: string;
   apiConfig: HeadersInit;
+  includeUk?: boolean;
 };
 
 type RowProps = {
@@ -37,6 +38,7 @@ export const CountrySelector = ({
   size = 100,
   hint,
   apiConfig,
+  includeUk = false,
 }: Props) => {
   const currentLanguage = i18n.language;
   const [countryList, setCountryList] = useState<string[]>([]);
@@ -46,7 +48,7 @@ export const CountrySelector = ({
     setIsLoading(true);
     const fetchData = async () => {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries?includeUk=${includeUk}`,
         { headers: apiConfig }
       )
         .then((response) => {

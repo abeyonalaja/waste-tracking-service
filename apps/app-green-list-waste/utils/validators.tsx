@@ -215,6 +215,7 @@ export const validateSameAsImporter: (
   transitCountry?: string,
   importerCountry?: string
 ) => string = (transitCountry, importerCountry) => {
+  if (importerCountry === undefined) return;
   if (transitCountry === importerCountry)
     return t('validation.transit.country.sameAsImporter');
 };

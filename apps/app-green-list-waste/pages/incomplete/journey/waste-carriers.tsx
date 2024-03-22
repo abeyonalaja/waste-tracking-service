@@ -23,6 +23,7 @@ import {
   SummaryList,
   Paragraph,
   TextareaCharCount,
+  CountrySelector,
 } from 'components';
 import {
   isNotEmpty,
@@ -173,7 +174,6 @@ const WasteCarriers = () => {
     null
   );
   const [confirmRemove, setConfirmRemove] = useState(null);
-
   const [addressDetails, setAddressDetails] = useState<{
     organisationName: string;
     address: string;
@@ -631,6 +631,12 @@ const WasteCarriers = () => {
     return carrier.filter((carrier) => carrier.addressDetails !== undefined);
   };
 
+  const onCountryChange = (e) => {
+    setAddressDetails((addressDetails) => ({
+      ...addressDetails,
+      country: e,
+    }));
+  };
   const onAddressDetailsChange = (e) => {
     const { name, value } = e.target;
     setAddressDetails((addressDetails) => ({
@@ -764,22 +770,17 @@ const WasteCarriers = () => {
                       >
                         {t('address')}
                       </GovUK.TextArea>
-                      <AddressField
-                        mb={6}
-                        input={{
-                          name: 'country',
-                          id: 'country',
-                          value: addressDetails?.country || '',
-                          maxLength: 250,
-                          onChange: onAddressDetailsChange,
-                        }}
-                        meta={{
-                          error: carrierPage.errors?.country,
-                          touched: !!carrierPage.errors?.country,
-                        }}
-                      >
-                        {t('address.country')}
-                      </AddressField>
+                      <CountrySelector
+                        id={'country'}
+                        name={'country'}
+                        label={t('address.country')}
+                        value={addressDetails?.country || ''}
+                        size={75}
+                        onChange={onCountryChange}
+                        error={carrierPage.errors?.country}
+                        apiConfig={apiConfig}
+                        includeUk={true}
+                      />
                       <ButtonGroup>
                         <GovUK.Button id="saveButtonAddress">
                           {t('saveButton')}
