@@ -68,3 +68,14 @@ Feature: Exporter manual address page
     And I remain on the enter exporter address manual page with an "Enter a town or city" error message displayed
     And I remain on the enter exporter address manual page with an "Select a country" error message displayed
     And I remain on the enter exporter address manual page with an "Enter an address" error message displayed
+
+  Scenario: User enter invalid input on all required field on the manual address entry page
+    Given I login to waste tracking portal
+    When I navigate to Enter exporter address manual page
+    And I verify Enter exporter address manual page is displayed
+    And I enter invalid input for all the fields on the manual address entry page
+    And I click the button Save and continue
+    And I remain on the enter exporter address manual page with an "Enter a town or city" error message displayed
+    And I remain on the enter exporter address manual page with an "Enter a real postcode" error message displayed
+    And I remain on the enter exporter address manual page with an "Select a country" error message displayed
+    And I remain on the enter exporter address manual page with an "Enter an address" error message displayed

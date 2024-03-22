@@ -44,3 +44,9 @@ end
 And(/^I verify Exporter details page is displayed$/) do
   ExporterDetailsPage.new.check_page_displayed
 end
+
+And(/^I enter invalid input for all the fields on the manual address entry page$/) do
+  EnterExporterAddressManualPage.new.enter_address1 '     '
+  EnterExporterAddressManualPage.new.enter_town '     '
+  EnterExporterAddressManualPage.new.enter_postcode('5 9NB')
+end
