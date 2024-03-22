@@ -13,11 +13,13 @@ import {
   SubmissionNotFound,
   Loading,
   CountrySelector,
+  ErrorSummary,
 } from 'components';
 import { getStatusImporter } from 'utils/statuses/getStatusImporter';
 import { GetExporterDetailResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import useApiConfig from 'utils/useApiConfig';
+import { isNotEmpty, validateSameAsTransit } from 'utils/validators';
 
 const AddressInput = styled(GovUK.InputField)`
   @media (min-width: 641px) {
@@ -36,6 +38,10 @@ const ImporterDetails = () => {
   const [organisationName, setOrganisationName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{
+    countryIncludedInTransit?: string;
+  }>({});
+  const [transitCountries, setTransitCountries] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,6 +65,7 @@ const ImporterDetails = () => {
               setOrganisationName(
                 data.importerAddressDetails?.organisationName
               );
+
               setAddress(data.importerAddressDetails?.address);
               setCountry(data.importerAddressDetails?.country);
               setIsLoading(false);
@@ -76,6 +83,30 @@ const ImporterDetails = () => {
     }
   }, [router.isReady, router.query.templateId]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      if (templateId !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsError(true);
+              setIsLoading(false);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setTransitCountries(data.values);
+            }
+          });
+      }
+    };
+    fetchData();
+  }, [router.isReady, templateId, country]);
   const handleCancelReturn = (e) => {
     e.preventDefault();
     router.push({
@@ -87,43 +118,54 @@ const ImporterDetails = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft = false) => {
       e.preventDefault();
-      const body = {
-        ...data,
-        importerAddressDetails: {
-          organisationName: organisationName || '',
-          address: address || '',
-          country: country || '',
-        },
+      const newErrors = {
+        countryIncludedInTransit: validateSameAsTransit(
+          country,
+          transitCountries
+        ),
       };
-      const updatedStatus = {
-        ...body,
-        status: getStatusImporter(body),
-      };
-      try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
-          {
-            method: 'PUT',
-            headers: apiConfig,
-            body: JSON.stringify(updatedStatus),
-          }
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((data) => {
-            if (data !== undefined) {
-              const path = returnToDraft
-                ? `/templates/tasklist`
-                : `/templates/exporter-importer/importer-contact-details`;
-              router.push({
-                pathname: path,
-                query: { templateId },
-              });
+      if (isNotEmpty(newErrors)) {
+        setErrors(newErrors);
+      } else {
+        setErrors(null);
+        const body = {
+          ...data,
+          importerAddressDetails: {
+            organisationName: organisationName || '',
+            address: address || '',
+            country: country || '',
+          },
+        };
+        const updatedStatus = {
+          ...body,
+          status: getStatusImporter(body),
+        };
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
+            {
+              method: 'PUT',
+              headers: apiConfig,
+              body: JSON.stringify(updatedStatus),
             }
-          });
-      } catch (e) {
-        console.error(e);
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((data) => {
+              if (data !== undefined) {
+                const path = returnToDraft
+                  ? `/templates/tasklist`
+                  : `/templates/exporter-importer/importer-contact-details`;
+                router.push({
+                  pathname: path,
+                  query: { templateId },
+                });
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
       }
     },
     [organisationName, address, country, data]
@@ -159,6 +201,15 @@ const ImporterDetails = () => {
             {isLoading && <Loading />}
             {!isError && !isLoading && (
               <>
+                {errors && !!Object.keys(errors).length && (
+                  <ErrorSummary
+                    heading={t('errorSummary.title')}
+                    errors={Object.keys(errors).map((key) => ({
+                      targetName: key,
+                      text: errors[key],
+                    }))}
+                  />
+                )}
                 <GovUK.Caption size="L">
                   {t('exportJourney.importerDetails.title')}
                 </GovUK.Caption>
@@ -199,7 +250,7 @@ const ImporterDetails = () => {
                       label={t('address.country')}
                       value={country || ''}
                       onChange={setCountry}
-                      error={null}
+                      error={errors?.countryIncludedInTransit}
                       apiConfig={apiConfig}
                     />
                   </GovUK.FormGroup>

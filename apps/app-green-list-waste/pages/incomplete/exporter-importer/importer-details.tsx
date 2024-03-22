@@ -22,6 +22,7 @@ import {
   validateOrganisationName,
   validateCountry,
   validateAddress,
+  validateSameAsTransit,
 } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -41,10 +42,12 @@ const ImporterDetails = () => {
   const [address, setAddress] = useState<string>('');
   const [country, setCountry] = useState(null);
   const [organisationName, setOrganisationName] = useState<string>('');
+  const [transitCountries, setTransitCountries] = useState([]);
   const [errors, setErrors] = useState<{
     organisationName?: string;
     address?: string;
     country?: string;
+    countryIncludedInTransit?: string;
   }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -86,6 +89,31 @@ const ImporterDetails = () => {
     }
   }, [router.isReady, router.query.id]);
 
+  useEffect(() => {
+    setIsError(false);
+    const fetchData = async () => {
+      setIsError(false);
+      if (id !== null) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/transit-countries`,
+          { headers: apiConfig }
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            else {
+              setIsError(true);
+              setIsLoading(false);
+            }
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setTransitCountries(data.values);
+            }
+          });
+      }
+    };
+    fetchData();
+  }, [router.isReady, router.query.id, country]);
   const handleLinkSubmit = async (e) => {
     await handleSubmit(e, true);
   };
@@ -97,6 +125,10 @@ const ImporterDetails = () => {
         organisationName: validateOrganisationName(organisationName),
         address: validateAddress(address),
         country: validateCountry(country),
+        countryIncludedInTransit: validateSameAsTransit(
+          country,
+          transitCountries
+        ),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -230,7 +262,9 @@ const ImporterDetails = () => {
                       label={t('address.country')}
                       value={country || ''}
                       onChange={setCountry}
-                      error={errors?.country}
+                      error={
+                        errors?.country || errors?.countryIncludedInTransit
+                      }
                       apiConfig={apiConfig}
                     />
                   </GovUK.FormGroup>

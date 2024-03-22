@@ -218,6 +218,20 @@ export const validateSameAsImporter: (
   if (transitCountry === importerCountry)
     return t('validation.transit.country.sameAsImporter');
 };
+
+export const validateSameAsTransit: (
+  importerCountry?: string,
+  transitCountries?: string[]
+) => string = (importerCountry, transitCountries) => {
+  if (
+    transitCountries === undefined ||
+    transitCountries.length === 0 ||
+    importerCountry === undefined
+  )
+    return;
+  if (transitCountries.includes(importerCountry))
+    return t('validation.importer.country.sameAsTransit');
+};
 export const validateAddress: (address?: string) => string = (address) => {
   if (address?.length === 0 || address === undefined || !address.trim())
     // trim returns true / false and in this way we check if string contains only spaces
