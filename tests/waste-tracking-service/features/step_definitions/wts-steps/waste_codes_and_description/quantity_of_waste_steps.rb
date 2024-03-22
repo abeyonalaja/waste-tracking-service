@@ -51,7 +51,7 @@ end
 
 When(/^I enter invalid weight in cubic meters$/) do
   ActualBulkTonneWeightPage.new.enter_weight_in_cubic_meters ''
-  weight_in_cubic_meters = Faker::Number.decimal(l_digits: 3, r_digits: 4)
+  weight_in_cubic_meters = '7,1'
   ActualBulkTonneWeightPage.new.enter_weight_in_cubic_meters weight_in_cubic_meters
   TestStatus.set_test_status(:weight_in_tonnes, weight_in_cubic_meters)
   Log.info("Weight in cubic meters, #{weight_in_cubic_meters}")
@@ -59,7 +59,7 @@ end
 
 When(/^I enter invalid weight in tonnes$/) do
   ActualBulkTonneWeightPage.new.enter_weight_in_tonnes ''
-  weight_in_tonnes = Faker::Number.decimal(l_digits: 3, r_digits: 4)
+  weight_in_tonnes = '7,1'
   ActualBulkTonneWeightPage.new.enter_weight_in_tonnes weight_in_tonnes
   TestStatus.set_test_status(:weight_in_tonnes, weight_in_tonnes)
   Log.info("Weight in tonnes, #{weight_in_tonnes}")
@@ -126,7 +126,7 @@ Then(/^I should see quantity option "([^"]*)" is not selected$/) do |option|
 end
 
 When(/^I enter invalid weight in kilograms$/) do
-  weight_in_kilometers = Faker::Number.decimal(l_digits: 3, r_digits: 4)
+  weight_in_kilometers = '7,1'
   ActualBulkTonneWeightPage.new.enter_weight_in_kilograms weight_in_kilometers
   TestStatus.set_test_status(:weight_in_kilometers, weight_in_kilometers)
   Log.info("Weight in kilograms, #{weight_in_kilometers}")
@@ -209,4 +209,8 @@ end
 
 And(/^I clear weight in volume$/) do
   ActualBulkTonneWeightPage.new.enter_weight_in_cubic_meters ''
+end
+
+And(/^I enter zero weight in kilograms$/) do
+  ActualBulkTonneWeightPage.new.enter_weight_in_kilograms '0'
 end

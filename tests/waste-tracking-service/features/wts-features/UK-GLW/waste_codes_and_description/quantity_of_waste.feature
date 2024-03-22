@@ -148,27 +148,27 @@ Feature: Quantity of waste page
     And I click the button Save and continue
     Then the What is the actual net weight of the waste is displayed
     And I click the button Save and continue
-    Then I remain on the Actual bulk tonne weight page with an "Enter quantity" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter weight" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Actual bulk tonne weight page with an "Enter quantity" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter weight" error message displayed
     When I click the "enter an estimate instead" link
     And I click the button Save and continue
-    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "Enter weight" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "Enter weight" error message displayed
     And I click "Back" link should display "Quantity of bulk waste" page
     When I choose "Actual volume (m³)" radio button
     And I click the button Save and continue
     Then the What is the actual net volume of the waste is displayed
     When I click the button Save and continue
-    Then I remain on the Actual bulk volume weight page with an "Enter quantity" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "Enter volume" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Actual bulk volume weight page with an "Enter quantity" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "Enter volume" error message displayed
     When I click the "enter an estimate instead" link
     And I click the button Save and continue
-    Then I remain on the Estimate bulk volume weight page with an "Enter quantity" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "Enter volume" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk volume weight page with an "Enter quantity" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "Enter volume" error message displayed
 
   Scenario: User can't enter special character in quantity of units option
     Given I login to waste tracking portal
@@ -178,52 +178,52 @@ Feature: Quantity of waste page
     And I click the button Save and continue
     When I enter invalid weight in tonnes
     And I click the button Save and continue
-    Then I remain on the Actual bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter weight using only numbers and a full stop" error message displayed
     And I click the Save and return to draft
-    Then I remain on the Actual bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "Enter weight using only numbers and a full stop" error message displayed
     When I enter zero weight in tonnes
     And I click the button Save and continue
-    Then I remain on the Actual bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "The weight needs to be greater than 0" error message displayed
     And I click the Save and return to draft
-    Then I remain on the Actual bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Actual bulk tonne weight page with an "The weight needs to be greater than 0" error message displayed
     When I click the "enter an estimate instead" link
     When I enter invalid weight in tonnes
     And I click the button Save and continue
-    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "Enter weight using only numbers and a full stop" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk tonne weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "Enter weight using only numbers and a full stop" error message displayed
     When I enter zero weight in tonnes
     And I click the button Save and continue
-    Then I remain on the Estimate bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "The weight needs to be greater than 0" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk tonne weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Estimate bulk tonne weight page with an "The weight needs to be greater than 0" error message displayed
     And I click "Back" link should display "Quantity of bulk waste" page
     When I choose "Actual volume (m³)" radio button
     And I click the button Save and continue
     Then the What is the actual net volume of the waste is displayed
     And I enter invalid weight in cubic meters
     When I click the button Save and continue
-    Then I remain on the Actual bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "Enter volume using only numbers and a full stop" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Actual bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "Enter volume using only numbers and a full stop" error message displayed
     And I enter zero weight in cubic meters
     When I click the button Save and continue
-    Then I remain on the Actual bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "The volume needs to be greater than 0" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Actual bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Actual bulk volume weight page with an "The volume needs to be greater than 0" error message displayed
     When I click the "enter an estimate instead" link
     And I click the button Save and continue
     And I wait for a second
     And I enter invalid weight in cubic meters
     And I click the button Save and continue
-    Then I remain on the Estimate bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "Enter volume using only numbers and a full stop" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk volume weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "Enter volume using only numbers and a full stop" error message displayed
     And I enter zero weight in cubic meters
     When I click the button Save and continue
-    Then I remain on the Estimate bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "The volume needs to be greater than 0" error message displayed
     When I click the Save and return to draft
-    Then I remain on the Estimate bulk volume weight page with an "The quantity needs to be greater than 0" error message displayed
+    Then I remain on the Estimate bulk volume weight page with an "The volume needs to be greater than 0" error message displayed
 
     ######## Small waste
   @translation
@@ -338,13 +338,13 @@ Feature: Quantity of waste page
     And I click the button Save and continue
     Then What is the actual net weight of the small weight waste is displayed
     When I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter quantity" error message displayed
+    Then I remain on the Net small weight page with an "Enter weight" error message displayed
     When I click "Back" link should display "Quantity of small waste" page
     And I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     Then the What is the estimate net weight of the small weight waste is displayed
     And I click the button Save and continue
-    And I remain on the Estimate small weight page with an "Enter quantity" error message displayed
+    And I remain on the Estimate small weight page with an "Enter weight" error message displayed
 
   Scenario: User change the waste code from Not Applicable to other options then quantity of waste should be rest
     Given I login to waste tracking portal
@@ -391,15 +391,15 @@ Feature: Quantity of waste page
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Net small weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Net small weight page with an "Enter weight using only numbers and a full stop" error message displayed
     When I click "Back" link should display "Quantity of small waste" page
     And I choose "Estimated weight (kilograms)" radio button
     And I click the button Save and continue
     And I enter invalid weight in kilograms
     And I click the button Save and continue
-    Then I remain on the Estimate small weight page with an "Enter quantity using only numbers" error message displayed
+    Then I remain on the Estimate small weight page with an "Enter weight using only numbers and a full stop" error message displayed
 
-  Scenario: Small weight user can't enter more than 25kgs
+  Scenario: Small weight user can't enter more than 25kgs or less than 0
     Given I login to waste tracking portal
     And I navigate to the task list page with reference
     And I navigate to Quantity of waste page with "Not applicable" has waste code
@@ -408,4 +408,7 @@ Feature: Quantity of waste page
     And I enter weight more than 25 kilograms
     And I click the button Save and continue
     Then I remain on the Net small weight page with an "Enter a weight 25kg or under" error message displayed
+    And I enter zero weight in kilograms
+    And I click the button Save and continue
+    Then I remain on the Net small weight page with an "The weight needs to be greater than 0" error message displayed
 
