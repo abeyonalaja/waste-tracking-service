@@ -36,7 +36,7 @@ export default async function handler(
             if (response.ok) {
               res.redirect(307, `${baseUrl}/?context=granted`);
             } else {
-              res.redirect(307, `${baseUrl}/?context=error`);
+              res.redirect(307, `${baseUrl}/status/?context=error`);
             }
           });
         } catch (e) {
@@ -45,7 +45,7 @@ export default async function handler(
       };
       await fetchData();
     } else {
-      res.redirect(307, `${baseUrl}/?context=unauthorized`);
+      res.redirect(307, `${baseUrl}/status/?context=unauthorized`);
     }
   } else {
     res.status(401);

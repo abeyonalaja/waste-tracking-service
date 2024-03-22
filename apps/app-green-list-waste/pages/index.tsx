@@ -33,7 +33,7 @@ const BreadCrumbs = () => {
   );
 };
 
-export function Index() {
+function Index() {
   const router = useRouter();
   const apiConfig = useApiConfig();
   const { setSubmission } = useSubmissionContext();
@@ -314,3 +314,4 @@ export function Index() {
 }
 
 export default Index;
+Index.auth = true;
