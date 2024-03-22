@@ -52,6 +52,7 @@ class CountriesWasteWillTravelPage < GenericPage
   end
 
   def select_first_country
+    first('country', minimum: 1).click
     find('country__option--0').click
   end
 end

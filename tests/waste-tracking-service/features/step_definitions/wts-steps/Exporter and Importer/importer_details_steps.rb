@@ -47,3 +47,13 @@ And(/^I enter invalid phone number$/) do
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
   ImporterContactDetailsPage.new.enter_phone_number '+359-8988-1434512345634'
 end
+
+And(/^I complete who is the importer page with first country from the list$/) do
+  org_name = Faker::Company.name.gsub(/\W/, '')
+  WhoIsTheImporterPage.new.enter_organisation_name org_name
+  TestStatus.set_test_status(:importer_org_name, org_name)
+  address = 'Address,1 street'
+  WhoIsTheImporterPage.new.enter_address address
+  TestStatus.set_test_status(:importer_address, address)
+  WhoIsTheImporterPage.new.select_first_importer_country
+end

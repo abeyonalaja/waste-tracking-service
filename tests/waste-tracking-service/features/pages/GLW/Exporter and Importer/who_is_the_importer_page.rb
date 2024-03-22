@@ -58,4 +58,9 @@ class WhoIsTheImporterPage < GenericPage
     Log.info("Importing country is #{importer_country}")
   end
 
+  def select_first_importer_country
+    first('country', minimum: 1).click
+    find('country__option--0').click
+  end
+
 end

@@ -71,3 +71,7 @@ When(/^I select same country as importing country$/) do
   sleep 0.5
   CountriesWasteWillTravelPage.new.select_first_country
 end
+
+And(/^I select the first country$/) do
+  CountriesWasteWillTravelPage.new.select_first_country
+end

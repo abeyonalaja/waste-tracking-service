@@ -120,3 +120,33 @@ Feature: Add Importer details page
     And I enter invalid phone number
     And I click the button Save and continue
     Then I remain on the Importer contact details page with an "Enter a real phone number" error message displayed
+
+  Scenario: User verifies that transit country cannot be the same as the importer country
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Importer details" link
+    Then the "who is the importer" page is displayed
+    And I complete who is the importer page with first country from the list
+    Then I click the Save and return to draft
+    And I click the "Countries waste will travel through" link
+    And I choose "Yes" radio button
+    And I select the first country
+    And I click the button Save and continue
+    Then I remain on the Countries waste will travel page with an "The transit country cannot be the same as the importer country" error message displayed
+    And I click the Save and return to draft
+    Then I remain on the Countries waste will travel page with an "The transit country cannot be the same as the importer country" error message displayed
+
+  Scenario: User verifies that importer country cannot be the same as the transit country
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Countries waste will travel through" link
+    And I choose "Yes" radio button
+    And I select the first country
+    And I click the Save and return to draft
+    And I click the "Importer details" link
+    Then the "who is the importer" page is displayed
+    And I complete who is the importer page with first country from the list
+    Then I click the button Save and continue
+    Then I remain on the who is the importer page with an "The importer country cannot be the same as the transit country" error message displayed
+    And I click the Save and return to draft
+    Then I remain on the who is the importer page with an "The importer country cannot be the same as the transit country" error message displayed
