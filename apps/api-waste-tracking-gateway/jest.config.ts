@@ -1,21 +1,21 @@
 /* eslint-disable */
 export default {
-  displayName: 'mock-gateway',
+  displayName: 'api-waste-tracking-gateway',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/mock-gateway',
+  coverageDirectory: '../../coverage/apps/api-waste-tracking-gateway',
   reporters: [
     'default',
     [
       'jest-junit',
       {
-        suiteName: 'waste-tracking-gateway',
+        suiteName: 'api-waste-tracking-gateway',
         outputDirectory: 'reports/junit',
-        outputName: 'waste-tracking-gateway.xml',
+        outputName: 'api-waste-tracking-gateway.xml',
       },
     ],
   ],

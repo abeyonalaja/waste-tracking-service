@@ -17,7 +17,7 @@ nx serve waste-tracking-service
 Run a development server API:
 
 ```
-nx serve waste-tracking-gateway
+nx serve mock-gateway
 ```
 
 ## Nx Workspace

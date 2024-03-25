@@ -1,4 +1,4 @@
-# Default values for waste-tracking-gateway.
+# Default values for api-waste-tracking-gateway.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -10,7 +10,7 @@ replicaCount: 1
 
 # Profile of the image used to create the pod containers
 image:
-  repository: SSVWTSINFCR5401.azurecr.io/wts/waste-tracking-gateway
+  repository: SSVWTSINFCR5401.azurecr.io/wts/api-waste-tracking-gateway
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 'main'
@@ -47,7 +47,7 @@ podLabels:
 podAnnotations:
   dapr.io/enabled: 'true'
   # The client service will use this name to locate the Node service through the Dapr sidecar.
-  dapr.io/app-id: 'waste-tracking-gateway'
+  dapr.io/app-id: 'api-waste-tracking-gateway'
   dapr.io/enable-api-logging: 'true'
   dapr.io/log-level: 'debug'
   dapr.io/app-health-probe-interval: '3600'

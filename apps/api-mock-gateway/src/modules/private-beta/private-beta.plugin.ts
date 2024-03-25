@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { UserFilter } from '../../auth//user-filter';
+import { UserFilter } from '../../auth/user-filter';
 import { Application } from 'express';
 import {
   BadRequestError,

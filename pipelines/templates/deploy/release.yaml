@@ -17,7 +17,7 @@ parameters:
       - feedback
       - limited-audience
       - reference-data
-      - waste-tracking-gateway
+      - api-waste-tracking-gateway
   - name: appNameTag
     type: string
     values:
@@ -30,7 +30,7 @@ parameters:
       - feedback
       - limited_audience
       - reference_data
-      - waste_tracking_gateway
+      - api_waste_tracking_gateway
   - name: deployChart
     type: string
     default: ''

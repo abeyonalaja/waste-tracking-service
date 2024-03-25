@@ -1,5 +1,5 @@
 apiVersion: v2
-name: waste-tracking-gateway
+name: api-waste-tracking-gateway
 description: A Helm chart for Waste Tracking Gateway API
 
 # A chart can be either an 'application' or a 'library' chart.

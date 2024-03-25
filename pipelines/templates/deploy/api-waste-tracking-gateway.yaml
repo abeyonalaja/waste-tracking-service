@@ -7,10 +7,10 @@ parameters:
     default: ''
   - name: appName
     type: string
-    default: 'waste-tracking-gateway'
+    default: 'api-waste-tracking-gateway'
   - name: appNameTag
     type: string
-    default: 'waste_tracking_gateway'
+    default: 'api_waste_tracking_gateway'
   - name: valuesFilePath
     type: string
     default: ''

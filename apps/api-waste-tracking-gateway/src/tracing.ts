@@ -14,7 +14,7 @@ const provider = new NodeTracerProvider({
   resource: Resource.default().merge(
     new Resource({
       [SemanticResourceAttributes.SERVICE_NAME]: `${
-        process.env['APP_ID'] || 'waste-tracking-gateway'
+        process.env['APP_ID'] || 'api-waste-tracking-gateway'
       }-impl`,
     })
   ),

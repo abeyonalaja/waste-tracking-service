@@ -14,7 +14,7 @@ parameters:
       - PRD
   - name: appName
     type: string
-    default: waste-tracking-gateway
+    default: api-waste-tracking-gateway
     values:
       - address
       - annex-vii
@@ -25,7 +25,7 @@ parameters:
       - feedback
       - limited-audience
       - reference-data
-      - waste-tracking-gateway
+      - api-waste-tracking-gateway
 
 jobs:
   - deployment: restart_deployments

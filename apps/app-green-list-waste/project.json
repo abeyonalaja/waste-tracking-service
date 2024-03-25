@@ -41,7 +41,10 @@
     "serve-both": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nx serve app-green-list-waste", "nx serve mock-gateway"],
+        "commands": [
+          "nx serve app-green-list-waste",
+          "nx serve api-mock-gateway"
+        ],
         "parallel": true
       }
     },

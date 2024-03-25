@@ -17,7 +17,7 @@ parameters:
       - feedback
       - limited-audience
       - reference-data
-      - waste-tracking-gateway
+      - api-waste-tracking-gateway
   - name: tag
     type: string
     default: ''

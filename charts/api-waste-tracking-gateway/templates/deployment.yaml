@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "waste-tracking-gateway.fullname" . }}
+  name: {{ include "api-waste-tracking-gateway.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "waste-tracking-gateway.labels" . | nindent 4 }}
+    {{- include "api-waste-tracking-gateway.labels" . | nindent 4 }}
     {{- range $name, $value := .Values.labels }}
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "waste-tracking-gateway.selectorLabels" . | nindent 6 }}
+      {{- include "api-waste-tracking-gateway.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -22,12 +22,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "waste-tracking-gateway.selectorLabels" . | nindent 8 }}
+        {{- include "api-waste-tracking-gateway.selectorLabels" . | nindent 8 }}
         {{- range $name, $value := .Values.podLabels }}
         {{ $name | quote }}: {{ $value | quote }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "waste-tracking-gateway.serviceAccountName" . }}
+      serviceAccountName: {{ include "api-waste-tracking-gateway.serviceAccountName" . }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -39,4 +39,4 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:          
-          {{- include "waste-tracking-gateway.env" . | nindent 8 }}
+          {{- include "api-waste-tracking-gateway.env" . | nindent 8 }}

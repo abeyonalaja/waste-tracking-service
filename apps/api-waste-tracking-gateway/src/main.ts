@@ -65,7 +65,7 @@ import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-b
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.simple(),
-  defaultMeta: { appId: process.env['APP_ID'] || 'waste-tracking-gateway' },
+  defaultMeta: { appId: process.env['APP_ID'] || 'api-waste-tracking-gateway' },
   transports: [new winston.transports.Console()],
 });
 

@@ -1,7 +1,7 @@
 {
-  "name": "waste-tracking-gateway",
+  "name": "api-waste-tracking-gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/waste-tracking-gateway/src",
+  "sourceRoot": "apps/api-waste-tracking-gateway/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,16 +11,16 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/waste-tracking-gateway",
-        "main": "apps/waste-tracking-gateway/src/main.ts",
-        "tsConfig": "apps/waste-tracking-gateway/tsconfig.app.json",
-        "assets": ["apps/waste-tracking-gateway/src/assets"],
-        "webpackConfig": "apps/waste-tracking-gateway/webpack.config.js",
+        "outputPath": "dist/apps/api-waste-tracking-gateway",
+        "main": "apps/api-waste-tracking-gateway/src/main.ts",
+        "tsConfig": "apps/api-waste-tracking-gateway/tsconfig.app.json",
+        "assets": ["apps/api-waste-tracking-gateway/src/assets"],
+        "webpackConfig": "apps/api-waste-tracking-gateway/webpack.config.js",
         "generatePackageJson": true,
         "additionalEntryPoints": [
           {
             "entryName": "tracing",
-            "entryPath": "apps/waste-tracking-gateway/src/tracing.ts"
+            "entryPath": "apps/api-waste-tracking-gateway/src/tracing.ts"
           }
         ]
       },
@@ -35,18 +35,18 @@
       "executor": "@nrwl/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "waste-tracking-gateway:build",
+        "buildTarget": "api-waste-tracking-gateway:build",
         "runtimeArgs": [
           "--require",
-          "./dist/apps/waste-tracking-gateway/tracing.js"
+          "./dist/apps/api-waste-tracking-gateway/tracing.js"
         ]
       },
       "configurations": {
         "development": {
-          "buildTarget": "waste-tracking-gateway:build:development"
+          "buildTarget": "api-waste-tracking-gateway:build:development"
         },
         "production": {
-          "buildTarget": "waste-tracking-gateway:build:production"
+          "buildTarget": "api-waste-tracking-gateway:build:production"
         }
       }
     },
@@ -54,14 +54,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/waste-tracking-gateway/**/*.ts"]
+        "lintFilePatterns": ["apps/api-waste-tracking-gateway/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/waste-tracking-gateway/jest.config.ts",
+        "jestConfig": "apps/api-waste-tracking-gateway/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -77,7 +77,7 @@
       "options": {
         "engine": "docker",
         "metadata": {
-          "images": ["wts/waste-tracking-gateway"],
+          "images": ["wts/api-waste-tracking-gateway"],
           "load": true,
           "tags": [
             "type=schedule",

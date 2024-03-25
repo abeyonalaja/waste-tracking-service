@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "waste-tracking-gateway.name" -}}
+{{- define "api-waste-tracking-gateway.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "waste-tracking-gateway.fullname" -}}
+{{- define "api-waste-tracking-gateway.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "waste-tracking-gateway.chart" -}}
+{{- define "api-waste-tracking-gateway.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "waste-tracking-gateway.labels" -}}
-helm.sh/chart: {{ include "waste-tracking-gateway.chart" . }}
-{{ include "waste-tracking-gateway.selectorLabels" . }}
+{{- define "api-waste-tracking-gateway.labels" -}}
+helm.sh/chart: {{ include "api-waste-tracking-gateway.chart" . }}
+{{ include "api-waste-tracking-gateway.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "waste-tracking-gateway.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "waste-tracking-gateway.name" . }}
+{{- define "api-waste-tracking-gateway.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "api-waste-tracking-gateway.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "waste-tracking-gateway.serviceAccountName" -}}
+{{- define "api-waste-tracking-gateway.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "waste-tracking-gateway.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "api-waste-tracking-gateway.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,15 +64,15 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret to use
 */}}
-{{- define "waste-tracking-gateway.secretName" -}}
-{{- default (include "waste-tracking-gateway.fullname" .) .Values.secret.name }}
+{{- define "api-waste-tracking-gateway.secretName" -}}
+{{- default (include "api-waste-tracking-gateway.fullname" .) .Values.secret.name }}
 {{- end }}
 
 {{/*
 Create the environment variables to use
 */}}
-{{- define "waste-tracking-gateway.env"}}
-{{- $secretName := default (include "waste-tracking-gateway.secretName" .) }}
+{{- define "api-waste-tracking-gateway.env"}}
+{{- $secretName := default (include "api-waste-tracking-gateway.secretName" .) }}
 {{- range $name, $value := .Values.secret.env }}
 - name: {{ $name }}
   valueFrom:

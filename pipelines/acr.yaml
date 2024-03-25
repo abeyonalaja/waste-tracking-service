@@ -25,8 +25,8 @@ parameters:
         nameTag: limited_audience
       - name: reference-data
         nameTag: reference_data
-      - name: waste-tracking-gateway
-        nameTag: waste_tracking_gateway
+      - name: api-waste-tracking-gateway
+        nameTag: api_waste_tracking_gateway
 
   - name: artifacts
     type: object
