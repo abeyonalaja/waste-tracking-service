@@ -2,8 +2,7 @@ import Boom from '@hapi/boom';
 import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
 import { compress } from 'snappy';
 import { Logger } from 'winston';
-import { BulkSubmission } from '@wts/api/waste-tracking-gateway';
-import { v4 as uuidv4 } from 'uuid';
+import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 
 export type BatchRef = {
@@ -15,11 +14,11 @@ export type Input = {
   type: string;
   data: Buffer;
 };
-const batches = new Map<string, BulkSubmission>();
+const batches = new Map<string, UkwmBulkSubmission>();
 
 export interface UkWasteMovementsBulkSubmissionBackend {
   createBatch(accountId: string, inputs: Input[]): Promise<{ id: string }>;
-  getBatch(ref: BatchRef): Promise<BulkSubmission>;
+  getBatch(ref: BatchRef): Promise<UkwmBulkSubmission>;
   finalizeBatch(ref: BatchRef): Promise<void>;
 }
 
@@ -39,7 +38,7 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
     };
   }
 
-  getBatch({ id, accountId }: BatchRef): Promise<BulkSubmission> {
+  getBatch({ id, accountId }: BatchRef): Promise<UkwmBulkSubmission> {
     const value = batches.get(JSON.stringify({ id, accountId }));
     if (value === undefined) {
       return Promise.reject(Boom.notFound());
@@ -55,22 +54,11 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
     }
 
     const timestamp = new Date();
-    const transactionId =
-      timestamp.getFullYear().toString().substring(2) +
-      (timestamp.getMonth() + 1).toString().padStart(2, '0') +
-      '_' +
-      id.substring(0, 8).toUpperCase();
 
     value.state = {
-      status: 'Submitted',
+      status: 'Submitting',
       timestamp: timestamp,
-      transactionId: transactionId,
-      submissions: [
-        {
-          id: uuidv4(),
-          transactionId: '2307_1234ABCD',
-        },
-      ],
+      hasEstimates: true,
     };
 
     batches.set(JSON.stringify({ id, accountId }), value);
@@ -143,7 +131,7 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
     }
   }
 
-  async getBatch({ id, accountId }: BatchRef): Promise<BulkSubmission> {
+  async getBatch({ id, accountId }: BatchRef): Promise<UkwmBulkSubmission> {
     let response: api.GetBatchResponse;
     try {
       response = await this.client.getBatch({ id, accountId });
@@ -158,7 +146,7 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
       });
     }
 
-    return response.value as BulkSubmission;
+    return response.value as UkwmBulkSubmission;
   }
 
   async finalizeBatch({ id, accountId }: BatchRef): Promise<void> {

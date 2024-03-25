@@ -18,8 +18,14 @@ export type UkwmBulkSubmissionState =
       hasEstimates: boolean;
     }
   | {
+      status: 'Submitting';
+      timestamp: Date;
+      hasEstimates: boolean;
+    }
+  | {
       status: 'Submitted';
       timestamp: Date;
+      hasEstimates: boolean;
       transactionId: string;
     };
 

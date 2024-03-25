@@ -263,17 +263,64 @@ export async function createBatch(
         accountId: accountId,
       };
       break;
+
+    case 'Submitting':
+      value = {
+        id: uuidv4(),
+        state: {
+          status: 'Submitting',
+          timestamp: timestamp,
+          hasEstimates: true,
+          submissions: [
+            {
+              reference: uuidv4(),
+              wasteDescription: {
+                wasteCode: {
+                  type: 'BaselAnnexIX',
+                  code: 'B1010',
+                },
+                ewcCodes: [
+                  {
+                    code: '101213',
+                  },
+                ],
+                nationalCode: {
+                  provided: 'No',
+                },
+                description: 'WasteDescription',
+              },
+              wasteQuantity: {
+                type: 'EstimateData',
+                estimateData: {
+                  quantityType: 'Volume',
+                  unit: 'Cubic Metre',
+                  value: 10,
+                },
+                actualData: {},
+              },
+            },
+          ],
+        },
+        accountId: accountId,
+      };
+      break;
+
     case 'Submitted':
       value = {
         id: uuidv4(),
         state: {
           status: 'Submitted',
-          timestamp: timestamp,
           transactionId: transactionId,
+          timestamp: timestamp,
+          hasEstimates: true,
           submissions: [
             {
               id: uuidv4(),
-              transactionId: '2307_1234ABCD',
+              transactionId: transactionId,
+              hasEstimates: true,
+              collectionDate: new Date(),
+              wasteCode: 'BaselAnnexIX',
+              reference: 'ref1',
             },
           ],
         },
@@ -313,20 +360,38 @@ export async function finalizeBatch({
   }
 
   const timestamp = new Date();
-  const transactionId =
-    timestamp.getFullYear().toString().substring(2) +
-    (timestamp.getMonth() + 1).toString().padStart(2, '0') +
-    '_' +
-    id.substring(0, 8).toUpperCase();
 
   value.state = {
-    status: 'Submitted',
+    status: 'Submitting',
     timestamp: timestamp,
-    transactionId: transactionId,
+    hasEstimates: true,
     submissions: [
       {
-        id: uuidv4(),
-        transactionId: '2307_1234ABCD',
+        reference: uuidv4(),
+        wasteDescription: {
+          wasteCode: {
+            type: 'BaselAnnexIX',
+            code: 'B1010',
+          },
+          ewcCodes: [
+            {
+              code: '101213',
+            },
+          ],
+          nationalCode: {
+            provided: 'No',
+          },
+          description: 'WasteDescription',
+        },
+        wasteQuantity: {
+          type: 'EstimateData',
+          estimateData: {
+            quantityType: 'Volume',
+            unit: 'Cubic Metre',
+            value: 10,
+          },
+          actualData: {},
+        },
       },
     ],
   };

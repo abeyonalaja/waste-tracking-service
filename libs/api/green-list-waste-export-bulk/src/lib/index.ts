@@ -16,5 +16,6 @@ export type {
   ExporterDetailFlattened,
   ImporterDetailFlattened,
   PartialSubmission,
+  SubmissionSummary,
 } from './dto';
 export * as schema from './schema';

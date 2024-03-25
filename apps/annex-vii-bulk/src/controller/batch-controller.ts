@@ -55,17 +55,12 @@ export default class BatchController {
     async ({ id, accountId }) => {
       try {
         const timestamp = new Date();
-        const transactionId =
-          timestamp.getFullYear().toString().substring(2) +
-          (timestamp.getMonth() + 1).toString().padStart(2, '0') +
-          '_' +
-          id.substring(0, 8).toUpperCase();
         const bulkSubmission: BulkSubmission = {
           id: id,
           state: {
-            status: 'Submitted',
+            status: 'Submitting',
             timestamp: timestamp,
-            transactionId: transactionId,
+            hasEstimates: true,
             submissions: [],
           },
         };

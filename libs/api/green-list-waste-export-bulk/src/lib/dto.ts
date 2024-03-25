@@ -25,11 +25,6 @@ export type PartialSubmission = {
   wasteQuantity: Submission['wasteQuantity'];
 };
 
-export type SubmissionReference = {
-  id: string;
-  transactionId: string;
-};
-
 export type BulkSubmissionState =
   | {
       status: 'Processing';
@@ -53,11 +48,27 @@ export type BulkSubmissionState =
       submissions: PartialSubmission[];
     }
   | {
+      status: 'Submitting';
+      timestamp: Date;
+      hasEstimates: boolean;
+      submissions: PartialSubmission[];
+    }
+  | {
       status: 'Submitted';
       timestamp: Date;
+      hasEstimates: true;
       transactionId: string;
-      submissions: SubmissionReference[];
+      submissions: SubmissionSummary[];
     };
+
+export type SubmissionSummary = {
+  id: string;
+  transactionId: string;
+  hasEstimates: boolean;
+  collectionDate: Date;
+  wasteCode: string;
+  reference: string;
+};
 
 export type BulkSubmission = {
   id: string;

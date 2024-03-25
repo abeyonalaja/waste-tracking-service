@@ -81,11 +81,27 @@ export type BulkSubmissionState =
       submissions: PartialSubmission[];
     }
   | {
+      status: 'Submitting';
+      timestamp: Date;
+      hasEstimates: boolean;
+      submissions: PartialSubmission[];
+    }
+  | {
       status: 'Submitted';
       timestamp: Date;
+      hasEstimates: boolean;
       transactionId: string;
-      submissions: SubmissionReference[];
+      submissions: CreatedSubmissionSummary[];
     };
+
+export type CreatedSubmissionSummary = {
+  id: string;
+  transactionId: string;
+  hasEstimates: boolean;
+  collectionDate: Date;
+  wasteCode: string;
+  reference: string;
+};
 
 export type BulkSubmission = {
   id: string;

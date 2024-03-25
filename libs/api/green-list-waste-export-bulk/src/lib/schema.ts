@@ -157,15 +157,35 @@ const bulkSubmissionState: SchemaObject = {
         },
       },
     },
+    Submitting: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+        hasEstimates: { type: 'boolean' },
+        submissions: {
+          elements: {
+            properties: {
+              reference: { type: 'string' },
+              wasteDescription: wasteDescription,
+              wasteQuantity: wasteQuantity,
+            },
+          },
+        },
+      },
+    },
     Submitted: {
       properties: {
         timestamp: { type: 'timestamp' },
         transactionId: { type: 'string' },
+        hasEstimates: { type: 'boolean' },
         submissions: {
           elements: {
             properties: {
               id: { type: 'string' },
               transactionId: { type: 'string' },
+              hasEstimates: { type: 'boolean' },
+              collectionDate: { type: 'timestamp' },
+              wasteCode: { type: 'string' },
+              reference: { type: 'string' },
             },
           },
         },

@@ -266,13 +266,64 @@ describe('getBatchResponse', () => {
       value: {
         id: faker.datatype.uuid(),
         state: {
-          status: 'Submitted',
+          status: 'Submitting',
           timestamp: new Date(),
-          transactionId: '2307_5678ABCD',
+          hasEstimates: false,
+          submissions: [
+            {
+              reference: 'testRef',
+              wasteDescription: {
+                wasteCode: {
+                  type: 'AnnexIIIA',
+                  code: 'B1010 and B1050',
+                },
+                ewcCodes: [
+                  {
+                    code: '010101',
+                  },
+                  {
+                    code: '010102',
+                  },
+                ],
+                nationalCode: {
+                  provided: 'No',
+                },
+                description: 'test',
+              },
+              wasteQuantity: {
+                type: 'ActualData',
+                estimateData: {},
+                actualData: {
+                  quantityType: 'Weight',
+                  unit: 'Tonne',
+                  value: 2,
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      success: true,
+      value: {
+        id: faker.datatype.uuid(),
+        state: {
+          status: 'Submitted',
+          transactionId: '3497_1224DCBA',
+          timestamp: new Date(),
+          hasEstimates: true,
           submissions: [
             {
               id: faker.datatype.uuid(),
-              transactionId: '2307_1234ABCD',
+              transactionId: '2307_5678ABCD',
+              hasEstimates: true,
+              collectionDate: new Date(),
+              wasteCode: 'Not Applicable',
+              reference: 'ref1',
             },
           ],
         },
