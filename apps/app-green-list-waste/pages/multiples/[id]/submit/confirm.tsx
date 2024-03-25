@@ -37,6 +37,7 @@ export default function Confirm() {
   }
 
   const recordCount: number = data.data.state.submissions.length;
+  const hasEstimates: boolean = data.data.state.hasEstimates;
 
   return (
     <PageLayout
@@ -52,7 +53,10 @@ export default function Confirm() {
         </GovUK.BackLink>
       }
     >
-      <SubmissionDeclaration recordCount={recordCount} />
+      <SubmissionDeclaration
+        recordCount={recordCount}
+        hasEstimates={hasEstimates}
+      />
     </PageLayout>
   );
 }

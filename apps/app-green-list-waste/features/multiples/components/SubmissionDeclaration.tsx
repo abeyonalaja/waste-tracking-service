@@ -5,13 +5,16 @@ import useApiConfig from 'utils/useApiConfig';
 import axios from 'axios';
 import { Heading, UnorderedList, ListItem, Button } from 'govuk-react';
 import { Paragraph } from 'components';
+import { EstimatesBanner } from './EstimatesBanner';
 
 type SubmissionDeclarationProps = {
   recordCount: number;
+  hasEstimates: boolean;
 };
 
 export function SubmissionDeclaration({
   recordCount,
+  hasEstimates,
 }: SubmissionDeclarationProps) {
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
@@ -44,13 +47,16 @@ export function SubmissionDeclaration({
       <Heading size={'L'}>
         {t('multiples.submit.heading', { count: recordCount })}
       </Heading>
+      {hasEstimates && <EstimatesBanner />}
       <Heading as={'h2'} size={'M'}>
         {t('multiples.submit.declaration')}
       </Heading>
       <Paragraph>{t('multiples.submit.list.heading')}</Paragraph>
       <UnorderedList mb={8}>
         <ListItem>{t('multiples.submit.list.itemOne')}</ListItem>
-        <ListItem>{t('multiples.submit.list.itemTwo')}</ListItem>
+        {hasEstimates && (
+          <ListItem>{t('multiples.submit.list.itemTwo')}</ListItem>
+        )}
         <ListItem>{t('multiples.submit.list.itemThree')}</ListItem>
         <ListItem>{t('multiples.submit.list.itemFour')}</ListItem>
       </UnorderedList>

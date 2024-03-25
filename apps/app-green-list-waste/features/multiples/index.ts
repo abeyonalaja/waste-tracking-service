@@ -1,5 +1,6 @@
 // Components
 import { ErrorSummary } from './components/ErrorSummary';
+import { EstimatesBanner } from './components/EstimatesBanner';
 import { GuidanceInteruption } from './components/GuidanceInteruption';
 import { Loader } from './components/Loader';
 import { Instructions } from './components/Instructions';
@@ -13,6 +14,7 @@ import { ValidationSuccess } from './components/ValidationSuccess';
 
 export {
   ErrorSummary,
+  EstimatesBanner,
   Loader,
   GuidanceInteruption,
   Instructions,
