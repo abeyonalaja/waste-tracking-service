@@ -4,6 +4,7 @@ import '../main.scss';
 import { HeaderNavigation, LanguageSwitcher, Link } from '../components';
 import { getServerSession } from 'next-auth';
 import SessionProvider from '../providers/SessionProvider';
+import { Suspense } from 'react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,7 +30,11 @@ export default async function RootLayout({
                 Move and track waste
               </Link>
             }
-            navigation={<HeaderNavigation />}
+            navigation={
+              <Suspense>
+                <HeaderNavigation />
+              </Suspense>
+            }
           />
           <GovUK.WidthContainer>
             <GovUK.PhaseBanner tag={`Beta`}>
