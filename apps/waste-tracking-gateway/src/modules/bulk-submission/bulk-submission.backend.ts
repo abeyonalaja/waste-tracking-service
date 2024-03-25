@@ -1,10 +1,13 @@
 import Boom from '@hapi/boom';
-import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import { DaprAnnexViiBulkClient } from '@wts/client/green-list-waste-export-bulk';
 import { compress } from 'snappy';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { BulkSubmission } from '@wts/api/waste-tracking-gateway';
-import { GetBatchResponse, UpdateBatchResponse } from '@wts/api/annex-vii-bulk';
+import {
+  GetBatchResponse,
+  UpdateBatchResponse,
+} from '@wts/api/green-list-waste-export-bulk';
 import { Readable } from 'stream';
 import { parse } from 'csv-parse';
 import { finished } from 'stream/promises';

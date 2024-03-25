@@ -1,10 +1,10 @@
 import Boom from '@hapi/boom';
-import { DaprUkWasteMovementsBulkClient } from '@wts/client/service-uk-waste-movements-bulk';
+import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
 import { compress } from 'snappy';
 import { Logger } from 'winston';
 import { BulkSubmission } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
-import * as api from '@wts/api/service-uk-waste-movements-bulk';
+import * as api from '@wts/api/uk-waste-movements-bulk';
 
 export type BatchRef = {
   id: string;

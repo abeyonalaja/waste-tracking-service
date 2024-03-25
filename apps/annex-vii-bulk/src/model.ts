@@ -1,4 +1,4 @@
-import * as api from '@wts/api/annex-vii-bulk';
+import * as api from '@wts/api/green-list-waste-export-bulk';
 import { BulkSubmissionCsvRow } from './lib/csv-content';
 import { Response } from '@wts/util/invocation';
 

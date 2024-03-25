@@ -3,7 +3,7 @@ import {
   GetBatchRequest,
   FinalizeBatchRequest,
   schema,
-} from '@wts/api/service-uk-waste-movements-bulk';
+} from '@wts/api/uk-waste-movements-bulk';
 import Ajv from 'ajv/dist/jtd';
 
 const ajv = new Ajv();

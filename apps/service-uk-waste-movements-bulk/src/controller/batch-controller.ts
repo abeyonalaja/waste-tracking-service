@@ -4,7 +4,7 @@ import { fromBoom, success } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
 import { BatchRepository } from '../data';
 import { Handler } from '@wts/api/common';
-import * as api from '@wts/api/service-uk-waste-movements-bulk';
+import * as api from '@wts/api/uk-waste-movements-bulk';
 import { BulkSubmission } from '../model';
 
 export class BatchController {

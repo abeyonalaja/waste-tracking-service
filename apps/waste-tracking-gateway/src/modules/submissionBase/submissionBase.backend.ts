@@ -6,9 +6,9 @@ import {
   DraftWasteDescription,
   DraftExitLocation,
   DraftTransitCountries,
-} from '@wts/api/annex-vii';
+} from '@wts/api/green-list-waste-export';
 import * as dto from '@wts/api/waste-tracking-gateway';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
 import { Submission } from '../submission/submission.backend';

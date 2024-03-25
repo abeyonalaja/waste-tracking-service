@@ -1,7 +1,7 @@
-import * as api from '@wts/api/annex-vii';
-import * as bulkApi from '@wts/api/annex-vii-bulk';
+import * as api from '@wts/api/green-list-waste-export';
+import * as bulkApi from '@wts/api/green-list-waste-export-bulk';
 
-export { validation } from '@wts/api/annex-vii';
+export { validation } from '@wts/api/green-list-waste-export';
 
 export type Submission = api.Submission;
 export type SubmissionBase = api.SubmissionBase;

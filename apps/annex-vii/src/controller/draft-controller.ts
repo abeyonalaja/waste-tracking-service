@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import * as api from '@wts/api/annex-vii';
+import * as api from '@wts/api/green-list-waste-export';
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';

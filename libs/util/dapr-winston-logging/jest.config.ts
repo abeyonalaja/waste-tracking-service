@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'util-dapr-winston-logging',
+  displayName: 'lib-util-dapr-winston-logging',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'util-dapr-winston-logging',
+        suiteName: 'lib-util-dapr-winston-logging',
         outputDirectory: 'reports/junit',
-        outputName: 'util-dapr-winston-logging.xml',
+        outputName: 'lib-util-dapr-winston-logging.xml',
       },
     ],
   ],

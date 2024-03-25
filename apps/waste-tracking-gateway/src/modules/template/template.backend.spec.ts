@@ -5,7 +5,10 @@ import {
   InMemorySubmissionBackend,
   Submission,
 } from '../submission/submission.backend';
-import { DraftWasteDescription, Template } from '@wts/api/annex-vii';
+import {
+  DraftWasteDescription,
+  Template,
+} from '@wts/api/green-list-waste-export';
 
 describe(InMemoryTemplateBackend, () => {
   const accountId = faker.datatype.uuid();

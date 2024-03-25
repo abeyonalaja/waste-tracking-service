@@ -12,7 +12,10 @@ import {
 } from './submission.backend';
 import { add } from 'date-fns';
 import { InMemoryTemplateBackend } from '../template';
-import { DraftWasteDescription, Template } from '@wts/api/annex-vii';
+import {
+  DraftWasteDescription,
+  Template,
+} from '@wts/api/green-list-waste-export';
 
 describe(InMemorySubmissionBackend, () => {
   let subject: InMemorySubmissionBackend;

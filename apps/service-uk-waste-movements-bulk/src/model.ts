@@ -1,4 +1,4 @@
-import { BulkSubmission as ApiBulkSubmission } from '@wts/api/service-uk-waste-movements-bulk';
+import { BulkSubmission as ApiBulkSubmission } from '@wts/api/uk-waste-movements-bulk';
 
 export type BulkSubmission = ApiBulkSubmission;
 

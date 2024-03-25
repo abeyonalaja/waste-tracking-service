@@ -1,5 +1,5 @@
 {
-  "name": "client-feedback",
+  "name": "lib-client-feedback",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/feedback/src",
   "projectType": "library",

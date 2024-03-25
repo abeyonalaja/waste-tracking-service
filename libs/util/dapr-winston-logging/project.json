@@ -1,5 +1,5 @@
 {
-  "name": "util-dapr-winston-logging",
+  "name": "lib-util-dapr-winston-logging",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/util/dapr-winston-logging/src",
   "projectType": "library",

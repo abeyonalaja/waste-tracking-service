@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'util-invocation',
+  displayName: 'lib-util-invocation',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'util-invocation',
+        suiteName: 'lib-util-invocation',
         outputDirectory: 'reports/junit',
-        outputName: 'util-invocation.xml',
+        outputName: 'lib-util-invocation.xml',
       },
     ],
   ],

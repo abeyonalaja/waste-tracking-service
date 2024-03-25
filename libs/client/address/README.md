@@ -1,11 +1,11 @@
-# client-address
+# lib-client-address
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Running unit tests
 
-Run `nx test client-address` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test lib-client-address` to execute the unit tests via [Jest](https://jestjs.io).
 
 ## Running lint
 
-Run `nx lint client-address` to execute the lint via [ESLint](https://eslint.org/).
+Run `nx lint lib-client-address` to execute the lint via [ESLint](https://eslint.org/).

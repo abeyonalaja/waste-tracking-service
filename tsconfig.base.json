@@ -17,34 +17,42 @@
     "baseUrl": ".",
     "paths": {
       "@wts/api/address": ["libs/api/address/src/index.ts"],
-      "@wts/api/annex-vii": ["libs/api/annex-vii/src/index.ts"],
-      "@wts/api/annex-vii-bulk": ["libs/api/annex-vii-bulk/src/index.ts"],
       "@wts/api/common": ["libs/api/common/src/index.ts"],
       "@wts/api/feedback": ["libs/api/feedback/src/index.ts"],
+      "@wts/api/green-list-waste-export": [
+        "libs/api/green-list-waste-export/src/index.ts"
+      ],
+      "@wts/api/green-list-waste-export-bulk": [
+        "libs/api/green-list-waste-export-bulk/src/index.ts"
+      ],
       "@wts/api/limited-audience": ["libs/api/limited-audience/src/index.ts"],
       "@wts/api/reference-data": ["libs/api/reference-data/src/index.ts"],
-      "@wts/api/service-uk-waste-movements": [
-        "libs/api/service-uk-waste-movements/src/index.ts"
+      "@wts/api/uk-waste-movements": [
+        "libs/api/uk-waste-movements/src/index.ts"
       ],
-      "@wts/api/service-uk-waste-movements-bulk": [
-        "libs/api/service-uk-waste-movements-bulk/src/index.ts"
+      "@wts/api/uk-waste-movements-bulk": [
+        "libs/api/uk-waste-movements-bulk/src/index.ts"
       ],
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
       ],
       "@wts/client/address": ["libs/client/address/src/index.ts"],
-      "@wts/client/annex-vii": ["libs/client/annex-vii/src/index.ts"],
-      "@wts/client/annex-vii-bulk": ["libs/client/annex-vii-bulk/src/index.ts"],
       "@wts/client/feedback": ["libs/client/feedback/src/index.ts"],
+      "@wts/client/green-list-waste-export": [
+        "libs/client/green-list-waste-export/src/index.ts"
+      ],
+      "@wts/client/green-list-waste-export-bulk": [
+        "libs/client/green-list-waste-export-bulk/src/index.ts"
+      ],
       "@wts/client/limited-audience": [
         "libs/client/limited-audience/src/index.ts"
       ],
       "@wts/client/reference-data": ["libs/client/reference-data/src/index.ts"],
-      "@wts/client/service-uk-waste-movements": [
-        "libs/client/service-uk-waste-movements/src/index.ts"
+      "@wts/client/uk-waste-movements": [
+        "libs/client/uk-waste-movements/src/index.ts"
       ],
-      "@wts/client/service-uk-waste-movements-bulk": [
-        "libs/client/service-uk-waste-movements-bulk/src/index.ts"
+      "@wts/client/uk-waste-movements-bulk": [
+        "libs/client/uk-waste-movements-bulk/src/index.ts"
       ],
       "@wts/ui/govuk-react-ui": ["libs/ui/govuk-react-ui/src/index.ts"],
       "@wts/util/dapr-winston-logging": [

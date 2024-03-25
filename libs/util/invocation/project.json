@@ -1,5 +1,5 @@
 {
-  "name": "util-invocation",
+  "name": "lib-util-invocation",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/util/invocation/src",
   "projectType": "library",

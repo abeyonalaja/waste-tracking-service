@@ -1,5 +1,5 @@
 {
-  "name": "api-waste-tracking-gateway",
+  "name": "lib-api-waste-tracking-gateway",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/waste-tracking-gateway/src",
   "projectType": "library",

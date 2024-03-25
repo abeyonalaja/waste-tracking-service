@@ -1,5 +1,5 @@
 {
-  "name": "api-limited-audience",
+  "name": "lib-api-limited-audience",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/limited-audience/src",
   "projectType": "library",

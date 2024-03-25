@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-common',
+  displayName: 'lib-api-common',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'api-common',
+        suiteName: 'lib-api-common',
         outputDirectory: 'reports/junit',
-        outputName: 'api-common.xml',
+        outputName: 'lib-api-common.xml',
       },
     ],
   ],

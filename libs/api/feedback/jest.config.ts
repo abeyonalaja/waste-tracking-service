@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-feedback',
+  displayName: 'lib-api-feedback',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'api-feedback',
+        suiteName: 'lib-api-feedback',
         outputDirectory: 'reports/junit',
-        outputName: 'api-feedback.xml',
+        outputName: 'lib-api-feedback.xml',
       },
     ],
   ],

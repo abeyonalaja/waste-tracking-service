@@ -1,9 +1,9 @@
 import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
-import { Template } from '@wts/api/annex-vii';
+import { Template } from '@wts/api/green-list-waste-export';
 import { DaprAddressClient } from '@wts/client/address';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
-import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
+import { DaprAnnexViiBulkClient } from '@wts/client/green-list-waste-export-bulk';
 import { DaprFeedbackClient } from '@wts/client/feedback';
 import { DaprLimitedAudienceClient } from '@wts/client/limited-audience';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
@@ -60,7 +60,7 @@ import {
   InMemoryUkWasteMovementsBulkSubmissionBackend,
   ukWasteMovementsBulkSubmissionPlugin,
 } from './modules/uk-waste-movements-bulk-submission';
-import { DaprUkWasteMovementsBulkClient } from '@wts/client/service-uk-waste-movements-bulk';
+import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
 
 const logger = winston.createLogger({
   level: 'info',

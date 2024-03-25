@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'client-address',
+  displayName: 'lib-client-address',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

@@ -1,5 +1,5 @@
 {
-  "name": "api-reference-data",
+  "name": "lib-api-reference-data",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/reference-data/src",
   "projectType": "library",

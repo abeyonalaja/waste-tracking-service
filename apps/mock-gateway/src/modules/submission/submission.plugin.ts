@@ -20,7 +20,7 @@ import {
   validatePutSubmissionCancellationRequest,
 } from './submission.validation';
 
-import { DraftWasteDescription } from '@wts/api/annex-vii';
+import { DraftWasteDescription } from '@wts/api/green-list-waste-export';
 import {
   getSubmissions,
   getSubmission,

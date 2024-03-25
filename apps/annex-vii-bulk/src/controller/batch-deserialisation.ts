@@ -2,7 +2,7 @@ import {
   GetBatchRequest,
   UpdateBatchRequest,
   schema,
-} from '@wts/api/annex-vii-bulk';
+} from '@wts/api/green-list-waste-export-bulk';
 import Ajv from 'ajv/dist/jtd';
 
 const ajv = new Ajv();

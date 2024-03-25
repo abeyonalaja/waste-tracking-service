@@ -50,7 +50,7 @@ import {
   validateSetCollectionDetailRequest,
   validateSetRecoveryFacilityDetailRequest,
 } from '../submission/submission.validation';
-import { DraftWasteDescription } from '@wts/api/annex-vii';
+import { DraftWasteDescription } from '@wts/api/green-list-waste-export';
 import { User } from '../../libs/user';
 
 export default class TemplatePlugin {

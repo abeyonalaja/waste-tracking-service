@@ -1,6 +1,6 @@
 import { DaprServer, HttpMethod, LogLevel } from '@dapr/dapr';
 import Boom from '@hapi/boom';
-import * as api from '@wts/api/service-uk-waste-movements-bulk';
+import * as api from '@wts/api/uk-waste-movements-bulk';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';

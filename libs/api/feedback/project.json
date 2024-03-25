@@ -1,5 +1,5 @@
 {
-  "name": "api-feedback",
+  "name": "lib-api-feedback",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/feedback/src",
   "projectType": "library",

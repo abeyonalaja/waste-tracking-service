@@ -1,4 +1,4 @@
-import { DaprAnnexViiBulkClient } from '@wts/client/annex-vii-bulk';
+import { DaprAnnexViiBulkClient } from '@wts/client/green-list-waste-export-bulk';
 import { AnnexViiBulkServiceBackend } from './bulk-submission.backend';
 import { jest, expect } from '@jest/globals';
 import { DaprClient } from '@dapr/dapr';
@@ -11,7 +11,7 @@ import {
   GetBatchResponse,
   UpdateBatchRequest,
   UpdateBatchResponse,
-} from '@wts/api/annex-vii-bulk';
+} from '@wts/api/green-list-waste-export-bulk';
 import Boom from '@hapi/boom';
 import { compress } from 'snappy';
 
@@ -39,7 +39,7 @@ const mockGetBatch =
 const mockUpdateBatch =
   jest.fn<(req: UpdateBatchRequest) => Promise<UpdateBatchResponse>>();
 
-jest.mock('@wts/client/annex-vii-bulk', () => ({
+jest.mock('@wts/client/green-list-waste-export-bulk', () => ({
   DaprAnnexViiBulkClient: jest.fn().mockImplementation(() => ({
     addContentToBatch: mockAddContentToBatch,
     getBatch: mockGetBatch,

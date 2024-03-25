@@ -4,7 +4,7 @@ import winston from 'winston';
 import Boom from '@hapi/boom';
 import { BatchController } from './batch-controller';
 import { BulkSubmission } from '../model';
-import * as api from '@wts/api/service-uk-waste-movements-bulk';
+import * as api from '@wts/api/uk-waste-movements-bulk';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({

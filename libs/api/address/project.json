@@ -1,5 +1,5 @@
 {
-  "name": "api-address",
+  "name": "lib-api-address",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/address/src",
   "projectType": "library",

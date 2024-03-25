@@ -2,7 +2,7 @@ import { Logger } from 'winston';
 import { Handler } from '@wts/api/common';
 import { fromBoom, success } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
-import * as api from '@wts/api/service-uk-waste-movements';
+import * as api from '@wts/api/uk-waste-movements';
 
 export default class PingController {
   constructor(private logger: Logger) {}

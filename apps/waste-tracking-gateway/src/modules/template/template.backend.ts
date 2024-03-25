@@ -33,7 +33,7 @@ import {
   TemplateSummary,
   TemplateSummaryPage,
   UpdateTemplateResponse,
-} from '@wts/api/annex-vii';
+} from '@wts/api/green-list-waste-export';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -49,7 +49,7 @@ import {
   SubmissionRef,
   WasteDescription,
 } from '../submissionBase/submissionBase.backend';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { Logger } from 'winston';
 import { OrderRef, Submission } from '../submission';
 

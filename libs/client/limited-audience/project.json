@@ -1,5 +1,5 @@
 {
-  "name": "client-limited-audience",
+  "name": "lib-client-limited-audience",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/client/limited-audience/src",
   "projectType": "library",

@@ -1,4 +1,4 @@
-import { PingRequest, schema } from '@wts/api/service-uk-waste-movements';
+import { PingRequest, schema } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
 const ajv = new Ajv();

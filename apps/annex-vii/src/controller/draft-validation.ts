@@ -24,7 +24,7 @@ import {
   DeleteTemplateRequest,
   CreateDraftFromTemplateRequest,
   UpdateTemplateRequest,
-} from '@wts/api/annex-vii';
+} from '@wts/api/green-list-waste-export';
 import Ajv from 'ajv/dist/jtd';
 
 const ajv = new Ajv();

@@ -11,7 +11,7 @@ import {
   TemplatePageMetadata,
   TemplateSummary,
   TemplateSummaryPage,
-} from '@wts/api/annex-vii';
+} from '@wts/api/green-list-waste-export';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Carriers,

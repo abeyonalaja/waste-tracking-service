@@ -1,7 +1,7 @@
 import { DaprServer, HttpMethod, LogLevel } from '@dapr/dapr';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import * as winston from 'winston';
-import * as api from '@wts/api/annex-vii-bulk';
+import * as api from '@wts/api/green-list-waste-export-bulk';
 import { fromBoom } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
 import { BatchController, validate, parse } from './controller';
@@ -27,8 +27,8 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { CloudEvent, HTTP } from 'cloudevents';
 import * as taskValidate from './lib/task-validation';
-import { DaprAnnexViiClient } from '@wts/client/annex-vii';
-import { ValidateSubmissionsResponse } from '@wts/api/annex-vii';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
+import { ValidateSubmissionsResponse } from '@wts/api/green-list-waste-export';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');

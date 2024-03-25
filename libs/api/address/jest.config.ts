@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-address',
+  displayName: 'lib-api-address',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'api-address',
+        suiteName: 'lib-api-address',
         outputDirectory: 'reports/junit',
-        outputName: 'api-address.xml',
+        outputName: 'lib-api-address.xml',
       },
     ],
   ],

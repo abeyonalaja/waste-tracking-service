@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'client-feedback',
+  displayName: 'lib-client-feedback',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

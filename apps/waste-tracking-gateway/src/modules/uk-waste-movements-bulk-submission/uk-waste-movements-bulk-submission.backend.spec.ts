@@ -1,4 +1,4 @@
-import { DaprUkWasteMovementsBulkClient } from '@wts/client/service-uk-waste-movements-bulk';
+import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
 import { ServiceUkWasteMovementsBulkSubmissionBackend } from './uk-waste-movements-bulk-submission.backend';
 import { jest, expect } from '@jest/globals';
 import { DaprClient } from '@dapr/dapr';
@@ -11,7 +11,7 @@ import {
   GetBatchResponse,
   FinalizeBatchRequest,
   FinalizeBatchResponse,
-} from '@wts/api/service-uk-waste-movements-bulk';
+} from '@wts/api/uk-waste-movements-bulk';
 import Boom from '@hapi/boom';
 import { compress } from 'snappy';
 
@@ -39,7 +39,7 @@ const mockGetBatch =
 const mockFinalizeBatch =
   jest.fn<(req: FinalizeBatchRequest) => Promise<FinalizeBatchResponse>>();
 
-jest.mock('@wts/client/service-uk-waste-movements-bulk', () => ({
+jest.mock('@wts/client/uk-waste-movements-bulk', () => ({
   DaprUkWasteMovementsBulkClient: jest.fn().mockImplementation(() => ({
     addContentToBatch: mockAddContentToBatch,
     getBatch: mockGetBatch,

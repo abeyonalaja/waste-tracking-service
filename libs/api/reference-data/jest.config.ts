@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-reference-data',
+  displayName: 'lib-api-reference-data',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -13,9 +13,9 @@ export default {
     [
       'jest-junit',
       {
-        suiteName: 'api-reference-data',
+        suiteName: 'lib-api-reference-data',
         outputDirectory: 'reports/junit',
-        outputName: 'api-reference-data.xml',
+        outputName: 'lib-api-reference-data.xml',
       },
     ],
   ],
