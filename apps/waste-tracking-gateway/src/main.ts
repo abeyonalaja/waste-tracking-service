@@ -267,16 +267,18 @@ await app.register({
   },
 });
 
-await app.register({
-  plugin: bulkSubmissionPlugin,
-  options: {
-    backend: backend.bulkSubmission,
-    logger,
-  },
-  routes: {
-    prefix: '/api/batches',
-  },
-});
+if (process.env['IS_MULTIPLE_UPLOAD_ENABLED'] === 'true') {
+  await app.register({
+    plugin: bulkSubmissionPlugin,
+    options: {
+      backend: backend.bulkSubmission,
+      logger,
+    },
+    routes: {
+      prefix: '/api/batches',
+    },
+  });
+}
 
 await app.register({
   plugin: privateBetaPlugin,
@@ -289,16 +291,18 @@ await app.register({
   },
 });
 
-await app.register({
-  plugin: ukWasteMovementsBulkSubmissionPlugin,
-  options: {
-    backend: backend.ukWasteMovements,
-    logger,
-  },
-  routes: {
-    prefix: '/api/ukwm-batches',
-  },
-});
+if (process.env['IS_UKWM_BATCHES_ENABLED'] === 'true') {
+  await app.register({
+    plugin: ukWasteMovementsBulkSubmissionPlugin,
+    options: {
+      backend: backend.ukWasteMovements,
+      logger,
+    },
+    routes: {
+      prefix: '/api/ukwm-batches',
+    },
+  });
+}
 
 process.on('unhandledRejection', (err) => {
   logger.error(err);
