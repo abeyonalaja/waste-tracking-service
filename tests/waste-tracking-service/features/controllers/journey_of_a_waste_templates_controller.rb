@@ -18,7 +18,7 @@ module JourneyOfAWasteTemplateController
     sleep 1
     waste_carrier_contact_details_page.enter_organisation_contact 'Nick Pope'
     waste_carrier_contact_details_page.enter_email 'sample@mail.com'
-    waste_carrier_contact_details_page.enter_phone_number '+441234567891'
+    waste_carrier_contact_details_page.enter_phone_number '+359-89 88-1(434)55 5'
     waste_carrier_contact_details_page.save_and_continue
 
     waste_carriers_list_page.choose_option 'No'
@@ -33,11 +33,11 @@ module JourneyOfAWasteTemplateController
     contact_details_address_page.enter_organisation_name 'OrgName LTD'
     contact_details_address_page.enter_full_name 'Nick Almiron'
     contact_details_address_page.enter_email 'sample@mail.com'
-    contact_details_address_page.enter_phone_number '+441234567891'
+    contact_details_address_page.enter_phone_number '+44 12345 6789(12-34)12'
     contact_details_address_page.save_and_continue
 
     location_leaves_uk_page.choose_option 'Yes'
-    location_leaves_uk_page.enter_location 'Dover'
+    location_leaves_uk_page.enter_location 'N,ew-Por\'t.'
     location_leaves_uk_page.save_and_continue
 
     sleep(2)

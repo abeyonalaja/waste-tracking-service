@@ -98,9 +98,6 @@ Feature: Waste carriers page
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
     Then I should see "what are the waste carriers contact details" page is displayed
-    And I enter not valid fax number
-    And I click the button Save and continue
-    Then I remain on the what are the waste carriers contact details page with an "Enter a real fax number" error message displayed
     And I enter not valid international fax number
     And I click the button Save and continue
     Then I remain on the what are the waste carriers contact details page with an "Enter a real fax number" error message displayed

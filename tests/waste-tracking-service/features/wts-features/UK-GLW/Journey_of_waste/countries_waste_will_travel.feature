@@ -1,4 +1,3 @@
-
 Feature: Countries waste will travel page
   AS A waste producer/broker
   I NEED specify all countries the waste pass through
@@ -174,4 +173,4 @@ Feature: Countries waste will travel page
     And I choose "Yes" radio button
     When I select same country as importing country
     And I click the button Save and continue
-    Then I remain on the Countries Waste Will Travel page with an "The importer country cannot be the same as the transit country" error message displayed
+    Then I remain on the Countries Waste Will Travel page with an "The transit country cannot be the same as the importer country" error message displayed

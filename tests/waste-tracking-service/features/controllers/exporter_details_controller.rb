@@ -28,7 +28,7 @@ module ExporterDetailsController
     org_name = Faker::Company.name.gsub(/\W/, '')
     exporter_name = Faker::Name.name
     email = Faker::Internet.email
-    exporter_phone = '08001234567'
+    exporter_phone = '+44 12345 6789(12-34)12'
     exporter_details_page.enter_organisation_name org_name
     exporter_details_page.enter_exporter_full_name exporter_name
     exporter_details_page.enter_exporter_email email

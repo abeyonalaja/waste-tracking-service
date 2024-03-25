@@ -324,9 +324,6 @@ Feature: Interim site page
     And I complete the Interim site address page
     And I click the button Save and continue
     Then the "Interim site contact details" page is displayed
-    And I enter not valid fax number
-    And I click the button Save and continue
-    Then I remain on the Interim site contact details page with an "Enter a real fax number" error message displayed
     And I enter not valid international fax number
     And I click the button Save and continue
     Then I remain on the Interim site contact details page with an "Enter a real fax number" error message displayed

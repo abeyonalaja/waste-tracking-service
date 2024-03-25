@@ -83,6 +83,3 @@ Feature: Exporter details page
     And I enter invalid fax code
     And I click the button Save and continue
     Then I remain on the exporter details page with an "Enter a real fax number" error message displayed
-    And I enter invalid international fax code
-    And I click the button Save and continue
-    Then I remain on the exporter details page with an "Enter a real fax number" error message displayed

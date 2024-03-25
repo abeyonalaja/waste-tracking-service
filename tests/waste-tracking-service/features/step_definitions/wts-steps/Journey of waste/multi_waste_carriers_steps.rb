@@ -7,13 +7,14 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
   WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
+  WhoIsTheWasteCarrierPage.new.select_first_country
   WhoIsTheWasteCarrierPage.new.save_and_continue
   sleep 1
   WhatAreTheWasteCarriersContactDetailsPage.new.check_page_title(waste_carrier)
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 5'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '+1-907-555-12(34) 123'
   TestStatus.waste_carrier_titles(waste_carrier_title)
   TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)
@@ -119,12 +120,13 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)" without transportati
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
   WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
+  WhoIsTheWasteCarrierPage.new.select_first_country
   WhoIsTheWasteCarrierPage.new.save_and_continue
   sleep 1
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+441234567891'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 5'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '+1-907-555-12(34) 123'
   TestStatus.waste_carrier_titles(waste_carrier_title)
   TestStatus.waste_carrier_addresses(waste_carrier_address)
   TestStatus.waste_carrier_org_details(waste_carrier_org_name)

@@ -111,9 +111,6 @@ Feature: Laboratory details page
     When I click the "Laboratory details" link
     When I complete laboratory address details
     Then the "Laboratory contact details" page is displayed
-    And I enter not valid fax number
-    And I click the button Save and continue
-    Then I remain on the Laboratory contact details page with an "Enter a real fax number" error message displayed
     And I enter not valid international fax number
     And I click the button Save and continue
     Then I remain on the Laboratory contact details page with an "Enter a real fax number" error message displayed

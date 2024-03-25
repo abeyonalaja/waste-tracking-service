@@ -112,7 +112,7 @@ And(/^I should see export Journey of waste correctly displayed$/) do
   expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
 
   expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
-  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:waste_carrier_details_phone_number)
   expect(CheckYourRecordPage.new.waste_collection_fax).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
   expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]
@@ -191,7 +191,7 @@ Then(/^I should see (\d+) waste carriers on check your export page$/) do |waste_
       expect(CheckYourRecordPage.new.carrier_full_name(i)).to eq TestStatus.test_status(:organisation_contact)
       expect(CheckYourRecordPage.new.carrier_email(i)).to eq TestStatus.test_status(:email)
       expect(CheckYourRecordPage.new.carrier_phone(i)).to eq TestStatus.test_status(:phone_number)
-      expect(CheckYourRecordPage.new.carrier_fax(i)).to eq '12345678910'
+      expect(CheckYourRecordPage.new.carrier_fax(i)).to eq '+1-907-555-12(34) 123'
       expect(CheckYourRecordPage.new.carrier_type(i)).to eq TestStatus.mode_of_travel_list_details[i]
     end
   end
@@ -465,7 +465,7 @@ And(/^I should see Small waste export Journey of waste correctly displayed$/) do
   expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
 
   expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
-  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:waste_carrier_details_phone_number)
   expect(CheckYourRecordPage.new.waste_collection_fax).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
   expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]

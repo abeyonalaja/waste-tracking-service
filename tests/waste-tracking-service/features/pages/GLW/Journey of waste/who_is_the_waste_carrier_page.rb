@@ -58,7 +58,18 @@ class WhoIsTheWasteCarrierPage < GenericPage
 
   def enter_country(country)
     fill_in COUNTRY_FIELD_ID, with: country, visible: false
-    TestStatus.set_test_status(:country, country)
+    case country
+    when 'England'
+      TestStatus.set_test_status(:country, 'United Kingdom (England) [GB-ENG]')
+    when 'Wales'
+      TestStatus.set_test_status(:country, 'United Kingdom (Wales) [GB-WLS]')
+    when 'Northern Ireland'
+      TestStatus.set_test_status(:country, 'United Kingdom (Northern Ireland) [GB-NIR]')
+    when 'Scotland'
+      TestStatus.set_test_status(:country, 'United Kingdom (Scotland) [GB-SCT]')
+    else
+      TestStatus.set_test_status(:country, country)
+    end
   end
 
   def enter_organisation_name(organisation_name)
@@ -76,6 +87,11 @@ class WhoIsTheWasteCarrierPage < GenericPage
 
   def has_reference_country?(country)
     find(COUNTRY_FIELD_ID).value == country
+  end
+
+  def select_first_country
+    first('country', minimum: 1).click
+    find('country__option--0').click
   end
 
 end

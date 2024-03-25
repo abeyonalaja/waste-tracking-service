@@ -21,18 +21,18 @@ end
 And(/^I complete Importer contact details page$/) do
   ImporterContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
-  ImporterContactDetailsPage.new.enter_phone_number '+359-8988-1(434)5'
-  ImporterContactDetailsPage.new.enter_fax_number '12345678910'
+  ImporterContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 5'
+  ImporterContactDetailsPage.new.enter_fax_number '+1-907-555-12(34) 123'
   TestStatus.set_test_status(:importer_org_contact, 'John Arnold')
   TestStatus.set_test_status(:importer_email, 'mail@mail.com')
-  TestStatus.set_test_status(:importer_phone_number, '+359-8988-1(434)5')
-  TestStatus.set_test_status(:importer_fax_number, '12345678910')
+  TestStatus.set_test_status(:importer_phone_number, '+359-89 88-1(434)55 5')
+  TestStatus.set_test_status(:importer_fax_number, '+1-907-555-12(34) 123')
 end
 
 Then(/^I verify that previously entered details are pre\-populated$/) do
   expect(WhoIsTheImporterPage.new).to have_reference_organisation_name TestStatus.test_status(:organisation_name)
   expect(WhoIsTheImporterPage.new).to have_reference_address TestStatus.test_status(:address)
-  expect(WhoIsTheImporterPage.new).to have_reference_country TestStatus.test_status(:country)
+  expect(WhoIsTheImporterPage.new).to have_reference_country TestStatus.test_status(:importer_country)
 end
 
 Then(/^I verify that previously entered details are pre\-populated on the Importer contact details page$/) do
@@ -45,7 +45,7 @@ end
 And(/^I enter invalid phone number$/) do
   ImporterContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   ImporterContactDetailsPage.new.enter_email 'mail@mail.com'
-  ImporterContactDetailsPage.new.enter_phone_number '+359-8988-1434512345634'
+  ImporterContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 52'
 end
 
 And(/^I complete who is the importer page with first country from the list$/) do

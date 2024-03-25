@@ -16,7 +16,7 @@ And(/^I complete the Contact details collection page$/) do
   ContactDetailsCollectionAddressPage.new.enter_organisation_name 'TestOrg LTD'
   ContactDetailsCollectionAddressPage.new.enter_full_name 'John Johnson'
   ContactDetailsCollectionAddressPage.new.enter_email 'emial@mail.com'
-  ContactDetailsCollectionAddressPage.new.enter_phone_number '+441234567891'
+  ContactDetailsCollectionAddressPage.new.enter_phone_number '+44 12345 6789(12-34)12'
 end
 
 And(/^I should see previously entered waste collection details pre-populated$/) do
@@ -36,4 +36,11 @@ end
 
 And(/^I should see check the collection address page correctly translated$/) do
   CheckTheCollectionAddressPage.new.check_page_translation
+end
+
+And(/^I complete the Contact details collection page with incorrect phone number$/) do
+  ContactDetailsCollectionAddressPage.new.enter_organisation_name 'TestOrg LTD'
+  ContactDetailsCollectionAddressPage.new.enter_full_name 'John Johnson'
+  ContactDetailsCollectionAddressPage.new.enter_email 'emial@mail.com'
+  ContactDetailsCollectionAddressPage.new.enter_phone_number '+44 12345 6789(12-34)123'
 end

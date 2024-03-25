@@ -14,11 +14,10 @@ module CommonComponents
   ORG_NAME = Faker::Company.name.gsub(/\W/, '')
   NAME = Faker::Name.name
   EMAIL = Faker::Internet.email
-  PHONE_NUMBER = '00359-8988-1(434)5'
-  INVALID_PHONE_NUMBER = '+359123123359-8988-11'
-  FAX_NUMBER = '01234567890'
-  INVALID_FAX = '1234567891'
-  phone = '08001234567'
+  PHONE_NUMBER = '+359-89 88-1(434)55 5'
+  INVALID_PHONE_NUMBER = '+359-89 88-1(434)55 51'
+  FAX_NUMBER = '+1-907-555-12(34) 123'
+  INVALID_FAX = '+4412 345 6789(12-34)123'
   COUNTRY = 'ENGLAND'
   NEW_COUNTRY = 'WALES'
   ADDRESS = '123abc, some street,town,city,United Kingdom, AB1 2CD'

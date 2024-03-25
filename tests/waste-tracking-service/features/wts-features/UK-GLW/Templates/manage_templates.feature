@@ -1,4 +1,3 @@
-
 Feature: Manage templates page
   I NEED to be able to manage my templates
   SO THAT I can amend the templates relevant and updated for my waste submissions
@@ -198,7 +197,6 @@ Feature: Manage templates page
     And the task "Exporter details" should be "COMPLETED"
     And the task "Importer details" should be "COMPLETED"
 
-    #need to be checked, banner does not appear when test running. Manually its working
   Scenario: User create template, modify Journey of a waste section and verify all entered data is pre-populated
     Given I login to waste tracking portal
     And I click the "Create a new Annex VII record template" link

@@ -46,6 +46,7 @@ Feature: Add Importer details page
     Then the "task list" page is displayed
     And the task "Importer details" should be "IN PROGRESS"
 
+    # need to be checked
   Scenario: User can see previously saved details on the Who is the importer page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
@@ -102,9 +103,6 @@ Feature: Add Importer details page
     And I complete who is the importer page
     And I click the button Save and continue
     Then the "Importer contact details" page is displayed
-    And I enter invalid fax code
-    And I click the button Save and continue
-    Then I remain on the Importer contact details page with an "Enter a real fax number" error message displayed
     And I enter invalid international fax code
     And I click the button Save and continue
     Then I remain on the Importer contact details page with an "Enter a real fax number" error message displayed

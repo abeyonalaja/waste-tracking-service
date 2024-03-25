@@ -3,13 +3,14 @@ And(/^I complete the Who is the waste carrier page$/) do
   WhoIsTheWasteCarrierPage.new.enter_organisation_name 'WTS Organisation'
   WhoIsTheWasteCarrierPage.new.enter_address 'wtsOrg1@mail.com'
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
+  WhoIsTheWasteCarrierPage.new.select_first_country
 end
 
 And(/^I complete the Whats is the waste carriers contact details page$/) do
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-8988-1(434)5'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 5'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '+1-907-555-12(34) 123'
 end
 
 And(/^I see previously entered waste carrier details pre-populated$/) do
@@ -38,6 +39,7 @@ When(/^I update first waste carrier Organisation name details$/) do
   WhoIsTheWasteCarrierPage.new.enter_organisation_name new_organisation_name
   WhoIsTheWasteCarrierPage.new.enter_address 'wtsOrg1@mail.com'
   WhoIsTheWasteCarrierPage.new.enter_country 'England'
+  WhoIsTheWasteCarrierPage.new.select_first_country
   TestStatus.waste_carrier_org_details new_organisation_name
 end
 
@@ -54,13 +56,12 @@ And(/^I enter not valid fax number$/) do
 end
 
 And(/^I enter not valid international fax number$/) do
-  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number ''
-  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number '+1234567891236547891233'
+  WhoIsTheWasteCarrierPage.new.enter_invalid_int_fax_number '+1-907-555-12(34) 1234'
 end
 
 And(/^I enter invalid phone number for waste carrier's contact$/) do
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_organisation_contact 'John Arnold'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_email 'mail@mail.net'
-  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+44123123359-8988-101'
+  WhatAreTheWasteCarriersContactDetailsPage.new.enter_phone_number '+359-89 88-1(434)55 51'
   WhatAreTheWasteCarriersContactDetailsPage.new.enter_fax_number '12345678910'
 end

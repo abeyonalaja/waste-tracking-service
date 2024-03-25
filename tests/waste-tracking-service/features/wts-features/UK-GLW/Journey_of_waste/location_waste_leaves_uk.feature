@@ -73,3 +73,13 @@ Feature: Location waste leaves UK
     And I choose "Yes" radio button
     And I click the button Save and continue
     Then I remain on the Location waste leaves the UK page with an "Enter the location" error message displayed
+
+  Scenario: User enter location with invalid special characters and click Save and continue
+    Given I login to waste tracking portal
+    When I navigate to the task list page with reference
+    And I click the "Location waste leaves the UK" link
+    Then the "Location waste leaves the UK" page is displayed
+    And I choose "Yes" radio button
+    And I enter invalid location
+    And I click the button Save and continue
+    Then I remain on the Location waste leaves the UK page with an "The location must only include letters a to z, and special characters such as full stops, hyphens, spaces and apostrophes" error message displayed

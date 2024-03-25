@@ -16,12 +16,12 @@ module WasteCollectionDetailsController
     contact_details_address_page.enter_organisation_name 'OrgName LTD'
     contact_details_address_page.enter_full_name 'Nick Almiron'
     contact_details_address_page.enter_email 'sample@mail.com'
-    contact_details_address_page.enter_phone_number '+441234567891'
+    contact_details_address_page.enter_phone_number '+4412 345 6789(12-34)12'
     contact_details_address_page.save_and_continue
 
     location_leaves_uk_page = LocationWasteLeavesTheUkPage.new
     location_leaves_uk_page.choose_option 'Yes'
-    location_leaves_uk_page.enter_location 'Dover'
+    location_leaves_uk_page.enter_location 'Ne,w-P.o\'rt'
     location_leaves_uk_page.save_and_continue
 
     countries_waste_will_travel_page = CountriesWasteWillTravelPage.new

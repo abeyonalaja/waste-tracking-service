@@ -26,16 +26,17 @@ module JourneyOfAWasteSmallWasteController
     TestStatus.set_test_status(:waste_carrier_org_name, 'CompanyLTD')
     who_is_waste_carrier_page.enter_address 'Sample Address 1'
     who_is_waste_carrier_page.enter_country 'Wales'
+    who_is_waste_carrier_page.select_first_country
     TestStatus.set_test_status(:waste_carrier_address, 'Sample Address 1 Wales')
     who_is_waste_carrier_page.save_and_continue
     sleep 1
     waste_carrier_contact_details_page.check_page_displayed
     waste_carrier_contact_details_page.enter_organisation_contact 'Nick Pope'
     waste_carrier_contact_details_page.enter_email 'sample@mail.com'
-    waste_carrier_contact_details_page.enter_phone_number '+441234567891'
+    waste_carrier_contact_details_page.enter_phone_number '+359-89 88-1(434)55 5'
     TestStatus.set_test_status(:waste_carrier_org_contact, 'Nick Pope')
     TestStatus.set_test_status(:waste_carrier_email, 'sample@mail.com')
-    TestStatus.set_test_status(:waste_carrier_phone_number, '+441234567891')
+    TestStatus.set_test_status(:waste_carrier_phone_number, '+359-89 88-1(434)55 5')
     waste_carrier_contact_details_page.save_and_continue
     waste_carriers_list_page.choose_option 'No'
     waste_carriers_list_page.save_and_continue
@@ -49,11 +50,12 @@ module JourneyOfAWasteSmallWasteController
     contact_details_address_page.enter_organisation_name 'OrgName LTD'
     contact_details_address_page.enter_full_name 'Nick Almiron'
     contact_details_address_page.enter_email 'sample@mail.com'
-    contact_details_address_page.enter_phone_number '+441234567891'
+    contact_details_address_page.enter_phone_number '+44 12345 6789(12-34)12'
+    TestStatus.set_test_status(:waste_carrier_details_phone_number, '+44 12345 6789(12-34)12')
     contact_details_address_page.save_and_continue
 
     location_leaves_uk_page.choose_option 'Yes'
-    location_leaves_uk_page.enter_location 'Dover'
+    location_leaves_uk_page.enter_location 'N,ew-Por\'t.'
     location_leaves_uk_page.save_and_continue
 
     sleep(2)
