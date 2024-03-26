@@ -27,6 +27,10 @@ parameters:
         nameTag: service_limited_audience
       - name: service-reference-data
         nameTag: service_reference_data
+      - name: service-uk-waste-movements
+        nameTag: service_uk_waste_movements
+      - name: service-uk-waste-movements-bulk
+        nameTag: service_uk_waste_movements_bulk
 
   - name: artifacts
     type: object

@@ -18,6 +18,8 @@ parameters:
       - service-feedback
       - service-limited-audience
       - service-reference-data
+      - service-uk-waste-movements
+      - service-uk-waste-movements-bulk
   - name: appNameTag
     type: string
     values:
@@ -31,6 +33,8 @@ parameters:
       - service_feedback
       - service_limited_audience
       - service_reference_data
+      - service_uk_waste_movements
+      - service_uk_waste_movements_bulk
   - name: deployChart
     type: string
     default: ''

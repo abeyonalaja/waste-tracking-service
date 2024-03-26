@@ -26,6 +26,8 @@ parameters:
       - service-feedback
       - service-limited-audience
       - service-reference-data
+      - service-uk-waste-movements
+      - service-uk-waste-movements-bulk
 
 jobs:
   - deployment: restart_deployments

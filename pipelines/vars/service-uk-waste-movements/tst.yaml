@@ -1,0 +1,16 @@
+image:
+  tag: 'main'
+resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
+  limits:
+    cpu: 50m
+    memory: 256Mi
+secret:
+  env:
+    COSMOS_DB_ACCOUNT_URI: 'https://tstwtsinfco1401.documents.azure.com:443/'
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: 21414555-2429-44fc-b4ed-5b566da8ab55
+    azure.workload.identity/tenant-id: c9d74090-b4e6-4b04-981d-e6757a160812

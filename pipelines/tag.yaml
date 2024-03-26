@@ -18,6 +18,8 @@ parameters:
       - service-feedback
       - service-limited-audience
       - service-reference-data
+      - service-uk-waste-movements
+      - service-uk-waste-movements-bulk
   - name: tag
     type: string
     default: ''
