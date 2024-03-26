@@ -23,14 +23,17 @@ export default async function Index() {
           </GovUK.Heading>
           <GovUK.SectionBreak size={'l'} />
           <GridRow display="flex-from-tablet">
-            <GovUK.GridCol size="one-third">
-              <LinkCard
-                id="link-card-UKWM"
-                title={t('cards.UKWM.title')}
-                content={t('cards.UKWM.description')}
-                href="../move-waste"
-              />
-            </GovUK.GridCol>
+            {process.env.NEXT_PUBLIC_UKWM_ENABLED === 'true' && (
+              <GovUK.GridCol size="one-third">
+                <LinkCard
+                  id="link-card-UKWM"
+                  title={t('cards.UKWM.title')}
+                  content={t('cards.UKWM.description')}
+                  href="../move-waste"
+                />
+              </GovUK.GridCol>
+            )}
+
             <GovUK.GridCol size="one-third">
               <LinkCard
                 id="link-card-GLW"

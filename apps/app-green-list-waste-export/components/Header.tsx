@@ -163,7 +163,7 @@ export const Header = ({
             </GovukHeaderLogoLink>
           </GovukHeaderLogo>
           <GovukHeaderContent>
-            <GovukHeaderLink href="/">{t('app.title')}</GovukHeaderLink>
+            <GovukHeaderLink href={'/'}>{t('app.title')}</GovukHeaderLink>
           </GovukHeaderContent>
           <GovukHeaderUserContent>
             {!session && (

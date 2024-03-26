@@ -24,7 +24,11 @@ export default async function RootLayout({
           <GovUK.Header
             serviceNameLink={
               <Link
-                href={'/'}
+                href={
+                  process.env.NEXT_PUBLIC_UKWM_ENABLED === 'true'
+                    ? '/'
+                    : '/export-annex-VII-waste'
+                }
                 className="govuk-header__link govuk-header__service-name"
               >
                 Move and track waste
