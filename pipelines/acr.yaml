@@ -7,26 +7,26 @@ parameters:
   - name: apps
     type: object
     default:
-      - name: address
-        nameTag: address
-      - name: annex-vii
-        nameTag: annex_vii
-      - name: annex-vii-bulk
-        nameTag: annex_vii_bulk
+      - name: api-waste-tracking-gateway
+        nameTag: api_waste_tracking_gateway
       - name: app-green-list-waste
         nameTag: app_green_list_waste
       - name: app-uk-waste-movements
         nameTag: app_uk_waste_movements
       - name: app-waste-tracking-service
         nameTag: app_waste_tracking_service
-      - name: feedback
-        nameTag: feedback
-      - name: limited-audience
-        nameTag: limited_audience
-      - name: reference-data
-        nameTag: reference_data
-      - name: api-waste-tracking-gateway
-        nameTag: api_waste_tracking_gateway
+      - name: service-address
+        nameTag: service_address
+      - name: service-green-list-waste-export
+        nameTag: service_green_list_waste_export
+      - name: service-green-list-waste-export-bulk
+        nameTag: service_green_list_waste_export_bulk
+      - name: service-feedback
+        nameTag: service_feedback
+      - name: service-limited-audience
+        nameTag: service_limited_audience
+      - name: service-reference-data
+        nameTag: service_reference_data
 
   - name: artifacts
     type: object

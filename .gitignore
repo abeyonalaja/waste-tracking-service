@@ -47,7 +47,7 @@ tests/*/.idea
 tests/*/Allure_*
 
 secrets.json
-apps/address/mnt/
+mnt/
 
 reports/
 .env.local

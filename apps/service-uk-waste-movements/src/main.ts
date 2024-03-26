@@ -13,7 +13,7 @@ if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.simple(),
-  defaultMeta: { appId: process.env['APP_ID'] },
+  defaultMeta: { appId: process.env['APP_ID'] || 'service-uk-waste-movements' },
   transports: [new winston.transports.Console()],
 });
 

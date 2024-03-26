@@ -19,7 +19,7 @@
       ],
       "@wts/api/common": ["../../libs/api/common/src/index.ts"],
       "@wts/api/green-list-waste-export-bulk": [
-        "../../libs/api/annex-vii-bulk/src/index.ts"
+        "../../libs/api/service-green-list-waste-export-bulk/src/index.ts"
       ]
     },
     "plugins": [

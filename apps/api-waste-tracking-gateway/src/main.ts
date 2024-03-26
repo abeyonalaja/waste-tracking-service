@@ -106,48 +106,52 @@ if (process.env['NODE_ENV'] === 'development') {
   const client = new DaprClient();
   backend = {
     address: new AddressServiceBackend(
-      new DaprAddressClient(client, process.env['ADDRESS_APP_ID'] || 'address'),
+      new DaprAddressClient(
+        client,
+        process.env['ADDRESS_APP_ID'] || 'service-address'
+      ),
       logger
     ),
     feedback: new FeedbackServiceBackend(
       new DaprFeedbackClient(
         client,
-        process.env['FEEDBACK_APP_ID'] || 'feedback'
+        process.env['FEEDBACK_APP_ID'] || 'service-feedback'
       ),
       logger
     ),
     submission: new AnnexViiServiceSubmissionBackend(
       new DaprAnnexViiClient(
         client,
-        process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export'
       ),
       logger
     ),
     template: new AnnexViiServiceTemplateBackend(
       new DaprAnnexViiClient(
         client,
-        process.env['ANNEX_VII_APP_ID'] || 'annex-vii'
+        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export'
       ),
       logger
     ),
     referenceData: new ReferenceDataServiceBackend(
       new DaprReferenceDataClient(
         client,
-        process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
+        process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
       ),
       logger
     ),
     bulkSubmission: new AnnexViiBulkServiceBackend(
       new DaprAnnexViiBulkClient(
         client,
-        process.env['ANNEX_VII_BULK_APP_ID'] || 'annex-vii-bulk'
+        process.env['GLW_EXPORT_BULK_APP_ID'] ||
+          'service-green-list-waste-export-bulk'
       ),
       logger
     ),
     privateBeta: new PrivateAudienceServiceBackend(
       new DaprLimitedAudienceClient(
         client,
-        process.env['LIMITED_AUDIENCE_APP_ID'] || 'limited-audience'
+        process.env['LIMITED_AUDIENCE_APP_ID'] || 'service-limited-audience'
       ),
       new LRUCache({
         ttl: 60 * 1000,

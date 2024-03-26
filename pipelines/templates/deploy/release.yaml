@@ -8,29 +8,29 @@ parameters:
   - name: appName
     type: string
     values:
-      - address
-      - annex-vii
-      - annex-vii-bulk
+      - api-waste-tracking-gateway
       - app-green-list-waste
       - app-uk-waste-movements
       - app-waste-tracking-service
-      - feedback
-      - limited-audience
-      - reference-data
-      - api-waste-tracking-gateway
+      - service-address
+      - service-green-list-waste-export
+      - service-green-list-waste-export-bulk
+      - service-feedback
+      - service-limited-audience
+      - service-reference-data
   - name: appNameTag
     type: string
     values:
-      - address
-      - annex_vii
-      - annex_vii_bulk
+      - api_waste_tracking_gateway
       - app_green_list_waste
       - app_uk_waste_movements
       - app_waste_tracking_service
-      - feedback
-      - limited_audience
-      - reference_data
-      - api_waste_tracking_gateway
+      - service_address
+      - service_green_list_waste_export
+      - service_green_list_waste_export_bulk
+      - service_feedback
+      - service_limited_audience
+      - service_reference_data
   - name: deployChart
     type: string
     default: ''

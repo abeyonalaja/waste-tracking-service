@@ -16,16 +16,16 @@ parameters:
     type: string
     default: api-waste-tracking-gateway
     values:
-      - address
-      - annex-vii
-      - annex-vii-bulk
+      - api-waste-tracking-gateway
       - app-green-list-waste
       - app-uk-waste-movements
       - app-waste-tracking-service
-      - feedback
-      - limited-audience
-      - reference-data
-      - api-waste-tracking-gateway
+      - service-address
+      - service-green-list-waste-export
+      - service-green-list-waste-export-bulk
+      - service-feedback
+      - service-limited-audience
+      - service-reference-data
 
 jobs:
   - deployment: restart_deployments

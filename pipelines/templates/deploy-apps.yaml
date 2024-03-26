@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="address,annex-vii,annex-vii-bulk,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,feedback,limited-audience,reference-data,api-waste-tracking-gateway"
+                        affected="api-waste-tracking-gateway,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: address,annex-vii,annex-vii-bulk,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,feedback,limited-audience,reference-data,api-waste-tracking-gateway
+        value: api-waste-tracking-gateway,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -121,29 +121,13 @@ jobs:
 
                 - bash: |
                     affected=$(cat $(Pipeline.Workspace)/runtimeVariables/affectedCharts)
-                    if [[ $affected = *'address'* ]]
+                    if [[ $affected = *'api-waste-tracking-gateway'* ]]
                     then
-                      echo "Deploy address: true"
-                      echo "##vso[task.setvariable variable=deployAddress;isoutput=true]true"
+                      echo "Deploy api-waste-tracking-gateway: true"
+                      echo "##vso[task.setvariable variable=deployApiWasteTrackingGateway;isoutput=true]true"
                     else
-                      echo "Deploy address: false"
-                      echo "##vso[task.setvariable variable=deployAddress;isoutput=true]false"
-                    fi
-                    if [[ $affected = *'annex-vii'* ]]
-                    then
-                      echo "Deploy annex-vii: true"
-                      echo "##vso[task.setvariable variable=deployAnnexVii;isoutput=true]true"
-                    else
-                      echo "Deploy annex-vii: false"
-                      echo "##vso[task.setvariable variable=deployAnnexVii;isoutput=true]false"
-                    fi
-                    if [[ $affected = *'annex-vii-bulk'* ]]
-                    then
-                      echo "Deploy annex-vii-bulk: true"
-                      echo "##vso[task.setvariable variable=deployAnnexViiBulk;isoutput=true]true"
-                    else
-                      echo "Deploy annex-vii-bulk: false"
-                      echo "##vso[task.setvariable variable=deployAnnexViiBulk;isoutput=true]false"
+                      echo "Deploy api-waste-tracking-gateway: false"
+                      echo "##vso[task.setvariable variable=deployApiWasteTrackingGateway;isoutput=true]false"
                     fi
                     if [[ $affected = *'app-green-list-waste'* ]]
                     then
@@ -169,71 +153,70 @@ jobs:
                       echo "Deploy app-waste-tracking-service: false"
                       echo "##vso[task.setvariable variable=deployAppWasteTrackingService;isoutput=true]false"
                     fi
-                    if [[ $affected = *'feedback'* ]]
+                    if [[ $affected = *'service-address'* ]]
                     then
-                      echo "Deploy feedback: true"
-                      echo "##vso[task.setvariable variable=deployFeedback;isoutput=true]true"
+                      echo "Deploy service-address: true"
+                      echo "##vso[task.setvariable variable=deployServiceAddress;isoutput=true]true"
                     else
-                      echo "Deploy feedback: false"
-                      echo "##vso[task.setvariable variable=deployFeedback;isoutput=true]false"
+                      echo "Deploy service-address: false"
+                      echo "##vso[task.setvariable variable=deployServiceAddress;isoutput=true]false"
                     fi
-                    if [[ $affected = *'limited-audience'* ]]
+                    if [[ $affected = *'service-green-list-waste-export'* ]]
                     then
-                      echo "Deploy limited-audience: true"
-                      echo "##vso[task.setvariable variable=deployLimitedAudience;isoutput=true]true"
+                      echo "Deploy service-green-list-waste-export: true"
+                      echo "##vso[task.setvariable variable=deployGreenListWasteExport;isoutput=true]true"
                     else
-                      echo "Deploy limited-audience: false"
-                      echo "##vso[task.setvariable variable=deployLimitedAudience;isoutput=true]false"
+                      echo "Deploy service-green-list-waste-export: false"
+                      echo "##vso[task.setvariable variable=deployGreenListWasteExport;isoutput=true]false"
                     fi
-                    if [[ $affected = *'reference-data'* ]]
+                    if [[ $affected = *'service-green-list-waste-export-bulk'* ]]
                     then
-                      echo "Deploy reference-data: true"
-                      echo "##vso[task.setvariable variable=deployReferenceData;isoutput=true]true"
+                      echo "Deploy service-green-list-waste-export-bulk: true"
+                      echo "##vso[task.setvariable variable=deployGreenListWasteExportBulk;isoutput=true]true"
                     else
-                      echo "Deploy reference-data: false"
-                      echo "##vso[task.setvariable variable=deployReferenceData;isoutput=true]false"
+                      echo "Deploy service-green-list-waste-export-bulk: false"
+                      echo "##vso[task.setvariable variable=deployGreenListWasteExportBulk;isoutput=true]false"
                     fi
-                    if [[ $affected = *'api-waste-tracking-gateway'* ]]
+                    if [[ $affected = *'service-feedback'* ]]
                     then
-                      echo "Deploy api-waste-tracking-gateway: true"
-                      echo "##vso[task.setvariable variable=deployApiWasteTrackingGateway;isoutput=true]true"
+                      echo "Deploy service-feedback: true"
+                      echo "##vso[task.setvariable variable=deployServiceFeedback;isoutput=true]true"
                     else
-                      echo "Deploy api-waste-tracking-gateway: false"
-                      echo "##vso[task.setvariable variable=deployApiWasteTrackingGateway;isoutput=true]false"
+                      echo "Deploy service-feedback: false"
+                      echo "##vso[task.setvariable variable=deployServiceFeedback;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'service-limited-audience'* ]]
+                    then
+                      echo "Deploy service-limited-audience: true"
+                      echo "##vso[task.setvariable variable=deployServiceLimitedAudience;isoutput=true]true"
+                    else
+                      echo "Deploy service-limited-audience: false"
+                      echo "##vso[task.setvariable variable=deployServiceLimitedAudience;isoutput=true]false"
+                    fi
+                    if [[ $affected = *'service-reference-data'* ]]
+                    then
+                      echo "Deploy service-reference-data: true"
+                      echo "##vso[task.setvariable variable=deployServiceReferenceData;isoutput=true]true"
+                    else
+                      echo "Deploy service-reference-data: false"
+                      echo "##vso[task.setvariable variable=deployServiceReferenceData;isoutput=true]false"
                     fi
                   displayName: Helm chart deployment triggers
                   name: chart_triggers
 
             - ${{ each app in split(variables.appList, ',') }}:
-                - ${{ if eq(app, 'address') }}:
+                - ${{ if eq(app, 'api-waste-tracking-gateway') }}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
                         containerRegistryName: ${{ parameters.containerRegistryName }}
                         valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
                         appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidWellKnown: $(dcidWellKnown)
+                        allowedUsers: $(allowedUsers)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployAddress'], true)
-
-                - ${{ elseif eq(app, 'annex-vii') }}:
-                    - template: deploy/${{ app }}.yaml
-                      parameters:
-                        serviceConnection: ${{ parameters.acrServiceConnection }}
-                        containerRegistryName: ${{ parameters.containerRegistryName }}
-                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
-                        appInsightsConnectionString: $(appInsightsConnectionString)
-                        ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployAnnexVii'], true)
-
-                - ${{ elseif eq(app, 'annex-vii-bulk') }}:
-                    - template: deploy/${{ app }}.yaml
-                      parameters:
-                        serviceConnection: ${{ parameters.acrServiceConnection }}
-                        containerRegistryName: ${{ parameters.containerRegistryName }}
-                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
-                        appInsightsConnectionString: $(appInsightsConnectionString)
-                        ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployAnnexViiBulk'], true)
+                          deployChart: eq(variables['chart_triggers.deployApiWasteTrackingGateway'], true)
 
                 - ${{ elseif eq(app, 'app-green-list-waste')}}:
                     - template: deploy/${{ app }}.yaml
@@ -285,7 +268,37 @@ jobs:
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployAppWasteTrackingService'], true)
 
-                - ${{ elseif eq(app, 'feedback') }}:
+                - ${{ elseif eq(app, 'service-address') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployServiceAddress'], true)
+
+                - ${{ elseif eq(app, 'service-green-list-waste-export') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployGreenListWasteExport'], true)
+
+                - ${{ elseif eq(app, 'service-green-list-waste-export-bulk') }}:
+                    - template: deploy/${{ app }}.yaml
+                      parameters:
+                        serviceConnection: ${{ parameters.acrServiceConnection }}
+                        containerRegistryName: ${{ parameters.containerRegistryName }}
+                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
+                        appInsightsConnectionString: $(appInsightsConnectionString)
+                        ${{ if eq(parameters.manualDeployment, false) }}:
+                          deployChart: eq(variables['chart_triggers.deployGreenListWasteExportBulk'], true)
+
+                - ${{ elseif eq(app, 'service-feedback') }}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
@@ -294,9 +307,9 @@ jobs:
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         qualtricsClientSecret: $(qualtricsClientSecret)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployFeedback'], true)
+                          deployChart: eq(variables['chart_triggers.deployServiceFeedback'], true)
 
-                - ${{ elseif eq(app, 'limited-audience') }}:
+                - ${{ elseif eq(app, 'service-limited-audience') }}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
@@ -305,9 +318,9 @@ jobs:
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         invitationTokenPublicKey: $(invitationTokenPublicKey)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployLimitedAudience'], true)
+                          deployChart: eq(variables['chart_triggers.deployServiceLimitedAudience'], true)
 
-                - ${{ elseif eq(app, 'reference-data') }}:
+                - ${{ elseif eq(app, 'service-reference-data') }}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
@@ -315,20 +328,7 @@ jobs:
                         valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
                         appInsightsConnectionString: $(appInsightsConnectionString)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployReferenceData'], true)
-
-                - ${{ elseif eq(app, 'api-waste-tracking-gateway') }}:
-                    - template: deploy/${{ app }}.yaml
-                      parameters:
-                        serviceConnection: ${{ parameters.acrServiceConnection }}
-                        containerRegistryName: ${{ parameters.containerRegistryName }}
-                        valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
-                        appInsightsConnectionString: $(appInsightsConnectionString)
-                        dcidClientId: $(dcidClientId)
-                        dcidWellKnown: $(dcidWellKnown)
-                        allowedUsers: $(allowedUsers)
-                        ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployApiWasteTrackingGateway'], true)
+                          deployChart: eq(variables['chart_triggers.deployServiceReferenceData'], true)
 
                 - ${{ else }}:
                     - bash: |
