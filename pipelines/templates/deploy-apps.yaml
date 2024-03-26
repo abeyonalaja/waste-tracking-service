@@ -65,7 +65,7 @@ jobs:
 
                 - ${{ else }}:
                     - bash: |
-                        affected="api-waste-tracking-gateway,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data"
+                        affected="api-waste-tracking-gateway,app-green-list-waste-export,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data"
                         for project in ${affected//,/ }
                         do
                           echo "Restarting deployment: $project"
@@ -88,7 +88,7 @@ jobs:
     variables:
       - group: VG_${{ parameters.environment }}_APPS_PARAMS
       - name: appList
-        value: api-waste-tracking-gateway,app-green-list-waste,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data
+        value: api-waste-tracking-gateway,app-green-list-waste-export,app-uk-waste-movements,app-waste-tracking-service,service-address,service-green-list-waste-export,service-green-list-waste-export-bulk,service-feedback,service-limited-audience,service-reference-data
       - name: serviceConnection
         ${{ if in(parameters.environment, 'SND', 'DEV', 'TST') }}:
           value: AZD-WTS-${{ parameters.environment }}1
@@ -129,13 +129,13 @@ jobs:
                       echo "Deploy api-waste-tracking-gateway: false"
                       echo "##vso[task.setvariable variable=deployApiWasteTrackingGateway;isoutput=true]false"
                     fi
-                    if [[ $affected = *'app-green-list-waste'* ]]
+                    if [[ $affected = *'app-green-list-waste-export'* ]]
                     then
-                      echo "Deploy app-green-list-waste: true"
-                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]true"
+                      echo "Deploy app-green-list-waste-export: true"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWasteExport;isoutput=true]true"
                     else
-                      echo "Deploy app-green-list-waste: false"
-                      echo "##vso[task.setvariable variable=deployAppGreenListWaste;isoutput=true]false"
+                      echo "Deploy app-green-list-waste-export: false"
+                      echo "##vso[task.setvariable variable=deployAppGreenListWasteExport;isoutput=true]false"
                     fi
                     if [[ $affected = *'app-uk-waste-movements'* ]]
                     then
@@ -218,7 +218,7 @@ jobs:
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployApiWasteTrackingGateway'], true)
 
-                - ${{ elseif eq(app, 'app-green-list-waste')}}:
+                - ${{ elseif eq(app, 'app-green-list-waste-export')}}:
                     - template: deploy/${{ app }}.yaml
                       parameters:
                         serviceConnection: ${{ parameters.acrServiceConnection }}
@@ -236,7 +236,7 @@ jobs:
                         nextAuthUrl: $(nextAuthUrl)
                         nextPublicGoogleAnalyticsAccount: $(nextPublicGoogleAnalyticsAccount)
                         ${{ if eq(parameters.manualDeployment, false) }}:
-                          deployChart: eq(variables['chart_triggers.deployAppGreenListWaste'], true)
+                          deployChart: eq(variables['chart_triggers.deployAppGreenListWasteExport'], true)
 
                 - ${{ elseif eq(app, 'app-uk-waste-movements')}}:
                     - template: deploy/${{ app }}.yaml

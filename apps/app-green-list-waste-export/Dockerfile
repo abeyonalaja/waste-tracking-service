@@ -17,11 +17,11 @@ RUN set -x \
     chromium
 
 WORKDIR /app
-COPY --chown=node:node dist/apps/app-green-list-waste/.next ./.next
-COPY --chown=node:node dist/apps/app-green-list-waste/.nx-helpers ./.nx-helpers
-COPY --chown=node:node dist/apps/app-green-list-waste/next.config.js ./
-COPY --chown=node:node dist/apps/app-green-list-waste/public ./public
-COPY --chown=node:node dist/apps/app-green-list-waste/package*.json ./
+COPY --chown=node:node dist/apps/app-green-list-waste-export/.next ./.next
+COPY --chown=node:node dist/apps/app-green-list-waste-export/.nx-helpers ./.nx-helpers
+COPY --chown=node:node dist/apps/app-green-list-waste-export/next.config.js ./
+COPY --chown=node:node dist/apps/app-green-list-waste-export/public ./public
+COPY --chown=node:node dist/apps/app-green-list-waste-export/package*.json ./
 
 RUN npm ci
 

@@ -1,6 +1,6 @@
 apiVersion: v2
-name: app-green-list-waste
-description: A Helm chart for Green List Waste
+name: app-green-list-waste-export
+description: A Helm chart for Green List Waste Export
 
 # A chart can be either an 'application' or a 'library' chart.
 #

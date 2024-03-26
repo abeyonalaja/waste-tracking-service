@@ -9,8 +9,8 @@ parameters:
     default:
       - name: api-waste-tracking-gateway
         nameTag: api_waste_tracking_gateway
-      - name: app-green-list-waste
-        nameTag: app_green_list_waste
+      - name: app-green-list-waste-export
+        nameTag: app_green_list_waste_export
       - name: app-uk-waste-movements
         nameTag: app_uk_waste_movements
       - name: app-waste-tracking-service

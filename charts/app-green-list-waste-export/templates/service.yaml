@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "app-green-list-waste.fullname" . }}
+  name: {{ include "app-green-list-waste-export.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "app-green-list-waste.labels" . | nindent 4 }}
+    {{- include "app-green-list-waste-export.labels" . | nindent 4 }}
     {{- range $name, $value := .Values.service.labels }}
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    {{- include "app-green-list-waste.selectorLabels" . | nindent 4 }}
+    {{- include "app-green-list-waste-export.selectorLabels" . | nindent 4 }}

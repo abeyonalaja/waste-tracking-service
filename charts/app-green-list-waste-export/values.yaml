@@ -10,7 +10,7 @@ replicaCount: 2
 
 # Profile of the image used to create the pod containers
 image:
-  repository: SSVWTSINFCR5401.azurecr.io/wts/app-green-list-waste
+  repository: SSVWTSINFCR5401.azurecr.io/wts/app-green-list-waste-export
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 'main'

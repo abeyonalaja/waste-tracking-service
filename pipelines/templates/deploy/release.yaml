@@ -9,7 +9,7 @@ parameters:
     type: string
     values:
       - api-waste-tracking-gateway
-      - app-green-list-waste
+      - app-green-list-waste-export
       - app-uk-waste-movements
       - app-waste-tracking-service
       - service-address
@@ -22,7 +22,7 @@ parameters:
     type: string
     values:
       - api_waste_tracking_gateway
-      - app_green_list_waste
+      - app_green_list_waste_export
       - app_uk_waste_movements
       - app_waste_tracking_service
       - service_address

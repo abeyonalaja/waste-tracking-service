@@ -9,7 +9,7 @@ if (process.env['APPINSIGHTS_CONNECTION_STRING']) {
 
   const sdk = new NodeSDK({
     resource: new Resource({
-      [SEMRESATTRS_SERVICE_NAME]: 'app-green-list-waste',
+      [SEMRESATTRS_SERVICE_NAME]: 'app-green-list-waste-export',
     }),
     spanProcessor: new BatchSpanProcessor(
       new AzureMonitorTraceExporter({ connectionString })

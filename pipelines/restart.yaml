@@ -17,7 +17,7 @@ parameters:
     default: api-waste-tracking-gateway
     values:
       - api-waste-tracking-gateway
-      - app-green-list-waste
+      - app-green-list-waste-export
       - app-uk-waste-movements
       - app-waste-tracking-service
       - service-address

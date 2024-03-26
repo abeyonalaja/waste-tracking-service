@@ -6,10 +6,10 @@ pool: DEFRA-COMMON-ubuntu2004-SSV3
 parameters:
   - name: appName
     type: string
-    default: app-green-list-waste
+    default: app-green-list-waste-export
     values:
       - api-waste-tracking-gateway
-      - app-green-list-waste
+      - app-green-list-waste-export
       - app-uk-waste-movements
       - app-waste-tracking-service
       - service-address

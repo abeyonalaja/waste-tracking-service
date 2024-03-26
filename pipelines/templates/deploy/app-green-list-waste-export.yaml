@@ -7,10 +7,10 @@ parameters:
     default: ''
   - name: appName
     type: string
-    default: 'app-green-list-waste'
+    default: 'app-green-list-waste-export'
   - name: appNameTag
     type: string
-    default: 'app_green_list_waste'
+    default: 'app_green_list_waste_export'
   - name: valuesFilePath
     type: string
     default: ''

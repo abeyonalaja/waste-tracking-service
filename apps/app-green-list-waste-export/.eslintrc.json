@@ -12,7 +12,7 @@
       "rules": {
         "@next/next/no-html-link-for-pages": [
           "error",
-          "apps/app-green-list-waste/pages"
+          "apps/app-green-list-waste-export/pages"
         ],
         "@typescript-eslint/no-explicit-any": "warn"
       }
