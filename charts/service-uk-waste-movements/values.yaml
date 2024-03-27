@@ -69,8 +69,6 @@ secret:
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
     COSMOS_DB_ACCOUNT_URI: ''
-    COSMOS_DATABASE_NAME: ''
-    COSMOS_DRAFTS_CONTAINER_NAME: ''
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
