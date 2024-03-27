@@ -95,7 +95,7 @@ And(/^I should see org nam and country for each waste carries$/) do
     expect(MultiWasteCarriersPage.new.waste_carrier_org_name_keys(i).text).to eq Translations.value 'contact.orgName'
     expect(MultiWasteCarriersPage.new.waste_carrier_country_name_keys(i).text).to eq Translations.value 'address.country'
     expect(MultiWasteCarriersPage.new.waste_carrier_org_name_value(i).text).to eq TestStatus.waste_carrier_org_detail[j]
-    expect(MultiWasteCarriersPage.new.waste_carrier_country_name_value(i).text).to eq 'England'
+    expect(MultiWasteCarriersPage.new.waste_carrier_country_name_value(i).text).to eq TestStatus.test_status(:country)
     j += 1
   end
 end
