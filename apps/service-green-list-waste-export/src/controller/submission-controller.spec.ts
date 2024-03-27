@@ -388,7 +388,7 @@ describe(SubmissionController, () => {
             exporterAddressLine1: '     ',
             exporterAddressLine2: '',
             exporterTownOrCity: '     ',
-            exporterCountry: '     ',
+            exporterCountry: 'france',
             exporterPostcode: '     ',
             exporterContactFullname: '     ',
             exporterContactPhoneNumber: '     ',

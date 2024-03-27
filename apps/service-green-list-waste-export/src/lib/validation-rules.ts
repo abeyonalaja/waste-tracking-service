@@ -18,6 +18,16 @@ import {
   ImporterDetail,
 } from '../model';
 
+function titleCase(str: string) {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(function (s) {
+      return s.replace(s[0], s[0].toUpperCase());
+    })
+    .join(' ');
+}
+
 const fourNationsCountries = [
   'England',
   'Scotland',
@@ -587,12 +597,13 @@ export function validateExporterDetailSection(
     }
   }
 
-  if (!value.exporterCountry) {
+  if (!value.exporterCountry || !value.exporterCountry.trim()) {
     errors.push({
       field: 'ExporterDetail',
       message: validation.ExporterDetailValidationErrorMessages.emptyCountry,
     });
   } else {
+    value.exporterCountry = titleCase(value.exporterCountry);
     if (!fourNationsCountries.includes(value.exporterCountry)) {
       errors.push({
         field: 'ExporterDetail',

@@ -1188,8 +1188,8 @@ describe('validateExporterDetailSection', () => {
       exporterOrganisationName: 'Test organisation 1',
       exporterAddressLine1: '1 Some Street',
       exporterAddressLine2: 'Address line',
-      exporterTownOrCity: 'London',
-      exporterCountry: 'England',
+      exporterTownOrCity: 'Belfast',
+      exporterCountry: 'northern ireland',
       exporterPostcode: 'EC2N4AY',
       exporterContactFullname: 'John Smith',
       exporterContactPhoneNumber: "'00447888888888'",
@@ -1201,9 +1201,9 @@ describe('validateExporterDetailSection', () => {
       exporterAddress: {
         addressLine1: '1 Some Street',
         addressLine2: 'Address line',
-        townCity: 'London',
+        townCity: 'Belfast',
         postcode: 'EC2N4AY',
-        country: 'England',
+        country: 'Northern Ireland',
       },
       exporterContactDetails: {
         organisationName: 'Test organisation 1',
@@ -1297,8 +1297,7 @@ describe('validateExporterDetailSection', () => {
       },
       {
         field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages.invalidCountry,
+        message: validation.ExporterDetailValidationErrorMessages.emptyCountry,
       },
       {
         field: 'ExporterDetail',
