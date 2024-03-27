@@ -61,7 +61,7 @@ And(/^I have (\d+) of 5 sections completed$/) do |completed|
 end
 
 And(/^I click Export waste from UK breadcrumb$/) do
-  click_link(href: '/export-annex-VII-waste/export')
+  TaskListPage.new.breadcrumb_export_waste_from_uk
 end
 
 And(/^I click Move export or import waste breadcrumb$/) do

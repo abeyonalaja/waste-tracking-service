@@ -11,6 +11,9 @@ And(/^I should see export reference correctly displayed$/) do
 end
 
 And(/^I should see export About the waste section correctly displayed$/) do
+  ## issue with DEV and TST env.. defect already raised
+  HelperMethods.wait_for_a_sec
+  HelperMethods.wait_for_a_sec
   HelperMethods.wait_for_a_sec
   expect(CheckYourRecordPage.new.waste_code_header).to eq Translations.value 'exportJourney.checkAnswers.wasteCode'
   expect(CheckYourRecordPage.new.ewc_code_header).to eq Translations.value 'exportJourney.checkAnswers.ewcCodes'
@@ -367,7 +370,7 @@ And(/^I should see export Journey of waste with estimated collection date correc
   expect(CheckYourRecordPage.new.waste_collection_full_name).to eq TestStatus.test_status(:waste_contact_full_name)
 
   expect(CheckYourRecordPage.new.waste_collection_email).to eq TestStatus.test_status(:waste_contact_email)
-  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:phone_number)
+  expect(CheckYourRecordPage.new.waste_collection_phone).to eq TestStatus.test_status(:waste_contact_phone_number)
   expect(CheckYourRecordPage.new.waste_collection_fax).to eq Translations.value 'exportJourney.checkAnswers.notProvided'
   expect(CheckYourRecordPage.new.exit_location).to eq TestStatus.test_status(:waste_leaves_UK_location)
   expect(CheckYourRecordPage.new.transit_countries).to eq TestStatus.countries_list[0]
@@ -406,6 +409,8 @@ When(/^I click mode of transport details Change link$/) do
 end
 
 And(/^I should see small waste export About the waste section correctly displayed$/) do
+  HelperMethods.wait_for_a_sec
+  HelperMethods.wait_for_a_sec
   expect(CheckYourRecordPage.new.waste_code_header).to eq 'Waste code'
   expect(CheckYourRecordPage.new.ewc_code_header).to eq 'EWC codes'
   expect(CheckYourRecordPage.new.national_code_header).to eq 'National code'

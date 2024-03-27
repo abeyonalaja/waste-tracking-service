@@ -9,7 +9,6 @@ end
 
 When(/^I click Export waste from the UK from the breadcrumb$/) do
   AddReferenceNumberPage.new.export_waste_from_the_uk
-
 end
 
 And(/^I have entered my reference$/) do

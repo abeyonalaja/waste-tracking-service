@@ -57,6 +57,11 @@ class TaskListPage < GenericPage
     find('govuk-notification-banner-title')
   end
 
+  def breadcrumb_export_waste_from_uk
+    link = all(:link, text: 'Export waste from the UK').last
+    link.click
+  end
+
   private
 
   def task_status(status)

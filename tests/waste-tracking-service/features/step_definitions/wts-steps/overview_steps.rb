@@ -26,7 +26,7 @@ end
 And(/^I can see links for each sections$/) do
   expect(page).to have_link Translations.value('exportJourney.submitAnExport.title')
   # expect(page).to have_text Translations.value('exportJourney.incompleteAnnexSeven.title')
-  expect(page).to have_link(href: '/export/incomplete')
+  expect(page).to have_link(href: '/export-annex-VII-waste/incomplete')
   expect(page).to have_link Translations.value 'exportJourney.exportSubmitted.updateAnnexRecordWithActuals'
   expect(page).to have_link Translations.value 'exportJourney.exportSubmitted.viewSubmittedRecords'
 end
