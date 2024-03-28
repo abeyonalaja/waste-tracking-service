@@ -65,8 +65,15 @@ await server.invoker.listen(
 
 await server.invoker.listen(
   api.getEWCCodes.name,
-  async () => {
-    return await referenceDataController.getEWCCodes(null);
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+    const request = parse.getEwcCodesRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+    return await referenceDataController.getEWCCodes(request);
   },
   { method: HttpMethod.POST }
 );

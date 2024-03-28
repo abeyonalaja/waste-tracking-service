@@ -36,6 +36,7 @@ import {
   CreatePopsResponse,
   createPops,
   GetCountriesRequest,
+  GetEWCCodesRequest,
 } from '@wts/api/reference-data';
 
 export class DaprReferenceDataClient {
@@ -52,11 +53,12 @@ export class DaprReferenceDataClient {
     )) as GetWasteCodesResponse;
   }
 
-  async getEWCCodes(): Promise<GetEWCCodesResponse> {
+  async getEWCCodes(req: GetEWCCodesRequest): Promise<GetEWCCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getEWCCodes.name,
-      HttpMethod.POST
+      HttpMethod.POST,
+      req
     )) as GetEWCCodesResponse;
   }
 

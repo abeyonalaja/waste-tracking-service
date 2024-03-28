@@ -38,7 +38,7 @@ export default class SubmissionController {
       let disposalCodesResponse: GetDisposalCodesResponse;
       try {
         wasteCodesResponse = await this.referenceDataClient.getWasteCodes();
-        ewcCodesResponse = await this.referenceDataClient.getEWCCodes();
+        ewcCodesResponse = await this.referenceDataClient.getEWCCodes({});
         countriesResponse = await this.referenceDataClient.getCountries({});
         recoveryCodesResponse =
           await this.referenceDataClient.getRecoveryCodes();

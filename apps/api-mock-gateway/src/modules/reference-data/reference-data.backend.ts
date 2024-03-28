@@ -14,9 +14,20 @@ export async function listWasteCodes(db: DB): Promise<ListWasteCodesResponse> {
   return wasteCodes;
 }
 
-export async function listEWCCodes(db: DB): Promise<ListEWCCodesResponse> {
-  const ewcCodes: ListEWCCodesResponse = db.ewcCodes;
-  return ewcCodes;
+export async function listEWCCodes(
+  db: DB,
+  includeHazardous: boolean
+): Promise<ListEWCCodesResponse> {
+  try {
+    let ewcCodes: ListEWCCodesResponse = db.ewcCodes;
+    if (!includeHazardous) {
+      ewcCodes = ewcCodes.filter((ewcCode) => !ewcCode.code.includes('*'));
+    }
+    return ewcCodes;
+  } catch (err) {
+    console.error('Unknown error', { error: err });
+    throw new Error('Internal server error');
+  }
 }
 
 export async function listCountries(

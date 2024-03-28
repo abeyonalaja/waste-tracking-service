@@ -23,6 +23,7 @@ export type {
   Pop,
   GetWasteCodesResponse,
   GetEWCCodesResponse,
+  GetEWCCodesRequest,
   GetCountriesResponse,
   GetCountriesRequest,
   GetRecoveryCodesResponse,

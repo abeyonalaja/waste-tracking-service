@@ -35,6 +35,10 @@ export type GetCountriesRequest = {
   includeUk?: boolean;
 };
 
+export type GetEWCCodesRequest = {
+  includeHazardous?: boolean;
+};
+
 export type GetWasteCodesResponse = Response<WasteCodeType[]>;
 export type GetEWCCodesResponse = Response<WasteCode[]>;
 export type GetCountriesResponse = Response<Country[]>;

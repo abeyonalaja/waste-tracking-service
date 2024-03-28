@@ -56,7 +56,28 @@ describe(ReferenceDataController, () => {
     });
 
     it('listEWCCodes', async () => {
-      const value = [
+      const valueWithHazardous = [
+        {
+          code: '010101',
+          value: {
+            description: {
+              en: 'English Description',
+              cy: 'Welsh Description',
+            },
+          },
+        },
+        {
+          code: '020202*',
+          value: {
+            description: {
+              en: 'Hazardous English Description',
+              cy: 'Hazardous Welsh Description',
+            },
+          },
+        },
+      ];
+
+      const valueWithoutHazardous = [
         {
           code: '010101',
           value: {
@@ -68,13 +89,30 @@ describe(ReferenceDataController, () => {
         },
       ];
 
-      mockRepository.getList.mockResolvedValueOnce(value);
+      mockRepository.getList.mockResolvedValueOnce(valueWithHazardous);
 
-      const response = await subject.getEWCCodes(null);
+      let response = await subject.getEWCCodes({ includeHazardous: true });
+
       expect(response.success).toBe(true);
       if (!response.success) {
-        return;
+        throw new Error('Expected success to be true');
       }
+
+      expect(response.value.length).toEqual(2);
+
+      expect(response.value[0].code).toEqual('010101');
+      expect(response.value[1].code).toEqual('020202*');
+
+      mockRepository.getList.mockResolvedValueOnce(valueWithoutHazardous);
+
+      response = await subject.getEWCCodes({ includeHazardous: false });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        throw new Error('Expected success to be true');
+      }
+
+      expect(response.value.length).toEqual(1);
 
       expect(response.value[0].code).toEqual('010101');
     });

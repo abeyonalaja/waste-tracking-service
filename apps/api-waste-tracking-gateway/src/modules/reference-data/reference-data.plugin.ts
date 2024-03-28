@@ -31,9 +31,22 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/ewc-codes',
-      handler: async function () {
+      handler: async function ({ query }) {
+        const includeHazardousStr = query['includeHazardous'] as
+          | string
+          | undefined;
+        let includeHazardous = false;
+        if (includeHazardousStr) {
+          try {
+            includeHazardous = JSON.parse(includeHazardousStr.toLowerCase());
+          } catch (err) {
+            return Boom.notFound(
+              "Query parameter 'includeHazardous' must be of type boolean"
+            );
+          }
+        }
         try {
-          return await backend.listEWCCodes();
+          return await backend.listEWCCodes(includeHazardous);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

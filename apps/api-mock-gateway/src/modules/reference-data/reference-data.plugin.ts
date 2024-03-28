@@ -31,8 +31,22 @@ export default class ReferenceDataPlugin {
     });
 
     this.server.get(`${this.prefix}/ewc-codes`, async (req, res) => {
+      const includeHazardousStr = req.query['includeHazardous'] as
+        | string
+        | undefined;
+
+      let includeHazardous = false;
+      if (includeHazardousStr) {
+        try {
+          includeHazardous = JSON.parse(includeHazardousStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(404)
+            .send("Query parameter 'includeHazardous' must be of type boolean");
+        }
+      }
       try {
-        res.jsonp(await listEWCCodes(this.db));
+        res.jsonp(await listEWCCodes(this.db, includeHazardous));
       } catch (error) {
         console.log('Unknown error', { error: error });
         return res
