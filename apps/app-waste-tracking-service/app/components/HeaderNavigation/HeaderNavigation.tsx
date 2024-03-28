@@ -6,7 +6,6 @@ import { SignOutLink } from './SignOutLink';
 
 export async function HeaderNavigation() {
   const session = await getServerSession();
-
   function getProfileUrl() {
     if (process.env.DCID_WELLKNOWN) {
       const domain = new URL(process.env.DCID_WELLKNOWN);
@@ -44,14 +43,15 @@ export async function HeaderNavigation() {
         </ul>
       </nav>
     );
+  } else if (process.env.NEXT_PUBLIC_UKWM_ENABLED !== 'false') {
+    return (
+      <nav className={styles.navigation}>
+        <ul className={styles.list}>
+          <li>
+            <SignInLink />
+          </li>
+        </ul>
+      </nav>
+    );
   }
-  return (
-    <nav className={styles.navigation}>
-      <ul className={styles.list}>
-        <li>
-          <SignInLink />
-        </li>
-      </ul>
-    </nav>
-  );
 }

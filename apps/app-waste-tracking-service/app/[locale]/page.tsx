@@ -15,11 +15,19 @@ export default function Page() {
         <GovUK.Heading size={'l'} level={1}>
           {t('title')}
         </GovUK.Heading>
-        <GovUK.Paragraph size={'l'}>{t('description')}</GovUK.Paragraph>
+        <GovUK.Caption size={'l'}>{t('summary')}</GovUK.Caption>
+        <GovUK.SectionBreak size={'m'} visible={false} />
         <GovUK.Paragraph> {t('serviceFeatures.description')}</GovUK.Paragraph>
         <GovUK.List type="unordered">
           <GovUK.ListItem>{t('serviceFeatures.listElementOne')}</GovUK.ListItem>
-          <GovUK.ListItem>{t('serviceFeatures.listElementTwo')}</GovUK.ListItem>
+          {process.env.NEXT_PUBLIC_UKWM_ENABLED !== 'false' && (
+            <GovUK.ListItem>
+              {t('serviceFeatures.listElementTwo')}
+              <Link href="#" target="_blank">
+                {t('serviceFeatures.listElementTwoLink')}
+              </Link>
+            </GovUK.ListItem>
+          )}
           <GovUK.ListItem>
             {t('serviceFeatures.listElementThree')}
           </GovUK.ListItem>
@@ -27,6 +35,7 @@ export default function Page() {
             {t('serviceFeatures.listElementFour')}
           </GovUK.ListItem>
         </GovUK.List>
+        <GovUK.Paragraph> {t('paragraph')}</GovUK.Paragraph>
         <Link href="/account" className="govuk-button govuk-button--start">
           {t('buttonStartNow')}
           <svg
@@ -63,12 +72,6 @@ export default function Page() {
           {t('beforeYouStart.descriptionThree')}
         </GovUK.Paragraph>
         <GovUK.Paragraph>{t('beforeYouStart.descriptionFour')}</GovUK.Paragraph>
-        <GovUK.Heading size={'m'} level={3}>
-          {t('wasteMovementControls.title')}
-        </GovUK.Heading>
-        <GovUK.Paragraph>
-          {t('wasteMovementControls.description')}
-        </GovUK.Paragraph>
         <GovUK.Heading size={'m'} level={3}>
           {t('exportImportControls.title')}
         </GovUK.Heading>
