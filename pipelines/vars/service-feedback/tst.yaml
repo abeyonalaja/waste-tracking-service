@@ -7,6 +7,11 @@ resources:
   limits:
     cpu: 50m
     memory: 256Mi
+podAnnotations:
+  dapr.io/sidecar-cpu-request: '1m'
+  dapr.io/sidecar-cpu-limit: '5m'
+  dapr.io/sidecar-memory-request: '64Mi'
+  dapr.io/sidecar-memory-limit: '128Mi'
 secret:
   env:
     CLIENT_ID: 'fe24d1fe9e0c9ab326e582ac3e1aca63'

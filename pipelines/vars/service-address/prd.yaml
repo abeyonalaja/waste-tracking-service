@@ -7,6 +7,11 @@ resources:
   limits:
     cpu: 100m
     memory: 512Mi
+podAnnotations:
+  dapr.io/sidecar-cpu-request: '5m'
+  dapr.io/sidecar-cpu-limit: '10m'
+  dapr.io/sidecar-memory-request: '128Mi'
+  dapr.io/sidecar-memory-limit: '256Mi'
 secret:
   env:
     ADDRESS_LOOKUP_URL: 'https://integration.azure.defra.cloud/ws/rest/DEFRA/v1/address/postcodes'
