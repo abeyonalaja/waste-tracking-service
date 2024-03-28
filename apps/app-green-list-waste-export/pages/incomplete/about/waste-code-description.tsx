@@ -4,38 +4,80 @@ import { useRouter } from 'next/router';
 import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
+import useApiConfig from 'utils/useApiConfig';
 import {
+  AppLink,
+  AutoComplete,
+  BreadcrumbWrap,
+  ButtonGroup,
+  ErrorSummary,
   Footer,
   Header,
-  RadiosDivider,
-  BreadcrumbWrap,
-  ErrorSummary,
-  SubmissionNotFound,
   Loading,
-  ButtonGroup,
+  Paragraph,
   SaveReturnButton,
+  SubmissionNotFound,
 } from 'components';
-import { isNotEmpty, validateWasteCodeCategory } from 'utils/validators';
+import { isNotEmpty, validateWasteCode } from 'utils/validators';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-import useApiConfig from 'utils/useApiConfig';
+type singleCodeType = {
+  code: string;
+  value: {
+    description: any;
+  };
+};
 
-const WasteCode = () => {
+type codeType = {
+  type: string;
+  values: Array<singleCodeType>;
+};
+const WasteCodeDesc = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState<GetWasteDescriptionResponse>();
+  const [refData, setRefData] = useState<Array<codeType>>();
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [hasValidId, setHasValidId] = useState<boolean>(false);
   const [wasteCodeCategory, setWasteCodeCategory] = useState<string>(null);
-  const [code, setCode] = useState<string>();
+  const [wasteCodeCategoryWithSpaces, setWasteCodeCategoryWithSpaces] =
+    useState<string>('');
+  const [code, setCode] = useState<string>(undefined);
+  const [hasValidId, setHasValidId] = useState<boolean>(false);
   const apiConfig = useApiConfig();
-
   const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (wasteCodeCategory !== undefined) {
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/waste-codes`,
+            { headers: apiConfig }
+          )
+            .then((response) => {
+              if (response.ok) return response.json();
+            })
+            .then((refdata) => {
+              if (refdata !== undefined) {
+                setRefData(refdata);
+                setDataLoaded(true);
+              }
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    fetchData();
+  }, [router.isReady]);
+
   useEffect(() => {
     if (router.isReady) {
       setId(router.query.id);
     }
   }, [router.isReady, router.query.id]);
+
   useEffect(() => {
     setIsLoading(true);
     setHasValidId(false);
@@ -43,7 +85,7 @@ const WasteCode = () => {
       if (id !== null) {
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description/`,
             { headers: apiConfig }
           )
             .then((response) => {
@@ -56,8 +98,11 @@ const WasteCode = () => {
             .then((data) => {
               if (data !== undefined) {
                 setData(data);
-                setWasteCodeCategory(data.wasteCode?.type);
                 setCode(data.wasteCode?.code);
+                setWasteCodeCategory(data.wasteCode?.type);
+                setWasteCodeCategoryWithSpaces(
+                  getCodeCategoryName(data.wasteCode?.type)
+                );
                 setHasValidId(true);
               }
             });
@@ -69,19 +114,38 @@ const WasteCode = () => {
     fetchData();
   }, [router.isReady, id]);
 
-  const [errors, setErrors] = useState<{
-    wasteCodeCategory?: string;
-  }>({});
+  const getRefData = (type: string) => {
+    const filterData = refData.find((options) => options.type === type);
+    return filterData.values;
+  };
 
+  const [errors, setErrors] = useState<{
+    code?: string;
+  }>({});
   const handleLinkSubmit = (e) => {
     handleSubmit(e, true);
   };
-
+  function getCodeCategoryName(wasteCodeCategory: string) {
+    if (wasteCodeCategory === 'BaselAnnexIX') {
+      return t('exportJourney.wasteCode.BaselAnnexIX');
+    } else if (wasteCodeCategory === 'OECD') {
+      return t('exportJourney.wasteCode.OECD');
+    } else if (wasteCodeCategory === 'AnnexIIIA') {
+      return t('exportJourney.wasteCode.AnnexIIIA');
+    } else if (wasteCodeCategory === 'AnnexIIIB') {
+      return t('exportJourney.wasteCode.AnnexIIIB');
+    }
+  }
   const handleSubmit = useCallback(
     async (e: FormEvent, returnToDraft) => {
       e.preventDefault();
+
       const newErrors = {
-        wasteCodeCategory: validateWasteCodeCategory(wasteCodeCategory),
+        code: validateWasteCode(
+          wasteCodeCategory,
+          code,
+          getCodeCategoryName(wasteCodeCategory)
+        ),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
@@ -93,7 +157,7 @@ const WasteCode = () => {
           status: 'Started',
           wasteCode: {
             type: wasteCodeCategory,
-            code: wasteCodeCategory === 'NotApplicable' ? undefined : code,
+            code: code,
           },
         };
         try {
@@ -109,11 +173,7 @@ const WasteCode = () => {
               if (data !== undefined) {
                 const path = returnToDraft
                   ? `/incomplete/tasklist`
-                  : `/incomplete/about/${
-                      wasteCodeCategory === 'NotApplicable'
-                        ? 'ewc-code'
-                        : 'waste-code-description'
-                    }`;
+                  : `/incomplete/about/ewc-code`;
                 router.push({
                   pathname: path,
                   query: { id },
@@ -125,9 +185,8 @@ const WasteCode = () => {
         }
       }
     },
-    [wasteCodeCategory, id, router, url, data]
+    [wasteCodeCategory, code, id, router, url, data]
   );
-
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
@@ -135,12 +194,14 @@ const WasteCode = () => {
           href="#"
           onClick={() => {
             router.push({
-              pathname: `/incomplete/tasklist`,
+              pathname: router.query.dashboard
+                ? `/incomplete/tasklist`
+                : `/incomplete/about/waste-code`,
               query: { id },
             });
           }}
         >
-          {t('Back')}
+          {t('back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );
@@ -176,76 +237,42 @@ const WasteCode = () => {
                   {t('exportJourney.wasteCodesAndDesc.caption')}
                 </GovUK.Caption>
                 <form onSubmit={(e) => handleSubmit(e, false)}>
-                  <GovUK.Fieldset>
-                    <GovUK.Fieldset.Legend isPageHeading size="LARGE">
-                      {t('exportJourney.whatsTheWasteCode.title')}
-                    </GovUK.Fieldset.Legend>
-                    <GovUK.MultiChoice
-                      mb={6}
-                      label=""
-                      meta={{
-                        error: errors?.wasteCodeCategory,
-                        touched: !!errors?.wasteCodeCategory,
-                      }}
+                  <GovUK.Label htmlFor={'WasteCode'}>
+                    <GovUK.Heading size={'L'}>
+                      {t('exportJourney.wasteCodesDescription.title', {
+                        wc: wasteCodeCategoryWithSpaces,
+                      })}
+                    </GovUK.Heading>
+                  </GovUK.Label>
+                  <Paragraph>
+                    {t('exportJourney.wasteCodesDescription.paragraph')}
+                    <AppLink
+                      href="https://www.gov.uk/government/publications/waste-classification-technical-guidance"
+                      target="_blank"
                     >
-                      <GovUK.Radio
-                        name="wasteCodeCategory"
-                        id="wasteCodeCategoryBaselAnnexIX"
-                        checked={wasteCodeCategory === 'BaselAnnexIX'}
-                        onChange={() => {
-                          setCode('');
-                          setWasteCodeCategory('BaselAnnexIX');
-                        }}
-                      >
-                        {t('exportJourney.wasteCode.BaselAnnexIX')}
-                      </GovUK.Radio>
-                      <GovUK.Radio
-                        name="wasteCodeCategory"
-                        id="wasteCodeCategoryBaselOECD"
-                        checked={wasteCodeCategory === 'OECD'}
-                        onChange={() => {
-                          setCode('');
-                          setWasteCodeCategory('OECD');
-                        }}
-                      >
-                        {t('exportJourney.wasteCode.OECD')}
-                      </GovUK.Radio>
-                      <GovUK.Radio
-                        name="wasteCodeCategory"
-                        id="wasteCodeCategoryAnnexIIIA"
-                        checked={wasteCodeCategory === 'AnnexIIIA'}
-                        onChange={() => {
-                          setCode('');
-                          setWasteCodeCategory('AnnexIIIA');
-                        }}
-                      >
-                        {t('exportJourney.wasteCode.AnnexIIIA')}
-                      </GovUK.Radio>
-                      <GovUK.Radio
-                        name="wasteCodeCategory"
-                        id="wasteCodeCategoryAnnexIIIB"
-                        checked={wasteCodeCategory === 'AnnexIIIB'}
-                        onChange={() => {
-                          setCode('');
-                          setWasteCodeCategory('AnnexIIIB');
-                        }}
-                      >
-                        {t('exportJourney.wasteCode.AnnexIIIB')}
-                      </GovUK.Radio>
-                      <RadiosDivider>
-                        {t('exportJourney.quantity.radioDivisor')}
-                      </RadiosDivider>
-                      <GovUK.Radio
-                        name="wasteCodeCategory"
-                        id="wasteCodeCategoryNA"
-                        hint="Only select this option if the waste is going to a laboratory."
-                        checked={wasteCodeCategory === 'NotApplicable'}
-                        onChange={() => setWasteCodeCategory('NotApplicable')}
-                      >
-                        {t('exportJourney.wasteCode.NotApplicable')}
-                      </GovUK.Radio>
-                    </GovUK.MultiChoice>
-                  </GovUK.Fieldset>
+                      {t('exportJourney.wasteCodesDescription.link')}
+                    </AppLink>
+                    .
+                  </Paragraph>
+                  <GovUK.MultiChoice
+                    mb={6}
+                    label=""
+                    meta={{
+                      error: errors?.code,
+                      touched: !!errors?.code,
+                    }}
+                  >
+                    <GovUK.HintText>{t('autocompleteHint')}</GovUK.HintText>
+                    {wasteCodeCategory && dataLoaded && (
+                      <AutoComplete
+                        id={'WasteCode'}
+                        name={'wasteCode'}
+                        options={getRefData(wasteCodeCategory)}
+                        value={code ? code : undefined}
+                        confirm={(o) => setCode(o.code)}
+                      />
+                    )}
+                  </GovUK.MultiChoice>
                   <ButtonGroup>
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}
@@ -262,5 +289,5 @@ const WasteCode = () => {
   );
 };
 
-export default WasteCode;
-WasteCode.auth = true;
+export default WasteCodeDesc;
+WasteCodeDesc.auth = true;

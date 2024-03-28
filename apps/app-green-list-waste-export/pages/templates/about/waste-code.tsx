@@ -5,10 +5,8 @@ import * as GovUK from 'govuk-react';
 
 import { useTranslation } from 'react-i18next';
 import {
-  AutoComplete,
   Footer,
   Header,
-  ConditionalRadioWrap,
   RadiosDivider,
   BreadcrumbWrap,
   ErrorSummary,
@@ -18,24 +16,8 @@ import {
   SaveReturnButton,
 } from 'components';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-import {
-  isNotEmpty,
-  validateWasteCode,
-  validateWasteCodeCategory,
-} from 'utils/validators';
+import { isNotEmpty, validateWasteCodeCategory } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
-
-type singleCodeType = {
-  code: string;
-  value: {
-    description: any;
-  };
-};
-
-type codeType = {
-  type: string;
-  values: Array<singleCodeType>;
-};
 
 const WasteCode = () => {
   const { t } = useTranslation();
@@ -43,57 +25,12 @@ const WasteCode = () => {
   const apiConfig = useApiConfig();
   const [templateId, setTemplateId] = useState<string>(null);
   const [data, setData] = useState<GetWasteDescriptionResponse>();
-  const [refData, setRefData] = useState<Array<codeType>>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasValidId, setHasValidId] = useState<boolean>(false);
   const [wasteCodeCategory, setWasteCodeCategory] = useState<string>();
-  const [baselAnnexIXCode, setBaselAnnexIXCode] = useState<string>();
-  const [oecdCode, setOecdCode] = useState<string>();
-  const [annexIIIACode, setAnnexIIIACode] = useState<string>();
-  const [annexIIIBCode, setAnnexIIIBCode] = useState<string>();
+  const [code, setCode] = useState<string>();
 
   const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/waste-codes`,
-          { headers: apiConfig }
-        )
-          .then((response) => {
-            if (response.ok) return response.json();
-          })
-          .then((refdata) => {
-            if (refdata !== undefined) {
-              setRefData(refdata);
-            }
-          });
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, [wasteCodeCategory]);
-
-  useEffect(() => {
-    if (data !== undefined && refData !== undefined) {
-      if (
-        data.status !== 'NotStarted' &&
-        data.wasteCode.type !== 'NotApplicable'
-      ) {
-        setWasteCode(data.wasteCode?.type, data.wasteCode?.code);
-      }
-      setIsLoading(false);
-    }
-  }, [data, refData]);
-
-  const setWasteCode = (category, code) => {
-    if (category === 'BaselAnnexIX') setBaselAnnexIXCode(code);
-    if (category === 'OECD') setOecdCode(code);
-    if (category === 'AnnexIIIA') setAnnexIIIACode(code);
-    if (category === 'AnnexIIIB') setAnnexIIIBCode(code);
-  };
 
   useEffect(() => {
     if (router.isReady) {
@@ -112,16 +49,17 @@ const WasteCode = () => {
             { headers: apiConfig }
           )
             .then((response) => {
+              setIsLoading(false);
               if (response.ok) return response.json();
               else {
                 setHasValidId(false);
-                setIsLoading(false);
               }
             })
             .then((data) => {
               if (data !== undefined) {
                 setData(data);
                 setWasteCodeCategory(data.wasteCode?.type);
+                setCode(data.wasteCode?.code);
                 setHasValidId(true);
               }
             });
@@ -135,16 +73,7 @@ const WasteCode = () => {
 
   const [errors, setErrors] = useState<{
     wasteCodeCategory?: string;
-    baselAnnexIXCode?: string;
-    oecdCode?: string;
-    annexIIIACode?: string;
-    annexIIIBCode?: string;
   }>({});
-
-  const getRefData = (type: string) => {
-    const filterData = refData.find((options) => options.type === type);
-    return filterData.values;
-  };
 
   const handleCancelReturn = (e) => {
     e.preventDefault();
@@ -157,87 +86,50 @@ const WasteCode = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      const getWasteCode = () => {
-        if (wasteCodeCategory === 'BaselAnnexIX') return baselAnnexIXCode;
-        if (wasteCodeCategory === 'OECD') return oecdCode;
-        if (wasteCodeCategory === 'AnnexIIIA') return annexIIIACode;
-        if (wasteCodeCategory === 'AnnexIIIB') return annexIIIBCode;
-        return undefined;
-      };
 
       const newErrors = {
         wasteCodeCategory: validateWasteCodeCategory(wasteCodeCategory),
-        baselAnnexIXCode: validateWasteCode(
-          wasteCodeCategory,
-          baselAnnexIXCode,
-          'Basel Annex IX'
-        ),
-        oecdCode: validateWasteCode(wasteCodeCategory, oecdCode, 'OECD'),
-        annexIIIACode: validateWasteCode(
-          wasteCodeCategory,
-          annexIIIACode,
-          'Annex IIIA'
-        ),
-        annexIIIBCode: validateWasteCode(
-          wasteCodeCategory,
-          annexIIIBCode,
-          'Annex IIIB'
-        ),
       };
       if (isNotEmpty(newErrors)) {
         setErrors(newErrors);
       } else {
         setErrors(null);
+        const body = {
+          ...data,
+          status: 'Started',
+          wasteCode: {
+            type: wasteCodeCategory,
+            code: wasteCodeCategory === 'NotApplicable' ? undefined : code,
+          },
+        };
 
-        if (wasteCodeCategory !== undefined) {
-          const body = {
-            ...data,
-            status: 'Started',
-            wasteCode: {
-              type: wasteCodeCategory,
-              code: getWasteCode(),
-            },
-          };
-
-          try {
-            await fetch(url, {
-              method: 'PUT',
-              headers: apiConfig,
-              body: JSON.stringify(body),
+        try {
+          await fetch(url, {
+            method: 'PUT',
+            headers: apiConfig,
+            body: JSON.stringify(body),
+          })
+            .then((response) => {
+              if (response.ok) return response.json();
             })
-              .then((response) => {
-                if (response.ok) return response.json();
-              })
-              .then((data) => {
-                if (data !== undefined) {
-                  router.push({
-                    pathname: `/templates/about/ewc-code`,
-                    query: { templateId },
-                  });
-                }
-              });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          router.push({
-            pathname: `/templates/about/ewc-code`,
-            query: { templateId },
-          });
+            .then((data) => {
+              if (data !== undefined) {
+                router.push({
+                  pathname: `/templates/about/${
+                    wasteCodeCategory === 'NotApplicable'
+                      ? 'ewc-code'
+                      : 'waste-code-description'
+                  }`,
+                  query: { templateId },
+                });
+              }
+            });
+        } catch (e) {
+          console.error(e);
         }
       }
     },
-    [
-      wasteCodeCategory,
-      baselAnnexIXCode,
-      oecdCode,
-      annexIIIACode,
-      annexIIIBCode,
-      templateId,
-      router,
-      url,
-      data,
-    ]
+    [wasteCodeCategory, templateId, router, url, data]
   );
 
   const BreadCrumbs = () => {
@@ -304,127 +196,49 @@ const WasteCode = () => {
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryBaselAnnexIX"
                         checked={wasteCodeCategory === 'BaselAnnexIX'}
-                        onChange={() => setWasteCodeCategory('BaselAnnexIX')}
+                        onChange={() => {
+                          setCode('');
+                          setWasteCodeCategory('BaselAnnexIX');
+                        }}
                       >
-                        Basel Annex IX
+                        {t('exportJourney.wasteCode.BaselAnnexIX')}
                       </GovUK.Radio>
-                      {wasteCodeCategory === 'BaselAnnexIX' && (
-                        <ConditionalRadioWrap>
-                          <GovUK.FormGroup error={!!errors?.baselAnnexIXCode}>
-                            <GovUK.VisuallyHidden>
-                              <GovUK.Label htmlFor="BaselAnnexIXCode">
-                                Basel Annex IX code
-                              </GovUK.Label>
-                            </GovUK.VisuallyHidden>
-                            <GovUK.HintText>
-                              {t('autocompleteHint')}
-                            </GovUK.HintText>
-                            <GovUK.ErrorText>
-                              {errors?.baselAnnexIXCode}
-                            </GovUK.ErrorText>
-                            <AutoComplete
-                              id={'BaselAnnexIXCode'}
-                              options={getRefData('BaselAnnexIX')}
-                              value={baselAnnexIXCode}
-                              confirm={(o) => setBaselAnnexIXCode(o.code)}
-                            />
-                          </GovUK.FormGroup>
-                        </ConditionalRadioWrap>
-                      )}
                       <GovUK.Radio
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryBaselOECD"
                         checked={wasteCodeCategory === 'OECD'}
-                        onChange={() => setWasteCodeCategory('OECD')}
+                        onChange={() => {
+                          setCode('');
+                          setWasteCodeCategory('OECD');
+                        }}
                       >
-                        OECD
+                        {t('exportJourney.wasteCode.OECD')}
                       </GovUK.Radio>
-                      {wasteCodeCategory === 'OECD' && (
-                        <ConditionalRadioWrap>
-                          <GovUK.FormGroup error={!!errors?.oecdCode}>
-                            <GovUK.VisuallyHidden>
-                              <GovUK.Label htmlFor="OecdCode">
-                                OECD code
-                              </GovUK.Label>
-                            </GovUK.VisuallyHidden>
-                            <GovUK.HintText>
-                              {t('autocompleteHint')}
-                            </GovUK.HintText>
-                            <GovUK.ErrorText>
-                              {errors?.oecdCode}
-                            </GovUK.ErrorText>
-                            <AutoComplete
-                              id={'OecdCode'}
-                              options={getRefData('OECD')}
-                              value={oecdCode}
-                              confirm={(o) => setOecdCode(o.code)}
-                            />
-                          </GovUK.FormGroup>
-                        </ConditionalRadioWrap>
-                      )}
                       <GovUK.Radio
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryAnnexIIIA"
                         checked={wasteCodeCategory === 'AnnexIIIA'}
-                        onChange={() => setWasteCodeCategory('AnnexIIIA')}
+                        onChange={() => {
+                          setCode('');
+                          setWasteCodeCategory('AnnexIIIA');
+                        }}
                       >
-                        Annex IIIA
+                        {t('exportJourney.wasteCode.AnnexIIIA')}
                       </GovUK.Radio>
-                      {wasteCodeCategory === 'AnnexIIIA' && (
-                        <ConditionalRadioWrap>
-                          <GovUK.FormGroup error={!!errors?.annexIIIACode}>
-                            <GovUK.VisuallyHidden>
-                              <GovUK.Label htmlFor="AnnexIIIACode">
-                                Annex IIIA code
-                              </GovUK.Label>
-                            </GovUK.VisuallyHidden>
-                            <GovUK.HintText>
-                              {t('autocompleteHint')}
-                            </GovUK.HintText>
-                            <GovUK.ErrorText>
-                              {errors?.annexIIIACode}
-                            </GovUK.ErrorText>
-                            <AutoComplete
-                              id={'AnnexIIIACode'}
-                              options={getRefData('AnnexIIIA')}
-                              value={annexIIIACode}
-                              confirm={(o) => setAnnexIIIACode(o.code)}
-                            />
-                          </GovUK.FormGroup>
-                        </ConditionalRadioWrap>
-                      )}
                       <GovUK.Radio
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryAnnexIIIB"
                         checked={wasteCodeCategory === 'AnnexIIIB'}
-                        onChange={() => setWasteCodeCategory('AnnexIIIB')}
+                        onChange={() => {
+                          setCode('');
+                          setWasteCodeCategory('AnnexIIIB');
+                        }}
                       >
-                        Annex IIIB
+                        {t('exportJourney.wasteCode.AnnexIIIB')}
                       </GovUK.Radio>
-                      {wasteCodeCategory === 'AnnexIIIB' && (
-                        <ConditionalRadioWrap>
-                          <GovUK.FormGroup error={!!errors?.annexIIIBCode}>
-                            <GovUK.VisuallyHidden>
-                              <GovUK.Label htmlFor="AnnexIIIBCode">
-                                Annex IIIB code
-                              </GovUK.Label>
-                            </GovUK.VisuallyHidden>
-                            <GovUK.HintText>
-                              {t('autocompleteHint')}
-                            </GovUK.HintText>
-                            <GovUK.ErrorText>
-                              {errors?.annexIIIBCode}
-                            </GovUK.ErrorText>
-                            <AutoComplete
-                              id={'AnnexIIIBCode'}
-                              options={getRefData('AnnexIIIB')}
-                              value={annexIIIBCode}
-                              confirm={(o) => setAnnexIIIBCode(o.code)}
-                            />
-                          </GovUK.FormGroup>
-                        </ConditionalRadioWrap>
-                      )}
-                      <RadiosDivider>or</RadiosDivider>
+                      <RadiosDivider>
+                        {t('exportJourney.quantity.radioDivisor')}
+                      </RadiosDivider>
                       <GovUK.Radio
                         name="wasteCodeCategory"
                         id="wasteCodeCategoryNA"
@@ -432,7 +246,7 @@ const WasteCode = () => {
                         checked={wasteCodeCategory === 'NotApplicable'}
                         onChange={() => setWasteCodeCategory('NotApplicable')}
                       >
-                        Not applicable
+                        {t('exportJourney.wasteCode.NotApplicable')}
                       </GovUK.Radio>
                     </GovUK.MultiChoice>
                   </GovUK.Fieldset>
@@ -440,9 +254,7 @@ const WasteCode = () => {
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}
                     </GovUK.Button>
-                    <SaveReturnButton onClick={handleCancelReturn}>
-                      {t('templates.cancelReturnButton')}
-                    </SaveReturnButton>
+                    <SaveReturnButton onClick={handleCancelReturn} />
                   </ButtonGroup>
                 </form>
               </>

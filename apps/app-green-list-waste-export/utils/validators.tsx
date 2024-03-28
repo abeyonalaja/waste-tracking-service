@@ -39,7 +39,7 @@ export const validateWasteCode: (
 
   if (
     wasteCodeCategory !== 'NotApplicable' &&
-    wasteCode === undefined &&
+    (wasteCode === undefined || wasteCode === '') &&
     wasteCodeCategory?.toLowerCase() ===
       wasteCodeCategoryLabel.toLowerCase().replace(/ /g, '')
   )

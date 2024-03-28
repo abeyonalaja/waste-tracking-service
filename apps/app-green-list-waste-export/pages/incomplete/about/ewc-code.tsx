@@ -215,6 +215,7 @@ const EwcCodes = () => {
     ewcCodeReducer,
     initialState
   );
+  const [wasteCodeType, setWasteCodeType] = useState<string>('');
   const [id, setId] = useState(null);
   const [refData, setRefData] = useState<Array<codeType>>([]);
   const [ewcCode, setEwcCode] = useState<string>(null);
@@ -264,6 +265,7 @@ const EwcCodes = () => {
           })
           .then((data) => {
             if (data !== undefined) {
+              setWasteCodeType(data.wasteCode?.type);
               dispatchEwcCodePage({
                 type: 'DATA_FETCH_SUCCESS',
                 payload: data,
@@ -551,7 +553,11 @@ const EwcCodes = () => {
               router.push({
                 pathname: router.query.dashboard
                   ? `/incomplete/tasklist`
-                  : `/incomplete/about/waste-code`,
+                  : `/incomplete/about/${
+                      wasteCodeType === 'NotApplicable'
+                        ? 'waste-code'
+                        : 'waste-code-description'
+                    }`,
                 query: { id },
               });
             }
