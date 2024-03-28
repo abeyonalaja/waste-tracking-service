@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Link } from '../../navigation';
+import { Link } from '../../../navigation';
 
 export const metadata = {
   title: 'Waste tracking service',
@@ -15,8 +15,9 @@ export default function Page() {
         <GovUK.Heading size={'l'} level={1}>
           {t('title')}
         </GovUK.Heading>
-        <GovUK.Caption size={'l'}>{t('summary')}</GovUK.Caption>
-        <GovUK.SectionBreak size={'m'} visible={false} />
+        <p>
+          <GovUK.Caption size={'l'}>{t('summary')}</GovUK.Caption>
+        </p>
         <GovUK.Paragraph> {t('serviceFeatures.description')}</GovUK.Paragraph>
         <GovUK.List type="unordered">
           <GovUK.ListItem>{t('serviceFeatures.listElementOne')}</GovUK.ListItem>
@@ -36,7 +37,11 @@ export default function Page() {
           </GovUK.ListItem>
         </GovUK.List>
         <GovUK.Paragraph> {t('paragraph')}</GovUK.Paragraph>
-        <Link href="/account" className="govuk-button govuk-button--start">
+        <Link
+          href="/account"
+          className="govuk-button govuk-button--start"
+          role="button"
+        >
           {t('buttonStartNow')}
           <svg
             className="govuk-button__start-icon"
@@ -87,7 +92,8 @@ export default function Page() {
               href="https://www.gov.uk/guidance/importing-and-exporting-waste"
               target="_blank"
             >
-              {t('exportImportControls.linkOne')}
+              {t('exportImportControls.linkOne')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -95,7 +101,8 @@ export default function Page() {
               href="https://www.sepa.org.uk/regulations/waste/transfrontier-shipment-of-waste/"
               target="_blank"
             >
-              {t('exportImportControls.linkTwo')}
+              {t('exportImportControls.linkTwo')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -103,7 +110,8 @@ export default function Page() {
               href="https://naturalresources.wales/permits-and-permissions/waste-permitting/guidance-on-importing-and-exporting-waste/?lang=en"
               target="_blank"
             >
-              {t('exportImportControls.linkThree')}
+              {t('exportImportControls.linkThree')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -111,7 +119,8 @@ export default function Page() {
               href="https://www.daera-ni.gov.uk/articles/transfrontier-shipment-waste"
               target="_blank"
             >
-              {t('exportImportControls.linkFour')}
+              {t('exportImportControls.linkFour')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
         </GovUK.List>
@@ -145,7 +154,8 @@ export default function Page() {
               href="https://www.gov.uk/browse/business/waste-environment"
               target="_blank"
             >
-              {t('getHelpRegulatoryIssue.linkOne')}
+              {t('getHelpRegulatoryIssue.linkOne')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -153,7 +163,8 @@ export default function Page() {
               href="https://www.sepa.org.uk/regulations/waste/"
               target="_blank"
             >
-              {t('getHelpRegulatoryIssue.linkTwo')}
+              {t('getHelpRegulatoryIssue.linkTwo')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -161,7 +172,8 @@ export default function Page() {
               href="https://www.daera-ni.gov.uk/articles/waste-policy-tracker"
               target="_blank"
             >
-              {t('getHelpRegulatoryIssue.linkThree')}
+              {t('getHelpRegulatoryIssue.linkThree')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
           <GovUK.ListItem>
@@ -169,7 +181,8 @@ export default function Page() {
               href="https://businesswales.gov.wales/topics-and-guidance/sustainability-and-social-responsibility/resource-efficiency/waste/managing-waste"
               target="_blank"
             >
-              {t('getHelpRegulatoryIssue.linkFour')}
+              {t('getHelpRegulatoryIssue.linkFour')}{' '}
+              <span className="govuk-visually-hidden">(opens in new tab)</span>
             </GovUK.Link>
           </GovUK.ListItem>
         </GovUK.List>

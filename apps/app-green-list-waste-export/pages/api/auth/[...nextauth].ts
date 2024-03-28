@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 15, // 15 minutes
   },
   pages: {
-    signIn: `${baseUrl}/auth/signin?source=glw`,
+    signIn: `${baseUrl}/auth/signin`,
     signOut: `${baseUrl}/auth/signout`,
   },
   callbacks: {

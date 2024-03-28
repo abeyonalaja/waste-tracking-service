@@ -1,9 +1,9 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { GridRow, LinkCard } from '../../components';
+import { GridRow, LinkCard } from '../../../components';
 import { getTranslations } from 'next-intl/server';
 import UserHeading from './_components/UserHeading';
 import { Suspense } from 'react';
-import { redirect } from '../../../navigation';
+import { redirect } from '../../../../navigation';
 import { getServerSession } from 'next-auth';
 
 export default async function Index() {
