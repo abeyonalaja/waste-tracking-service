@@ -1,13 +1,15 @@
 'use client';
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import * as GovUK from '@wts/ui/govuk-react-ui';
+import { signIn } from 'next-auth/react';
 
-export default function SignInButton() {
-  const { data: session } = useSession();
-  useEffect(() => {
-    if (!session) {
-      signIn('defra-b2c');
-    }
-  }, [session]);
-  return <></>;
+export default function SignInButton({ label }: { label: string }) {
+  return (
+    <GovUK.Button
+      onClick={() => {
+        signIn('defra-b2c');
+      }}
+    >
+      {label}
+    </GovUK.Button>
+  );
 }

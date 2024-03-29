@@ -1,19 +1,15 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { getTranslations } from 'next-intl/server';
 import SignInButton from './_components/SignInButton';
 import { getServerSession } from 'next-auth';
 import { redirect } from '../../../../../navigation';
-import { Loading } from '../../../../components/Loading';
-import React, { Suspense } from 'react';
-
-export const metadata = {
-  title: 'Waste tracking service',
-};
 
 export default async function Index({
   searchParams,
 }: {
   searchParams: Record<string, string>;
 }) {
+  const t = await getTranslations('signinPage');
   const session = await getServerSession();
 
   if (session) {
@@ -25,10 +21,10 @@ export default async function Index({
     <>
       <GovUK.GridRow>
         <GovUK.GridCol size={'two-thirds'}>
-          <Loading />
-          <Suspense>
-            <SignInButton />
-          </Suspense>
+          <GovUK.Heading size={'l'} level={1}>
+            {t('title')}
+          </GovUK.Heading>
+          <SignInButton label={t('button')} />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </>
