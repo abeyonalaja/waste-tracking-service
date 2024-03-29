@@ -7,6 +7,8 @@ import {
   FinalizeBatchResponse,
   GetBatchRequest,
   GetBatchResponse,
+  getBatch,
+  finalizeBatch,
 } from '@wts/api/uk-waste-movements-bulk';
 
 export class DaprUkWasteMovementsBulkClient {
@@ -29,7 +31,7 @@ export class DaprUkWasteMovementsBulkClient {
   async getBatch(req: GetBatchRequest): Promise<GetBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsBulkAppId,
-      this.getBatch.name,
+      getBatch.name,
       HttpMethod.POST,
       req
     )) as GetBatchResponse;
@@ -40,7 +42,7 @@ export class DaprUkWasteMovementsBulkClient {
   ): Promise<FinalizeBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsBulkAppId,
-      this.finalizeBatch.name,
+      finalizeBatch.name,
       HttpMethod.POST,
       req
     )) as FinalizeBatchResponse;

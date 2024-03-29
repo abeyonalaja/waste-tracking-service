@@ -17,8 +17,6 @@ const mockRepository = {
     jest.fn<(value: BulkSubmission, accountId: string) => Promise<void>>(),
   getBatch:
     jest.fn<(id: string, accountId: string) => Promise<BulkSubmission>>(),
-  finalizeBatch:
-    jest.fn<(id: string, accountId: string) => Promise<BulkSubmission>>(),
 };
 
 describe(BatchController, () => {
@@ -27,7 +25,6 @@ describe(BatchController, () => {
   beforeEach(() => {
     mockRepository.saveBatch.mockClear();
     mockRepository.getBatch.mockClear();
-    mockRepository.finalizeBatch.mockClear();
   });
 
   describe('getBatch', () => {
@@ -76,8 +73,7 @@ describe(BatchController, () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
 
-      mockRepository.getBatch.mockRejectedValue(Boom.teapot());
-      mockRepository.finalizeBatch.mockRejectedValue(Boom.teapot());
+      mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
 
       const response = await subject.finalizeBatch({ id, accountId });
 
@@ -86,51 +82,15 @@ describe(BatchController, () => {
         return;
       }
 
-      expect(mockRepository.getBatch).toBeCalledWith(id, accountId);
+      expect(mockRepository.saveBatch).toBeCalledTimes(1);
       expect(response.error.statusCode).toBe(418);
-    });
-
-    it('Batch has not passed validation', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
-
-      const value: BulkSubmission = {
-        id,
-        state: {
-          status: 'Processing',
-          timestamp: new Date(),
-        },
-      };
-
-      mockRepository.getBatch.mockResolvedValue(value);
-      mockRepository.finalizeBatch.mockRejectedValue(Boom.badRequest);
-
-      const response = await subject.finalizeBatch({ id, accountId });
-
-      expect(response.success).toBe(false);
-      if (response.success) {
-        return;
-      }
-
-      expect(mockRepository.getBatch).toBeCalledWith(id, accountId);
-      expect(response.error.statusCode).toBe(400);
     });
 
     it('Successfully updates value in the repository', async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
 
-      const value: BulkSubmission = {
-        id,
-        state: {
-          status: 'PassedValidation',
-          hasEstimates: true,
-          timestamp: new Date(),
-        },
-      };
-
-      mockRepository.getBatch.mockResolvedValue(value);
-      mockRepository.finalizeBatch.mockRejectedValue(Boom.badRequest);
+      mockRepository.saveBatch.mockResolvedValue();
 
       const response: api.FinalizeBatchResponse = await subject.finalizeBatch({
         id,
@@ -138,7 +98,6 @@ describe(BatchController, () => {
       });
 
       expect(response.success).toBe(true);
-      expect(mockRepository.getBatch).toBeCalledWith(id, accountId);
       expect(mockRepository.saveBatch).toBeCalledTimes(1);
 
       if (!response.success) {

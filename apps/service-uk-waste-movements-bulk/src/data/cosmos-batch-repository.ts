@@ -61,6 +61,7 @@ export class CosmosBatchRepository implements BatchRepository {
       .container(this.draftContainerName)
       .item(id, accountId)
       .read();
+
     if (!item) {
       throw Boom.notFound();
     }
