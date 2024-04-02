@@ -4,7 +4,7 @@ end
 
 When(/^I navigate to You have added EWC codes page with Not applicable waste code$/) do
   TaskListPage.new.waste_codes_and_description
-  WhatIsTheWasteCodePage.new.choose_option Translations.value 'notApplicable'
+  ClassificationOfTheWastePage.new.choose_option Translations.value 'notApplicable'
   TestStatus.set_test_status(:waste_code_option, 'Not applicable')
 end
 

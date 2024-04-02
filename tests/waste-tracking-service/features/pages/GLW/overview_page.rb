@@ -28,7 +28,7 @@ class OverviewPage < GenericPage
 
   def login_to_dcid(user)
     TestStatus.set_test_status(:current_user, user.to_sym)
-    OverviewPage.new.sign_in_or_create_an_account
+    # OverviewPage.new.sign_in_or_create_an_account
     HelperMethods.wait_for_a_sec
     Log.info("current user: #{TestData::Users.user_name(user.to_sym)}")
     case Env.test_env

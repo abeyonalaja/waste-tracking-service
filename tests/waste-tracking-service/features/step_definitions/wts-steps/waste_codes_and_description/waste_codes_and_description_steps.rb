@@ -11,32 +11,32 @@ When(/^I choose Not applicable option$/) do
 end
 
 When(/^I choose "([^"]*)" as a waste code$/) do |waste_code_option|
-  WhatIsTheWasteCodePage.new.choose_option waste_code_option
+  ClassificationOfTheWastePage.new.choose_option waste_code_option
   TestStatus.set_test_status(:waste_code_option, waste_code_option)
   Log.info("Waste code option :  #{TestStatus.test_status(:waste_code_option)}")
 end
 
 And(/^select a first option as waste code description$/) do
-  WhatIsTheWasteCodePage.new.select_first_option
+  ClassificationOfTheWastePage.new.select_first_option
 end
 
 Then(/^"([^"]*)" is still selected$/) do |option|
-  expect(WhatIsTheWasteCodePage.new.waste_code_option(option)).to be_checked
+  expect(ClassificationOfTheWastePage.new.waste_code_option(option)).to be_checked
 end
 
 And(/^waste code description is displayed$/) do
-  expect(WhatIsTheWasteCodePage.new).to have_waste_code TestStatus.test_status(:waste_code_description)
+  expect(ClassificationOfTheWastePage.new).to have_waste_code TestStatus.test_status(:waste_code_description)
 end
 
 When(/^I change the waste code from small to bulk waste$/) do
-  WhatIsTheWasteCodePage.new.choose_option 'Basel Annex IX'
+  ClassificationOfTheWastePage.new.choose_option 'Basel Annex IX'
   TestStatus.set_test_status(:waste_code_option, 'Basel Annex IX')
   Log.info("Waste code option :  #{TestStatus.test_status(:waste_code_option)}")
-  WhatIsTheWasteCodePage.new.select_first_option
+  ClassificationOfTheWastePage.new.select_first_option
 end
 
 When(/^I update Waste codes and description task with Not applicable has waste code$/) do
-  WhatIsTheWasteCodePage.new.choose_option 'Not applicable'
+  ClassificationOfTheWastePage.new.choose_option 'Not applicable'
 end
 
 When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$/) do
@@ -57,9 +57,9 @@ When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$
 end
 
 And(/^I select first OECD code$/) do
-  WhatIsTheWasteCodePage.new.select_first_OECD_option
+  ClassificationOfTheWastePage.new.select_first_OECD_option
 end
 
 And(/^I select new Basel Annex IX code$/) do
-  WhatIsTheWasteCodePage.new.select_second_BaselAnnexIX_option
+  ClassificationOfTheWastePage.new.select_second_BaselAnnexIX_option
 end

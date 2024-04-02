@@ -10,7 +10,7 @@ class WasteTrackingLandingPage < GenericPage
   end
 
   def create_green_list_waste_record
-    click_link(href: '../export-annex-VII-waste')
+    click_link('link-card-GLW')
   end
 
 end

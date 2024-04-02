@@ -43,7 +43,7 @@ Given(/^I navigate to ewc code page with selecting Not applicable option on wast
   ExportWasteFromUkPage.new.create_single_annex_record
   AddReferenceNumberController.complete
   TaskListPage.new.waste_codes_and_description
-  whats_waste_code_page = WhatIsTheWasteCodePage.new
+  whats_waste_code_page = ClassificationOfTheWastePage.new
   whats_waste_code_page.choose_option(Translations.value('notApplicable'))
   whats_waste_code_page.save_and_continue
 end
@@ -70,7 +70,7 @@ And(/^I verify the code is removed$/) do
 end
 
 Then(/^I verify What's the waste code page is displayed$/) do
-  WhatIsTheWasteCodePage.new.check_page_displayed
+  ClassificationOfTheWastePage.new.check_page_displayed
 end
 
 Then(/^I verify option selection error is displayed$/) do
