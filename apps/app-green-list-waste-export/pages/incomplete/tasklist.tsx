@@ -663,7 +663,7 @@ const Tasklist = () => {
             <SaveReturnButton
               onClick={() =>
                 router.push({
-                  pathname: `/export-annex-VII-waste`,
+                  pathname: `/`,
                 })
               }
             >
