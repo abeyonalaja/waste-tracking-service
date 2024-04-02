@@ -32,7 +32,7 @@ Feature: Final checks - change waste code
     Then the "Change waste code" page is displayed
     And I verify Change waste code page is translated correctly
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I choose "Not applicable" as a waste code
     And I click the Save and return to draft
     Then the "task list" page is displayed
@@ -67,7 +67,7 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I choose "Not applicable" as a waste code
     And I click the button Save and continue
     Then the "Enter an ewc code" page is displayed
@@ -113,7 +113,7 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I choose "OECD" as a waste code
     And I select first OECD code
     And I wait for a second
@@ -155,7 +155,7 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I choose "OECD" as a waste code
     And I select first OECD code
     And I click the Save and return to draft
@@ -191,7 +191,7 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I choose "OECD" as a waste code
     And I select first OECD code
     And I click the button Save and continue
@@ -232,7 +232,8 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
+    When I click the button Save and continue
     And I select new Basel Annex IX code
     And I click the Save and return to draft
     Then the "task list" page is displayed
@@ -267,7 +268,8 @@ Feature: Final checks - change waste code
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
+    When I click the button Save and continue
     And I select new Basel Annex IX code
     And I click the button Save and continue
     And I wait for a second

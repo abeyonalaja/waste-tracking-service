@@ -74,7 +74,7 @@ Feature: Final checks section
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
     Then I click the "Waste codes and description" link
-    And the "What is the waste code" page is displayed
+    And the "Classification of the waste" page is displayed
     And I choose "Not applicable" radio button
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"

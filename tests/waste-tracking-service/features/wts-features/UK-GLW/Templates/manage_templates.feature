@@ -153,7 +153,7 @@ Feature: Manage templates page
     And I complete Create record template page
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I complete the Waste code and description task
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
@@ -219,7 +219,7 @@ Feature: Manage templates page
     And I complete Create record template page
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I complete the Waste code and description task with small waste
     Then I click the "Laboratory details" link
     And I complete laboratory address details
@@ -242,7 +242,7 @@ Feature: Manage templates page
     And I complete Create record template page
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I complete the Waste code and description task
     Then I click the "Recovery facility" link
     And I complete Treatment of waste section
@@ -258,7 +258,7 @@ Feature: Manage templates page
     And I complete Create record template page
     Then the "Template task list" page is displayed
     And I click the "Waste codes and description" link
-    Then the "What is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And I click Cancel and return to template button
     Then the task "Waste codes and description" should be "NOT STARTED"
 

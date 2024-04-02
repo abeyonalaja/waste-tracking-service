@@ -17,7 +17,7 @@ When(/^I choose "([^"]*)" as a waste code$/) do |waste_code_option|
 end
 
 And(/^select a first option as waste code description$/) do
-  ClassificationOfTheWastePage.new.select_first_option
+  WasteCodePage.new.select_first_option
 end
 
 Then(/^"([^"]*)" is still selected$/) do |option|
@@ -25,7 +25,7 @@ Then(/^"([^"]*)" is still selected$/) do |option|
 end
 
 And(/^waste code description is displayed$/) do
-  expect(ClassificationOfTheWastePage.new).to have_waste_code TestStatus.test_status(:waste_code_description)
+  expect(WasteCodePage.new).to have_waste_code TestStatus.test_status(:waste_code_description)
 end
 
 When(/^I change the waste code from small to bulk waste$/) do
@@ -62,4 +62,12 @@ end
 
 And(/^I select new Basel Annex IX code$/) do
   ClassificationOfTheWastePage.new.select_second_BaselAnnexIX_option
+end
+
+Then(/^I remain on the (.+) page with "([^"]*)" an "([^"]*)" error message displayed$/) do |page_name, option, error_message|
+  camel_case_page_name = page_name.split.map(&:capitalize).push('Page').join
+  page_class = Object.const_get camel_case_page_name
+  page_object = page_class.new
+  page_object.check_page_displayed(option)
+  expect(page_object).to have_error_message error_message
 end

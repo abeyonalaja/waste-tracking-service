@@ -88,6 +88,6 @@ Feature:EWC code page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
     Then I verify add ewc code page is displayed
-    And I click "Back" link should display "What is the waste code" page
+    And I click "Back" link should display "Classification of the waste" page
     Then "Basel Annex IX" is still selected
 

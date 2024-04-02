@@ -12,7 +12,6 @@ Then(/^I should see (\d+) EWC code added to the export$/) do |no_of_ewc_codes|
   expect(page).to have_text(Translations.value('exportJourney.ewc.maxReached'))
 end
 
-
 When(/^I enter valid ewc code$/) do
   code = TestData.get_ewc_codes 0
   EnterAnEwcCodePage.new.enter_ewc_code code

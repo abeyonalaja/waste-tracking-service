@@ -4,6 +4,8 @@ class WasteCodePage < GenericPage
   include ErrorBox
   include PageHelper
 
+  WASTE_CODE_BASEL_ANNEX_IX_CODE = 'WasteCode'
+
   TITLE = Translations.value 'exportJourney.wasteCodesDescription.title'
   PARAGRAPH = Translations.value 'exportJourney.wasteCodesDescription.paragraph'
   LINK_TEXT = Translations.value 'exportJourney.wasteCodesDescription.link'
@@ -23,6 +25,11 @@ class WasteCodePage < GenericPage
     first('WasteCode', minimum: 1).click
     first('WasteCode__option--0', minimum: 1).select_option
     TestStatus.set_test_status(:waste_code_description, first('WasteCode').value)
+  end
+
+  def has_waste_code?(reference)
+    # puts find(WASTE_CODE_BASEL_ANNEX_IX_CODE, visible: false).checked?
+    find(WASTE_CODE_BASEL_ANNEX_IX_CODE, visible: false).value == reference
   end
 
 end

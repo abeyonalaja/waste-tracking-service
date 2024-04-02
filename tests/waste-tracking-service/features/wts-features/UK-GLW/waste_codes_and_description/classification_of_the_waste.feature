@@ -8,7 +8,7 @@ Feature: Waste code page
     When I choose Not applicable option
     And I click the button Save and continue
     Then Enter an EWC code is displayed
-    When I click "Back" link should display "What is the waste code" page
+    When I click "Back" link should display "classification of the waste" page
 
   Scenario: Display "laboratory details" as an option on the "task list page" page
     Given I login to waste tracking portal
@@ -24,10 +24,12 @@ Feature: Waste code page
     And I navigate to the task list page with reference
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
+    And I click the button Save and continue
     And select a first option as waste code description
     And I click the Save and return to draft
     When I click the "Waste codes and description" link
     Then "Basel Annex IX" is still selected
+    And I click the button Save and continue
     And waste code description is displayed
 
   Scenario: Not applicable selection
@@ -44,6 +46,7 @@ Feature: Waste code page
     And I navigate to the task list page with reference
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
+    And I click the button Save and continue
     And select a first option as waste code description
     And I click the Save and return to draft
     Then the task "Waste codes and description" should be "In progress"
@@ -54,7 +57,7 @@ Feature: Waste code page
     When I navigate to the task list page with reference
     When I click the "Waste codes and description" link
     And I click the button Save and continue
-    Then I remain on the what is the waste code page with an "Select a waste code" error message displayed
+    Then I remain on the classification of the waste page with an "Select a waste code" error message displayed
 
   Scenario Outline: Continue without selecting any waste code options from the list
     Given I login to waste tracking portal
@@ -62,7 +65,9 @@ Feature: Waste code page
     When I click the "Waste codes and description" link
     And I choose "<option>" as a waste code
     And I click the button Save and continue
-    Then I remain on the what is the waste code page with an "<error_message>" error message displayed
+    And I wait for a second
+    And I click the button Save and continue
+    Then I remain on the Waste code page with "<option>" an "<error_message>" error message displayed
     Examples:
       | option         | error_message                     |
       | Basel Annex IX | Enter a Basel Annex IX waste code |

@@ -6,10 +6,7 @@ class ClassificationOfTheWastePage < GenericPage
   include ErrorBox
   include PageHelper
 
-  WASTE_CODE_BASEL_ANNEX_IX_CODE = 'BaselAnnexIXCode'
-  WASTE_CODE_OECD = 'BaselAnnexIXCode'
-  WASTE_CODE_BASEL_ANNEX_IIIA = 'AnnexIIIACode'
-  WASTE_CODE_BASEL_ANNEX_IIIB = 'AnnexIIIBCode'
+  WASTE_CODE_BASEL_ANNEX_IX_CODE = 'WasteCode'
 
   TITLE = Translations.value 'exportJourney.whatsTheWasteCode.title'
   HINT = Translations.value 'exportJourney.whatsTheWasteCode.naHint'
@@ -29,16 +26,16 @@ class ClassificationOfTheWastePage < GenericPage
   end
 
   def select_second_BaselAnnexIX_option
-    fill_in 'BaselAnnexIXCode', with: ''
-    first('BaselAnnexIXCode', minimum: 1).click
-    first('BaselAnnexIXCode__option--1', minimum: 1).select_option
-    TestStatus.set_test_status(:waste_code_description, first('BaselAnnexIXCode').value)
+    fill_in 'WasteCode', with: ''
+    first('WasteCode', minimum: 1).click
+    first('WasteCode__option--1', minimum: 1).select_option
+    TestStatus.set_test_status(:waste_code_description, first('WasteCode').value)
   end
 
   def select_first_OECD_option
-    first('OecdCode', minimum: 1).click
-    first('OecdCode__option--0', minimum: 1).select_option
-    TestStatus.set_test_status(:waste_code_description, first('OecdCode').value)
+    first('WasteCode', minimum: 1).click
+    first('WasteCode__option--0', minimum: 1).select_option
+    TestStatus.set_test_status(:waste_code_description, first('WasteCode').value)
   end
 
   def waste_code_options
@@ -49,10 +46,6 @@ class ClassificationOfTheWastePage < GenericPage
       'Annex IIIB' => 'wasteCodeCategoryAnnexIIIB',
       'Not applicable' => 'wasteCodeCategoryNA'
     }
-  end
-
-  def has_waste_code?(reference)
-    find(WASTE_CODE_BASEL_ANNEX_IX_CODE).value == reference
   end
 
 end

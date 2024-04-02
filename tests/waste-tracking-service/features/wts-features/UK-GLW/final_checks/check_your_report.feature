@@ -85,7 +85,7 @@ Feature: Check your report page
     When I click waste code Change link
     Then the "Change waste code" page is displayed
     And I click Continue and change waste code button
-    Then the "what is the waste code" page is displayed
+    Then the "Classification of the waste" page is displayed
     And "Basel Annex IX" is still selected
     When I update Waste codes and description task with Not applicable has waste code
     And I click the Save and return to draft
