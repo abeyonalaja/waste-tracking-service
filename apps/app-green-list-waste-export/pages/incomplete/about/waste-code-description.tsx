@@ -85,7 +85,7 @@ const WasteCodeDesc = () => {
       if (id !== null) {
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description/`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
             { headers: apiConfig }
           )
             .then((response) => {
