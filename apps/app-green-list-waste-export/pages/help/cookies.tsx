@@ -109,41 +109,67 @@ const Cookies = () => {
               head={
                 <GovUK.Table.Row>
                   <GovUK.Table.CellHeader scope="col" setWidth="36%">
-                    Name
+                    {t('cookie.page.name')}
                   </GovUK.Table.CellHeader>
                   <GovUK.Table.CellHeader scope="col">
-                    Purpose
+                    {t('cookie.page.purpose')}
                   </GovUK.Table.CellHeader>
                   <GovUK.Table.CellHeader scope="col">
-                    Expires
+                    {t('cookie.page.expires')}
                   </GovUK.Table.CellHeader>
                 </GovUK.Table.Row>
               }
             >
               <GovUK.Table.Row>
-                <GovUK.Table.Cell>next-auth.callback-url</GovUK.Table.Cell>
                 <GovUK.Table.Cell>
-                  To check who you are and give you access to the service
+                  _Secure-next-auth.callback-url
                 </GovUK.Table.Cell>
                 <GovUK.Table.Cell>
-                  When you log out or leave the service
-                </GovUK.Table.Cell>
-              </GovUK.Table.Row>
-              <GovUK.Table.Row>
-                <GovUK.Table.Cell>next-auth.csrf-token</GovUK.Table.Cell>
-                <GovUK.Table.Cell>
-                  To check who you are and give you access to the service
+                  {t('cookie.page.secureNextPurpose')}
                 </GovUK.Table.Cell>
                 <GovUK.Table.Cell>
-                  When you log out or leave the service
+                  {t('cookie.page.secureNextExpires')}
                 </GovUK.Table.Cell>
               </GovUK.Table.Row>
               <GovUK.Table.Row>
-                <GovUK.Table.Cell>next-auth.session-token</GovUK.Table.Cell>
+                <GovUK.Table.Cell>_Host-next-auth.csrf-token</GovUK.Table.Cell>
                 <GovUK.Table.Cell>
-                  To check who you are and give you access to the service
+                  {t('cookie.page.hostNextPurpose')}
                 </GovUK.Table.Cell>
-                <GovUK.Table.Cell>15 minutes</GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.hostNextExpires')}
+                </GovUK.Table.Cell>
+              </GovUK.Table.Row>
+              <GovUK.Table.Row>
+                <GovUK.Table.Cell>
+                  _Secure-next-auth.session-token.0
+                </GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.secureToken0Purpose')}
+                </GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.secureToken0Expires')}
+                </GovUK.Table.Cell>
+              </GovUK.Table.Row>
+              <GovUK.Table.Row>
+                <GovUK.Table.Cell>
+                  _Secure-next-auth.session-token.1
+                </GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.secureToken1Purpose')}
+                </GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.secureToken1Expires')}
+                </GovUK.Table.Cell>
+              </GovUK.Table.Row>
+              <GovUK.Table.Row>
+                <GovUK.Table.Cell>NEXT_LOCALE</GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.NextLocalePurpose')}
+                </GovUK.Table.Cell>
+                <GovUK.Table.Cell>
+                  {t('cookie.page.NextLocaleExpires')}
+                </GovUK.Table.Cell>
               </GovUK.Table.Row>
             </GovUK.Table>
             <GovUK.Heading size="M" as="h2" id="heading-essential-cookies">
