@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Link } from '../../../navigation';
+import { Link } from '../../navigation';
 
 export const metadata = {
   title: 'Waste tracking service',

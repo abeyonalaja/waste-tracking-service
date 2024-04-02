@@ -43,7 +43,7 @@ export async function HeaderNavigation() {
         </ul>
       </nav>
     );
-  } else if (process.env.NEXT_PUBLIC_UKWM_ENABLED !== 'false') {
+  } else {
     return (
       <nav className={styles.navigation}>
         <ul className={styles.list}>
