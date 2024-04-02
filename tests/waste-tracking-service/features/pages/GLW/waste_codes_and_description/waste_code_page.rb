@@ -11,7 +11,7 @@ class WasteCodePage < GenericPage
   LINK_TEXT = Translations.value 'exportJourney.wasteCodesDescription.link'
   AUTO_HINT = Translations.value 'autocompleteHint'
 
-  def check_page_displayed(waste_code)
+  def check_page_displayed(waste_code = 'Basel Annex IX')
     expect(self).to have_css 'h1', text: TITLE.gsub('{{ wc }}', waste_code), exact_text: true
   end
 

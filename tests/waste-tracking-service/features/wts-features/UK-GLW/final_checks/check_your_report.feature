@@ -179,6 +179,7 @@ Feature: Check your report page
     And I click the button Save and continue
     When I click the "Check your record" link
     Then I should see 5 waste carriers on check your export page
+    And I wait for a second
     And I should see 5 ewc codes on check your export page
     And I should see interim side details on check your export page
     And I should see 5 recovery facilities on check your export page

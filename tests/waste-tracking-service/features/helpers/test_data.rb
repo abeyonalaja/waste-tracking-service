@@ -4,7 +4,7 @@ require 'yaml'
 # Module is for ruby methods
 module TestData
   def self.ewc_codes
-    %w[010101 010102 010304 010305 010306 010307 020702 020703 020704]
+    %w[010101 010102 010306 010308 010309 010399 010408 010409 010410]
   end
 
   def self.get_ewc_codes(no_of_codes)

@@ -40,6 +40,8 @@ Feature:EWC code page
     When I click the "Waste codes and description" link
     Then "Basel Annex IX" is still selected
     And I click the button Save and continue
+    And waste code description is displayed
+    When I click the button Save and continue
     Then I should see ewc code description on EWC list page
     And I verify Do you need to add another page is displayed
 
@@ -88,6 +90,8 @@ Feature:EWC code page
     Given I login to waste tracking portal
     When I navigate to Add EWC code page
     Then I verify add ewc code page is displayed
-    And I click "Back" link should display "Classification of the waste" page
+    And I click "Back" link should display "Waste code" page
+    And waste code description is displayed
+    And I click "Back" link should display "classification of the waste" page
     Then "Basel Annex IX" is still selected
 

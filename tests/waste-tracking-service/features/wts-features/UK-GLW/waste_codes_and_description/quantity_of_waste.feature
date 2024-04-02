@@ -100,6 +100,7 @@ Feature: Quantity of waste page
     Given I login to waste tracking portal
     And I navigate to whats the waste code page
     When I choose "Basel Annex IX" radio button
+    And I click the button Save and continue
     And select a first option as waste code description
     And I click the Save and return to draft
     And I click the "Quantity of waste" link
@@ -357,6 +358,7 @@ Feature: Quantity of waste page
     Then the task "Quantity of waste" should be "COMPLETED"
     When I click the "Waste codes and description" link
     When I choose "Basel Annex IX" as a waste code
+    And I click the button Save and continue
     And select a first option as waste code description
     And I click the Save and return to draft
     Then the task "Quantity of waste" should be "NOT STARTED"

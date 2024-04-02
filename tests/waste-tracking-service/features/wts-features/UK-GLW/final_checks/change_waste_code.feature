@@ -115,6 +115,7 @@ Feature: Final checks - change waste code
     And I click Continue and change waste code button
     Then the "Classification of the waste" page is displayed
     And I choose "OECD" as a waste code
+    And I click the button Save and continue
     And I select first OECD code
     And I wait for a second
     And I click the button Save and continue
@@ -193,6 +194,7 @@ Feature: Final checks - change waste code
     And I click Continue and change waste code button
     Then the "Classification of the waste" page is displayed
     And I choose "OECD" as a waste code
+    And I click the button Save and continue
     And I select first OECD code
     And I click the button Save and continue
     And I wait for a second
