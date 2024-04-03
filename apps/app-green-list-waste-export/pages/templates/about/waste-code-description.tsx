@@ -123,8 +123,12 @@ const WasteCodeDesc = () => {
   const [errors, setErrors] = useState<{
     code?: string;
   }>({});
-  const handleLinkSubmit = (e) => {
-    handleSubmit(e, true);
+  const handleCancelReturn = (e) => {
+    e.preventDefault();
+    router.push({
+      pathname: `/templates/tasklist`,
+      query: { templateId },
+    });
   };
   function getCodeCategoryName(wasteCodeCategory: string) {
     if (wasteCodeCategory === 'BaselAnnexIX') {
@@ -278,7 +282,7 @@ const WasteCodeDesc = () => {
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}
                     </GovUK.Button>
-                    <SaveReturnButton onClick={handleLinkSubmit}>
+                    <SaveReturnButton onClick={handleCancelReturn}>
                       {t('templates.cancelReturnButton')}
                     </SaveReturnButton>
                   </ButtonGroup>
