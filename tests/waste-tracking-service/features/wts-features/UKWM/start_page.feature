@@ -5,7 +5,7 @@ Feature: Start page
 
   @translation
   Scenario: User navigates to Start page and verifies its translated correctly
-    Given I navigate to waste tracking start page
+    Given I navigate to start page
     When the "Start" page is displayed
     Then I should see start page is correctly translated
 

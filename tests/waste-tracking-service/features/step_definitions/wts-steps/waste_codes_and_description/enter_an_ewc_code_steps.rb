@@ -29,3 +29,7 @@ end
 When(/^I enter invalid EWC code less then 6 digit$/) do
   EnterAnEwcCodePage.new.enter_ewc_code '0101'
 end
+
+When(/^I enter hazardous EWC code$/) do
+  EnterAnEwcCodePage.new.enter_ewc_code '17 03 01'
+end

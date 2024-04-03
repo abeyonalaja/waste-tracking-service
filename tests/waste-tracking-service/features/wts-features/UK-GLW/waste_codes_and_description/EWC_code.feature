@@ -95,3 +95,10 @@ Feature:EWC code page
     And I click "Back" link should display "classification of the waste" page
     Then "Basel Annex IX" is still selected
 
+  Scenario: User enter hazardous EWC code
+    Given I login to waste tracking portal
+    Then I navigate to Add EWC code page
+    When I enter hazardous EWC code
+    And I click the button Save and continue
+    Then I remain on the Enter an ewc code page with an "Enter a code in the correct format" error message displayed
+

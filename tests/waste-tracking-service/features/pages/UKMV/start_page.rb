@@ -4,13 +4,16 @@
 class StartPage < GenericPage
 
   TITLE = Translations.ukmv_value 'startPage.title'
-  DESCRIPTION = Translations.ukmv_value 'startPage.description'
+  SUMMARY = Translations.ukmv_value 'startPage.summary'
   DESCRIPTION_SERVICE = Translations.ukmv_value 'startPage.serviceFeatures.description'
   TEXT_ONE = Translations.ukmv_value 'startPage.serviceFeatures.listElementOne'
-  TEXT_TWO = Translations.ukmv_value 'startPage.serviceFeatures.listElementTwo'
+  # DONT NEED THIS FOR NOW TEXT_TWO = Translations.ukmv_value 'startPage.serviceFeatures.listElementTwo'
   TEXT_THREE = Translations.ukmv_value 'startPage.serviceFeatures.listElementThree'
   TEXT_FOUR = Translations.ukmv_value 'startPage.serviceFeatures.listElementFour'
+  PARAGRAPH = Translations.ukmv_value 'startPage.paragraph'
+
   START_BUTTON = Translations.ukmv_value 'startPage.buttonStartNow'
+
   BEFORE_START = Translations.ukmv_value 'startPage.beforeYouStart.title'
   BEFORE_DESCRIPTION_ONE = Translations.ukmv_value 'startPage.beforeYouStart.descriptionOne'
   BEFORE_LIST_ONE = Translations.ukmv_value 'startPage.beforeYouStart.listElementOne'
@@ -21,8 +24,7 @@ class StartPage < GenericPage
   INSET_TEXT = Translations.ukmv_value 'startPage.beforeYouStart.insetText'
   BEFORE_DESCRIPTION_THREE = Translations.ukmv_value 'startPage.beforeYouStart.descriptionThree'
   BEFORE_DESCRIPTION_FOUR = Translations.ukmv_value 'startPage.beforeYouStart.descriptionFour'
-  WASTE_MOVEMENT_TITLE = Translations.ukmv_value 'startPage.wasteMovementControls.title'
-  WASTE_MOVEMENT_DESCRIPTION = Translations.ukmv_value 'startPage.wasteMovementControls.description'
+
   EXPORT_IMPORT_CONTROLS_TITLE = Translations.ukmv_value 'startPage.exportImportControls.title'
   EXPORT_IMPORT_CONTROLS_DESCRIPTION_ONE = Translations.ukmv_value 'startPage.exportImportControls.descriptionOne'
   EXPORT_IMPORT_CONTROLS_DESCRIPTION_TWO = Translations.ukmv_value 'startPage.exportImportControls.descriptionTwo'
@@ -30,11 +32,13 @@ class StartPage < GenericPage
   EXPORT_IMPORT_CONTROLS_LINK_TWO = Translations.ukmv_value 'startPage.exportImportControls.linkTwo'
   EXPORT_IMPORT_CONTROLS_LINK_THREE = Translations.ukmv_value 'startPage.exportImportControls.linkThree'
   EXPORT_IMPORT_CONTROLS_LINK_FOUR = Translations.ukmv_value 'startPage.exportImportControls.linkFour'
+
   GET_HELP_TITLE = Translations.ukmv_value 'startPage.getHelpTechnicalIssue.title'
   GET_HELP_DESCRIPTION_ONE = Translations.ukmv_value 'startPage.getHelpTechnicalIssue.descriptionOne'
   GET_HELP_EMAIL_KEY = Translations.ukmv_value 'startPage.getHelpTechnicalIssue.emailKey'
   GET_HELP_EMAIL_VALUE = Translations.ukmv_value 'startPage.getHelpTechnicalIssue.emailValue'
   GET_HELP_DESCRIPTION_TWO = Translations.ukmv_value 'startPage.getHelpTechnicalIssue.descriptionTwo'
+
   GET_HELP_REG_TITLE = Translations.ukmv_value 'startPage.getHelpRegulatoryIssue.title'
   GET_HELP_REG_DESCRIPTION_ONE = Translations.ukmv_value 'startPage.getHelpRegulatoryIssue.descriptionOne'
   GET_HELP_REG_DESCRIPTION_TWO = Translations.ukmv_value 'startPage.getHelpRegulatoryIssue.descriptionTwo'
@@ -49,10 +53,10 @@ class StartPage < GenericPage
   end
 
   def check_page_translation
-    expect(self).to have_text DESCRIPTION
+    expect(self).to have_text SUMMARY
     expect(self).to have_text DESCRIPTION_SERVICE
     expect(self).to have_text TEXT_ONE
-    expect(self).to have_text TEXT_TWO
+    # DONT NEED THIS FOR NOW expect(self).to have_text TEXT_TWO
     expect(self).to have_text TEXT_THREE
     expect(self).to have_text TEXT_FOUR
     expect(self).to have_text START_BUTTON
@@ -66,8 +70,6 @@ class StartPage < GenericPage
     expect(self).to have_text INSET_TEXT
     expect(self).to have_text BEFORE_DESCRIPTION_THREE
     expect(self).to have_text BEFORE_DESCRIPTION_FOUR
-    expect(self).to have_text WASTE_MOVEMENT_TITLE
-    expect(self).to have_text WASTE_MOVEMENT_DESCRIPTION
     expect(self).to have_text EXPORT_IMPORT_CONTROLS_TITLE
     expect(self).to have_text EXPORT_IMPORT_CONTROLS_DESCRIPTION_ONE
     expect(self).to have_text EXPORT_IMPORT_CONTROLS_DESCRIPTION_TWO

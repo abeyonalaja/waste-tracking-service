@@ -1,6 +1,5 @@
-Given(/^I navigate to waste tracking start page$/) do
-  Log.info("UKMV Start url: #{Env.start_page_url}")
-  TestStatus.set_test_status('Test ENV', Env.test_env)
+Given(/^I navigate to start page$/) do
+  Log.info("Start url: #{Env.start_page_url}")
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
 end

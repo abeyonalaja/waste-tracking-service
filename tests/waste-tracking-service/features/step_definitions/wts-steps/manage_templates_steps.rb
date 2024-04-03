@@ -131,8 +131,10 @@ And(/^I complete the Waste code and description task$/) do
 end
 
 Then(/^I verify previously selected waste code is pre\-selected$/) do
-  expect(ClassificationOfTheWastePage.new.has_waste_code?('B1010: Metal and metal-alloy wastes in metallic, non-dispersible form'))
+  expect(ClassificationOfTheWastePage.new.waste_code_option('Basel Annex IX'))
   ClassificationOfTheWastePage.new.save_and_continue
+  WasteCodePage.new.has_waste_code?('B1010: Metal and metal-alloy wastes in metallic, non-dispersible form')
+  WasteCodePage.new.save_and_continue
 end
 
 And(/^I complete the Journey of a waste section for templates$/) do

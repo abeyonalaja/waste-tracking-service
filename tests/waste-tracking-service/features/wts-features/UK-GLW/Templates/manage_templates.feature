@@ -197,6 +197,7 @@ Feature: Manage templates page
     And the task "Exporter details" should be "COMPLETED"
     And the task "Importer details" should be "COMPLETED"
 
+    # strange behavior of the Automation framework, need to be checked
   Scenario: User create template, modify Journey of a waste section and verify all entered data is pre-populated
     Given I login to waste tracking portal
     And I click the "Create a new Annex VII record template" link
