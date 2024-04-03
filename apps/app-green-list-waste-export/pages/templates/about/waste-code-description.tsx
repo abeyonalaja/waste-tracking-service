@@ -278,7 +278,9 @@ const WasteCodeDesc = () => {
                     <GovUK.Button id="saveButton">
                       {t('saveButton')}
                     </GovUK.Button>
-                    <SaveReturnButton onClick={handleLinkSubmit} />
+                    <SaveReturnButton onClick={handleLinkSubmit}>
+                      {t('templates.cancelReturnButton')}
+                    </SaveReturnButton>
                   </ButtonGroup>
                 </form>
               </>
