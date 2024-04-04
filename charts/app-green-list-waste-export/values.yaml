@@ -59,7 +59,7 @@ resources:
 secret:
   name: ''
   env:
-    APPINSIGHTS_CONNECTION_STRING: ''
+    NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING: ''
     DCID_CLIENT_ID: ''
     DCID_CLIENT_SECRET: ''
     DCID_POLICY: ''

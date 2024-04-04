@@ -14,6 +14,9 @@ const nextConfig = {
     svgr: false,
   },
   basePath: '/move-waste',
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 const plugins = [
