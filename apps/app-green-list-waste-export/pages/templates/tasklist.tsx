@@ -619,7 +619,7 @@ const TemplateTasklist = () => {
                         href="#"
                         onClick={(e) => {
                           router.push({
-                            pathname: `/export`,
+                            pathname: `/`,
                           });
                           e.preventDefault();
                         }}
