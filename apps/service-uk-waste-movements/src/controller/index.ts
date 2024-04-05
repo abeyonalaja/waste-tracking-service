@@ -1,2 +1,2 @@
-export { default as PingController } from './ping-controller';
-export * as parse from './deserialisation';
+export { default as SubmissionController } from './submission-controller';
+export * as validateSubmission from './submission-validation';

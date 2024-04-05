@@ -6,7 +6,6 @@ import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
 import { BatchController, parse } from './controller';
 import { CosmosClient } from '@azure/cosmos';
-import { ServiceBusClient } from '@azure/service-bus';
 import {
   AzureCliCredential,
   ChainedTokenCredential,
@@ -15,7 +14,24 @@ import {
 import { CosmosBatchRepository } from './data';
 import { CloudEvent, HTTP } from 'cloudevents';
 import { v4 as uuidv4 } from 'uuid';
-import { ContentProcessingTask } from './model';
+import {
+  BulkSubmission,
+  ContentProcessingTask,
+  ContentToBeProcessedTask,
+} from './model';
+import * as taskValidate from './lib/task-validation';
+import { CsvValidator } from './lib/csv-validator';
+import {
+  ProcessErrorArgs,
+  ServiceBusClient,
+  delay,
+  isServiceBusError,
+} from '@azure/service-bus';
+import {
+  ValidateSubmissionsResponse,
+  Field,
+} from '@wts/api/uk-waste-movements';
+import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -26,6 +42,7 @@ if (!process.env['SERVICE_BUS_HOST_NAME']) {
 }
 
 const appId = process.env['APP_ID'] || 'service-uk-waste-movements-bulk';
+const ukwmAppId = process.env['UKWM_APP_ID'] || 'service-uk-waste-movements';
 const tasksQueueName =
   process.env['TASKS_QUEUE_NAME'] || 'uk-waste-movements-bulk-tasks';
 
@@ -70,6 +87,8 @@ const repository = new CosmosBatchRepository(
 );
 
 const batchController = new BatchController(repository, logger);
+const csvValidator = new CsvValidator(logger);
+const daprUkwmClient = new DaprUkWasteMovementsClient(server.client, ukwmAppId);
 
 await server.invoker.listen(
   api.addContentToBatch.name,
@@ -177,3 +196,213 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 await server.start();
+
+const execute = true;
+while (execute) {
+  const receiver = serviceBusClient.createReceiver(tasksQueueName);
+  const subscription = receiver.subscribe({
+    processMessage: async (brokeredMessage) => {
+      if (HTTP.isEvent(brokeredMessage.body)) {
+        const body = JSON.parse(
+          brokeredMessage.body.body
+        ) as ContentToBeProcessedTask;
+
+        if (!taskValidate.receiveContentToBeProcessedTask(body)) {
+          const message = `Data validation failed for queue message ID: ${brokeredMessage.messageId}`;
+          logger.error(message);
+          throw Boom.internal(message);
+        }
+
+        try {
+          const records = await csvValidator.validateBatch(body.data);
+          if (!records.success) {
+            if (records.error.statusCode !== 400) {
+              throw new Boom.Boom(records.error.message, {
+                statusCode: records.error.statusCode,
+              });
+            }
+            const value: BulkSubmission = {
+              id: body.data.batchId,
+              state: {
+                status: 'FailedCsvValidation',
+                timestamp: new Date(),
+                error: records.error.message,
+              },
+            };
+            await repository.saveBatch(value, body.data.accountId);
+          } else {
+            const partialSubmission = records.value.rows.map((s) => {
+              return {
+                reference: s.customerReference,
+                producerOrganisationName: s.producerOrganisationName,
+                producerContactName: s.producerContactName,
+                producerEmail: s.producerContactEmail,
+                producerPhone: s.producerContactPhoneNumber,
+                producerAddressLine1: s.producerAddressLine1,
+                producerAddressLine2: s.producerAddressLine2,
+                producerTownCity: s.producerTownOrCity,
+                producerPostcode: s.producerPostcode,
+                producerCountry: s.producerCountry,
+                producerSicCode: s.producerSicCode,
+              };
+            });
+            const submissions: api.PartialSubmission[] = [];
+            const rowErrors: api.BulkSubmissionValidationRowError[] = [];
+            const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
+            const chunkSize = 50;
+            for (let i = 0; i < partialSubmission.length; i += chunkSize) {
+              const chunk = partialSubmission.slice(i, i + chunkSize);
+              let response: ValidateSubmissionsResponse;
+              try {
+                response = await daprUkwmClient.validateSubmissions({
+                  accountId: body.data.accountId,
+                  values: chunk,
+                });
+              } catch (err) {
+                logger.error(
+                  `Error receiving response from ${ukwmAppId} service`,
+                  { error: err }
+                );
+                throw Boom.internal();
+              }
+
+              if (!response.success) {
+                throw new Boom.Boom(response.error.message, {
+                  statusCode: response.error.statusCode,
+                });
+              }
+
+              if (!response.value.valid) {
+                response.value.values.forEach((v) =>
+                  rowErrors.push({
+                    rowNumber: v.index,
+                    errorAmount:
+                      v.fieldFormatErrors.length +
+                      v.invalidStructureErrors.length,
+                    errorDetails: v.fieldFormatErrors
+                      .map((f) => f.message)
+                      .concat(v.invalidStructureErrors.map((i) => i.message)),
+                  })
+                );
+
+                const columnErrorsObj: {
+                  [key in Field]: api.BulkSubmissionValidationRowErrorDetails[];
+                } = {
+                  'Producer address line 1': [],
+                  'Producer address line 2': [],
+                  'Producer contact name': [],
+                  'Producer contact email address': [],
+                  'Producer contact phone number': [],
+                  'Producer country': [],
+                  'Producer organisation name': [],
+                  'Producer postcode': [],
+                  'Producer Standard Industrial Classification (SIC) code': [],
+                  'Producer town or city': [],
+
+                  Reference: [],
+                  WasteCollectionDetails: [],
+                  Receiver: [],
+                  WasteTransportation: [],
+                  WasteTypeDetails: [],
+                };
+
+                for (const error of response.value.values) {
+                  for (const fieldError of error.fieldFormatErrors) {
+                    columnErrorsObj[fieldError.field].push({
+                      rowNumber: error.index,
+                      errorReason: fieldError.message,
+                    });
+                  }
+                }
+
+                for (const key in columnErrorsObj) {
+                  const keyAsField = key as Field;
+                  const errorDetails = columnErrorsObj[keyAsField];
+                  columnErrors.push({
+                    columnName: keyAsField,
+                    errorAmount: errorDetails.length,
+                    errorDetails: errorDetails,
+                  });
+                }
+              } else {
+                response.value.values.forEach((v) => submissions.push(v));
+              }
+            }
+
+            const value: BulkSubmission =
+              rowErrors.length > 0
+                ? {
+                    id: body.data.batchId,
+                    state: {
+                      status: 'FailedValidation',
+                      timestamp: new Date(),
+                      rowErrors: rowErrors,
+                      columnErrors: columnErrors.filter(
+                        (ce) => ce.errorAmount > 0
+                      ),
+                    },
+                  }
+                : {
+                    id: body.data.batchId,
+                    state: {
+                      status: 'PassedValidation',
+                      timestamp: new Date(),
+                      hasEstimates: submissions.some((s) =>
+                        s.wasteTypeDetails.some(
+                          (wtd) => wtd.wasteQuantityType === 'EstimateData'
+                        )
+                      ),
+                      submissions: submissions,
+                    },
+                  };
+
+            await repository.saveBatch(value, body.data.accountId);
+          }
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            logger.error('Error processing task from queue', {
+              batchId: body.data.batchId,
+              accountId: body.data.accountId,
+              error: error,
+            });
+          } else {
+            logger.error('Unknown error', {
+              batchId: body.data.batchId,
+              accountId: body.data.accountId,
+              error: error,
+            });
+          }
+        }
+      }
+    },
+
+    processError: async (args: ProcessErrorArgs) => {
+      logger.error(
+        `Error from source ${args.errorSource} occurred: `,
+        args.error
+      );
+      if (isServiceBusError(args.error)) {
+        switch (args.error.code) {
+          case 'MessagingEntityDisabled':
+          case 'MessagingEntityNotFound':
+          case 'UnauthorizedAccess':
+            logger.error(
+              `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
+              args.error
+            );
+            await subscription.close();
+            break;
+          case 'MessageLockLost':
+            logger.error(`Message lock lost for message`, args.error);
+            break;
+          case 'ServiceBusy':
+            await delay(1000);
+            break;
+        }
+      }
+    },
+  });
+
+  await delay(20000);
+  await receiver.close();
+}

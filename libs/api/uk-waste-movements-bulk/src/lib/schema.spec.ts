@@ -27,6 +27,7 @@ describe('addContentToBatchRequest', () => {
   it('is compatible with dto values', () => {
     let value: AddContentToBatchRequest = {
       accountId: faker.datatype.uuid(),
+      batchId: faker.datatype.uuid(),
       content: {
         type: 'text/csv',
         compression: 'Snappy',
@@ -131,6 +132,25 @@ describe('getBatchResponse', () => {
         state: {
           status: 'FailedValidation',
           timestamp: new Date(),
+          rowErrors: [
+            {
+              errorAmount: 3,
+              rowNumber: 1,
+              errorDetails: ['error1', 'error2'],
+            },
+          ],
+          columnErrors: [
+            {
+              columnName: 'column1',
+              errorAmount: 3,
+              errorDetails: [
+                {
+                  errorReason: 'error1',
+                  rowNumber: 1,
+                },
+              ],
+            },
+          ],
         },
       },
     };
@@ -145,6 +165,41 @@ describe('getBatchResponse', () => {
           status: 'PassedValidation',
           timestamp: new Date(),
           hasEstimates: false,
+          submissions: [
+            {
+              producer: {
+                reference: '1234',
+                sicCode: '123456',
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: '1234',
+                },
+                contact: {
+                  name: 'test',
+                  organisationName: 'test',
+                  phone: '1234',
+                  email: 'test@organisation.com',
+                },
+              },
+              wasteTypeDetails: [
+                {
+                  ewcCode: '1234',
+                  wasteDescription: 'test',
+                  physicalForm: 'Solid',
+                  wasteQuantity: 1,
+                  quantityUnits: 'Kilograms',
+                  wasteQuantityType: 'EstimateData',
+                  haveHazardousProperties: false,
+                  containsPop: false,
+                  hazardousPropertiesCode: '1234',
+                  popDetails: 'test',
+                },
+              ],
+            },
+          ],
         },
       },
     };
@@ -159,6 +214,12 @@ describe('getBatchResponse', () => {
           status: 'Submitted',
           timestamp: new Date(),
           transactionId: '2307_5678ABCD',
+          submissions: [
+            {
+              id: '1234',
+              transactionId: '1234',
+            },
+          ],
         },
       },
     };

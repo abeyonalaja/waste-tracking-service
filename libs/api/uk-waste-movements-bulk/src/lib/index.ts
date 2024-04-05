@@ -8,6 +8,13 @@ export type {
   BulkSubmissionState,
   FinalizeBatchRequest,
   FinalizeBatchResponse,
+  PartialSubmission,
+  BulkSubmissionValidationRowError,
+  BulkSubmissionValidationColumnError,
+  BulkSubmissionValidationRowErrorDetails,
+  SubmissionReference,
+  ProducerDetailsFlattened,
+  SubmissionFlattened,
 } from './dto';
 
 export * as schema from './schema';

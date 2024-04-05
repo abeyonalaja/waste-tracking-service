@@ -1,5 +1,9 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
-import { PingRequest, PingResponse, ping } from '@wts/api/uk-waste-movements';
+import {
+  ValidateSubmissionsRequest,
+  ValidateSubmissionsResponse,
+  validateSubmissions,
+} from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
   constructor(
@@ -7,12 +11,14 @@ export class DaprUkWasteMovementsClient {
     private ukWasteMovementsAppId: string
   ) {}
 
-  async ping(req: PingRequest): Promise<PingResponse> {
+  async validateSubmissions(
+    req: ValidateSubmissionsRequest
+  ): Promise<ValidateSubmissionsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
-      ping.name,
+      validateSubmissions.name,
       HttpMethod.POST,
       req
-    )) as PingResponse;
+    )) as ValidateSubmissionsResponse;
   }
 }

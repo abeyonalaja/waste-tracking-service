@@ -1,5 +1,7 @@
 import { AccountIdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
+import { Submission } from '@wts/api/uk-waste-movements';
+
 export type AddContentToBatchRequest = AccountIdRequest & {
   batchId?: string;
   content: {
@@ -28,6 +30,33 @@ export type GetBatchResponse = Response<BulkSubmission>;
 export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
 
+export type PartialSubmission = {
+  producer: Submission['producer'];
+  wasteTypeDetails: Submission['wasteTypeDetails'];
+};
+
+export type BulkSubmissionValidationRowError = {
+  rowNumber: number;
+  errorAmount: number;
+  errorDetails: string[];
+};
+
+export type BulkSubmissionValidationRowErrorDetails = {
+  rowNumber: number;
+  errorReason: string;
+};
+
+export type BulkSubmissionValidationColumnError = {
+  errorAmount: number;
+  columnName: string;
+  errorDetails: BulkSubmissionValidationRowErrorDetails[];
+};
+
+export type SubmissionReference = {
+  id: string;
+  transactionId: string;
+};
+
 export type BulkSubmissionState =
   | {
       status: 'Processing';
@@ -41,19 +70,39 @@ export type BulkSubmissionState =
   | {
       status: 'FailedValidation';
       timestamp: Date;
+      rowErrors: BulkSubmissionValidationRowError[];
+      columnErrors: BulkSubmissionValidationColumnError[];
     }
   | {
       status: 'PassedValidation';
       timestamp: Date;
       hasEstimates: boolean;
+      submissions: PartialSubmission[];
     }
   | {
       status: 'Submitted';
       timestamp: Date;
       transactionId: string;
+      submissions: SubmissionReference[];
     };
 
 export type BulkSubmission = {
   id: string;
   state: BulkSubmissionState;
 };
+
+export type ProducerDetailsFlattened = {
+  reference: string;
+  producerOrganisationName: string;
+  producerContactName: string;
+  producerEmail: string;
+  producerPhone: string;
+  producerAddressLine1: string;
+  producerAddressLine2?: string;
+  producerTownCity: string;
+  producerPostcode: string;
+  producerCountry: string;
+  producerSicCode: string;
+};
+
+export type SubmissionFlattened = ProducerDetailsFlattened;

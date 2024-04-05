@@ -96,7 +96,7 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
           content: {
             type: input.type as 'text/csv',
             compression: 'Snappy',
-            value: (await compress(input.data)).toString('base64'),
+            value: content,
           },
         });
 

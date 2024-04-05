@@ -4,7 +4,8 @@ import * as api from '@wts/api/uk-waste-movements';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
-import { PingController, parse } from './controller';
+import { SubmissionController, validateSubmission } from './controller';
+import { DaprReferenceDataClient } from '@wts/client/reference-data';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -28,21 +29,27 @@ const server = new DaprServer({
   },
 });
 
-const pingController = new PingController(logger);
+const submissionController = new SubmissionController(
+  new DaprReferenceDataClient(
+    server.client,
+    process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
+  ),
+  logger
+);
 
 await server.invoker.listen(
-  api.ping.name,
+  api.validateSubmissions.name,
   async ({ body }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    const request = parse.pingRequest(body);
-    if (request === undefined) {
+    const request = JSON.parse(body) as api.ValidateSubmissionsRequest;
+    if (!validateSubmission.validateSubmissionsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
-    return await pingController.ping(request);
+    return await submissionController.validateSubmissions(request);
   },
   { method: HttpMethod.POST }
 );

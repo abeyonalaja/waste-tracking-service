@@ -1,6 +1,6 @@
-import { BulkSubmission as ApiBulkSubmission } from '@wts/api/uk-waste-movements-bulk';
-
-export type BulkSubmission = ApiBulkSubmission;
+import * as api from '@wts/api/uk-waste-movements-bulk';
+import { BulkSubmissionCsvRow } from './lib/csv-content';
+import { Response } from '@wts/util/invocation';
 
 export type ContentProcessingTask = {
   batchId: string;
@@ -11,3 +11,26 @@ export type ContentProcessingTask = {
     value: string;
   };
 };
+
+export type ContentToBeProcessedTask = {
+  id: string;
+  time: string;
+  type: string;
+  source: string;
+  specversion: string;
+  datacontenttype: string;
+  pubsubname: string;
+  queue: string;
+  traceparent: string;
+  tracestate: string;
+  data: ContentProcessingTask;
+};
+
+export type ValidateCsvContentRequest = api.AddContentToBatchRequest;
+export type ValidateCsvContentResponse = Response<{
+  batchId: string | undefined;
+  accountId: string;
+  rows: BulkSubmissionCsvRow[];
+}>;
+
+export type BulkSubmission = api.BulkSubmission;

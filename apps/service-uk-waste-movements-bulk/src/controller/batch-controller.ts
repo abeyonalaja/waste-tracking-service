@@ -72,6 +72,7 @@ export class BatchController {
             status: 'Submitted',
             timestamp,
             transactionId,
+            submissions: [],
           },
         };
 
