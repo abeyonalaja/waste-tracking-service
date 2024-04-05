@@ -38,8 +38,11 @@ export default function AppInsightsProvider({
     if (connectionString) {
       appInsights.loadAppInsights();
     }
+
     return () => {
-      appInsights.unload();
+      if (connectionString) {
+        appInsights.unload();
+      }
     };
   }, []);
 
