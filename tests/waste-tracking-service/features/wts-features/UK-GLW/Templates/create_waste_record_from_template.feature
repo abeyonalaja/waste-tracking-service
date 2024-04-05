@@ -394,3 +394,12 @@ Feature: Create template page
     And I click Manage templates link
     Then I verify that newly created template is on top of the table
 
+  Scenario: User creates template and click Return to export waste page button
+    Given I login to waste tracking portal
+    And I click the "Create a new Annex VII record template" link
+    Then the "Create new record template" page is displayed
+    And I complete Create record template page
+    Then the "Template task list" page is displayed
+    And I verify Success banner with template name is displayed
+    And I click Return to export waste from the UK button
+    Then the "Export waste from Uk" page is displayed

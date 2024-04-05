@@ -263,5 +263,14 @@ Feature: Manage templates page
     And I click Cancel and return to template button
     Then the task "Waste codes and description" should be "NOT STARTED"
 
+  Scenario: User open template record from Manage template page and click Return to manage templates button
+    Given I login to waste tracking portal
+    And I click Manage your Annex VII record templates link
+    Then the "Manage templates" page is displayed
+    And I open first template record from the list
+    Then the "Template task list" page is displayed
+    And I click Return to manage templates button
+    Then the "Manage templates" page is displayed
+
 
 

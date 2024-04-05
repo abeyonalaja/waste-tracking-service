@@ -199,3 +199,15 @@ And(/^I verify NOT IN TEMPLATE labels are present$/) do
   expect(CreateNewRecordTemplatePage.new.mode_of_transport_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
   expect(CreateNewRecordTemplatePage.new.transport_details_not_in_template.text).to eq (Translations.value 'templates.notInTemplate').upcase
 end
+
+And(/^I click Return to export waste from the UK button$/) do
+  click_link Translations.value 'templates.taskList.returnButton'
+end
+
+And(/^I open first template record from the list$/) do
+  click_link('template-link-tasklist-0')
+end
+
+And(/^I click Return to manage templates button$/) do
+  click_link Translations.value'templates.taskList.returnButtonManage'
+end
