@@ -107,6 +107,8 @@ const bulkSubmissionState: SchemaObject = {
                     wasteQuantityType: { type: 'string' },
                     haveHazardousProperties: { type: 'boolean' },
                     containsPop: { type: 'boolean' },
+                  },
+                  optionalProperties: {
                     hazardousPropertiesCode: { type: 'string' },
                     popDetails: { type: 'string' },
                   },
@@ -126,6 +128,7 @@ const bulkSubmissionState: SchemaObject = {
             properties: {
               id: { type: 'string' },
               transactionId: { type: 'string' },
+              reference: { type: 'string' },
             },
           },
         },

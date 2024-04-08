@@ -10,11 +10,13 @@ import {
   BulkSubmission,
   ListHazardousCodesResponse,
   ListPopsResponse,
+  UkwmBulkSubmission,
 } from '@wts/api/waste-tracking-gateway';
 
 export type SubmissionWithAccount = Submission & { accountId: string };
 export type TemplateWithAccount = Template & { accountId: string };
 export type BulkWithAccount = BulkSubmission & { accountId: string };
+export type UkwmBulkWithAccount = UkwmBulkSubmission & { accountId: string };
 
 export interface DB {
   addresses: ListAddressesResponse;
@@ -28,6 +30,7 @@ export interface DB {
   hazarodusCodes: ListHazardousCodesResponse;
   pops: ListPopsResponse;
   batches: BulkWithAccount[];
+  ukwmBatches: UkwmBulkWithAccount[];
 }
 
 export const db: DB = {
@@ -65,6 +68,7 @@ export const db: DB = {
   submissions: [],
   templates: [],
   batches: [],
+  ukwmBatches: [],
   wasteCodes: [
     {
       type: 'BaselAnnexIX',

@@ -50,6 +50,8 @@ export const wasteTypeDetails: SchemaObject = {
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
     haveHazardousProperties: { type: 'boolean' },
     containsPop: { type: 'boolean' },
+  },
+  optionalProperties: {
     hazardousPropertiesCode: { type: 'string' },
     popDetails: { type: 'string' },
   },

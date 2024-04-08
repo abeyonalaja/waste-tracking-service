@@ -14,7 +14,5 @@ export type ValidationResult = api.validation.ValidationResult;
 export type Value = api.validation.Value;
 export type Error = api.validation.Error;
 
-export type CustomerReference = Submission['reference'];
-
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type ProducerDetailsFlattened = bulkApi.ProducerDetailsFlattened;

@@ -218,6 +218,7 @@ describe('getBatchResponse', () => {
             {
               id: '1234',
               transactionId: '1234',
+              reference: '12345',
             },
           ],
         },

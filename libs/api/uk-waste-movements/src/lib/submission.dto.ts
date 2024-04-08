@@ -98,17 +98,12 @@ export type WasteTypeDetails = {
   wasteQuantityType: WasteQuantityType;
   haveHazardousProperties: boolean;
   containsPop: boolean;
-  hazardousPropertiesCode: string;
-  popDetails: string;
-};
-
-export type SubmissionReference = {
-  id: string;
+  hazardousPropertiesCode?: string;
+  popDetails?: string;
 };
 
 export type SubmissionBase = {
   transactionId: string;
-  reference: SubmissionReference;
   producer: ProducerDetails;
   wasteCollectionDetails: WasteCollectionDetails;
   receiver: ReceiverDetails;

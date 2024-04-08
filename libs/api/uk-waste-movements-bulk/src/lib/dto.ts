@@ -55,6 +55,7 @@ export type BulkSubmissionValidationColumnError = {
 export type SubmissionReference = {
   id: string;
   transactionId: string;
+  reference: string;
 };
 
 export type BulkSubmissionState =

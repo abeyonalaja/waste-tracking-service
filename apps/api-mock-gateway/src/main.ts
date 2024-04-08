@@ -14,6 +14,7 @@ import { Algorithm } from 'jsonwebtoken';
 import PrivateBetaPlugin, {
   PrivateBetaMock,
 } from './modules/private-beta/private-beta.plugin';
+import { UkwmBulkSubmissionPlugin } from './modules/uk-waste-movements-bulk-submission';
 
 const server = jsonServer.create();
 const router = jsonServer.router(db);
@@ -86,6 +87,7 @@ const registerPlugins = () => {
   new TemplatePlugin(server, '/api/templates').register();
   new BulkSubmissionPlugin(server, '/api/batches').register();
   new PrivateBetaPlugin(server, '/api/private-beta', backend).register();
+  new UkwmBulkSubmissionPlugin(server, '/api/ukwm-batches').register();
 };
 
 (async () => {
