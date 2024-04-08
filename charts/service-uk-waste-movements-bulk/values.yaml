@@ -77,6 +77,7 @@ secret:
     COSMOS_DRAFTS_CONTAINER_NAME: 'drafts'
     SERVICE_BUS_HOST_NAME: ''
     TASKS_QUEUE_NAME: 'uk-waste-movements-bulk-tasks'
+    UKWM_APP_ID: 'service-uk-waste-movements.service-uk-waste-movements'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
