@@ -49,7 +49,7 @@ const referenceDataController = new ReferenceDataController(
     }),
     process.env['COSMOS_DATABASE_NAME'] || 'waste-information',
     process.env['COSMOS_CONTAINER_NAME'] || 'reference-data',
-    new LRUCache({ ttl: 1000 * 60 * 60, max: 5 }),
+    new LRUCache({ ttl: 1000 * 60 * 60, max: 7 }),
     logger
   ),
   logger
