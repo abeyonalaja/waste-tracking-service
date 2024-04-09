@@ -64,7 +64,7 @@ export type DraftImporterDetail =
   | ({ status: 'Started' } & Partial<ImporterDetailData>)
   | ({ status: 'Complete' } & ImporterDetailData);
 
-type CarrierData = {
+export type CarrierData = {
   addressDetails?: {
     organisationName: string;
     address: string;

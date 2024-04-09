@@ -12,7 +12,7 @@ import {
   WasteDescriptionData,
   ExporterDetailData,
   ImporterDetailData,
-  Carrier,
+  CarrierData,
   CollectionDetailData,
   ExitLocationData,
   RecoveryFacilityData,
@@ -149,10 +149,7 @@ export type Submission = {
   exporterDetail: ExporterDetailData;
   importerDetail: ImporterDetailData;
   collectionDate: CollectionDateData;
-  carriers: {
-    transport: boolean;
-    values: Carrier[];
-  };
+  carriers: CarrierData[];
   collectionDetail: CollectionDetailData;
   ukExitLocation: ExitLocationData;
   transitCountries: string[];

@@ -59,17 +59,26 @@ function getSubmissionData(data: DraftSubmission): Submission {
         importerContactDetails: data.importerDetail.importerContactDetails,
       },
       collectionDate: data.collectionDate.value,
-      carriers: {
-        transport: data.carriers.transport,
-        values: data.carriers.values,
-      },
+      carriers: data.carriers.values.map((c) => {
+        return {
+          addressDetails: c.addressDetails,
+          contactDetails: c.contactDetails,
+          transportDetails: c.transportDetails,
+        };
+      }),
       collectionDetail: {
         address: data.collectionDetail.address,
         contactDetails: data.collectionDetail.contactDetails,
       },
       ukExitLocation: data.ukExitLocation.exitLocation,
       transitCountries: data.transitCountries.values,
-      recoveryFacilityDetail: data.recoveryFacilityDetail.values,
+      recoveryFacilityDetail: data.recoveryFacilityDetail.values.map((rf) => {
+        return {
+          addressDetails: rf.addressDetails,
+          contactDetails: rf.contactDetails,
+          recoveryFacilityType: rf.recoveryFacilityType,
+        };
+      }),
       submissionDeclaration: data.submissionDeclaration.values,
       submissionState: {
         status: data.submissionState.status,
