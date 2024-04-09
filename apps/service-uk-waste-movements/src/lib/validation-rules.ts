@@ -117,12 +117,10 @@ export function validateProducerDetailsSection(
     }
   }
 
-  if (!value.producerPostcode?.trim()) {
-    errors.push({
-      field: 'Producer postcode',
-      message: validation.ProducerValidationErrorMessages.emptyPostcode,
-    });
-  } else if (!validation.postcodeRegex.test(value.producerPostcode)) {
+  if (
+    value.producerPostcode?.trim() &&
+    !validation.postcodeRegex.test(value.producerPostcode)
+  ) {
     errors.push({
       field: 'Producer postcode',
       message: validation.ProducerValidationErrorMessages.invalidPostcode,

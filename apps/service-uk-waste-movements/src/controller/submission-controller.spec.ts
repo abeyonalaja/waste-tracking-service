@@ -137,11 +137,6 @@ describe(SubmissionController, () => {
                   validation.ProducerValidationErrorMessages.emptyCountry,
               },
               {
-                field: 'Producer postcode',
-                message:
-                  validation.ProducerValidationErrorMessages.emptyPostcode,
-              },
-              {
                 field: 'Producer contact name',
                 message:
                   validation.ProducerValidationErrorMessages

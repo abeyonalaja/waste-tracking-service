@@ -1,4 +1,5 @@
-import { SchemaObject } from 'ajv/dist/jtd';
+import { SchemaObject, JTDSchemaType } from 'ajv/dist/jtd';
+import { Address, Contact } from './submission.dto';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -8,17 +9,19 @@ const errorResponseValue: SchemaObject = {
   },
 };
 
-export const address: SchemaObject = {
+export const address: JTDSchemaType<Address> = {
   properties: {
     addressLine1: { type: 'string' },
-    addressLine2: { type: 'string' },
     townCity: { type: 'string' },
-    postcode: { type: 'string' },
     country: { type: 'string' },
+  },
+  optionalProperties: {
+    addressLine2: { type: 'string' },
+    postcode: { type: 'string' },
   },
 };
 
-export const contact: SchemaObject = {
+export const contact: JTDSchemaType<Contact> = {
   properties: {
     organisationName: { type: 'string' },
     name: { type: 'string' },
@@ -30,9 +33,11 @@ export const contact: SchemaObject = {
 export const producer: SchemaObject = {
   properties: {
     reference: { type: 'string' },
-    sicCode: { type: 'string' },
     contact: contact,
     address: address,
+  },
+  optionalProperties: {
+    sicCode: { type: 'string' },
   },
 };
 
@@ -69,10 +74,12 @@ export const validateSubmissionsRequest: SchemaObject = {
           producerEmail: { type: 'string' },
           producerPhone: { type: 'string' },
           producerAddressLine1: { type: 'string' },
-          producerAddressLine2: { type: 'string' },
           producerTownCity: { type: 'string' },
-          producerPostcode: { type: 'string' },
           producerCountry: { type: 'string' },
+        },
+        optionalProperties: {
+          producerAddressLine2: { type: 'string' },
+          producerPostcode: { type: 'string' },
           producerSicCode: { type: 'string' },
         },
       },

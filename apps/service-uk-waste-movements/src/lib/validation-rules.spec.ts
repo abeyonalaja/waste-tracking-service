@@ -59,10 +59,6 @@ describe(validateProducerDetailsSection, () => {
         message: validation.ProducerValidationErrorMessages.emptyCountry,
       },
       {
-        field: 'Producer postcode',
-        message: validation.ProducerValidationErrorMessages.emptyPostcode,
-      },
-      {
         field: 'Producer contact name',
         message:
           validation.ProducerValidationErrorMessages.emptyContactFullName,
@@ -113,10 +109,6 @@ describe(validateProducerDetailsSection, () => {
       {
         field: 'Producer country',
         message: validation.ProducerValidationErrorMessages.emptyCountry,
-      },
-      {
-        field: 'Producer postcode',
-        message: validation.ProducerValidationErrorMessages.emptyPostcode,
       },
       {
         field: 'Producer contact name',

@@ -11,7 +11,6 @@ export const ProducerValidationErrorMessages = {
   emptyCountry: 'Enter the producer country',
   invalidCountry:
     'The producer country must only be England, Wales, Scotland, or Northern Ireland',
-  emptyPostcode: 'Enter the producer postcode',
   invalidPostcode: 'Enter the producer postcode in the correct format',
   emptyContactFullName: 'Enter full name of producer contact',
   charTooManyContactFullName: `The producer contact name must be less than ${FreeTextChar.max} characters`,

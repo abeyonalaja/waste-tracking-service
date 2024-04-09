@@ -4,6 +4,7 @@ import {
   GetBatchRequest,
   FinalizeBatchRequest,
 } from './dto';
+import { Address, Contact } from '@wts/api/uk-waste-movements';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -13,19 +14,19 @@ const errorResponseValue: SchemaObject = {
   },
 };
 
-const address: SchemaObject = {
+const address: JTDSchemaType<Address> = {
   properties: {
     addressLine1: { type: 'string' },
     townCity: { type: 'string' },
-    postcode: { type: 'string' },
     country: { type: 'string' },
   },
   optionalProperties: {
     addressLine2: { type: 'string' },
+    postcode: { type: 'string' },
   },
 };
 
-const contact: SchemaObject = {
+const contact: JTDSchemaType<Contact> = {
   properties: {
     organisationName: { type: 'string' },
     name: { type: 'string' },
@@ -38,9 +39,11 @@ const contact: SchemaObject = {
 export const producer: SchemaObject = {
   properties: {
     reference: { type: 'string' },
-    sicCode: { type: 'string' },
     contact: contact,
     address: address,
+  },
+  optionalProperties: {
+    sicCode: { type: 'string' },
   },
 };
 
