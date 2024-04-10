@@ -156,6 +156,31 @@ module UserData
         businessUnitId: '',
         userId: '541873557611'
       },
+      USER6: {
+        businessName: 'WTS Testing',
+        businessUnitId: '',
+        userId: '950393233513'
+      },
+      USER7: {
+        businessName: 'WTS Testing',
+        businessUnitId: '',
+        userId: '584732804173'
+      },
+      USER8: {
+        businessName: 'WTS Testing',
+        businessUnitId: '',
+        userId: '847606471615'
+      },
+      USER9: {
+        businessName: 'WTS Testing',
+        businessUnitId: '',
+        userId: '967837632734'
+      },
+      USER10: {
+        businessName: 'WTS Testing',
+        businessUnitId: '',
+        userId: '682273410566'
+      },
       EMAIL_USER1: {
         businessName: 'aabey0@hotmail.com',
         businessUnitId: '',
