@@ -167,6 +167,23 @@ describe('getBatchResponse', () => {
           hasEstimates: false,
           submissions: [
             {
+              receiver: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '1234',
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: '1234',
+                },
+                contact: {
+                  name: 'test',
+                  organisationName: 'test',
+                  phone: '1234',
+                  email: 'test@organisation.com',
+                },
+              },
               producer: {
                 reference: '1234',
                 sicCode: '123456',
@@ -190,7 +207,7 @@ describe('getBatchResponse', () => {
                   wasteDescription: 'test',
                   physicalForm: 'Solid',
                   wasteQuantity: 1,
-                  quantityUnits: 'Kilograms',
+                  quantityUnits: 'Kilogram',
                   wasteQuantityType: 'EstimateData',
                   haveHazardousProperties: false,
                   containsPop: false,

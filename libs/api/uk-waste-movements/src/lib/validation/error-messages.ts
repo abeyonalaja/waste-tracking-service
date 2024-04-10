@@ -1,4 +1,8 @@
-import { FreeTextChar, ReferenceChar } from './constraints';
+import {
+  FreeTextChar,
+  ReferenceChar,
+  ReceiverEnvironmentalPermitNumberChar,
+} from './constraints';
 
 export const ProducerValidationErrorMessages = {
   emptyOrganisationName: 'Enter the producer organisation name',
@@ -25,4 +29,31 @@ export const ProducerValidationErrorMessages = {
   charTooManyReference: `The unique reference must be ${ReferenceChar.max} characters or less`,
   invalidReference:
     'The reference must only include letters a to z, and numbers',
+};
+
+export const ReceiverValidationErrorMessages = {
+  emptyAuthorizationType: 'Enter the receiver authorization type',
+  invalidAuthorizationTypeLength: `The receiver authorisation details must be less than ${FreeTextChar.max} characters`,
+  invalidEnvironmentalPermitNumberLength: `The receiver permit number must be less than ${ReceiverEnvironmentalPermitNumberChar.max} characters`,
+  emptyOrganisationName: 'Enter the receiver organisation name',
+  charTooManyOrganisationName: `The receiver organisation name must be less than ${FreeTextChar.max} characters`,
+  emptyAddressLine1: 'Enter the receiver address',
+  charTooManyAddressLine1: `The receiver address line 1 must be less than ${FreeTextChar.max} characters`,
+  charTooManyAddressLine2: `The receiver address line 2 must be less than ${FreeTextChar.max} characters`,
+  emptyTownOrCity: 'Enter the receiver town or city',
+  charTooManyTownOrCity: `The receiver town or city must be less than ${FreeTextChar.max} characters`,
+  emptyCountry: 'Enter the receiver country',
+  invalidCountry:
+    'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
+  invalidPostcode: 'Enter the receiver postcode in the correct format',
+  emptyContactFullName: 'Enter full name of receiver contact',
+  charTooManyContactFullName: `The receiver contact name must be less than ${FreeTextChar.max} characters`,
+  emptyPhone: 'Enter receiver contact phone number',
+  invalidPhone: 'Enter receiver contact phone number in correct format',
+  emptyEmail: 'Enter receiver contact email address',
+  invalidEmail: 'Enter receiver contact email address in correct format',
+  charTooManyEmail: `The receiver email address must be less than ${FreeTextChar.max} characters`,
+  invalidReceiverAuthorizationType: 'Enter the receiver authorization type',
+  invalidReceiverEnvironmentalPermitNumber:
+    'Enter the receiver environmental permit number',
 };

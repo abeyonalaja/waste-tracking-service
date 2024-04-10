@@ -2,7 +2,6 @@ import { Submission } from '../submission.dto';
 
 export type Field =
   | 'WasteCollectionDetails'
-  | 'Receiver'
   | 'WasteTransportation'
   | 'WasteTypeDetails'
   | 'Reference'
@@ -15,7 +14,18 @@ export type Field =
   | 'Producer contact name'
   | 'Producer contact email address'
   | 'Producer contact phone number'
-  | 'Producer Standard Industrial Classification (SIC) code';
+  | 'Producer Standard Industrial Classification (SIC) code'
+  | 'Receiver authorization type'
+  | 'Receiver environmental permit number'
+  | 'Receiver organisation name'
+  | 'Receiver address line 1'
+  | 'Receiver address line 2'
+  | 'Receiver town or city'
+  | 'Receiver postcode'
+  | 'Receiver country'
+  | 'Receiver contact name'
+  | 'Receiver contact phone number'
+  | 'Receiver contact email address';
 
 export type FieldFormatError = {
   field: Field;
@@ -30,6 +40,7 @@ export type InvalidAttributeCombinationError = {
 export type Value = {
   producer: Submission['producer'];
   wasteTypeDetails: Submission['wasteTypeDetails'];
+  receiver: Submission['receiver'];
 };
 
 export type Error = {

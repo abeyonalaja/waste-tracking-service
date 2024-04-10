@@ -47,6 +47,15 @@ export const producer: SchemaObject = {
   },
 };
 
+export const receiver: SchemaObject = {
+  properties: {
+    authorizationType: { type: 'string' },
+    environmentalPermitNumber: { type: 'string' },
+    contact: contact,
+    address: address,
+  },
+};
+
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -98,6 +107,7 @@ const bulkSubmissionState: SchemaObject = {
         submissions: {
           elements: {
             properties: {
+              receiver: receiver,
               producer: producer,
               wasteTypeDetails: {
                 elements: {

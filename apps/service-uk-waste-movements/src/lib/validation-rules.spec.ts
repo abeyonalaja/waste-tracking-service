@@ -1,5 +1,8 @@
 import { validation } from '../model';
-import { validateProducerDetailsSection } from './validation-rules';
+import {
+  validateProducerDetailsSection,
+  validateReceiverDetailsSection,
+} from './validation-rules';
 import { faker } from '@faker-js/faker';
 
 describe(validateProducerDetailsSection, () => {
@@ -196,6 +199,208 @@ describe(validateProducerDetailsSection, () => {
       {
         field: 'Producer Standard Industrial Classification (SIC) code',
         message: validation.ProducerValidationErrorMessages.invalidSicCode,
+      },
+    ]);
+  });
+});
+
+describe(validateReceiverDetailsSection, () => {
+  it('passes receiver section validation', () => {
+    const result = validateReceiverDetailsSection({
+      receiverAddressLine1: '123 Real Street',
+      receiverContactName: 'John Smith',
+      receiverCountry: 'England',
+      receiverContactEmail: 'john.smith@john.smith',
+      receiverOrganisationName: 'Test organization',
+      receiverContactPhone: '0044140000000',
+      receiverPostcode: 'ABC 123',
+      receiverEnvironmentalPermitNumber: '123456',
+      receiverAuthorizationType: 'permit',
+      receiverTownCity: 'London',
+      receiverAddressLine2: '',
+    });
+
+    expect(result.valid).toBe(true);
+  });
+
+  it('fails receiver section validation', () => {
+    let result = validateReceiverDetailsSection({
+      receiverAddressLine1: '',
+      receiverContactName: '',
+      receiverCountry: '',
+      receiverContactEmail: '',
+      receiverOrganisationName: '',
+      receiverContactPhone: '',
+      receiverPostcode: '',
+      receiverAuthorizationType: 'Denied',
+      receiverTownCity: '',
+      receiverEnvironmentalPermitNumber: faker.datatype.string(21),
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Receiver environmental permit number',
+        message:
+          validation.ReceiverValidationErrorMessages
+            .invalidEnvironmentalPermitNumberLength,
+      },
+      {
+        field: 'Receiver organisation name',
+        message:
+          validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'Receiver address line 1',
+        message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'Receiver town or city',
+        message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'Receiver country',
+        message: validation.ReceiverValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Receiver contact name',
+        message:
+          validation.ReceiverValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'Receiver contact phone number',
+        message: validation.ReceiverValidationErrorMessages.emptyPhone,
+      },
+      {
+        field: 'Receiver contact email address',
+        message: validation.ReceiverValidationErrorMessages.emptyEmail,
+      },
+    ]);
+
+    result = validateReceiverDetailsSection({
+      receiverEnvironmentalPermitNumber: '             ',
+      receiverAddressLine1: '     ',
+      receiverContactName: '     ',
+      receiverCountry: '     ',
+      receiverContactEmail: '     ',
+      receiverOrganisationName: '     ',
+      receiverContactPhone: '+123567578',
+      receiverPostcode: '     ',
+      receiverAuthorizationType: '     ',
+      receiverTownCity: '     ',
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Receiver authorization type',
+        message:
+          validation.ReceiverValidationErrorMessages.emptyAuthorizationType,
+      },
+      {
+        field: 'Receiver organisation name',
+        message:
+          validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'Receiver address line 1',
+        message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'Receiver town or city',
+        message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'Receiver country',
+        message: validation.ReceiverValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Receiver contact name',
+        message:
+          validation.ReceiverValidationErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'Receiver contact phone number',
+        message: validation.ReceiverValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'Receiver contact email address',
+        message: validation.ReceiverValidationErrorMessages.invalidEmail,
+      },
+    ]);
+
+    result = validateReceiverDetailsSection({
+      receiverAddressLine1: faker.datatype.string(251),
+      receiverAddressLine2: faker.datatype.string(251),
+      receiverContactName: faker.datatype.string(251),
+      receiverCountry: 'France',
+      receiverContactEmail: 'not_an_email',
+      receiverOrganisationName: faker.datatype.string(251),
+      receiverContactPhone: faker.datatype.string(251),
+      receiverPostcode: faker.datatype.string(251),
+      receiverAuthorizationType: faker.datatype.string(251),
+      receiverTownCity: faker.datatype.string(251),
+      receiverEnvironmentalPermitNumber: faker.datatype.string(21),
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Receiver authorization type',
+        message:
+          validation.ReceiverValidationErrorMessages
+            .invalidAuthorizationTypeLength,
+      },
+      {
+        field: 'Receiver environmental permit number',
+        message:
+          validation.ReceiverValidationErrorMessages
+            .invalidEnvironmentalPermitNumberLength,
+      },
+      {
+        field: 'Receiver organisation name',
+        message:
+          validation.ReceiverValidationErrorMessages
+            .charTooManyOrganisationName,
+      },
+      {
+        field: 'Receiver address line 1',
+        message:
+          validation.ReceiverValidationErrorMessages.charTooManyAddressLine1,
+      },
+      {
+        field: 'Receiver address line 2',
+        message:
+          validation.ReceiverValidationErrorMessages.charTooManyAddressLine2,
+      },
+      {
+        field: 'Receiver town or city',
+        message:
+          validation.ReceiverValidationErrorMessages.charTooManyTownOrCity,
+      },
+      {
+        field: 'Receiver country',
+        message: validation.ReceiverValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'Receiver postcode',
+        message: validation.ReceiverValidationErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'Receiver contact name',
+        message:
+          validation.ReceiverValidationErrorMessages.charTooManyContactFullName,
+      },
+      {
+        field: 'Receiver contact phone number',
+        message: validation.ReceiverValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'Receiver contact email address',
+        message: validation.ReceiverValidationErrorMessages.invalidEmail,
       },
     ]);
   });

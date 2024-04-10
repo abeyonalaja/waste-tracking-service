@@ -14,7 +14,7 @@ export type WasteTransport =
   | 'Rail'
   | 'Sea'
   | 'Air'
-  | 'Inland waterway';
+  | 'InlandWaterways';
 export type PhysicalForm =
   | 'Gas'
   | 'Liquid'
@@ -22,19 +22,12 @@ export type PhysicalForm =
   | 'Sludge'
   | 'Powder'
   | 'Mixed';
-export type Quantityunits = 'Kilograms' | 'Litres' | 'Tonnes' | 'Cubic metres';
+export type Quantityunits = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 
-export type DraftSubmissionState = {
+export type SubmissionState = {
   status: 'InProgress' | 'Submitted';
   timestamp: Date;
 };
-
-export type DraftSubmissionConfirmation =
-  | { status: 'CannotStart' | 'NotStarted' }
-  | {
-      status: 'Complete';
-      confirmation: boolean;
-    };
 
 export type SubmissionConfirmation =
   | { status: 'CannotStart' | 'NotStarted' }
@@ -78,8 +71,8 @@ export type WasteCollectionDetails = {
 };
 
 export type ReceiverDetails = {
-  receiverAuthorizationType: string;
-  receiverEnvironmentalPermitNumber: string;
+  authorizationType: string;
+  environmentalPermitNumber: string;
   contact: Contact;
   address: Address;
 };
@@ -109,11 +102,7 @@ export type SubmissionBase = {
   receiver: ReceiverDetails;
   wasteTransportation: WasteTransportation;
   wasteTypeDetails: WasteTypeDetails[];
-  submissionState: DraftSubmissionState;
-};
-
-export type DraftSubmission = SubmissionBase & {
-  submissionConfirmation: DraftSubmissionConfirmation;
+  submissionState: SubmissionState;
 };
 
 export type Submission = SubmissionBase & {
@@ -134,7 +123,22 @@ export type ProducerDetailsFlattened = {
   reference: string;
 };
 
-export type SubmissionFlattened = ProducerDetailsFlattened;
+export type ReceiverDetailsFlattened = {
+  receiverAuthorizationType: string;
+  receiverEnvironmentalPermitNumber: string;
+  receiverOrganisationName: string;
+  receiverAddressLine1: string;
+  receiverAddressLine2?: string;
+  receiverTownCity: string;
+  receiverPostcode: string;
+  receiverCountry: string;
+  receiverContactName: string;
+  receiverContactPhone: string;
+  receiverContactEmail: string;
+};
+
+export type SubmissionFlattened = ProducerDetailsFlattened &
+  ReceiverDetailsFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   values: SubmissionFlattened[];

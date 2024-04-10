@@ -41,6 +41,15 @@ export const producer: SchemaObject = {
   },
 };
 
+export const receiver: SchemaObject = {
+  properties: {
+    authorizationType: { type: 'string' },
+    environmentalPermitNumber: { type: 'string' },
+    contact: contact,
+    address: address,
+  },
+};
+
 export const wasteTypeDetails: SchemaObject = {
   properties: {
     ewcCode: { type: 'string' },
@@ -50,7 +59,7 @@ export const wasteTypeDetails: SchemaObject = {
     },
     wasteQuantity: { type: 'float64' },
     quantityUnits: {
-      enum: ['Kilograms', 'Litres', 'Tonnes', 'Cubic metres'],
+      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
     },
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
     haveHazardousProperties: { type: 'boolean' },
@@ -81,6 +90,17 @@ export const validateSubmissionsRequest: SchemaObject = {
           producerAddressLine2: { type: 'string' },
           producerPostcode: { type: 'string' },
           producerSicCode: { type: 'string' },
+          receiverAuthorizationType: { type: 'string' },
+          receiverEnvironmentalPermitNumber: { type: 'string' },
+          receiverOrganisationName: { type: 'string' },
+          receiverContactName: { type: 'string' },
+          receiverContactEmail: { type: 'string' },
+          receiverContactPhone: { type: 'string' },
+          receiverAddressLine1: { type: 'string' },
+          receiverAddressLine2: { type: 'string' },
+          receiverTownCity: { type: 'string' },
+          receiverPostcode: { type: 'string' },
+          receiverCountry: { type: 'string' },
         },
       },
     },
@@ -95,6 +115,7 @@ const validationResult: SchemaObject = {
       elements: {
         optionalProperties: {
           producer: producer,
+          receiver: receiver,
           wasteTypeDetails: {
             elements: {
               ...wasteTypeDetails,
@@ -107,7 +128,6 @@ const validationResult: SchemaObject = {
                 field: {
                   enum: [
                     'WasteCollectionDetails',
-                    'Receiver',
                     'WasteTransportation',
                     'WasteTypeDetails',
                     'Reference',
@@ -121,6 +141,17 @@ const validationResult: SchemaObject = {
                     'Producer contact email address',
                     'Producer contact phone number',
                     'Producer Standard Industrial Classification (SIC) code',
+                    'Receiver authorization type',
+                    'Receiver environmental permit number',
+                    'Receiver organisation name',
+                    'Receiver address line 1',
+                    'Receiver address line 2',
+                    'Receiver town or city',
+                    'Receiver country',
+                    'Receiver postcode',
+                    'Receiver contact name',
+                    'Receiver contact email address',
+                    'Receiver contact phone number',
                   ],
                 },
                 message: { type: 'string' },
@@ -135,8 +166,6 @@ const validationResult: SchemaObject = {
                     properties: {
                       field: {
                         enum: [
-                          'WasteCollectionDetails',
-                          'Receiver',
                           'WasteTransportation',
                           'WasteTypeDetails',
                           'Reference',
@@ -150,6 +179,17 @@ const validationResult: SchemaObject = {
                           'Producer contact email address',
                           'Producer contact phone number',
                           'Producer Standard Industrial Classification (SIC) code',
+                          'Receiver authorization type',
+                          'Receiver environmental permit number',
+                          'Receiver organisation name',
+                          'Receiver address line 1',
+                          'Receiver address line 2',
+                          'Receiver town or city',
+                          'Receiver country',
+                          'Receiver postcode',
+                          'Receiver contact name',
+                          'Receiver contact email address',
+                          'Receiver contact phone number',
                         ],
                       },
                       message: { type: 'string' },

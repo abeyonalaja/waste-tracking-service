@@ -133,6 +133,11 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                   'Enter the producer town or city',
                   'Enter full name of producer contact',
                   'Enter producer contact email address in correct format',
+                  'Enter the receiver organisation name',
+                  'Enter the receiver address',
+                  'Enter the receiver town or city',
+                  'Enter full name of receiver contact',
+                  'Enter receiver contact email address in correct format',
                 ],
               },
               {
@@ -146,6 +151,12 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                   'The producer country must only be England, Wales, Scotland, or Northern Ireland',
                   'Enter full name of producer contact',
                   'Enter producer contact email address',
+                  'Enter the receiver organisation name',
+                  'Enter the receiver address',
+                  'Enter the receiver town or city',
+                  'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
+                  'Enter full name of receiver contact',
+                  'Enter receiver contact email address',
                 ],
               },
             ],
@@ -233,6 +244,88 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                 ],
               },
               {
+                columnName: 'Receiver address line 1',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter the receiver address',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason: 'Enter the receiver address',
+                  },
+                ],
+              },
+              {
+                columnName: 'Receiver contact name',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter full name of receiver contact',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason: 'Enter full name of receiver contact',
+                  },
+                ],
+              },
+              {
+                columnName: 'Receiver contact email address',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason:
+                      'Enter receiver contact email address in correct format',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason: 'Enter receiver contact email address',
+                  },
+                ],
+              },
+              {
+                columnName: 'Receiver country',
+                errorAmount: 1,
+                errorDetails: [
+                  {
+                    rowNumber: 4,
+                    errorReason:
+                      'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
+                  },
+                ],
+              },
+              {
+                columnName: 'Receiver organisation name',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter the receiver organisation name',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason: 'Enter the receiver organisation name',
+                  },
+                ],
+              },
+              {
+                columnName: 'Receiver town or city',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter the receiver town or city',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason: 'Enter the receiver town or city',
+                  },
+                ],
+              },
+              {
                 columnName: 'Reference',
                 errorAmount: 2,
                 errorDetails: [
@@ -278,6 +371,23 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                     postcode: 'FA1 2KE',
                   },
                 },
+                receiver: {
+                  authorizationType: 'permit',
+                  environmentalPermitNumber: '1010101',
+                  contact: {
+                    email: 'example@email.com',
+                    name: 'John Doe',
+                    organisationName: 'Example Ltd',
+                    phone: '0044140000000',
+                  },
+                  address: {
+                    addressLine1: '123 Fake Street',
+                    addressLine2: 'Apt 10',
+                    country: 'England',
+                    townCity: 'London',
+                    postcode: 'FA1 2KE',
+                  },
+                },
                 wasteTypeDetails: {
                   containsPop: false,
                   ewcCode: '01 03 04',
@@ -304,6 +414,23 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                     addressLine2: 'Apt 20',
                     country: 'England',
                     townCity: 'Manchester',
+                    postcode: 'FA1 2KE',
+                  },
+                },
+                receiver: {
+                  authorizationType: 'permit',
+                  environmentalPermitNumber: '2020202',
+                  contact: {
+                    email: 'example@email.com',
+                    name: 'John Doe',
+                    organisationName: 'Example Ltd',
+                    phone: '0044140000000',
+                  },
+                  address: {
+                    addressLine1: '123 Fake Street',
+                    addressLine2: 'Apt 10',
+                    country: 'England',
+                    townCity: 'London',
                     postcode: 'FA1 2KE',
                   },
                 },

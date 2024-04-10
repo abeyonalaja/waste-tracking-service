@@ -31,6 +31,7 @@ export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
 
 export type PartialSubmission = {
+  receiver: Submission['receiver'];
   producer: Submission['producer'];
   wasteTypeDetails: Submission['wasteTypeDetails'];
 };
@@ -106,4 +107,19 @@ export type ProducerDetailsFlattened = {
   producerSicCode: string;
 };
 
-export type SubmissionFlattened = ProducerDetailsFlattened;
+export type SubmissionFlattened = ProducerDetailsFlattened &
+  ReceiverDetailsFlattened;
+
+export type ReceiverDetailsFlattened = {
+  receiverAuthorizationType: string;
+  receiverEnvironmentalPermitNumber: string;
+  receiverOrganisationName: string;
+  receiverAddressLine1: string;
+  receiverAddressLine2?: string;
+  receiverTownCity: string;
+  receiverPostcode: string;
+  receiverCountry: string;
+  receiverContactName: string;
+  receiverContactEmail: string;
+  receiverContactPhone: string;
+};

@@ -15,6 +15,7 @@ export type {
   SubmissionReference,
   ProducerDetailsFlattened,
   SubmissionFlattened,
+  ReceiverDetailsFlattened,
 } from './dto';
 
 export * as schema from './schema';

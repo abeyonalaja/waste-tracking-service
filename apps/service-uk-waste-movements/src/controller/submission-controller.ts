@@ -52,9 +52,29 @@ export default class SubmissionController {
 
         const invalidStructureErrors: InvalidAttributeCombinationError[] = [];
 
-        if (producer.valid) {
+        const receiver = validationRules.validateReceiverDetailsSection({
+          receiverAuthorizationType: s.receiverAuthorizationType,
+          receiverEnvironmentalPermitNumber:
+            s.receiverEnvironmentalPermitNumber,
+          receiverOrganisationName: s.receiverOrganisationName,
+          receiverAddressLine1: s.receiverAddressLine1,
+          receiverAddressLine2: s.receiverAddressLine2,
+          receiverTownCity: s.receiverTownCity,
+          receiverPostcode: s.receiverPostcode,
+          receiverCountry: s.receiverCountry,
+          receiverContactName: s.receiverContactName,
+          receiverContactEmail: s.receiverContactEmail,
+          receiverContactPhone: s.receiverContactPhone,
+        });
+
+        if (!receiver.valid) {
+          fieldFormatErrors.push(...receiver.value);
+        }
+
+        if (receiver.valid && producer.valid) {
           submissions.push({
             producer: producer.value,
+            receiver: receiver.value,
             wasteTypeDetails: [],
           });
         } else {

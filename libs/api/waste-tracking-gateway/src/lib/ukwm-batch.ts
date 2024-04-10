@@ -34,6 +34,13 @@ export type UkwmProducerDetails = {
   address: UkwmAddress;
 };
 
+export type UkwmReceiverDetails = {
+  authorizationType: string;
+  environmentalPermitNumber: string;
+  contact: UkwmContact;
+  address: UkwmAddress;
+};
+
 export type UkwmWasteTypeDetails = {
   ewcCode: string;
   wasteDescription: string;
@@ -50,6 +57,7 @@ export type UkwmWasteTypeDetails = {
 export type UkwmPartialSubmission = {
   producer: UkwmProducerDetails;
   wasteTypeDetails: UkwmWasteTypeDetails;
+  receiver: UkwmReceiverDetails;
 };
 
 export type UkwmBulkSubmissionValidationRowError = {

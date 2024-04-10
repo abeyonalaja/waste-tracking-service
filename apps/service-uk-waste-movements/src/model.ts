@@ -4,7 +4,6 @@ import * as bulkApi from '@wts/api/uk-waste-movements-bulk';
 export { validation } from '@wts/api/uk-waste-movements';
 
 export type Submission = api.Submission;
-export type DraftSubmission = api.DraftSubmission;
 export type ProducerDetails = api.ProducerDetails;
 
 export type FieldFormatError = api.validation.FieldFormatError;
@@ -16,3 +15,5 @@ export type Error = api.validation.Error;
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type ProducerDetailsFlattened = bulkApi.ProducerDetailsFlattened;
+export type ReceiverDetailsFlattened = bulkApi.ReceiverDetailsFlattened;
+export type ReceiverDetails = api.ReceiverDetails;

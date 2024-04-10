@@ -244,6 +244,18 @@ while (execute) {
                 producerPostcode: s.producerPostcode,
                 producerCountry: s.producerCountry,
                 producerSicCode: s.producerSicCode,
+                receiverAuthorizationType: s.receiverAuthorisationType,
+                receiverEnvironmentalPermitNumber:
+                  s.receiverEnvironmentalPermitNumber,
+                receiverOrganisationName: s.receiverOrganisationName,
+                receiverContactName: s.receiverContactName,
+                receiverContactEmail: s.receiverContactEmail,
+                receiverContactPhone: s.receiverContactPhone,
+                receiverAddressLine1: s.receiverAddressLine1,
+                receiverAddressLine2: s.receiverAddressLine2,
+                receiverTownCity: s.receiverTownOrCity,
+                receiverPostcode: s.receiverPostcode,
+                receiverCountry: s.receiverCountry,
               };
             });
             const submissions: api.PartialSubmission[] = [];
@@ -298,10 +310,20 @@ while (execute) {
                   'Producer postcode': [],
                   'Producer Standard Industrial Classification (SIC) code': [],
                   'Producer town or city': [],
+                  'Receiver address line 1': [],
+                  'Receiver address line 2': [],
+                  'Receiver postcode': [],
+                  'Receiver contact name': [],
+                  'Receiver contact email address': [],
+                  'Receiver contact phone number': [],
+                  'Receiver country': [],
+                  'Receiver environmental permit number': [],
+                  'Receiver organisation name': [],
+                  'Receiver town or city': [],
+                  'Receiver authorization type': [],
 
                   Reference: [],
                   WasteCollectionDetails: [],
-                  Receiver: [],
                   WasteTransportation: [],
                   WasteTypeDetails: [],
                 };

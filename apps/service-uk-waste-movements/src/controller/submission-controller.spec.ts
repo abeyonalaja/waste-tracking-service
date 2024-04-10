@@ -40,6 +40,17 @@ describe(SubmissionController, () => {
             producerPostcode: 'ABC 123',
             producerSicCode: '123456',
             producerTownCity: 'London',
+            receiverAuthorizationType: 'permit',
+            receiverEnvironmentalPermitNumber: '123456',
+            receiverOrganisationName: 'Test organization',
+            receiverContactName: 'John Smith',
+            receiverContactEmail: 'john.smith@testorganisation.com',
+            receiverContactPhone: '0044140000000',
+            receiverAddressLine1: '123 Real Street',
+            receiverAddressLine2: '',
+            receiverCountry: 'England',
+            receiverPostcode: 'ABC 123',
+            receiverTownCity: 'London',
           },
         ],
       });
@@ -71,6 +82,23 @@ describe(SubmissionController, () => {
                 phone: '0044140000000',
               },
             },
+            receiver: {
+              authorizationType: 'permit',
+              environmentalPermitNumber: '123456',
+              contact: {
+                organisationName: 'Test organization',
+                name: 'John Smith',
+                email: 'john.smith@testorganisation.com',
+                phone: '0044140000000',
+              },
+              address: {
+                addressLine1: '123 Real Street',
+                addressLine2: undefined,
+                country: 'England',
+                postcode: 'ABC 123',
+                townCity: 'London',
+              },
+            },
             wasteTypeDetails: [],
           },
         ],
@@ -94,6 +122,16 @@ describe(SubmissionController, () => {
             producerPostcode: '     ',
             producerSicCode: '     ',
             producerTownCity: '     ',
+            receiverAuthorizationType: '     ',
+            receiverEnvironmentalPermitNumber: '     ',
+            receiverOrganisationName: '     ',
+            receiverContactName: '     ',
+            receiverContactEmail: 'not_an_email',
+            receiverContactPhone: '     ',
+            receiverAddressLine1: '     ',
+            receiverCountry: '     ',
+            receiverPostcode: '     ',
+            receiverTownCity: '     ',
           },
         ],
       });
@@ -156,6 +194,49 @@ describe(SubmissionController, () => {
                 field: 'Producer Standard Industrial Classification (SIC) code',
                 message:
                   validation.ProducerValidationErrorMessages.invalidSicCode,
+              },
+              {
+                field: 'Receiver authorization type',
+                message:
+                  validation.ReceiverValidationErrorMessages
+                    .emptyAuthorizationType,
+              },
+              {
+                field: 'Receiver organisation name',
+                message:
+                  validation.ReceiverValidationErrorMessages
+                    .emptyOrganisationName,
+              },
+              {
+                field: 'Receiver address line 1',
+                message:
+                  validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+              },
+              {
+                field: 'Receiver town or city',
+                message:
+                  validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+              },
+              {
+                field: 'Receiver country',
+                message:
+                  validation.ReceiverValidationErrorMessages.emptyCountry,
+              },
+              {
+                field: 'Receiver contact name',
+                message:
+                  validation.ReceiverValidationErrorMessages
+                    .emptyContactFullName,
+              },
+              {
+                field: 'Receiver contact phone number',
+                message:
+                  validation.ReceiverValidationErrorMessages.invalidPhone,
+              },
+              {
+                field: 'Receiver contact email address',
+                message:
+                  validation.ReceiverValidationErrorMessages.invalidEmail,
               },
             ],
             invalidStructureErrors: [],

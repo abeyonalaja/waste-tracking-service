@@ -1,6 +1,8 @@
 import {
   validation,
   FieldFormatError,
+  ReceiverDetailsFlattened,
+  ReceiverDetails,
   ProducerDetailsFlattened,
   ProducerDetails,
 } from '../model';
@@ -209,6 +211,199 @@ export function validateProducerDetailsSection(
         email: value.producerEmail,
         name: value.producerContactName,
         organisationName: value.producerOrganisationName,
+        phone: reformattedReceiverContactPhoneNumber,
+      },
+    },
+  };
+}
+
+export function validateReceiverDetailsSection(
+  value: ReceiverDetailsFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: ReceiverDetails } {
+  const errors: FieldFormatError[] = [];
+
+  if (!value.receiverAuthorizationType?.trim()) {
+    errors.push({
+      field: 'Receiver authorization type',
+      message:
+        validation.ReceiverValidationErrorMessages.emptyAuthorizationType,
+    });
+  } else if (
+    value.receiverAuthorizationType.length > validation.FreeTextChar.max
+  ) {
+    errors.push({
+      field: 'Receiver authorization type',
+      message:
+        validation.ReceiverValidationErrorMessages
+          .invalidAuthorizationTypeLength,
+    });
+  }
+
+  if (
+    value.receiverEnvironmentalPermitNumber?.trim() &&
+    value.receiverEnvironmentalPermitNumber.length >
+      validation.ReceiverEnvironmentalPermitNumberChar.max
+  ) {
+    errors.push({
+      field: 'Receiver environmental permit number',
+      message:
+        validation.ReceiverValidationErrorMessages
+          .invalidEnvironmentalPermitNumberLength,
+    });
+  }
+
+  if (!value.receiverOrganisationName?.trim()) {
+    errors.push({
+      field: 'Receiver organisation name',
+      message: validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+    });
+  } else if (
+    value.receiverOrganisationName.length > validation.FreeTextChar.max
+  ) {
+    errors.push({
+      field: 'Receiver organisation name',
+      message:
+        validation.ReceiverValidationErrorMessages.charTooManyOrganisationName,
+    });
+  }
+
+  if (!value.receiverAddressLine1?.trim()) {
+    errors.push({
+      field: 'Receiver address line 1',
+      message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+    });
+  } else if (value.receiverAddressLine1.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'Receiver address line 1',
+      message:
+        validation.ReceiverValidationErrorMessages.charTooManyAddressLine1,
+    });
+  }
+
+  if (
+    value.receiverAddressLine2 &&
+    value.receiverAddressLine2.length > validation.FreeTextChar.max
+  ) {
+    errors.push({
+      field: 'Receiver address line 2',
+      message:
+        validation.ReceiverValidationErrorMessages.charTooManyAddressLine2,
+    });
+  }
+
+  if (!value.receiverTownCity?.trim()) {
+    errors.push({
+      field: 'Receiver town or city',
+      message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+    });
+  } else {
+    if (value.receiverTownCity.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'Receiver town or city',
+        message:
+          validation.ReceiverValidationErrorMessages.charTooManyTownOrCity,
+      });
+    }
+  }
+
+  if (!value.receiverCountry?.trim()) {
+    errors.push({
+      field: 'Receiver country',
+      message: validation.ReceiverValidationErrorMessages.emptyCountry,
+    });
+  } else {
+    value.receiverCountry = titleCase(value.receiverCountry);
+    if (!fourNationsCountries.includes(value.receiverCountry)) {
+      errors.push({
+        field: 'Receiver country',
+        message: validation.ReceiverValidationErrorMessages.invalidCountry,
+      });
+    }
+  }
+
+  if (
+    value.receiverPostcode?.trim() &&
+    !validation.postcodeRegex.test(value.receiverPostcode)
+  ) {
+    errors.push({
+      field: 'Receiver postcode',
+      message: validation.ReceiverValidationErrorMessages.invalidPostcode,
+    });
+  }
+
+  if (!value.receiverContactName?.trim()) {
+    errors.push({
+      field: 'Receiver contact name',
+      message: validation.ReceiverValidationErrorMessages.emptyContactFullName,
+    });
+  } else if (value.receiverContactName.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'Receiver contact name',
+      message:
+        validation.ReceiverValidationErrorMessages.charTooManyContactFullName,
+    });
+  }
+
+  const reformattedReceiverContactPhoneNumber =
+    value.receiverContactPhone.replace(/'/g, '');
+  if (!reformattedReceiverContactPhoneNumber) {
+    errors.push({
+      field: 'Receiver contact phone number',
+      message: validation.ReceiverValidationErrorMessages.emptyPhone,
+    });
+  } else if (
+    !validation.phoneRegex.test(reformattedReceiverContactPhoneNumber)
+  ) {
+    errors.push({
+      field: 'Receiver contact phone number',
+      message: validation.ReceiverValidationErrorMessages.invalidPhone,
+    });
+  }
+
+  if (!value.receiverContactEmail) {
+    errors.push({
+      field: 'Receiver contact email address',
+      message: validation.ReceiverValidationErrorMessages.emptyEmail,
+    });
+  } else if (!validation.emailRegex.test(value.receiverContactEmail)) {
+    errors.push({
+      field: 'Receiver contact email address',
+      message: validation.ReceiverValidationErrorMessages.invalidEmail,
+    });
+  } else if (value.receiverContactEmail.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'Receiver contact email address',
+      message: validation.ReceiverValidationErrorMessages.charTooManyEmail,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      authorizationType: value.receiverAuthorizationType,
+      environmentalPermitNumber: value.receiverEnvironmentalPermitNumber,
+      address: {
+        addressLine1: value.receiverAddressLine1,
+        addressLine2: value.receiverAddressLine2
+          ? value.receiverAddressLine2
+          : undefined,
+        country: value.receiverCountry,
+        postcode: value.receiverPostcode,
+        townCity: value.receiverTownCity,
+      },
+      contact: {
+        email: value.receiverContactEmail,
+        name: value.receiverContactName,
+        organisationName: value.receiverOrganisationName,
         phone: reformattedReceiverContactPhoneNumber,
       },
     },
