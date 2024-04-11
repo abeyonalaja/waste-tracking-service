@@ -1,6 +1,13 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from 'jest-utils';
 import { SubmissionConfirmation } from 'features/multiples';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('SubmissionConfirmation component', () => {
   it('Renders without errors', () => {

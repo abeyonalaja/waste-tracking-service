@@ -1,7 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'jest-utils';
 import '@testing-library/jest-dom';
 import { RadiosDivider } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('RadiosDivider', () => {
   it('renders children', () => {

@@ -1,6 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { Address } from 'components';
+import { render } from 'jest-utils';
+import { Address } from 'components/Address';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Address component', () => {
   const address = {

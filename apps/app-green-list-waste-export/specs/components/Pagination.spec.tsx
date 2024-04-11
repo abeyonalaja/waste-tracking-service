@@ -1,8 +1,15 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from 'jest-utils';
 import { Pagination } from 'components';
 import '@testing-library/jest-dom/extend-expect';
 import 'i18n/config';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Pagination Component', () => {
   it('renders the component with page numbers and previous/next buttons', () => {

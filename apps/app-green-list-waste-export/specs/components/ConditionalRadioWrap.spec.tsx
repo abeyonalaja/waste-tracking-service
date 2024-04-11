@@ -1,5 +1,12 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within } from 'jest-utils';
 import { ConditionalRadioWrap } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('ConditionalRadioWrap', () => {
   it('renders', () => {

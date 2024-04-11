@@ -1020,8 +1020,6 @@ export const SubmissionSummary = ({
                     {t('contact.faxNumber')}
                   </Key>
                   <Value id="waste-collection-fax">
-                    {data.collectionDetail?.contactDetails.faxNumber}
-
                     {data.collectionDetail?.contactDetails.faxNumber ===
                     undefined
                       ? t('exportJourney.checkAnswers.notProvided')

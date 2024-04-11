@@ -263,6 +263,7 @@ const ExportSubmitted = () => {
                     <DownloadPDFLink
                       submissionId={id}
                       transactionId={exportSubmittedPage.data.reference}
+                      data={exportSubmittedPage.data}
                     />
                     {exportSubmittedPage.data.submissionState.status ===
                       'SubmittedWithEstimates' && (

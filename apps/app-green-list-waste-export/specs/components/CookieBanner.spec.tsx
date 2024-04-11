@@ -1,7 +1,14 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from 'jest-utils';
 import '@testing-library/jest-dom';
 import { CookieBanner } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Cookie Banner component', () => {
   it('renders correctly', () => {

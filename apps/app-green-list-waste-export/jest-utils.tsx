@@ -8,6 +8,16 @@ import { TextEncoder, TextDecoder } from 'util';
 
 const queryClient = new QueryClient();
 
+jest.mock('@react-pdf/renderer', () => ({
+  Document: () => <div>Document</div>,
+  Image: () => <div>Image</div>,
+  Page: () => <div>Page</div>,
+  PDFViewer: jest.fn(() => null),
+  PDFDownloadLink: jest.fn(() => null),
+  StyleSheet: { create: () => {} },
+  Text: () => <div>Text</div>,
+  View: () => <div>View</div>,
+}));
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 

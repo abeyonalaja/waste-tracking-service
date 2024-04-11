@@ -1,5 +1,12 @@
-import { render, screen, within } from '@testing-library/react';
-import { BreadcrumbWrap } from 'components';
+import { render, screen, within } from 'jest-utils';
+import { BreadcrumbWrap } from 'components/BreadcrumbWrap';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('BreadcrumbWrap', () => {
   it('renders', () => {

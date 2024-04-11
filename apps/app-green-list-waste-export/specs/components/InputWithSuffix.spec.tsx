@@ -1,7 +1,14 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from 'jest-utils';
 import '@testing-library/jest-dom';
 import { InputWithSuffix } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Input field with suffix', () => {
   const defaultProps = {

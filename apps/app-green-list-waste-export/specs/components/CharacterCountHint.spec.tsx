@@ -1,6 +1,13 @@
 import '@testing-library/jest-dom';
-import { render, queryByAttribute, screen } from '@testing-library/react';
-import { CharacterCountHint } from 'components';
+import { render, queryByAttribute, screen } from 'jest-utils';
+import { CharacterCountHint } from 'components/CharacterCountHint';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('CharacterCountHint component', () => {
   it('Renders without errors', () => {

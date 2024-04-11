@@ -1,7 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'jest-utils';
 import '@testing-library/jest-dom/extend-expect';
 import { NotificationBanner } from '../../components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('NotificationBanner', () => {
   test('renders important banner with custom heading', () => {

@@ -191,6 +191,7 @@ const ViewRecord = () => {
                       viewRecordPage.data.submissionDeclaration.values
                         .transactionId
                     }
+                    data={viewRecordPage.data}
                   >
                     {t('exportJourney.submittedView.downloadPDF')}
                   </DownloadPDFLink>

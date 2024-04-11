@@ -1,5 +1,5 @@
 import { render, screen } from '../../jest-utils';
-import { Header } from 'components';
+import { Header } from 'components/Header';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({

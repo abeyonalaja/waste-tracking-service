@@ -1,7 +1,14 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from 'jest-utils';
 import { TextareaCharCount } from 'components';
 import 'i18n/config';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Character count textarea component', () => {
   const defaultProps = {

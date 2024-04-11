@@ -1,7 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'jest-utils';
 import '@testing-library/jest-dom/extend-expect';
 import { formatDate } from 'utils/formatDate';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('DateConverter', () => {
   it('should display the formatted date', () => {

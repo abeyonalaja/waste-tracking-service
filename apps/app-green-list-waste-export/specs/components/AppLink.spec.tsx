@@ -1,7 +1,14 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from 'jest-utils';
 import '@testing-library/jest-dom';
-import { AppLink } from 'components';
+import { AppLink } from 'components/AppLink';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('App Link', () => {
   const href = '/example-link';

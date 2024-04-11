@@ -1,7 +1,14 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
+import { render, fireEvent, screen, act } from 'jest-utils';
 import '@testing-library/jest-dom';
 import { ErrorSummary } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('ErrorSummary', () => {
   it('renders with default props', () => {

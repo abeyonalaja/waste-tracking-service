@@ -1,6 +1,13 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from 'jest-utils';
 import { RadioList } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('Small Radio List component', () => {
   const options = ['Option 1', 'Option 2', 'Option 3'];

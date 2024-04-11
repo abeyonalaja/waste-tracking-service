@@ -1,6 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'jest-utils';
 import { UnitDisplay } from 'components';
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ data: {} }),
+  })
+);
 
 describe('UnitDisplay', () => {
   it('displays "kg" when type is "NotApplicable" and quantityType is "Weight"', () => {
