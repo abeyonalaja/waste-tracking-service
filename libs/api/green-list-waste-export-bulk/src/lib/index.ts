@@ -15,6 +15,11 @@ export type {
   WasteQuantityFlattened,
   ExporterDetailFlattened,
   ImporterDetailFlattened,
+  CollectionDateFlattened,
+  CarriersFlattened,
+  CollectionDetailFlattened,
+  ExitLocationFlattened,
+  TransitCountriesFlattened,
   PartialSubmission,
   SubmissionSummary,
 } from './dto';

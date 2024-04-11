@@ -706,7 +706,7 @@ export const exporterDetail: SchemaObject = {
   },
 };
 
-export const importerDetail = {
+export const importerDetail: SchemaObject = {
   properties: {
     importerAddressDetails: {
       properties: {
@@ -726,6 +726,99 @@ export const importerDetail = {
       },
     },
   },
+};
+
+export const collectionDate: SchemaObject = {
+  properties: {
+    type: { enum: ['EstimateDate', 'ActualDate'] },
+    estimateDate: {
+      optionalProperties: {
+        day: { type: 'string' },
+        month: { type: 'string' },
+        year: { type: 'string' },
+      },
+    },
+    actualDate: {
+      optionalProperties: {
+        day: { type: 'string' },
+        month: { type: 'string' },
+        year: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const carriers: SchemaObject = {
+  elements: {
+    properties: {
+      addressDetails: {
+        properties: {
+          organisationName: { type: 'string' },
+          address: { type: 'string' },
+          country: { type: 'string' },
+        },
+      },
+      contactDetails: {
+        properties: {
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+        },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        },
+      },
+    },
+    optionalProperties: {
+      transportDetails: {
+        properties: {
+          type: { enum: ['Road', 'Air', 'Sea', 'Rail', 'InlandWaterways'] },
+        },
+        optionalProperties: {
+          description: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
+export const collectionDetail: SchemaObject = {
+  properties: {
+    address: {
+      properties: {
+        addressLine1: { type: 'string' },
+        townCity: { type: 'string' },
+        country: { type: 'string' },
+      },
+      optionalProperties: {
+        addressLine2: { type: 'string' },
+        postcode: { type: 'string' },
+      },
+    },
+    contactDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const ukExitLocation: SchemaObject = {
+  discriminator: 'provided',
+  mapping: {
+    Yes: { properties: { value: { type: 'string' } } },
+    No: { properties: {} },
+  },
+};
+
+export const transitCountries: SchemaObject = {
+  elements: { type: 'string' },
 };
 
 export const validateSubmissionsRequest: SchemaObject = {
@@ -753,17 +846,76 @@ export const validateSubmissionsRequest: SchemaObject = {
           exporterTownOrCity: { type: 'string' },
           exporterCountry: { type: 'string' },
           exporterPostcode: { type: 'string' },
-          exporterContactFullname: { type: 'string' },
+          exporterContactFullName: { type: 'string' },
           exporterContactPhoneNumber: { type: 'string' },
           exporterFaxNumber: { type: 'string' },
           exporterEmailAddress: { type: 'string' },
           importerOrganisationName: { type: 'string' },
           importerAddress: { type: 'string' },
           importerCountry: { type: 'string' },
-          importerContactFullname: { type: 'string' },
+          importerContactFullName: { type: 'string' },
           importerContactPhoneNumber: { type: 'string' },
           importerFaxNumber: { type: 'string' },
           importerEmailAddress: { type: 'string' },
+          wasteCollectionDate: { type: 'string' },
+          estimatedOrActualCollectionDate: { type: 'string' },
+          firstCarrierOrganisationName: { type: 'string' },
+          firstCarrierAddress: { type: 'string' },
+          firstCarrierCountry: { type: 'string' },
+          firstCarrierContactFullName: { type: 'string' },
+          firstCarrierContactPhoneNumber: { type: 'string' },
+          firstCarrierFaxNumber: { type: 'string' },
+          firstCarrierEmailAddress: { type: 'string' },
+          firstCarrierMeansOfTransport: { type: 'string' },
+          firstCarrierMeansOfTransportDetails: { type: 'string' },
+          secondCarrierOrganisationName: { type: 'string' },
+          secondCarrierAddress: { type: 'string' },
+          secondCarrierCountry: { type: 'string' },
+          secondCarrierContactFullName: { type: 'string' },
+          secondCarrierContactPhoneNumber: { type: 'string' },
+          secondCarrierFaxNumber: { type: 'string' },
+          secondCarrierEmailAddress: { type: 'string' },
+          secondCarrierMeansOfTransport: { type: 'string' },
+          secondCarrierMeansOfTransportDetails: { type: 'string' },
+          thirdCarrierOrganisationName: { type: 'string' },
+          thirdCarrierAddress: { type: 'string' },
+          thirdCarrierCountry: { type: 'string' },
+          thirdCarrierContactFullName: { type: 'string' },
+          thirdCarrierContactPhoneNumber: { type: 'string' },
+          thirdCarrierFaxNumber: { type: 'string' },
+          thirdCarrierEmailAddress: { type: 'string' },
+          thirdCarrierMeansOfTransport: { type: 'string' },
+          thirdCarrierMeansOfTransportDetails: { type: 'string' },
+          fourthCarrierOrganisationName: { type: 'string' },
+          fourthCarrierAddress: { type: 'string' },
+          fourthCarrierCountry: { type: 'string' },
+          fourthCarrierContactFullName: { type: 'string' },
+          fourthCarrierContactPhoneNumber: { type: 'string' },
+          fourthCarrierFaxNumber: { type: 'string' },
+          fourthCarrierEmailAddress: { type: 'string' },
+          fourthCarrierMeansOfTransport: { type: 'string' },
+          fourthCarrierMeansOfTransportDetails: { type: 'string' },
+          fifthCarrierOrganisationName: { type: 'string' },
+          fifthCarrierAddress: { type: 'string' },
+          fifthCarrierCountry: { type: 'string' },
+          fifthCarrierContactFullName: { type: 'string' },
+          fifthCarrierContactPhoneNumber: { type: 'string' },
+          fifthCarrierFaxNumber: { type: 'string' },
+          fifthCarrierEmailAddress: { type: 'string' },
+          fifthCarrierMeansOfTransport: { type: 'string' },
+          fifthCarrierMeansOfTransportDetails: { type: 'string' },
+          wasteCollectionOrganisationName: { type: 'string' },
+          wasteCollectionAddressLine1: { type: 'string' },
+          wasteCollectionAddressLine2: { type: 'string' },
+          wasteCollectionTownOrCity: { type: 'string' },
+          wasteCollectionCountry: { type: 'string' },
+          wasteCollectionPostcode: { type: 'string' },
+          wasteCollectionContactFullName: { type: 'string' },
+          wasteCollectionContactPhoneNumber: { type: 'string' },
+          wasteCollectionFaxNumber: { type: 'string' },
+          wasteCollectionEmailAddress: { type: 'string' },
+          whereWasteLeavesUk: { type: 'string' },
+          transitCountries: { type: 'string' },
         },
       },
     },
@@ -782,6 +934,11 @@ const validationResult: SchemaObject = {
           wasteQuantity: wasteQuantity,
           exporterDetail: exporterDetail,
           importerDetail: importerDetail,
+          collectionDate: collectionDate,
+          carriers: carriers,
+          collectionDetail: collectionDetail,
+          ukExitLocation: ukExitLocation,
+          transitCountries: transitCountries,
           index: { type: 'uint16' },
           fieldFormatErrors: {
             elements: {

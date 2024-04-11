@@ -18,14 +18,14 @@ export type BulkSubmissionCsvRow = {
   exporterTownOrCity: string;
   exporterCountry: string;
   exporterPostcode: string;
-  exporterContactFullname: string;
+  exporterContactFullName: string;
   exporterContactPhoneNumber: string;
   exporterFaxNumber: string;
   exporterEmailAddress: string;
   importerOrganisationName: string;
   importerAddress: string;
   importerCountry: string;
-  importerContactFullname: string;
+  importerContactFullName: string;
   importerContactPhoneNumber: string;
   importerFaxNumber: string;
   importerEmailAddress: string;
@@ -34,7 +34,7 @@ export type BulkSubmissionCsvRow = {
   firstCarrierOrganisationName: string;
   firstCarrierAddress: string;
   firstCarrierCountry: string;
-  firstCarrierContactFullname: string;
+  firstCarrierContactFullName: string;
   firstCarrierContactPhoneNumber: string;
   firstCarrierFaxNumber: string;
   firstCarrierEmailAddress: string;
@@ -43,7 +43,7 @@ export type BulkSubmissionCsvRow = {
   secondCarrierOrganisationName: string;
   secondCarrierAddress: string;
   secondCarrierCountry: string;
-  secondCarrierContactFullname: string;
+  secondCarrierContactFullName: string;
   secondCarrierContactPhoneNumber: string;
   secondCarrierFaxNumber: string;
   secondCarrierEmailAddress: string;
@@ -52,7 +52,7 @@ export type BulkSubmissionCsvRow = {
   thirdCarrierOrganisationName: string;
   thirdCarrierAddress: string;
   thirdCarrierCountry: string;
-  thirdCarrierContactFullname: string;
+  thirdCarrierContactFullName: string;
   thirdCarrierContactPhoneNumber: string;
   thirdCarrierFaxNumber: string;
   thirdCarrierEmailAddress: string;
@@ -61,7 +61,7 @@ export type BulkSubmissionCsvRow = {
   fourthCarrierOrganisationName: string;
   fourthCarrierAddress: string;
   fourthCarrierCountry: string;
-  fourthCarrierContactFullname: string;
+  fourthCarrierContactFullName: string;
   fourthCarrierContactPhoneNumber: string;
   fourthCarrierFaxNumber: string;
   fourthCarrierEmailAddress: string;
@@ -70,7 +70,7 @@ export type BulkSubmissionCsvRow = {
   fifthCarrierOrganisationName: string;
   fifthCarrierAddress: string;
   fifthCarrierCountry: string;
-  fifthCarrierContactFullname: string;
+  fifthCarrierContactFullName: string;
   fifthCarrierContactPhoneNumber: string;
   fifthCarrierFaxNumber: string;
   fifthCarrierEmailAddress: string;
@@ -91,7 +91,7 @@ export type BulkSubmissionCsvRow = {
   interimSiteOrganisationName: string;
   interimSiteAddress: string;
   interimSiteCountry: string;
-  interimSiteContactFullname: string;
+  interimSiteContactFullName: string;
   interimSiteContactPhoneNumber: string;
   interimSiteFaxNumber: string;
   interimSiteEmailAddress: string;
@@ -99,7 +99,7 @@ export type BulkSubmissionCsvRow = {
   laboratoryOrganisationName: string;
   laboratoryAddress: string;
   laboratoryCountry: string;
-  laboratoryContactFullname: string;
+  laboratoryContactFullName: string;
   laboratoryContactPhoneNumber: string;
   laboratoryFaxNumber: string;
   laboratoryEmailAddress: string;
@@ -107,7 +107,7 @@ export type BulkSubmissionCsvRow = {
   firstRecoveryFacilityOrganisationName: string;
   firstRecoveryFacilityAddress: string;
   firstRecoveryFacilityCountry: string;
-  firstRecoveryFacilityContactFullname: string;
+  firstRecoveryFacilityContactFullName: string;
   firstRecoveryFacilityContactPhoneNumber: string;
   firstRecoveryFacilityFaxNumber: string;
   firstRecoveryFacilityEmailAddress: string;
@@ -115,7 +115,7 @@ export type BulkSubmissionCsvRow = {
   secondRecoveryFacilityOrganisationName: string;
   secondRecoveryFacilityAddress: string;
   secondRecoveryFacilityCountry: string;
-  secondRecoveryFacilityContactFullname: string;
+  secondRecoveryFacilityContactFullName: string;
   secondRecoveryFacilityContactPhoneNumber: string;
   secondRecoveryFacilityFaxNumber: string;
   secondRecoveryFacilityEmailAddress: string;
@@ -123,7 +123,7 @@ export type BulkSubmissionCsvRow = {
   thirdRecoveryFacilityOrganisationName: string;
   thirdRecoveryFacilityAddress: string;
   thirdRecoveryFacilityCountry: string;
-  thirdRecoveryFacilityContactFullname: string;
+  thirdRecoveryFacilityContactFullName: string;
   thirdRecoveryFacilityContactPhoneNumber: string;
   thirdRecoveryFacilityFaxNumber: string;
   thirdRecoveryFacilityEmailAddress: string;
@@ -131,7 +131,7 @@ export type BulkSubmissionCsvRow = {
   fourthRecoveryFacilityOrganisationName: string;
   fourthRecoveryFacilityAddress: string;
   fourthRecoveryFacilityCountry: string;
-  fourthRecoveryFacilityContactFullname: string;
+  fourthRecoveryFacilityContactFullName: string;
   fourthRecoveryFacilityContactPhoneNumber: string;
   fourthRecoveryFacilityFaxNumber: string;
   fourthRecoveryFacilityEmailAddress: string;
@@ -139,7 +139,7 @@ export type BulkSubmissionCsvRow = {
   fifthRecoveryFacilityOrganisationName: string;
   fifthRecoveryFacilityAddress: string;
   fifthRecoveryFacilityCountry: string;
-  fifthRecoveryFacilityContactFullname: string;
+  fifthRecoveryFacilityContactFullName: string;
   fifthRecoveryFacilityContactPhoneNumber: string;
   fifthRecoveryFacilityFaxNumber: string;
   fifthRecoveryFacilityEmailAddress: string;
@@ -166,14 +166,14 @@ export const headersFormatted = [
   'exporterTownOrCity',
   'exporterCountry',
   'exporterPostcode',
-  'exporterContactFullname',
+  'exporterContactFullName',
   'exporterContactPhoneNumber',
   'exporterFaxNumber',
   'exporterEmailAddress',
   'importerOrganisationName',
   'importerAddress',
   'importerCountry',
-  'importerContactFullname',
+  'importerContactFullName',
   'importerContactPhoneNumber',
   'importerFaxNumber',
   'importerEmailAddress',
@@ -182,7 +182,7 @@ export const headersFormatted = [
   'firstCarrierOrganisationName',
   'firstCarrierAddress',
   'firstCarrierCountry',
-  'firstCarrierContactFullname',
+  'firstCarrierContactFullName',
   'firstCarrierContactPhoneNumber',
   'firstCarrierFaxNumber',
   'firstCarrierEmailAddress',
@@ -191,7 +191,7 @@ export const headersFormatted = [
   'secondCarrierOrganisationName',
   'secondCarrierAddress',
   'secondCarrierCountry',
-  'secondCarrierContactFullname',
+  'secondCarrierContactFullName',
   'secondCarrierContactPhoneNumber',
   'secondCarrierFaxNumber',
   'secondCarrierEmailAddress',
@@ -200,7 +200,7 @@ export const headersFormatted = [
   'thirdCarrierOrganisationName',
   'thirdCarrierAddress',
   'thirdCarrierCountry',
-  'thirdCarrierContactFullname',
+  'thirdCarrierContactFullName',
   'thirdCarrierContactPhoneNumber',
   'thirdCarrierFaxNumber',
   'thirdCarrierEmailAddress',
@@ -209,7 +209,7 @@ export const headersFormatted = [
   'fourthCarrierOrganisationName',
   'fourthCarrierAddress',
   'fourthCarrierCountry',
-  'fourthCarrierContactFullname',
+  'fourthCarrierContactFullName',
   'fourthCarrierContactPhoneNumber',
   'fourthCarrierFaxNumber',
   'fourthCarrierEmailAddress',
@@ -218,7 +218,7 @@ export const headersFormatted = [
   'fifthCarrierOrganisationName',
   'fifthCarrierAddress',
   'fifthCarrierCountry',
-  'fifthCarrierContactFullname',
+  'fifthCarrierContactFullName',
   'fifthCarrierContactPhoneNumber',
   'fifthCarrierFaxNumber',
   'fifthCarrierEmailAddress',
@@ -239,7 +239,7 @@ export const headersFormatted = [
   'interimSiteOrganisationName',
   'interimSiteAddress',
   'interimSiteCountry',
-  'interimSiteContactFullname',
+  'interimSiteContactFullName',
   'interimSiteContactPhoneNumber',
   'interimSiteFaxNumber',
   'interimSiteEmailAddress',
@@ -247,7 +247,7 @@ export const headersFormatted = [
   'laboratoryOrganisationName',
   'laboratoryAddress',
   'laboratoryCountry',
-  'laboratoryContactFullname',
+  'laboratoryContactFullName',
   'laboratoryContactPhoneNumber',
   'laboratoryFaxNumber',
   'laboratoryEmailAddress',
@@ -255,7 +255,7 @@ export const headersFormatted = [
   'firstRecoveryFacilityOrganisationName',
   'firstRecoveryFacilityAddress',
   'firstRecoveryFacilityCountry',
-  'firstRecoveryFacilityContactFullname',
+  'firstRecoveryFacilityContactFullName',
   'firstRecoveryFacilityContactPhoneNumber',
   'firstRecoveryFacilityFaxNumber',
   'firstRecoveryFacilityEmailAddress',
@@ -263,7 +263,7 @@ export const headersFormatted = [
   'secondRecoveryFacilityOrganisationName',
   'secondRecoveryFacilityAddress',
   'secondRecoveryFacilityCountry',
-  'secondRecoveryFacilityContactFullname',
+  'secondRecoveryFacilityContactFullName',
   'secondRecoveryFacilityContactPhoneNumber',
   'secondRecoveryFacilityFaxNumber',
   'secondRecoveryFacilityEmailAddress',
@@ -271,7 +271,7 @@ export const headersFormatted = [
   'thirdRecoveryFacilityOrganisationName',
   'thirdRecoveryFacilityAddress',
   'thirdRecoveryFacilityCountry',
-  'thirdRecoveryFacilityContactFullname',
+  'thirdRecoveryFacilityContactFullName',
   'thirdRecoveryFacilityContactPhoneNumber',
   'thirdRecoveryFacilityFaxNumber',
   'thirdRecoveryFacilityEmailAddress',
@@ -279,7 +279,7 @@ export const headersFormatted = [
   'fourthRecoveryFacilityOrganisationName',
   'fourthRecoveryFacilityAddress',
   'fourthRecoveryFacilityCountry',
-  'fourthRecoveryFacilityContactFullname',
+  'fourthRecoveryFacilityContactFullName',
   'fourthRecoveryFacilityContactPhoneNumber',
   'fourthRecoveryFacilityFaxNumber',
   'fourthRecoveryFacilityEmailAddress',
@@ -287,7 +287,7 @@ export const headersFormatted = [
   'fifthRecoveryFacilityOrganisationName',
   'fifthRecoveryFacilityAddress',
   'fifthRecoveryFacilityCountry',
-  'fifthRecoveryFacilityContactFullname',
+  'fifthRecoveryFacilityContactFullName',
   'fifthRecoveryFacilityContactPhoneNumber',
   'fifthRecoveryFacilityFaxNumber',
   'fifthRecoveryFacilityEmailAddress',

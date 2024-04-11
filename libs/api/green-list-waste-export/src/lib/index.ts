@@ -80,6 +80,7 @@ export type {
   DraftExporterDetail,
   DraftImporterDetail,
   Carrier,
+  CarrierData,
   DraftCarriers,
   DraftCollectionDetail,
   DraftExitLocation,

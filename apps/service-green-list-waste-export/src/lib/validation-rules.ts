@@ -1,3 +1,4 @@
+import { isPast, isValid } from 'date-fns';
 import { WasteCodeType, WasteCode, Country } from '@wts/api/reference-data';
 import {
   validation,
@@ -16,6 +17,16 @@ import {
   ExporterDetail,
   ImporterDetailFlattened,
   ImporterDetail,
+  CollectionDateFlattened,
+  CollectionDate,
+  CarriersFlattened,
+  CarrierData,
+  CollectionDetail,
+  CollectionDetailFlattened,
+  ExitLocationFlattened,
+  ExitLocation,
+  TransitCountries,
+  TransitCountriesFlattened,
 } from '../model';
 
 function titleCase(str: string) {
@@ -33,6 +44,14 @@ const fourNationsCountries = [
   'Scotland',
   'Wales',
   'Northern Ireland',
+];
+
+const carrierMeansOfTransport = [
+  'Road',
+  'Rail',
+  'Sea',
+  'Air',
+  'InlandWaterways',
 ];
 
 export function validateCustomerReferenceSection(
@@ -597,14 +616,14 @@ export function validateExporterDetailSection(
     });
   }
 
-  if (!value.exporterContactFullname || !value.exporterContactFullname.trim()) {
+  if (!value.exporterContactFullName || !value.exporterContactFullName.trim()) {
     errors.push({
       field: 'ExporterDetail',
       message:
         validation.ExporterDetailValidationErrorMessages.emptyContactFullName,
     });
   } else {
-    if (value.exporterContactFullname.length > validation.FreeTextChar.max) {
+    if (value.exporterContactFullName.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'ExporterDetail',
         message:
@@ -650,11 +669,20 @@ export function validateExporterDetailSection(
       message: validation.ExporterDetailValidationErrorMessages.emptyEmail,
     });
   } else {
-    if (!validation.emailRegex.test(value.exporterEmailAddress)) {
+    if (value.exporterEmailAddress.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'ExporterDetail',
-        message: validation.ExporterDetailValidationErrorMessages.invalidEmail,
+        message:
+          validation.ExporterDetailValidationErrorMessages.charTooManyEmail,
       });
+    } else {
+      if (!validation.emailRegex.test(value.exporterEmailAddress)) {
+        errors.push({
+          field: 'ExporterDetail',
+          message:
+            validation.ExporterDetailValidationErrorMessages.invalidEmail,
+        });
+      }
     }
   }
 
@@ -679,7 +707,7 @@ export function validateExporterDetailSection(
       },
       exporterContactDetails: {
         organisationName: value.exporterOrganisationName,
-        fullName: value.exporterContactFullname,
+        fullName: value.exporterContactFullName,
         emailAddress: value.exporterEmailAddress,
         phoneNumber: reformattedExporterContactPhoneNumber,
         faxNumber: !reformattedExporterFaxNumber
@@ -752,17 +780,14 @@ export function validateImporterDetailSection(
     }
   }
 
-  // TODO: country should not be the same as transit country
-  // Cannot be done until transit country section is done
-
-  if (!value.importerContactFullname || !value.importerContactFullname.trim()) {
+  if (!value.importerContactFullName || !value.importerContactFullName.trim()) {
     errors.push({
       field: 'ImporterDetail',
       message:
         validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
     });
   } else {
-    if (value.importerContactFullname.length > validation.FreeTextChar.max) {
+    if (value.importerContactFullName.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'ImporterDetail',
         message:
@@ -812,11 +837,20 @@ export function validateImporterDetailSection(
       message: validation.ImporterDetailValidationErrorMessages.emptyEmail,
     });
   } else {
-    if (!validation.emailRegex.test(value.importerEmailAddress)) {
+    if (value.importerEmailAddress.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+        message:
+          validation.ImporterDetailValidationErrorMessages.charTooManyEmail,
       });
+    } else {
+      if (!validation.emailRegex.test(value.importerEmailAddress)) {
+        errors.push({
+          field: 'ImporterDetail',
+          message:
+            validation.ImporterDetailValidationErrorMessages.invalidEmail,
+        });
+      }
     }
   }
 
@@ -836,7 +870,7 @@ export function validateImporterDetailSection(
         country: value.importerCountry,
       },
       importerContactDetails: {
-        fullName: value.importerContactFullname,
+        fullName: value.importerContactFullName,
         emailAddress: value.importerEmailAddress,
         phoneNumber: reformattedImporterContactPhoneNumber,
         faxNumber: !reformattedImporterFaxNumber
@@ -845,4 +879,716 @@ export function validateImporterDetailSection(
       },
     },
   };
+}
+
+export function validateCollectionDateSection(
+  value: CollectionDateFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: CollectionDate } {
+  const errors: FieldFormatError[] = [];
+
+  if (!value.wasteCollectionDate) {
+    errors.push({
+      field: 'CollectionDate',
+      message: validation.CollectionDateValidationErrorMessages.empty,
+    });
+  } else {
+    value.wasteCollectionDate = value.wasteCollectionDate.replace(/-/g, '/');
+    if (!isValid(new Date(value.wasteCollectionDate))) {
+      errors.push({
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.empty,
+      });
+    } else {
+      const dateArr = value.wasteCollectionDate.split('/');
+      const date = new Date(
+        Number(dateArr[2]),
+        Number(dateArr[1]) - 1,
+        Number(dateArr[0])
+      );
+      if (isPast(date)) {
+        errors.push({
+          field: 'CollectionDate',
+          message: validation.CollectionDateValidationErrorMessages.invalid,
+        });
+      }
+    }
+  }
+
+  let collectionDateType = '';
+  const quantityType = value.estimatedOrActualCollectionDate
+    .replace(/\s/g, '')
+    .toLowerCase();
+  if (quantityType === 'actual') {
+    collectionDateType = 'ActualDate';
+  } else if (quantityType === 'estimate') {
+    collectionDateType = 'EstimateDate';
+  } else {
+    errors.push({
+      field: 'CollectionDate',
+      message: validation.CollectionDateValidationErrorMessages.missingType,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  const dateArr = value.wasteCollectionDate.split('/');
+  const date = {
+    day: dateArr[0],
+    month: dateArr[1],
+    year: dateArr[2],
+  };
+  return {
+    valid: true,
+    value: {
+      type: collectionDateType as 'EstimateDate' | 'ActualDate',
+      estimateDate: collectionDateType === 'EstimateDate' ? date : {},
+      actualDate: collectionDateType === 'ActualDate' ? date : {},
+    },
+  };
+}
+
+export function validateCarriersSection(
+  value: CarriersFlattened,
+  transport: boolean,
+  countryList: Country[],
+  countryIncludingUkList: Country[]
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: CarrierData[] } {
+  const carriersArr = [
+    {
+      carrierOrganisationName: value.firstCarrierOrganisationName,
+      carrierAddress: value.firstCarrierAddress,
+      carrierCountry: value.firstCarrierCountry,
+      carrierContactFullName: value.firstCarrierContactFullName,
+      carrierContactPhoneNumber: value.firstCarrierContactPhoneNumber,
+      carrierFaxNumber: value.firstCarrierFaxNumber,
+      carrierEmailAddress: value.firstCarrierEmailAddress,
+      carrierMeansOfTransport: value.firstCarrierMeansOfTransport,
+      carrierMeansOfTransportDetails: value.firstCarrierMeansOfTransportDetails,
+    },
+    {
+      carrierOrganisationName: value.secondCarrierOrganisationName,
+      carrierAddress: value.secondCarrierAddress,
+      carrierCountry: value.secondCarrierCountry,
+      carrierContactFullName: value.secondCarrierContactFullName,
+      carrierContactPhoneNumber: value.secondCarrierContactPhoneNumber,
+      carrierFaxNumber: value.secondCarrierFaxNumber,
+      carrierEmailAddress: value.secondCarrierEmailAddress,
+      carrierMeansOfTransport: value.secondCarrierMeansOfTransport,
+      carrierMeansOfTransportDetails:
+        value.secondCarrierMeansOfTransportDetails,
+    },
+    {
+      carrierOrganisationName: value.thirdCarrierOrganisationName,
+      carrierAddress: value.thirdCarrierAddress,
+      carrierCountry: value.thirdCarrierCountry,
+      carrierContactFullName: value.thirdCarrierContactFullName,
+      carrierContactPhoneNumber: value.thirdCarrierContactPhoneNumber,
+      carrierFaxNumber: value.thirdCarrierFaxNumber,
+      carrierEmailAddress: value.thirdCarrierEmailAddress,
+      carrierMeansOfTransport: value.thirdCarrierMeansOfTransport,
+      carrierMeansOfTransportDetails: value.thirdCarrierMeansOfTransportDetails,
+    },
+    {
+      carrierOrganisationName: value.fourthCarrierOrganisationName,
+      carrierAddress: value.fourthCarrierAddress,
+      carrierCountry: value.fourthCarrierCountry,
+      carrierContactFullName: value.fourthCarrierContactFullName,
+      carrierContactPhoneNumber: value.fourthCarrierContactPhoneNumber,
+      carrierFaxNumber: value.fourthCarrierFaxNumber,
+      carrierEmailAddress: value.fourthCarrierEmailAddress,
+      carrierMeansOfTransport: value.fourthCarrierMeansOfTransport,
+      carrierMeansOfTransportDetails:
+        value.fourthCarrierMeansOfTransportDetails,
+    },
+    {
+      carrierOrganisationName: value.fifthCarrierOrganisationName,
+      carrierAddress: value.fifthCarrierAddress,
+      carrierCountry: value.fifthCarrierCountry,
+      carrierContactFullName: value.fifthCarrierContactFullName,
+      carrierContactPhoneNumber: value.fifthCarrierContactPhoneNumber,
+      carrierFaxNumber: value.fifthCarrierFaxNumber,
+      carrierEmailAddress: value.fifthCarrierEmailAddress,
+      carrierMeansOfTransport: value.fifthCarrierMeansOfTransport,
+      carrierMeansOfTransportDetails: value.fifthCarrierMeansOfTransportDetails,
+    },
+  ];
+
+  let index = 0;
+  const errors: FieldFormatError[] = [];
+  const carriers: CarrierData[] = [];
+  carriersArr.map((c) => {
+    index += 1;
+
+    if (
+      index > 1 &&
+      !c.carrierOrganisationName &&
+      !c.carrierAddress &&
+      !c.carrierCountry &&
+      !c.carrierContactFullName &&
+      !c.carrierContactPhoneNumber &&
+      !c.carrierFaxNumber &&
+      !c.carrierEmailAddress &&
+      !c.carrierMeansOfTransport &&
+      !c.carrierMeansOfTransportDetails
+    ) {
+      return;
+    }
+
+    let errorCount = 0;
+    const errorMessages = validation.CarrierValidationErrorMessages(index);
+
+    if (!c.carrierOrganisationName || !c.carrierOrganisationName.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyOrganisationName,
+      });
+    } else {
+      if (c.carrierOrganisationName.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.charTooManyOrganisationName,
+        });
+      }
+    }
+
+    if (!c.carrierAddress || !c.carrierAddress.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyAddress,
+      });
+    } else {
+      if (c.carrierAddress.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.charTooManyAddress,
+        });
+      }
+    }
+
+    if (!c.carrierCountry) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyCountry,
+      });
+    } else {
+      const filteredCountryList =
+        index !== 1
+          ? countryList.filter((country) =>
+              country.name
+                .toUpperCase()
+                .includes(c.carrierCountry.toUpperCase())
+            )
+          : countryIncludingUkList.filter((country) =>
+              country.name
+                .toUpperCase()
+                .includes(c.carrierCountry.toUpperCase())
+            );
+      if (filteredCountryList.length !== 1) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.invalidCountry,
+        });
+      } else {
+        c.carrierCountry = filteredCountryList[0].name;
+      }
+    }
+
+    if (!c.carrierContactFullName || !c.carrierContactFullName.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyContactFullName,
+      });
+    } else {
+      if (c.carrierContactFullName.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.charTooManyContactFullName,
+        });
+      }
+    }
+
+    const reformattedCarrierContactPhoneNumber =
+      c.carrierContactPhoneNumber.replace(/'/g, '');
+    if (!reformattedCarrierContactPhoneNumber) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyPhone,
+      });
+    } else {
+      if (
+        !validation.phoneInternationalRegex.test(
+          reformattedCarrierContactPhoneNumber
+        )
+      ) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.invalidPhone,
+        });
+      }
+    }
+
+    const reformattedCarrierFaxNumber = c.carrierFaxNumber.replace(/'/g, '');
+    if (
+      reformattedCarrierFaxNumber &&
+      !validation.faxInternationalRegex.test(reformattedCarrierFaxNumber)
+    ) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.invalidFax,
+      });
+    }
+
+    if (!c.carrierEmailAddress) {
+      errorCount += 1;
+      errors.push({
+        field: 'Carriers',
+        message: errorMessages.emptyEmail,
+      });
+    } else {
+      if (c.carrierEmailAddress.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.charTooManyEmail,
+        });
+      } else {
+        if (!validation.emailRegex.test(c.carrierEmailAddress)) {
+          errorCount += 1;
+          errors.push({
+            field: 'Carriers',
+            message: errorMessages.invalidEmail,
+          });
+        }
+      }
+    }
+
+    if (!transport) {
+      if (c.carrierMeansOfTransport.trim()) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.invalidCrossSectionTransport,
+        });
+      }
+
+      if (c.carrierMeansOfTransportDetails.trim()) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.invalidCrossSectionTransportDescription,
+        });
+      }
+    } else {
+      if (!c.carrierMeansOfTransport || !c.carrierMeansOfTransport.trim()) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.emptyTransport,
+        });
+      } else {
+        c.carrierMeansOfTransport = titleCase(
+          c.carrierMeansOfTransport
+        ).replace(/\s/g, '');
+        if (!carrierMeansOfTransport.includes(c.carrierMeansOfTransport)) {
+          errorCount += 1;
+          errors.push({
+            field: 'Carriers',
+            message: errorMessages.emptyTransport,
+          });
+        }
+      }
+
+      if (
+        c.carrierMeansOfTransportDetails &&
+        c.carrierMeansOfTransportDetails.length >
+          validation.CarrierTransportDescriptionChar.max
+      ) {
+        errorCount += 1;
+        errors.push({
+          field: 'Carriers',
+          message: errorMessages.charTooManyTransportDescription,
+        });
+      }
+    }
+
+    if (errorCount === 0) {
+      carriers.push({
+        addressDetails: {
+          organisationName: c.carrierOrganisationName,
+          address: c.carrierAddress,
+          country: c.carrierCountry,
+        },
+        contactDetails: {
+          fullName: c.carrierContactFullName,
+          emailAddress: c.carrierEmailAddress,
+          phoneNumber: reformattedCarrierContactPhoneNumber,
+          faxNumber: !reformattedCarrierFaxNumber
+            ? undefined
+            : reformattedCarrierFaxNumber,
+        },
+        transportDetails: !transport
+          ? undefined
+          : {
+              type: c.carrierMeansOfTransport as
+                | 'Road'
+                | 'Rail'
+                | 'Sea'
+                | 'Air'
+                | 'InlandWaterways',
+              description: !c.carrierMeansOfTransportDetails
+                ? undefined
+                : c.carrierMeansOfTransportDetails,
+            },
+      });
+    }
+  });
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: carriers,
+  };
+}
+
+export function validateCollectionDetailSection(
+  value: CollectionDetailFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: CollectionDetail } {
+  const errors: FieldFormatError[] = [];
+  if (
+    !value.wasteCollectionOrganisationName ||
+    !value.wasteCollectionOrganisationName.trim()
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages
+          .emptyOrganisationName,
+    });
+  } else {
+    if (
+      value.wasteCollectionOrganisationName.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      });
+    }
+  }
+
+  if (
+    !value.wasteCollectionAddressLine1 ||
+    !value.wasteCollectionAddressLine1.trim()
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
+    });
+  } else {
+    if (
+      value.wasteCollectionAddressLine1.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyAddressLine1,
+      });
+    }
+  }
+
+  if (value.wasteCollectionAddressLine2.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages
+          .charTooManyAddressLine2,
+    });
+  }
+
+  if (
+    !value.wasteCollectionTownOrCity ||
+    !value.wasteCollectionTownOrCity.trim()
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
+    });
+  } else {
+    if (value.wasteCollectionTownOrCity.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyTownOrCity,
+      });
+    }
+  }
+
+  if (!value.wasteCollectionCountry || !value.wasteCollectionCountry.trim()) {
+    errors.push({
+      field: 'CollectionDetail',
+      message: validation.CollectionDetailValidationErrorMessages.emptyCountry,
+    });
+  } else {
+    value.wasteCollectionCountry = titleCase(value.wasteCollectionCountry);
+    if (!fourNationsCountries.includes(value.wasteCollectionCountry)) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidCountry,
+      });
+    }
+  }
+
+  if (
+    value.wasteCollectionPostcode &&
+    !validation.postcodeRegex.test(value.wasteCollectionPostcode)
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages.invalidPostcode,
+    });
+  }
+
+  if (
+    !value.wasteCollectionContactFullName ||
+    !value.wasteCollectionContactFullName.trim()
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message:
+        validation.CollectionDetailValidationErrorMessages.emptyContactFullName,
+    });
+  } else {
+    if (
+      value.wasteCollectionContactFullName.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      });
+    }
+  }
+
+  const reformattedwasteCollectionContactPhoneNumber =
+    value.wasteCollectionContactPhoneNumber.replace(/'/g, '');
+  if (!reformattedwasteCollectionContactPhoneNumber) {
+    errors.push({
+      field: 'CollectionDetail',
+      message: validation.CollectionDetailValidationErrorMessages.emptyPhone,
+    });
+  } else {
+    if (
+      !validation.phoneRegex.test(reformattedwasteCollectionContactPhoneNumber)
+    ) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidPhone,
+      });
+    }
+  }
+
+  const reformattedwasteCollectionFaxNumber =
+    value.wasteCollectionFaxNumber.replace(/'/g, '');
+  if (
+    reformattedwasteCollectionFaxNumber &&
+    !validation.faxRegex.test(reformattedwasteCollectionFaxNumber)
+  ) {
+    errors.push({
+      field: 'CollectionDetail',
+      message: validation.CollectionDetailValidationErrorMessages.invalidFax,
+    });
+  }
+
+  if (!value.wasteCollectionEmailAddress) {
+    errors.push({
+      field: 'CollectionDetail',
+      message: validation.CollectionDetailValidationErrorMessages.emptyEmail,
+    });
+  } else {
+    if (
+      value.wasteCollectionEmailAddress.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
+      });
+    } else {
+      if (!validation.emailRegex.test(value.wasteCollectionEmailAddress)) {
+        errors.push({
+          field: 'CollectionDetail',
+          message:
+            validation.CollectionDetailValidationErrorMessages.invalidEmail,
+        });
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      address: {
+        addressLine1: value.wasteCollectionAddressLine1,
+        addressLine2: !value.wasteCollectionAddressLine2
+          ? undefined
+          : value.wasteCollectionAddressLine2,
+        townCity: value.wasteCollectionTownOrCity,
+        postcode: !value.wasteCollectionPostcode
+          ? undefined
+          : value.wasteCollectionPostcode,
+        country: value.wasteCollectionCountry,
+      },
+      contactDetails: {
+        organisationName: value.wasteCollectionOrganisationName,
+        fullName: value.wasteCollectionContactFullName,
+        emailAddress: value.wasteCollectionEmailAddress,
+        phoneNumber: reformattedwasteCollectionContactPhoneNumber,
+        faxNumber: !reformattedwasteCollectionFaxNumber
+          ? undefined
+          : reformattedwasteCollectionFaxNumber,
+      },
+    },
+  };
+}
+
+export function validateUkExitLocationSection(
+  value: ExitLocationFlattened
+):
+  | { valid: false; value: FieldFormatError }
+  | { valid: true; value: ExitLocation } {
+  value.whereWasteLeavesUk = value.whereWasteLeavesUk.trim();
+  let location: ExitLocation = { provided: 'No' };
+
+  if (value.whereWasteLeavesUk) {
+    if (value.whereWasteLeavesUk.length > validation.UkExitLocationChar.max) {
+      return {
+        valid: false,
+        value: {
+          field: 'UkExitLocation',
+          message: validation.UkExitLocationErrorMessages.charTooMany,
+        },
+      };
+    }
+
+    if (!validation.ukExitLocationRegex.test(value.whereWasteLeavesUk)) {
+      return {
+        valid: false,
+        value: {
+          field: 'UkExitLocation',
+          message: validation.UkExitLocationErrorMessages.invalid,
+        },
+      };
+    }
+
+    location = {
+      provided: 'Yes',
+      value: value.whereWasteLeavesUk,
+    };
+  }
+
+  return { valid: true, value: location };
+}
+
+export function validateTransitCountriesSection(
+  value: TransitCountriesFlattened,
+  countryList: Country[]
+):
+  | { valid: false; value: FieldFormatError }
+  | { valid: true; value: TransitCountries } {
+  let countries: string[] = [];
+  if (value.transitCountries && value.transitCountries.trim()) {
+    const countryArr = [
+      ...new Set(value.transitCountries.trim().toUpperCase().split(';')),
+    ];
+    const filteredCountryList = countryList.filter((v) =>
+      countryArr.find((c) => v.name.toUpperCase().includes(c.trim()))
+    );
+    if (filteredCountryList.length !== countryArr.length) {
+      return {
+        valid: false,
+        value: {
+          field: 'TransitCountries',
+          message: validation.TransitCountriesErrorMessages.invalid,
+        },
+      };
+    }
+
+    countries = filteredCountryList.map((s) => s.name);
+  }
+
+  return { valid: true, value: countries };
+}
+
+export function validateImporterDetailAndTransitCountriesCrossSection(
+  importerDetail: ImporterDetail,
+  transitCountries: TransitCountries
+):
+  | { valid: false; value: InvalidAttributeCombinationError[] }
+  | { valid: true } {
+  if (
+    transitCountries.some(
+      (c) => c === importerDetail.importerAddressDetails.country
+    )
+  ) {
+    return {
+      valid: false,
+      value: [
+        {
+          fields: ['ImporterDetail', 'TransitCountries'],
+          message:
+            validation.ImporterDetailValidationErrorMessages
+              .invalidCrossSectionCountry,
+        },
+        {
+          fields: ['ImporterDetail', 'TransitCountries'],
+          message: validation.TransitCountriesErrorMessages.invalidCrossSection,
+        },
+      ],
+    };
+  }
+  return { valid: true };
 }

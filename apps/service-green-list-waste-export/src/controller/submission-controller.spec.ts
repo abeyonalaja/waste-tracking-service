@@ -60,17 +60,76 @@ describe(SubmissionController, () => {
             exporterTownOrCity: 'London',
             exporterCountry: 'England',
             exporterPostcode: 'EC2N4AY',
-            exporterContactFullname: 'John Smith',
+            exporterContactFullName: 'John Smith',
             exporterContactPhoneNumber: '07888888888',
             exporterFaxNumber: '',
             exporterEmailAddress: 'test1@test.com',
             importerOrganisationName: 'Test organisation 2',
             importerAddress: '2 Some Street, Paris, 75002',
             importerCountry: 'France',
-            importerContactFullname: 'Jane Smith',
+            importerContactFullName: 'Jane Smith',
             importerContactPhoneNumber: '0033140000000',
             importerFaxNumber: '0033140000000',
             importerEmailAddress: 'test2@test.com',
+            wasteCollectionDate: '01/01/2050',
+            estimatedOrActualCollectionDate: 'actual',
+            firstCarrierOrganisationName: 'Test organisation 3',
+            firstCarrierAddress: 'Some address, London, EC2N4AY',
+            firstCarrierCountry: 'England',
+            firstCarrierContactFullName: 'John Doe',
+            firstCarrierContactPhoneNumber: '07888888844',
+            firstCarrierFaxNumber: '07888888844',
+            firstCarrierEmailAddress: 'test3@test.com',
+            firstCarrierMeansOfTransport: 'inland waterways',
+            firstCarrierMeansOfTransportDetails: 'details',
+            secondCarrierOrganisationName: 'Test organisation 4',
+            secondCarrierAddress: '3 Some Street, Paris, 75002',
+            secondCarrierCountry: 'France',
+            secondCarrierContactFullName: 'Jane Doe',
+            secondCarrierContactPhoneNumber: '0033140000044',
+            secondCarrierFaxNumber: '',
+            secondCarrierEmailAddress: 'test4@test.com',
+            secondCarrierMeansOfTransport: 'Road',
+            secondCarrierMeansOfTransportDetails: '',
+            thirdCarrierOrganisationName: '',
+            thirdCarrierAddress: '',
+            thirdCarrierCountry: '',
+            thirdCarrierContactFullName: '',
+            thirdCarrierContactPhoneNumber: '',
+            thirdCarrierFaxNumber: '',
+            thirdCarrierEmailAddress: '',
+            thirdCarrierMeansOfTransport: '',
+            thirdCarrierMeansOfTransportDetails: '',
+            fourthCarrierOrganisationName: '',
+            fourthCarrierAddress: '',
+            fourthCarrierCountry: '',
+            fourthCarrierContactFullName: '',
+            fourthCarrierContactPhoneNumber: '',
+            fourthCarrierFaxNumber: '',
+            fourthCarrierEmailAddress: '',
+            fourthCarrierMeansOfTransport: '',
+            fourthCarrierMeansOfTransportDetails: '',
+            fifthCarrierOrganisationName: '',
+            fifthCarrierAddress: '',
+            fifthCarrierCountry: '',
+            fifthCarrierContactFullName: '',
+            fifthCarrierContactPhoneNumber: '',
+            fifthCarrierFaxNumber: '',
+            fifthCarrierEmailAddress: '',
+            fifthCarrierMeansOfTransport: '',
+            fifthCarrierMeansOfTransportDetails: '',
+            wasteCollectionOrganisationName: 'Test organisation 5',
+            wasteCollectionAddressLine1: '5 Some Street',
+            wasteCollectionAddressLine2: '',
+            wasteCollectionTownOrCity: 'London',
+            wasteCollectionCountry: 'England',
+            wasteCollectionPostcode: 'EC2N4AY',
+            wasteCollectionContactFullName: 'John Johnson',
+            wasteCollectionContactPhoneNumber: '07888888855',
+            wasteCollectionFaxNumber: '07888888855',
+            wasteCollectionEmailAddress: 'test5@test.com',
+            whereWasteLeavesUk: 'Dover',
+            transitCountries: 'France;Belgium',
           },
         ],
       });
@@ -138,6 +197,17 @@ describe(SubmissionController, () => {
           {
             name: 'France [FR]',
           },
+          {
+            name: 'Belgium [BE]',
+          },
+        ],
+      });
+      mockClient.getCountries.mockResolvedValueOnce({
+        success: true,
+        value: [
+          {
+            name: 'United Kingdom (England) [GB-ENG]',
+          },
         ],
       });
       mockClient.getRecoveryCodes.mockResolvedValueOnce({
@@ -193,17 +263,76 @@ describe(SubmissionController, () => {
             exporterTownOrCity: 'London',
             exporterCountry: 'England',
             exporterPostcode: 'EC2N4AY',
-            exporterContactFullname: 'John Smith',
+            exporterContactFullName: 'John Smith',
             exporterContactPhoneNumber: '07888888888',
             exporterFaxNumber: '',
             exporterEmailAddress: 'test1@test.com',
             importerOrganisationName: 'Test organisation 2',
-            importerAddress: '2 Some Street, Paris, 75002',
-            importerCountry: 'France',
-            importerContactFullname: 'Jane Smith',
+            importerAddress: '2 Some Street, Kabul, 1001',
+            importerCountry: 'Afghanistan',
+            importerContactFullName: 'Jane Smith',
             importerContactPhoneNumber: '0033140000000',
             importerFaxNumber: '0033140000000',
             importerEmailAddress: 'test2@test.com',
+            wasteCollectionDate: '01/01/2050',
+            estimatedOrActualCollectionDate: 'actual',
+            firstCarrierOrganisationName: 'Test organisation 3',
+            firstCarrierAddress: 'Some address, London, EC2N4AY',
+            firstCarrierCountry: 'England',
+            firstCarrierContactFullName: 'John Doe',
+            firstCarrierContactPhoneNumber: '07888888844',
+            firstCarrierFaxNumber: '07888888844',
+            firstCarrierEmailAddress: 'test3@test.com',
+            firstCarrierMeansOfTransport: 'inland waterways',
+            firstCarrierMeansOfTransportDetails: 'details',
+            secondCarrierOrganisationName: 'Test organisation 4',
+            secondCarrierAddress: '3 Some Street, Paris, 75002',
+            secondCarrierCountry: 'France',
+            secondCarrierContactFullName: 'Jane Doe',
+            secondCarrierContactPhoneNumber: '0033140000044',
+            secondCarrierFaxNumber: '',
+            secondCarrierEmailAddress: 'test4@test.com',
+            secondCarrierMeansOfTransport: 'Road',
+            secondCarrierMeansOfTransportDetails: '',
+            thirdCarrierOrganisationName: '',
+            thirdCarrierAddress: '',
+            thirdCarrierCountry: '',
+            thirdCarrierContactFullName: '',
+            thirdCarrierContactPhoneNumber: '',
+            thirdCarrierFaxNumber: '',
+            thirdCarrierEmailAddress: '',
+            thirdCarrierMeansOfTransport: '',
+            thirdCarrierMeansOfTransportDetails: '',
+            fourthCarrierOrganisationName: '',
+            fourthCarrierAddress: '',
+            fourthCarrierCountry: '',
+            fourthCarrierContactFullName: '',
+            fourthCarrierContactPhoneNumber: '',
+            fourthCarrierFaxNumber: '',
+            fourthCarrierEmailAddress: '',
+            fourthCarrierMeansOfTransport: '',
+            fourthCarrierMeansOfTransportDetails: '',
+            fifthCarrierOrganisationName: '',
+            fifthCarrierAddress: '',
+            fifthCarrierCountry: '',
+            fifthCarrierContactFullName: '',
+            fifthCarrierContactPhoneNumber: '',
+            fifthCarrierFaxNumber: '',
+            fifthCarrierEmailAddress: '',
+            fifthCarrierMeansOfTransport: '',
+            fifthCarrierMeansOfTransportDetails: '',
+            wasteCollectionOrganisationName: 'Test organisation 5',
+            wasteCollectionAddressLine1: '5 Some Street',
+            wasteCollectionAddressLine2: '',
+            wasteCollectionTownOrCity: 'London',
+            wasteCollectionCountry: 'England',
+            wasteCollectionPostcode: 'EC2N4AY',
+            wasteCollectionContactFullName: 'John Johnson',
+            wasteCollectionContactPhoneNumber: '07888888855',
+            wasteCollectionFaxNumber: '07888888855',
+            wasteCollectionEmailAddress: 'test5@test.com',
+            whereWasteLeavesUk: 'Dover',
+            transitCountries: 'France;Belgium',
           },
         ],
       });
@@ -215,7 +344,7 @@ describe(SubmissionController, () => {
 
       expect(mockClient.getWasteCodes).toBeCalled();
       expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalled();
+      expect(mockClient.getCountries).toBeCalledTimes(2);
       expect(mockClient.getRecoveryCodes).toBeCalled();
       expect(mockClient.getDisposalCodes).toBeCalled();
 
@@ -269,8 +398,8 @@ describe(SubmissionController, () => {
             importerDetail: {
               importerAddressDetails: {
                 organisationName: 'Test organisation 2',
-                address: '2 Some Street, Paris, 75002',
-                country: 'France [FR]',
+                address: '2 Some Street, Kabul, 1001',
+                country: 'Afghanistan [AF]',
               },
               importerContactDetails: {
                 fullName: 'Jane Smith',
@@ -279,6 +408,69 @@ describe(SubmissionController, () => {
                 faxNumber: '0033140000000',
               },
             },
+            collectionDate: {
+              type: 'ActualDate',
+              actualDate: {
+                day: '01',
+                month: '01',
+                year: '2050',
+              },
+              estimateDate: {},
+            },
+            carriers: [
+              {
+                addressDetails: {
+                  organisationName: 'Test organisation 3',
+                  address: 'Some address, London, EC2N4AY',
+                  country: 'United Kingdom (England) [GB-ENG]',
+                },
+                contactDetails: {
+                  fullName: 'John Doe',
+                  emailAddress: 'test3@test.com',
+                  phoneNumber: '07888888844',
+                  faxNumber: '07888888844',
+                },
+                transportDetails: {
+                  type: 'InlandWaterways',
+                  description: 'details',
+                },
+              },
+              {
+                addressDetails: {
+                  organisationName: 'Test organisation 4',
+                  address: '3 Some Street, Paris, 75002',
+                  country: 'France [FR]',
+                },
+                contactDetails: {
+                  fullName: 'Jane Doe',
+                  emailAddress: 'test4@test.com',
+                  phoneNumber: '0033140000044',
+                },
+                transportDetails: {
+                  type: 'Road',
+                },
+              },
+            ],
+            collectionDetail: {
+              address: {
+                addressLine1: '5 Some Street',
+                townCity: 'London',
+                postcode: 'EC2N4AY',
+                country: 'England',
+              },
+              contactDetails: {
+                organisationName: 'Test organisation 5',
+                fullName: 'John Johnson',
+                emailAddress: 'test5@test.com',
+                phoneNumber: '07888888855',
+                faxNumber: '07888888855',
+              },
+            },
+            ukExitLocation: {
+              provided: 'Yes',
+              value: 'Dover',
+            },
+            transitCountries: ['France [FR]', 'Belgium [BE]'],
           },
         ],
       });
@@ -337,6 +529,14 @@ describe(SubmissionController, () => {
           },
         ],
       });
+      mockClient.getCountries.mockResolvedValueOnce({
+        success: true,
+        value: [
+          {
+            name: 'United Kingdom (England) [GB-ENG]',
+          },
+        ],
+      });
       mockClient.getRecoveryCodes.mockResolvedValueOnce({
         success: true,
         value: [
@@ -390,17 +590,76 @@ describe(SubmissionController, () => {
             exporterTownOrCity: '     ',
             exporterCountry: 'france',
             exporterPostcode: '     ',
-            exporterContactFullname: '     ',
+            exporterContactFullName: '     ',
             exporterContactPhoneNumber: '     ',
             exporterFaxNumber: '     ',
             exporterEmailAddress: '     ',
             importerOrganisationName: '     ',
             importerAddress: '     ',
             importerCountry: '     ',
-            importerContactFullname: '     ',
+            importerContactFullName: '     ',
             importerContactPhoneNumber: '     ',
             importerFaxNumber: '     ',
             importerEmailAddress: '     ',
+            wasteCollectionDate: 'date',
+            estimatedOrActualCollectionDate: 'type',
+            firstCarrierOrganisationName: '     ',
+            firstCarrierAddress: '     ',
+            firstCarrierCountry: '     ',
+            firstCarrierContactFullName: '     ',
+            firstCarrierContactPhoneNumber: '     ',
+            firstCarrierFaxNumber: '     ',
+            firstCarrierEmailAddress: '     ',
+            firstCarrierMeansOfTransport: '     ',
+            firstCarrierMeansOfTransportDetails: '     ',
+            secondCarrierOrganisationName: '',
+            secondCarrierAddress: '',
+            secondCarrierCountry: '',
+            secondCarrierContactFullName: '',
+            secondCarrierContactPhoneNumber: '',
+            secondCarrierFaxNumber: '',
+            secondCarrierEmailAddress: '',
+            secondCarrierMeansOfTransport: '',
+            secondCarrierMeansOfTransportDetails: '',
+            thirdCarrierOrganisationName: '',
+            thirdCarrierAddress: '',
+            thirdCarrierCountry: '',
+            thirdCarrierContactFullName: '',
+            thirdCarrierContactPhoneNumber: '',
+            thirdCarrierFaxNumber: '',
+            thirdCarrierEmailAddress: '',
+            thirdCarrierMeansOfTransport: '',
+            thirdCarrierMeansOfTransportDetails: '',
+            fourthCarrierOrganisationName: '',
+            fourthCarrierAddress: '',
+            fourthCarrierCountry: '',
+            fourthCarrierContactFullName: '',
+            fourthCarrierContactPhoneNumber: '',
+            fourthCarrierFaxNumber: '',
+            fourthCarrierEmailAddress: '',
+            fourthCarrierMeansOfTransport: '',
+            fourthCarrierMeansOfTransportDetails: '',
+            fifthCarrierOrganisationName: '',
+            fifthCarrierAddress: '',
+            fifthCarrierCountry: '',
+            fifthCarrierContactFullName: '',
+            fifthCarrierContactPhoneNumber: '',
+            fifthCarrierFaxNumber: '',
+            fifthCarrierEmailAddress: '',
+            fifthCarrierMeansOfTransport: '',
+            fifthCarrierMeansOfTransportDetails: '',
+            wasteCollectionOrganisationName: '     ',
+            wasteCollectionAddressLine1: '     ',
+            wasteCollectionAddressLine2: '',
+            wasteCollectionTownOrCity: '     ',
+            wasteCollectionCountry: 'france',
+            wasteCollectionPostcode: '     ',
+            wasteCollectionContactFullName: '     ',
+            wasteCollectionContactPhoneNumber: '     ',
+            wasteCollectionFaxNumber: '     ',
+            wasteCollectionEmailAddress: '     ',
+            whereWasteLeavesUk: '     ',
+            transitCountries: '     ',
           },
         ],
       });
@@ -412,9 +671,11 @@ describe(SubmissionController, () => {
 
       expect(mockClient.getWasteCodes).toBeCalled();
       expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalled();
+      expect(mockClient.getCountries).toBeCalledTimes(2);
       expect(mockClient.getRecoveryCodes).toBeCalled();
       expect(mockClient.getDisposalCodes).toBeCalled();
+
+      const carrierErrorMessages = validation.CarrierValidationErrorMessages(1);
 
       expect(response.value).toEqual({
         valid: false,
@@ -530,6 +791,100 @@ describe(SubmissionController, () => {
                 message:
                   validation.ImporterDetailValidationErrorMessages.invalidEmail,
               },
+              {
+                field: 'CollectionDate',
+                message: validation.CollectionDateValidationErrorMessages.empty,
+              },
+              {
+                field: 'CollectionDate',
+                message:
+                  validation.CollectionDateValidationErrorMessages.missingType,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.emptyOrganisationName,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.emptyAddress,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.invalidCountry,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.emptyContactFullName,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.invalidPhone,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.invalidFax,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.invalidEmail,
+              },
+              {
+                field: 'Carriers',
+                message: carrierErrorMessages.emptyTransport,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .emptyOrganisationName,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .emptyAddressLine1,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .emptyTownOrCity,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .invalidCountry,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .invalidPostcode,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .emptyContactFullName,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .invalidPhone,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages.invalidFax,
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  validation.CollectionDetailValidationErrorMessages
+                    .invalidEmail,
+              },
             ],
             invalidStructureErrors: [],
           },
@@ -591,6 +946,17 @@ describe(SubmissionController, () => {
           {
             name: 'France [FR]',
           },
+          {
+            name: 'Belgium [BE]',
+          },
+        ],
+      });
+      mockClient.getCountries.mockResolvedValueOnce({
+        success: true,
+        value: [
+          {
+            name: 'United Kingdom (England) [GB-ENG]',
+          },
         ],
       });
       mockClient.getRecoveryCodes.mockResolvedValueOnce({
@@ -646,17 +1012,76 @@ describe(SubmissionController, () => {
             exporterTownOrCity: 'London',
             exporterCountry: 'England',
             exporterPostcode: 'EC2N4AY',
-            exporterContactFullname: 'John Smith',
+            exporterContactFullName: 'John Smith',
             exporterContactPhoneNumber: '07888888888',
             exporterFaxNumber: '',
             exporterEmailAddress: 'test1@test.com',
             importerOrganisationName: 'Test organisation 2',
             importerAddress: '2 Some Street, Paris, 75002',
             importerCountry: 'France',
-            importerContactFullname: 'Jane Smith',
+            importerContactFullName: 'Jane Smith',
             importerContactPhoneNumber: '0033140000000',
             importerFaxNumber: '0033140000000',
             importerEmailAddress: 'test2@test.com',
+            wasteCollectionDate: '01/01/2050',
+            estimatedOrActualCollectionDate: 'actual',
+            firstCarrierOrganisationName: 'Test organisation 3',
+            firstCarrierAddress: 'Some address, London, EC2N4AY',
+            firstCarrierCountry: 'England',
+            firstCarrierContactFullName: 'England',
+            firstCarrierContactPhoneNumber: '07888888844',
+            firstCarrierFaxNumber: '07888888844',
+            firstCarrierEmailAddress: 'test3@test.com',
+            firstCarrierMeansOfTransport: 'inland waterways',
+            firstCarrierMeansOfTransportDetails: 'details',
+            secondCarrierOrganisationName: '',
+            secondCarrierAddress: '',
+            secondCarrierCountry: '',
+            secondCarrierContactFullName: '',
+            secondCarrierContactPhoneNumber: '',
+            secondCarrierFaxNumber: '',
+            secondCarrierEmailAddress: '',
+            secondCarrierMeansOfTransport: '',
+            secondCarrierMeansOfTransportDetails: '',
+            thirdCarrierOrganisationName: '',
+            thirdCarrierAddress: '',
+            thirdCarrierCountry: '',
+            thirdCarrierContactFullName: '',
+            thirdCarrierContactPhoneNumber: '',
+            thirdCarrierFaxNumber: '',
+            thirdCarrierEmailAddress: '',
+            thirdCarrierMeansOfTransport: '',
+            thirdCarrierMeansOfTransportDetails: '',
+            fourthCarrierOrganisationName: '',
+            fourthCarrierAddress: '',
+            fourthCarrierCountry: '',
+            fourthCarrierContactFullName: '',
+            fourthCarrierContactPhoneNumber: '',
+            fourthCarrierFaxNumber: '',
+            fourthCarrierEmailAddress: '',
+            fourthCarrierMeansOfTransport: '',
+            fourthCarrierMeansOfTransportDetails: '',
+            fifthCarrierOrganisationName: '',
+            fifthCarrierAddress: '',
+            fifthCarrierCountry: '',
+            fifthCarrierContactFullName: '',
+            fifthCarrierContactPhoneNumber: '',
+            fifthCarrierFaxNumber: '',
+            fifthCarrierEmailAddress: '',
+            fifthCarrierMeansOfTransport: '',
+            fifthCarrierMeansOfTransportDetails: '',
+            wasteCollectionOrganisationName: 'Test organisation 5',
+            wasteCollectionAddressLine1: '5 Some Street',
+            wasteCollectionAddressLine2: '',
+            wasteCollectionTownOrCity: 'London',
+            wasteCollectionCountry: 'England',
+            wasteCollectionPostcode: 'EC2N4AY',
+            wasteCollectionContactFullName: 'John Johnson',
+            wasteCollectionContactPhoneNumber: '07888888855',
+            wasteCollectionFaxNumber: '07888888855',
+            wasteCollectionEmailAddress: 'test5@test.com',
+            whereWasteLeavesUk: 'Dover',
+            transitCountries: 'France;Belgium',
           },
         ],
       });
@@ -668,7 +1093,7 @@ describe(SubmissionController, () => {
 
       expect(mockClient.getWasteCodes).toBeCalled();
       expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalled();
+      expect(mockClient.getCountries).toBeCalledTimes(2);
       expect(mockClient.getRecoveryCodes).toBeCalled();
       expect(mockClient.getDisposalCodes).toBeCalled();
 
@@ -689,6 +1114,17 @@ describe(SubmissionController, () => {
                 fields: ['WasteDescription', 'WasteQuantity'],
                 message:
                   validation.WasteQuantityValidationErrorMessages.laboratory,
+              },
+              {
+                fields: ['ImporterDetail', 'TransitCountries'],
+                message:
+                  validation.ImporterDetailValidationErrorMessages
+                    .invalidCrossSectionCountry,
+              },
+              {
+                fields: ['ImporterDetail', 'TransitCountries'],
+                message:
+                  validation.TransitCountriesErrorMessages.invalidCrossSection,
               },
             ],
           },

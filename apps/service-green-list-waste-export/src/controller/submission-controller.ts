@@ -34,12 +34,15 @@ export default class SubmissionController {
       let wasteCodesResponse: GetWasteCodesResponse;
       let ewcCodesResponse: GetEWCCodesResponse;
       let countriesResponse: GetCountriesResponse;
+      let countriesIncludingUkResponse: GetCountriesResponse;
       let recoveryCodesResponse: GetRecoveryCodesResponse;
       let disposalCodesResponse: GetDisposalCodesResponse;
       try {
         wasteCodesResponse = await this.referenceDataClient.getWasteCodes();
         ewcCodesResponse = await this.referenceDataClient.getEWCCodes({});
         countriesResponse = await this.referenceDataClient.getCountries({});
+        countriesIncludingUkResponse =
+          await this.referenceDataClient.getCountries({ includeUk: true });
         recoveryCodesResponse =
           await this.referenceDataClient.getRecoveryCodes();
         disposalCodesResponse =
@@ -53,6 +56,7 @@ export default class SubmissionController {
         !wasteCodesResponse.success ||
         !ewcCodesResponse.success ||
         !countriesResponse.success ||
+        !countriesIncludingUkResponse.success ||
         !recoveryCodesResponse.success ||
         !disposalCodesResponse.success
       ) {
@@ -62,6 +66,7 @@ export default class SubmissionController {
       const wasteCodeList = wasteCodesResponse.value;
       const ewcCodeList = ewcCodesResponse.value;
       const countryList = countriesResponse.value;
+      const countryIncludingUkList = countriesIncludingUkResponse.value;
 
       let index = 2;
       const errors: Error[] = [];
@@ -128,7 +133,7 @@ export default class SubmissionController {
           exporterTownOrCity: s.exporterTownOrCity,
           exporterCountry: s.exporterCountry,
           exporterPostcode: s.exporterPostcode,
-          exporterContactFullname: s.exporterContactFullname,
+          exporterContactFullName: s.exporterContactFullName,
           exporterContactPhoneNumber: s.exporterContactPhoneNumber,
           exporterFaxNumber: s.exporterFaxNumber,
           exporterEmailAddress: s.exporterEmailAddress,
@@ -144,7 +149,7 @@ export default class SubmissionController {
             importerOrganisationName: s.importerOrganisationName,
             importerAddress: s.importerAddress,
             importerCountry: s.importerCountry,
-            importerContactFullname: s.importerContactFullname,
+            importerContactFullName: s.importerContactFullName,
             importerContactPhoneNumber: s.importerContactPhoneNumber,
             importerFaxNumber: s.importerFaxNumber,
             importerEmailAddress: s.importerEmailAddress,
@@ -157,12 +162,145 @@ export default class SubmissionController {
           });
         }
 
+        const collectionDate = validationRules.validateCollectionDateSection({
+          wasteCollectionDate: s.wasteCollectionDate,
+          estimatedOrActualCollectionDate: s.estimatedOrActualCollectionDate,
+        });
+        if (!collectionDate.valid) {
+          collectionDate.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
+        }
+
+        const transport =
+          !wasteDescription.valid ||
+          (wasteDescription.valid &&
+            wasteDescription.value.wasteCode.type !== 'NotApplicable');
+        const carriers = validationRules.validateCarriersSection(
+          {
+            firstCarrierOrganisationName: s.firstCarrierOrganisationName,
+            firstCarrierAddress: s.firstCarrierAddress,
+            firstCarrierCountry: s.firstCarrierCountry,
+            firstCarrierContactFullName: s.firstCarrierContactFullName,
+            firstCarrierContactPhoneNumber: s.firstCarrierContactPhoneNumber,
+            firstCarrierFaxNumber: s.firstCarrierFaxNumber,
+            firstCarrierEmailAddress: s.firstCarrierEmailAddress,
+            firstCarrierMeansOfTransport: s.firstCarrierMeansOfTransport,
+            firstCarrierMeansOfTransportDetails:
+              s.firstCarrierMeansOfTransportDetails,
+            secondCarrierOrganisationName: s.secondCarrierOrganisationName,
+            secondCarrierAddress: s.secondCarrierAddress,
+            secondCarrierCountry: s.secondCarrierCountry,
+            secondCarrierContactFullName: s.secondCarrierContactFullName,
+            secondCarrierContactPhoneNumber: s.secondCarrierContactPhoneNumber,
+            secondCarrierFaxNumber: s.secondCarrierFaxNumber,
+            secondCarrierEmailAddress: s.secondCarrierEmailAddress,
+            secondCarrierMeansOfTransport: s.secondCarrierMeansOfTransport,
+            secondCarrierMeansOfTransportDetails:
+              s.secondCarrierMeansOfTransportDetails,
+            thirdCarrierOrganisationName: s.thirdCarrierOrganisationName,
+            thirdCarrierAddress: s.thirdCarrierAddress,
+            thirdCarrierCountry: s.thirdCarrierCountry,
+            thirdCarrierContactFullName: s.thirdCarrierContactFullName,
+            thirdCarrierContactPhoneNumber: s.thirdCarrierContactPhoneNumber,
+            thirdCarrierFaxNumber: s.thirdCarrierFaxNumber,
+            thirdCarrierEmailAddress: s.thirdCarrierEmailAddress,
+            thirdCarrierMeansOfTransport: s.thirdCarrierMeansOfTransport,
+            thirdCarrierMeansOfTransportDetails:
+              s.thirdCarrierMeansOfTransportDetails,
+            fourthCarrierOrganisationName: s.fourthCarrierOrganisationName,
+            fourthCarrierAddress: s.fourthCarrierAddress,
+            fourthCarrierCountry: s.fourthCarrierCountry,
+            fourthCarrierContactFullName: s.fourthCarrierContactFullName,
+            fourthCarrierContactPhoneNumber: s.fourthCarrierContactPhoneNumber,
+            fourthCarrierFaxNumber: s.fourthCarrierFaxNumber,
+            fourthCarrierEmailAddress: s.fourthCarrierEmailAddress,
+            fourthCarrierMeansOfTransport: s.fourthCarrierMeansOfTransport,
+            fourthCarrierMeansOfTransportDetails:
+              s.fourthCarrierMeansOfTransportDetails,
+            fifthCarrierOrganisationName: s.fifthCarrierOrganisationName,
+            fifthCarrierAddress: s.fifthCarrierAddress,
+            fifthCarrierCountry: s.fifthCarrierCountry,
+            fifthCarrierContactFullName: s.fifthCarrierContactFullName,
+            fifthCarrierContactPhoneNumber: s.fifthCarrierContactPhoneNumber,
+            fifthCarrierFaxNumber: s.fifthCarrierFaxNumber,
+            fifthCarrierEmailAddress: s.fifthCarrierEmailAddress,
+            fifthCarrierMeansOfTransport: s.fifthCarrierMeansOfTransport,
+            fifthCarrierMeansOfTransportDetails:
+              s.fifthCarrierMeansOfTransportDetails,
+          },
+          transport,
+          countryList,
+          countryIncludingUkList
+        );
+        if (!carriers.valid) {
+          carriers.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
+        }
+
+        const collectionDetail =
+          validationRules.validateCollectionDetailSection({
+            wasteCollectionOrganisationName: s.wasteCollectionOrganisationName,
+            wasteCollectionAddressLine1: s.wasteCollectionAddressLine1,
+            wasteCollectionAddressLine2: s.wasteCollectionAddressLine2,
+            wasteCollectionTownOrCity: s.wasteCollectionTownOrCity,
+            wasteCollectionCountry: s.wasteCollectionCountry,
+            wasteCollectionPostcode: s.wasteCollectionPostcode,
+            wasteCollectionContactFullName: s.wasteCollectionContactFullName,
+            wasteCollectionContactPhoneNumber:
+              s.wasteCollectionContactPhoneNumber,
+            wasteCollectionFaxNumber: s.wasteCollectionFaxNumber,
+            wasteCollectionEmailAddress: s.wasteCollectionEmailAddress,
+          });
+        if (!collectionDetail.valid) {
+          collectionDetail.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
+        }
+
+        const ukExitLocation = validationRules.validateUkExitLocationSection({
+          whereWasteLeavesUk: s.whereWasteLeavesUk,
+        });
+        if (!ukExitLocation.valid) {
+          fieldFormatErrors.push(ukExitLocation.value);
+        }
+
+        const transitCountries =
+          validationRules.validateTransitCountriesSection(
+            {
+              transitCountries: s.transitCountries,
+            },
+            countryList
+          );
+        if (!transitCountries.valid) {
+          fieldFormatErrors.push(transitCountries.value);
+        }
+
+        if (importerDetail.valid && transitCountries.valid) {
+          const crossSection =
+            validationRules.validateImporterDetailAndTransitCountriesCrossSection(
+              importerDetail.value,
+              transitCountries.value
+            );
+          if (!crossSection.valid) {
+            crossSection.value.map((e) => {
+              invalidStructureErrors.push(e);
+            });
+          }
+        }
+
         if (
           reference.valid &&
           wasteDescription.valid &&
           wasteQuantity.valid &&
           exporterDetail.valid &&
           importerDetail.valid &&
+          collectionDate.valid &&
+          carriers.valid &&
+          collectionDetail.valid &&
+          ukExitLocation.valid &&
+          transitCountries.valid &&
           invalidStructureErrors.length === 0
         ) {
           submissions.push({
@@ -171,6 +309,11 @@ export default class SubmissionController {
             wasteQuantity: wasteQuantity.value,
             exporterDetail: exporterDetail.value,
             importerDetail: importerDetail.value,
+            collectionDate: collectionDate.value,
+            carriers: carriers.value,
+            collectionDetail: collectionDetail.value,
+            ukExitLocation: ukExitLocation.value,
+            transitCountries: transitCountries.value,
           });
         } else {
           errors.push({

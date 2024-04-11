@@ -245,17 +245,90 @@ while (execute) {
                 exporterTownOrCity: s.exporterTownOrCity,
                 exporterCountry: s.exporterCountry,
                 exporterPostcode: s.exporterPostcode,
-                exporterContactFullname: s.exporterContactFullname,
+                exporterContactFullName: s.exporterContactFullName,
                 exporterContactPhoneNumber: s.exporterContactPhoneNumber,
                 exporterFaxNumber: s.exporterFaxNumber,
                 exporterEmailAddress: s.exporterEmailAddress,
                 importerOrganisationName: s.importerOrganisationName,
                 importerAddress: s.importerAddress,
                 importerCountry: s.importerCountry,
-                importerContactFullname: s.importerContactFullname,
+                importerContactFullName: s.importerContactFullName,
                 importerContactPhoneNumber: s.importerContactPhoneNumber,
                 importerFaxNumber: s.importerFaxNumber,
                 importerEmailAddress: s.importerEmailAddress,
+                wasteCollectionDate: s.wasteCollectionDate,
+                estimatedOrActualCollectionDate:
+                  s.estimatedOrActualCollectionDate,
+                firstCarrierOrganisationName: s.firstCarrierOrganisationName,
+                firstCarrierAddress: s.firstCarrierAddress,
+                firstCarrierCountry: s.firstCarrierCountry,
+                firstCarrierContactFullName: s.firstCarrierContactFullName,
+                firstCarrierContactPhoneNumber:
+                  s.firstCarrierContactPhoneNumber,
+                firstCarrierFaxNumber: s.firstCarrierFaxNumber,
+                firstCarrierEmailAddress: s.firstCarrierEmailAddress,
+                firstCarrierMeansOfTransport: s.firstCarrierMeansOfTransport,
+                firstCarrierMeansOfTransportDetails:
+                  s.firstCarrierMeansOfTransportDetails,
+                secondCarrierOrganisationName: s.secondCarrierOrganisationName,
+                secondCarrierAddress: s.secondCarrierAddress,
+                secondCarrierCountry: s.secondCarrierCountry,
+                secondCarrierContactFullName: s.secondCarrierContactFullName,
+                secondCarrierContactPhoneNumber:
+                  s.secondCarrierContactPhoneNumber,
+                secondCarrierFaxNumber: s.secondCarrierFaxNumber,
+                secondCarrierEmailAddress: s.secondCarrierEmailAddress,
+                secondCarrierMeansOfTransport: s.secondCarrierMeansOfTransport,
+                secondCarrierMeansOfTransportDetails:
+                  s.secondCarrierMeansOfTransportDetails,
+                thirdCarrierOrganisationName: s.thirdCarrierOrganisationName,
+                thirdCarrierAddress: s.thirdCarrierAddress,
+                thirdCarrierCountry: s.thirdCarrierCountry,
+                thirdCarrierContactFullName: s.thirdCarrierContactFullName,
+                thirdCarrierContactPhoneNumber:
+                  s.thirdCarrierContactPhoneNumber,
+                thirdCarrierFaxNumber: s.thirdCarrierFaxNumber,
+                thirdCarrierEmailAddress: s.thirdCarrierEmailAddress,
+                thirdCarrierMeansOfTransport: s.thirdCarrierMeansOfTransport,
+                thirdCarrierMeansOfTransportDetails:
+                  s.thirdCarrierMeansOfTransportDetails,
+                fourthCarrierOrganisationName: s.fourthCarrierOrganisationName,
+                fourthCarrierAddress: s.fourthCarrierAddress,
+                fourthCarrierCountry: s.fourthCarrierCountry,
+                fourthCarrierContactFullName: s.fourthCarrierContactFullName,
+                fourthCarrierContactPhoneNumber:
+                  s.fourthCarrierContactPhoneNumber,
+                fourthCarrierFaxNumber: s.fourthCarrierFaxNumber,
+                fourthCarrierEmailAddress: s.fourthCarrierEmailAddress,
+                fourthCarrierMeansOfTransport: s.fourthCarrierMeansOfTransport,
+                fourthCarrierMeansOfTransportDetails:
+                  s.fourthCarrierMeansOfTransportDetails,
+                fifthCarrierOrganisationName: s.fifthCarrierOrganisationName,
+                fifthCarrierAddress: s.fifthCarrierAddress,
+                fifthCarrierCountry: s.fifthCarrierCountry,
+                fifthCarrierContactFullName: s.fifthCarrierContactFullName,
+                fifthCarrierContactPhoneNumber:
+                  s.fifthCarrierContactPhoneNumber,
+                fifthCarrierFaxNumber: s.fifthCarrierFaxNumber,
+                fifthCarrierEmailAddress: s.fifthCarrierEmailAddress,
+                fifthCarrierMeansOfTransport: s.fifthCarrierMeansOfTransport,
+                fifthCarrierMeansOfTransportDetails:
+                  s.fifthCarrierMeansOfTransportDetails,
+                wasteCollectionOrganisationName:
+                  s.wasteCollectionOrganisationName,
+                wasteCollectionAddressLine1: s.wasteCollectionAddressLine1,
+                wasteCollectionAddressLine2: s.wasteCollectionAddressLine2,
+                wasteCollectionTownOrCity: s.wasteCollectionTownOrCity,
+                wasteCollectionCountry: s.wasteCollectionCountry,
+                wasteCollectionPostcode: s.wasteCollectionPostcode,
+                wasteCollectionContactFullName:
+                  s.wasteCollectionContactFullName,
+                wasteCollectionContactPhoneNumber:
+                  s.wasteCollectionContactPhoneNumber,
+                wasteCollectionFaxNumber: s.wasteCollectionFaxNumber,
+                wasteCollectionEmailAddress: s.wasteCollectionEmailAddress,
+                whereWasteLeavesUk: s.whereWasteLeavesUk,
+                transitCountries: s.transitCountries,
               };
             });
             const submissions: api.PartialSubmission[] = [];
@@ -317,7 +390,9 @@ while (execute) {
                       status: 'PassedValidation',
                       timestamp: new Date(),
                       hasEstimates: submissions.some(
-                        (s) => s.wasteQuantity.type === 'EstimateData'
+                        (s) =>
+                          s.wasteQuantity.type === 'EstimateData' ||
+                          s.collectionDate.type === 'EstimateDate'
                       ),
                       submissions: submissions,
                     },

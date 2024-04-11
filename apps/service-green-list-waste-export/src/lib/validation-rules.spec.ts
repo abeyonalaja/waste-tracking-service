@@ -1,8 +1,20 @@
-import { WasteDescription, WasteQuantity, validation } from '../model';
 import {
+  ImporterDetail,
+  TransitCountries,
+  WasteDescription,
+  WasteQuantity,
+  validation,
+} from '../model';
+import {
+  validateCarriersSection,
+  validateCollectionDateSection,
+  validateCollectionDetailSection,
   validateCustomerReferenceSection,
   validateExporterDetailSection,
+  validateImporterDetailAndTransitCountriesCrossSection,
   validateImporterDetailSection,
+  validateTransitCountriesSection,
+  validateUkExitLocationSection,
   validateWasteDescriptionAndQuantityCrossSection,
   validateWasteDescriptionSection,
   validateWasteQuantitySection,
@@ -95,6 +107,21 @@ const countries = [
   },
   {
     name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+];
+
+const countriesIncludingUk = [
+  {
+    name: 'United Kingdom (England) [GB-ENG]',
   },
 ];
 
@@ -221,10 +248,10 @@ describe('validateWasteDescriptionSection', () => {
       {
         baselAnnexIXCode: '',
         oecdCode: '',
-        annexIIIACode: 'B1010;B1050',
+        annexIIIACode: 'B1010; B1050',
         annexIIIBCode: '',
         laboratory: '',
-        ewcCodes: '010101;010102',
+        ewcCodes: '010101; 010102',
         nationalCode: '',
         wasteDescription: 'test',
       },
@@ -402,7 +429,7 @@ describe('validateWasteDescriptionSection', () => {
       {
         baselAnnexIXCode: '',
         oecdCode: '',
-        annexIIIACode: 'B9999;B9999',
+        annexIIIACode: 'B1010;B9999',
         annexIIIBCode: '',
         laboratory: '',
         ewcCodes: '010101;010102',
@@ -2472,7 +2499,7 @@ describe('validateExporterDetailSection', () => {
       exporterTownOrCity: 'London',
       exporterCountry: 'England',
       exporterPostcode: '',
-      exporterContactFullname: 'John Smith',
+      exporterContactFullName: 'John Smith',
       exporterContactPhoneNumber: '00-44788-888 8888',
       exporterFaxNumber: '',
       exporterEmailAddress: 'test1@test.com',
@@ -2499,7 +2526,7 @@ describe('validateExporterDetailSection', () => {
       exporterTownOrCity: 'Belfast',
       exporterCountry: 'northern ireland',
       exporterPostcode: 'EC2N4AY',
-      exporterContactFullname: 'John Smith',
+      exporterContactFullName: 'John Smith',
       exporterContactPhoneNumber: "'00447888888888'",
       exporterFaxNumber: "'+ (44)78888-88888'",
       exporterEmailAddress: 'test1@test.com',
@@ -2531,7 +2558,7 @@ describe('validateExporterDetailSection', () => {
       exporterTownOrCity: '',
       exporterCountry: '',
       exporterPostcode: '',
-      exporterContactFullname: '',
+      exporterContactFullName: '',
       exporterContactPhoneNumber: '',
       exporterFaxNumber: '',
       exporterEmailAddress: '',
@@ -2580,7 +2607,7 @@ describe('validateExporterDetailSection', () => {
       exporterTownOrCity: '     ',
       exporterCountry: '     ',
       exporterPostcode: '     ',
-      exporterContactFullname: '     ',
+      exporterContactFullName: '     ',
       exporterContactPhoneNumber: '+34556757895678',
       exporterFaxNumber: '     ',
       exporterEmailAddress: '     ',
@@ -2638,10 +2665,10 @@ describe('validateExporterDetailSection', () => {
       exporterTownOrCity: faker.datatype.string(251),
       exporterCountry: faker.datatype.string(251),
       exporterPostcode: faker.datatype.string(251),
-      exporterContactFullname: faker.datatype.string(251),
+      exporterContactFullName: faker.datatype.string(251),
       exporterContactPhoneNumber: faker.datatype.string(30),
       exporterFaxNumber: faker.datatype.string(30),
-      exporterEmailAddress: faker.datatype.string(30),
+      exporterEmailAddress: faker.datatype.string(251),
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2695,7 +2722,8 @@ describe('validateExporterDetailSection', () => {
       },
       {
         field: 'ExporterDetail',
-        message: validation.ExporterDetailValidationErrorMessages.invalidEmail,
+        message:
+          validation.ExporterDetailValidationErrorMessages.charTooManyEmail,
       },
     ]);
   });
@@ -2708,8 +2736,8 @@ describe('validateImporterDetailSection', () => {
         importerOrganisationName: 'Test organisation 2',
         importerAddress: '2 Some Street, Paris, 75002',
         importerCountry: 'France',
-        importerContactFullname: 'Jane Smith',
-        importerContactPhoneNumber: '0033140000000',
+        importerContactFullName: 'Jane Smith',
+        importerContactPhoneNumber: '00-44788-888 8888',
         importerFaxNumber: '',
         importerEmailAddress: 'test2@test.com',
       },
@@ -2725,7 +2753,7 @@ describe('validateImporterDetailSection', () => {
       importerContactDetails: {
         fullName: 'Jane Smith',
         emailAddress: 'test2@test.com',
-        phoneNumber: '0033140000000',
+        phoneNumber: '00-44788-888 8888',
       },
     });
 
@@ -2734,7 +2762,7 @@ describe('validateImporterDetailSection', () => {
         importerOrganisationName: 'Test organisation 2',
         importerAddress: '2 Some Street, Paris, 75002',
         importerCountry: 'France',
-        importerContactFullname: 'Jane Smith',
+        importerContactFullName: 'Jane Smith',
         importerContactPhoneNumber: "'0033140000000'",
         importerFaxNumber: "'0033140000000'",
         importerEmailAddress: 'test2@test.com',
@@ -2763,7 +2791,7 @@ describe('validateImporterDetailSection', () => {
         importerOrganisationName: '',
         importerAddress: '',
         importerCountry: '',
-        importerContactFullname: '',
+        importerContactFullName: '',
         importerContactPhoneNumber: '',
         importerFaxNumber: '',
         importerEmailAddress: '',
@@ -2806,7 +2834,7 @@ describe('validateImporterDetailSection', () => {
         importerOrganisationName: '     ',
         importerAddress: '     ',
         importerCountry: '     ',
-        importerContactFullname: '     ',
+        importerContactFullName: '     ',
         importerContactPhoneNumber: '     ',
         importerFaxNumber: '     ',
         importerEmailAddress: '     ',
@@ -2854,10 +2882,10 @@ describe('validateImporterDetailSection', () => {
         importerOrganisationName: faker.datatype.string(251),
         importerAddress: faker.datatype.string(251),
         importerCountry: faker.datatype.string(251),
-        importerContactFullname: faker.datatype.string(251),
+        importerContactFullName: faker.datatype.string(251),
         importerContactPhoneNumber: faker.datatype.string(30),
         importerFaxNumber: faker.datatype.string(30),
-        importerEmailAddress: faker.datatype.string(30),
+        importerEmailAddress: faker.datatype.string(251),
       },
       countries
     );
@@ -2895,7 +2923,1065 @@ describe('validateImporterDetailSection', () => {
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+        message:
+          validation.ImporterDetailValidationErrorMessages.charTooManyEmail,
+      },
+    ]);
+  });
+});
+
+describe('validateCollectionDateSection', () => {
+  it('passes CollectionDate section validation', async () => {
+    const futureDate = '01/01/3000';
+    const futureDateArr = futureDate.split('/');
+    let response = validateCollectionDateSection({
+      wasteCollectionDate: futureDate,
+      estimatedOrActualCollectionDate: 'Actual',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'ActualDate',
+      estimateDate: {},
+      actualDate: {
+        day: futureDateArr[0],
+        month: futureDateArr[1],
+        year: futureDateArr[2],
+      },
+    });
+
+    response = validateCollectionDateSection({
+      wasteCollectionDate: futureDate.replace(/\//g, '-'),
+      estimatedOrActualCollectionDate: 'estimate',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'EstimateDate',
+      estimateDate: {
+        day: futureDateArr[0],
+        month: futureDateArr[1],
+        year: futureDateArr[2],
+      },
+      actualDate: {},
+    });
+  });
+
+  it('fails CollectionDate section validation', async () => {
+    let response = validateCollectionDateSection({
+      wasteCollectionDate: '',
+      estimatedOrActualCollectionDate: 'Actual',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateCollectionDateSection({
+      wasteCollectionDate: 'date',
+      estimatedOrActualCollectionDate: 'Actual',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateCollectionDateSection({
+      wasteCollectionDate: '01/01/2023',
+      estimatedOrActualCollectionDate: 'Actual',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.invalid,
+      },
+    ]);
+
+    response = validateCollectionDateSection({
+      wasteCollectionDate: '',
+      estimatedOrActualCollectionDate: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.empty,
+      },
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateCollectionDateSection({
+      wasteCollectionDate: '01/01/3000',
+      estimatedOrActualCollectionDate: 'type',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.missingType,
+      },
+    ]);
+  });
+});
+
+describe('validateCarriersSection', () => {
+  it('passes Carriers section validation', async () => {
+    let response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: 'inland waterways',
+        firstCarrierMeansOfTransportDetails: 'details',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: 'Road',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      true,
+      countries,
+      countriesIncludingUk
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      {
+        addressDetails: {
+          organisationName: 'Test organisation 3',
+          address: 'Some address, London, EC2N4AY',
+          country: 'United Kingdom (England) [GB-ENG]',
+        },
+        contactDetails: {
+          fullName: 'John Doe',
+          emailAddress: 'test3@test.com',
+          phoneNumber: '07888888844',
+          faxNumber: '07888888844',
+        },
+        transportDetails: {
+          type: 'InlandWaterways',
+          description: 'details',
+        },
+      },
+      {
+        addressDetails: {
+          organisationName: 'Test organisation 4',
+          address: '3 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jane Doe',
+          emailAddress: 'test4@test.com',
+          phoneNumber: '0033140000044',
+        },
+        transportDetails: {
+          type: 'Road',
+        },
+      },
+    ]);
+
+    response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: '',
+        firstCarrierMeansOfTransportDetails: '',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: '',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      false,
+      countries,
+      countriesIncludingUk
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      {
+        addressDetails: {
+          organisationName: 'Test organisation 3',
+          address: 'Some address, London, EC2N4AY',
+          country: 'United Kingdom (England) [GB-ENG]',
+        },
+        contactDetails: {
+          fullName: 'John Doe',
+          emailAddress: 'test3@test.com',
+          phoneNumber: '07888888844',
+          faxNumber: '07888888844',
+        },
+      },
+      {
+        addressDetails: {
+          organisationName: 'Test organisation 4',
+          address: '3 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jane Doe',
+          emailAddress: 'test4@test.com',
+          phoneNumber: '0033140000044',
+        },
+      },
+    ]);
+  });
+
+  const firstCarrierErrorMessages =
+    validation.CarrierValidationErrorMessages(1);
+  const secondCarrierErrorMessages =
+    validation.CarrierValidationErrorMessages(2);
+  const thirdCarrierErrorMessages =
+    validation.CarrierValidationErrorMessages(3);
+
+  it('fails Carriers section validation', async () => {
+    let response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: '',
+        firstCarrierAddress: '',
+        firstCarrierCountry: '',
+        firstCarrierContactFullName: '',
+        firstCarrierContactPhoneNumber: '',
+        firstCarrierFaxNumber: '',
+        firstCarrierEmailAddress: '',
+        firstCarrierMeansOfTransport: '',
+        firstCarrierMeansOfTransportDetails: '',
+        secondCarrierOrganisationName: '',
+        secondCarrierAddress: '',
+        secondCarrierCountry: '',
+        secondCarrierContactFullName: '',
+        secondCarrierContactPhoneNumber: '',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: '',
+        secondCarrierMeansOfTransport: '',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      true,
+      countries,
+      countriesIncludingUk
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyAddress,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyPhone,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyEmail,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyTransport,
+      },
+    ]);
+
+    response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: faker.datatype.string(251),
+        firstCarrierAddress: faker.datatype.string(251),
+        firstCarrierCountry: faker.datatype.string(50),
+        firstCarrierContactFullName: faker.datatype.string(251),
+        firstCarrierContactPhoneNumber: faker.datatype.string(50),
+        firstCarrierFaxNumber: faker.datatype.string(50),
+        firstCarrierEmailAddress: faker.datatype.string(50),
+        firstCarrierMeansOfTransport: faker.datatype.string(50),
+        firstCarrierMeansOfTransportDetails: faker.datatype.string(201),
+        secondCarrierOrganisationName: '',
+        secondCarrierAddress: '',
+        secondCarrierCountry: '',
+        secondCarrierContactFullName: '',
+        secondCarrierContactPhoneNumber: '',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: '',
+        secondCarrierMeansOfTransport: '',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      true,
+      countries,
+      countriesIncludingUk
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.charTooManyOrganisationName,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.charTooManyAddress,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.invalidCountry,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.charTooManyContactFullName,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.invalidPhone,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.invalidFax,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.invalidEmail,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.emptyTransport,
+      },
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.charTooManyTransportDescription,
+      },
+    ]);
+
+    response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: 'inland waterways',
+        firstCarrierMeansOfTransportDetails: 'details',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: 'Road',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: 'Incomplete',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      true,
+      countries,
+      countriesIncludingUk
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyAddress,
+      },
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyPhone,
+      },
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyEmail,
+      },
+      {
+        field: 'Carriers',
+        message: thirdCarrierErrorMessages.emptyTransport,
+      },
+    ]);
+
+    response = validateCarriersSection(
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: 'inland waterways',
+        firstCarrierMeansOfTransportDetails: 'details',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'England',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: 'Road',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      },
+      false,
+      countries,
+      countriesIncludingUk
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Carriers',
+        message: firstCarrierErrorMessages.invalidCrossSectionTransport,
+      },
+      {
+        field: 'Carriers',
+        message:
+          firstCarrierErrorMessages.invalidCrossSectionTransportDescription,
+      },
+      {
+        field: 'Carriers',
+        message: secondCarrierErrorMessages.invalidCountry,
+      },
+      {
+        field: 'Carriers',
+        message: secondCarrierErrorMessages.invalidCrossSectionTransport,
+      },
+    ]);
+  });
+});
+
+describe('validateCollectionDetailSection', () => {
+  it('passes CollectionDetail section validation', async () => {
+    let response = validateCollectionDetailSection({
+      wasteCollectionOrganisationName: 'Test organisation 1',
+      wasteCollectionAddressLine1: '1 Some Street',
+      wasteCollectionAddressLine2: '',
+      wasteCollectionTownOrCity: 'London',
+      wasteCollectionCountry: 'England',
+      wasteCollectionPostcode: '',
+      wasteCollectionContactFullName: 'John Smith',
+      wasteCollectionContactPhoneNumber: '00-44788-888 8888',
+      wasteCollectionFaxNumber: '',
+      wasteCollectionEmailAddress: 'test1@test.com',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      address: {
+        addressLine1: '1 Some Street',
+        townCity: 'London',
+        country: 'England',
+      },
+      contactDetails: {
+        organisationName: 'Test organisation 1',
+        fullName: 'John Smith',
+        emailAddress: 'test1@test.com',
+        phoneNumber: '00-44788-888 8888',
+      },
+    });
+
+    response = validateCollectionDetailSection({
+      wasteCollectionOrganisationName: 'Test organisation 1',
+      wasteCollectionAddressLine1: '1 Some Street',
+      wasteCollectionAddressLine2: 'Address line',
+      wasteCollectionTownOrCity: 'Belfast',
+      wasteCollectionCountry: 'northern ireland',
+      wasteCollectionPostcode: 'EC2N4AY',
+      wasteCollectionContactFullName: 'John Smith',
+      wasteCollectionContactPhoneNumber: "'00447888888888'",
+      wasteCollectionFaxNumber: "'+ (44)78888-88888'",
+      wasteCollectionEmailAddress: 'test1@test.com',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      address: {
+        addressLine1: '1 Some Street',
+        addressLine2: 'Address line',
+        townCity: 'Belfast',
+        postcode: 'EC2N4AY',
+        country: 'Northern Ireland',
+      },
+      contactDetails: {
+        organisationName: 'Test organisation 1',
+        fullName: 'John Smith',
+        emailAddress: 'test1@test.com',
+        phoneNumber: '00447888888888',
+        faxNumber: '+ (44)78888-88888',
+      },
+    });
+  });
+
+  it('fails CollectionDetail section validation', async () => {
+    let response = validateCollectionDetailSection({
+      wasteCollectionOrganisationName: '',
+      wasteCollectionAddressLine1: '',
+      wasteCollectionAddressLine2: '',
+      wasteCollectionTownOrCity: '',
+      wasteCollectionCountry: '',
+      wasteCollectionPostcode: '',
+      wasteCollectionContactFullName: '',
+      wasteCollectionContactPhoneNumber: '',
+      wasteCollectionFaxNumber: '',
+      wasteCollectionEmailAddress: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .emptyContactFullName,
+      },
+      {
+        field: 'CollectionDetail',
+        message: validation.CollectionDetailValidationErrorMessages.emptyPhone,
+      },
+      {
+        field: 'CollectionDetail',
+        message: validation.CollectionDetailValidationErrorMessages.emptyEmail,
+      },
+    ]);
+
+    response = validateCollectionDetailSection({
+      wasteCollectionOrganisationName: '     ',
+      wasteCollectionAddressLine1: '     ',
+      wasteCollectionAddressLine2: '     ',
+      wasteCollectionTownOrCity: '     ',
+      wasteCollectionCountry: '     ',
+      wasteCollectionPostcode: '     ',
+      wasteCollectionContactFullName: '     ',
+      wasteCollectionContactPhoneNumber: '+34556757895678',
+      wasteCollectionFaxNumber: '     ',
+      wasteCollectionEmailAddress: '     ',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .emptyOrganisationName,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .emptyContactFullName,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'CollectionDetail',
+        message: validation.CollectionDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidEmail,
+      },
+    ]);
+
+    response = validateCollectionDetailSection({
+      wasteCollectionOrganisationName: faker.datatype.string(251),
+      wasteCollectionAddressLine1: faker.datatype.string(251),
+      wasteCollectionAddressLine2: faker.datatype.string(251),
+      wasteCollectionTownOrCity: faker.datatype.string(251),
+      wasteCollectionCountry: faker.datatype.string(251),
+      wasteCollectionPostcode: faker.datatype.string(251),
+      wasteCollectionContactFullName: faker.datatype.string(251),
+      wasteCollectionContactPhoneNumber: faker.datatype.string(30),
+      wasteCollectionFaxNumber: faker.datatype.string(30),
+      wasteCollectionEmailAddress: faker.datatype.string(251),
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyOrganisationName,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyAddressLine1,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyAddressLine2,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyTownOrCity,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidCountry,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages
+            .charTooManyContactFullName,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.invalidPhone,
+      },
+      {
+        field: 'CollectionDetail',
+        message: validation.CollectionDetailValidationErrorMessages.invalidFax,
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
+      },
+    ]);
+  });
+});
+
+describe('validateUkExitLocationSection', () => {
+  it('passes UkExitLocation section validation', async () => {
+    let response = validateUkExitLocationSection({
+      whereWasteLeavesUk: '',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({ provided: 'No' });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: 'Dover',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({ provided: 'Yes', value: 'Dover' });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: "some-value.-,'",
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      provided: 'Yes',
+      value: "some-value.-,'",
+    });
+  });
+
+  it('fails UkExitLocation section validation', async () => {
+    let response = validateUkExitLocationSection({
+      whereWasteLeavesUk: faker.datatype.string(51),
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'UkExitLocation',
+      message: validation.UkExitLocationErrorMessages.charTooMany,
+    });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: 'some_value',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'UkExitLocation',
+      message: validation.UkExitLocationErrorMessages.invalid,
+    });
+  });
+});
+
+describe('validateTransitCountriesSection', () => {
+  it('passes TransitCountries section validation', async () => {
+    let response = validateTransitCountriesSection(
+      {
+        transitCountries: '',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([]);
+
+    response = validateTransitCountriesSection(
+      {
+        transitCountries: 'france',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual(['France [FR]']);
+
+    response = validateTransitCountriesSection(
+      {
+        transitCountries: 'France;france',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual(['France [FR]']);
+
+    response = validateTransitCountriesSection(
+      {
+        transitCountries: 'France ; Belgium;Burkina Faso',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      'France [FR]',
+      'Belgium [BE]',
+      'Burkina Faso [BF]',
+    ]);
+  });
+
+  it('fails TransitCountries section validation', async () => {
+    let response = validateTransitCountriesSection(
+      {
+        transitCountries: 'some_value',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'TransitCountries',
+      message: validation.TransitCountriesErrorMessages.invalid,
+    });
+
+    response = validateTransitCountriesSection(
+      {
+        transitCountries: 'France;some_value',
+      },
+      countries
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'TransitCountries',
+      message: validation.TransitCountriesErrorMessages.invalid,
+    });
+  });
+});
+
+describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
+  it('passes ImporterDetailAndTransitCountries cross section validation', async () => {
+    const importerDetail: ImporterDetail = {
+      importerAddressDetails: {
+        organisationName: 'Test organisation 2',
+        address: '2 Some Street, Paris, 75002',
+        country: 'France [FR]',
+      },
+      importerContactDetails: {
+        fullName: 'Jane Smith',
+        emailAddress: 'test2@test.com',
+        phoneNumber: '0033140000000',
+      },
+    };
+    let transitCountries: TransitCountries = [];
+    let response = validateImporterDetailAndTransitCountriesCrossSection(
+      importerDetail,
+      transitCountries
+    );
+    expect(response.valid).toEqual(true);
+
+    transitCountries = ['Belgium [BE]', 'Burkina Faso [BF]'];
+    response = validateImporterDetailAndTransitCountriesCrossSection(
+      importerDetail,
+      transitCountries
+    );
+    expect(response.valid).toEqual(true);
+  });
+
+  it('fails ImporterDetailAndTransitCountries cross section validation', async () => {
+    const importerDetail: ImporterDetail = {
+      importerAddressDetails: {
+        organisationName: 'Test organisation 2',
+        address: '2 Some Street, Paris, 75002',
+        country: 'France [FR]',
+      },
+      importerContactDetails: {
+        fullName: 'Jane Smith',
+        emailAddress: 'test2@test.com',
+        phoneNumber: '0033140000000',
+      },
+    };
+
+    const transitCountries = [
+      'France [FR]',
+      'Belgium [BE]',
+      'Burkina Faso [BF]',
+    ];
+    const response = validateImporterDetailAndTransitCountriesCrossSection(
+      importerDetail,
+      transitCountries
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['ImporterDetail', 'TransitCountries'],
+        message:
+          validation.ImporterDetailValidationErrorMessages
+            .invalidCrossSectionCountry,
+      },
+      {
+        fields: ['ImporterDetail', 'TransitCountries'],
+        message: validation.TransitCountriesErrorMessages.invalidCrossSection,
       },
     ]);
   });

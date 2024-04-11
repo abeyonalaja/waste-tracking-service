@@ -29,6 +29,11 @@ export type Value = {
   wasteQuantity: Submission['wasteQuantity'];
   exporterDetail: Submission['exporterDetail'];
   importerDetail: Submission['importerDetail'];
+  collectionDate: Submission['collectionDate'];
+  carriers: Submission['carriers'];
+  collectionDetail: Submission['collectionDetail'];
+  ukExitLocation: Submission['ukExitLocation'];
+  transitCountries: Submission['transitCountries'];
 };
 
 export type Error = {

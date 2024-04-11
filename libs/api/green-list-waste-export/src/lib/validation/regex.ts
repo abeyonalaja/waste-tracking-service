@@ -2,6 +2,7 @@ import {
   ReferenceChar,
   NationalCodeChar,
   DecimalPlacesChar,
+  UkExitLocationChar,
 } from './constraints';
 
 const numeric = '0-9';
@@ -36,10 +37,10 @@ export const phoneInternationalRegex = new RegExp(
   '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$'
 );
 
-export const faxRegex = new RegExp(
-  '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
-);
+export const faxRegex = phoneRegex;
 
-export const faxInternationalRegex = new RegExp(
-  '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$'
+export const faxInternationalRegex = phoneInternationalRegex;
+
+export const ukExitLocationRegex = new RegExp(
+  `^[${alphaNumeric}\\-.,']{${UkExitLocationChar.min},${UkExitLocationChar.max}}$`
 );

@@ -23,6 +23,13 @@ export type PartialSubmission = {
   reference: Submission['reference'];
   wasteDescription: Submission['wasteDescription'];
   wasteQuantity: Submission['wasteQuantity'];
+  exporterDetail: Submission['exporterDetail'];
+  importerDetail: Submission['importerDetail'];
+  collectionDate: Submission['collectionDate'];
+  carriers: Submission['carriers'];
+  collectionDetail: Submission['collectionDetail'];
+  ukExitLocation: Submission['ukExitLocation'];
+  transitCountries: Submission['transitCountries'];
 };
 
 export type BulkSubmissionState =
@@ -153,7 +160,7 @@ export type ExporterDetailFlattened = {
   exporterTownOrCity: string;
   exporterCountry: string;
   exporterPostcode: string;
-  exporterContactFullname: string;
+  exporterContactFullName: string;
   exporterContactPhoneNumber: string;
   exporterFaxNumber: string;
   exporterEmailAddress: string;
@@ -163,14 +170,93 @@ export type ImporterDetailFlattened = {
   importerOrganisationName: string;
   importerAddress: string;
   importerCountry: string;
-  importerContactFullname: string;
+  importerContactFullName: string;
   importerContactPhoneNumber: string;
   importerFaxNumber: string;
   importerEmailAddress: string;
+};
+
+export type CollectionDateFlattened = {
+  wasteCollectionDate: string;
+  estimatedOrActualCollectionDate: string;
+};
+
+export type CarriersFlattened = {
+  firstCarrierOrganisationName: string;
+  firstCarrierAddress: string;
+  firstCarrierCountry: string;
+  firstCarrierContactFullName: string;
+  firstCarrierContactPhoneNumber: string;
+  firstCarrierFaxNumber: string;
+  firstCarrierEmailAddress: string;
+  firstCarrierMeansOfTransport: string;
+  firstCarrierMeansOfTransportDetails: string;
+  secondCarrierOrganisationName: string;
+  secondCarrierAddress: string;
+  secondCarrierCountry: string;
+  secondCarrierContactFullName: string;
+  secondCarrierContactPhoneNumber: string;
+  secondCarrierFaxNumber: string;
+  secondCarrierEmailAddress: string;
+  secondCarrierMeansOfTransport: string;
+  secondCarrierMeansOfTransportDetails: string;
+  thirdCarrierOrganisationName: string;
+  thirdCarrierAddress: string;
+  thirdCarrierCountry: string;
+  thirdCarrierContactFullName: string;
+  thirdCarrierContactPhoneNumber: string;
+  thirdCarrierFaxNumber: string;
+  thirdCarrierEmailAddress: string;
+  thirdCarrierMeansOfTransport: string;
+  thirdCarrierMeansOfTransportDetails: string;
+  fourthCarrierOrganisationName: string;
+  fourthCarrierAddress: string;
+  fourthCarrierCountry: string;
+  fourthCarrierContactFullName: string;
+  fourthCarrierContactPhoneNumber: string;
+  fourthCarrierFaxNumber: string;
+  fourthCarrierEmailAddress: string;
+  fourthCarrierMeansOfTransport: string;
+  fourthCarrierMeansOfTransportDetails: string;
+  fifthCarrierOrganisationName: string;
+  fifthCarrierAddress: string;
+  fifthCarrierCountry: string;
+  fifthCarrierContactFullName: string;
+  fifthCarrierContactPhoneNumber: string;
+  fifthCarrierFaxNumber: string;
+  fifthCarrierEmailAddress: string;
+  fifthCarrierMeansOfTransport: string;
+  fifthCarrierMeansOfTransportDetails: string;
+};
+
+export type CollectionDetailFlattened = {
+  wasteCollectionOrganisationName: string;
+  wasteCollectionAddressLine1: string;
+  wasteCollectionAddressLine2: string;
+  wasteCollectionTownOrCity: string;
+  wasteCollectionCountry: string;
+  wasteCollectionPostcode: string;
+  wasteCollectionContactFullName: string;
+  wasteCollectionContactPhoneNumber: string;
+  wasteCollectionFaxNumber: string;
+  wasteCollectionEmailAddress: string;
+};
+
+export type ExitLocationFlattened = {
+  whereWasteLeavesUk: string;
+};
+
+export type TransitCountriesFlattened = {
+  transitCountries: string;
 };
 
 export type SubmissionFlattened = CustomerReferenceFlattened &
   WasteDescriptionFlattened &
   WasteQuantityFlattened &
   ExporterDetailFlattened &
-  ImporterDetailFlattened;
+  ImporterDetailFlattened &
+  CollectionDateFlattened &
+  CarriersFlattened &
+  CollectionDetailFlattened &
+  ExitLocationFlattened &
+  TransitCountriesFlattened;

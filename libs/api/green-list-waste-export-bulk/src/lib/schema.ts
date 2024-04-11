@@ -98,6 +98,148 @@ export const wasteQuantity: SchemaObject = {
   },
 };
 
+export const exporterDetail: SchemaObject = {
+  properties: {
+    exporterAddress: {
+      properties: {
+        addressLine1: { type: 'string' },
+        townCity: { type: 'string' },
+        country: { type: 'string' },
+      },
+      optionalProperties: {
+        addressLine2: { type: 'string' },
+        postcode: { type: 'string' },
+      },
+    },
+    exporterContactDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const importerDetail: SchemaObject = {
+  properties: {
+    importerAddressDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        address: { type: 'string' },
+        country: { type: 'string' },
+      },
+    },
+    importerContactDetails: {
+      properties: {
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const collectionDate: SchemaObject = {
+  properties: {
+    type: { enum: ['EstimateDate', 'ActualDate'] },
+    estimateDate: {
+      optionalProperties: {
+        day: { type: 'string' },
+        month: { type: 'string' },
+        year: { type: 'string' },
+      },
+    },
+    actualDate: {
+      optionalProperties: {
+        day: { type: 'string' },
+        month: { type: 'string' },
+        year: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const carriers: SchemaObject = {
+  elements: {
+    properties: {
+      addressDetails: {
+        properties: {
+          organisationName: { type: 'string' },
+          address: { type: 'string' },
+          country: { type: 'string' },
+        },
+      },
+      contactDetails: {
+        properties: {
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+        },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        },
+      },
+    },
+    optionalProperties: {
+      transportDetails: {
+        properties: {
+          type: { enum: ['Road', 'Air', 'Sea', 'Rail', 'InlandWaterways'] },
+        },
+        optionalProperties: {
+          description: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
+export const collectionDetail: SchemaObject = {
+  properties: {
+    address: {
+      properties: {
+        addressLine1: { type: 'string' },
+        townCity: { type: 'string' },
+        country: { type: 'string' },
+      },
+      optionalProperties: {
+        addressLine2: { type: 'string' },
+        postcode: { type: 'string' },
+      },
+    },
+    contactDetails: {
+      properties: {
+        organisationName: { type: 'string' },
+        fullName: { type: 'string' },
+        emailAddress: { type: 'string' },
+        phoneNumber: { type: 'string' },
+      },
+      optionalProperties: {
+        faxNumber: { type: 'string' },
+      },
+    },
+  },
+};
+
+export const ukExitLocation: SchemaObject = {
+  discriminator: 'provided',
+  mapping: {
+    Yes: { properties: { value: { type: 'string' } } },
+    No: { properties: {} },
+  },
+};
+
+export const transitCountries: SchemaObject = {
+  elements: { type: 'string' },
+};
+
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -152,6 +294,13 @@ const bulkSubmissionState: SchemaObject = {
               reference: { type: 'string' },
               wasteDescription: wasteDescription,
               wasteQuantity: wasteQuantity,
+              exporterDetail: exporterDetail,
+              importerDetail: importerDetail,
+              collectionDate: collectionDate,
+              carriers: carriers,
+              collectionDetail: collectionDetail,
+              ukExitLocation: ukExitLocation,
+              transitCountries: transitCountries,
             },
           },
         },
@@ -167,6 +316,13 @@ const bulkSubmissionState: SchemaObject = {
               reference: { type: 'string' },
               wasteDescription: wasteDescription,
               wasteQuantity: wasteQuantity,
+              exporterDetail: exporterDetail,
+              importerDetail: importerDetail,
+              collectionDate: collectionDate,
+              carriers: carriers,
+              collectionDetail: collectionDetail,
+              ukExitLocation: ukExitLocation,
+              transitCountries: transitCountries,
             },
           },
         },

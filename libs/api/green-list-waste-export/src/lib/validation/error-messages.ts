@@ -5,6 +5,8 @@ import {
   BulkWasteQuantityValue,
   SmallWasteQuantityValue,
   FreeTextChar,
+  CarrierTransportDescriptionChar,
+  UkExitLocationChar,
 } from './constraints';
 
 export const ReferenceValidationErrorMessages = {
@@ -95,6 +97,7 @@ export const ExporterDetailValidationErrorMessages = {
   invalidFax: 'Enter a real fax number for the exporter',
   emptyEmail: 'Enter exporter email address',
   invalidEmail: 'Enter a real email address for the exporter',
+  charTooManyEmail: `The exporter email address must be less than ${FreeTextChar.max} characters`,
 };
 
 export const ImporterDetailValidationErrorMessages = {
@@ -113,4 +116,113 @@ export const ImporterDetailValidationErrorMessages = {
   invalidFax: 'Enter a real fax number for the importer',
   emptyEmail: 'Enter importer email address',
   invalidEmail: 'Enter a real email address for the importer',
+  charTooManyEmail: `The importer email address must be less than ${FreeTextChar.max} characters`,
+};
+
+export const CollectionDateValidationErrorMessages = {
+  empty: 'Enter a real date',
+  invalid: 'Enter a date in the future',
+  missingType: "Enter if this is an 'estimate' or 'actual' date",
+};
+
+type CarrierErrorMessages = {
+  emptyOrganisationName: string;
+  charTooManyOrganisationName: string;
+  emptyAddress: string;
+  charTooManyAddress: string;
+  emptyCountry: string;
+  invalidCountry: string;
+  emptyContactFullName: string;
+  charTooManyContactFullName: string;
+  emptyPhone: string;
+  invalidPhone: string;
+  invalidFax: string;
+  emptyEmail: string;
+  charTooManyEmail: string;
+  invalidEmail: string;
+  emptyTransport: string;
+  charTooManyTransportDescription: string;
+  invalidCrossSectionTransport: string;
+  invalidCrossSectionTransportDescription: string;
+};
+
+export const CarrierValidationErrorMessages: (
+  carrierNumber: number
+) => CarrierErrorMessages = (carrierNumber) => {
+  let carrierStr = '';
+  switch (carrierNumber) {
+    case 1:
+      carrierStr = 'first';
+      break;
+    case 2:
+      carrierStr = 'second';
+      break;
+    case 3:
+      carrierStr = 'third';
+      break;
+    case 4:
+      carrierStr = 'fourth';
+      break;
+    case 5:
+      carrierStr = 'fifth';
+      break;
+    default:
+      carrierStr = 'first';
+      break;
+  }
+
+  return {
+    emptyOrganisationName: `Enter the ${carrierStr} carrier organisation name`,
+    charTooManyOrganisationName: `The ${carrierStr} carrier organisation name must be less than ${FreeTextChar.max} characters`,
+    emptyAddress: `Enter the ${carrierStr} carrier address`,
+    charTooManyAddress: `The ${carrierStr} carrier address must be less than ${FreeTextChar.max} characters`,
+    emptyCountry: `Enter the ${carrierStr} carrier country`,
+    invalidCountry: `Enter the ${carrierStr} carrier country in full`,
+    emptyContactFullName: `Enter full name of ${carrierStr} carrier contact`,
+    charTooManyContactFullName: `The ${carrierStr} carrier contact full name must be less than ${FreeTextChar.max} characters`,
+    emptyPhone: `Enter ${carrierStr} carrier contact phone number`,
+    invalidPhone: `Enter a real phone number for the ${carrierStr} carrier`,
+    invalidFax: `Enter a real fax number for the ${carrierStr} carrier`,
+    emptyEmail: `Enter ${carrierStr} carrier email address`,
+    invalidEmail: `Enter a real email address for the ${carrierStr} carrier`,
+    charTooManyEmail: `The ${carrierStr} carrier email address must be less than ${FreeTextChar.max} characters`,
+    emptyTransport: `Enter ${carrierStr} carrier means of transport`,
+    charTooManyTransportDescription: `The ${carrierStr} carrier transport details must be less than ${CarrierTransportDescriptionChar.max} characters`,
+    invalidCrossSectionTransport: `Do not enter the ${carrierStr} carrier means of transport if you are exporting unlisted waste`,
+    invalidCrossSectionTransportDescription: `Do not enter the ${carrierStr} carrier means of transport details if you are exporting unlisted waste`,
+  };
+};
+
+export const CollectionDetailValidationErrorMessages = {
+  emptyOrganisationName: 'Enter the waste collection organisation name',
+  charTooManyOrganisationName: `The waste collection organisation name must be less than ${FreeTextChar.max} characters`,
+  emptyAddressLine1: 'Enter the waste collection address',
+  charTooManyAddressLine1: `The waste collection address line 1 must be less than ${FreeTextChar.max} characters`,
+  charTooManyAddressLine2: `The waste collection address line 2 must be less than ${FreeTextChar.max} characters`,
+  emptyTownOrCity: 'Enter the waste collection town or city',
+  charTooManyTownOrCity: `The waste collection town or city must be less than ${FreeTextChar.max} characters`,
+  emptyCountry: 'Enter the waste collection country',
+  invalidCountry:
+    'The waste collection country must only be England, Wales, Scotland or Northern Ireland',
+  invalidPostcode: 'Enter the waste collection postcode in the correct format',
+  emptyContactFullName: 'Enter full name of waste collection contact',
+  charTooManyContactFullName: `The waste collection contact full name must be less than ${FreeTextChar.max} characters`,
+  emptyPhone: 'Enter waste collection contact phone number',
+  invalidPhone: 'Enter a real phone number for the waste collection',
+  invalidFax: 'Enter a real fax number for the waste collection',
+  emptyEmail: 'Enter waste collection email address',
+  invalidEmail: 'Enter a real email address for the waste collection',
+  charTooManyEmail: `The waste collection email address must be less than ${FreeTextChar.max} characters`,
+};
+
+export const UkExitLocationErrorMessages = {
+  invalid:
+    'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
+  charTooMany: `The location must be less than ${UkExitLocationChar.max} characters`,
+};
+
+export const TransitCountriesErrorMessages = {
+  invalid: 'Enter transit country in full',
+  invalidCrossSection:
+    'The transit country cannot be the same as the importer country',
 };

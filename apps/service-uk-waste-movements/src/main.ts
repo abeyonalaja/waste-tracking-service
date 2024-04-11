@@ -32,7 +32,7 @@ const server = new DaprServer({
 const submissionController = new SubmissionController(
   new DaprReferenceDataClient(
     server.client,
-    process.env['REFERENCE_DATA_APP_ID'] || 'reference-data'
+    process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
   ),
   logger
 );

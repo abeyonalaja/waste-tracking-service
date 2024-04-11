@@ -36,3 +36,13 @@ export const DecimalPlacesChar = {
 export const FreeTextChar = {
   max: 250,
 };
+
+export const CarrierTransportDescriptionChar = {
+  min: 1,
+  max: 200,
+};
+
+export const UkExitLocationChar = {
+  min: 1,
+  max: 50,
+};
