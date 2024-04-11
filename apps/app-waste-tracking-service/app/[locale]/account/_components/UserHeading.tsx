@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth';
-import * as GovUK from '@wts/ui/govuk-react-ui';
+import * as GovUK from 'govuk-react-ui';
 
 export default async function UserHeading() {
   const session = await getServerSession();

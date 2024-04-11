@@ -79,5 +79,36 @@
     "titleTwo": "Move, export or import waste",
     "cardOneTitle": "Start a new waste movement",
     "cardOneContent": "Create multiple new waste movements"
+  },
+  "multiples": {
+    "uploadPage": {
+      "title": "Creating multiple waste movements"
+    },
+    "instructions": {
+      "createAndUpload": {
+        "heading": "How to create and upload your file ",
+        "listItemOnePartOne": "Use the guidance on ",
+        "listItemOneLink": "how to create multiple new waste movements using the CSV template (opens in new tab)",
+        "listItemOnePartTwo": " to help you create your file.",
+        "listItemTwoPartOne": "Download the ",
+        "listItemTwoLink": "multiple new waste movements CSV template",
+        "listItemTwoPartTwo": " and open it using spreadsheet software. For example, Excel, Numbers, OpenOffice Calc or Google Sheets.",
+        "listItemThree": "Enter all the required information into the template.",
+        "listItemFour": "Save the file in CSV format.",
+        "listItemFive": "Upload the completed CSV file."
+      },
+      "documents": {
+        "heading": "Documents",
+        "linkOne": "How to create multiple new waste movements using the CSV template (opens in new tab)",
+        "templateHeading": "Multiple new waste movements CSV template",
+        "templateDescription": "This file may not be suitable for users of assistive technology.",
+        "templateLink": "Download the multiple new waste movements CSV template (3Kb)"
+      }
+    },
+    "uploadForm": {
+      "heading": "Upload your CSV file",
+      "hint": "You need to review and check for errors before uploading",
+      "button": "Upload"
+    }
   }
 }

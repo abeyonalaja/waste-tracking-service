@@ -36,6 +36,7 @@
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
       ],
+      "@wts/app/ukwm": ["apps/app-uk-waste-movements/index.ts"],
       "@wts/client/address": ["libs/client/address/src/index.ts"],
       "@wts/client/feedback": ["libs/client/feedback/src/index.ts"],
       "@wts/client/green-list-waste-export": [
@@ -54,11 +55,25 @@
       "@wts/client/uk-waste-movements-bulk": [
         "libs/client/uk-waste-movements-bulk/src/index.ts"
       ],
-      "@wts/ui/govuk-react-ui": ["libs/ui/govuk-react-ui/src/index.ts"],
+      "@wts/frontend/navigation": ["libs/frontend/navigation/src/index.ts"],
+      "@wts/frontend/navigation/server": [
+        "libs/frontend/navigation/src/server.ts"
+      ],
+      "@wts/frontend/shared-ui": ["libs/frontend/ui/shared-ui/src/index.ts"],
+      "@wts/frontend/shared-ui/server": [
+        "libs/frontend/ui/shared-ui/src/server.ts"
+      ],
+      "@wts/ukwm/multiples": [
+        "libs/frontend/ukwm/feature-multiples/src/index.ts"
+      ],
+      "@wts/ukwm/multiples/server": [
+        "libs/frontend/ukwm/feature-multiples/src/server.ts"
+      ],
       "@wts/util/dapr-winston-logging": [
         "libs/util/dapr-winston-logging/src/index.ts"
       ],
-      "@wts/util/invocation": ["libs/util/invocation/src/index.ts"]
+      "@wts/util/invocation": ["libs/util/invocation/src/index.ts"],
+      "govuk-react-ui": ["libs/frontend/ui/govuk-react-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

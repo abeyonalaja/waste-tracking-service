@@ -1,4 +1,5 @@
 'use client';
+import { Page } from '@wts/frontend/shared-ui/server';
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -11,5 +12,9 @@ export default function Error({ error }: ErrorPageProps) {
 
   console.error(error);
 
-  return <div>An error has occured</div>;
+  return (
+    <Page>
+      <div>An error has occured</div>
+    </Page>
+  );
 }

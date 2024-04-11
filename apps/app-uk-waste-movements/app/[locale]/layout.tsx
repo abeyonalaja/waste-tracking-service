@@ -1,8 +1,7 @@
 import React from 'react';
-import * as GovUK from '@wts/ui/govuk-react-ui';
+import * as GovUK from 'govuk-react-ui';
 import '../main.scss';
 import { useTranslations } from 'next-intl';
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,12 +21,7 @@ export default function RootLayout({
         <GovUK.WidthContainer>
           <GovUK.PhaseBanner tag={`Beta`}>{t('phaseBanner')}</GovUK.PhaseBanner>
         </GovUK.WidthContainer>
-        <GovUK.WidthContainer>
-          <LanguageSwitcher />
-        </GovUK.WidthContainer>
-        <GovUK.WidthContainer>
-          <GovUK.Main>{children}</GovUK.Main>
-        </GovUK.WidthContainer>
+        {children}
         <GovUK.Footer />
       </body>
     </html>

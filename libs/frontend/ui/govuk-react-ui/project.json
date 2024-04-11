@@ -1,0 +1,40 @@
+{
+  "name": "govuk-react-ui",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/ui/govuk-react-ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/frontend/ui/govuk-react-ui",
+        "tsConfig": "libs/frontend/ui/govuk-react-ui/tsconfig.lib.json",
+        "project": "libs/frontend/ui/govuk-react-ui/package.json",
+        "entryFile": "libs/frontend/ui/govuk-react-ui/src/index.ts",
+        "external": ["react", "react-dom", "react/jsx-runtime"],
+        "rollupConfig": "@nx/react/plugins/bundle-rollup",
+        "compiler": "babel",
+        "assets": [
+          {
+            "glob": "libs/frontend/ui/govuk-react-ui/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/frontend/ui/govuk-react-ui/jest.config.ts"
+      }
+    }
+  }
+}
