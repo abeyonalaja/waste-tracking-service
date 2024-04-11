@@ -10,40 +10,49 @@ interface AppInsightsProviderProps {
 }
 
 export default function AppInsightsProvider({
-  connectionString,
   children,
 }: AppInsightsProviderProps) {
   const reactPlugin = new ReactPlugin();
 
   useEffect(() => {
-    const clickPluginInstance = new ClickAnalyticsPlugin();
-    const clickPluginConfig = {
-      autoCapture: true,
-    };
+    async function startAppInsights() {
+      const baseUrl =
+        process.env['NODE_ENV'] === 'production'
+          ? '/export-annex-VII-waste'
+          : '';
 
-    const appInsights = new ApplicationInsights({
-      config: {
-        connectionString: connectionString,
-        maxBatchSizeInBytes: 10000,
-        maxBatchInterval: 15000,
-        enableAutoRouteTracking: true,
-        extensions: [reactPlugin, clickPluginInstance],
-        extensionConfig: {
-          [reactPlugin.identifier]: {},
-          [clickPluginInstance.identifier]: clickPluginConfig,
-        },
-      },
-    });
+      try {
+        const res = await fetch(`${baseUrl}/api/env`);
+        const data = await res.json();
+        const connectionString = data.APPINSIGHTS_CONNECTION_STRING;
+        const clickPluginInstance = new ClickAnalyticsPlugin();
+        const clickPluginConfig = {
+          autoCapture: true,
+        };
 
-    if (connectionString) {
-      appInsights.loadAppInsights();
-    }
+        const appInsights = new ApplicationInsights({
+          config: {
+            connectionString: connectionString,
+            maxBatchSizeInBytes: 10000,
+            maxBatchInterval: 15000,
+            enableAutoRouteTracking: true,
+            extensions: [reactPlugin, clickPluginInstance],
+            extensionConfig: {
+              [reactPlugin.identifier]: {},
+              [clickPluginInstance.identifier]: clickPluginConfig,
+            },
+          },
+        });
 
-    return () => {
-      if (connectionString) {
-        appInsights.unload();
+        if (connectionString) {
+          console.log('Starting AppInsights');
+          appInsights.loadAppInsights();
+        }
+      } catch (err) {
+        console.error(err);
       }
-    };
+    }
+    startAppInsights();
   }, []);
 
   return (
