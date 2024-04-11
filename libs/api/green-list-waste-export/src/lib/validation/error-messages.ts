@@ -70,9 +70,10 @@ export const WasteQuantityValidationErrorMessages = {
   invalid: 'Enter the weight using only numbers and a full stop',
   tooMany:
     'Only enter one of the following; waste quantity in tonnes, kilograms, or cubic metres',
-  missingType: "Enter either 'estimate' or 'actual'",
+  missingType: "Enter either 'estimate' or 'actual' waste quantity",
   laboratory:
     "Only enter an amount in this cell if you have entered 'Y' in column G for sending waste to a laboratory",
+  smallNonKg: 'Unlisted weight can only be measured in kilograms',
 };
 
 export const ExporterDetailValidationErrorMessages = {

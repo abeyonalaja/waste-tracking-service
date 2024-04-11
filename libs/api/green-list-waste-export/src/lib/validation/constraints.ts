@@ -30,7 +30,7 @@ export const SmallWasteQuantityValue = {
 
 export const DecimalPlacesChar = {
   min: 0,
-  max: 2,
+  max: 10,
 };
 
 export const FreeTextChar = {

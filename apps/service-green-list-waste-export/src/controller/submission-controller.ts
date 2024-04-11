@@ -63,7 +63,7 @@ export default class SubmissionController {
       const ewcCodeList = ewcCodesResponse.value;
       const countryList = countriesResponse.value;
 
-      let index = 0;
+      let index = 2;
       const errors: Error[] = [];
       const submissions: Value[] = [];
       values.map((s) => {
@@ -92,7 +92,9 @@ export default class SubmissionController {
             ewcCodeList
           );
         if (!wasteDescription.valid) {
-          fieldFormatErrors.push(wasteDescription.value);
+          wasteDescription.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
         }
 
         const wasteQuantity = validationRules.validateWasteQuantitySection({
@@ -102,7 +104,9 @@ export default class SubmissionController {
           estimatedOrActualWasteQuantity: s.estimatedOrActualWasteQuantity,
         });
         if (!wasteQuantity.valid) {
-          fieldFormatErrors.push(wasteQuantity.value);
+          wasteQuantity.value.map((e) => {
+            fieldFormatErrors.push(e);
+          });
         }
 
         const invalidStructureErrors: InvalidAttributeCombinationError[] = [];
@@ -158,7 +162,8 @@ export default class SubmissionController {
           wasteDescription.valid &&
           wasteQuantity.valid &&
           exporterDetail.valid &&
-          importerDetail.valid
+          importerDetail.valid &&
+          invalidStructureErrors.length === 0
         ) {
           submissions.push({
             reference: reference.value,

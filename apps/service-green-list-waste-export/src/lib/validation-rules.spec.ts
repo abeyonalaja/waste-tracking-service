@@ -293,6 +293,40 @@ describe('validateWasteDescriptionSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
         ewcCodes: '010101;010102',
+        nationalCode: 'A-123',
+        wasteDescription: 'test',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: 'A-123',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010101;010102',
         nationalCode: '',
         wasteDescription: 'test',
       },
@@ -335,10 +369,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -355,10 +391,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.OECDCodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.OECDCodeValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -375,10 +413,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -395,10 +435,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -415,10 +457,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.LaboratoryValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.LaboratoryValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -435,10 +479,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.empty,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -455,10 +501,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -475,10 +523,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -495,10 +545,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -515,10 +567,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -535,10 +589,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -555,10 +611,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -575,10 +633,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -595,10 +655,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -615,10 +677,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -635,10 +699,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+    ]);
   });
 
   it('fails WasteDescription section validation on EWC codes', async () => {
@@ -657,10 +723,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.EWCCodeErrorMessages.empty,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -677,10 +745,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.EWCCodeErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -697,10 +767,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.EWCCodeErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -717,10 +789,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.NationalCodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+    ]);
   });
 
   it('fails WasteDescription section validation on national code', async () => {
@@ -739,10 +813,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.NationalCodeValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+    ]);
   });
 
   it('fails WasteDescription section validation on waste description', async () => {
@@ -761,10 +837,12 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
 
     response = validateWasteDescriptionSection(
       {
@@ -781,10 +859,940 @@ describe('validateWasteDescriptionSection', () => {
       ewcCodes
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+  });
+
+  it('fails WasteDescription section validation on waste code,ewc code,national code and waste description', async () => {
+    let response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B3040;B3080',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: 'B1050',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      wasteCodes,
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteCodeValidationErrorMessages.laboratory,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
   });
 });
 
@@ -840,6 +1848,57 @@ describe('validateWasteQuantitySection', () => {
       },
       actualData: {},
     });
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '2.347899',
+      estimatedOrActualWasteQuantity: 'Estimate',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'EstimateData',
+      estimateData: {
+        quantityType: 'Weight',
+        unit: 'Kilogram',
+        value: 2.35,
+      },
+      actualData: {},
+    });
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '56.347899',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: 'Estimate',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'EstimateData',
+      estimateData: {
+        quantityType: 'Volume',
+        unit: 'Cubic Metre',
+        value: 56.35,
+      },
+      actualData: {},
+    });
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '56.347899',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: 'Estimate',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'EstimateData',
+      estimateData: {
+        quantityType: 'Weight',
+        unit: 'Tonne',
+        value: 56.35,
+      },
+      actualData: {},
+    });
   });
 
   it('fails WasteQuantity section validation', async () => {
@@ -850,10 +1909,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.empty,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.empty,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '1',
@@ -862,10 +1923,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '1',
@@ -874,10 +1937,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -886,10 +1951,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.tooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -898,10 +1965,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: '',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.missingType,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -910,10 +1979,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actuals',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.missingType,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: 'test',
@@ -922,10 +1993,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '0',
@@ -934,10 +2007,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -946,10 +2021,12 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -958,22 +2035,26 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
       wasteQuantityCubicMetres: '',
-      wasteQuantityKilograms: '2.123',
+      wasteQuantityKilograms: '2.12379070970',
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
 
     response = validateWasteQuantitySection({
       wasteQuantityTonnes: '',
@@ -982,10 +2063,156 @@ describe('validateWasteQuantitySection', () => {
       estimatedOrActualWasteQuantity: 'Actual',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteQuantity',
-      message: validation.SmallWasteQuantityValidationErrorMessages.invalid,
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.SmallWasteQuantityValidationErrorMessages.invalid,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: '',
     });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.empty,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '34,6789',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '34,6789',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '34,6789',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '34.6789',
+      wasteQuantityCubicMetres: '34.6789',
+      wasteQuantityKilograms: '34.6789',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '0',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '0',
+      wasteQuantityKilograms: '',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
+
+    response = validateWasteQuantitySection({
+      wasteQuantityTonnes: '',
+      wasteQuantityCubicMetres: '',
+      wasteQuantityKilograms: '26',
+      estimatedOrActualWasteQuantity: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteQuantity',
+        message: validation.SmallWasteQuantityValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteQuantity',
+        message: validation.WasteQuantityValidationErrorMessages.missingType,
+      },
+    ]);
   });
 });
 
@@ -1151,6 +2378,87 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
     expect(response.value).toEqual({
       fields: ['WasteDescription', 'WasteQuantity'],
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
+    });
+  });
+  it('fails WasteDescriptionAndQuantity cross section validation for NotApplicable wasteCode and Cubic Metre unit', () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    const wasteQuantity: WasteQuantity = {
+      type: 'ActualData',
+      estimateData: {},
+      actualData: {
+        unit: 'Cubic Metre',
+        value: 0.2,
+      },
+    };
+    const response = validateWasteDescriptionAndQuantityCrossSection(
+      wasteDescription,
+      wasteQuantity
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      fields: ['WasteDescription', 'WasteQuantity'],
+      message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
+    });
+  });
+
+  it('fails WasteDescriptionAndQuantity cross section validation for NotApplicable wasteCode and Tonne unit', () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    const wasteQuantity: WasteQuantity = {
+      type: 'ActualData',
+      estimateData: {},
+      actualData: {
+        unit: 'Tonne',
+        value: 0.2,
+      },
+    };
+    const response = validateWasteDescriptionAndQuantityCrossSection(
+      wasteDescription,
+      wasteQuantity
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      fields: ['WasteDescription', 'WasteQuantity'],
+      message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
     });
   });
 });

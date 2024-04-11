@@ -421,7 +421,7 @@ describe(SubmissionController, () => {
         accountId: accountId,
         values: [
           {
-            index: 1,
+            index: 3,
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
@@ -431,6 +431,10 @@ describe(SubmissionController, () => {
                 field: 'WasteDescription',
                 message:
                   validation.AnnexIIIACodeValidationErrorMessages.invalid,
+              },
+              {
+                field: 'WasteDescription',
+                message: validation.EWCCodeErrorMessages.invalid,
               },
               {
                 field: 'WasteQuantity',
@@ -673,7 +677,7 @@ describe(SubmissionController, () => {
         accountId: accountId,
         values: [
           {
-            index: 1,
+            index: 3,
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
