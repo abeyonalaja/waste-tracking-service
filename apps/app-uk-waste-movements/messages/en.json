@@ -74,9 +74,17 @@
     "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
   },
   "moveWastePage": {
+    "breadcrumbs": {
+      "home": "Home",
+      "current": "Move waste in the UK"
+    },
     "title": "Move waste in the UK",
     "name": "{name}",
     "titleTwo": "Move, export or import waste",
+    "cardTitle": "Create new waste movements",
+    "cardParagraphOne": "Create multiple waste movement",
+    "cardTitleTwo": "Multiple waste movements",
+    "cardLink": "Create a new multiple waste movement",
     "cardOneTitle": "Start a new waste movement",
     "cardOneContent": "Create multiple new waste movements"
   },

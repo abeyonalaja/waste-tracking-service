@@ -1,6 +1,6 @@
 // Client components
 export { LanguageSwitcher } from './LanguageSwitcher';
-
+export { Breadcrumbs } from './Breadcrumbs';
 // Server components
 export { CSV } from './CSV';
 export { GridRow } from './GridRow';

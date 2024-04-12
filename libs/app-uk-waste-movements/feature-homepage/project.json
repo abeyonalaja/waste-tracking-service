@@ -1,0 +1,20 @@
+{
+  "name": "lib-app-uk-waste-movements-feature-homepage",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/app-uk-waste-movements/feature-homepage/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/app-uk-waste-movements/feature-homepage/jest.config.ts"
+      }
+    }
+  }
+}

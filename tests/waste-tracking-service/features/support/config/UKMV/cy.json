@@ -55,5 +55,51 @@
       "linkThree": "DEARA ( Department of Agriculture, Environment and Rural Affairs) waste policy tracker",
       "linkFour": "Business Cymru Waste Legislation"
     }
+  },
+  "moveWastePage": {
+    "breadcrumbs": {
+      "home": "Home",
+      "current": "Move waste in the UK"
+    },
+    "title": "Symud gwastraff yn y DU",
+    "name": "{name}",
+    "titleTwo": "Move, export or import waste",
+    "cardTitle": "Create new waste movements",
+    "cardParagraphOne": "Create multiple waste movement",
+    "cardTitleTwo": "Multiple waste movements",
+    "cardLink": "Create a new multiple waste movement",
+    "cardOneTitle": "Start a new waste movement",
+    "cardOneContent": "Create multiple new waste movements"
+  },
+  "multiples": {
+    "uploadPage": {
+      "title": "Creating multiple waste movements"
+    },
+    "instructions": {
+      "createAndUpload": {
+        "heading": "How to create and upload your file ",
+        "listItemOnePartOne": "Use the guidance on ",
+        "listItemOneLink": "how to create multiple new waste movements using the CSV template (opens in new tab)",
+        "listItemOnePartTwo": " to help you create your file.",
+        "listItemTwoPartOne": "Download the ",
+        "listItemTwoLink": "multiple new waste movements CSV template",
+        "listItemTwoPartTwo": " and open it using spreadsheet software. For example, Excel, Numbers, OpenOffice Calc or Google Sheets.",
+        "listItemThree": "Enter all the required information into the template.",
+        "listItemFour": "Save the file in CSV format.",
+        "listItemFive": "Upload the completed CSV file."
+      },
+      "documents": {
+        "heading": "Documents",
+        "linkOne": "How to create multiple new waste movements using the CSV template (opens in new tab)",
+        "templateHeading": "Multiple new waste movements CSV template",
+        "templateDescription": "This file may not be suitable for users of assistive technology.",
+        "templateLink": "Download the multiple new waste movements CSV template (3Kb)"
+      }
+    },
+    "uploadForm": {
+      "heading": "Upload your CSV file",
+      "hint": "You need to review and check for errors before uploading",
+      "button": "Upload"
+    }
   }
 }

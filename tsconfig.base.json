@@ -36,6 +36,12 @@
       "@wts/api/waste-tracking-gateway": [
         "libs/api/waste-tracking-gateway/src/index.ts"
       ],
+      "@wts/app-uk-waste-movements/feature-homepage": [
+        "libs/app-uk-waste-movements/feature-homepage/src/index.ts"
+      ],
+      "@wts/app-uk-waste-movements/feature-homepage/server": [
+        "libs/app-uk-waste-movements/feature-homepage/src/server.ts"
+      ],
       "@wts/app-uk-waste-movements/feature-multiples": [
         "libs/app-uk-waste-movements/feature-multiples/src/index.ts"
       ],
@@ -60,12 +66,6 @@
       ],
       "@wts/client/uk-waste-movements-bulk": [
         "libs/client/uk-waste-movements-bulk/src/index.ts"
-      ],
-      "@wts/frontend/navigation/server": [
-        "libs/frontend/navigation/src/server.ts"
-      ],
-      "@wts/frontend/shared-ui/server": [
-        "libs/frontend/ui/shared-ui/src/server.ts"
       ],
       "@wts/ui/govuk-react-ui": ["libs/ui/govuk-react-ui/src/index.ts"],
       "@wts/ui/navigation": ["libs/ui/navigation/src/index.ts"],
