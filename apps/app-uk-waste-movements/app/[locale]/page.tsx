@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Page, GridRow } from '@wts/frontend/shared-ui/server';
+import { Page, GridRow } from '@wts/ui/shared-ui/server';
 
 export const metadata = {
   title: 'UK waste movements',

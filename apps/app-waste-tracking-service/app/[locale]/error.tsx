@@ -1,6 +1,6 @@
 'use client';
 
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import React from 'react';
 
 interface ErrorPageProps {

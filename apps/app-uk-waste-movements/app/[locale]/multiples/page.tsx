@@ -1,8 +1,8 @@
 import { useTranslations } from 'next-intl';
-import * as GovUK from 'govuk-react-ui';
-import { Instructions } from '@wts/ukwm/multiples/server';
-import { Page } from '@wts/frontend/shared-ui/server';
-import { UploadForm } from '@wts/ukwm/multiples';
+import * as GovUK from '@wts/ui/govuk-react-ui';
+import { Instructions } from '@wts/app-uk-waste-movements/feature-multiples/server';
+import { Page } from '@wts/ui/shared-ui/server';
+import { UploadForm } from '@wts/app-uk-waste-movements/feature-multiples';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

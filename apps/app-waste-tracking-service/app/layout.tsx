@@ -1,5 +1,5 @@
 import React from 'react';
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import './main.scss';
 import { getServerSession } from 'next-auth';
 import SessionProvider from './providers/SessionProvider';

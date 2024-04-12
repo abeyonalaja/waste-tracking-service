@@ -1,4 +1,4 @@
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import { HeaderNavigation, LanguageSwitcher, Link } from '../components';
 import React, { Suspense } from 'react';
 

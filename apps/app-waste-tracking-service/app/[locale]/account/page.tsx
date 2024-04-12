@@ -1,4 +1,4 @@
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import { GridRow, LinkCard } from '../../components';
 import { getTranslations } from 'next-intl/server';
 import UserHeading from './_components/UserHeading';

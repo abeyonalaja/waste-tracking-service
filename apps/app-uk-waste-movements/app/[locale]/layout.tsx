@@ -1,5 +1,5 @@
 import React from 'react';
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import '../main.scss';
 import { useTranslations } from 'next-intl';
 

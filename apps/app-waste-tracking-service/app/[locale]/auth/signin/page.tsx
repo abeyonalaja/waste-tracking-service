@@ -1,4 +1,4 @@
-import * as GovUK from 'govuk-react-ui';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import SignInButton from './_components/SignInButton';
 import { getServerSession } from 'next-auth';
 import { redirect } from '../../../../navigation';

@@ -1,7 +1,7 @@
-import { Link } from '@wts/frontend/navigation';
-import * as GovUK from 'govuk-react-ui';
+import { Link } from '@wts/ui/navigation';
+import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Page } from '@wts/frontend/shared-ui/server';
+import { Page } from '@wts/ui/shared-ui/server';
 
 export default function NotFound() {
   const t = useTranslations('404');

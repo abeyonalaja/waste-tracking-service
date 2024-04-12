@@ -1,4 +1,4 @@
-import { Page } from '@wts/frontend/shared-ui/server';
+import { Page } from '@wts/ui/shared-ui/server';
 
 export default function GuidancePage() {
   return (
