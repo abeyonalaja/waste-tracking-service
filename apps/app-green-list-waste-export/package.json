@@ -1,0 +1,7 @@
+{
+  "name": "app-green-list-waste-export",
+  "version": "0.0.1",
+  "dependencies": {
+    "legacy-swc-helpers": "npm:@swc/helpers@0.4.14"
+  }
+}
