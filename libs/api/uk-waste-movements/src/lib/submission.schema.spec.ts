@@ -47,10 +47,28 @@ describe('wasteTypeDetails', () => {
       wasteQuantity: 100,
       quantityUnits: 'Tonne',
       wasteQuantityType: 'ActualData',
-      haveHazardousProperties: true,
-      containsPop: false,
-      hazardousPropertiesCode: 'H1',
-      popDetails: 'pop details',
+      hasHazardousProperties: false,
+      containsPops: false,
+      hazardousWasteCodes: [
+        {
+          code: 'HP1',
+          concentration: 1,
+          concentrationUnit: 'Kilogram',
+          name: 'test',
+          packageGroup: 'I',
+          properShippingName: 'test',
+          specialHandlingRequirements: 'test',
+          unClass: '1.1',
+          unIdentificationNumber: '1234',
+        },
+      ],
+      pops: [
+        {
+          concentration: 1,
+          name: 'test',
+          concentrationUnit: 'Milligram',
+        },
+      ],
     };
 
     const isValid = validate(value);

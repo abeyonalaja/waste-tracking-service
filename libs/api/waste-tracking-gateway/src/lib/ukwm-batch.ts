@@ -5,11 +5,7 @@ export type UkwmPhysicalForm =
   | 'Sludge'
   | 'Powder'
   | 'Mixed';
-export type UkwmQuantityunits =
-  | 'Kilograms'
-  | 'Litres'
-  | 'Tonnes'
-  | 'Cubic metres';
+export type UkwmQuantityUnits = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
 
 export type UkwmAddress = {
@@ -46,7 +42,7 @@ export type UkwmWasteTypeDetails = {
   wasteDescription: string;
   physicalForm: UkwmPhysicalForm;
   wasteQuantity: number;
-  quantityUnits: UkwmQuantityunits;
+  quantityUnits: UkwmQuantityUnits;
   wasteQuantityType: UkwmWasteQuantityType;
   haveHazardousProperties: boolean;
   containsPop: boolean;

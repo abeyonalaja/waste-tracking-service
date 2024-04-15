@@ -4,7 +4,7 @@ export type {
   WasteSource,
   WasteTransport,
   PhysicalForm,
-  Quantityunits,
+  QuantityUnits,
   SubmissionState,
   SubmissionConfirmation,
   ValidateSubmissionsRequest,

@@ -22,7 +22,26 @@ export type PhysicalForm =
   | 'Sludge'
   | 'Powder'
   | 'Mixed';
-export type Quantityunits = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+
+export type HazardousWasteCodeDetails = {
+  code: string;
+  name: string;
+  concentration: number;
+  concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
+  unIdentificationNumber: string;
+  properShippingName: string;
+  unClass: string;
+  packageGroup: string;
+  specialHandlingRequirements: string;
+};
+
+export type PopDetails = {
+  name: string;
+  concentration: number;
+  concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
+};
+
+export type QuantityUnits = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 
 export type SubmissionState = {
   status: 'InProgress' | 'Submitted';
@@ -87,12 +106,12 @@ export type WasteTypeDetails = {
   wasteDescription: string;
   physicalForm: PhysicalForm;
   wasteQuantity: number;
-  quantityUnits: Quantityunits;
+  quantityUnits: QuantityUnits;
   wasteQuantityType: WasteQuantityType;
-  haveHazardousProperties: boolean;
-  containsPop: boolean;
-  hazardousPropertiesCode?: string;
-  popDetails?: string;
+  hasHazardousProperties: boolean;
+  containsPops: boolean;
+  hazardousWasteCodes?: HazardousWasteCodeDetails[];
+  pops?: PopDetails[];
 };
 
 export type SubmissionBase = {

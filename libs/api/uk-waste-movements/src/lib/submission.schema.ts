@@ -62,12 +62,34 @@ export const wasteTypeDetails: SchemaObject = {
       enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
     },
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
-    haveHazardousProperties: { type: 'boolean' },
-    containsPop: { type: 'boolean' },
+    hasHazardousProperties: { type: 'boolean' },
+    containsPops: { type: 'boolean' },
   },
   optionalProperties: {
-    hazardousPropertiesCode: { type: 'string' },
-    popDetails: { type: 'string' },
+    hazardousWasteCodes: {
+      elements: {
+        properties: {
+          code: { type: 'string' },
+          name: { type: 'string' },
+          concentration: { type: 'float64' },
+          concentrationUnit: { enum: ['Microgram', 'Milligram', 'Kilogram'] },
+          unIdentificationNumber: { type: 'string' },
+          properShippingName: { type: 'string' },
+          unClass: { type: 'string' },
+          packageGroup: { type: 'string' },
+          specialHandlingRequirements: { type: 'string' },
+        },
+      },
+    },
+    pops: {
+      elements: {
+        properties: {
+          name: { type: 'string' },
+          concentration: { type: 'float64' },
+          concentrationUnit: { enum: ['Microgram', 'Milligram', 'Kilogram'] },
+        },
+      },
+    },
   },
 };
 

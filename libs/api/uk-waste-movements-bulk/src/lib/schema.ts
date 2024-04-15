@@ -118,12 +118,38 @@ const bulkSubmissionState: SchemaObject = {
                     wasteQuantity: { type: 'uint16' },
                     quantityUnits: { type: 'string' },
                     wasteQuantityType: { type: 'string' },
-                    haveHazardousProperties: { type: 'boolean' },
-                    containsPop: { type: 'boolean' },
+                    hasHazardousProperties: { type: 'boolean' },
+                    containsPops: { type: 'boolean' },
                   },
                   optionalProperties: {
-                    hazardousPropertiesCode: { type: 'string' },
-                    popDetails: { type: 'string' },
+                    hazardousWasteCodes: {
+                      elements: {
+                        properties: {
+                          code: { type: 'string' },
+                          name: { type: 'string' },
+                          concentration: { type: 'float64' },
+                          concentrationUnit: {
+                            enum: ['Microgram', 'Milligram', 'Kilogram'],
+                          },
+                          unIdentificationNumber: { type: 'string' },
+                          properShippingName: { type: 'string' },
+                          unClass: { type: 'string' },
+                          packageGroup: { type: 'string' },
+                          specialHandlingRequirements: { type: 'string' },
+                        },
+                      },
+                    },
+                    pops: {
+                      elements: {
+                        properties: {
+                          name: { type: 'string' },
+                          concentration: { type: 'float64' },
+                          concentrationUnit: {
+                            enum: ['Microgram', 'Milligram', 'Kilogram'],
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
