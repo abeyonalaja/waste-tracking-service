@@ -11,7 +11,7 @@ export const metadata = {
 export default function Index() {
   const t = useTranslations('moveWastePage');
   const breadcrumbs = [
-    { text: t('breadcrumbs.home'), href: '../' },
+    { text: t('breadcrumbs.home'), href: '../account' },
     { text: t('breadcrumbs.current') },
   ];
   return (
