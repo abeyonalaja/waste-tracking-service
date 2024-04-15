@@ -31,7 +31,7 @@
         "development": {
           "buildTarget": "app-uk-waste-movements:build:development",
           "dev": true,
-          "port": 4201
+          "port": 4200
         },
         "production": {
           "buildTarget": "app-uk-waste-movements:build:production",

@@ -2,6 +2,12 @@ import { render, screen } from '@testing-library/react';
 import { Instructions } from './Instructions';
 import { NextIntlClientProvider } from 'next-intl';
 import '@testing-library/jest-dom';
+import type { Session } from 'next-auth';
+
+const mockedSession: Session | null = null;
+jest.mock('next-auth/next', () => ({
+  getServerSession: jest.fn(() => Promise.resolve(mockedSession)),
+}));
 
 const messages = {
   multiples: {

@@ -3,7 +3,8 @@ const { composePlugins, withNx } = require('@nx/next');
 const createNextIntlPlugin = require('next-intl/plugin');
 
 const withNextIntl = createNextIntlPlugin();
-
+const assetPath =
+  process.env['NODE_ENV'] === 'production' ? '/move-waste/assets/' : '/assets/';
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
@@ -13,9 +14,12 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  basePath: '/move-waste',
+  basePath: process.env['NODE_ENV'] === 'production' ? '/move-waste' : '',
   experimental: {
     instrumentationHook: true,
+  },
+  sassOptions: {
+    prependData: `$assetPath: '${assetPath}';`,
   },
 };
 
