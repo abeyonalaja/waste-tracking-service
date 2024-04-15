@@ -1,5 +1,5 @@
 image:
-  tag: '2.0.0'
+  tag: '3.0.0'
 resources:
   requests:
     cpu: 50m
@@ -17,5 +17,5 @@ secret:
     COSMOS_DB_ACCOUNT_URI: 'https://prdwtsinfco1401.documents.azure.com:443/'
 serviceAccount:
   annotations:
-    azure.workload.identity/client-id: ''
+    azure.workload.identity/client-id: badb257c-14ec-40a1-a744-6af4bce6c2ba
     azure.workload.identity/tenant-id: 770a2450-0227-4c62-90c7-4e38537f1102
