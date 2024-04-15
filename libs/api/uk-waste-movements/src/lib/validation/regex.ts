@@ -5,7 +5,7 @@ const alphabetic = 'a-zA-Z';
 const alphaNumeric = `a-zA-Z${numeric}`;
 
 export const postcodeRegex = new RegExp(
-  `^[${alphaNumeric} ]{${constraints.PostcodeChar.min},${constraints.PostcodeChar.max}}$`
+  `^[${alphabetic}]{1,2}\\d{1,2}[${alphabetic}]?\\s?\\d[${alphabetic}]{2}$`
 );
 
 export const emailRegex = new RegExp(

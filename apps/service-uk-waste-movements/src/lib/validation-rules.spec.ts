@@ -14,7 +14,7 @@ describe(validateProducerDetailsSection, () => {
       producerEmail: 'john.smith@john.smith',
       producerOrganisationName: 'Test organization',
       producerPhone: '0044140000000',
-      producerPostcode: 'ABC 123',
+      producerPostcode: 'AB1 1CB',
       producerSicCode: '123456',
       producerTownCity: 'London',
       reference: 'testRef',
@@ -83,7 +83,7 @@ describe(validateProducerDetailsSection, () => {
       producerEmail: 'not_an_email',
       producerOrganisationName: '     ',
       producerPhone: '+123567578',
-      producerPostcode: '     ',
+      producerPostcode: 'AB1',
       producerSicCode: '     ',
       producerTownCity: '     ',
       reference: '@!"?',
@@ -112,6 +112,10 @@ describe(validateProducerDetailsSection, () => {
       {
         field: 'Producer country',
         message: validation.ProducerValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Producer postcode',
+        message: validation.ProducerValidationErrorMessages.invalidPostcode,
       },
       {
         field: 'Producer contact name',
@@ -213,7 +217,7 @@ describe(validateReceiverDetailsSection, () => {
       receiverContactEmail: 'john.smith@john.smith',
       receiverOrganisationName: 'Test organization',
       receiverContactPhone: '0044140000000',
-      receiverPostcode: 'ABC 123',
+      receiverPostcode: 'AB1 1AB',
       receiverEnvironmentalPermitNumber: '123456',
       receiverAuthorizationType: 'permit',
       receiverTownCity: 'London',
@@ -286,7 +290,7 @@ describe(validateReceiverDetailsSection, () => {
       receiverContactEmail: '     ',
       receiverOrganisationName: '     ',
       receiverContactPhone: '+123567578',
-      receiverPostcode: '     ',
+      receiverPostcode: 'AB1',
       receiverAuthorizationType: '     ',
       receiverTownCity: '     ',
     });
@@ -315,6 +319,10 @@ describe(validateReceiverDetailsSection, () => {
       {
         field: 'Receiver country',
         message: validation.ReceiverValidationErrorMessages.emptyCountry,
+      },
+      {
+        field: 'Receiver postcode',
+        message: validation.ReceiverValidationErrorMessages.invalidPostcode,
       },
       {
         field: 'Receiver contact name',
