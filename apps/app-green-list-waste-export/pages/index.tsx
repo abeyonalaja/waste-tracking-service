@@ -36,7 +36,7 @@ const BreadCrumbs = () => {
 function Index() {
   const router = useRouter();
   const apiConfig = useApiConfig();
-  const { setSubmission } = useSubmissionContext();
+  const { setSubmission, featureFlags } = useSubmissionContext();
 
   const [numberOfCompleteSubmissions, setNumberOfCompleteSubmissions] =
     React.useState<number>(0);
@@ -287,7 +287,7 @@ function Index() {
               </GovUK.UnorderedList>
             </Card>
           </GovUK.GridCol>
-          {process.env.NEXT_PUBLIC_MULTIPLES_ENABLED === 'true' && (
+          {featureFlags.multiples && (
             <GovUK.GridCol setWidth="one-third">
               <Card
                 title={t('export.homepage.multiples.guidance.title')}

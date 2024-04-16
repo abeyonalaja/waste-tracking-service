@@ -1,16 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  function BooleanFromString(bool) {
+    const str = String(bool);
+    return str === 'true';
+  }
   const environmentVariables = {
     GOOGLE_ANALYTICS_ACCOUNT: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT
       ? process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT
       : undefined,
     MULTIPLES_ENABLED: process.env.NEXT_PUBLIC_MULTIPLES_ENABLED
-      ? Boolean(process.env.NEXT_PUBLIC_MULTIPLES_ENABLED)
-      : undefined,
+      ? BooleanFromString(process.env.NEXT_PUBLIC_MULTIPLES_ENABLED)
+      : false,
     LANGUAGES_ENABLED: process.env.NEXT_PUBLIC_LANGUAGES_ENABLED
-      ? Boolean(process.env.NEXT_PUBLIC_LANGUAGES_ENABLED)
-      : undefined,
+      ? BooleanFromString(process.env.NEXT_PUBLIC_LANGUAGES_ENABLED)
+      : false,
     GATEWAY_URL: process.env.NEXT_PUBLIC_GATEWAY_URL
       ? process.env.NEXT_PUBLIC_GATEWAY_URL
       : undefined,

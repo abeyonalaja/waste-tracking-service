@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 interface ISubmissionContextProps {
+  featureFlags: { multiples: boolean; languages: boolean } | null;
   submission: { id; reference } | null;
   setSubmission: (submission) => void;
 }
@@ -14,6 +15,7 @@ export const SubmissionContextProvider = (props) => {
   return (
     <SubmissionContext.Provider
       value={{
+        featureFlags: props.featureFlags,
         submission: currentSubmission,
         setSubmission: setCurrentSubmission,
       }}

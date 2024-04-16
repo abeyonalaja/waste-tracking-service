@@ -57,11 +57,8 @@ const AuthWrapper = ({ children }) => {
   const idle = useIdle(1000 * 60 * 15);
 
   if (idle) {
-    const basePath =
-      process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';
-
     router.push({
-      pathname: `${basePath}/auth/signout`,
+      pathname: `/auth/signout`,
       query: { callbackUrl: router.asPath },
     });
   }
