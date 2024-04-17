@@ -261,6 +261,15 @@ jobs:
                         containerRegistryName: ${{ parameters.containerRegistryName }}
                         valuesFilePath: ./pipelines/vars/${{ app }}/${{ lower(parameters.environment) }}.yaml
                         appInsightsConnectionString: $(appInsightsConnectionString)
+                        dcidClientId: $(dcidClientId)
+                        dcidClientSecret: $(dcidClientSecret)
+                        dcidPolicy: $(dcidPolicy)
+                        dcidRedirect: $(dcidRedirect)
+                        dcidServiceId: $(dcidServiceId)
+                        dcidTenant: $(dcidTenant)
+                        dcidWellKnown: $(dcidWellKnown)
+                        nextAuthSecret: $(nextAuthSecret)
+                        nextAuthUrl: $(nextAuthUrl)
                         ${{ if eq(parameters.manualDeployment, false) }}:
                           deployChart: eq(variables['chart_triggers.deployAppUkWasteMovements'], true)
 
