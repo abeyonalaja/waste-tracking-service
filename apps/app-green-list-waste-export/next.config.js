@@ -18,18 +18,6 @@ const nextConfig = {
   },
   basePath:
     process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '',
-  experimental: {
-    instrumentationHook: true,
-  },
-  webpack: (
-    config,
-    { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
-  ) => {
-    if (isServer) {
-      config.ignoreWarnings = [{ module: /opentelemetry/ }];
-    }
-    return config;
-  },
 };
 
 module.exports = withNx(nextConfig);

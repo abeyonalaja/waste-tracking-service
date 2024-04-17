@@ -15,9 +15,6 @@ const nextConfig = {
     svgr: false,
   },
   basePath: process.env['NODE_ENV'] === 'production' ? '/move-waste' : '',
-  experimental: {
-    instrumentationHook: true,
-  },
   sassOptions: {
     prependData: `$assetPath: '${assetPath}';`,
   },

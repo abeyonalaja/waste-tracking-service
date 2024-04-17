@@ -8,7 +8,6 @@ import { useSession } from 'next-auth/react';
 import { useIdle } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppInsightsProvider from 'contexts/AppInsightsProvider';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export default function App({
@@ -16,38 +15,34 @@ export default function App({
   pageProps: { session, ...pageProps },
 }) {
   noStore();
-  const connectionString =
-    process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING;
   const [queryClient] = useState(() => {
     return new QueryClient();
   });
 
   return (
-    <AppInsightsProvider connectionString={connectionString}>
-      <Layout>
-        <SessionProvider
-          session={session}
-          refetchInterval={60}
-          basePath={
-            process.env['NODE_ENV'] === 'production'
-              ? '/export-annex-VII-waste/api/auth'
-              : '/api/auth'
-          }
-        >
-          <CookiesProvider>
-            <QueryClientProvider client={queryClient}>
-              {Component.auth ? (
-                <AuthWrapper>
-                  <Component {...pageProps} />
-                </AuthWrapper>
-              ) : (
+    <Layout>
+      <SessionProvider
+        session={session}
+        refetchInterval={60}
+        basePath={
+          process.env['NODE_ENV'] === 'production'
+            ? '/export-annex-VII-waste/api/auth'
+            : '/api/auth'
+        }
+      >
+        <CookiesProvider>
+          <QueryClientProvider client={queryClient}>
+            {Component.auth ? (
+              <AuthWrapper>
                 <Component {...pageProps} />
-              )}
-            </QueryClientProvider>
-          </CookiesProvider>
-        </SessionProvider>
-      </Layout>
-    </AppInsightsProvider>
+              </AuthWrapper>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </QueryClientProvider>
+        </CookiesProvider>
+      </SessionProvider>
+    </Layout>
   );
 }
 
