@@ -75,7 +75,8 @@ steps:
         --set secret.env.DCID_SERVICE_ID=$DCID_SERVICE_ID \
         --set secret.env.DCID_TENANT=$DCID_TENANT \
         --set secret.env.DCID_WELLKNOWN=$DCID_WELLKNOWN \
-        --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+        --set secret.env.NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
+        --set secret.env.NEXTAUTH_URL=$NEXTAUTH_URL
     displayName: AKS Deploy ${{ parameters.appName }}
     condition: ${{ parameters.deployChart }}
     env:
