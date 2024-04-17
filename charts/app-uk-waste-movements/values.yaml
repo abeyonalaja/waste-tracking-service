@@ -60,6 +60,15 @@ secret:
   name: ''
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
+    DCID_CLIENT_ID: ''
+    DCID_CLIENT_SECRET: ''
+    DCID_POLICY: ''
+    DCID_REDIRECT: ''
+    DCID_SERVICE_ID: ''
+    DCID_TENANT: ''
+    DCID_WELLKNOWN: ''
+    NEXTAUTH_SECRET: ''
+    NEXTAUTH_URL: ''
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
