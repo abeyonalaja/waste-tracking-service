@@ -1,10 +1,14 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
 import { getTranslations } from 'next-intl/server';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Instructions } from '@wts/app-uk-waste-movements/feature-multiples/server';
-import { Page } from '@wts/ui/shared-ui/server';
+import {
+  Instructions,
+  Interruption,
+} from '@wts/app-uk-waste-movements/feature-multiples/server';
+import { Page, BackLink } from '@wts/ui/shared-ui/server';
 import { UploadForm } from '@wts/app-uk-waste-movements/feature-multiples';
 
 export const metadata: Metadata = {
@@ -13,12 +17,14 @@ export const metadata: Metadata = {
 };
 
 export default async function UploadPage() {
+  const cookieStore = cookies();
+  const guidanceViewedCookie = cookieStore.get('UKWMMultipleGuidanceViewed');
   const page = await getTranslations('multiples.uploadPage');
   const form = await getTranslations('multiples.uploadForm');
   const session = await getServerSession(options);
   const token = session?.token;
 
-  const strings = {
+  const uploadFormStrings = {
     heading: form('heading'),
     hint: form('hint'),
     button: form('button'),
@@ -26,14 +32,22 @@ export default async function UploadPage() {
     summaryLabel: form('summaryLabel'),
   };
 
+  if (!guidanceViewedCookie) {
+    return (
+      <Page beforeChildren={<BackLink href="/" />}>
+        <Interruption />
+      </Page>
+    );
+  }
+
   return (
     <Page beforeChildren={<GovUK.BackLink href="/" />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <UploadForm token={token!} strings={strings}>
-            <GovUK.Heading size={'l'} level={1}>
-              {page('title')}
-            </GovUK.Heading>
+          <GovUK.Heading size={'l'} level={1}>
+            {page('title')}
+          </GovUK.Heading>
+          <UploadForm token={token!} strings={uploadFormStrings}>
             <Instructions />
           </UploadForm>
         </GovUK.GridCol>

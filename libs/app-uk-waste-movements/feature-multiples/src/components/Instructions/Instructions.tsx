@@ -1,5 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
+import styles from './Instructions.module.scss';
 
 // Standard Next link is required here to navigate user to
 // public folder to download template CSV file, bypassing locale
@@ -42,24 +43,22 @@ export function Instructions() {
       <GovUK.Heading size={'m'} level={2}>
         {t('documents.heading')}
       </GovUK.Heading>
-      <GovUK.GridRow mb={7}>
-        <GovUK.GridCol size="one-quarter">
-          <HTML />
-        </GovUK.GridCol>
-        <GovUK.GridCol size="two-thirds">
+
+      <div className={styles.row}>
+        <HTML />
+        <div>
           <GovUK.Paragraph size="l" mb={2}>
             <LocaleLink href="/multiples/guidance" target="_blank">
               {t('documents.linkOne')}
             </LocaleLink>
           </GovUK.Paragraph>
           <GovUK.Paragraph size="s">HTML</GovUK.Paragraph>
-        </GovUK.GridCol>
-      </GovUK.GridRow>
-      <GovUK.GridRow>
-        <GovUK.GridCol size="one-quarter">
-          <CSV />
-        </GovUK.GridCol>
-        <GovUK.GridCol size="three-quarters">
+        </div>
+      </div>
+
+      <div className={styles.row}>
+        <CSV />
+        <div>
           <GovUK.Paragraph size="l" mb={2}>
             {t('documents.templateHeading')}
           </GovUK.Paragraph>
@@ -69,7 +68,16 @@ export function Instructions() {
               {t('documents.templateLink')}
             </Link>
           </GovUK.Paragraph>
-        </GovUK.GridCol>
+        </div>
+      </div>
+
+      <GovUK.GridRow mb={7}>
+        <GovUK.GridCol size="one-quarter"></GovUK.GridCol>
+        <GovUK.GridCol size="two-thirds"></GovUK.GridCol>
+      </GovUK.GridRow>
+      <GovUK.GridRow>
+        <GovUK.GridCol size="one-quarter"></GovUK.GridCol>
+        <GovUK.GridCol size="three-quarters"></GovUK.GridCol>
       </GovUK.GridRow>
     </>
   );

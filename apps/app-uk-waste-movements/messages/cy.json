@@ -122,6 +122,13 @@
     },
     "processingPage": {
       "label": "Uploading"
+    },
+    "interruption": {
+      "heading": "Use the guidance to create multiple new waste movements using a CSV template",
+      "paragraphOne": "When you enter your waste movement information into the template, you need to save it as a CSV file. This is where data is separated by commas rather than columns. If you change the structure of the template, your upload may fail.",
+      "paragraphTwo": "It is important you use the guidance to help you fill in and upload the template correctly.",
+      "link": "How to create multiple new waste movements using the CSV template (opens in new tab)",
+      "button": "Continue"
     }
   }
 }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 type Props = {
   children?: ReactNode;
   secondary?: boolean;
+  inverse?: boolean;
   start?: boolean;
   text?: string;
   href?: string;
@@ -14,6 +15,7 @@ type Props = {
 export const Button = ({
   children,
   secondary,
+  inverse,
   start,
   text,
   href,
@@ -24,8 +26,8 @@ export const Button = ({
     return (
       <button
         className={`govuk-button ${secondary && `govuk-button--secondary`} ${
-          start && `govuk-button--start`
-        }`}
+          inverse && `govuk-button--inverse`
+        } ${start && `govuk-button--start`}`}
         data-testid={testId}
         onClick={onClick}
       >
