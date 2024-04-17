@@ -1,11 +1,22 @@
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { UploadForm } from './UploadForm';
-import '@testing-library/jest-dom';
+
+jest.mock('@wts/ui/navigation', () => ({
+  useRouter: () => null,
+}));
+
+// Second mock of useRouter is required for tests involving the ErrorSummary component
+jest.mock('next/navigation', () => ({
+  useRouter: () => null,
+}));
 
 const strings = {
   heading: 'Upload your CSV file',
   hint: 'You need to review and check for errors before uploading',
   button: 'Upload',
+  errorLabel: 'Error: ',
+  summaryLabel: 'There is a problem',
 };
 
 function MockChild() {
@@ -15,7 +26,7 @@ function MockChild() {
 describe('UploadForm component', () => {
   test('renders instructions', () => {
     render(
-      <UploadForm strings={strings}>
+      <UploadForm token="#" strings={strings}>
         <MockChild />
       </UploadForm>
     );
@@ -23,7 +34,7 @@ describe('UploadForm component', () => {
 
   test('contains an h2 heading with string from props', () => {
     render(
-      <UploadForm strings={strings}>
+      <UploadForm token="#" strings={strings}>
         <MockChild />
       </UploadForm>
     );
@@ -37,7 +48,7 @@ describe('UploadForm component', () => {
 
   test('contains a button with string from props', () => {
     render(
-      <UploadForm strings={strings}>
+      <UploadForm token="#" strings={strings}>
         <MockChild />
       </UploadForm>
     );
@@ -45,5 +56,21 @@ describe('UploadForm component', () => {
     const uploadButton = screen.getByRole('button', { name: 'Upload' });
 
     expect(uploadButton).toBeInTheDocument();
+  });
+
+  test('displays validation errors from props', () => {
+    render(
+      <UploadForm
+        token="#"
+        strings={strings}
+        validationError="Incorrect columns"
+      >
+        <MockChild />
+      </UploadForm>
+    );
+
+    const validationError = screen.getAllByText('Incorrect columns');
+
+    expect(validationError).toHaveLength(2);
   });
 });

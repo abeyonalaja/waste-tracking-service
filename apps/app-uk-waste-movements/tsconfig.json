@@ -26,7 +26,8 @@
     ".next/types/**/*.ts",
     "../../dist/apps/app-uk-waste-movements/.next/types/**/*.ts",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "./types/next-auth.d.ts"
   ],
   "exclude": [
     "node_modules",

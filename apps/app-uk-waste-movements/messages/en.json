@@ -116,7 +116,12 @@
     "uploadForm": {
       "heading": "Upload your CSV file",
       "hint": "You need to review and check for errors before uploading",
-      "button": "Upload"
+      "button": "Upload",
+      "errorLabel": "Error: ",
+      "summaryLabel": "There is a problem"
+    },
+    "processingPage": {
+      "label": "Uploading"
     }
   }
 }

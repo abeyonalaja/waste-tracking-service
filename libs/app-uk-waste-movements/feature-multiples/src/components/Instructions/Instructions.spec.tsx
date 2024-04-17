@@ -1,7 +1,7 @@
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { Instructions } from './Instructions';
 import { NextIntlClientProvider } from 'next-intl';
-import '@testing-library/jest-dom';
 import type { Session } from 'next-auth';
 
 const mockedSession: Session | null = null;
@@ -98,7 +98,7 @@ describe('Instructions component', () => {
 
     expect(templateLink).toHaveAttribute(
       'href',
-      '/downloads/multiples-template.csv'
+      '/downloads/multiple-movements-template.csv'
     );
   });
 
@@ -115,7 +115,7 @@ describe('Instructions component', () => {
 
     expect(templateLink).toHaveAttribute(
       'href',
-      '/downloads/multiples-template.csv'
+      '/downloads/multiple-movements-template.csv'
     );
   });
 });

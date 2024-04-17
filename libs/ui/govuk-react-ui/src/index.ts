@@ -6,6 +6,7 @@ export { ButtonGroup } from './components/ButtonGroup';
 export { Caption } from './components/Caption';
 export { CharacterCount } from './components/CharacterCount';
 export { ErrorMessage } from './components/ErrorMessage';
+export { ErrorSummary } from './components/ErrorSummary';
 export { Footer } from './components/Footer';
 export { FileUpload } from './components/FileUpload';
 export { FormGroup } from './components/FormGroup';

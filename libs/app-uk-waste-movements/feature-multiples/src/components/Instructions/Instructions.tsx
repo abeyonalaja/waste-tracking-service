@@ -28,7 +28,7 @@ export function Instructions() {
         <GovUK.ListItem>
           <span>
             {t('createAndUpload.listItemTwoPartOne')}
-            <Link href="/downloads/multiples-template.csv">
+            <Link href="/downloads/multiple-movements-template.csv">
               {t('createAndUpload.listItemTwoLink')}
             </Link>
             {t('createAndUpload.listItemTwoPartTwo')}
@@ -65,7 +65,7 @@ export function Instructions() {
           </GovUK.Paragraph>
           <GovUK.Hint>{t('documents.templateDescription')}</GovUK.Hint>
           <GovUK.Paragraph>
-            <Link href="/downloads/multiples-template.csv">
+            <Link href="/downloads/multiple-movements-template.csv">
               {t('documents.templateLink')}
             </Link>
           </GovUK.Paragraph>
