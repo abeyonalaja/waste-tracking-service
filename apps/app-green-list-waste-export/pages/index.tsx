@@ -287,7 +287,7 @@ function Index() {
               </GovUK.UnorderedList>
             </Card>
           </GovUK.GridCol>
-          {featureFlags.multiples && (
+          {featureFlags?.multiples && (
             <GovUK.GridCol setWidth="one-third">
               <Card
                 title={t('export.homepage.multiples.guidance.title')}
