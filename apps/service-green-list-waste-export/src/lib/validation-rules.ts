@@ -908,7 +908,10 @@ export function validateCollectionDateSection(
       Number(dateArr[1]) - 1,
       Number(dateArr[0])
     );
-    if (!isValid(new Date(collectionDate))) {
+    if (
+      !isValid(collectionDate) ||
+      !(collectionDate.getMonth() + 1 === Number(dateArr[1]))
+    ) {
       errors.push({
         field: 'CollectionDate',
         message: validation.CollectionDateValidationErrorMessages.empty,

@@ -3044,6 +3044,18 @@ describe('validateCollectionDateSection', () => {
     ]);
 
     response = validateCollectionDateSection({
+      wasteCollectionDate: '15/15/3000',
+      estimatedOrActualCollectionDate: 'Actual',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'CollectionDate',
+        message: validation.CollectionDateValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateCollectionDateSection({
       wasteCollectionDate: '01/01/2023',
       estimatedOrActualCollectionDate: 'Actual',
     });
