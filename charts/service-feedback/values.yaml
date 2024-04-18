@@ -70,7 +70,8 @@ secret:
     APPINSIGHTS_CONNECTION_STRING: ''
     CLIENT_ID: ''
     CLIENT_SECRET: ''
-    SURVEY_ID: ''
+    GLW_SURVEY_ID: ''
+    UKWM_SURVEY_ID: ''
     SURVEY_API_ENDPOINT: 'https://fra1.qualtrics.com/'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas

@@ -15,5 +15,6 @@ podAnnotations:
 secret:
   env:
     CLIENT_ID: '6042458915723fef74e6d0d6ca17deda'
-    SURVEY_ID: 'SV_cvhrE3mjTWUJ0lE'
+    GLW_SURVEY_ID: 'SV_cvhrE3mjTWUJ0lE'
+    UKWM_SURVEY_ID: 'SV_aXErPlULYzuKs5M'
     SURVEY_API_ENDPOINT: 'https://fra1.qualtrics.com/'
