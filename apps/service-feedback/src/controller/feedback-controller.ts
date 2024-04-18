@@ -13,13 +13,13 @@ export default class FeedbackController {
   constructor(private feedbackClient: FeedbackClient, private logger: Logger) {}
 
   sendFeedback: Handler<SendFeedbackRequest, SendFeedbackResponse> = async ({
-    rating,
-    feedback,
+    serviceName,
+    surveyData,
   }) => {
     try {
       const feedbackResults = await this.feedbackClient.sendFeedback({
-        rating,
-        feedback,
+        serviceName,
+        surveyData,
       });
 
       if (feedbackResults.success) {

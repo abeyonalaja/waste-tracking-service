@@ -14,7 +14,11 @@ jest.mock('winston', () => ({
 const mockBackend = {
   sendFeedback:
     jest.fn<
-      (feedback: string, rating: number) => Promise<api.SendFeedbackResponse>
+      (
+        serviceName: string,
+        feedback: string,
+        rating: number
+      ) => Promise<api.SendFeedbackResponse>
     >(),
 };
 
@@ -64,8 +68,27 @@ describe('FeedbackPlugin', () => {
         method: `POST`,
         url: `/feedback`,
         payload: {
-          rating: '1',
-          feedback: 'test',
+          serviceName: 'glw',
+          surveyData: {
+            rating: '-1',
+            feedback: 'test',
+          },
+        },
+      };
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+
+    it('responds with 400 when serviceName is incorrect', async () => {
+      const options = {
+        method: `POST`,
+        url: `/feedback`,
+        payload: {
+          serviceName: 'fakeservicename',
+          surveyData: {
+            rating: '-1',
+            feedback: 'test',
+          },
         },
       };
       const response = await app.inject(options);

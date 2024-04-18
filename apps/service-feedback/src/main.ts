@@ -6,6 +6,9 @@ import { LoggerService } from '@wts/util/dapr-winston-logging';
 import winston from 'winston';
 import { FeedbackController, parse } from './controller';
 import FeedbackClient from './clients/feedback-client';
+import { ServiceName } from '@wts/api/feedback';
+
+const surveyIDMap = new Map<ServiceName, string>();
 
 if (!process.env['CLIENT_ID']) {
   throw new Error('Missing CLIENT_ID from environment configuration.');
@@ -15,9 +18,15 @@ if (!process.env['CLIENT_SECRET']) {
   throw new Error('Missing CLIENT_SECRET from environment configuration.');
 }
 
-if (!process.env['SURVEY_ID']) {
-  throw new Error('Missing SURVEY_ID from environment configuration.');
+if (!process.env['GLW_SURVEY_ID']) {
+  throw new Error('Missing GLW_SURVEY_ID from environment configuration.');
 }
+surveyIDMap.set('glw', process.env['GLW_SURVEY_ID']);
+
+if (!process.env['UKWM_SURVEY_ID']) {
+  throw new Error('Missing UKWM_SURVEY_ID from environment configuration.');
+}
+surveyIDMap.set('ukwm', process.env['UKWM_SURVEY_ID']);
 
 if (!process.env['SURVEY_API_ENDPOINT']) {
   throw new Error(
@@ -48,7 +57,7 @@ const feedbackClient = new FeedbackClient(
   logger,
   process.env['CLIENT_ID'],
   process.env['CLIENT_SECRET'],
-  process.env['SURVEY_ID'],
+  surveyIDMap,
   process.env['SURVEY_API_ENDPOINT']
 );
 

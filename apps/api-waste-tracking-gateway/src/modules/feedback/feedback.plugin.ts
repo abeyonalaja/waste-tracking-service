@@ -24,10 +24,12 @@ const plugin: Plugin<PluginOptions> = {
           return Boom.badRequest();
         }
 
-        const { rating, feedback } = payload as dto.SendFeedbackRequest;
+        const serviceName = payload.serviceName as dto.ServiceName;
+
+        const { rating, feedback } = payload.surveyData as dto.SurveyData;
 
         try {
-          return await backend.sendFeedback(feedback, rating);
+          return await backend.sendFeedback(serviceName, feedback, rating);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             return error;

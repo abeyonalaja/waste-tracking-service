@@ -14,7 +14,9 @@ jest.mock('winston', () => ({
 const mockFeedbackClient = {
   sendFeedback:
     jest.fn<
-      (surveyData: SendFeedbackRequest) => Promise<SendFeedbackResponse>
+      (
+        sendFeedbackRequest: SendFeedbackRequest
+      ) => Promise<SendFeedbackResponse>
     >(),
 };
 
@@ -28,8 +30,11 @@ describe(FeedbackController, () => {
   describe('sendFeedback', () => {
     it('successfully throws Boom errors', async () => {
       const feedback: SendFeedbackRequest = {
-        rating: 1,
-        feedback: 'test',
+        serviceName: 'glw',
+        surveyData: {
+          rating: 1,
+          feedback: 'test',
+        },
       };
 
       mockFeedbackClient.sendFeedback.mockRejectedValue(Boom.badRequest());
@@ -44,7 +49,7 @@ describe(FeedbackController, () => {
       expect(mockFeedbackClient.sendFeedback).toBeCalledWith(feedback);
       expect(response.error.statusCode).toBe(400);
 
-      feedback.rating = 6;
+      feedback.surveyData.rating = 6;
 
       response = await subject.sendFeedback(feedback);
 
@@ -56,8 +61,11 @@ describe(FeedbackController, () => {
 
     it('successfully sends data', async () => {
       const feedback: SendFeedbackRequest = {
-        rating: 1,
-        feedback: 'test',
+        serviceName: 'glw',
+        surveyData: {
+          rating: 1,
+          feedback: 'test',
+        },
       };
 
       const feedbackResponse: FeedbackResponse = {

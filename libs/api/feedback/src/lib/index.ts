@@ -1,5 +1,7 @@
 export type {
   SendFeedbackRequest,
+  ServiceName,
+  SurveyData,
   SendFeedbackResponse,
   FeedbackResponse,
 } from './feedback';

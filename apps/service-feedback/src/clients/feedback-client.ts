@@ -11,7 +11,9 @@ import {
 } from '../model';
 
 export interface FeedbackClient {
-  sendFeedback(surveyData: SendFeedbackRequest): Promise<SendFeedbackResponse>;
+  sendFeedback(
+    sendFeedbackRequest: SendFeedbackRequest
+  ): Promise<SendFeedbackResponse>;
 }
 
 export default class QualtricsFeedbackClient implements FeedbackClient {
@@ -19,7 +21,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
     private logger: Logger,
     private clientId: string,
     private clientSecret: string,
-    private surveyId: string,
+    private surveyIdMap: Map<string, string>,
     private surveyAPIEndpoint: string
   ) {}
 
@@ -78,7 +80,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
   }
 
   async sendFeedback(
-    surveyData: SendFeedbackRequest
+    feedbackRequest: SendFeedbackRequest
   ): Promise<SendFeedbackResponse> {
     const bearertoken = await this.generateAccessToken(
       this.clientId,
@@ -91,9 +93,15 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
       throw Boom.internal();
     }
 
+    const surveyId = this.surveyIdMap.get(feedbackRequest.serviceName);
+
+    if (!surveyId) {
+      throw Boom.badRequest('Invalid service name provided.');
+    }
+
     const surveySession = await this.generateSurveySession(
       bearertoken.access_token,
-      this.surveyId
+      surveyId
     );
 
     if (!surveySession.result.sessionId) {
@@ -106,7 +114,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
         responses: {},
       };
 
-      if (surveyData.rating) {
+      if (feedbackRequest.surveyData.rating) {
         sd.responses.QID5 = {
           1: {
             selected: false,
@@ -125,11 +133,14 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
           },
         };
 
-        if (surveyData.rating < 1 || surveyData.rating > 5) {
+        if (
+          feedbackRequest.surveyData.rating < 1 ||
+          feedbackRequest.surveyData.rating > 5
+        ) {
           throw Boom.badRequest();
         }
 
-        switch (surveyData.rating) {
+        switch (feedbackRequest.surveyData.rating) {
           case 1:
             sd.responses.QID5[1].selected = true;
             break;
@@ -151,8 +162,8 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
         }
       }
 
-      if (surveyData.feedback) {
-        sd.responses.QID6 = surveyData.feedback;
+      if (feedbackRequest.surveyData.feedback) {
+        sd.responses.QID6 = feedbackRequest.surveyData.feedback;
       }
 
       if (!sd.responses.QID5 && !sd.responses.QID6) {
@@ -162,7 +173,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
       const sendSurveyDataResponse = await axios.post(
         this.surveyAPIEndpoint +
           'API/v3/surveys/' +
-          this.surveyId +
+          surveyId +
           '/sessions/' +
           surveySession.result.sessionId,
         sd,

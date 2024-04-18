@@ -10,9 +10,14 @@ const errorResponseValue: SchemaObject = {
 };
 
 export const sendFeedbackRequest: JTDSchemaType<SendFeedbackRequest> = {
-  optionalProperties: {
-    rating: { type: 'uint16' },
-    feedback: { type: 'string' },
+  properties: {
+    serviceName: { enum: ['glw', 'ukwm'] },
+    surveyData: {
+      optionalProperties: {
+        rating: { type: 'uint16' },
+        feedback: { type: 'string' },
+      },
+    },
   },
 };
 
