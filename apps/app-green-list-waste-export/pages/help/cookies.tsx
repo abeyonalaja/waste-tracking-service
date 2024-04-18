@@ -46,7 +46,7 @@ const Cookies = () => {
       }),
     });
 
-    window.location.replace('/help/cookies?updated=true');
+    router.push('/help/cookies?updated=true');
   };
 
   const BreadCrumbs = () => {
