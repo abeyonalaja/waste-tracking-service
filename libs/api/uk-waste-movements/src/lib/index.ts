@@ -12,6 +12,8 @@ export type {
   ProducerDetails,
   Address,
   Contact,
+  WasteTransportationDetails,
+  WasteTypeDetails,
 } from './submission.dto';
 
 export type { Field } from './validation';

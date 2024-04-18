@@ -125,7 +125,7 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
             rowErrors: [
               {
                 rowNumber: 3,
-                errorAmount: 6,
+                errorAmount: 12,
                 errorDetails: [
                   'The unique reference must be 20 characters or less',
                   'Enter the producer organisation name',
@@ -138,11 +138,12 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                   'Enter the receiver town or city',
                   'Enter full name of receiver contact',
                   'Enter receiver contact email address in correct format',
+                  'Enter the number and type of containers',
                 ],
               },
               {
                 rowNumber: 4,
-                errorAmount: 7,
+                errorAmount: 14,
                 errorDetails: [
                   'The unique reference must be 20 characters or less',
                   'Enter the producer organisation name',
@@ -157,6 +158,7 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                   'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
                   'Enter full name of receiver contact',
                   'Enter receiver contact email address',
+                  'Number and type of transportation details must be less than 100 characters',
                 ],
               },
             ],
@@ -338,6 +340,21 @@ export class InMemoryUkWasteMovementsBulkSubmissionBackend
                     rowNumber: 4,
                     errorReason:
                       'The unique reference must be 20 characters or less',
+                  },
+                ],
+              },
+              {
+                columnName: 'Number and type of transportation containers',
+                errorAmount: 2,
+                errorDetails: [
+                  {
+                    rowNumber: 3,
+                    errorReason: 'Enter the number and type of containers',
+                  },
+                  {
+                    rowNumber: 4,
+                    errorReason:
+                      'Number and type of transportation details must be less than 100 characters',
                   },
                 ],
               },

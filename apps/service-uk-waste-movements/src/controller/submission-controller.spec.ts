@@ -51,6 +51,8 @@ describe(SubmissionController, () => {
             receiverCountry: 'England',
             receiverPostcode: 'AB1 1AB',
             receiverTownCity: 'London',
+            wasteTransportationNumberAndTypeOfContainers: 'test',
+            wasteTransportationSpecialHandlingRequirements: 'test',
           },
         ],
       });
@@ -100,6 +102,10 @@ describe(SubmissionController, () => {
               },
             },
             wasteTypeDetails: [],
+            wasteTransportationDetails: {
+              numberAndTypeOfContainers: 'test',
+              specialHandlingRequirements: 'test',
+            },
           },
         ],
       });
@@ -132,6 +138,8 @@ describe(SubmissionController, () => {
             receiverCountry: '     ',
             receiverPostcode: '     ',
             receiverTownCity: '     ',
+            wasteTransportationNumberAndTypeOfContainers: '     ',
+            wasteTransportationSpecialHandlingRequirements: '     ',
           },
         ],
       });
@@ -237,6 +245,12 @@ describe(SubmissionController, () => {
                 field: 'Receiver contact email address',
                 message:
                   validation.ReceiverValidationErrorMessages.invalidEmail,
+              },
+              {
+                field: 'Number and type of transportation containers',
+                message:
+                  validation.WasteTransportationValidationErrorMessages
+                    .emptyNameAndTypeOfContainers,
               },
             ],
             invalidStructureErrors: [],

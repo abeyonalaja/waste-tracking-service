@@ -24,7 +24,6 @@ export default class SubmissionController {
     api.ValidateSubmissionsResponse
   > = async ({ accountId, values }) => {
     try {
-      // 2 handles the padding at the top of the CSV (header and instruction rows)
       let index = 2;
       const errors: Error[] = [];
       const submissions: Value[] = [];
@@ -71,10 +70,23 @@ export default class SubmissionController {
           fieldFormatErrors.push(...receiver.value);
         }
 
-        if (receiver.valid && producer.valid) {
+        const wasteTransportation =
+          validationRules.validateWasteTransportationDetailsSection({
+            wasteTransportationNumberAndTypeOfContainers:
+              s.wasteTransportationNumberAndTypeOfContainers,
+            wasteTransportationSpecialHandlingRequirements:
+              s.wasteTransportationSpecialHandlingRequirements,
+          });
+
+        if (!wasteTransportation.valid) {
+          fieldFormatErrors.push(...wasteTransportation.value);
+        }
+
+        if (receiver.valid && producer.valid && wasteTransportation.valid) {
           submissions.push({
             producer: producer.value,
             receiver: receiver.value,
+            wasteTransportationDetails: wasteTransportation.value,
             wasteTypeDetails: [],
           });
         } else {

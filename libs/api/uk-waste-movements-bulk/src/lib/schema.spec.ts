@@ -201,6 +201,10 @@ describe('getBatchResponse', () => {
                   email: 'test@organisation.com',
                 },
               },
+              wasteTransportationDetails: {
+                numberAndTypeOfContainers: 'test',
+                specialHandlingRequirements: 'test',
+              },
               wasteTypeDetails: [
                 {
                   ewcCode: '1234',

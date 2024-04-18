@@ -34,6 +34,7 @@ export type PartialSubmission = {
   receiver: Submission['receiver'];
   producer: Submission['producer'];
   wasteTypeDetails: Submission['wasteTypeDetails'];
+  wasteTransportationDetails: Submission['wasteTransportationDetails'];
 };
 
 export type BulkSubmissionValidationRowError = {
@@ -106,10 +107,6 @@ export type ProducerDetailsFlattened = {
   producerCountry: string;
   producerSicCode: string;
 };
-
-export type SubmissionFlattened = ProducerDetailsFlattened &
-  ReceiverDetailsFlattened;
-
 export type ReceiverDetailsFlattened = {
   receiverAuthorizationType: string;
   receiverEnvironmentalPermitNumber: string;
@@ -123,3 +120,12 @@ export type ReceiverDetailsFlattened = {
   receiverContactEmail: string;
   receiverContactPhone: string;
 };
+
+export type WasteTransportationDetailsFlattened = {
+  wasteTransportationNumberAndTypeOfContainers: string;
+  wasteTransportationSpecialHandlingRequirements?: string;
+};
+
+export type SubmissionFlattened = ProducerDetailsFlattened &
+  ReceiverDetailsFlattened &
+  WasteTransportationDetailsFlattened;

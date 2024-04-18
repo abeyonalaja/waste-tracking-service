@@ -1,5 +1,10 @@
 import { SchemaObject, JTDSchemaType } from 'ajv/dist/jtd';
-import { Address, Contact } from './submission.dto';
+import {
+  Address,
+  Contact,
+  WasteTransportationDetails,
+  WasteTypeDetails,
+} from './submission.dto';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -50,7 +55,7 @@ export const receiver: SchemaObject = {
   },
 };
 
-export const wasteTypeDetails: SchemaObject = {
+export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
   properties: {
     ewcCode: { type: 'string' },
     wasteDescription: { type: 'string' },
@@ -93,6 +98,16 @@ export const wasteTypeDetails: SchemaObject = {
   },
 };
 
+export const wasteTransportationDetails: JTDSchemaType<WasteTransportationDetails> =
+  {
+    properties: {
+      numberAndTypeOfContainers: { type: 'string' },
+    },
+    optionalProperties: {
+      specialHandlingRequirements: { type: 'string' },
+    },
+  };
+
 export const validateSubmissionsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },
@@ -107,6 +122,7 @@ export const validateSubmissionsRequest: SchemaObject = {
           producerAddressLine1: { type: 'string' },
           producerTownCity: { type: 'string' },
           producerCountry: { type: 'string' },
+          wasteTransportationNumberAndTypeOfContainers: { type: 'string' },
         },
         optionalProperties: {
           producerAddressLine2: { type: 'string' },
@@ -123,6 +139,7 @@ export const validateSubmissionsRequest: SchemaObject = {
           receiverTownCity: { type: 'string' },
           receiverPostcode: { type: 'string' },
           receiverCountry: { type: 'string' },
+          wasteTransportationSpecialHandlingRequirements: { type: 'string' },
         },
       },
     },
@@ -138,6 +155,7 @@ const validationResult: SchemaObject = {
         optionalProperties: {
           producer: producer,
           receiver: receiver,
+          wasteTransportationDetails,
           wasteTypeDetails: {
             elements: {
               ...wasteTypeDetails,

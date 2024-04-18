@@ -24,3 +24,7 @@ export const ProducerSicCodeChar = {
 export const ReceiverEnvironmentalPermitNumberChar = {
   max: 20,
 };
+
+export const WasteTransportationDetailsChar = {
+  max: 100,
+};

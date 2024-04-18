@@ -256,6 +256,10 @@ while (execute) {
                 receiverTownCity: s.receiverTownOrCity,
                 receiverPostcode: s.receiverPostcode,
                 receiverCountry: s.receiverCountry,
+                wasteTransportationNumberAndTypeOfContainers:
+                  s.wasteTransportationNumberAndTypeOfContainers,
+                wasteTransportationSpecialHandlingRequirements:
+                  s.wasteTransportationSpecialHandlingRequirements,
               };
             });
             const submissions: api.PartialSubmission[] = [];
@@ -321,15 +325,20 @@ while (execute) {
                   'Receiver organisation name': [],
                   'Receiver town or city': [],
                   'Receiver authorization type': [],
+                  'Number and type of transportation containers': [],
+                  'Special handling requirements details': [],
 
                   Reference: [],
                   WasteCollectionDetails: [],
-                  WasteTransportation: [],
                   WasteTypeDetails: [],
                 };
 
                 for (const error of response.value.values) {
                   for (const fieldError of error.fieldFormatErrors) {
+                    if (!columnErrorsObj[fieldError.field]) {
+                      continue;
+                    }
+
                     columnErrorsObj[fieldError.field].push({
                       rowNumber: error.index,
                       errorReason: fieldError.message,

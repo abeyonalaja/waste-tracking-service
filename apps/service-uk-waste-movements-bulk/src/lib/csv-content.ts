@@ -31,8 +31,8 @@ export type BulkSubmissionCsvRow = {
   receiverContactName: string;
   receiverContactEmail: string;
   receiverContactPhone: string;
-  containerTransportationType: string;
-  specialHandlingRequirementsDetails: string;
+  wasteTransportationNumberAndTypeOfContainers: string;
+  wasteTransportationSpecialHandlingRequirements: string;
   ewcCode: string;
   wasteDescription: string;
   physicalForm: string;
@@ -178,8 +178,8 @@ export const headersFormatted = [
   'receiverContactName',
   'receiverContactEmail',
   'receiverContactPhone',
-  'containerTransportationType',
-  'specialHandlingRequirementsDetails',
+  'wasteTransportationNumberAndTypeOfContainers',
+  'wasteTransportationSpecialHandlingRequirements',
   'ewcCode',
   'wasteDescription',
   'physicalForm',

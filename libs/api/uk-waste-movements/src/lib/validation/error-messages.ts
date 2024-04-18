@@ -2,6 +2,7 @@ import {
   FreeTextChar,
   ReferenceChar,
   ReceiverEnvironmentalPermitNumberChar,
+  WasteTransportationDetailsChar,
 } from './constraints';
 
 export const ProducerValidationErrorMessages = {
@@ -56,4 +57,10 @@ export const ReceiverValidationErrorMessages = {
   invalidReceiverAuthorizationType: 'Enter the receiver authorization type',
   invalidReceiverEnvironmentalPermitNumber:
     'Enter the receiver environmental permit number',
+};
+
+export const WasteTransportationValidationErrorMessages = {
+  emptyNameAndTypeOfContainers: `Enter the number and type of containers`,
+  charTooManyNameAndTypeOfContainers: `Number and type of transportation details must be less than ${WasteTransportationDetailsChar.max} characters`,
+  charTooManySpecialHandlingRequirements: `The special handling requirements must be less than ${WasteTransportationDetailsChar.max} characters`,
 };

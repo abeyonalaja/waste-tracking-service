@@ -4,7 +4,12 @@ import {
   GetBatchRequest,
   FinalizeBatchRequest,
 } from './dto';
-import { Address, Contact } from '@wts/api/uk-waste-movements';
+import {
+  Address,
+  Contact,
+  WasteTransportationDetails,
+  WasteTypeDetails,
+} from '@wts/api/uk-waste-movements';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -55,6 +60,63 @@ export const receiver: SchemaObject = {
     address: address,
   },
 };
+
+export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
+  properties: {
+    ewcCode: { type: 'string' },
+    wasteDescription: { type: 'string' },
+    physicalForm: {
+      enum: ['Gas', 'Liquid', 'Solid', 'Sludge', 'Powder', 'Mixed'],
+    },
+    wasteQuantity: { type: 'uint16' },
+    quantityUnits: {
+      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+    },
+    wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
+    hasHazardousProperties: { type: 'boolean' },
+    containsPops: { type: 'boolean' },
+  },
+  optionalProperties: {
+    hazardousWasteCodes: {
+      elements: {
+        properties: {
+          code: { type: 'string' },
+          name: { type: 'string' },
+          concentration: { type: 'float64' },
+          concentrationUnit: {
+            enum: ['Microgram', 'Milligram', 'Kilogram'],
+          },
+          unIdentificationNumber: { type: 'string' },
+          properShippingName: { type: 'string' },
+          unClass: { type: 'string' },
+          packageGroup: { type: 'string' },
+          specialHandlingRequirements: { type: 'string' },
+        },
+      },
+    },
+    pops: {
+      elements: {
+        properties: {
+          name: { type: 'string' },
+          concentration: { type: 'float64' },
+          concentrationUnit: {
+            enum: ['Microgram', 'Milligram', 'Kilogram'],
+          },
+        },
+      },
+    },
+  },
+};
+
+export const wasteTransportationDetails: JTDSchemaType<WasteTransportationDetails> =
+  {
+    properties: {
+      numberAndTypeOfContainers: { type: 'string' },
+    },
+    optionalProperties: {
+      specialHandlingRequirements: { type: 'string' },
+    },
+  };
 
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
@@ -109,48 +171,10 @@ const bulkSubmissionState: SchemaObject = {
             properties: {
               receiver: receiver,
               producer: producer,
+              wasteTransportationDetails,
               wasteTypeDetails: {
                 elements: {
-                  properties: {
-                    ewcCode: { type: 'string' },
-                    wasteDescription: { type: 'string' },
-                    physicalForm: { type: 'string' },
-                    wasteQuantity: { type: 'uint16' },
-                    quantityUnits: { type: 'string' },
-                    wasteQuantityType: { type: 'string' },
-                    hasHazardousProperties: { type: 'boolean' },
-                    containsPops: { type: 'boolean' },
-                  },
-                  optionalProperties: {
-                    hazardousWasteCodes: {
-                      elements: {
-                        properties: {
-                          code: { type: 'string' },
-                          name: { type: 'string' },
-                          concentration: { type: 'float64' },
-                          concentrationUnit: {
-                            enum: ['Microgram', 'Milligram', 'Kilogram'],
-                          },
-                          unIdentificationNumber: { type: 'string' },
-                          properShippingName: { type: 'string' },
-                          unClass: { type: 'string' },
-                          packageGroup: { type: 'string' },
-                          specialHandlingRequirements: { type: 'string' },
-                        },
-                      },
-                    },
-                    pops: {
-                      elements: {
-                        properties: {
-                          name: { type: 'string' },
-                          concentration: { type: 'float64' },
-                          concentrationUnit: {
-                            enum: ['Microgram', 'Milligram', 'Kilogram'],
-                          },
-                        },
-                      },
-                    },
-                  },
+                  ...wasteTypeDetails,
                 },
               },
             },

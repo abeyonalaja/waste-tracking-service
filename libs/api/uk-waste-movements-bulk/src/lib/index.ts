@@ -16,6 +16,7 @@ export type {
   ProducerDetailsFlattened,
   SubmissionFlattened,
   ReceiverDetailsFlattened,
+  WasteTransportationDetailsFlattened,
 } from './dto';
 
 export * as schema from './schema';

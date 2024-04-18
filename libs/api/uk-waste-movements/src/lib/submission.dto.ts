@@ -96,9 +96,9 @@ export type ReceiverDetails = {
   address: Address;
 };
 
-export type WasteTransportation = {
-  numberTypeContainer: string;
-  specialHandlingRequirements: string;
+export type WasteTransportationDetails = {
+  numberAndTypeOfContainers: string;
+  specialHandlingRequirements?: string;
 };
 
 export type WasteTypeDetails = {
@@ -119,7 +119,7 @@ export type SubmissionBase = {
   producer: ProducerDetails;
   wasteCollectionDetails: WasteCollectionDetails;
   receiver: ReceiverDetails;
-  wasteTransportation: WasteTransportation;
+  wasteTransportationDetails: WasteTransportationDetails;
   wasteTypeDetails: WasteTypeDetails[];
   submissionState: SubmissionState;
 };
@@ -156,8 +156,14 @@ export type ReceiverDetailsFlattened = {
   receiverContactEmail: string;
 };
 
+export type WasteTransportationDetailsFlattened = {
+  wasteTransportationNumberAndTypeOfContainers: string;
+  wasteTransportationSpecialHandlingRequirements?: string;
+};
+
 export type SubmissionFlattened = ProducerDetailsFlattened &
-  ReceiverDetailsFlattened;
+  ReceiverDetailsFlattened &
+  WasteTransportationDetailsFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   values: SubmissionFlattened[];

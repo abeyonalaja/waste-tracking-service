@@ -2,7 +2,6 @@ import { Submission } from '../submission.dto';
 
 export type Field =
   | 'WasteCollectionDetails'
-  | 'WasteTransportation'
   | 'WasteTypeDetails'
   | 'Reference'
   | 'Producer organisation name'
@@ -25,7 +24,9 @@ export type Field =
   | 'Receiver country'
   | 'Receiver contact name'
   | 'Receiver contact phone number'
-  | 'Receiver contact email address';
+  | 'Receiver contact email address'
+  | 'Number and type of transportation containers'
+  | 'Special handling requirements details';
 
 export type FieldFormatError = {
   field: Field;
@@ -41,6 +42,7 @@ export type Value = {
   producer: Submission['producer'];
   wasteTypeDetails: Submission['wasteTypeDetails'];
   receiver: Submission['receiver'];
+  wasteTransportationDetails: Submission['wasteTransportationDetails'];
 };
 
 export type Error = {

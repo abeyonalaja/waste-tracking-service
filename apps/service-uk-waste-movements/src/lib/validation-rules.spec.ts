@@ -2,6 +2,7 @@ import { validation } from '../model';
 import {
   validateProducerDetailsSection,
   validateReceiverDetailsSection,
+  validateWasteTransportationDetailsSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -409,6 +410,56 @@ describe(validateReceiverDetailsSection, () => {
       {
         field: 'Receiver contact email address',
         message: validation.ReceiverValidationErrorMessages.invalidEmail,
+      },
+    ]);
+  });
+});
+
+describe(validateWasteTransportationDetailsSection, () => {
+  it('passes waste transportation section validation', () => {
+    const result = validateWasteTransportationDetailsSection({
+      wasteTransportationNumberAndTypeOfContainers: 'test',
+      wasteTransportationSpecialHandlingRequirements: 'test',
+    });
+
+    expect(result.valid).toBe(true);
+  });
+
+  it('fails waste transportation section validation', () => {
+    let result = validateWasteTransportationDetailsSection({
+      wasteTransportationNumberAndTypeOfContainers: '',
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.value).toEqual([
+      {
+        field: 'Number and type of transportation containers',
+        message:
+          validation.WasteTransportationValidationErrorMessages
+            .emptyNameAndTypeOfContainers,
+      },
+    ]);
+
+    result = validateWasteTransportationDetailsSection({
+      wasteTransportationNumberAndTypeOfContainers: faker.datatype.string(251),
+      wasteTransportationSpecialHandlingRequirements:
+        faker.datatype.string(251),
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Number and type of transportation containers',
+        message:
+          validation.WasteTransportationValidationErrorMessages
+            .charTooManyNameAndTypeOfContainers,
+      },
+      {
+        field: 'Special handling requirements details',
+        message:
+          validation.WasteTransportationValidationErrorMessages
+            .charTooManySpecialHandlingRequirements,
       },
     ]);
   });

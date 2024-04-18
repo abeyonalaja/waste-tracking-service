@@ -5,6 +5,8 @@ import {
   ReceiverDetails,
   ProducerDetailsFlattened,
   ProducerDetails,
+  WasteTransportationDetailsFlattened,
+  WasteTransportationDetails,
 } from '../model';
 
 function titleCase(str: string) {
@@ -406,6 +408,64 @@ export function validateReceiverDetailsSection(
         organisationName: value.receiverOrganisationName,
         phone: reformattedReceiverContactPhoneNumber,
       },
+    },
+  };
+}
+
+export function validateWasteTransportationDetailsSection(
+  value: WasteTransportationDetailsFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: WasteTransportationDetails } {
+  const errors: FieldFormatError[] = [];
+
+  if (!value.wasteTransportationNumberAndTypeOfContainers?.trim()) {
+    errors.push({
+      field: 'Number and type of transportation containers',
+      message:
+        validation.WasteTransportationValidationErrorMessages
+          .emptyNameAndTypeOfContainers,
+    });
+  } else if (
+    value.wasteTransportationNumberAndTypeOfContainers?.trim() &&
+    value.wasteTransportationNumberAndTypeOfContainers.length >
+      validation.WasteTransportationDetailsChar.max
+  ) {
+    errors.push({
+      field: 'Number and type of transportation containers',
+      message:
+        validation.WasteTransportationValidationErrorMessages
+          .charTooManyNameAndTypeOfContainers,
+    });
+  }
+
+  if (
+    value.wasteTransportationSpecialHandlingRequirements?.trim() &&
+    value.wasteTransportationSpecialHandlingRequirements.length >
+      validation.WasteTransportationDetailsChar.max
+  ) {
+    errors.push({
+      field: 'Special handling requirements details',
+      message:
+        validation.WasteTransportationValidationErrorMessages
+          .charTooManySpecialHandlingRequirements,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      numberAndTypeOfContainers:
+        value.wasteTransportationNumberAndTypeOfContainers,
+      specialHandlingRequirements:
+        value.wasteTransportationSpecialHandlingRequirements,
     },
   };
 }
