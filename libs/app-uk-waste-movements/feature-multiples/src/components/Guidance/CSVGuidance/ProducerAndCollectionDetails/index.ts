@@ -1,0 +1,1 @@
+export { ProducerAndCollectionDetails } from './ProducerAndCollectionDetails';

@@ -1,0 +1,1 @@
+export { ReceiverDetails } from './ReceiverDetails';

@@ -98,6 +98,174 @@
       "heading": "Upload your CSV file",
       "hint": "You need to review and check for errors before uploading",
       "button": "Upload"
+    },
+    "guidancePage": {
+      "heading": "Waste movements in the UK: how to create multiple waste movements using a CSV file",
+      "hint": "Use this guidance to help you complete a CSV template to upload multiple waste movements for the ‘Move waste in the UK’ service.",
+      "content": {
+        "linkOne": "Details",
+        "linkTwo": "Your unique reference",
+        "linkThree": "Producer and collection details",
+        "linkFour": "Collection details",
+        "linkFive": "Receiver details",
+        "linkSix": "European Waste Catalogue (EWC) codes and description "
+      },
+      "documents": {
+        "heading": "Documents",
+        "linkOne": "Multiple waste movements CSV template"
+      },
+      "details": {
+        "heading": "Details",
+        "content": "Use this CSV template and guidance if you want to submit multiple waste movements at the same time to the {serviceURL}. This is instead of submitting one waste movement record at a time.",
+        "listInfo": "It’s important the information you enter is:",
+        "listItemOne": "accurate",
+        "listItemTwo": "spelt correctly",
+        "listItemThree": "formatted correctly",
+        "outro": "Make sure you check for errors before you upload your file.",
+        "multiple": {
+          "heading": "Multiple waste movements CSV template",
+          "contentOne": "You need to fill in the CSV template with information you would usually provide when you complete a waste movement record.",
+          "contentTwo": "The template is designed so that it is accessible for most users and is compatible with as many programs as possible. For example, it does not include colours, freeze panes or pre-populated dropdowns, as these features do not work on all systems. "
+        },
+        "technicalIssue": {
+          "heading": "Get help with technical issues",
+          "contentOne": "You can contact the waste tracking service support team if you need help with a technical issue, such as: ",
+          "listItemOne": "problems with uploading waste movement details using a CSV file",
+          "listItemTwo": "any other technical service-related query",
+          "contentTwo": "You can contact the waste tracking service support team by emailing ",
+          "email": "wastetracking@defra.gov.uk"
+        },
+        "regulatoryIssue": {
+          "heading": "Get help with regulatory issues",
+          "contentOne": "The waste tracking service support team will not be able to answer regulatory questions. You should contact your relevant regulatory team instead.",
+          "contentTwo": "Your national regulatory team will not be able to answer technical questions about service problems."
+        }
+      }
+    },
+    "guidancePageCSV": {
+      "heading": "Creating multiple UK waste movements: how to create a CSV file for multiple waste movements",
+      "hint": "How green list waste exporters need to complete the CSV template for multiple waste movements.",
+      "contentOne": "Use this guidance to help you complete the CSV template to upload multiple records at a time.",
+      "contentTwo": "If there are any sections or questions that do not apply to your movement, leave the cell blank. You must complete all compulsory sections for all your records, which includes:",
+      "listItemOne": "your unique reference",
+      "listItemTwo": "producer (person or business who has created the waste) details",
+      "listItemThree": "all relevant European Waste Catalogue (EWC) codes and descriptions of waste",
+      "listItemFour": "receiver (consignee-person or business who receives the waste for recovery or disposal) details",
+      "listItemFive": "waste quantity and collection date",
+      "uniqueReference": {
+        "heading": "Your unique reference",
+        "contentOne": "You need to use a unique reference for each new record you submit.",
+        "contentTwo": "Your unique reference can be anything that helps you to identify your movement. For example, it could match a reference on a system you already use to identify movements. ",
+        "contentThree": "Your unique reference can only have numbers and letters and should be a maximum of 20 characters. For example, ABC10001.",
+        "contentFour": "Make sure your unique reference is different for each movement. Each row on the CSV template is a unique movement. For example, if you put ABC10001 in one row, then you might put ABC10002 in the next to show it is different."
+      },
+      "producerAndCollectionDetails": {
+        "heading": "Producer and collection details",
+        "headingProducer": "Producer (person who creates the waste) details",
+        "contentProducer": "The producer is also known as the person who organises the movement . This section must be completed in full.",
+        "tableProducerDetails": {
+          "producer": "Producer (person who creates the waste) details",
+          "answerFormat": "Answer format",
+          "organisationName": "Organisation name",
+          "organisationDescription": "Enter the full organisation name of the waste producer.",
+          "address": "Address",
+          "addressDescription": "Enter as much of the business address as you can.",
+          "postcode": "Postcode",
+          "postcodeDescription": "",
+          "contactEmail": "Contact email",
+          "contactEmailDescription": "Enter the email address in the correct format. For example, ",
+          "contactEmailExample": "bob.walker@ccma.co.uk",
+          "contactPhone": "Contact phone",
+          "contactPhoneDescription": "This should be a 15-digit phone number, including the area code, for example 01484 545612. Do not use any other special characters.",
+          "sicCode": "Standard Industrial Classification (SIC) code",
+          "sitCodeDescriptionOne": "This is a 5 digit number used to identify different type of activities businesses do. You can ",
+          "sitCodeLink": "search the Companies House register (opens in new tab)",
+          "sitCodeDescriptionTwo": " to find SIC codes."
+        },
+        "headingCollection": "Collection details",
+        "tableCollectionDetails": {
+          "collection": "Collection (where and who is picking up the waste) details",
+          "answerFormat": "Answer format",
+          "isProducerAddressSame": "Is producer address same as waste collection address?",
+          "isProducerAddressSameDescription": "Enter ‘Y’ if the addresses are the same. Enter ‘n’ if the waste collection address is different to the producer address.",
+          "collectionAddress": "Waste collection address if different to producer address",
+          "collectionAddressDescription": "Enter as much of the address as you can.",
+          "collectionPostcode": "Waste collection postcode if different to producer address",
+          "collectionPostcodeDescription": "Enter the postcode in the correct format. For example, OX3 8BA.",
+          "wasteSource": "Waste source",
+          "wasteSourceDescription": "Enter if the waste source is ‘household’, ‘commercial’, or ‘industrial’.",
+          "brokerRegistrationNumber": "Broker registration number",
+          "brokerRegistrationNumberDescription": "This starts with CB and is followed by 5 or 6 digits. This is optional.",
+          "carrierRegistrationNumber": "Carrier registration number",
+          "carrierRegistrationNumberDescription": "This starts with CB and is followed by 5 or 6 digits.",
+          "modeOfTransport": "Mode of transport",
+          "modeOfTransportDescription": "Enter if the waste is travelling by one of the following: ",
+          "road": "road",
+          "rail": "rail",
+          "sea": "sea",
+          "air": "air",
+          "inlandWaterways": "inland waterways"
+        }
+      },
+      "receiverDetails": {
+        "heading": "Receiver (consignee) details",
+        "description": "The waste receiver is the person or business who receives the waste for recovery or disposal.",
+        "contentHeadingOne": "Environmental permit number",
+        "contentDescriptionOne": "This is a combination of letters and numbers and is 8 characters long, for example AB1234CD. You can ",
+        "contentLinkOne": "search for environmental permit numbers here (opens in new tab)",
+        "contentHeadingTwo": "Waste exemption number",
+        "contentDescriptionTwo": "This is a combination of 3 letters, followed by 6 numbers, for example, ABC123456. You can ",
+        "contentLinkTwo": "search for waste exemption numbers here (opens in new tab)",
+        "contentHeadingThree": "Expected waste collection date",
+        "contentDescriptionThree": "This date must be in the future. Only use numbers and slashes between the day, month and year. For example, 23 /10/24 .",
+        "contentHeadingFour": "Number and type of transportation containers",
+        "contentDescriptionFour": "Enter a short description of the number and type of transportation containers, up to 100 characters long. For example, ‘3  yellow bin bags and 1 gas bottle’. ",
+        "contentHeadingFive": "Special handling requirements details (optional)",
+        "contentDescriptionFive": "Enter a short description of any special handling requirements if you are moving hazardous waste, up to 100 characters long. For example, ‘Goggles and cut resistant gloves are required’."
+      },
+      "ewcCodesAndDescription": {
+        "heading": "European Waste Catalogue (EWC) codes and description",
+        "contentOne": "You must enter all ",
+        "contentLink": "EWC codes (opens in new tab)",
+        "contentTwo": " that are relevant to your shipment in the relevant columns in the template. You can enter up to 3 EWC codes with all their relevant details. ",
+        "contentThree": "If you add an EWC code, you must complete all the additional information related to that EWC code. ",
+        "codes": {
+          "heading": "European Waste Catalogue (EWC) codes",
+          "content": "This should be 6 digits. For example, 010101."
+        },
+        "descriptionOfTheWaste": {
+          "headingOne": "Description of the waste",
+          "headingTwo": "Waste description ",
+          "contentOne": "Enter the usual description of the waste . For example, ‘baled PET bottles, bagged HDPE pellets or OCC paper.",
+          "contentTwo": "Your description must be 100 characters or less. ",
+          "headingThree": "Physical form of waste",
+          "contentThree": "Enter the physical form of the waste. This can be one of the following:",
+          "gas": "gas",
+          "liquid": "liquid",
+          "solid": "solid",
+          "powder": "powder",
+          "sludge": "sludge",
+          "mixed": "mixed",
+          "headingQuantity": "Waste quantity",
+          "wasteQuantityDetails": {
+            "heading": "Waste quantity details",
+            "answerFormat": "Answer format",
+            "wasteQuantity": "Waste quantity",
+            "wasteQuantityDescription": "Enter the waste quantity using only numbers and a decimal point, for example ‘13.5’. Do not write the unit after the number. Do not include the weight of the container or vehicle.",
+            "wasteQuantityUnits": "Waste quantity units",
+            "wasteQuantityUnitsDescription": "Enter if the quantity is being measured in tonnes, kilograms, litres, or cubic metres.",
+            "estimatedOrActualQuantity": "Estimated or actual quantity",
+            "estimatedOrActualQuantityDescription": "Enter either ‘estimate’ or ‘actual’."
+          },
+          "headingFour": "Hazardous properties",
+          "contentFour": "Enter ‘yes’ if the waste contains hazardous properties. You can ",
+          "contentLink": "find more information about hazardous waste here (opens in new tab)",
+          "headingFive": "Does the waste contain Persistent Organic Pollutants (POPs )?",
+          "contentFive": "Enter ‘yes’ if the waste contains POPs. There is ",
+          "contentLinkTwo": "additional information about POPs (opens in new tab)",
+          "contentFiveFinal": " here, if you need further help."
+        }
+      }
     }
   }
 }
