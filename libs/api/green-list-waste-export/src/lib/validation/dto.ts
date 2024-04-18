@@ -23,18 +23,10 @@ export type InvalidAttributeCombinationError = {
   message: string;
 };
 
-export type Value = {
-  reference: Submission['reference'];
-  wasteDescription: Submission['wasteDescription'];
-  wasteQuantity: Submission['wasteQuantity'];
-  exporterDetail: Submission['exporterDetail'];
-  importerDetail: Submission['importerDetail'];
-  collectionDate: Submission['collectionDate'];
-  carriers: Submission['carriers'];
-  collectionDetail: Submission['collectionDetail'];
-  ukExitLocation: Submission['ukExitLocation'];
-  transitCountries: Submission['transitCountries'];
-};
+export type Value = Omit<
+  Submission,
+  'id' | 'submissionDeclaration' | 'submissionState'
+>;
 
 export type Error = {
   index: number;

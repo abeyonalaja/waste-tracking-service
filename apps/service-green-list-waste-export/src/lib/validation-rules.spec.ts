@@ -13,9 +13,12 @@ import {
   validateExporterDetailSection,
   validateImporterDetailAndTransitCountriesCrossSection,
   validateImporterDetailSection,
+  validateRecoveryFacilityDetailSection,
   validateTransitCountriesSection,
   validateUkExitLocationSection,
+  validateWasteDescriptionAndCarriersCrossSection,
   validateWasteDescriptionAndQuantityCrossSection,
+  validateWasteDescriptionAndRecoveryFacilityDetailCrossSection,
   validateWasteDescriptionSection,
   validateWasteQuantitySection,
 } from './validation-rules';
@@ -121,7 +124,57 @@ const countries = [
 
 const countriesIncludingUk = [
   {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
     name: 'United Kingdom (England) [GB-ENG]',
+  },
+];
+
+const recoveryCodes = [
+  {
+    code: 'R1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: false,
+    },
+  },
+  {
+    code: 'R13',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: true,
+    },
+  },
+];
+
+const disposalCodes = [
+  {
+    code: 'D1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
   },
 ];
 
@@ -487,7 +540,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.LaboratoryValidationErrorMessages.invalid,
+        message: validation.UnlistedValidationErrorMessages.invalid,
       },
     ]);
 
@@ -2932,7 +2985,7 @@ describe('validateImporterDetailSection', () => {
 
 describe('validateCollectionDateSection', () => {
   it('passes CollectionDate section validation', async () => {
-    const futureDate = '01/01/3000';
+    const futureDate = '15/01/3000';
     const futureDateArr = futureDate.split('/');
     let response = validateCollectionDateSection({
       wasteCollectionDate: futureDate,
@@ -3047,7 +3100,7 @@ describe('validateCarriersSection', () => {
         firstCarrierMeansOfTransportDetails: 'details',
         secondCarrierOrganisationName: 'Test organisation 4',
         secondCarrierAddress: '3 Some Street, Paris, 75002',
-        secondCarrierCountry: 'France',
+        secondCarrierCountry: 'England',
         secondCarrierContactFullName: 'Jane Doe',
         secondCarrierContactPhoneNumber: '0033140000044',
         secondCarrierFaxNumber: '',
@@ -3083,7 +3136,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countries,
       countriesIncludingUk
     );
     expect(response.valid).toEqual(true);
@@ -3109,7 +3161,7 @@ describe('validateCarriersSection', () => {
         addressDetails: {
           organisationName: 'Test organisation 4',
           address: '3 Some Street, Paris, 75002',
-          country: 'France [FR]',
+          country: 'United Kingdom (England) [GB-ENG]',
         },
         contactDetails: {
           fullName: 'Jane Doe',
@@ -3171,7 +3223,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       false,
-      countries,
       countriesIncludingUk
     );
     expect(response.valid).toEqual(true);
@@ -3261,7 +3312,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countries,
       countriesIncludingUk
     );
     if (response.valid) {
@@ -3348,7 +3398,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countries,
       countriesIncludingUk
     );
     if (response.valid) {
@@ -3443,7 +3492,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countries,
       countriesIncludingUk
     );
     if (response.valid) {
@@ -3526,7 +3574,6 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       false,
-      countries,
       countriesIncludingUk
     );
     if (response.valid) {
@@ -3536,20 +3583,224 @@ describe('validateCarriersSection', () => {
     expect(response.value).toEqual([
       {
         field: 'Carriers',
-        message: firstCarrierErrorMessages.invalidCrossSectionTransport,
-      },
-      {
-        field: 'Carriers',
-        message:
-          firstCarrierErrorMessages.invalidCrossSectionTransportDescription,
-      },
-      {
-        field: 'Carriers',
         message: secondCarrierErrorMessages.invalidCountry,
       },
+    ]);
+  });
+});
+
+describe('validateWasteDescriptionAndCarriersCrossSection', () => {
+  it('passes WasteDescriptionAndCarriers cross section validation', async () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'BaselAnnexIX',
+        code: 'B1010',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    let response = validateWasteDescriptionAndCarriersCrossSection(
+      wasteDescription,
       {
-        field: 'Carriers',
-        message: secondCarrierErrorMessages.invalidCrossSectionTransport,
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: 'inland waterways',
+        firstCarrierMeansOfTransportDetails: 'details',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: 'Road',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      }
+    );
+    expect(response.valid).toEqual(true);
+
+    wasteDescription.wasteCode.type = 'NotApplicable';
+    response = validateWasteDescriptionAndCarriersCrossSection(
+      wasteDescription,
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: '',
+        firstCarrierMeansOfTransportDetails: '',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: '',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      }
+    );
+    expect(response.valid).toEqual(true);
+  });
+
+  it('fails WasteDescriptionAndCarriers cross section validation', async () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    const response = validateWasteDescriptionAndCarriersCrossSection(
+      wasteDescription,
+      {
+        firstCarrierOrganisationName: 'Test organisation 3',
+        firstCarrierAddress: 'Some address, London, EC2N4AY',
+        firstCarrierCountry: 'England',
+        firstCarrierContactFullName: 'John Doe',
+        firstCarrierContactPhoneNumber: '07888888844',
+        firstCarrierFaxNumber: '07888888844',
+        firstCarrierEmailAddress: 'test3@test.com',
+        firstCarrierMeansOfTransport: 'inland waterways',
+        firstCarrierMeansOfTransportDetails: 'details',
+        secondCarrierOrganisationName: 'Test organisation 4',
+        secondCarrierAddress: '3 Some Street, Paris, 75002',
+        secondCarrierCountry: 'France',
+        secondCarrierContactFullName: 'Jane Doe',
+        secondCarrierContactPhoneNumber: '0033140000044',
+        secondCarrierFaxNumber: '',
+        secondCarrierEmailAddress: 'test4@test.com',
+        secondCarrierMeansOfTransport: 'Road',
+        secondCarrierMeansOfTransportDetails: '',
+        thirdCarrierOrganisationName: '',
+        thirdCarrierAddress: '',
+        thirdCarrierCountry: '',
+        thirdCarrierContactFullName: '',
+        thirdCarrierContactPhoneNumber: '',
+        thirdCarrierFaxNumber: '',
+        thirdCarrierEmailAddress: '',
+        thirdCarrierMeansOfTransport: '',
+        thirdCarrierMeansOfTransportDetails: '',
+        fourthCarrierOrganisationName: '',
+        fourthCarrierAddress: '',
+        fourthCarrierCountry: '',
+        fourthCarrierContactFullName: '',
+        fourthCarrierContactPhoneNumber: '',
+        fourthCarrierFaxNumber: '',
+        fourthCarrierEmailAddress: '',
+        fourthCarrierMeansOfTransport: '',
+        fourthCarrierMeansOfTransportDetails: '',
+        fifthCarrierOrganisationName: '',
+        fifthCarrierAddress: '',
+        fifthCarrierCountry: '',
+        fifthCarrierContactFullName: '',
+        fifthCarrierContactPhoneNumber: '',
+        fifthCarrierFaxNumber: '',
+        fifthCarrierEmailAddress: '',
+        fifthCarrierMeansOfTransport: '',
+        fifthCarrierMeansOfTransportDetails: '',
+      }
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          validation.CarriersCrossSectionValidationErrorMessages
+            .invalidTransport,
+      },
+      {
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          validation.CarriersCrossSectionValidationErrorMessages
+            .invalidTransportDescription,
       },
     ]);
   });
@@ -3832,7 +4083,7 @@ describe('validateUkExitLocationSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'UkExitLocation',
-      message: validation.UkExitLocationErrorMessages.charTooMany,
+      message: validation.UkExitLocationValidationErrorMessages.charTooMany,
     });
 
     response = validateUkExitLocationSection({
@@ -3841,7 +4092,7 @@ describe('validateUkExitLocationSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'UkExitLocation',
-      message: validation.UkExitLocationErrorMessages.invalid,
+      message: validation.UkExitLocationValidationErrorMessages.invalid,
     });
   });
 });
@@ -3899,7 +4150,7 @@ describe('validateTransitCountriesSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'TransitCountries',
-      message: validation.TransitCountriesErrorMessages.invalid,
+      message: validation.TransitCountriesValidationErrorMessages.invalid,
     });
 
     response = validateTransitCountriesSection(
@@ -3911,7 +4162,7 @@ describe('validateTransitCountriesSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'TransitCountries',
-      message: validation.TransitCountriesErrorMessages.invalid,
+      message: validation.TransitCountriesValidationErrorMessages.invalid,
     });
   });
 });
@@ -3981,7 +4232,1383 @@ describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
       },
       {
         fields: ['ImporterDetail', 'TransitCountries'],
-        message: validation.TransitCountriesErrorMessages.invalidCrossSection,
+        message:
+          validation.TransitCountriesValidationErrorMessages
+            .invalidCrossSection,
+      },
+    ]);
+  });
+});
+
+describe('validateRecoveryFacilityDetailSection', () => {
+  it('passes RecoveryFacilityDetail section validation', async () => {
+    let response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: '',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+        firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+        firstRecoveryFacilityCountry: 'France',
+        firstRecoveryFacilityContactFullName: 'Jean Philip',
+        firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: 'test6@test.com',
+        firstRecoveryFacilityRecoveryCode: 'r1',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      false,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      {
+        addressDetails: {
+          name: 'Test organisation 6',
+          address: '4 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jean Philip',
+          emailAddress: 'test6@test.com',
+          phoneNumber: '0033140000066',
+        },
+        recoveryFacilityType: {
+          type: 'RecoveryFacility',
+          recoveryCode: 'R1',
+        },
+      },
+    ]);
+
+    response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: 'Test organisation 7',
+        interimSiteAddress: '5 Some Street, Paris, 75002',
+        interimSiteCountry: 'France',
+        interimSiteContactFullName: 'Jean Luc',
+        interimSiteContactPhoneNumber: '0033140000077',
+        interimSiteFaxNumber: '0033140000077',
+        interimSiteEmailAddress: 'test7@test.com',
+        interimSiteRecoveryCode: 'R13',
+        laboratoryOrganisationName: '',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+        firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+        firstRecoveryFacilityCountry: 'France',
+        firstRecoveryFacilityContactFullName: 'Jean Philip',
+        firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: 'test6@test.com',
+        firstRecoveryFacilityRecoveryCode: 'r1',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      false,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      {
+        addressDetails: {
+          name: 'Test organisation 7',
+          address: '5 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jean Luc',
+          emailAddress: 'test7@test.com',
+          phoneNumber: '0033140000077',
+          faxNumber: '0033140000077',
+        },
+        recoveryFacilityType: {
+          type: 'InterimSite',
+          recoveryCode: 'R13',
+        },
+      },
+      {
+        addressDetails: {
+          name: 'Test organisation 6',
+          address: '4 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jean Philip',
+          emailAddress: 'test6@test.com',
+          phoneNumber: '0033140000066',
+        },
+        recoveryFacilityType: {
+          type: 'RecoveryFacility',
+          recoveryCode: 'R1',
+        },
+      },
+    ]);
+
+    response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: 'Test organisation 6',
+        laboratoryAddress: '4 Some Street, Paris, 75002',
+        laboratoryCountry: 'France',
+        laboratoryContactFullName: 'Jean Philip',
+        laboratoryContactPhoneNumber: '0033140000066',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: 'test6@test.com',
+        laboratoryDisposalCode: 'd1',
+        firstRecoveryFacilityOrganisationName: '',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      true,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual([
+      {
+        addressDetails: {
+          name: 'Test organisation 6',
+          address: '4 Some Street, Paris, 75002',
+          country: 'France [FR]',
+        },
+        contactDetails: {
+          fullName: 'Jean Philip',
+          emailAddress: 'test6@test.com',
+          phoneNumber: '0033140000066',
+        },
+        recoveryFacilityType: {
+          type: 'Laboratory',
+          disposalCode: 'D1',
+        },
+      },
+    ]);
+  });
+
+  const interimSiteErrorMessages =
+    validation.RecoveryFacilityDetailValidationErrorMessages('InterimSite', 1);
+  const laboratoryErrorMessages =
+    validation.RecoveryFacilityDetailValidationErrorMessages('Laboratory', 1);
+  const firstRecoveryFacilityErrorMessages =
+    validation.RecoveryFacilityDetailValidationErrorMessages(
+      'RecoveryFacility',
+      1
+    );
+
+  it('fails RecoveryFacilityDetail section validation', async () => {
+    let response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: '     ',
+        interimSiteAddress: '     ',
+        interimSiteCountry: '     ',
+        interimSiteContactFullName: '     ',
+        interimSiteContactPhoneNumber: '      ',
+        interimSiteFaxNumber: '     ',
+        interimSiteEmailAddress: '     ',
+        interimSiteRecoveryCode: '     ',
+        laboratoryOrganisationName: '',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: '     ',
+        firstRecoveryFacilityAddress: '     ',
+        firstRecoveryFacilityCountry: '     ',
+        firstRecoveryFacilityContactFullName: '     ',
+        firstRecoveryFacilityContactPhoneNumber: '     ',
+        firstRecoveryFacilityFaxNumber: '     ',
+        firstRecoveryFacilityEmailAddress: '     ',
+        firstRecoveryFacilityRecoveryCode: '     ',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      false,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.emptyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidCode,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.emptyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidCode,
+      },
+    ]);
+
+    response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: faker.datatype.string(251),
+        interimSiteAddress: faker.datatype.string(251),
+        interimSiteCountry: faker.datatype.string(50),
+        interimSiteContactFullName: faker.datatype.string(251),
+        interimSiteContactPhoneNumber: faker.datatype.string(50),
+        interimSiteFaxNumber: faker.datatype.string(50),
+        interimSiteEmailAddress: faker.datatype.string(50),
+        interimSiteRecoveryCode: faker.datatype.string(50),
+        laboratoryOrganisationName: '',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: faker.datatype.string(251),
+        firstRecoveryFacilityAddress: faker.datatype.string(251),
+        firstRecoveryFacilityCountry: faker.datatype.string(50),
+        firstRecoveryFacilityContactFullName: faker.datatype.string(251),
+        firstRecoveryFacilityContactPhoneNumber: faker.datatype.string(50),
+        firstRecoveryFacilityFaxNumber: faker.datatype.string(50),
+        firstRecoveryFacilityEmailAddress: faker.datatype.string(50),
+        firstRecoveryFacilityRecoveryCode: faker.datatype.string(50),
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      false,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.charTooManyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.charTooManyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.charTooManyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: interimSiteErrorMessages.invalidCode,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.charTooManyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.charTooManyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.charTooManyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: firstRecoveryFacilityErrorMessages.invalidCode,
+      },
+    ]);
+
+    response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: '     ',
+        laboratoryAddress: '     ',
+        laboratoryCountry: '     ',
+        laboratoryContactFullName: '     ',
+        laboratoryContactPhoneNumber: '     ',
+        laboratoryFaxNumber: '     ',
+        laboratoryEmailAddress: '     ',
+        laboratoryDisposalCode: '     ',
+        firstRecoveryFacilityOrganisationName: '',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      true,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.emptyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.emptyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.emptyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidCode,
+      },
+    ]);
+
+    response = validateRecoveryFacilityDetailSection(
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: faker.datatype.string(251),
+        laboratoryAddress: faker.datatype.string(251),
+        laboratoryCountry: faker.datatype.string(50),
+        laboratoryContactFullName: faker.datatype.string(251),
+        laboratoryContactPhoneNumber: faker.datatype.string(50),
+        laboratoryFaxNumber: faker.datatype.string(50),
+        laboratoryEmailAddress: faker.datatype.string(50),
+        laboratoryDisposalCode: faker.datatype.string(50),
+        firstRecoveryFacilityOrganisationName: '',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      },
+      true,
+      countries,
+      recoveryCodes,
+      disposalCodes
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.charTooManyOrganisationName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.charTooManyAddress,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidCountry,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.charTooManyContactFullName,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidPhone,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidFax,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidEmail,
+      },
+      {
+        field: 'RecoveryFacilityDetail',
+        message: laboratoryErrorMessages.invalidCode,
+      },
+    ]);
+  });
+});
+
+describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => {
+  it('passes WasteDescriptionAndRecoveryFacilityDetail cross section validation', async () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'BaselAnnexIX',
+        code: 'B1010',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    let response =
+      validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+        wasteDescription,
+        {
+          interimSiteOrganisationName: '',
+          interimSiteAddress: '',
+          interimSiteCountry: '',
+          interimSiteContactFullName: '',
+          interimSiteContactPhoneNumber: '',
+          interimSiteFaxNumber: '',
+          interimSiteEmailAddress: '',
+          interimSiteRecoveryCode: '',
+          laboratoryOrganisationName: '',
+          laboratoryAddress: '',
+          laboratoryCountry: '',
+          laboratoryContactFullName: '',
+          laboratoryContactPhoneNumber: '',
+          laboratoryFaxNumber: '',
+          laboratoryEmailAddress: '',
+          laboratoryDisposalCode: '',
+          firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+          firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+          firstRecoveryFacilityCountry: 'France',
+          firstRecoveryFacilityContactFullName: 'Jean Philip',
+          firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+          firstRecoveryFacilityFaxNumber: '',
+          firstRecoveryFacilityEmailAddress: 'test6@test.com',
+          firstRecoveryFacilityRecoveryCode: 'r1',
+          secondRecoveryFacilityOrganisationName: '',
+          secondRecoveryFacilityAddress: '',
+          secondRecoveryFacilityCountry: '',
+          secondRecoveryFacilityContactFullName: '',
+          secondRecoveryFacilityContactPhoneNumber: '',
+          secondRecoveryFacilityFaxNumber: '',
+          secondRecoveryFacilityEmailAddress: '',
+          secondRecoveryFacilityRecoveryCode: '',
+          thirdRecoveryFacilityOrganisationName: '',
+          thirdRecoveryFacilityAddress: '',
+          thirdRecoveryFacilityCountry: '',
+          thirdRecoveryFacilityContactFullName: '',
+          thirdRecoveryFacilityContactPhoneNumber: '',
+          thirdRecoveryFacilityFaxNumber: '',
+          thirdRecoveryFacilityEmailAddress: '',
+          thirdRecoveryFacilityRecoveryCode: '',
+          fourthRecoveryFacilityOrganisationName: '',
+          fourthRecoveryFacilityAddress: '',
+          fourthRecoveryFacilityCountry: '',
+          fourthRecoveryFacilityContactFullName: '',
+          fourthRecoveryFacilityContactPhoneNumber: '',
+          fourthRecoveryFacilityFaxNumber: '',
+          fourthRecoveryFacilityEmailAddress: '',
+          fourthRecoveryFacilityRecoveryCode: '',
+          fifthRecoveryFacilityOrganisationName: '',
+          fifthRecoveryFacilityAddress: '',
+          fifthRecoveryFacilityCountry: '',
+          fifthRecoveryFacilityContactFullName: '',
+          fifthRecoveryFacilityContactPhoneNumber: '',
+          fifthRecoveryFacilityFaxNumber: '',
+          fifthRecoveryFacilityEmailAddress: '',
+          fifthRecoveryFacilityRecoveryCode: '',
+        }
+      );
+    expect(response.valid).toEqual(true);
+
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: 'Test organisation 7',
+        interimSiteAddress: '5 Some Street, Paris, 75002',
+        interimSiteCountry: 'France',
+        interimSiteContactFullName: 'Jean Luc',
+        interimSiteContactPhoneNumber: '0033140000077',
+        interimSiteFaxNumber: '0033140000077',
+        interimSiteEmailAddress: 'test7@test.com',
+        interimSiteRecoveryCode: 'R13',
+        laboratoryOrganisationName: '',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+        firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+        firstRecoveryFacilityCountry: 'France',
+        firstRecoveryFacilityContactFullName: 'Jean Philip',
+        firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: 'test6@test.com',
+        firstRecoveryFacilityRecoveryCode: 'r1',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    expect(response.valid).toEqual(true);
+
+    wasteDescription.wasteCode.type = 'NotApplicable';
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: 'Test organisation 6',
+        laboratoryAddress: '4 Some Street, Paris, 75002',
+        laboratoryCountry: 'France',
+        laboratoryContactFullName: 'Jean Philip',
+        laboratoryContactPhoneNumber: '0033140000066',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: 'test6@test.com',
+        laboratoryDisposalCode: 'd1',
+        firstRecoveryFacilityOrganisationName: '',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    expect(response.valid).toEqual(true);
+  });
+
+  it('fails WasteDescriptionAndRecoveryFacilityDetail cross section validation', async () => {
+    const wasteDescription: WasteDescription = {
+      wasteCode: {
+        type: 'BaselAnnexIX',
+        code: 'B1010',
+      },
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    };
+    let response =
+      validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+        wasteDescription,
+        {
+          interimSiteOrganisationName: '',
+          interimSiteAddress: '',
+          interimSiteCountry: '',
+          interimSiteContactFullName: '',
+          interimSiteContactPhoneNumber: '',
+          interimSiteFaxNumber: '',
+          interimSiteEmailAddress: '',
+          interimSiteRecoveryCode: '',
+          laboratoryOrganisationName: 'Invalid',
+          laboratoryAddress: '',
+          laboratoryCountry: '',
+          laboratoryContactFullName: '',
+          laboratoryContactPhoneNumber: '',
+          laboratoryFaxNumber: '',
+          laboratoryEmailAddress: '',
+          laboratoryDisposalCode: '',
+          firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+          firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+          firstRecoveryFacilityCountry: 'France',
+          firstRecoveryFacilityContactFullName: 'Jean Philip',
+          firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+          firstRecoveryFacilityFaxNumber: '',
+          firstRecoveryFacilityEmailAddress: 'test6@test.com',
+          firstRecoveryFacilityRecoveryCode: 'r1',
+          secondRecoveryFacilityOrganisationName: '',
+          secondRecoveryFacilityAddress: '',
+          secondRecoveryFacilityCountry: '',
+          secondRecoveryFacilityContactFullName: '',
+          secondRecoveryFacilityContactPhoneNumber: '',
+          secondRecoveryFacilityFaxNumber: '',
+          secondRecoveryFacilityEmailAddress: '',
+          secondRecoveryFacilityRecoveryCode: '',
+          thirdRecoveryFacilityOrganisationName: '',
+          thirdRecoveryFacilityAddress: '',
+          thirdRecoveryFacilityCountry: '',
+          thirdRecoveryFacilityContactFullName: '',
+          thirdRecoveryFacilityContactPhoneNumber: '',
+          thirdRecoveryFacilityFaxNumber: '',
+          thirdRecoveryFacilityEmailAddress: '',
+          thirdRecoveryFacilityRecoveryCode: '',
+          fourthRecoveryFacilityOrganisationName: '',
+          fourthRecoveryFacilityAddress: '',
+          fourthRecoveryFacilityCountry: '',
+          fourthRecoveryFacilityContactFullName: '',
+          fourthRecoveryFacilityContactPhoneNumber: '',
+          fourthRecoveryFacilityFaxNumber: '',
+          fourthRecoveryFacilityEmailAddress: '',
+          fourthRecoveryFacilityRecoveryCode: '',
+          fifthRecoveryFacilityOrganisationName: '',
+          fifthRecoveryFacilityAddress: '',
+          fifthRecoveryFacilityCountry: '',
+          fifthRecoveryFacilityContactFullName: '',
+          fifthRecoveryFacilityContactPhoneNumber: '',
+          fifthRecoveryFacilityFaxNumber: '',
+          fifthRecoveryFacilityEmailAddress: '',
+          fifthRecoveryFacilityRecoveryCode: '',
+        }
+      );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidLaboratory,
+      },
+    ]);
+
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: 'Test organisation 7',
+        interimSiteAddress: '5 Some Street, Paris, 75002',
+        interimSiteCountry: 'France',
+        interimSiteContactFullName: 'Jean Luc',
+        interimSiteContactPhoneNumber: '0033140000077',
+        interimSiteFaxNumber: '0033140000077',
+        interimSiteEmailAddress: 'test7@test.com',
+        interimSiteRecoveryCode: 'R13',
+        laboratoryOrganisationName: 'Invalid',
+        laboratoryAddress: '',
+        laboratoryCountry: '',
+        laboratoryContactFullName: '',
+        laboratoryContactPhoneNumber: '',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: '',
+        laboratoryDisposalCode: '',
+        firstRecoveryFacilityOrganisationName: 'Test organisation 6',
+        firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
+        firstRecoveryFacilityCountry: 'France',
+        firstRecoveryFacilityContactFullName: 'Jean Philip',
+        firstRecoveryFacilityContactPhoneNumber: '0033140000066',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: 'test6@test.com',
+        firstRecoveryFacilityRecoveryCode: 'r1',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidLaboratory,
+      },
+    ]);
+
+    wasteDescription.wasteCode.type = 'NotApplicable';
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: 'Invalid',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: 'Test organisation 6',
+        laboratoryAddress: '4 Some Street, Paris, 75002',
+        laboratoryCountry: 'France',
+        laboratoryContactFullName: 'Jean Philip',
+        laboratoryContactPhoneNumber: '0033140000066',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: 'test6@test.com',
+        laboratoryDisposalCode: 'd1',
+        firstRecoveryFacilityOrganisationName: '',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidInterimSite,
+      },
+    ]);
+
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: '',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: 'Test organisation 6',
+        laboratoryAddress: '4 Some Street, Paris, 75002',
+        laboratoryCountry: 'France',
+        laboratoryContactFullName: 'Jean Philip',
+        laboratoryContactPhoneNumber: '0033140000066',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: 'test6@test.com',
+        laboratoryDisposalCode: 'd1',
+        firstRecoveryFacilityOrganisationName: 'Invalid',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidRecoveryFacility,
+      },
+    ]);
+
+    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+      wasteDescription,
+      {
+        interimSiteOrganisationName: 'Invalid',
+        interimSiteAddress: '',
+        interimSiteCountry: '',
+        interimSiteContactFullName: '',
+        interimSiteContactPhoneNumber: '',
+        interimSiteFaxNumber: '',
+        interimSiteEmailAddress: '',
+        interimSiteRecoveryCode: '',
+        laboratoryOrganisationName: 'Test organisation 6',
+        laboratoryAddress: '4 Some Street, Paris, 75002',
+        laboratoryCountry: 'France',
+        laboratoryContactFullName: 'Jean Philip',
+        laboratoryContactPhoneNumber: '0033140000066',
+        laboratoryFaxNumber: '',
+        laboratoryEmailAddress: 'test6@test.com',
+        laboratoryDisposalCode: 'd1',
+        firstRecoveryFacilityOrganisationName: 'Invalid',
+        firstRecoveryFacilityAddress: '',
+        firstRecoveryFacilityCountry: '',
+        firstRecoveryFacilityContactFullName: '',
+        firstRecoveryFacilityContactPhoneNumber: '',
+        firstRecoveryFacilityFaxNumber: '',
+        firstRecoveryFacilityEmailAddress: '',
+        firstRecoveryFacilityRecoveryCode: '',
+        secondRecoveryFacilityOrganisationName: '',
+        secondRecoveryFacilityAddress: '',
+        secondRecoveryFacilityCountry: '',
+        secondRecoveryFacilityContactFullName: '',
+        secondRecoveryFacilityContactPhoneNumber: '',
+        secondRecoveryFacilityFaxNumber: '',
+        secondRecoveryFacilityEmailAddress: '',
+        secondRecoveryFacilityRecoveryCode: '',
+        thirdRecoveryFacilityOrganisationName: '',
+        thirdRecoveryFacilityAddress: '',
+        thirdRecoveryFacilityCountry: '',
+        thirdRecoveryFacilityContactFullName: '',
+        thirdRecoveryFacilityContactPhoneNumber: '',
+        thirdRecoveryFacilityFaxNumber: '',
+        thirdRecoveryFacilityEmailAddress: '',
+        thirdRecoveryFacilityRecoveryCode: '',
+        fourthRecoveryFacilityOrganisationName: '',
+        fourthRecoveryFacilityAddress: '',
+        fourthRecoveryFacilityCountry: '',
+        fourthRecoveryFacilityContactFullName: '',
+        fourthRecoveryFacilityContactPhoneNumber: '',
+        fourthRecoveryFacilityFaxNumber: '',
+        fourthRecoveryFacilityEmailAddress: '',
+        fourthRecoveryFacilityRecoveryCode: '',
+        fifthRecoveryFacilityOrganisationName: '',
+        fifthRecoveryFacilityAddress: '',
+        fifthRecoveryFacilityCountry: '',
+        fifthRecoveryFacilityContactFullName: '',
+        fifthRecoveryFacilityContactPhoneNumber: '',
+        fifthRecoveryFacilityFaxNumber: '',
+        fifthRecoveryFacilityEmailAddress: '',
+        fifthRecoveryFacilityRecoveryCode: '',
+      }
+    );
+    if (response.valid) {
+      return;
+    }
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidInterimSite,
+      },
+      {
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidRecoveryFacility,
       },
     ]);
   });

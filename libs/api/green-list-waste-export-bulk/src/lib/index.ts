@@ -20,6 +20,7 @@ export type {
   CollectionDetailFlattened,
   ExitLocationFlattened,
   TransitCountriesFlattened,
+  RecoveryFacilityDetailFlattened,
   PartialSubmission,
   SubmissionSummary,
 } from './dto';

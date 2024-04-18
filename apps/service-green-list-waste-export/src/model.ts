@@ -18,6 +18,7 @@ export type DraftCollectionDetail = api.DraftCollectionDetail;
 export type DraftExitLocation = api.DraftExitLocation;
 export type DraftTransitCountries = api.DraftTransitCountries;
 export type RecoveryFacility = api.RecoveryFacility;
+export type RecoveryFacilityData = api.RecoveryFacilityData;
 export type DraftRecoveryFacilityDetail = api.DraftRecoveryFacilityDetail;
 export type DraftSubmissionSummary = api.DraftSubmissionSummary;
 export type DraftSubmissionSummaryPage = api.DraftSubmissionSummaryPage;
@@ -48,6 +49,7 @@ export type Carriers = Submission['carriers'];
 export type CollectionDetail = Submission['collectionDetail'];
 export type ExitLocation = Submission['ukExitLocation'];
 export type TransitCountries = Submission['transitCountries'];
+export type RecoveryFacilityDetail = Submission['recoveryFacilityDetail'];
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type CustomerReferenceFlattened = bulkApi.CustomerReferenceFlattened;
@@ -60,3 +62,5 @@ export type CarriersFlattened = bulkApi.CarriersFlattened;
 export type CollectionDetailFlattened = bulkApi.CollectionDetailFlattened;
 export type ExitLocationFlattened = bulkApi.ExitLocationFlattened;
 export type TransitCountriesFlattened = bulkApi.TransitCountriesFlattened;
+export type RecoveryFacilityDetailFlattened =
+  bulkApi.RecoveryFacilityDetailFlattened;

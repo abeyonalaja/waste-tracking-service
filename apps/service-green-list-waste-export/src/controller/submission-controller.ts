@@ -9,6 +9,7 @@ import {
   Value,
   Error,
   ValidationResult,
+  RecoveryFacilityData,
 } from '../model';
 import { validationRules } from '../lib';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
@@ -67,6 +68,8 @@ export default class SubmissionController {
       const ewcCodeList = ewcCodesResponse.value;
       const countryList = countriesResponse.value;
       const countryIncludingUkList = countriesIncludingUkResponse.value;
+      const recoveryCodeList = recoveryCodesResponse.value;
+      const disposalCodeList = disposalCodesResponse.value;
 
       let index = 2;
       const errors: Error[] = [];
@@ -176,67 +179,80 @@ export default class SubmissionController {
           !wasteDescription.valid ||
           (wasteDescription.valid &&
             wasteDescription.value.wasteCode.type !== 'NotApplicable');
+        const carriersFlattened = {
+          firstCarrierOrganisationName: s.firstCarrierOrganisationName,
+          firstCarrierAddress: s.firstCarrierAddress,
+          firstCarrierCountry: s.firstCarrierCountry,
+          firstCarrierContactFullName: s.firstCarrierContactFullName,
+          firstCarrierContactPhoneNumber: s.firstCarrierContactPhoneNumber,
+          firstCarrierFaxNumber: s.firstCarrierFaxNumber,
+          firstCarrierEmailAddress: s.firstCarrierEmailAddress,
+          firstCarrierMeansOfTransport: s.firstCarrierMeansOfTransport,
+          firstCarrierMeansOfTransportDetails:
+            s.firstCarrierMeansOfTransportDetails,
+          secondCarrierOrganisationName: s.secondCarrierOrganisationName,
+          secondCarrierAddress: s.secondCarrierAddress,
+          secondCarrierCountry: s.secondCarrierCountry,
+          secondCarrierContactFullName: s.secondCarrierContactFullName,
+          secondCarrierContactPhoneNumber: s.secondCarrierContactPhoneNumber,
+          secondCarrierFaxNumber: s.secondCarrierFaxNumber,
+          secondCarrierEmailAddress: s.secondCarrierEmailAddress,
+          secondCarrierMeansOfTransport: s.secondCarrierMeansOfTransport,
+          secondCarrierMeansOfTransportDetails:
+            s.secondCarrierMeansOfTransportDetails,
+          thirdCarrierOrganisationName: s.thirdCarrierOrganisationName,
+          thirdCarrierAddress: s.thirdCarrierAddress,
+          thirdCarrierCountry: s.thirdCarrierCountry,
+          thirdCarrierContactFullName: s.thirdCarrierContactFullName,
+          thirdCarrierContactPhoneNumber: s.thirdCarrierContactPhoneNumber,
+          thirdCarrierFaxNumber: s.thirdCarrierFaxNumber,
+          thirdCarrierEmailAddress: s.thirdCarrierEmailAddress,
+          thirdCarrierMeansOfTransport: s.thirdCarrierMeansOfTransport,
+          thirdCarrierMeansOfTransportDetails:
+            s.thirdCarrierMeansOfTransportDetails,
+          fourthCarrierOrganisationName: s.fourthCarrierOrganisationName,
+          fourthCarrierAddress: s.fourthCarrierAddress,
+          fourthCarrierCountry: s.fourthCarrierCountry,
+          fourthCarrierContactFullName: s.fourthCarrierContactFullName,
+          fourthCarrierContactPhoneNumber: s.fourthCarrierContactPhoneNumber,
+          fourthCarrierFaxNumber: s.fourthCarrierFaxNumber,
+          fourthCarrierEmailAddress: s.fourthCarrierEmailAddress,
+          fourthCarrierMeansOfTransport: s.fourthCarrierMeansOfTransport,
+          fourthCarrierMeansOfTransportDetails:
+            s.fourthCarrierMeansOfTransportDetails,
+          fifthCarrierOrganisationName: s.fifthCarrierOrganisationName,
+          fifthCarrierAddress: s.fifthCarrierAddress,
+          fifthCarrierCountry: s.fifthCarrierCountry,
+          fifthCarrierContactFullName: s.fifthCarrierContactFullName,
+          fifthCarrierContactPhoneNumber: s.fifthCarrierContactPhoneNumber,
+          fifthCarrierFaxNumber: s.fifthCarrierFaxNumber,
+          fifthCarrierEmailAddress: s.fifthCarrierEmailAddress,
+          fifthCarrierMeansOfTransport: s.fifthCarrierMeansOfTransport,
+          fifthCarrierMeansOfTransportDetails:
+            s.fifthCarrierMeansOfTransportDetails,
+        };
         const carriers = validationRules.validateCarriersSection(
-          {
-            firstCarrierOrganisationName: s.firstCarrierOrganisationName,
-            firstCarrierAddress: s.firstCarrierAddress,
-            firstCarrierCountry: s.firstCarrierCountry,
-            firstCarrierContactFullName: s.firstCarrierContactFullName,
-            firstCarrierContactPhoneNumber: s.firstCarrierContactPhoneNumber,
-            firstCarrierFaxNumber: s.firstCarrierFaxNumber,
-            firstCarrierEmailAddress: s.firstCarrierEmailAddress,
-            firstCarrierMeansOfTransport: s.firstCarrierMeansOfTransport,
-            firstCarrierMeansOfTransportDetails:
-              s.firstCarrierMeansOfTransportDetails,
-            secondCarrierOrganisationName: s.secondCarrierOrganisationName,
-            secondCarrierAddress: s.secondCarrierAddress,
-            secondCarrierCountry: s.secondCarrierCountry,
-            secondCarrierContactFullName: s.secondCarrierContactFullName,
-            secondCarrierContactPhoneNumber: s.secondCarrierContactPhoneNumber,
-            secondCarrierFaxNumber: s.secondCarrierFaxNumber,
-            secondCarrierEmailAddress: s.secondCarrierEmailAddress,
-            secondCarrierMeansOfTransport: s.secondCarrierMeansOfTransport,
-            secondCarrierMeansOfTransportDetails:
-              s.secondCarrierMeansOfTransportDetails,
-            thirdCarrierOrganisationName: s.thirdCarrierOrganisationName,
-            thirdCarrierAddress: s.thirdCarrierAddress,
-            thirdCarrierCountry: s.thirdCarrierCountry,
-            thirdCarrierContactFullName: s.thirdCarrierContactFullName,
-            thirdCarrierContactPhoneNumber: s.thirdCarrierContactPhoneNumber,
-            thirdCarrierFaxNumber: s.thirdCarrierFaxNumber,
-            thirdCarrierEmailAddress: s.thirdCarrierEmailAddress,
-            thirdCarrierMeansOfTransport: s.thirdCarrierMeansOfTransport,
-            thirdCarrierMeansOfTransportDetails:
-              s.thirdCarrierMeansOfTransportDetails,
-            fourthCarrierOrganisationName: s.fourthCarrierOrganisationName,
-            fourthCarrierAddress: s.fourthCarrierAddress,
-            fourthCarrierCountry: s.fourthCarrierCountry,
-            fourthCarrierContactFullName: s.fourthCarrierContactFullName,
-            fourthCarrierContactPhoneNumber: s.fourthCarrierContactPhoneNumber,
-            fourthCarrierFaxNumber: s.fourthCarrierFaxNumber,
-            fourthCarrierEmailAddress: s.fourthCarrierEmailAddress,
-            fourthCarrierMeansOfTransport: s.fourthCarrierMeansOfTransport,
-            fourthCarrierMeansOfTransportDetails:
-              s.fourthCarrierMeansOfTransportDetails,
-            fifthCarrierOrganisationName: s.fifthCarrierOrganisationName,
-            fifthCarrierAddress: s.fifthCarrierAddress,
-            fifthCarrierCountry: s.fifthCarrierCountry,
-            fifthCarrierContactFullName: s.fifthCarrierContactFullName,
-            fifthCarrierContactPhoneNumber: s.fifthCarrierContactPhoneNumber,
-            fifthCarrierFaxNumber: s.fifthCarrierFaxNumber,
-            fifthCarrierEmailAddress: s.fifthCarrierEmailAddress,
-            fifthCarrierMeansOfTransport: s.fifthCarrierMeansOfTransport,
-            fifthCarrierMeansOfTransportDetails:
-              s.fifthCarrierMeansOfTransportDetails,
-          },
+          carriersFlattened,
           transport,
-          countryList,
           countryIncludingUkList
         );
         if (!carriers.valid) {
           carriers.value.map((e) => {
             fieldFormatErrors.push(e);
           });
+        }
+
+        if (wasteDescription.valid) {
+          const crossSection =
+            validationRules.validateWasteDescriptionAndCarriersCrossSection(
+              wasteDescription.value,
+              carriersFlattened
+            );
+          if (!crossSection.valid) {
+            crossSection.value.map((e) => {
+              invalidStructureErrors.push(e);
+            });
+          }
         }
 
         const collectionDetail =
@@ -290,6 +306,122 @@ export default class SubmissionController {
           }
         }
 
+        let recoveryFacilityDetail:
+          | { valid: false; value: FieldFormatError[] }
+          | { valid: true; value: RecoveryFacilityData[] } = {
+          valid: false,
+          value: [],
+        };
+        if (wasteDescription.valid) {
+          const recoveryFacilityDetailFlattened = {
+            interimSiteOrganisationName: s.interimSiteOrganisationName,
+            interimSiteAddress: s.interimSiteAddress,
+            interimSiteCountry: s.interimSiteCountry,
+            interimSiteContactFullName: s.interimSiteContactFullName,
+            interimSiteContactPhoneNumber: s.interimSiteContactPhoneNumber,
+            interimSiteFaxNumber: s.interimSiteFaxNumber,
+            interimSiteEmailAddress: s.interimSiteEmailAddress,
+            interimSiteRecoveryCode: s.interimSiteRecoveryCode,
+            laboratoryOrganisationName: s.laboratoryOrganisationName,
+            laboratoryAddress: s.laboratoryAddress,
+            laboratoryCountry: s.laboratoryCountry,
+            laboratoryContactFullName: s.laboratoryContactFullName,
+            laboratoryContactPhoneNumber: s.laboratoryContactPhoneNumber,
+            laboratoryFaxNumber: s.laboratoryFaxNumber,
+            laboratoryEmailAddress: s.laboratoryEmailAddress,
+            laboratoryDisposalCode: s.laboratoryDisposalCode,
+            firstRecoveryFacilityOrganisationName:
+              s.firstRecoveryFacilityOrganisationName,
+            firstRecoveryFacilityAddress: s.firstRecoveryFacilityAddress,
+            firstRecoveryFacilityCountry: s.firstRecoveryFacilityCountry,
+            firstRecoveryFacilityContactFullName:
+              s.firstRecoveryFacilityContactFullName,
+            firstRecoveryFacilityContactPhoneNumber:
+              s.firstRecoveryFacilityContactPhoneNumber,
+            firstRecoveryFacilityFaxNumber: s.firstRecoveryFacilityFaxNumber,
+            firstRecoveryFacilityEmailAddress:
+              s.firstRecoveryFacilityEmailAddress,
+            firstRecoveryFacilityRecoveryCode:
+              s.firstRecoveryFacilityRecoveryCode,
+            secondRecoveryFacilityOrganisationName:
+              s.secondRecoveryFacilityOrganisationName,
+            secondRecoveryFacilityAddress: s.secondRecoveryFacilityAddress,
+            secondRecoveryFacilityCountry: s.secondRecoveryFacilityCountry,
+            secondRecoveryFacilityContactFullName:
+              s.secondRecoveryFacilityContactFullName,
+            secondRecoveryFacilityContactPhoneNumber:
+              s.secondRecoveryFacilityContactPhoneNumber,
+            secondRecoveryFacilityFaxNumber: s.secondRecoveryFacilityFaxNumber,
+            secondRecoveryFacilityEmailAddress:
+              s.secondRecoveryFacilityEmailAddress,
+            secondRecoveryFacilityRecoveryCode:
+              s.secondRecoveryFacilityRecoveryCode,
+            thirdRecoveryFacilityOrganisationName:
+              s.thirdRecoveryFacilityOrganisationName,
+            thirdRecoveryFacilityAddress: s.thirdRecoveryFacilityAddress,
+            thirdRecoveryFacilityCountry: s.thirdRecoveryFacilityCountry,
+            thirdRecoveryFacilityContactFullName:
+              s.thirdRecoveryFacilityContactFullName,
+            thirdRecoveryFacilityContactPhoneNumber:
+              s.thirdRecoveryFacilityContactPhoneNumber,
+            thirdRecoveryFacilityFaxNumber: s.thirdRecoveryFacilityFaxNumber,
+            thirdRecoveryFacilityEmailAddress:
+              s.thirdRecoveryFacilityEmailAddress,
+            thirdRecoveryFacilityRecoveryCode:
+              s.thirdRecoveryFacilityRecoveryCode,
+            fourthRecoveryFacilityOrganisationName:
+              s.fourthRecoveryFacilityOrganisationName,
+            fourthRecoveryFacilityAddress: s.fourthRecoveryFacilityAddress,
+            fourthRecoveryFacilityCountry: s.fourthRecoveryFacilityCountry,
+            fourthRecoveryFacilityContactFullName:
+              s.fourthRecoveryFacilityContactFullName,
+            fourthRecoveryFacilityContactPhoneNumber:
+              s.fourthRecoveryFacilityContactPhoneNumber,
+            fourthRecoveryFacilityFaxNumber: s.fourthRecoveryFacilityFaxNumber,
+            fourthRecoveryFacilityEmailAddress:
+              s.fourthRecoveryFacilityEmailAddress,
+            fourthRecoveryFacilityRecoveryCode:
+              s.fourthRecoveryFacilityRecoveryCode,
+            fifthRecoveryFacilityOrganisationName:
+              s.fifthRecoveryFacilityOrganisationName,
+            fifthRecoveryFacilityAddress: s.fifthRecoveryFacilityAddress,
+            fifthRecoveryFacilityCountry: s.fifthRecoveryFacilityCountry,
+            fifthRecoveryFacilityContactFullName:
+              s.fifthRecoveryFacilityContactFullName,
+            fifthRecoveryFacilityContactPhoneNumber:
+              s.fifthRecoveryFacilityContactPhoneNumber,
+            fifthRecoveryFacilityFaxNumber: s.fifthRecoveryFacilityFaxNumber,
+            fifthRecoveryFacilityEmailAddress:
+              s.fifthRecoveryFacilityEmailAddress,
+            fifthRecoveryFacilityRecoveryCode:
+              s.fifthRecoveryFacilityRecoveryCode,
+          };
+          recoveryFacilityDetail =
+            validationRules.validateRecoveryFacilityDetailSection(
+              recoveryFacilityDetailFlattened,
+              wasteDescription.value.wasteCode.type === 'NotApplicable',
+              countryList,
+              recoveryCodeList,
+              disposalCodeList
+            );
+          if (!recoveryFacilityDetail.valid) {
+            recoveryFacilityDetail.value.map((e) => {
+              fieldFormatErrors.push(e);
+            });
+          }
+
+          const crossSection =
+            validationRules.validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+              wasteDescription.value,
+              recoveryFacilityDetailFlattened
+            );
+          if (!crossSection.valid) {
+            crossSection.value.map((e) => {
+              invalidStructureErrors.push(e);
+            });
+          }
+        }
+
         if (
           reference.valid &&
           wasteDescription.valid &&
@@ -301,6 +433,7 @@ export default class SubmissionController {
           collectionDetail.valid &&
           ukExitLocation.valid &&
           transitCountries.valid &&
+          recoveryFacilityDetail.valid &&
           invalidStructureErrors.length === 0
         ) {
           submissions.push({
@@ -314,6 +447,7 @@ export default class SubmissionController {
             collectionDetail: collectionDetail.value,
             ukExitLocation: ukExitLocation.value,
             transitCountries: transitCountries.value,
+            recoveryFacilityDetail: recoveryFacilityDetail.value,
           });
         } else {
           errors.push({

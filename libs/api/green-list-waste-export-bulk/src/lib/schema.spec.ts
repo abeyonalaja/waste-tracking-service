@@ -343,6 +343,24 @@ describe('getBatchResponse', () => {
                 value: 'Dover',
               },
               transitCountries: ['France [FR]', 'Belgium [BE]'],
+              recoveryFacilityDetail: [
+                {
+                  addressDetails: {
+                    name: 'Test organisation 6',
+                    address: '4 Some Street, Paris, 75002',
+                    country: 'France [FR]',
+                  },
+                  contactDetails: {
+                    fullName: 'Jean Philip',
+                    emailAddress: 'test6@test.com',
+                    phoneNumber: '0033140000066',
+                  },
+                  recoveryFacilityType: {
+                    type: 'RecoveryFacility',
+                    recoveryCode: 'R1',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -479,6 +497,24 @@ describe('getBatchResponse', () => {
                 value: 'Dover',
               },
               transitCountries: ['France [FR]', 'Belgium [BE]'],
+              recoveryFacilityDetail: [
+                {
+                  addressDetails: {
+                    name: 'Test organisation 6',
+                    address: '4 Some Street, Paris, 75002',
+                    country: 'France [FR]',
+                  },
+                  contactDetails: {
+                    fullName: 'Jean Philip',
+                    emailAddress: 'test6@test.com',
+                    phoneNumber: '0033140000066',
+                  },
+                  recoveryFacilityType: {
+                    type: 'RecoveryFacility',
+                    recoveryCode: 'R1',
+                  },
+                },
+              ],
             },
           ],
         },

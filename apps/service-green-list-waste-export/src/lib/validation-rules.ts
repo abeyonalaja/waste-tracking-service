@@ -1,5 +1,10 @@
 import { isPast, isValid } from 'date-fns';
-import { WasteCodeType, WasteCode, Country } from '@wts/api/reference-data';
+import {
+  WasteCodeType,
+  WasteCode,
+  Country,
+  RecoveryCode,
+} from '@wts/api/reference-data';
 import {
   validation,
   FieldFormatError,
@@ -27,6 +32,8 @@ import {
   ExitLocation,
   TransitCountries,
   TransitCountriesFlattened,
+  RecoveryFacilityData,
+  RecoveryFacilityDetailFlattened,
 } from '../model';
 
 function titleCase(str: string) {
@@ -226,7 +233,7 @@ export function validateWasteDescriptionSection(
       if (laboratory !== 'yes') {
         errors.push({
           field: 'WasteDescription',
-          message: validation.LaboratoryValidationErrorMessages.invalid,
+          message: validation.UnlistedValidationErrorMessages.invalid,
         });
       } else {
         wasteCode = {
@@ -888,26 +895,26 @@ export function validateCollectionDateSection(
   | { valid: true; value: CollectionDate } {
   const errors: FieldFormatError[] = [];
 
+  let dateArr: string[] = [];
   if (!value.wasteCollectionDate) {
     errors.push({
       field: 'CollectionDate',
       message: validation.CollectionDateValidationErrorMessages.empty,
     });
   } else {
-    value.wasteCollectionDate = value.wasteCollectionDate.replace(/-/g, '/');
-    if (!isValid(new Date(value.wasteCollectionDate))) {
+    dateArr = value.wasteCollectionDate.replace(/-/g, '/').split('/');
+    const collectionDate = new Date(
+      Number(dateArr[2]),
+      Number(dateArr[1]) - 1,
+      Number(dateArr[0])
+    );
+    if (!isValid(new Date(collectionDate))) {
       errors.push({
         field: 'CollectionDate',
         message: validation.CollectionDateValidationErrorMessages.empty,
       });
     } else {
-      const dateArr = value.wasteCollectionDate.split('/');
-      const date = new Date(
-        Number(dateArr[2]),
-        Number(dateArr[1]) - 1,
-        Number(dateArr[0])
-      );
-      if (isPast(date)) {
+      if (isPast(collectionDate)) {
         errors.push({
           field: 'CollectionDate',
           message: validation.CollectionDateValidationErrorMessages.invalid,
@@ -938,7 +945,6 @@ export function validateCollectionDateSection(
     };
   }
 
-  const dateArr = value.wasteCollectionDate.split('/');
   const date = {
     day: dateArr[0],
     month: dateArr[1],
@@ -957,7 +963,6 @@ export function validateCollectionDateSection(
 export function validateCarriersSection(
   value: CarriersFlattened,
   transport: boolean,
-  countryList: Country[],
   countryIncludingUkList: Country[]
 ):
   | { valid: false; value: FieldFormatError[] }
@@ -1025,7 +1030,7 @@ export function validateCarriersSection(
   let index = 0;
   const errors: FieldFormatError[] = [];
   const carriers: CarrierData[] = [];
-  carriersArr.map((c) => {
+  carriersArr.forEach((c) => {
     index += 1;
 
     if (
@@ -1085,18 +1090,9 @@ export function validateCarriersSection(
         message: errorMessages.emptyCountry,
       });
     } else {
-      const filteredCountryList =
-        index !== 1
-          ? countryList.filter((country) =>
-              country.name
-                .toUpperCase()
-                .includes(c.carrierCountry.toUpperCase())
-            )
-          : countryIncludingUkList.filter((country) =>
-              country.name
-                .toUpperCase()
-                .includes(c.carrierCountry.toUpperCase())
-            );
+      const filteredCountryList = countryIncludingUkList.filter((country) =>
+        country.name.toUpperCase().includes(c.carrierCountry.toUpperCase())
+      );
       if (filteredCountryList.length !== 1) {
         errorCount += 1;
         errors.push({
@@ -1182,23 +1178,7 @@ export function validateCarriersSection(
       }
     }
 
-    if (!transport) {
-      if (c.carrierMeansOfTransport.trim()) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.invalidCrossSectionTransport,
-        });
-      }
-
-      if (c.carrierMeansOfTransportDetails.trim()) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.invalidCrossSectionTransportDescription,
-        });
-      }
-    } else {
+    if (transport) {
       if (!c.carrierMeansOfTransport || !c.carrierMeansOfTransport.trim()) {
         errorCount += 1;
         errors.push({
@@ -1273,6 +1253,57 @@ export function validateCarriersSection(
   return {
     valid: true,
     value: carriers,
+  };
+}
+
+export function validateWasteDescriptionAndCarriersCrossSection(
+  wasteDescription: WasteDescription,
+  carriers: CarriersFlattened
+):
+  | { valid: false; value: InvalidAttributeCombinationError[] }
+  | { valid: true } {
+  if (wasteDescription.wasteCode.type === 'NotApplicable') {
+    const errors: InvalidAttributeCombinationError[] = [];
+    if (
+      carriers.firstCarrierMeansOfTransport?.trim() ||
+      carriers.secondCarrierMeansOfTransport?.trim() ||
+      carriers.thirdCarrierMeansOfTransport?.trim() ||
+      carriers.fourthCarrierMeansOfTransport?.trim() ||
+      carriers.fifthCarrierMeansOfTransport?.trim()
+    ) {
+      errors.push({
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          validation.CarriersCrossSectionValidationErrorMessages
+            .invalidTransport,
+      });
+    }
+
+    if (
+      carriers.firstCarrierMeansOfTransportDetails?.trim() ||
+      carriers.secondCarrierMeansOfTransportDetails?.trim() ||
+      carriers.thirdCarrierMeansOfTransportDetails?.trim() ||
+      carriers.fourthCarrierMeansOfTransportDetails?.trim() ||
+      carriers.fifthCarrierMeansOfTransportDetails?.trim()
+    ) {
+      errors.push({
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          validation.CarriersCrossSectionValidationErrorMessages
+            .invalidTransportDescription,
+      });
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        value: errors,
+      };
+    }
+  }
+
+  return {
+    valid: true,
   };
 }
 
@@ -1509,7 +1540,7 @@ export function validateUkExitLocationSection(
         valid: false,
         value: {
           field: 'UkExitLocation',
-          message: validation.UkExitLocationErrorMessages.charTooMany,
+          message: validation.UkExitLocationValidationErrorMessages.charTooMany,
         },
       };
     }
@@ -1519,7 +1550,7 @@ export function validateUkExitLocationSection(
         valid: false,
         value: {
           field: 'UkExitLocation',
-          message: validation.UkExitLocationErrorMessages.invalid,
+          message: validation.UkExitLocationValidationErrorMessages.invalid,
         },
       };
     }
@@ -1552,7 +1583,7 @@ export function validateTransitCountriesSection(
         valid: false,
         value: {
           field: 'TransitCountries',
-          message: validation.TransitCountriesErrorMessages.invalid,
+          message: validation.TransitCountriesValidationErrorMessages.invalid,
         },
       };
     }
@@ -1585,10 +1616,531 @@ export function validateImporterDetailAndTransitCountriesCrossSection(
         },
         {
           fields: ['ImporterDetail', 'TransitCountries'],
-          message: validation.TransitCountriesErrorMessages.invalidCrossSection,
+          message:
+            validation.TransitCountriesValidationErrorMessages
+              .invalidCrossSection,
         },
       ],
     };
   }
   return { valid: true };
+}
+
+type RecoveryFacilityEntry = {
+  organisationName: string;
+  address: string;
+  country: string;
+  contactFullName: string;
+  contactPhoneNumber: string;
+  faxNumber: string;
+  emailAddress: string;
+  code: string;
+};
+
+function validateRecoveryFacilityEntry(
+  values: RecoveryFacilityEntry[],
+  type: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+  countryList: Country[],
+  recoveryCodeList: RecoveryCode[],
+  disposalCodeList: WasteCode[]
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: RecoveryFacilityData[] } {
+  const errors: FieldFormatError[] = [];
+  const recoveryFacilities: RecoveryFacilityData[] = [];
+  let index = 0;
+  values.forEach((v) => {
+    index += 1;
+
+    if (
+      index > 1 &&
+      !v.organisationName &&
+      !v.address &&
+      !v.country &&
+      !v.contactFullName &&
+      !v.contactPhoneNumber &&
+      !v.faxNumber &&
+      !v.emailAddress &&
+      !v.code
+    ) {
+      return;
+    }
+
+    let errorCount = 0;
+    const errorMessages =
+      validation.RecoveryFacilityDetailValidationErrorMessages(type, index);
+
+    if (!v.organisationName || !v.organisationName.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyOrganisationName,
+      });
+    } else {
+      if (v.organisationName.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.charTooManyOrganisationName,
+        });
+      }
+    }
+
+    if (!v.address || !v.address.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyAddress,
+      });
+    } else {
+      if (v.address.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.charTooManyAddress,
+        });
+      }
+    }
+
+    if (!v.country) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyCountry,
+      });
+    } else {
+      const filteredCountryList = countryList.filter((country) =>
+        country.name.toUpperCase().includes(v.country.toUpperCase())
+      );
+      if (filteredCountryList.length !== 1) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.invalidCountry,
+        });
+      } else {
+        v.country = filteredCountryList[0].name;
+      }
+    }
+
+    if (!v.contactFullName || !v.contactFullName.trim()) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyContactFullName,
+      });
+    } else {
+      if (v.contactFullName.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.charTooManyContactFullName,
+        });
+      }
+    }
+
+    v.contactPhoneNumber = v.contactPhoneNumber.replace(/'/g, '');
+    if (!v.contactPhoneNumber) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyPhone,
+      });
+    } else {
+      if (!validation.phoneInternationalRegex.test(v.contactPhoneNumber)) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.invalidPhone,
+        });
+      }
+    }
+
+    v.faxNumber = v.faxNumber.replace(/'/g, '');
+    if (v.faxNumber && !validation.faxInternationalRegex.test(v.faxNumber)) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.invalidFax,
+      });
+    }
+
+    if (!v.emailAddress) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyEmail,
+      });
+    } else {
+      if (v.emailAddress.length > validation.FreeTextChar.max) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.charTooManyEmail,
+        });
+      } else {
+        if (!validation.emailRegex.test(v.emailAddress)) {
+          errorCount += 1;
+          errors.push({
+            field: 'RecoveryFacilityDetail',
+            message: errorMessages.invalidEmail,
+          });
+        }
+      }
+    }
+
+    if (!v.code) {
+      errorCount += 1;
+      errors.push({
+        field: 'RecoveryFacilityDetail',
+        message: errorMessages.emptyCode,
+      });
+    } else {
+      const filteredCodeList =
+        type === 'Laboratory'
+          ? disposalCodeList.filter(
+              (c) => c.code.toUpperCase() === v.code.toUpperCase()
+            )
+          : type === 'InterimSite'
+          ? recoveryCodeList.filter(
+              (c) =>
+                c.value.interim && c.code.toUpperCase() === v.code.toUpperCase()
+            )
+          : recoveryCodeList.filter(
+              (c) => c.code.toUpperCase() === v.code.toUpperCase()
+            );
+      if (filteredCodeList.length !== 1) {
+        errorCount += 1;
+        errors.push({
+          field: 'RecoveryFacilityDetail',
+          message: errorMessages.invalidCode,
+        });
+      } else {
+        v.code = filteredCodeList[0].code;
+      }
+    }
+
+    if (errorCount === 0) {
+      recoveryFacilities.push({
+        addressDetails: {
+          name: v.organisationName,
+          address: v.address,
+          country: v.country,
+        },
+        contactDetails: {
+          fullName: v.contactFullName,
+          emailAddress: v.emailAddress,
+          phoneNumber: v.contactPhoneNumber,
+          faxNumber: !v.faxNumber ? undefined : v.faxNumber,
+        },
+        recoveryFacilityType:
+          type === 'Laboratory'
+            ? {
+                type: type,
+                disposalCode: v.code,
+              }
+            : {
+                type: type,
+                recoveryCode: v.code,
+              },
+      });
+    }
+  });
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: recoveryFacilities,
+  };
+}
+
+export function validateRecoveryFacilityDetailSection(
+  value: RecoveryFacilityDetailFlattened,
+  smallWaste: boolean,
+  countryList: Country[],
+  recoveryCodeList: RecoveryCode[],
+  disposalCodeList: WasteCode[]
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: RecoveryFacilityData[] } {
+  let errors: FieldFormatError[] = [];
+  let recoveryFacilityEntries: RecoveryFacilityData[] = [];
+
+  if (smallWaste) {
+    const laboratory = validateRecoveryFacilityEntry(
+      [
+        {
+          organisationName: value.laboratoryOrganisationName,
+          address: value.laboratoryAddress,
+          country: value.laboratoryCountry,
+          contactFullName: value.laboratoryContactFullName,
+          contactPhoneNumber: value.laboratoryContactPhoneNumber,
+          faxNumber: value.laboratoryFaxNumber,
+          emailAddress: value.laboratoryEmailAddress,
+          code: value.laboratoryDisposalCode,
+        },
+      ],
+      'Laboratory',
+      countryList,
+      recoveryCodeList,
+      disposalCodeList
+    );
+
+    if (!laboratory.valid) {
+      errors = errors.concat(laboratory.value);
+    } else {
+      recoveryFacilityEntries = recoveryFacilityEntries.concat(
+        laboratory.value
+      );
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        value: errors,
+      };
+    }
+
+    return {
+      valid: true,
+      value: recoveryFacilityEntries,
+    };
+  }
+
+  if (
+    value.interimSiteOrganisationName ||
+    value.interimSiteAddress ||
+    value.interimSiteCountry ||
+    value.interimSiteContactFullName ||
+    value.interimSiteContactPhoneNumber ||
+    value.interimSiteFaxNumber ||
+    value.interimSiteEmailAddress ||
+    value.interimSiteRecoveryCode
+  ) {
+    const interimSite = validateRecoveryFacilityEntry(
+      [
+        {
+          organisationName: value.interimSiteOrganisationName,
+          address: value.interimSiteAddress,
+          country: value.interimSiteCountry,
+          contactFullName: value.interimSiteContactFullName,
+          contactPhoneNumber: value.interimSiteContactPhoneNumber,
+          faxNumber: value.interimSiteFaxNumber,
+          emailAddress: value.interimSiteEmailAddress,
+          code: value.interimSiteRecoveryCode,
+        },
+      ],
+      'InterimSite',
+      countryList,
+      recoveryCodeList,
+      disposalCodeList
+    );
+
+    if (!interimSite.valid) {
+      errors = errors.concat(interimSite.value);
+    } else {
+      recoveryFacilityEntries = recoveryFacilityEntries.concat(
+        interimSite.value
+      );
+    }
+  }
+
+  const recoveryFacilitiesArr = [
+    {
+      organisationName: value.firstRecoveryFacilityOrganisationName,
+      address: value.firstRecoveryFacilityAddress,
+      country: value.firstRecoveryFacilityCountry,
+      contactFullName: value.firstRecoveryFacilityContactFullName,
+      contactPhoneNumber: value.firstRecoveryFacilityContactPhoneNumber,
+      faxNumber: value.firstRecoveryFacilityFaxNumber,
+      emailAddress: value.firstRecoveryFacilityEmailAddress,
+      code: value.firstRecoveryFacilityRecoveryCode,
+    },
+    {
+      organisationName: value.secondRecoveryFacilityOrganisationName,
+      address: value.secondRecoveryFacilityAddress,
+      country: value.secondRecoveryFacilityCountry,
+      contactFullName: value.secondRecoveryFacilityContactFullName,
+      contactPhoneNumber: value.secondRecoveryFacilityContactPhoneNumber,
+      faxNumber: value.secondRecoveryFacilityFaxNumber,
+      emailAddress: value.secondRecoveryFacilityEmailAddress,
+      code: value.secondRecoveryFacilityRecoveryCode,
+    },
+    {
+      organisationName: value.thirdRecoveryFacilityOrganisationName,
+      address: value.thirdRecoveryFacilityAddress,
+      country: value.thirdRecoveryFacilityCountry,
+      contactFullName: value.thirdRecoveryFacilityContactFullName,
+      contactPhoneNumber: value.thirdRecoveryFacilityContactPhoneNumber,
+      faxNumber: value.thirdRecoveryFacilityFaxNumber,
+      emailAddress: value.thirdRecoveryFacilityEmailAddress,
+      code: value.thirdRecoveryFacilityRecoveryCode,
+    },
+    {
+      organisationName: value.fourthRecoveryFacilityOrganisationName,
+      address: value.fourthRecoveryFacilityAddress,
+      country: value.fourthRecoveryFacilityCountry,
+      contactFullName: value.fourthRecoveryFacilityContactFullName,
+      contactPhoneNumber: value.fourthRecoveryFacilityContactPhoneNumber,
+      faxNumber: value.fourthRecoveryFacilityFaxNumber,
+      emailAddress: value.fourthRecoveryFacilityEmailAddress,
+      code: value.fourthRecoveryFacilityRecoveryCode,
+    },
+    {
+      organisationName: value.fifthRecoveryFacilityOrganisationName,
+      address: value.fifthRecoveryFacilityAddress,
+      country: value.fifthRecoveryFacilityCountry,
+      contactFullName: value.fifthRecoveryFacilityContactFullName,
+      contactPhoneNumber: value.fifthRecoveryFacilityContactPhoneNumber,
+      faxNumber: value.fifthRecoveryFacilityFaxNumber,
+      emailAddress: value.fifthRecoveryFacilityEmailAddress,
+      code: value.fifthRecoveryFacilityRecoveryCode,
+    },
+  ];
+  const recoveryFacilities = validateRecoveryFacilityEntry(
+    recoveryFacilitiesArr,
+    'RecoveryFacility',
+    countryList,
+    recoveryCodeList,
+    disposalCodeList
+  );
+
+  if (!recoveryFacilities.valid) {
+    errors = errors.concat(recoveryFacilities.value);
+  } else {
+    recoveryFacilityEntries = recoveryFacilityEntries.concat(
+      recoveryFacilities.value
+    );
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: recoveryFacilityEntries,
+  };
+}
+
+export function validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
+  wasteDescription: WasteDescription,
+  recoveryFacilityDetail: RecoveryFacilityDetailFlattened
+):
+  | { valid: false; value: InvalidAttributeCombinationError[] }
+  | { valid: true } {
+  if (wasteDescription.wasteCode.type === 'NotApplicable') {
+    const errors: InvalidAttributeCombinationError[] = [];
+    if (
+      recoveryFacilityDetail.interimSiteOrganisationName ||
+      recoveryFacilityDetail.interimSiteAddress ||
+      recoveryFacilityDetail.interimSiteCountry ||
+      recoveryFacilityDetail.interimSiteContactFullName ||
+      recoveryFacilityDetail.interimSiteContactPhoneNumber ||
+      recoveryFacilityDetail.interimSiteFaxNumber ||
+      recoveryFacilityDetail.interimSiteEmailAddress ||
+      recoveryFacilityDetail.interimSiteRecoveryCode
+    ) {
+      errors.push({
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidInterimSite,
+      });
+    }
+
+    if (
+      recoveryFacilityDetail.firstRecoveryFacilityOrganisationName ||
+      recoveryFacilityDetail.firstRecoveryFacilityAddress ||
+      recoveryFacilityDetail.firstRecoveryFacilityCountry ||
+      recoveryFacilityDetail.firstRecoveryFacilityContactFullName ||
+      recoveryFacilityDetail.firstRecoveryFacilityContactPhoneNumber ||
+      recoveryFacilityDetail.firstRecoveryFacilityFaxNumber ||
+      recoveryFacilityDetail.firstRecoveryFacilityEmailAddress ||
+      recoveryFacilityDetail.firstRecoveryFacilityRecoveryCode ||
+      recoveryFacilityDetail.secondRecoveryFacilityOrganisationName ||
+      recoveryFacilityDetail.secondRecoveryFacilityAddress ||
+      recoveryFacilityDetail.secondRecoveryFacilityCountry ||
+      recoveryFacilityDetail.secondRecoveryFacilityContactFullName ||
+      recoveryFacilityDetail.secondRecoveryFacilityContactPhoneNumber ||
+      recoveryFacilityDetail.secondRecoveryFacilityFaxNumber ||
+      recoveryFacilityDetail.secondRecoveryFacilityEmailAddress ||
+      recoveryFacilityDetail.secondRecoveryFacilityRecoveryCode ||
+      recoveryFacilityDetail.thirdRecoveryFacilityOrganisationName ||
+      recoveryFacilityDetail.thirdRecoveryFacilityAddress ||
+      recoveryFacilityDetail.thirdRecoveryFacilityCountry ||
+      recoveryFacilityDetail.thirdRecoveryFacilityContactFullName ||
+      recoveryFacilityDetail.thirdRecoveryFacilityContactPhoneNumber ||
+      recoveryFacilityDetail.thirdRecoveryFacilityFaxNumber ||
+      recoveryFacilityDetail.thirdRecoveryFacilityEmailAddress ||
+      recoveryFacilityDetail.thirdRecoveryFacilityRecoveryCode ||
+      recoveryFacilityDetail.fourthRecoveryFacilityOrganisationName ||
+      recoveryFacilityDetail.fourthRecoveryFacilityAddress ||
+      recoveryFacilityDetail.fourthRecoveryFacilityCountry ||
+      recoveryFacilityDetail.fourthRecoveryFacilityContactFullName ||
+      recoveryFacilityDetail.fourthRecoveryFacilityContactPhoneNumber ||
+      recoveryFacilityDetail.fourthRecoveryFacilityFaxNumber ||
+      recoveryFacilityDetail.fourthRecoveryFacilityEmailAddress ||
+      recoveryFacilityDetail.fourthRecoveryFacilityRecoveryCode ||
+      recoveryFacilityDetail.fifthRecoveryFacilityOrganisationName ||
+      recoveryFacilityDetail.fifthRecoveryFacilityAddress ||
+      recoveryFacilityDetail.fifthRecoveryFacilityCountry ||
+      recoveryFacilityDetail.fifthRecoveryFacilityContactFullName ||
+      recoveryFacilityDetail.fifthRecoveryFacilityContactPhoneNumber ||
+      recoveryFacilityDetail.fifthRecoveryFacilityFaxNumber ||
+      recoveryFacilityDetail.fifthRecoveryFacilityEmailAddress ||
+      recoveryFacilityDetail.fifthRecoveryFacilityRecoveryCode
+    ) {
+      errors.push({
+        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+        message:
+          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
+            .invalidRecoveryFacility,
+      });
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        value: errors,
+      };
+    }
+  } else {
+    if (
+      recoveryFacilityDetail.laboratoryOrganisationName ||
+      recoveryFacilityDetail.laboratoryAddress ||
+      recoveryFacilityDetail.laboratoryCountry ||
+      recoveryFacilityDetail.laboratoryContactFullName ||
+      recoveryFacilityDetail.laboratoryContactPhoneNumber ||
+      recoveryFacilityDetail.laboratoryFaxNumber ||
+      recoveryFacilityDetail.laboratoryEmailAddress ||
+      recoveryFacilityDetail.laboratoryDisposalCode
+    ) {
+      return {
+        valid: false,
+        value: [
+          {
+            fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+            message:
+              validation
+                .RecoveryFacilityDetailCrossSectionValidationErrorMessages
+                .invalidLaboratory,
+          },
+        ],
+      };
+    }
+  }
+
+  return {
+    valid: true,
+  };
 }

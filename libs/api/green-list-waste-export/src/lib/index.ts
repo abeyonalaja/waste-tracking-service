@@ -120,6 +120,7 @@ export type {
   SetDraftCollectionDetailRequest,
   SetDraftCollectionDetailResponse,
   RecoveryFacility,
+  RecoveryFacilityData,
   DraftRecoveryFacilityDetail,
   ListDraftRecoveryFacilityDetailsRequest,
   ListDraftRecoveryFacilityDetailsResponse,

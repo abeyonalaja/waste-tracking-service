@@ -821,6 +821,50 @@ export const transitCountries: SchemaObject = {
   elements: { type: 'string' },
 };
 
+export const recoveryFacilityDetail: SchemaObject = {
+  elements: {
+    properties: {
+      addressDetails: {
+        properties: {
+          name: { type: 'string' },
+          address: { type: 'string' },
+          country: { type: 'string' },
+        },
+      },
+      contactDetails: {
+        properties: {
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+        },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        },
+      },
+      recoveryFacilityType: {
+        discriminator: 'type',
+        mapping: {
+          Laboratory: {
+            properties: {
+              disposalCode: { type: 'string' },
+            },
+          },
+          InterimSite: {
+            properties: {
+              recoveryCode: { type: 'string' },
+            },
+          },
+          RecoveryFacility: {
+            properties: {
+              recoveryCode: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const validateSubmissionsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },
@@ -916,6 +960,62 @@ export const validateSubmissionsRequest: SchemaObject = {
           wasteCollectionEmailAddress: { type: 'string' },
           whereWasteLeavesUk: { type: 'string' },
           transitCountries: { type: 'string' },
+          interimSiteOrganisationName: { type: 'string' },
+          interimSiteAddress: { type: 'string' },
+          interimSiteCountry: { type: 'string' },
+          interimSiteContactFullName: { type: 'string' },
+          interimSiteContactPhoneNumber: { type: 'string' },
+          interimSiteFaxNumber: { type: 'string' },
+          interimSiteEmailAddress: { type: 'string' },
+          interimSiteRecoveryCode: { type: 'string' },
+          laboratoryOrganisationName: { type: 'string' },
+          laboratoryAddress: { type: 'string' },
+          laboratoryCountry: { type: 'string' },
+          laboratoryContactFullName: { type: 'string' },
+          laboratoryContactPhoneNumber: { type: 'string' },
+          laboratoryFaxNumber: { type: 'string' },
+          laboratoryEmailAddress: { type: 'string' },
+          laboratoryDisposalCode: { type: 'string' },
+          firstRecoveryFacilityOrganisationName: { type: 'string' },
+          firstRecoveryFacilityAddress: { type: 'string' },
+          firstRecoveryFacilityCountry: { type: 'string' },
+          firstRecoveryFacilityContactFullName: { type: 'string' },
+          firstRecoveryFacilityContactPhoneNumber: { type: 'string' },
+          firstRecoveryFacilityFaxNumber: { type: 'string' },
+          firstRecoveryFacilityEmailAddress: { type: 'string' },
+          firstRecoveryFacilityRecoveryCode: { type: 'string' },
+          secondRecoveryFacilityOrganisationName: { type: 'string' },
+          secondRecoveryFacilityAddress: { type: 'string' },
+          secondRecoveryFacilityCountry: { type: 'string' },
+          secondRecoveryFacilityContactFullName: { type: 'string' },
+          secondRecoveryFacilityContactPhoneNumber: { type: 'string' },
+          secondRecoveryFacilityFaxNumber: { type: 'string' },
+          secondRecoveryFacilityEmailAddress: { type: 'string' },
+          secondRecoveryFacilityRecoveryCode: { type: 'string' },
+          thirdRecoveryFacilityOrganisationName: { type: 'string' },
+          thirdRecoveryFacilityAddress: { type: 'string' },
+          thirdRecoveryFacilityCountry: { type: 'string' },
+          thirdRecoveryFacilityContactFullName: { type: 'string' },
+          thirdRecoveryFacilityContactPhoneNumber: { type: 'string' },
+          thirdRecoveryFacilityFaxNumber: { type: 'string' },
+          thirdRecoveryFacilityEmailAddress: { type: 'string' },
+          thirdRecoveryFacilityRecoveryCode: { type: 'string' },
+          fourthRecoveryFacilityOrganisationName: { type: 'string' },
+          fourthRecoveryFacilityAddress: { type: 'string' },
+          fourthRecoveryFacilityCountry: { type: 'string' },
+          fourthRecoveryFacilityContactFullName: { type: 'string' },
+          fourthRecoveryFacilityContactPhoneNumber: { type: 'string' },
+          fourthRecoveryFacilityFaxNumber: { type: 'string' },
+          fourthRecoveryFacilityEmailAddress: { type: 'string' },
+          fourthRecoveryFacilityRecoveryCode: { type: 'string' },
+          fifthRecoveryFacilityOrganisationName: { type: 'string' },
+          fifthRecoveryFacilityAddress: { type: 'string' },
+          fifthRecoveryFacilityCountry: { type: 'string' },
+          fifthRecoveryFacilityContactFullName: { type: 'string' },
+          fifthRecoveryFacilityContactPhoneNumber: { type: 'string' },
+          fifthRecoveryFacilityFaxNumber: { type: 'string' },
+          fifthRecoveryFacilityEmailAddress: { type: 'string' },
+          fifthRecoveryFacilityRecoveryCode: { type: 'string' },
         },
       },
     },
@@ -939,6 +1039,7 @@ const validationResult: SchemaObject = {
           collectionDetail: collectionDetail,
           ukExitLocation: ukExitLocation,
           transitCountries: transitCountries,
+          recoveryFacilityDetail: recoveryFacilityDetail,
           index: { type: 'uint16' },
           fieldFormatErrors: {
             elements: {

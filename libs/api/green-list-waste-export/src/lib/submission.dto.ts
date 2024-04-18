@@ -524,6 +524,65 @@ export type TransitCountriesFlattened = {
   transitCountries: string;
 };
 
+export type RecoveryFacilityDetailFlattened = {
+  interimSiteOrganisationName: string;
+  interimSiteAddress: string;
+  interimSiteCountry: string;
+  interimSiteContactFullName: string;
+  interimSiteContactPhoneNumber: string;
+  interimSiteFaxNumber: string;
+  interimSiteEmailAddress: string;
+  interimSiteRecoveryCode: string;
+  laboratoryOrganisationName: string;
+  laboratoryAddress: string;
+  laboratoryCountry: string;
+  laboratoryContactFullName: string;
+  laboratoryContactPhoneNumber: string;
+  laboratoryFaxNumber: string;
+  laboratoryEmailAddress: string;
+  laboratoryDisposalCode: string;
+  firstRecoveryFacilityOrganisationName: string;
+  firstRecoveryFacilityAddress: string;
+  firstRecoveryFacilityCountry: string;
+  firstRecoveryFacilityContactFullName: string;
+  firstRecoveryFacilityContactPhoneNumber: string;
+  firstRecoveryFacilityFaxNumber: string;
+  firstRecoveryFacilityEmailAddress: string;
+  firstRecoveryFacilityRecoveryCode: string;
+  secondRecoveryFacilityOrganisationName: string;
+  secondRecoveryFacilityAddress: string;
+  secondRecoveryFacilityCountry: string;
+  secondRecoveryFacilityContactFullName: string;
+  secondRecoveryFacilityContactPhoneNumber: string;
+  secondRecoveryFacilityFaxNumber: string;
+  secondRecoveryFacilityEmailAddress: string;
+  secondRecoveryFacilityRecoveryCode: string;
+  thirdRecoveryFacilityOrganisationName: string;
+  thirdRecoveryFacilityAddress: string;
+  thirdRecoveryFacilityCountry: string;
+  thirdRecoveryFacilityContactFullName: string;
+  thirdRecoveryFacilityContactPhoneNumber: string;
+  thirdRecoveryFacilityFaxNumber: string;
+  thirdRecoveryFacilityEmailAddress: string;
+  thirdRecoveryFacilityRecoveryCode: string;
+  fourthRecoveryFacilityOrganisationName: string;
+  fourthRecoveryFacilityAddress: string;
+  fourthRecoveryFacilityCountry: string;
+  fourthRecoveryFacilityContactFullName: string;
+  fourthRecoveryFacilityContactPhoneNumber: string;
+  fourthRecoveryFacilityFaxNumber: string;
+  fourthRecoveryFacilityEmailAddress: string;
+  fourthRecoveryFacilityRecoveryCode: string;
+  fifthRecoveryFacilityOrganisationName: string;
+  fifthRecoveryFacilityAddress: string;
+  fifthRecoveryFacilityCountry: string;
+  fifthRecoveryFacilityContactFullName: string;
+  fifthRecoveryFacilityContactPhoneNumber: string;
+  fifthRecoveryFacilityFaxNumber: string;
+  fifthRecoveryFacilityEmailAddress: string;
+  fifthRecoveryFacilityRecoveryCode: string;
+};
+
 export type SubmissionFlattened = CustomerReferenceFlattened &
   WasteDescriptionFlattened &
   WasteQuantityFlattened &
@@ -533,7 +592,8 @@ export type SubmissionFlattened = CustomerReferenceFlattened &
   CarriersFlattened &
   CollectionDetailFlattened &
   ExitLocationFlattened &
-  TransitCountriesFlattened;
+  TransitCountriesFlattened &
+  RecoveryFacilityDetailFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   values: SubmissionFlattened[];

@@ -240,6 +240,50 @@ export const transitCountries: SchemaObject = {
   elements: { type: 'string' },
 };
 
+export const recoveryFacilityDetail: SchemaObject = {
+  elements: {
+    properties: {
+      addressDetails: {
+        properties: {
+          name: { type: 'string' },
+          address: { type: 'string' },
+          country: { type: 'string' },
+        },
+      },
+      contactDetails: {
+        properties: {
+          fullName: { type: 'string' },
+          emailAddress: { type: 'string' },
+          phoneNumber: { type: 'string' },
+        },
+        optionalProperties: {
+          faxNumber: { type: 'string' },
+        },
+      },
+      recoveryFacilityType: {
+        discriminator: 'type',
+        mapping: {
+          Laboratory: {
+            properties: {
+              disposalCode: { type: 'string' },
+            },
+          },
+          InterimSite: {
+            properties: {
+              recoveryCode: { type: 'string' },
+            },
+          },
+          RecoveryFacility: {
+            properties: {
+              recoveryCode: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -301,6 +345,7 @@ const bulkSubmissionState: SchemaObject = {
               collectionDetail: collectionDetail,
               ukExitLocation: ukExitLocation,
               transitCountries: transitCountries,
+              recoveryFacilityDetail: recoveryFacilityDetail,
             },
           },
         },
@@ -323,6 +368,7 @@ const bulkSubmissionState: SchemaObject = {
               collectionDetail: collectionDetail,
               ukExitLocation: ukExitLocation,
               transitCountries: transitCountries,
+              recoveryFacilityDetail: recoveryFacilityDetail,
             },
           },
         },
