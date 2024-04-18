@@ -25,7 +25,14 @@ export function Instructions() {
         <GovUK.ListItem>
           <span>
             {t('createAndUpload.listItemTwoPartOne')}
-            <a href="/downloads/multiple-movements-template.csv">
+
+            <a
+              href={
+                process.env['NODE_ENV'] === 'production'
+                  ? '/move-waste/downloads/multiple-movements-template.csv'
+                  : '/downloads/multiple-movements-template.csv'
+              }
+            >
               {t('createAndUpload.listItemTwoLink')}
             </a>
             {t('createAndUpload.listItemTwoPartTwo')}
@@ -59,7 +66,13 @@ export function Instructions() {
           </GovUK.Paragraph>
           <GovUK.Hint>{t('documents.templateDescription')}</GovUK.Hint>
           <GovUK.Paragraph>
-            <a href="/downloads/multiple-movements-template.csv">
+            <a
+              href={
+                process.env['NODE_ENV'] === 'production'
+                  ? '/move-waste/downloads/multiple-movements-template.csv'
+                  : '/downloads/multiple-movements-template.csv'
+              }
+            >
               {t('documents.templateLink')}
             </a>
           </GovUK.Paragraph>
