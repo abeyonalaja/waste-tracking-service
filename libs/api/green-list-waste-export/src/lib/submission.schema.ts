@@ -868,6 +868,7 @@ export const recoveryFacilityDetail: SchemaObject = {
 export const validateSubmissionsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },
+    padIndex: { type: 'uint16' },
     values: {
       elements: {
         properties: {

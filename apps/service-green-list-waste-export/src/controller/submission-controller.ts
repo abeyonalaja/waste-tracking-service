@@ -30,7 +30,7 @@ export default class SubmissionController {
   validateSubmissions: Handler<
     api.ValidateSubmissionsRequest,
     api.ValidateSubmissionsResponse
-  > = async ({ accountId, values }) => {
+  > = async ({ accountId, padIndex, values }) => {
     try {
       let wasteCodesResponse: GetWasteCodesResponse;
       let ewcCodesResponse: GetEWCCodesResponse;
@@ -71,7 +71,7 @@ export default class SubmissionController {
       const recoveryCodeList = recoveryCodesResponse.value;
       const disposalCodeList = disposalCodesResponse.value;
 
-      let index = 2;
+      let index = padIndex;
       const errors: Error[] = [];
       const submissions: Value[] = [];
       values.map((s) => {

@@ -232,6 +232,7 @@ while (execute) {
               try {
                 response = await daprAnnexViiClient.validateSubmissions({
                   accountId: body.data.accountId,
+                  padIndex: i + 2,
                   values: chunk,
                 });
               } catch (err) {

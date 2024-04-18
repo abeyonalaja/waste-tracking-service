@@ -596,6 +596,7 @@ export type SubmissionFlattened = CustomerReferenceFlattened &
   RecoveryFacilityDetailFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
+  padIndex: number;
   values: SubmissionFlattened[];
 };
 export type ValidateSubmissionsResponse = Response<ValidationResult>;

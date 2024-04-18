@@ -39,6 +39,7 @@ describe(SubmissionController, () => {
       mockClient.getWasteCodes.mockRejectedValue(Boom.teapot());
       const response = await subject.validateSubmissions({
         accountId: faker.datatype.uuid(),
+        padIndex: 2,
         values: [
           {
             reference: 'testRef',
@@ -307,6 +308,7 @@ describe(SubmissionController, () => {
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
+        padIndex: 2,
         values: [
           {
             reference: 'testRef',
@@ -708,6 +710,7 @@ describe(SubmissionController, () => {
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
+        padIndex: 2,
         values: [
           {
             reference: 'test-Ref',
@@ -1186,6 +1189,7 @@ describe(SubmissionController, () => {
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
+        padIndex: 2,
         values: [
           {
             reference: 'test-Ref',
