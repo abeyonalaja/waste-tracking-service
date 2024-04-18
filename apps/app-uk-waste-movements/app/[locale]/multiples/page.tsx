@@ -34,14 +34,14 @@ export default async function UploadPage() {
 
   if (!guidanceViewedCookie) {
     return (
-      <Page beforeChildren={<BackLink href="/" />}>
+      <Page beforeChildren={<BackLink href={'../'} />}>
         <Interruption />
       </Page>
     );
   }
 
   return (
-    <Page beforeChildren={<GovUK.BackLink href="/" />}>
+    <Page beforeChildren={<GovUK.BackLink href={'../'} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
           <GovUK.Heading size={'l'} level={1}>

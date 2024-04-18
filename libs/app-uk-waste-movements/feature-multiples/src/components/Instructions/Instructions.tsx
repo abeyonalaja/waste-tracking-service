@@ -1,11 +1,7 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import styles from './Instructions.module.scss';
-
-// Standard Next link is required here to navigate user to
-// public folder to download template CSV file, bypassing locale
-import Link from 'next/link';
-import { Link as LocaleLink } from '@wts/ui/navigation';
+import { Link } from '@wts/ui/navigation';
 import { HTML, CSV } from '@wts/ui/shared-ui/server';
 
 export function Instructions() {
@@ -20,18 +16,18 @@ export function Instructions() {
         <GovUK.ListItem>
           <span>
             {t('createAndUpload.listItemOnePartOne')}
-            <LocaleLink href="/multiples/guidance" target="_blank">
+            <Link href="/multiples/guidance" target="_blank">
               {t('createAndUpload.listItemOneLink')}
-            </LocaleLink>
+            </Link>
             {t('createAndUpload.listItemOnePartTwo')}
           </span>
         </GovUK.ListItem>
         <GovUK.ListItem>
           <span>
             {t('createAndUpload.listItemTwoPartOne')}
-            <Link href="/downloads/multiple-movements-template.csv">
+            <a href="/downloads/multiple-movements-template.csv">
               {t('createAndUpload.listItemTwoLink')}
-            </Link>
+            </a>
             {t('createAndUpload.listItemTwoPartTwo')}
           </span>
         </GovUK.ListItem>
@@ -48,14 +44,13 @@ export function Instructions() {
         <HTML />
         <div>
           <GovUK.Paragraph size="l" mb={2}>
-            <LocaleLink href="/multiples/guidance" target="_blank">
+            <Link href="/multiples/guidance" target="_blank">
               {t('documents.linkOne')}
-            </LocaleLink>
+            </Link>
           </GovUK.Paragraph>
           <GovUK.Paragraph size="s">HTML</GovUK.Paragraph>
         </div>
       </div>
-
       <div className={styles.row}>
         <CSV />
         <div>
@@ -64,13 +59,12 @@ export function Instructions() {
           </GovUK.Paragraph>
           <GovUK.Hint>{t('documents.templateDescription')}</GovUK.Hint>
           <GovUK.Paragraph>
-            <Link href="/downloads/multiple-movements-template.csv">
+            <a href="/downloads/multiple-movements-template.csv">
               {t('documents.templateLink')}
-            </Link>
+            </a>
           </GovUK.Paragraph>
         </div>
       </div>
-
       <GovUK.GridRow mb={7}>
         <GovUK.GridCol size="one-quarter"></GovUK.GridCol>
         <GovUK.GridCol size="two-thirds"></GovUK.GridCol>
