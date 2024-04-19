@@ -1,0 +1,1 @@
+export { useNewWindow } from './useNewWindow';

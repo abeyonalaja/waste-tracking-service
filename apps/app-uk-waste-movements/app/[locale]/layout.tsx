@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { Link } from '@wts/ui/navigation';
 import '../main.scss';
 import { useTranslations } from 'next-intl';
 import { AuthNavigation } from '@wts/ui/shared-ui/server';
@@ -27,7 +28,12 @@ export default function RootLayout({
           }
         />
         <GovUK.WidthContainer>
-          <GovUK.PhaseBanner tag={`Beta`}>{t('phaseBanner')}</GovUK.PhaseBanner>
+          <GovUK.PhaseBanner tag={`Beta`}>
+            {' '}
+            {t('phaseBannerPartOne')}{' '}
+            <Link href="/feedback">{t('phaseBannerLink')}</Link>{' '}
+            {t('phaseBannerPartTwo')}
+          </GovUK.PhaseBanner>
         </GovUK.WidthContainer>
         {children}
         <GovUK.Footer />

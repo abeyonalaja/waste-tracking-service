@@ -75,6 +75,45 @@
     "uploadPage": {
       "title": "Creating multiple waste movements"
     },
+    "feedbackPage": {
+      "form": {
+        "headingOne": "Give feedback on the move waste in the UK service",
+        "headingTwo": "Satisfaction Survey",
+        "rating": {
+          "heading": "Overall, how did you feel about the service you received today?",
+          "labelOne": "Very satisfied",
+          "labelTwo": "Satisfied",
+          "labelThree": "Neither satisfied or dissatisfied",
+          "labelFour": "Dissatisfied",
+          "labelFive": "Very dissatisfied"
+        },
+        "textArea": {
+          "heading": "How could we improve this service?",
+          "hint": "Do not include any business or personal information here, for example reference numbers or names.",
+          "hintBottomPartOne": "You have",
+          "hintBottomPartTwo": "characters remaining",
+          "hintBottomExceeds": "characters too many",
+          "errorTextArea": "Character count exceeded",
+          "errorTextAreaHeading": "Error summary",
+          "errorTextAreaDescription": "Address the following issues:"
+        },
+        "submitButton": "Send feedback"
+      },
+      "successPage": {
+        "bannerTitle": "Success",
+        "bannerHeading": "You have submitted your feedback",
+        "backLink": "Go back to the page you were looking at",
+        "backLinkNewWindow": "Return to the move waste in the UK service"
+      },
+      "errorPage": {
+        "heading": "Sorry, there is a problem with the feedback service",
+        "paragraphOne": "Try again later.",
+        "paragraphTwo": " If you have entered any answers, you will need to enter them again.",
+        "backLink": "Go back to the page you were looking at",
+        "backLinkNewWindow": "Return to the move waste in the UK service"
+      },
+      "backText": "Back"
+    },
     "instructions": {
       "createAndUpload": {
         "heading": "How to create and upload your file ",

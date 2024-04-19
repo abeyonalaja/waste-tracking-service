@@ -2,37 +2,46 @@ import { FormGroup } from '../FormGroup';
 import { Hint } from '../Hint';
 import { ErrorMessage } from '../ErrorMessage';
 
+type Option = {
+  text: string;
+  value: string;
+};
+
 type Props = {
   name: string;
   value?: string;
-  label: string;
-  options: Array<string>;
+  legendText?: string;
+  legendSize?: 's' | 'm' | 'l';
+  options: Option[];
   hint?: string;
   error?: string;
   small?: boolean;
   inline?: boolean;
-  onchange?: () => void;
+  onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
 };
 
 export const Radios = ({
   name,
   value,
-  label,
+  legendText,
+  legendSize = 'm',
   options,
   hint,
   error,
   small,
   inline,
-  onchange = () => {
-    return;
-  },
+  onchange = () => {},
   testId,
 }: Props) => {
   return (
     <FormGroup error={!!error}>
       <fieldset className="govuk-fieldset">
-        <legend className="govuk-fieldset__legend">{label}</legend>
+        <legend
+          className={`govuk-fieldset__legend govuk-fieldset__legend--${legendSize}`}
+        >
+          {legendText}
+        </legend>
         {hint && <Hint text={hint} />}
         {error && <ErrorMessage text={error} />}
         <div
@@ -46,22 +55,21 @@ export const Radios = ({
             const radioId =
               name.replace(' ', '').toLowerCase() + '-radio-' + index + 1;
             return (
-              // Maybe not the best key to use here for the map
-              <div key={index} className="govuk-radios__item">
+              <div key={`radio-option-${index}`} className="govuk-radios__item">
                 <input
                   className="govuk-radios__input"
                   type="radio"
                   name={name}
-                  value={option}
+                  value={option.value}
                   id={radioId}
-                  checked={value === option}
+                  checked={value === option.value}
                   onChange={onchange}
                 />
                 <label
                   className="govuk-label govuk-radios__label"
                   htmlFor={radioId}
                 >
-                  {option}
+                  {option.text}
                 </label>
               </div>
             );

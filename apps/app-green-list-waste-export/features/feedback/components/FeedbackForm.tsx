@@ -54,12 +54,15 @@ export default function FeedbackForm({ children }: FeedbackFormProps) {
     mutationFn: async ({ rating, feedback }: SendFeedbackRequest) => {
       const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/feedback`;
 
-      const body: SendFeedbackRequest = {};
+      const body = {
+        serviceName: 'glw',
+        surveyData: {} as SendFeedbackRequest,
+      };
       if (rating) {
-        body.rating = Number(rating);
+        body.surveyData.rating = Number(rating);
       }
       if (feedback) {
-        body.feedback = feedback;
+        body.surveyData.feedback = feedback;
       }
 
       const headers = {
