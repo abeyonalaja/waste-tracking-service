@@ -13,4 +13,7 @@ class WasteTrackingLandingPage < GenericPage
     click_link('link-card-GLW')
   end
 
+  def move_waste_in_uk_card
+    click_link('link-card-UKWM')
+  end
 end

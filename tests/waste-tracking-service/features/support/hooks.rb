@@ -12,18 +12,19 @@ Before do |scenario|
   Log.console("STARTING FEATURE: #{@feature_name} for current process #{@current_process}")
   TestStatus.reset_test_status
   TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'true')
+  # TestStatus.set_feature_flag('UKWMMultipleGuidanceViewed', 'true') need to be discussed with FE and Sri
 end
 
 Before('@csv_helper') do
   TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'false')
 end
 
-Before('not @cookies') do
-  @reset_cookies = true
+Before('@csv_helper_ukmw') do
+  TestStatus.set_feature_flag('UKWMMultipleGuidanceViewed', 'false')
 end
 
-Before('@UKMV') do
-  ENV['START_PAGE_URL'] = 'http://localhost:4201/'
+Before('not @cookies') do
+  @reset_cookies = true
 end
 
 After do |scenario|
