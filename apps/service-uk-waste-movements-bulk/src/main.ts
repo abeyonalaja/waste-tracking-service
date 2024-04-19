@@ -265,6 +265,38 @@ while (execute) {
             const submissions: api.PartialSubmission[] = [];
             const rowErrors: api.BulkSubmissionValidationRowError[] = [];
             const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
+            const columnErrorsObj: {
+              [key in Field]: api.BulkSubmissionValidationRowErrorDetails[];
+            } = {
+              'Producer address line 1': [],
+              'Producer address line 2': [],
+              'Producer contact name': [],
+              'Producer contact email address': [],
+              'Producer contact phone number': [],
+              'Producer country': [],
+              'Producer organisation name': [],
+              'Producer postcode': [],
+              'Producer Standard Industrial Classification (SIC) code': [],
+              'Producer town or city': [],
+              'Receiver address line 1': [],
+              'Receiver address line 2': [],
+              'Receiver postcode': [],
+              'Receiver contact name': [],
+              'Receiver contact email address': [],
+              'Receiver contact phone number': [],
+              'Receiver country': [],
+              'Receiver environmental permit number': [],
+              'Receiver organisation name': [],
+              'Receiver town or city': [],
+              'Receiver authorization type': [],
+              'Number and type of transportation containers': [],
+              'Special handling requirements details': [],
+
+              Reference: [],
+              WasteCollectionDetails: [],
+              WasteTypeDetails: [],
+            };
+
             const chunkSize = 50;
             for (let i = 0; i < partialSubmission.length; i += chunkSize) {
               const chunk = partialSubmission.slice(i, i + chunkSize);
@@ -272,6 +304,7 @@ while (execute) {
               try {
                 response = await daprUkwmClient.validateSubmissions({
                   accountId: body.data.accountId,
+                  padIndex: i + 2,
                   values: chunk,
                 });
               } catch (err) {
@@ -300,38 +333,6 @@ while (execute) {
                       .concat(v.invalidStructureErrors.map((i) => i.message)),
                   })
                 );
-
-                const columnErrorsObj: {
-                  [key in Field]: api.BulkSubmissionValidationRowErrorDetails[];
-                } = {
-                  'Producer address line 1': [],
-                  'Producer address line 2': [],
-                  'Producer contact name': [],
-                  'Producer contact email address': [],
-                  'Producer contact phone number': [],
-                  'Producer country': [],
-                  'Producer organisation name': [],
-                  'Producer postcode': [],
-                  'Producer Standard Industrial Classification (SIC) code': [],
-                  'Producer town or city': [],
-                  'Receiver address line 1': [],
-                  'Receiver address line 2': [],
-                  'Receiver postcode': [],
-                  'Receiver contact name': [],
-                  'Receiver contact email address': [],
-                  'Receiver contact phone number': [],
-                  'Receiver country': [],
-                  'Receiver environmental permit number': [],
-                  'Receiver organisation name': [],
-                  'Receiver town or city': [],
-                  'Receiver authorization type': [],
-                  'Number and type of transportation containers': [],
-                  'Special handling requirements details': [],
-
-                  Reference: [],
-                  WasteCollectionDetails: [],
-                  WasteTypeDetails: [],
-                };
 
                 for (const error of response.value.values) {
                   for (const fieldError of error.fieldFormatErrors) {

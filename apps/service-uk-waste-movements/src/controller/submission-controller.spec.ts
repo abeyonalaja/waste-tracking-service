@@ -27,6 +27,7 @@ describe(SubmissionController, () => {
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
+        padIndex: 2,
         values: [
           {
             reference: 'testRef',
@@ -116,6 +117,7 @@ describe(SubmissionController, () => {
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
+        padIndex: 2,
         values: [
           {
             reference: '@!"?',

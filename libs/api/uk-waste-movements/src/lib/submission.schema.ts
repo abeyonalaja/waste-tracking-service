@@ -111,6 +111,7 @@ export const wasteTransportationDetails: JTDSchemaType<WasteTransportationDetail
 export const validateSubmissionsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },
+    padIndex: { type: 'uint16' },
     values: {
       elements: {
         properties: {

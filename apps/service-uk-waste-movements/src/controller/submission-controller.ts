@@ -22,9 +22,9 @@ export default class SubmissionController {
   validateSubmissions: Handler<
     api.ValidateSubmissionsRequest,
     api.ValidateSubmissionsResponse
-  > = async ({ accountId, values }) => {
+  > = async ({ accountId, padIndex, values }) => {
     try {
-      let index = 2;
+      let index = padIndex;
       const errors: Error[] = [];
       const submissions: Value[] = [];
       values.map((s) => {

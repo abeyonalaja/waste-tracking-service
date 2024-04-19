@@ -166,6 +166,7 @@ export type SubmissionFlattened = ProducerDetailsFlattened &
   WasteTransportationDetailsFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
+  padIndex: number;
   values: SubmissionFlattened[];
 };
 
