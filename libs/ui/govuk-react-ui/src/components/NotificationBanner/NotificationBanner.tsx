@@ -22,7 +22,12 @@ export const NotificationBanner = ({
     >
       {title && (
         <div className="govuk-notification-banner__header">
-          <div className="govuk-notification-banner__title">{title}</div>
+          <h2
+            className="govuk-notification-banner__title"
+            id="govuk-notification-banner-title"
+          >
+            {title}
+          </h2>
         </div>
       )}
       <div className="govuk-notification-banner__content">{children}</div>

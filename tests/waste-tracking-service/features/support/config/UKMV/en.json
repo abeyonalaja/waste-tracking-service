@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "UK waste movements",
-    "phaseBanner": "This is a new service"
+    "phaseBannerPartOne": "This is a new service - your ",
+    "phaseBannerLink": "feedback ",
+    "phaseBannerPartTwo": "will help us to improve it."
   },
   "startPage": {
     "title": "Export green list waste: submit Annex VII records on the waste tracking service",

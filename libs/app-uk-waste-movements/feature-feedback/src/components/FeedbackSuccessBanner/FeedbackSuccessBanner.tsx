@@ -19,7 +19,11 @@ export function FeedbackSuccessBanner({ strings }: FeedbackSuccessBannerProps) {
   const router = useRouter();
   return (
     <GovUK.NotificationBanner title={strings.bannerTitle} success="success">
-      <GovUK.Heading size="m" level={3}>
+      <GovUK.Heading
+        size="m"
+        level={3}
+        id="govuk-notification-banner-content-heading"
+      >
         {strings.bannerHeading}
       </GovUK.Heading>
       {isNewWindow ? ( // Removes back link if feedback page is opened in new window/tab
@@ -28,6 +32,7 @@ export function FeedbackSuccessBanner({ strings }: FeedbackSuccessBannerProps) {
           className="govuk-notification-banner__link"
           href="../"
           target="_self"
+          id=""
         >
           {strings.backLinkNewWindow}
         </Link>

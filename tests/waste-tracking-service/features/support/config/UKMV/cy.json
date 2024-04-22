@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "UK waste movements (Welsh)",
-    "phaseBanner": "This is a new service"
+    "phaseBannerPartOne": "This is a new service - your ",
+    "phaseBannerLink": "feedback ",
+    "phaseBannerPartTwo": "will help us to improve it."
   },
   "startPage": {
     "title": "Sign into your Defra waste tracking service account",
