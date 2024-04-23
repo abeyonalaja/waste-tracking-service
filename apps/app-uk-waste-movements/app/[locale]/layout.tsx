@@ -28,7 +28,7 @@ export default function RootLayout({
           }
         />
         <GovUK.WidthContainer>
-          <GovUK.PhaseBanner tag={`Beta`}>
+          <GovUK.PhaseBanner tag={`Private beta`}>
             {' '}
             {t('phaseBannerPartOne')}{' '}
             <Link href="/feedback">{t('phaseBannerLink')}</Link>{' '}
