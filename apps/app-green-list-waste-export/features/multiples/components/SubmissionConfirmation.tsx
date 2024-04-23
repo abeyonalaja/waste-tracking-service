@@ -4,6 +4,7 @@ import { AppLink, Paragraph } from 'components';
 import { YELLOW, GREY_3, BLACK } from 'govuk-colours';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const LinkWrapper = styled.div`
   margin-top: 20px;
@@ -65,6 +66,7 @@ export function SubmissionConfirmation({
   pageCount = 200,
 }: SubmissionConfirmationProps) {
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <>
@@ -76,7 +78,10 @@ export function SubmissionConfirmation({
       />
       {/* TODO: Add link to actual page once backend capable */}
       <LinkWrapper>
-        <AppLink href="" target="__blank">
+        <AppLink
+          href={`/multiples/${router.query.id}/submitted`}
+          target="_blank"
+        >
           {t('multiples.confirmation.detailsLink')}
         </AppLink>
       </LinkWrapper>

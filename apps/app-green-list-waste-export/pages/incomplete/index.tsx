@@ -397,18 +397,19 @@ const IncompleteAnnex7 = () => {
                             {item.wasteDescription?.status !== 'NotStarted' && (
                               <>
                                 {item.wasteDescription?.wasteCode.type !==
-                                  'NotApplicable' && (
-                                  <>
-                                    <strong>
-                                      {item.wasteDescription?.wasteCode.code}:{' '}
-                                    </strong>
-                                    {getRefData(
-                                      'WasteCode',
-                                      item.wasteDescription?.wasteCode.code,
-                                      item.wasteDescription?.wasteCode.type
-                                    )}
-                                  </>
-                                )}
+                                  'NotApplicable' &&
+                                  item.wasteDescription?.wasteCode.code && (
+                                    <>
+                                      <strong>
+                                        {item.wasteDescription?.wasteCode.code}:{' '}
+                                      </strong>
+                                      {getRefData(
+                                        'WasteCode',
+                                        item.wasteDescription?.wasteCode.code,
+                                        item.wasteDescription?.wasteCode.type
+                                      )}
+                                    </>
+                                  )}
                                 {item.wasteDescription?.wasteCode.type ===
                                   'NotApplicable' && (
                                   <span id="waste-code-not-provided">

@@ -34,6 +34,7 @@ import { SubmissionSummary } from './SubmissionSummary';
 import { SummaryCard } from './SummaryCard';
 import { SummaryList } from './SummaryList';
 import { SummaryListWithActions } from './SummaryListWithActions';
+import { Tag } from './Tag';
 import { TextareaCharCount } from './TextareaCharCount';
 import { UnitDisplay } from './UnitDisplay';
 
@@ -74,6 +75,7 @@ export {
   SummaryCard,
   SummaryList,
   SummaryListWithActions,
+  Tag,
   TextareaCharCount,
   UnitDisplay,
 };

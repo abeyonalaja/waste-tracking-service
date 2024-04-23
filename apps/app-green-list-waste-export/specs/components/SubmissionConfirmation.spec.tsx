@@ -9,6 +9,14 @@ global.fetch = jest.fn(() =>
   })
 );
 
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    query: {
+      id: '123',
+    },
+  }),
+}));
+
 describe('SubmissionConfirmation component', () => {
   it('Renders without errors', () => {
     render(<SubmissionConfirmation recordCount={1} />);

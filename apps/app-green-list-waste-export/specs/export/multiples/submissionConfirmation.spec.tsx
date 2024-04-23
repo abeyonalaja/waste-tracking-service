@@ -73,7 +73,7 @@ const multipleSubmissionData = {
   },
 };
 
-describe('Submitted page', () => {
+describe('Submission Confirmation page', () => {
   it('Renders without errors', async () => {
     mockUseQuery.mockReturnValue({
       data: singleSubmissionData,

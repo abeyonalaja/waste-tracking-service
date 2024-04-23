@@ -16,6 +16,15 @@ export type SetShowCancelPrompt = Dispatch<SetStateAction<boolean>>;
 
 export type SetShowDeclaration = Dispatch<SetStateAction<boolean>>;
 
+export type Transaction = {
+  id: string;
+  transactionId: string;
+  hasEstimates: boolean;
+  collectionDate: string;
+  wasteCode: string;
+  reference: string;
+};
+
 export type ValidationErrorsType = {
   file?: string;
 };

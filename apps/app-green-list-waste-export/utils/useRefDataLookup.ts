@@ -111,6 +111,9 @@ const useRefDataLookup = (apiConfig) => {
       if (category.type === wasteCodeCategory) {
         result = category.values.find(({ code }) => code === wasteCode);
       }
+      if (wasteCodeCategory === undefined) {
+        result = category.values.find(({ code }) => code === wasteCode);
+      }
       if (result) {
         foundResult = result;
       }
@@ -118,6 +121,7 @@ const useRefDataLookup = (apiConfig) => {
     if (foundResult) {
       return foundResult.value.description[currentLanguage];
     }
+    return '';
   };
 
   const getEWCDesc = (savedCode) => {
@@ -127,18 +131,21 @@ const useRefDataLookup = (apiConfig) => {
     if (result) {
       return result.value.description[currentLanguage];
     }
+    return '';
   };
   const getRecoveryCodeDesc = (savedCode) => {
     const result = recoveryCodeRefData.find(({ code }) => code === savedCode);
     if (result) {
       return result.value.description[currentLanguage];
     }
+    return '';
   };
   const getLaboratoryCodeDesc = (savedCode) => {
     const result = laboratoryCodeRefData.find(({ code }) => code === savedCode);
     if (result) {
       return result.value.description[currentLanguage];
     }
+    return '';
   };
 
   return (type, code, category?) => {

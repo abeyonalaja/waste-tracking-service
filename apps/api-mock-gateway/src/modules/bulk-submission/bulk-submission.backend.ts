@@ -319,7 +319,7 @@ export async function createBatch(
               transactionId: transactionId,
               hasEstimates: true,
               collectionDate: new Date(),
-              wasteCode: 'BaselAnnexIX',
+              wasteCode: 'B1010',
               reference: 'ref1',
             },
           ],

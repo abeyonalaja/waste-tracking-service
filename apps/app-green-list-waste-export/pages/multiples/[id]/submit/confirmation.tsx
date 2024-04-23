@@ -8,7 +8,7 @@ import {
   Loader,
 } from 'features/multiples';
 
-export default function Submitted() {
+export default function ConfirmationPage() {
   const router = useRouter();
 
   const { isPending, data, error } = useQuery({
@@ -41,4 +41,4 @@ export default function Submitted() {
   );
 }
 
-Submitted.auth = true;
+ConfirmationPage.auth = true;
