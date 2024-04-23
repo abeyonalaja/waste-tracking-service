@@ -6,12 +6,14 @@ type Error = {
   href: string;
 };
 type ErrorSummaryProps = {
+  id?: string;
   testId?: string;
   headingErrorText?: string;
   errors: Error[];
 };
 
 export const ErrorSummary = ({
+  id = 'error-summary-box',
   testId,
   headingErrorText,
   errors,
@@ -22,6 +24,7 @@ export const ErrorSummary = ({
       className="govuk-error-summary"
       data-module="govuk-error-summary"
       data-testid={testId}
+      id={id}
     >
       <div role="alert">
         <h2 className="govuk-error-summary__title">{headingErrorText}</h2>

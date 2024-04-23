@@ -2,6 +2,8 @@
 
 # this page is for Ukwm create multiple waste page page details
 class UkwmCreateMultipleWastePage < GenericPage
+  include GeneralHelpers
+  include ErrorBox
 
   TITLE = Translations.ukmv_value 'multiples.uploadPage.title'
   HEADING = Translations.ukmv_value 'instructions.createAndUpload.heading'

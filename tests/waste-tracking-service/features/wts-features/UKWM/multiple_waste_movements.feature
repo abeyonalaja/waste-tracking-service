@@ -38,3 +38,13 @@ Feature: AS A Waste Controller
     Then the "Ukwm Interruption" page is displayed
     And I click on guidance link
     Then the "Ukwm User Guidance" page is displayed
+
+  Scenario: User navigates to create multiple waste page and click upload
+    Given I login into ukwm FE mock gateway app
+    When the "Service Home" page is displayed
+    And I click Create a new multiple waste movement link
+    Then the "Ukwm Interruption" page is displayed
+    And I click Continue button
+    Then the "Ukwm Create Multiple Waste" page is displayed
+    And I click the upload button
+    Then I remain on the Ukwm Create Multiple Waste page with an "Upload a CSV file" error message displayed
