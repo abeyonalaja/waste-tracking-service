@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Heading, UnorderedList, ListItem, Button } from 'govuk-react';
 import { Paragraph } from 'components';
 import { EstimatesBanner } from './EstimatesBanner';
+import { useState } from 'react';
 
 type SubmissionDeclarationProps = {
   recordCount: number;
@@ -19,6 +20,7 @@ export function SubmissionDeclaration({
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
   const router = useRouter();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (uploadId: string) => {
@@ -31,6 +33,7 @@ export function SubmissionDeclaration({
     },
     onError: async (err) => {
       console.error(err);
+      router.push(`/multiples/${router.query.id}/submit/error`);
     },
     onSuccess: async () => {
       router.push(`/multiples/${router.query.id}/submit/confirmation`);
@@ -39,6 +42,7 @@ export function SubmissionDeclaration({
 
   function handleSubmission(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setButtonDisabled(true);
     mutation.mutate(router.query.id as string);
   }
 
@@ -61,7 +65,7 @@ export function SubmissionDeclaration({
         <ListItem>{t('multiples.submit.list.itemFour')}</ListItem>
       </UnorderedList>
       <form onSubmit={handleSubmission}>
-        <Button type="submit" id="submitButton">
+        <Button disabled={buttonDisabled} type="submit" id="submitButton">
           {t('multiples.submit.button')}
         </Button>
       </form>
