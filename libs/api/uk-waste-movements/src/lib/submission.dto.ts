@@ -7,7 +7,7 @@ export type WasteSource =
   | 'Commercial'
   | 'Construction'
   | 'Industrial'
-  | 'Local Authority'
+  | 'LocalAuthority'
   | 'Demolition';
 export type WasteTransport =
   | 'Road'
@@ -23,7 +23,7 @@ export type PhysicalForm =
   | 'Powder'
   | 'Mixed';
 
-export type HazardousWasteCodeDetails = {
+export type HazardousWasteCode = {
   code: string;
   name: string;
   concentration: number;
@@ -35,13 +35,13 @@ export type HazardousWasteCodeDetails = {
   specialHandlingRequirements: string;
 };
 
-export type PopDetails = {
+export type Pop = {
   name: string;
   concentration: number;
   concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
 };
 
-export type QuantityUnits = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+export type QuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 
 export type SubmissionState = {
   status: 'InProgress' | 'Submitted';
@@ -72,55 +72,68 @@ export type Contact = {
   phone: string;
 };
 
-export type ProducerDetails = {
+export type ProducerDetail = {
   reference: string;
-  sicCode: string;
+  sicCode?: string;
   contact: Contact;
   address: Address;
 };
 
-export type WasteCollectionDetails = {
-  wasteSource: WasteSource;
-  brokerRegistrationNumber: string;
-  carrierRegistrationNumber: string;
-  transportMethod: WasteTransport;
-  exceptedWasteCollectionDate: Date;
-  contact: Contact;
-  address: Address;
+export type ExpectedWasteCollectionDate = {
+  day: string;
+  month: string;
+  year: string;
 };
 
-export type ReceiverDetails = {
+export type WasteCollectionDetail = {
+  wasteSource: string;
+  brokerRegistrationNumber?: string;
+  carrierRegistrationNumber?: string;
+  modeOfWasteTransport: string;
+  expectedWasteCollectionDate: ExpectedWasteCollectionDate;
+  address: WasteCollectionAddress;
+};
+
+export type WasteCollectionAddress = {
+  addressLine1?: string;
+  addressLine2?: string;
+  townCity?: string;
+  postcode?: string;
+  country?: string;
+};
+
+export type ReceiverDetail = {
   authorizationType: string;
-  environmentalPermitNumber: string;
+  environmentalPermitNumber?: string;
   contact: Contact;
   address: Address;
 };
 
-export type WasteTransportationDetails = {
+export type WasteTransportationDetail = {
   numberAndTypeOfContainers: string;
   specialHandlingRequirements?: string;
 };
 
-export type WasteTypeDetails = {
+export type WasteTypeDetail = {
   ewcCode: string;
   wasteDescription: string;
   physicalForm: PhysicalForm;
   wasteQuantity: number;
-  quantityUnits: QuantityUnits;
+  quantityUnit: QuantityUnit;
   wasteQuantityType: WasteQuantityType;
   hasHazardousProperties: boolean;
   containsPops: boolean;
-  hazardousWasteCodes?: HazardousWasteCodeDetails[];
-  pops?: PopDetails[];
+  hazardousWasteCodes?: HazardousWasteCode[];
+  pops?: Pop[];
 };
 
 export type SubmissionBase = {
   transactionId: string;
-  producer: ProducerDetails;
-  wasteCollectionDetails: WasteCollectionDetails;
-  receiver: ReceiverDetails;
-  wasteTransportationDetails: WasteTransportationDetails;
-  wasteTypeDetails: WasteTypeDetails[];
+  producer: ProducerDetail;
+  wasteCollection: WasteCollectionDetail;
+  receiver: ReceiverDetail;
+  wasteTransportation: WasteTransportationDetail;
+  wasteType: WasteTypeDetail[];
   submissionState: SubmissionState;
 };
 
@@ -128,7 +141,7 @@ export type Submission = SubmissionBase & {
   submissionConfirmation: SubmissionConfirmation;
 };
 
-export type ProducerDetailsFlattened = {
+export type ProducerDetailFlattened = {
   producerOrganisationName: string;
   producerContactName: string;
   producerEmail: string;
@@ -136,34 +149,48 @@ export type ProducerDetailsFlattened = {
   producerAddressLine1: string;
   producerAddressLine2?: string;
   producerTownCity: string;
-  producerPostcode: string;
+  producerPostcode?: string;
   producerCountry: string;
-  producerSicCode: string;
+  producerSicCode?: string;
   reference: string;
 };
 
-export type ReceiverDetailsFlattened = {
+export type ReceiverDetailFlattened = {
   receiverAuthorizationType: string;
-  receiverEnvironmentalPermitNumber: string;
+  receiverEnvironmentalPermitNumber?: string;
   receiverOrganisationName: string;
   receiverAddressLine1: string;
   receiverAddressLine2?: string;
   receiverTownCity: string;
-  receiverPostcode: string;
+  receiverPostcode?: string;
   receiverCountry: string;
   receiverContactName: string;
   receiverContactPhone: string;
   receiverContactEmail: string;
 };
 
-export type WasteTransportationDetailsFlattened = {
+export type WasteTransportationDetailFlattened = {
   wasteTransportationNumberAndTypeOfContainers: string;
   wasteTransportationSpecialHandlingRequirements?: string;
 };
 
-export type SubmissionFlattened = ProducerDetailsFlattened &
-  ReceiverDetailsFlattened &
-  WasteTransportationDetailsFlattened;
+export type WasteCollectionDetailFlattened = {
+  wasteCollectionDetailsAddressLine1?: string;
+  wasteCollectionDetailsAddressLine2?: string;
+  wasteCollectionDetailsTownCity?: string;
+  wasteCollectionDetailsPostcode?: string;
+  wasteCollectionDetailsCountry?: string;
+  wasteCollectionDetailsWasteSource: string;
+  wasteCollectionDetailsBrokerRegistrationNumber?: string;
+  wasteCollectionDetailsCarrierRegistrationNumber?: string;
+  wasteCollectionDetailsModeOfWasteTransport: string;
+  wasteCollectionDetailsExpectedWasteCollectionDate: string;
+};
+
+export type SubmissionFlattened = ProducerDetailFlattened &
+  WasteCollectionDetailFlattened &
+  ReceiverDetailFlattened &
+  WasteTransportationDetailFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   padIndex: number;

@@ -28,3 +28,8 @@ export const ReceiverEnvironmentalPermitNumberChar = {
 export const WasteTransportationDetailsChar = {
   max: 100,
 };
+
+export const WasteCollectionChar = {
+  min: 1,
+  max: 20,
+};

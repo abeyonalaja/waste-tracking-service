@@ -1,19 +1,22 @@
 export * as submissionSchema from './submission.schema';
-export type { Submission, ReceiverDetails } from './submission.dto';
 export type {
+  Submission,
+  ReceiverDetail,
   WasteSource,
   WasteTransport,
   PhysicalForm,
-  QuantityUnits,
+  QuantityUnit,
   SubmissionState,
   SubmissionConfirmation,
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
-  ProducerDetails,
+  ProducerDetail,
+  WasteCollectionDetail,
   Address,
   Contact,
-  WasteTransportationDetails,
-  WasteTypeDetails,
+  WasteTransportationDetail,
+  WasteTypeDetail,
+  ExpectedWasteCollectionDate,
 } from './submission.dto';
 
 export type { Field } from './validation';

@@ -1,13 +1,18 @@
 import {
   validation,
   FieldFormatError,
-  ReceiverDetailsFlattened,
-  ReceiverDetails,
-  ProducerDetailsFlattened,
-  ProducerDetails,
-  WasteTransportationDetailsFlattened,
-  WasteTransportationDetails,
+  ReceiverDetailFlattened,
+  ReceiverDetail,
+  ProducerDetailFlattened,
+  ProducerDetail,
+  WasteTransportationDetailFlattened,
+  WasteTransportationDetail,
+  WasteCollectionDetailFlattened,
+  WasteCollectionDetail,
 } from '../model';
+
+import { parse, isValid } from 'date-fns';
+import enGB from 'date-fns/locale/en-GB';
 
 function titleCase(str: string) {
   return str
@@ -20,6 +25,18 @@ function titleCase(str: string) {
     .join(' ');
 }
 
+function titleCaseSpacesRemoved(str: string) {
+  return str
+    .trim()
+    .toLowerCase()
+    .split(' ')
+    .map(function (s) {
+      return s.replace(s[0], s[0].toUpperCase());
+    })
+    .join(' ')
+    .replace(/\s/g, '');
+}
+
 const fourNationsCountries = [
   'England',
   'Scotland',
@@ -27,11 +44,22 @@ const fourNationsCountries = [
   'Northern Ireland',
 ];
 
-export function validateProducerDetailsSection(
-  value: ProducerDetailsFlattened
+const wasteSource = [
+  'Household',
+  'LocalAuthority',
+  'Construction',
+  'Demolition',
+  'Commercial',
+  'Industrial',
+];
+
+const modeOfWasteTransport = ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'];
+
+export function validateProducerDetailSection(
+  value: ProducerDetailFlattened
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: ProducerDetails } {
+  | { valid: true; value: ProducerDetail } {
   const errors: FieldFormatError[] = [];
 
   const trimmedReference = value.reference?.trim();
@@ -219,11 +247,221 @@ export function validateProducerDetailsSection(
   };
 }
 
-export function validateReceiverDetailsSection(
-  value: ReceiverDetailsFlattened
+export function validateWasteCollectionDetailSection(
+  value: WasteCollectionDetailFlattened
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: ReceiverDetails } {
+  | { valid: true; value: WasteCollectionDetail } {
+  const errors: FieldFormatError[] = [];
+
+  if (
+    value.wasteCollectionAddressLine1?.trim() ||
+    value.wasteCollectionAddressLine2?.trim() ||
+    value.wasteCollectionTownCity?.trim() ||
+    value.wasteCollectionCountry?.trim() ||
+    value.wasteCollectionPostcode?.trim()
+  ) {
+    if (!value.wasteCollectionAddressLine1?.trim()) {
+      errors.push({
+        field: 'Waste Collection Details Address Line 1',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.emptyAddressLine1,
+      });
+    } else {
+      if (
+        value.wasteCollectionAddressLine1 &&
+        value.wasteCollectionAddressLine1.length > validation.FreeTextChar.max
+      ) {
+        errors.push({
+          field: 'Waste Collection Details Address Line 1',
+          message:
+            validation.WasteCollectionDetailsErrorMessages
+              .charTooManyAddressLine1,
+        });
+      }
+    }
+
+    if (
+      value.wasteCollectionAddressLine2 &&
+      value.wasteCollectionAddressLine2.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'Waste Collection Details Address Line 2',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .charTooManyAddressLine2,
+      });
+    }
+
+    if (!value.wasteCollectionTownCity?.trim()) {
+      errors.push({
+        field: 'Waste Collection Details Town or City',
+        message: validation.WasteCollectionDetailsErrorMessages.emptyTownOrCity,
+      });
+    } else {
+      if (
+        value.wasteCollectionTownCity &&
+        value.wasteCollectionTownCity.length > validation.FreeTextChar.max
+      ) {
+        errors.push({
+          field: 'Waste Collection Details Town or City',
+          message:
+            validation.WasteCollectionDetailsErrorMessages
+              .charTooManyTownOrCity,
+        });
+      }
+    }
+    if (!value.wasteCollectionCountry?.trim()) {
+      errors.push({
+        field: 'Waste Collection Details Country',
+        message: validation.WasteCollectionDetailsErrorMessages.emptyCountry,
+      });
+    } else {
+      value.wasteCollectionCountry = titleCase(value.wasteCollectionCountry);
+      if (!fourNationsCountries.includes(value.wasteCollectionCountry)) {
+        errors.push({
+          field: 'Waste Collection Details Country',
+          message:
+            validation.WasteCollectionDetailsErrorMessages.invalidCountry,
+        });
+      }
+    }
+
+    if (
+      value.wasteCollectionPostcode &&
+      !validation.postcodeRegex.test(value.wasteCollectionPostcode)
+    ) {
+      errors.push({
+        field: 'Waste Collection Details Postcode',
+        message: validation.WasteCollectionDetailsErrorMessages.invalidPostcode,
+      });
+    }
+  }
+
+  if (!value.wasteSource?.trim()) {
+    errors.push({
+      field: 'Waste Collection Details Waste Source',
+      message:
+        validation.WasteCollectionDetailsErrorMessages.missingWasteSource,
+    });
+  } else {
+    value.wasteSource = titleCaseSpacesRemoved(value.wasteSource);
+    if (!wasteSource.includes(value.wasteSource)) {
+      errors.push({
+        field: 'Waste Collection Details Waste Source',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.invalidWasteSource,
+      });
+    }
+  }
+
+  if (
+    value.brokerRegNumber &&
+    value.brokerRegNumber.length > validation.WasteCollectionChar.max
+  ) {
+    errors.push({
+      field: 'Waste Collection Details Broker Registration Number',
+      message:
+        validation.WasteCollectionDetailsErrorMessages
+          .charTooManyBrokerRegistrationNumber,
+    });
+  }
+
+  if (
+    value.carrierRegNumber &&
+    value.carrierRegNumber.length > validation.WasteCollectionChar.max
+  ) {
+    errors.push({
+      field: 'Waste Collection Details Carrier Registration Number',
+      message:
+        validation.WasteCollectionDetailsErrorMessages
+          .charTooManyCarrierRegistrationNumber,
+    });
+  }
+
+  if (!value.modeOfWasteTransport?.trim()) {
+    errors.push({
+      field: 'Waste Collection Details Mode of Waste Transport',
+      message:
+        validation.WasteCollectionDetailsErrorMessages.emptyModeOfTransport,
+    });
+  } else {
+    value.modeOfWasteTransport = titleCaseSpacesRemoved(
+      value.modeOfWasteTransport
+    );
+    if (!modeOfWasteTransport.includes(value.modeOfWasteTransport)) {
+      errors.push({
+        field: 'Waste Collection Details Mode of Waste Transport',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .invalidModeOfWasteTransport,
+      });
+    }
+  }
+
+  if (!value.expectedWasteCollectionDate) {
+    errors.push({
+      field: 'Waste Collection Details Expected Waste Collection Date',
+      message:
+        validation.WasteCollectionDetailsErrorMessages
+          .missingWasteCollectionDate,
+    });
+  } else {
+    const parsedDate = parse(
+      value.expectedWasteCollectionDate,
+      'P',
+      new Date(),
+      { locale: enGB }
+    );
+    const isValidDate = isValid(parsedDate);
+    if (value.expectedWasteCollectionDate && !isValidDate) {
+      errors.push({
+        field: 'Waste Collection Details Expected Waste Collection Date',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .invalidFormatWasteCollectionDate,
+      });
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  const dateParts = value.expectedWasteCollectionDate.split('/');
+  return {
+    valid: true,
+    value: {
+      wasteSource: value.wasteSource,
+      brokerRegistrationNumber: !value.brokerRegNumber
+        ? undefined
+        : value.brokerRegNumber,
+      carrierRegistrationNumber: value.carrierRegNumber,
+      modeOfWasteTransport: value.modeOfWasteTransport,
+      expectedWasteCollectionDate: {
+        day: dateParts[0],
+        month: dateParts[1],
+        year: dateParts[2],
+      },
+      address: {
+        addressLine1: value.wasteCollectionAddressLine1,
+        addressLine2: value.wasteCollectionAddressLine2,
+        townCity: value.wasteCollectionTownCity,
+        postcode: value.wasteCollectionPostcode,
+        country: value.wasteCollectionCountry,
+      },
+    },
+  };
+}
+
+export function validateReceiverDetailSection(
+  value: ReceiverDetailFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: ReceiverDetail } {
   const errors: FieldFormatError[] = [];
 
   if (!value.receiverAuthorizationType?.trim()) {
@@ -412,11 +650,11 @@ export function validateReceiverDetailsSection(
   };
 }
 
-export function validateWasteTransportationDetailsSection(
-  value: WasteTransportationDetailsFlattened
+export function validateWasteTransportationDetailSection(
+  value: WasteTransportationDetailFlattened
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: WasteTransportationDetails } {
+  | { valid: true; value: WasteTransportationDetail } {
   const errors: FieldFormatError[] = [];
 
   if (!value.wasteTransportationNumberAndTypeOfContainers?.trim()) {

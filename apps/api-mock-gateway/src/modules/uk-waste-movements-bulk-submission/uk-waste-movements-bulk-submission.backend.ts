@@ -129,7 +129,7 @@ export async function createBatch(
             },
             {
               rowNumber: 4,
-              errorAmount: 14,
+              errorAmount: 16,
               errorDetails: [
                 'The unique reference must be 20 characters or less',
                 'Enter the producer organisation name',
@@ -145,6 +145,9 @@ export async function createBatch(
                 'Enter full name of receiver contact',
                 'Enter receiver contact email address',
                 'Number and type of transportation details must be less than 100 characters',
+                'The waste collection address line 2 must be fewer than 250 characters',
+                'Enter the waste collection town or city',
+                'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
               ],
             },
           ],
@@ -314,6 +317,22 @@ export async function createBatch(
               ],
             },
             {
+              columnName: 'Waste Collection Details Invalid Town',
+              errorAmount: 2,
+              errorDetails: [
+                {
+                  rowNumber: 6,
+                  errorReason:
+                    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
+                },
+                {
+                  rowNumber: 7,
+                  errorReason:
+                    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
+                },
+              ],
+            },
+            {
               columnName: 'Reference',
               errorAmount: 2,
               errorDetails: [
@@ -392,15 +411,37 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteTypeDetails: {
-                containsPop: false,
+              wasteType: {
+                containsPops: false,
                 ewcCode: '01 03 04',
-                haveHazardousProperties: false,
+                hasHazardousProperties: false,
                 physicalForm: 'Solid',
-                quantityUnits: 'Tonne',
+                quantityUnit: 'Tonne',
                 wasteDescription: 'Waste description',
                 wasteQuantity: 100,
                 wasteQuantityType: 'ActualData',
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                  country: 'England',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                },
+                brokerRegistrationNumber: 'CBDL349812',
+                carrierRegistrationNumber: 'CBDL349812',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                modeOfWasteTransport: 'Rail',
+                wasteSource: 'LocalAuthority',
+              },
+              wasteTransportation: {
+                numberAndTypeOfContainers: '20 x 40ft containers',
+                specialHandlingRequirements: 'Special handling requirements',
               },
             },
             {
@@ -438,21 +479,193 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteTypeDetails: {
-                containsPop: true,
+              wasteType: {
+                containsPops: true,
                 ewcCode: '02 03 02',
-                haveHazardousProperties: true,
+                hasHazardousProperties: true,
                 physicalForm: 'Liquid',
-                quantityUnits: 'Cubic Metre',
+                quantityUnit: 'Cubic Metre',
                 wasteDescription: 'Waste description',
                 wasteQuantity: 200,
                 wasteQuantityType: 'EstimateData',
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                  country: 'England',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                },
+                brokerRegistrationNumber: 'CBDL349812',
+                carrierRegistrationNumber: 'CBDL349812',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                modeOfWasteTransport: 'Rail',
+                wasteSource: 'LocalAuthority',
+              },
+              wasteTransportation: {
+                numberAndTypeOfContainers: '20 x 40ft containers',
+                specialHandlingRequirements: 'Special handling requirements',
               },
             },
           ],
         },
       };
       break;
+    case 'Submitting':
+      value = {
+        id: id,
+        accountId: accountId,
+        state: {
+          status: 'Submitting',
+          timestamp: timestamp,
+          hasEstimates: true,
+          submissions: [
+            {
+              producer: {
+                reference: 'ref1',
+                sicCode: '1010101',
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              receiver: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '1010101',
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              wasteType: {
+                containsPops: false,
+                ewcCode: '01 03 04',
+                hasHazardousProperties: false,
+                physicalForm: 'Solid',
+                quantityUnit: 'Tonne',
+                wasteDescription: 'Waste description',
+                wasteQuantity: 100,
+                wasteQuantityType: 'ActualData',
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                  country: 'England',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                },
+                brokerRegistrationNumber: 'CBDL349812',
+                carrierRegistrationNumber: 'CBDL349812',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                modeOfWasteTransport: 'Rail',
+                wasteSource: 'LocalAuthority',
+              },
+              wasteTransportation: {
+                numberAndTypeOfContainers: '20 x 40ft containers',
+                specialHandlingRequirements: 'Special handling requirements',
+              },
+            },
+            {
+              producer: {
+                reference: 'ref2',
+                sicCode: '20202',
+                contact: {
+                  email: 'janedoe@email.com',
+                  name: 'Jane Doe',
+                  organisationName: 'Company Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Apt 20',
+                  country: 'England',
+                  townCity: 'Manchester',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              receiver: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '2020202',
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              wasteType: {
+                containsPops: true,
+                ewcCode: '02 03 02',
+                hasHazardousProperties: true,
+                physicalForm: 'Liquid',
+                quantityUnit: 'Cubic Metre',
+                wasteDescription: 'Waste description',
+                wasteQuantity: 200,
+                wasteQuantityType: 'EstimateData',
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                  country: 'England',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                },
+                brokerRegistrationNumber: 'CBDL349812',
+                carrierRegistrationNumber: 'CBDL349812',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                modeOfWasteTransport: 'Rail',
+                wasteSource: 'LocalAuthority',
+              },
+              wasteTransportation: {
+                numberAndTypeOfContainers: '20 x 40ft containers',
+                specialHandlingRequirements: 'Special handling requirements',
+              },
+            },
+          ],
+        },
+      };
+      break;
+
     case 'Submitted':
       value = {
         id: id,

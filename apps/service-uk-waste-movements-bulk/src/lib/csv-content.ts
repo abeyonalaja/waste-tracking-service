@@ -39,7 +39,7 @@ export type BulkSubmissionCsvRow = {
   wasteQuantity: string;
   quantityUnits: string;
   quantityWaste: string;
-  haveHazardousProperties: string;
+  hasHazardousProperties: string;
   containPersistentOrganicPollutants: string;
   hazardousWasteCode: string;
   popDetails: string;
@@ -186,7 +186,7 @@ export const headersFormatted = [
   'wasteQuantity',
   'quantityUnits',
   'quantityWaste',
-  'haveHazardousProperties',
+  'hasHazardousProperties',
   'containPersistentOrganicPollutants',
   'hazardousWasteCode',
   'popDetails',

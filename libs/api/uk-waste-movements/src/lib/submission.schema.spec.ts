@@ -3,27 +3,29 @@ import { faker } from '@faker-js/faker';
 import {
   producer,
   receiver,
-  wasteTypeDetails,
-  wasteTransportationDetails,
+  wasteType,
+  wasteTransportation,
   validateSubmissionsRequest,
   validateSubmissionsResponse,
+  wasteCollection,
 } from './submission.schema';
 import {
-  ProducerDetails,
-  ReceiverDetails,
-  WasteTypeDetails,
-  WasteTransportationDetails,
+  ProducerDetail,
+  ReceiverDetail,
+  WasteTypeDetail,
+  WasteTransportationDetail,
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
+  WasteCollectionDetail,
 } from './submission.dto';
 
 const ajv = new Ajv();
 
 describe('producer', () => {
-  const validate = ajv.compile<ProducerDetails>(producer);
+  const validate = ajv.compile<ProducerDetail>(producer);
 
   it('is compatible with dto values', () => {
-    const value: ProducerDetails = {
+    const value: ProducerDetail = {
       reference: 'testRef',
       sicCode: '123456',
       contact: {
@@ -48,15 +50,15 @@ describe('producer', () => {
 });
 
 describe('wasteTypeDetails', () => {
-  const validate = ajv.compile<WasteTypeDetails>(wasteTypeDetails);
+  const validate = ajv.compile<WasteTypeDetail>(wasteType);
 
   it('is compatible with dto values', () => {
-    const value: WasteTypeDetails = {
+    const value: WasteTypeDetail = {
       ewcCode: '01 03 04',
       wasteDescription: 'waste description',
       physicalForm: 'Solid',
       wasteQuantity: 100,
-      quantityUnits: 'Tonne',
+      quantityUnit: 'Tonne',
       wasteQuantityType: 'ActualData',
       hasHazardousProperties: false,
       containsPops: false,
@@ -89,10 +91,10 @@ describe('wasteTypeDetails', () => {
 });
 
 describe('receiver', () => {
-  const validate = ajv.compile<ReceiverDetails>(receiver);
+  const validate = ajv.compile<ReceiverDetail>(receiver);
 
   it('is compatible with dto values and phone number contains 11 caracters', () => {
-    const value: ReceiverDetails = {
+    const value: ReceiverDetail = {
       authorizationType: 'permit',
       environmentalPermitNumber: '123',
       contact: {
@@ -110,18 +112,11 @@ describe('receiver', () => {
       },
     };
 
-    const isValid = validate(value);
-
-    if (!isValid) {
-      console.log('error validation case 1');
-      console.log(validate.errors);
-    }
-
-    expect(isValid).toBe(true);
+    expect(validate(value)).toBe(true);
   });
 
   it('is compatible with dto values and phone number contains 13 caracters', () => {
-    const value: ReceiverDetails = {
+    const value: ReceiverDetail = {
       authorizationType: 'permit',
       environmentalPermitNumber: '123',
       contact: {
@@ -143,7 +138,7 @@ describe('receiver', () => {
   });
 
   it('is compatible with dto values and phone number contains 13 caracters and an environmental Permit number with space and ()', () => {
-    const value: ReceiverDetails = {
+    const value: ReceiverDetail = {
       authorizationType: 'permit',
       environmentalPermitNumber: 'E123-456-ABC (1)',
       contact: {
@@ -165,13 +160,40 @@ describe('receiver', () => {
   });
 });
 
-describe('wasteTransportationDetails', () => {
-  const validate = ajv.compile<WasteTransportationDetails>(
-    wasteTransportationDetails
-  );
+describe('wasteCollection', () => {
+  const validate = ajv.compile<WasteCollectionDetail>(wasteCollection);
 
   it('is compatible with dto values', () => {
-    const value: WasteTransportationDetails = {
+    const value: WasteCollectionDetail = {
+      address: {
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+      wasteSource: 'Household',
+      brokerRegistrationNumber: '1234567',
+      carrierRegistrationNumber: 'CBDU1234',
+      modeOfWasteTransport: 'Road',
+      expectedWasteCollectionDate: {
+        day: '01',
+        month: '01',
+        year: '2028',
+      },
+    };
+
+    const isValid = validate(value);
+
+    expect(isValid).toBe(true);
+  });
+});
+
+describe('wasteTransportationDetails', () => {
+  const validate = ajv.compile<WasteTransportationDetail>(wasteTransportation);
+
+  it('is compatible with dto values', () => {
+    const value: WasteTransportationDetail = {
       numberAndTypeOfContainers: '1 x 20L drum',
       specialHandlingRequirements: 'special handling requirements',
     };
@@ -180,7 +202,7 @@ describe('wasteTransportationDetails', () => {
   });
 
   it('handles optional properties', () => {
-    const value: WasteTransportationDetails = {
+    const value: WasteTransportationDetail = {
       numberAndTypeOfContainers: '1 x 20L drum',
     };
 
@@ -226,6 +248,18 @@ describe('validateSubmissionsRequest', () => {
             'Waste Transportation Number And Type Of Containers',
           wasteTransportationSpecialHandlingRequirements:
             'Waste Transportation Special Handling Requirements',
+          wasteCollectionDetailsExpectedWasteCollectionDate: '2022-01-01',
+          wasteCollectionDetailsModeOfWasteTransport: 'Road',
+          wasteCollectionDetailsWasteSource: 'Household',
+          wasteCollectionDetailsAddressLine1: 'Waste Collection Address Line 1',
+          wasteCollectionDetailsAddressLine2: 'Waste Collection Address Line 2',
+          wasteCollectionDetailsBrokerRegistrationNumber:
+            'Waste Collection Broker Registration Number',
+          wasteCollectionDetailsCarrierRegistrationNumber:
+            'Waste Collection Carrier Registration Number',
+          wasteCollectionDetailsCountry: 'Waste Collection Country',
+          wasteCollectionDetailsPostcode: 'Waste Collection Postcode',
+          wasteCollectionDetailsTownCity: 'Waste Collection Town/City',
         },
       ],
     };
@@ -247,17 +281,37 @@ describe('validateSubmissionsResponse', () => {
         accountId: faker.datatype.uuid(),
         values: [
           {
-            wasteTransportationDetails: {
+            wasteTransportation: {
               numberAndTypeOfContainers: 'test',
               specialHandlingRequirements: 'test',
             },
-            wasteTypeDetails: [
+            wasteCollection: {
+              address: {
+                addressLine1: 'Waste Collection Address Line 1',
+                addressLine2: 'Waste Collection Address Line 2',
+                country: 'Waste Collection Country',
+                postcode: 'Waste Collection Postcode',
+                townCity: 'Waste Collection Town/City',
+              },
+              expectedWasteCollectionDate: {
+                day: '01',
+                month: '01',
+                year: '2024',
+              },
+              modeOfWasteTransport: 'Road',
+              wasteSource: 'Household',
+              brokerRegistrationNumber:
+                'Waste Collection Broker Registration Number',
+              carrierRegistrationNumber:
+                'Waste Collection Carrier Registration Number',
+            },
+            wasteType: [
               {
                 ewcCode: '01 03 04',
                 wasteDescription: 'waste description',
                 physicalForm: 'Solid',
                 wasteQuantity: 100,
-                quantityUnits: 'Tonne',
+                quantityUnit: 'Tonne',
                 wasteQuantityType: 'ActualData',
                 hasHazardousProperties: false,
                 containsPops: false,

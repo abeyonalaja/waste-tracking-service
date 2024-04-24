@@ -7,8 +7,9 @@ import {
 import {
   Address,
   Contact,
-  WasteTransportationDetails,
-  WasteTypeDetails,
+  WasteTransportationDetail,
+  WasteTypeDetail,
+  ExpectedWasteCollectionDate,
 } from '@wts/api/uk-waste-movements';
 
 const errorResponseValue: SchemaObject = {
@@ -16,6 +17,14 @@ const errorResponseValue: SchemaObject = {
     statusCode: { type: 'uint16' },
     name: { type: 'string' },
     message: { type: 'string' },
+  },
+};
+
+const wasteCollectionDate: JTDSchemaType<ExpectedWasteCollectionDate> = {
+  properties: {
+    day: { type: 'string' },
+    month: { type: 'string' },
+    year: { type: 'string' },
   },
 };
 
@@ -52,6 +61,30 @@ export const producer: SchemaObject = {
   },
 };
 
+export const wasteCollection: SchemaObject = {
+  properties: {
+    wasteSource: {
+      enum: [
+        'Household',
+        'LocalAuthority',
+        'Construction',
+        'Demolition',
+        'Commercial',
+        'Industrial',
+      ],
+    },
+    modeOfWasteTransport: {
+      enum: ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'],
+    },
+    expectedWasteCollectionDate: wasteCollectionDate,
+    address: address,
+  },
+  optionalProperties: {
+    brokerRegistrationNumber: { type: 'string' },
+    carrierRegistrationNumber: { type: 'string' },
+  },
+};
+
 export const receiver: SchemaObject = {
   properties: {
     authorizationType: { type: 'string' },
@@ -61,7 +94,7 @@ export const receiver: SchemaObject = {
   },
 };
 
-export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
+export const wasteType: JTDSchemaType<WasteTypeDetail> = {
   properties: {
     ewcCode: { type: 'string' },
     wasteDescription: { type: 'string' },
@@ -69,7 +102,7 @@ export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
       enum: ['Gas', 'Liquid', 'Solid', 'Sludge', 'Powder', 'Mixed'],
     },
     wasteQuantity: { type: 'uint16' },
-    quantityUnits: {
+    quantityUnit: {
       enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
     },
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
@@ -108,15 +141,14 @@ export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
   },
 };
 
-export const wasteTransportationDetails: JTDSchemaType<WasteTransportationDetails> =
-  {
-    properties: {
-      numberAndTypeOfContainers: { type: 'string' },
-    },
-    optionalProperties: {
-      specialHandlingRequirements: { type: 'string' },
-    },
-  };
+export const wasteTransportation: JTDSchemaType<WasteTransportationDetail> = {
+  properties: {
+    numberAndTypeOfContainers: { type: 'string' },
+  },
+  optionalProperties: {
+    specialHandlingRequirements: { type: 'string' },
+  },
+};
 
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
@@ -169,12 +201,35 @@ const bulkSubmissionState: SchemaObject = {
         submissions: {
           elements: {
             properties: {
-              receiver: receiver,
-              producer: producer,
-              wasteTransportationDetails,
-              wasteTypeDetails: {
+              receiver,
+              producer,
+              wasteCollection,
+              wasteTransportation,
+              wasteType: {
                 elements: {
-                  ...wasteTypeDetails,
+                  ...wasteType,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    Submitting: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+        hasEstimates: { type: 'boolean' },
+        transactionId: { type: 'string' },
+        submissions: {
+          elements: {
+            properties: {
+              receiver,
+              producer,
+              wasteCollection,
+              wasteTransportation,
+              wasteType: {
+                elements: {
+                  ...wasteType,
                 },
               },
             },
@@ -186,6 +241,7 @@ const bulkSubmissionState: SchemaObject = {
       properties: {
         timestamp: { type: 'timestamp' },
         transactionId: { type: 'string' },
+        hasEstimates: { type: 'boolean' },
         submissions: {
           elements: {
             properties: {

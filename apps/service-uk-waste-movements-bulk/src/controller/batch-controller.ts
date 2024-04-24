@@ -59,6 +59,12 @@ export class BatchController {
   finalizeBatch: Handler<api.FinalizeBatchRequest, api.FinalizeBatchResponse> =
     async ({ id, accountId }) => {
       try {
+        const submissions = await this.repository.getBatch(id, accountId);
+
+        if (submissions.state.status !== 'PassedValidation') {
+          throw Boom.badRequest('Batch has not passed validation');
+        }
+
         const timestamp = new Date();
         const transactionId =
           timestamp.getFullYear().toString().substring(2) +
@@ -69,16 +75,16 @@ export class BatchController {
         const bulkSubmission: BulkSubmission = {
           id: id,
           state: {
-            status: 'Submitted',
-            timestamp,
+            status: 'Submitting',
             transactionId,
-            submissions: [],
+            timestamp,
+            hasEstimates: submissions.state.hasEstimates,
+            submissions: submissions.state.submissions,
           },
         };
-
-        await this.repository.saveBatch(bulkSubmission, accountId);
-
-        return success(undefined);
+        return success(
+          await this.repository.saveBatch(bulkSubmission, accountId)
+        );
       } catch (err) {
         if (err instanceof Boom.Boom) {
           return fromBoom(err);

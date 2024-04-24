@@ -4,7 +4,6 @@ import winston from 'winston';
 import Boom from '@hapi/boom';
 import { BatchController } from './batch-controller';
 import { BulkSubmission } from '../model';
-import * as api from '@wts/api/uk-waste-movements-bulk';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -73,32 +72,153 @@ describe(BatchController, () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
 
-      mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
+      mockRepository.getBatch.mockRejectedValue(Boom.teapot());
 
-      const response = await subject.finalizeBatch({ id, accountId });
+      let response = await subject.finalizeBatch({ id, accountId });
 
       expect(response.success).toBe(false);
       if (response.success) {
         return;
       }
 
-      expect(mockRepository.saveBatch).toBeCalledTimes(1);
+      expect(mockRepository.getBatch).toBeCalled();
+      expect(mockRepository.saveBatch).toBeCalledTimes(0);
       expect(response.error.statusCode).toBe(418);
+
+      const value: BulkSubmission = {
+        id,
+        state: {
+          status: 'FailedValidation',
+          timestamp: new Date(),
+          rowErrors: [
+            {
+              errorAmount: 3,
+              rowNumber: 1,
+              errorDetails: ['error1', 'error2'],
+            },
+          ],
+          columnErrors: [
+            {
+              columnName: 'column1',
+              errorAmount: 3,
+              errorDetails: [
+                {
+                  errorReason: 'error1',
+                  rowNumber: 1,
+                },
+              ],
+            },
+          ],
+        },
+      };
+      mockRepository.getBatch.mockResolvedValue(value);
+
+      response = await subject.finalizeBatch({ id, accountId });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getBatch).toBeCalled();
+      expect(mockRepository.saveBatch).toBeCalledTimes(0);
+      expect(response.error.statusCode).toBe(400);
     });
 
     it('Successfully updates value in the repository', async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
 
-      mockRepository.saveBatch.mockResolvedValue();
+      const value: BulkSubmission = {
+        id,
+        state: {
+          status: 'PassedValidation',
+          timestamp: new Date(),
+          hasEstimates: true,
+          submissions: [
+            {
+              producer: {
+                reference: 'ref1',
+                sicCode: '1010101',
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              receiver: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '1010101',
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                  country: 'England',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                },
+                brokerRegistrationNumber: 'CBDL349812',
+                carrierRegistrationNumber: 'CBDL349812',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                modeOfWasteTransport: 'Rail',
+                wasteSource: 'LocalAuthority',
+              },
+              wasteTransportation: {
+                numberAndTypeOfContainers: '10x20ft',
+                specialHandlingRequirements: 'Special handling requirements',
+              },
+              wasteType: [
+                {
+                  containsPops: false,
+                  ewcCode: '01 03 04',
+                  hasHazardousProperties: false,
+                  physicalForm: 'Solid',
+                  quantityUnit: 'Tonne',
+                  wasteDescription: 'Waste description',
+                  wasteQuantity: 100,
+                  wasteQuantityType: 'ActualData',
+                },
+              ],
+            },
+          ],
+        },
+      };
+      mockRepository.getBatch.mockResolvedValue(value);
 
-      const response: api.FinalizeBatchResponse = await subject.finalizeBatch({
+      const response = await subject.finalizeBatch({
         id,
         accountId,
       });
 
       expect(response.success).toBe(true);
-      expect(mockRepository.saveBatch).toBeCalledTimes(1);
+      expect(mockRepository.getBatch).toBeCalled();
+      expect(mockRepository.saveBatch).toBeCalled();
 
       if (!response.success) {
         return;

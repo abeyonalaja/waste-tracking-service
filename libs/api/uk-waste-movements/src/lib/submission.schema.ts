@@ -2,8 +2,11 @@ import { SchemaObject, JTDSchemaType } from 'ajv/dist/jtd';
 import {
   Address,
   Contact,
-  WasteTransportationDetails,
-  WasteTypeDetails,
+  WasteTransportationDetail,
+  WasteTypeDetail,
+  ExpectedWasteCollectionDate,
+  WasteCollectionAddress,
+  ValidateSubmissionsRequest,
 } from './submission.dto';
 
 const errorResponseValue: SchemaObject = {
@@ -23,6 +26,24 @@ export const address: JTDSchemaType<Address> = {
   optionalProperties: {
     addressLine2: { type: 'string' },
     postcode: { type: 'string' },
+  },
+};
+
+export const wasteCollectionAddress: JTDSchemaType<WasteCollectionAddress> = {
+  optionalProperties: {
+    addressLine1: { type: 'string' },
+    addressLine2: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+};
+
+export const wasteCollectionDate: JTDSchemaType<ExpectedWasteCollectionDate> = {
+  properties: {
+    day: { type: 'string' },
+    month: { type: 'string' },
+    year: { type: 'string' },
   },
 };
 
@@ -46,6 +67,28 @@ export const producer: SchemaObject = {
   },
 };
 
+export const wasteCollection: SchemaObject = {
+  properties: {
+    address: wasteCollectionAddress,
+    wasteSource: {
+      enum: [
+        'Household',
+        'Commercial',
+        'Industrial',
+        'LocalAuthority',
+        'Demolition',
+        'Construction',
+      ],
+    },
+    brokerRegistrationNumber: { type: 'string' },
+    carrierRegistrationNumber: { type: 'string' },
+    modeOfWasteTransport: {
+      enum: ['Road', 'Rail', 'Air', 'Sea', 'InlandWaterways'],
+    },
+    expectedWasteCollectionDate: wasteCollectionDate,
+  },
+};
+
 export const receiver: SchemaObject = {
   properties: {
     authorizationType: { type: 'string' },
@@ -55,7 +98,7 @@ export const receiver: SchemaObject = {
   },
 };
 
-export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
+export const wasteType: JTDSchemaType<WasteTypeDetail> = {
   properties: {
     ewcCode: { type: 'string' },
     wasteDescription: { type: 'string' },
@@ -63,7 +106,7 @@ export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
       enum: ['Gas', 'Liquid', 'Solid', 'Sludge', 'Powder', 'Mixed'],
     },
     wasteQuantity: { type: 'float64' },
-    quantityUnits: {
+    quantityUnit: {
       enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
     },
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
@@ -98,54 +141,66 @@ export const wasteTypeDetails: JTDSchemaType<WasteTypeDetails> = {
   },
 };
 
-export const wasteTransportationDetails: JTDSchemaType<WasteTransportationDetails> =
+export const wasteTransportation: JTDSchemaType<WasteTransportationDetail> = {
+  properties: {
+    numberAndTypeOfContainers: { type: 'string' },
+  },
+  optionalProperties: {
+    specialHandlingRequirements: { type: 'string' },
+  },
+};
+
+export const validateSubmissionsRequest: JTDSchemaType<ValidateSubmissionsRequest> =
   {
     properties: {
-      numberAndTypeOfContainers: { type: 'string' },
-    },
-    optionalProperties: {
-      specialHandlingRequirements: { type: 'string' },
-    },
-  };
-
-export const validateSubmissionsRequest: SchemaObject = {
-  properties: {
-    accountId: { type: 'string' },
-    padIndex: { type: 'uint16' },
-    values: {
-      elements: {
-        properties: {
-          reference: { type: 'string' },
-          producerOrganisationName: { type: 'string' },
-          producerContactName: { type: 'string' },
-          producerEmail: { type: 'string' },
-          producerPhone: { type: 'string' },
-          producerAddressLine1: { type: 'string' },
-          producerTownCity: { type: 'string' },
-          producerCountry: { type: 'string' },
-          wasteTransportationNumberAndTypeOfContainers: { type: 'string' },
-        },
-        optionalProperties: {
-          producerAddressLine2: { type: 'string' },
-          producerPostcode: { type: 'string' },
-          producerSicCode: { type: 'string' },
-          receiverAuthorizationType: { type: 'string' },
-          receiverEnvironmentalPermitNumber: { type: 'string' },
-          receiverOrganisationName: { type: 'string' },
-          receiverContactName: { type: 'string' },
-          receiverContactEmail: { type: 'string' },
-          receiverContactPhone: { type: 'string' },
-          receiverAddressLine1: { type: 'string' },
-          receiverAddressLine2: { type: 'string' },
-          receiverTownCity: { type: 'string' },
-          receiverPostcode: { type: 'string' },
-          receiverCountry: { type: 'string' },
-          wasteTransportationSpecialHandlingRequirements: { type: 'string' },
+      accountId: { type: 'string' },
+      padIndex: { type: 'uint16' },
+      values: {
+        elements: {
+          properties: {
+            reference: { type: 'string' },
+            producerOrganisationName: { type: 'string' },
+            producerContactName: { type: 'string' },
+            producerEmail: { type: 'string' },
+            producerPhone: { type: 'string' },
+            producerAddressLine1: { type: 'string' },
+            producerTownCity: { type: 'string' },
+            producerCountry: { type: 'string' },
+            receiverAuthorizationType: { type: 'string' },
+            receiverOrganisationName: { type: 'string' },
+            receiverContactName: { type: 'string' },
+            receiverContactEmail: { type: 'string' },
+            receiverContactPhone: { type: 'string' },
+            receiverAddressLine1: { type: 'string' },
+            receiverTownCity: { type: 'string' },
+            receiverCountry: { type: 'string' },
+            wasteTransportationNumberAndTypeOfContainers: { type: 'string' },
+            wasteCollectionDetailsWasteSource: { type: 'string' },
+            wasteCollectionDetailsModeOfWasteTransport: { type: 'string' },
+            wasteCollectionDetailsExpectedWasteCollectionDate: {
+              type: 'string',
+            },
+          },
+          optionalProperties: {
+            producerAddressLine2: { type: 'string' },
+            producerPostcode: { type: 'string' },
+            producerSicCode: { type: 'string' },
+            receiverEnvironmentalPermitNumber: { type: 'string' },
+            receiverAddressLine2: { type: 'string' },
+            receiverPostcode: { type: 'string' },
+            wasteTransportationSpecialHandlingRequirements: { type: 'string' },
+            wasteCollectionDetailsAddressLine1: { type: 'string' },
+            wasteCollectionDetailsAddressLine2: { type: 'string' },
+            wasteCollectionDetailsTownCity: { type: 'string' },
+            wasteCollectionDetailsPostcode: { type: 'string' },
+            wasteCollectionDetailsCountry: { type: 'string' },
+            wasteCollectionDetailsBrokerRegistrationNumber: { type: 'string' },
+            wasteCollectionDetailsCarrierRegistrationNumber: { type: 'string' },
+          },
         },
       },
     },
-  },
-};
+  };
 
 const validationResult: SchemaObject = {
   properties: {
@@ -155,11 +210,12 @@ const validationResult: SchemaObject = {
       elements: {
         optionalProperties: {
           producer: producer,
+          wasteCollection: wasteCollection,
           receiver: receiver,
-          wasteTransportationDetails,
-          wasteTypeDetails: {
+          wasteTransportation,
+          wasteType: {
             elements: {
-              ...wasteTypeDetails,
+              ...wasteType,
             },
           },
           index: { type: 'uint16' },
@@ -168,7 +224,6 @@ const validationResult: SchemaObject = {
               properties: {
                 field: {
                   enum: [
-                    'WasteCollectionDetails',
                     'WasteTransportation',
                     'WasteTypeDetails',
                     'Reference',
@@ -182,6 +237,16 @@ const validationResult: SchemaObject = {
                     'Producer contact email address',
                     'Producer contact phone number',
                     'Producer Standard Industrial Classification (SIC) code',
+                    'Waste Collection Details Address Line 1',
+                    'Waste Collection Details Address Line 2',
+                    'Waste Collection Details Town or City',
+                    'Waste Collection Details Country',
+                    'Waste Collection Details Postcode',
+                    'Waste Collection Details Waste Source',
+                    'Waste Collection Details Broker Registration Number',
+                    'Waste Collection Details Carrier Registration Number',
+                    'Waste Collection Details Mode of Waste Transport',
+                    'Waste Collection Details Expected Waste Collection Date',
                     'Receiver authorization type',
                     'Receiver environmental permit number',
                     'Receiver organisation name',
@@ -220,6 +285,16 @@ const validationResult: SchemaObject = {
                           'Producer contact email address',
                           'Producer contact phone number',
                           'Producer Standard Industrial Classification (SIC) code',
+                          'Waste Collection Details Address Line 1',
+                          'Waste Collection Details Address Line 2',
+                          'Waste Collection Details Town or City',
+                          'Waste Collection Details Country',
+                          'Waste Collection Details Postcode',
+                          'Waste Collection Details Waste Source',
+                          'Waste Collection Details Broker Registration Number',
+                          'Waste Collection Details Carrier Registration Number',
+                          'Waste Collection Details Mode of Waste Transport',
+                          'Waste Collection Details Expected Waste Collection Date',
                           'Receiver authorization type',
                           'Receiver environmental permit number',
                           'Receiver organisation name',

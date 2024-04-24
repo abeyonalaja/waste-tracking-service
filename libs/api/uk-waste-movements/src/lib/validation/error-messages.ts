@@ -3,6 +3,7 @@ import {
   ReferenceChar,
   ReceiverEnvironmentalPermitNumberChar,
   WasteTransportationDetailsChar,
+  WasteCollectionChar,
 } from './constraints';
 
 export const ProducerValidationErrorMessages = {
@@ -30,6 +31,29 @@ export const ProducerValidationErrorMessages = {
   charTooManyReference: `The unique reference must be ${ReferenceChar.max} characters or less`,
   invalidReference:
     'The reference must only include letters a to z, and numbers',
+};
+
+export const WasteCollectionDetailsErrorMessages = {
+  emptyAddressLine1: 'Enter the waste collection address',
+  charTooManyAddressLine1: `The waste collection address line 1 must be fewer than ${FreeTextChar.max} characters`,
+  charTooManyAddressLine2: `The waste collection address line 2 must be fewer than ${FreeTextChar.max} characters`,
+  emptyTownOrCity: 'Enter the waste collection town or city',
+  charTooManyTownOrCity: `The waste collection town or city must be fewer than ${FreeTextChar.max} characters`,
+  emptyCountry: 'Enter the waste collection country',
+  invalidCountry:
+    'The waste collection country must only be England, Wales, Scotland or Northern Ireland',
+  invalidPostcode: 'Enter the waste collection postcode in the correct format',
+  missingWasteSource: 'Enter a waste source',
+  invalidWasteSource:
+    'The waste source must only be Household, Local Authority, Construction, Demolition, Commercial or Industrial',
+  charTooManyBrokerRegistrationNumber: `The broker registration number must be fewer than ${WasteCollectionChar.max} characters`,
+  charTooManyCarrierRegistrationNumber: `The carrier registration number must be fewer than ${WasteCollectionChar.max} characters`,
+  emptyModeOfTransport: 'Enter the mode of transport',
+  invalidModeOfWasteTransport:
+    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
+  missingWasteCollectionDate: 'Enter the expected Waste Collection Date',
+  invalidFormatWasteCollectionDate:
+    'Enter the expected waste collection date in the correct format',
 };
 
 export const ReceiverValidationErrorMessages = {

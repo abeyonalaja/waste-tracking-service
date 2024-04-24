@@ -31,7 +31,7 @@ export default class SubmissionController {
         index += 1;
         const fieldFormatErrors: FieldFormatError[] = [];
 
-        const producer = validationRules.validateProducerDetailsSection({
+        const producer = validationRules.validateProducerDetailSection({
           producerAddressLine1: s.producerAddressLine1,
           producerAddressLine2: s.producerAddressLine2,
           producerCountry: s.producerCountry,
@@ -49,9 +49,28 @@ export default class SubmissionController {
           fieldFormatErrors.push(...producer.value);
         }
 
+        const wasteCollectionDetails =
+          validationRules.validateWasteCollectionDetailSection({
+            wasteCollectionAddressLine1: s.wasteCollectionDetailsAddressLine1,
+            wasteCollectionAddressLine2: s.wasteCollectionDetailsAddressLine2,
+            wasteCollectionTownCity: s.wasteCollectionDetailsTownCity,
+            wasteCollectionCountry: s.wasteCollectionDetailsCountry,
+            wasteCollectionPostcode: s.wasteCollectionDetailsPostcode,
+            wasteSource: s.wasteCollectionDetailsWasteSource,
+            brokerRegNumber: s.wasteCollectionDetailsBrokerRegistrationNumber,
+            carrierRegNumber: s.wasteCollectionDetailsCarrierRegistrationNumber,
+            modeOfWasteTransport: s.wasteCollectionDetailsModeOfWasteTransport,
+            expectedWasteCollectionDate:
+              s.wasteCollectionDetailsExpectedWasteCollectionDate,
+          });
+
+        if (!wasteCollectionDetails.valid) {
+          fieldFormatErrors.push(...wasteCollectionDetails.value);
+        }
+
         const invalidStructureErrors: InvalidAttributeCombinationError[] = [];
 
-        const receiver = validationRules.validateReceiverDetailsSection({
+        const receiver = validationRules.validateReceiverDetailSection({
           receiverAuthorizationType: s.receiverAuthorizationType,
           receiverEnvironmentalPermitNumber:
             s.receiverEnvironmentalPermitNumber,
@@ -71,7 +90,7 @@ export default class SubmissionController {
         }
 
         const wasteTransportation =
-          validationRules.validateWasteTransportationDetailsSection({
+          validationRules.validateWasteTransportationDetailSection({
             wasteTransportationNumberAndTypeOfContainers:
               s.wasteTransportationNumberAndTypeOfContainers,
             wasteTransportationSpecialHandlingRequirements:
@@ -82,12 +101,22 @@ export default class SubmissionController {
           fieldFormatErrors.push(...wasteTransportation.value);
         }
 
-        if (receiver.valid && producer.valid && wasteTransportation.valid) {
+        if (
+          receiver.valid &&
+          producer.valid &&
+          wasteCollectionDetails.valid &&
+          wasteTransportation.valid
+        ) {
+          if (!wasteCollectionDetails.value.address.addressLine1?.trim()) {
+            wasteCollectionDetails.value.address = producer.value.address;
+          }
+
           submissions.push({
             producer: producer.value,
             receiver: receiver.value,
-            wasteTransportationDetails: wasteTransportation.value,
-            wasteTypeDetails: [],
+            wasteType: [],
+            wasteCollection: wasteCollectionDetails.value,
+            wasteTransportation: wasteTransportation.value,
           });
         } else {
           errors.push({

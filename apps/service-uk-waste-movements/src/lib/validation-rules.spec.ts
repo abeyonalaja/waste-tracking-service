@@ -1,15 +1,17 @@
 import { validation } from '../model';
 import {
-  validateProducerDetailsSection,
-  validateReceiverDetailsSection,
-  validateWasteTransportationDetailsSection,
+  validateProducerDetailSection,
+  validateWasteCollectionDetailSection,
+  validateReceiverDetailSection,
+  validateWasteTransportationDetailSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
-describe(validateProducerDetailsSection, () => {
+describe(validateProducerDetailSection, () => {
   it('passes producer section validation', () => {
-    const result = validateProducerDetailsSection({
+    const result = validateProducerDetailSection({
       producerAddressLine1: '123 Real Street',
+      producerAddressLine2: '',
       producerContactName: 'John Smith',
       producerCountry: 'England',
       producerEmail: 'john.smith@john.smith',
@@ -19,14 +21,13 @@ describe(validateProducerDetailsSection, () => {
       producerSicCode: '123456',
       producerTownCity: 'London',
       reference: 'testRef',
-      producerAddressLine2: '',
     });
 
     expect(result.valid).toBe(true);
   });
 
   it('fails producer section validation', () => {
-    let result = validateProducerDetailsSection({
+    let result = validateProducerDetailSection({
       producerAddressLine1: '',
       producerContactName: '',
       producerCountry: '',
@@ -77,7 +78,7 @@ describe(validateProducerDetailsSection, () => {
       },
     ]);
 
-    result = validateProducerDetailsSection({
+    result = validateProducerDetailSection({
       producerAddressLine1: '     ',
       producerContactName: '     ',
       producerCountry: '     ',
@@ -137,7 +138,7 @@ describe(validateProducerDetailsSection, () => {
       },
     ]);
 
-    result = validateProducerDetailsSection({
+    result = validateProducerDetailSection({
       producerAddressLine1: faker.datatype.string(251),
       producerAddressLine2: faker.datatype.string(251),
       producerContactName: faker.datatype.string(251),
@@ -209,9 +210,9 @@ describe(validateProducerDetailsSection, () => {
   });
 });
 
-describe(validateReceiverDetailsSection, () => {
+describe(validateReceiverDetailSection, () => {
   it('passes receiver section validation', () => {
-    const result = validateReceiverDetailsSection({
+    const result = validateReceiverDetailSection({
       receiverAddressLine1: '123 Real Street',
       receiverContactName: 'John Smith',
       receiverCountry: 'England',
@@ -229,7 +230,7 @@ describe(validateReceiverDetailsSection, () => {
   });
 
   it('fails receiver section validation', () => {
-    let result = validateReceiverDetailsSection({
+    let result = validateReceiverDetailSection({
       receiverAddressLine1: '',
       receiverContactName: '',
       receiverCountry: '',
@@ -283,7 +284,7 @@ describe(validateReceiverDetailsSection, () => {
       },
     ]);
 
-    result = validateReceiverDetailsSection({
+    result = validateReceiverDetailSection({
       receiverEnvironmentalPermitNumber: '             ',
       receiverAddressLine1: '     ',
       receiverContactName: '     ',
@@ -340,7 +341,7 @@ describe(validateReceiverDetailsSection, () => {
       },
     ]);
 
-    result = validateReceiverDetailsSection({
+    result = validateReceiverDetailSection({
       receiverAddressLine1: faker.datatype.string(251),
       receiverAddressLine2: faker.datatype.string(251),
       receiverContactName: faker.datatype.string(251),
@@ -415,9 +416,9 @@ describe(validateReceiverDetailsSection, () => {
   });
 });
 
-describe(validateWasteTransportationDetailsSection, () => {
+describe(validateWasteTransportationDetailSection, () => {
   it('passes waste transportation section validation', () => {
-    const result = validateWasteTransportationDetailsSection({
+    const result = validateWasteTransportationDetailSection({
       wasteTransportationNumberAndTypeOfContainers: 'test',
       wasteTransportationSpecialHandlingRequirements: 'test',
     });
@@ -426,7 +427,7 @@ describe(validateWasteTransportationDetailsSection, () => {
   });
 
   it('fails waste transportation section validation', () => {
-    let result = validateWasteTransportationDetailsSection({
+    let result = validateWasteTransportationDetailSection({
       wasteTransportationNumberAndTypeOfContainers: '',
     });
 
@@ -440,7 +441,7 @@ describe(validateWasteTransportationDetailsSection, () => {
       },
     ]);
 
-    result = validateWasteTransportationDetailsSection({
+    result = validateWasteTransportationDetailSection({
       wasteTransportationNumberAndTypeOfContainers: faker.datatype.string(251),
       wasteTransportationSpecialHandlingRequirements:
         faker.datatype.string(251),
@@ -460,6 +461,147 @@ describe(validateWasteTransportationDetailsSection, () => {
         message:
           validation.WasteTransportationValidationErrorMessages
             .charTooManySpecialHandlingRequirements,
+      },
+    ]);
+  });
+});
+
+describe(validateWasteCollectionDetailSection, () => {
+  it('passes WasteCollectionDetailsSection section validation', async () => {
+    const response = validateWasteCollectionDetailSection({
+      wasteCollectionAddressLine1: '125, Ashtree Lane',
+      wasteCollectionAddressLine2: 'Ashfield',
+      wasteCollectionTownCity: 'Ashford',
+      wasteCollectionCountry: 'England',
+      wasteCollectionPostcode: 'TN14 8HA',
+      wasteSource: 'Construction',
+      brokerRegNumber: '768453434',
+      carrierRegNumber: 'CBDL349812',
+      modeOfWasteTransport: 'Rail',
+      expectedWasteCollectionDate: '01/01/2028',
+    });
+
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      wasteSource: 'Construction',
+      brokerRegistrationNumber: '768453434',
+      carrierRegistrationNumber: 'CBDL349812',
+      modeOfWasteTransport: 'Rail',
+      expectedWasteCollectionDate: {
+        day: '01',
+        month: '01',
+        year: '2028',
+      },
+      address: {
+        addressLine1: '125, Ashtree Lane',
+        addressLine2: 'Ashfield',
+        townCity: 'Ashford',
+        postcode: 'TN14 8HA',
+        country: 'England',
+      },
+    });
+  });
+
+  it('fails WasteCollectionDetailsSection section validation', async () => {
+    let response = validateWasteCollectionDetailSection({
+      wasteCollectionAddressLine1: '',
+      wasteCollectionAddressLine2: '',
+      wasteCollectionTownCity: '',
+      wasteCollectionCountry: '',
+      wasteCollectionPostcode: '',
+      wasteSource: '',
+      brokerRegNumber: '',
+      carrierRegNumber: '',
+      modeOfWasteTransport: '',
+      expectedWasteCollectionDate: '',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Waste Collection Details Waste Source',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.missingWasteSource,
+      },
+      {
+        field: 'Waste Collection Details Mode of Waste Transport',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.emptyModeOfTransport,
+      },
+      {
+        field: 'Waste Collection Details Expected Waste Collection Date',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .missingWasteCollectionDate,
+      },
+    ]);
+
+    response = validateWasteCollectionDetailSection({
+      wasteCollectionAddressLine1: faker.datatype.string(251),
+      wasteCollectionAddressLine2: faker.datatype.string(251),
+      wasteCollectionTownCity: faker.datatype.string(251),
+      wasteCollectionCountry: 'France',
+      wasteCollectionPostcode: faker.datatype.string(11),
+      wasteSource: faker.datatype.string(),
+      brokerRegNumber: faker.datatype.string(21),
+      carrierRegNumber: faker.datatype.string(21),
+      modeOfWasteTransport: faker.datatype.string(),
+      expectedWasteCollectionDate: faker.datatype.string(),
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Waste Collection Details Address Line 1',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .charTooManyAddressLine1,
+      },
+      {
+        field: 'Waste Collection Details Address Line 2',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .charTooManyAddressLine2,
+      },
+      {
+        field: 'Waste Collection Details Town or City',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.charTooManyTownOrCity,
+      },
+      {
+        field: 'Waste Collection Details Country',
+        message: validation.WasteCollectionDetailsErrorMessages.invalidCountry,
+      },
+      {
+        field: 'Waste Collection Details Postcode',
+        message: validation.WasteCollectionDetailsErrorMessages.invalidPostcode,
+      },
+      {
+        field: 'Waste Collection Details Waste Source',
+        message:
+          validation.WasteCollectionDetailsErrorMessages.invalidWasteSource,
+      },
+      {
+        field: 'Waste Collection Details Broker Registration Number',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .charTooManyBrokerRegistrationNumber,
+      },
+      {
+        field: 'Waste Collection Details Carrier Registration Number',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .charTooManyCarrierRegistrationNumber,
+      },
+      {
+        field: 'Waste Collection Details Mode of Waste Transport',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .invalidModeOfWasteTransport,
+      },
+      {
+        field: 'Waste Collection Details Expected Waste Collection Date',
+        message:
+          validation.WasteCollectionDetailsErrorMessages
+            .invalidFormatWasteCollectionDate,
       },
     ]);
   });

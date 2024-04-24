@@ -31,6 +31,16 @@ describe(SubmissionController, () => {
         values: [
           {
             reference: 'testRef',
+            wasteCollectionDetailsAddressLine1: '123 Real Street',
+            wasteCollectionDetailsAddressLine2: 'Real Avenue',
+            wasteCollectionDetailsTownCity: 'London',
+            wasteCollectionDetailsPostcode: 'SW1A 1AA',
+            wasteCollectionDetailsCountry: 'England',
+            wasteCollectionDetailsBrokerRegistrationNumber: 'CBDL349812',
+            wasteCollectionDetailsCarrierRegistrationNumber: 'CBDL349812',
+            wasteCollectionDetailsWasteSource: 'Local Authority',
+            wasteCollectionDetailsModeOfWasteTransport: 'Rail',
+            wasteCollectionDetailsExpectedWasteCollectionDate: '01/01/2028',
             producerAddressLine1: '123 Real Street',
             producerAddressLine2: '',
             producerContactName: 'John Smith',
@@ -102,10 +112,28 @@ describe(SubmissionController, () => {
                 townCity: 'London',
               },
             },
-            wasteTypeDetails: [],
-            wasteTransportationDetails: {
+            wasteType: [],
+            wasteTransportation: {
               numberAndTypeOfContainers: 'test',
               specialHandlingRequirements: 'test',
+            },
+            wasteCollection: {
+              address: {
+                addressLine1: '123 Real Street',
+                addressLine2: 'Real Avenue',
+                country: 'England',
+                postcode: 'SW1A 1AA',
+                townCity: 'London',
+              },
+              brokerRegistrationNumber: 'CBDL349812',
+              carrierRegistrationNumber: 'CBDL349812',
+              expectedWasteCollectionDate: {
+                day: '01',
+                month: '01',
+                year: '2028',
+              },
+              modeOfWasteTransport: 'Rail',
+              wasteSource: 'LocalAuthority',
             },
           },
         ],
@@ -130,6 +158,13 @@ describe(SubmissionController, () => {
             producerPostcode: '     ',
             producerSicCode: '     ',
             producerTownCity: '     ',
+            wasteCollectionDetailsAddressLine1: '     ',
+            wasteCollectionDetailsTownCity: '     ',
+            wasteCollectionDetailsPostcode: 'AAAAAAAAAA',
+            wasteCollectionDetailsCountry: '     ',
+            wasteCollectionDetailsWasteSource: '     ',
+            wasteCollectionDetailsModeOfWasteTransport: '     ',
+            wasteCollectionDetailsExpectedWasteCollectionDate: '31/31/2099',
             receiverAuthorizationType: '     ',
             receiverEnvironmentalPermitNumber: '     ',
             receiverOrganisationName: '     ',
@@ -204,6 +239,49 @@ describe(SubmissionController, () => {
                 field: 'Producer Standard Industrial Classification (SIC) code',
                 message:
                   validation.ProducerValidationErrorMessages.invalidSicCode,
+              },
+              {
+                field: 'Waste Collection Details Address Line 1',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .emptyAddressLine1,
+              },
+              {
+                field: 'Waste Collection Details Town or City',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .emptyTownOrCity,
+              },
+              {
+                field: 'Waste Collection Details Country',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages.emptyCountry,
+              },
+              {
+                field: 'Waste Collection Details Postcode',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .invalidPostcode,
+              },
+              {
+                field: 'Waste Collection Details Waste Source',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .missingWasteSource,
+              },
+              {
+                field: 'Waste Collection Details Mode of Waste Transport',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .emptyModeOfTransport,
+              },
+
+              {
+                field:
+                  'Waste Collection Details Expected Waste Collection Date',
+                message:
+                  validation.WasteCollectionDetailsErrorMessages
+                    .invalidFormatWasteCollectionDate,
               },
               {
                 field: 'Receiver authorization type',

@@ -244,6 +244,22 @@ while (execute) {
                 producerPostcode: s.producerPostcode,
                 producerCountry: s.producerCountry,
                 producerSicCode: s.producerSicCode,
+                wasteCollectionDetailsAddressLine1:
+                  s.wasteCollectionAddressLine1,
+                wasteCollectionDetailsAddressLine2:
+                  s.wasteCollectionAddressLine2,
+                wasteCollectionDetailsTownCity: s.wasteCollectionTownOrCity,
+                wasteCollectionDetailsCountry: s.wasteCollectionCountry,
+                wasteCollectionDetailsPostcode: s.wasteCollectionPostcode,
+                wasteCollectionDetailsBrokerRegistrationNumber:
+                  s.carrierRegistrationNumber,
+                wasteCollectionDetailsCarrierRegistrationNumber:
+                  s.brokerRegistrationNumber,
+                wasteCollectionDetailsWasteSource: s.wasteCollectionSource,
+                wasteCollectionDetailsModeOfWasteTransport:
+                  s.wasteModeTransport,
+                wasteCollectionDetailsExpectedWasteCollectionDate:
+                  s.wasteExpectedDate,
                 receiverAuthorizationType: s.receiverAuthorisationType,
                 receiverEnvironmentalPermitNumber:
                   s.receiverEnvironmentalPermitNumber,
@@ -289,11 +305,20 @@ while (execute) {
               'Receiver organisation name': [],
               'Receiver town or city': [],
               'Receiver authorization type': [],
+              'Waste Collection Details Address Line 1': [],
+              'Waste Collection Details Address Line 2': [],
+              'Waste Collection Details Town or City': [],
+              'Waste Collection Details Country': [],
+              'Waste Collection Details Postcode': [],
+              'Waste Collection Details Waste Source': [],
+              'Waste Collection Details Broker Registration Number': [],
+              'Waste Collection Details Carrier Registration Number': [],
+              'Waste Collection Details Mode of Waste Transport': [],
+              'Waste Collection Details Expected Waste Collection Date': [],
               'Number and type of transportation containers': [],
               'Special handling requirements details': [],
 
               Reference: [],
-              WasteCollectionDetails: [],
               WasteTypeDetails: [],
             };
 
@@ -380,8 +405,9 @@ while (execute) {
                       status: 'PassedValidation',
                       timestamp: new Date(),
                       hasEstimates: submissions.some((s) =>
-                        s.wasteTypeDetails.some(
-                          (wtd) => wtd.wasteQuantityType === 'EstimateData'
+                        s.wasteType.some(
+                          (wasteType) =>
+                            wasteType.wasteQuantityType === 'EstimateData'
                         )
                       ),
                       submissions: submissions,

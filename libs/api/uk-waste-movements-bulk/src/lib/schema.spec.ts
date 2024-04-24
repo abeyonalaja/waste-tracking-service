@@ -164,9 +164,13 @@ describe('getBatchResponse', () => {
         state: {
           status: 'PassedValidation',
           timestamp: new Date(),
-          hasEstimates: false,
+          hasEstimates: true,
           submissions: [
             {
+              wasteTransportation: {
+                numberAndTypeOfContainers: 'test',
+                specialHandlingRequirements: 'test',
+              },
               receiver: {
                 authorizationType: 'permit',
                 environmentalPermitNumber: '1234',
@@ -192,6 +196,72 @@ describe('getBatchResponse', () => {
                   addressLine2: 'address2',
                   country: 'England',
                   townCity: 'London',
+                  postcode: 'SW1A 1AA',
+                },
+                contact: {
+                  name: 'test',
+                  organisationName: 'test',
+                  phone: '1234',
+                  email: 'test@organisation.com',
+                },
+              },
+              wasteCollection: {
+                wasteSource: 'Household',
+                modeOfWasteTransport: 'Road',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'SW1A 1AA',
+                },
+                brokerRegistrationNumber: '1234567',
+                carrierRegistrationNumber: 'CBDL1234',
+              },
+              wasteType: [
+                {
+                  ewcCode: '1234',
+                  wasteDescription: 'test',
+                  physicalForm: 'Solid',
+                  wasteQuantity: 1,
+                  quantityUnit: 'Kilogram',
+                  wasteQuantityType: 'EstimateData',
+                  hasHazardousProperties: false,
+                  containsPops: false,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+
+    value = {
+      success: true,
+      value: {
+        id: faker.datatype.uuid(),
+        state: {
+          status: 'Submitting',
+          timestamp: new Date(),
+          transactionId: '2307_5678ABCD',
+          hasEstimates: true,
+          submissions: [
+            {
+              receiver: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '1234',
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
                   postcode: '1234',
                 },
                 contact: {
@@ -201,17 +271,52 @@ describe('getBatchResponse', () => {
                   email: 'test@organisation.com',
                 },
               },
-              wasteTransportationDetails: {
+              wasteTransportation: {
                 numberAndTypeOfContainers: 'test',
                 specialHandlingRequirements: 'test',
               },
-              wasteTypeDetails: [
+              producer: {
+                reference: '1234',
+                sicCode: '123456',
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'SW1A 1AA',
+                },
+                contact: {
+                  name: 'test',
+                  organisationName: 'test',
+                  phone: '1234',
+                  email: 'test@organisation.com',
+                },
+              },
+              wasteCollection: {
+                address: {
+                  addressLine1: 'address1',
+                  addressLine2: 'address2',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'SW1A 1AA',
+                },
+                brokerRegistrationNumber: 'CBDU1234',
+                carrierRegistrationNumber: 'CBDU1234',
+                wasteSource: 'Household',
+                modeOfWasteTransport: 'Road',
+                expectedWasteCollectionDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2028',
+                },
+              },
+              wasteType: [
                 {
                   ewcCode: '1234',
                   wasteDescription: 'test',
                   physicalForm: 'Solid',
                   wasteQuantity: 1,
-                  quantityUnits: 'Kilogram',
+                  quantityUnit: 'Kilogram',
                   wasteQuantityType: 'EstimateData',
                   hasHazardousProperties: false,
                   containsPops: false,
@@ -253,6 +358,7 @@ describe('getBatchResponse', () => {
           status: 'Submitted',
           timestamp: new Date(),
           transactionId: '2307_5678ABCD',
+          hasEstimates: true,
           submissions: [
             {
               id: '1234',

@@ -16,6 +16,10 @@ export const phoneRegex = new RegExp(
   '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
 );
 
+export const carrierRegistrationNumberRegex = new RegExp(
+  `^(CBDU|CBDL)[${numeric}]{4,6}$`
+);
+
 export const referenceRegex = new RegExp(
   `^[${alphaNumeric}]{${constraints.ReferenceChar.min},${constraints.ReferenceChar.max}}$`
 );

@@ -33,8 +33,9 @@ export type FinalizeBatchResponse = Response<void>;
 export type PartialSubmission = {
   receiver: Submission['receiver'];
   producer: Submission['producer'];
-  wasteTypeDetails: Submission['wasteTypeDetails'];
-  wasteTransportationDetails: Submission['wasteTransportationDetails'];
+  wasteCollection: Submission['wasteCollection'];
+  wasteType: Submission['wasteType'];
+  wasteTransportation: Submission['wasteTransportation'];
 };
 
 export type BulkSubmissionValidationRowError = {
@@ -83,8 +84,16 @@ export type BulkSubmissionState =
       submissions: PartialSubmission[];
     }
   | {
+      status: 'Submitting';
+      timestamp: Date;
+      hasEstimates: boolean;
+      transactionId: string;
+      submissions: PartialSubmission[];
+    }
+  | {
       status: 'Submitted';
       timestamp: Date;
+      hasEstimates: boolean;
       transactionId: string;
       submissions: SubmissionReference[];
     };
@@ -94,7 +103,7 @@ export type BulkSubmission = {
   state: BulkSubmissionState;
 };
 
-export type ProducerDetailsFlattened = {
+export type ProducerDetailFlattened = {
   reference: string;
   producerOrganisationName: string;
   producerContactName: string;
@@ -103,29 +112,44 @@ export type ProducerDetailsFlattened = {
   producerAddressLine1: string;
   producerAddressLine2?: string;
   producerTownCity: string;
-  producerPostcode: string;
+  producerPostcode?: string;
   producerCountry: string;
-  producerSicCode: string;
+  producerSicCode?: string;
 };
-export type ReceiverDetailsFlattened = {
+
+export type WasteCollectionDetailFlattened = {
+  wasteCollectionAddressLine1?: string;
+  wasteCollectionAddressLine2?: string;
+  wasteCollectionTownCity?: string;
+  wasteCollectionCountry?: string;
+  wasteCollectionPostcode?: string;
+  wasteSource: string;
+  brokerRegNumber?: string;
+  carrierRegNumber?: string;
+  modeOfWasteTransport: string;
+  expectedWasteCollectionDate: string;
+};
+
+export type ReceiverDetailFlattened = {
   receiverAuthorizationType: string;
-  receiverEnvironmentalPermitNumber: string;
+  receiverEnvironmentalPermitNumber?: string;
   receiverOrganisationName: string;
   receiverAddressLine1: string;
   receiverAddressLine2?: string;
   receiverTownCity: string;
-  receiverPostcode: string;
+  receiverPostcode?: string;
   receiverCountry: string;
   receiverContactName: string;
   receiverContactEmail: string;
   receiverContactPhone: string;
 };
 
-export type WasteTransportationDetailsFlattened = {
+export type WasteTransportationDetailFlattened = {
   wasteTransportationNumberAndTypeOfContainers: string;
   wasteTransportationSpecialHandlingRequirements?: string;
 };
 
-export type SubmissionFlattened = ProducerDetailsFlattened &
-  ReceiverDetailsFlattened &
-  WasteTransportationDetailsFlattened;
+export type SubmissionFlattened = ProducerDetailFlattened &
+  ReceiverDetailFlattened &
+  WasteTransportationDetailFlattened &
+  WasteCollectionDetailFlattened;

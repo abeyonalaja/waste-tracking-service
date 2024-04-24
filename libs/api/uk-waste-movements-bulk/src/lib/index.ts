@@ -13,10 +13,11 @@ export type {
   BulkSubmissionValidationColumnError,
   BulkSubmissionValidationRowErrorDetails,
   SubmissionReference,
-  ProducerDetailsFlattened,
+  ProducerDetailFlattened,
+  WasteCollectionDetailFlattened,
   SubmissionFlattened,
-  ReceiverDetailsFlattened,
-  WasteTransportationDetailsFlattened,
+  ReceiverDetailFlattened,
+  WasteTransportationDetailFlattened,
 } from './dto';
 
 export * as schema from './schema';
