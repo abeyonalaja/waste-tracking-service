@@ -44,10 +44,10 @@ export default async function UploadPage() {
     <Page beforeChildren={<GovUK.BackLink href={'../'} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <GovUK.Heading size={'l'} level={1}>
-            {page('title')}
-          </GovUK.Heading>
           <UploadForm token={token!} strings={uploadFormStrings}>
+            <GovUK.Heading size={'l'} level={1}>
+              {page('title')}
+            </GovUK.Heading>
             <Instructions />
           </UploadForm>
         </GovUK.GridCol>
