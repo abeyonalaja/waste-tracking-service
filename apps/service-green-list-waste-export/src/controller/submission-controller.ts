@@ -84,25 +84,31 @@ export default class SubmissionController {
           fieldFormatErrors.push(reference.value);
         }
 
-        const wasteDescription =
-          validationRules.validateWasteDescriptionSection(
+        const wasteCodeSubSection = validationRules.validateWasteCodeSubSection(
+          {
+            baselAnnexIXCode: s.baselAnnexIXCode,
+            oecdCode: s.oecdCode,
+            annexIIIACode: s.annexIIIACode,
+            annexIIIBCode: s.annexIIIBCode,
+            laboratory: s.laboratory,
+          },
+          wasteCodeList
+        );
+        if (!wasteCodeSubSection.valid) {
+          fieldFormatErrors.push(wasteCodeSubSection.value);
+        }
+
+        const wasteDescriptionSubSection =
+          validationRules.validateWasteDescriptionSubSection(
             {
-              baselAnnexIXCode: s.baselAnnexIXCode,
-              oecdCode: s.oecdCode,
-              annexIIIACode: s.annexIIIACode,
-              annexIIIBCode: s.annexIIIBCode,
-              laboratory: s.laboratory,
               ewcCodes: s.ewcCodes,
               nationalCode: s.nationalCode,
               wasteDescription: s.wasteDescription,
             },
-            wasteCodeList,
             ewcCodeList
           );
-        if (!wasteDescription.valid) {
-          wasteDescription.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+        if (!wasteDescriptionSubSection.valid) {
+          fieldFormatErrors.push(...wasteDescriptionSubSection.value);
         }
 
         const wasteQuantity = validationRules.validateWasteQuantitySection({
@@ -112,16 +118,14 @@ export default class SubmissionController {
           estimatedOrActualWasteQuantity: s.estimatedOrActualWasteQuantity,
         });
         if (!wasteQuantity.valid) {
-          wasteQuantity.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...wasteQuantity.value);
         }
 
         const invalidStructureErrors: InvalidAttributeCombinationError[] = [];
-        if (wasteDescription.valid && wasteQuantity.valid) {
+        if (wasteCodeSubSection.valid && wasteQuantity.valid) {
           const crossSection =
-            validationRules.validateWasteDescriptionAndQuantityCrossSection(
-              wasteDescription.value,
+            validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+              wasteCodeSubSection.value,
               wasteQuantity.value
             );
           if (!crossSection.valid) {
@@ -142,9 +146,7 @@ export default class SubmissionController {
           exporterEmailAddress: s.exporterEmailAddress,
         });
         if (!exporterDetail.valid) {
-          exporterDetail.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...exporterDetail.value);
         }
 
         const importerDetail = validationRules.validateImporterDetailSection(
@@ -160,9 +162,7 @@ export default class SubmissionController {
           countryList
         );
         if (!importerDetail.valid) {
-          importerDetail.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...importerDetail.value);
         }
 
         const collectionDate = validationRules.validateCollectionDateSection({
@@ -170,15 +170,13 @@ export default class SubmissionController {
           estimatedOrActualCollectionDate: s.estimatedOrActualCollectionDate,
         });
         if (!collectionDate.valid) {
-          collectionDate.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...collectionDate.value);
         }
 
         const transport =
-          !wasteDescription.valid ||
-          (wasteDescription.valid &&
-            wasteDescription.value.wasteCode.type !== 'NotApplicable');
+          !wasteCodeSubSection.valid ||
+          (wasteCodeSubSection.valid &&
+            wasteCodeSubSection.value.type !== 'NotApplicable');
         const carriersFlattened = {
           firstCarrierOrganisationName: s.firstCarrierOrganisationName,
           firstCarrierAddress: s.firstCarrierAddress,
@@ -237,21 +235,17 @@ export default class SubmissionController {
           countryIncludingUkList
         );
         if (!carriers.valid) {
-          carriers.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...carriers.value);
         }
 
-        if (wasteDescription.valid) {
+        if (wasteCodeSubSection.valid) {
           const crossSection =
-            validationRules.validateWasteDescriptionAndCarriersCrossSection(
-              wasteDescription.value,
+            validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+              wasteCodeSubSection.value,
               carriersFlattened
             );
           if (!crossSection.valid) {
-            crossSection.value.map((e) => {
-              invalidStructureErrors.push(e);
-            });
+            invalidStructureErrors.push(...crossSection.value);
           }
         }
 
@@ -270,9 +264,7 @@ export default class SubmissionController {
             wasteCollectionEmailAddress: s.wasteCollectionEmailAddress,
           });
         if (!collectionDetail.valid) {
-          collectionDetail.value.map((e) => {
-            fieldFormatErrors.push(e);
-          });
+          fieldFormatErrors.push(...collectionDetail.value);
         }
 
         const ukExitLocation = validationRules.validateUkExitLocationSection({
@@ -300,9 +292,7 @@ export default class SubmissionController {
               transitCountries.value
             );
           if (!crossSection.valid) {
-            crossSection.value.map((e) => {
-              invalidStructureErrors.push(e);
-            });
+            invalidStructureErrors.push(...crossSection.value);
           }
         }
 
@@ -312,7 +302,7 @@ export default class SubmissionController {
           valid: false,
           value: [],
         };
-        if (wasteDescription.valid) {
+        if (wasteCodeSubSection.valid) {
           const recoveryFacilityDetailFlattened = {
             interimSiteOrganisationName: s.interimSiteOrganisationName,
             interimSiteAddress: s.interimSiteAddress,
@@ -399,32 +389,30 @@ export default class SubmissionController {
           recoveryFacilityDetail =
             validationRules.validateRecoveryFacilityDetailSection(
               recoveryFacilityDetailFlattened,
-              wasteDescription.value.wasteCode.type === 'NotApplicable',
+              wasteCodeSubSection.value.type === 'NotApplicable',
               countryList,
               recoveryCodeList,
               disposalCodeList
             );
+
           if (!recoveryFacilityDetail.valid) {
-            recoveryFacilityDetail.value.map((e) => {
-              fieldFormatErrors.push(e);
-            });
+            fieldFormatErrors.push(...recoveryFacilityDetail.value);
           }
 
           const crossSection =
-            validationRules.validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-              wasteDescription.value,
+            validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+              wasteCodeSubSection.value,
               recoveryFacilityDetailFlattened
             );
           if (!crossSection.valid) {
-            crossSection.value.map((e) => {
-              invalidStructureErrors.push(e);
-            });
+            invalidStructureErrors.push(...crossSection.value);
           }
         }
 
         if (
           reference.valid &&
-          wasteDescription.valid &&
+          wasteCodeSubSection.valid &&
+          wasteDescriptionSubSection.valid &&
           wasteQuantity.valid &&
           exporterDetail.valid &&
           importerDetail.valid &&
@@ -438,7 +426,12 @@ export default class SubmissionController {
         ) {
           submissions.push({
             reference: reference.value,
-            wasteDescription: wasteDescription.value,
+            wasteDescription: {
+              wasteCode: wasteCodeSubSection.value,
+              ewcCodes: wasteDescriptionSubSection.value.ewcCodes,
+              nationalCode: wasteDescriptionSubSection.value.nationalCode,
+              description: wasteDescriptionSubSection.value.description,
+            },
             wasteQuantity: wasteQuantity.value,
             exporterDetail: exporterDetail.value,
             importerDetail: importerDetail.value,

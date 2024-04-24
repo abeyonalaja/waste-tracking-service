@@ -127,16 +127,22 @@ export type CustomerReferenceFlattened = {
   reference: string;
 };
 
-export type WasteDescriptionFlattened = {
+export type WasteCodeSubSectionFlattened = {
   baselAnnexIXCode: string;
   oecdCode: string;
   annexIIIACode: string;
   annexIIIBCode: string;
   laboratory: string;
+};
+
+export type WasteDescriptionSubSectionFlattened = {
   ewcCodes: string;
   nationalCode: string;
   wasteDescription: string;
 };
+
+export type WasteDescriptionFlattened = WasteCodeSubSectionFlattened &
+  WasteDescriptionSubSectionFlattened;
 
 export type WasteQuantityFlattened = {
   wasteQuantityTonnes: string;

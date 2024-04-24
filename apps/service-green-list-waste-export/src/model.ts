@@ -53,6 +53,9 @@ export type RecoveryFacilityDetail = Submission['recoveryFacilityDetail'];
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type CustomerReferenceFlattened = bulkApi.CustomerReferenceFlattened;
+export type WasteCodeSubSectionFlattened = bulkApi.WasteCodeSubSectionFlattened;
+export type WasteDescriptionSubSectionFlattened =
+  bulkApi.WasteDescriptionSubSectionFlattened;
 export type WasteDescriptionFlattened = bulkApi.WasteDescriptionFlattened;
 export type WasteQuantityFlattened = bulkApi.WasteQuantityFlattened;
 export type ExporterDetailFlattened = bulkApi.ExporterDetailFlattened;

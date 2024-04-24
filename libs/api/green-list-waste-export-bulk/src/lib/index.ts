@@ -11,6 +11,8 @@ export type {
   BulkSubmissionValidationColumnError,
   SubmissionFlattened,
   CustomerReferenceFlattened,
+  WasteCodeSubSectionFlattened,
+  WasteDescriptionSubSectionFlattened,
   WasteDescriptionFlattened,
   WasteQuantityFlattened,
   ExporterDetailFlattened,

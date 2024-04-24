@@ -16,10 +16,12 @@ import {
   validateRecoveryFacilityDetailSection,
   validateTransitCountriesSection,
   validateUkExitLocationSection,
-  validateWasteDescriptionAndCarriersCrossSection,
-  validateWasteDescriptionAndQuantityCrossSection,
-  validateWasteDescriptionAndRecoveryFacilityDetailCrossSection,
+  validateWasteCodeSubSection,
+  validateWasteCodeSubSectionAndQuantityCrossSection,
+  validateWasteCodeSubSectionAndCarriersCrossSection,
+  validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection,
   validateWasteDescriptionSection,
+  validateWasteDescriptionSubSection,
   validateWasteQuantitySection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
@@ -223,6 +225,851 @@ describe('validateCustomerReferenceSection', () => {
       field: 'CustomerReference',
       message: validation.ReferenceValidationErrorMessages.invalid,
     });
+  });
+});
+
+describe('validateWasteCodeSubSection', () => {
+  it('passes WasteCode sub section validation', async () => {
+    let response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B1010',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'BaselAnnexIX',
+      code: 'B1010',
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: 'GB040',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'OECD',
+      code: 'GB040',
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: 'B1010; B1050',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'AnnexIIIA',
+      code: 'B1010 and B1050',
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'AnnexIIIB',
+      code: 'BEU04',
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'NotApplicable',
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      type: 'NotApplicable',
+    });
+  });
+
+  it('fails WasteCode sub section validation', async () => {
+    let response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B9999',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: 'GB999',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.OECDCodeValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: 'B1010;B9999',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: 'BEU99',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yessss',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.UnlistedValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.empty,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B1010',
+        oecdCode: 'GB040',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B1010',
+        oecdCode: '',
+        annexIIIACode: 'B1010;B1050',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B1010',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: 'GB040',
+        annexIIIACode: '',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: 'B1010;B1050',
+        annexIIIBCode: 'BEU04',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: 'GB040',
+        annexIIIACode: 'B1010;B1050',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.tooMany,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: 'B1010',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.laboratory,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: 'GB040',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.laboratory,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: 'B1010;B1050',
+        annexIIIBCode: '',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.laboratory,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: 'BEU04',
+        laboratory: 'Yes',
+      },
+      wasteCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.WasteCodeValidationErrorMessages.laboratory,
+    });
+  });
+});
+
+describe('validateWasteDescriptionSubSection', () => {
+  it('passes WasteDescription sub section validation', async () => {
+    let response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102',
+        nationalCode: '123456',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: '123456',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'No',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101; 010102',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'No',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'No',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102',
+        nationalCode: 'A-123',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'Yes',
+        value: 'A-123',
+      },
+      description: 'test',
+    });
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      ewcCodes: [
+        {
+          code: '010101',
+        },
+        {
+          code: '010102',
+        },
+      ],
+      nationalCode: {
+        provided: 'No',
+      },
+      description: 'test',
+    });
+  });
+
+  it('fails WasteDescription sub section validation on EWC codes', async () => {
+    let response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;999999',
+        nationalCode: '',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101',
+        nationalCode: '*****',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+    ]);
+  });
+
+  it('fails WasteDescription sub section validation on national code', async () => {
+    const response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101',
+        nationalCode: '*****',
+        wasteDescription: 'test',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+    ]);
+  });
+
+  it('fails WasteDescription sub section validation on waste description', async () => {
+    let response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101',
+        nationalCode: '',
+        wasteDescription: faker.datatype.string(120),
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101',
+        nationalCode: '',
+        wasteDescription: ' ',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+  });
+
+  it('fails WasteDescription sub section validation on all fields', async () => {
+    let response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.empty,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: '',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.empty,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: ' ',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+      },
+    ]);
+
+    response = validateWasteDescriptionSubSection(
+      {
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription:
+          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+      },
+      ewcCodes
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: validation.EWCCodeErrorMessages.tooMany,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.NationalCodeValidationErrorMessages.invalid,
+      },
+      {
+        field: 'WasteDescription',
+        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+      },
+    ]);
   });
 });
 
@@ -2296,26 +3143,11 @@ describe('validateWasteQuantitySection', () => {
   });
 });
 
-describe('validateWasteDescriptionAndQuantityCrossSection', () => {
-  it('passes WasteDescriptionAndQuantity cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'BaselAnnexIX',
-        code: 'B1010',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
+  it('passes WasteCodeSubSectionAndQuantity cross section validation', async () => {
+    let wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'BaselAnnexIX',
+      code: 'B1010',
     };
     const wasteQuantity: WasteQuantity = {
       type: 'ActualData',
@@ -2326,61 +3158,46 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
         value: 0.2,
       },
     };
-    let response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    let response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'OECD';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'OECD';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'AnnexIIIA';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'AnnexIIIA';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'AnnexIIIB';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'AnnexIIIB';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'NotApplicable';
+    wasteCodeSubSection = { type: 'NotApplicable' };
     wasteQuantity.actualData.unit = 'Kilogram';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     expect(response.valid).toEqual(true);
   });
 
-  it('fails WasteDescriptionAndQuantity cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'BaselAnnexIX',
-        code: 'B1010',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+  it('fails WasteCodeSubSectionAndQuantity cross section validation for bulk waste', async () => {
+    const wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'BaselAnnexIX',
+      code: 'B1010',
     };
     const wasteQuantity: WasteQuantity = {
       type: 'ActualData',
@@ -2391,8 +3208,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
         value: 0.2,
       },
     };
-    let response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+
+    let response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -2404,9 +3222,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
     });
 
-    wasteDescription.wasteCode.type = 'OECD';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'OECD';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -2418,9 +3236,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
     });
 
-    wasteDescription.wasteCode.type = 'OECD';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'AnnexIIIA';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -2432,23 +3250,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
     });
 
-    wasteDescription.wasteCode.type = 'AnnexIIIA';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
-      wasteQuantity
-    );
-    if (response.valid) {
-      return;
-    }
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.laboratory,
-    });
-
-    wasteDescription.wasteCode.type = 'AnnexIIIB';
-    response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+    wasteCodeSubSection.type = 'AnnexIIIB';
+    response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -2460,24 +3264,10 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
       message: validation.WasteQuantityValidationErrorMessages.laboratory,
     });
   });
-  it('fails WasteDescriptionAndQuantity cross section validation for NotApplicable wasteCode and Cubic Metre unit', () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'NotApplicable',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+
+  it('fails WasteCodeSubSectionAndQuantity cross section validation for NotApplicable wasteCode and Cubic Metre unit', () => {
+    const wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'NotApplicable',
     };
     const wasteQuantity: WasteQuantity = {
       type: 'ActualData',
@@ -2487,8 +3277,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
         value: 0.2,
       },
     };
-    const response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+
+    const response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -2501,24 +3292,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
     });
   });
 
-  it('fails WasteDescriptionAndQuantity cross section validation for NotApplicable wasteCode and Tonne unit', () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'NotApplicable',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+  it('fails WasteCodeSubSectionAndQuantity cross section validation for NotApplicable wasteCode and Tonne unit', () => {
+    const wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'NotApplicable',
     };
     const wasteQuantity: WasteQuantity = {
       type: 'ActualData',
@@ -2528,8 +3304,9 @@ describe('validateWasteDescriptionAndQuantityCrossSection', () => {
         value: 0.2,
       },
     };
-    const response = validateWasteDescriptionAndQuantityCrossSection(
-      wasteDescription,
+
+    const response = validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
       wasteQuantity
     );
     if (response.valid) {
@@ -3601,29 +4378,14 @@ describe('validateCarriersSection', () => {
   });
 });
 
-describe('validateWasteDescriptionAndCarriersCrossSection', () => {
-  it('passes WasteDescriptionAndCarriers cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'BaselAnnexIX',
-        code: 'B1010',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+describe('validateWasteCodeSubSectionAndCarriersCrossSection', () => {
+  it('passes WasteCodeSubSectionAndCarriers cross section validation', async () => {
+    let wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'BaselAnnexIX',
+      code: 'B1010',
     };
-    let response = validateWasteDescriptionAndCarriersCrossSection(
-      wasteDescription,
+    let response = validateWasteCodeSubSectionAndCarriersCrossSection(
+      wasteCodeSubSection,
       {
         firstCarrierOrganisationName: 'Test organisation 3',
         firstCarrierAddress: 'Some address, London, EC2N4AY',
@@ -3674,9 +4436,9 @@ describe('validateWasteDescriptionAndCarriersCrossSection', () => {
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'NotApplicable';
-    response = validateWasteDescriptionAndCarriersCrossSection(
-      wasteDescription,
+    wasteCodeSubSection = { type: 'NotApplicable' };
+    response = validateWasteCodeSubSectionAndCarriersCrossSection(
+      wasteCodeSubSection,
       {
         firstCarrierOrganisationName: 'Test organisation 3',
         firstCarrierAddress: 'Some address, London, EC2N4AY',
@@ -3728,27 +4490,12 @@ describe('validateWasteDescriptionAndCarriersCrossSection', () => {
     expect(response.valid).toEqual(true);
   });
 
-  it('fails WasteDescriptionAndCarriers cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'NotApplicable',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+  it('fails WasteCodeSubSectionAndCarriers cross section validation', async () => {
+    const wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'NotApplicable',
     };
-    const response = validateWasteDescriptionAndCarriersCrossSection(
-      wasteDescription,
+    const response = validateWasteCodeSubSectionAndCarriersCrossSection(
+      wasteCodeSubSection,
       {
         firstCarrierOrganisationName: 'Test organisation 3',
         firstCarrierAddress: 'Some address, London, EC2N4AY',
@@ -5013,30 +5760,15 @@ describe('validateRecoveryFacilityDetailSection', () => {
   });
 });
 
-describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => {
-  it('passes WasteDescriptionAndRecoveryFacilityDetail cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'BaselAnnexIX',
-        code: 'B1010',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () => {
+  it('passes WasteCodeSubSectionAndRecoveryFacilityDetail cross section validation', async () => {
+    let wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'BaselAnnexIX',
+      code: 'B1010',
     };
     let response =
-      validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-        wasteDescription,
+      validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        wasteCodeSubSection,
         {
           interimSiteOrganisationName: '',
           interimSiteAddress: '',
@@ -5098,8 +5830,8 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
       );
     expect(response.valid).toEqual(true);
 
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: 'Test organisation 7',
         interimSiteAddress: '5 Some Street, Paris, 75002',
@@ -5161,9 +5893,9 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
     );
     expect(response.valid).toEqual(true);
 
-    wasteDescription.wasteCode.type = 'NotApplicable';
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    wasteCodeSubSection = { type: 'NotApplicable' };
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: '',
         interimSiteAddress: '',
@@ -5226,29 +5958,14 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
     expect(response.valid).toEqual(true);
   });
 
-  it('fails WasteDescriptionAndRecoveryFacilityDetail cross section validation', async () => {
-    const wasteDescription: WasteDescription = {
-      wasteCode: {
-        type: 'BaselAnnexIX',
-        code: 'B1010',
-      },
-      ewcCodes: [
-        {
-          code: '010101',
-        },
-        {
-          code: '010102',
-        },
-      ],
-      nationalCode: {
-        provided: 'Yes',
-        value: '123456',
-      },
-      description: 'test',
+  it('fails WasteCodeSubSectionAndRecoveryFacilityDetail cross section validation', async () => {
+    let wasteCodeSubSection: WasteDescription['wasteCode'] = {
+      type: 'BaselAnnexIX',
+      code: 'B1010',
     };
     let response =
-      validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-        wasteDescription,
+      validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        wasteCodeSubSection,
         {
           interimSiteOrganisationName: '',
           interimSiteAddress: '',
@@ -5321,8 +6038,8 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
       },
     ]);
 
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: 'Test organisation 7',
         interimSiteAddress: '5 Some Street, Paris, 75002',
@@ -5395,9 +6112,9 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
       },
     ]);
 
-    wasteDescription.wasteCode.type = 'NotApplicable';
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    wasteCodeSubSection = { type: 'NotApplicable' };
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: 'Invalid',
         interimSiteAddress: '',
@@ -5470,8 +6187,8 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
       },
     ]);
 
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: '',
         interimSiteAddress: '',
@@ -5544,8 +6261,8 @@ describe('validateWasteDescriptionAndRecoveryFacilityDetailCrossSection', () => 
       },
     ]);
 
-    response = validateWasteDescriptionAndRecoveryFacilityDetailCrossSection(
-      wasteDescription,
+    response = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      wasteCodeSubSection,
       {
         interimSiteOrganisationName: 'Invalid',
         interimSiteAddress: '',
