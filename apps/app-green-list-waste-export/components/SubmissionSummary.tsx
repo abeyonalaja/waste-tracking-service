@@ -22,6 +22,8 @@ interface Props {
   estimate?: boolean;
   isTemplate?: boolean;
   testId?: string;
+  showEstimateLinks?: boolean;
+  isMultiple?: boolean;
 }
 
 const DefinitionList = styled('dl')`
@@ -113,10 +115,12 @@ export const SubmissionSummary = ({
   isTemplate = false,
   apiConfig,
   testId,
+  showEstimateLinks = true,
+  isMultiple = false,
 }: Props) => {
   const { t } = useTranslation();
   const getRefData = useRefDataLookup(apiConfig);
-  const [expandedAll, setExpandedAll] = useState(!estimate);
+  const [expandedAll, setExpandedAll] = useState(!estimate || isMultiple);
 
   const handleAccordionShowAll = (expand) => {
     setExpandedAll(expand);
@@ -391,6 +395,7 @@ export const SubmissionSummary = ({
                       )}
                       {!showChangeLinks &&
                         !isTemplate &&
+                        showEstimateLinks &&
                         data?.wasteQuantity.value.type === 'EstimateData' && (
                           <Actions>
                             <AppLink
@@ -705,6 +710,7 @@ export const SubmissionSummary = ({
 
                   {!showChangeLinks &&
                     !isTemplate &&
+                    showEstimateLinks &&
                     data.collectionDate.value.type === 'EstimateDate' && (
                       <Actions>
                         <AppLink

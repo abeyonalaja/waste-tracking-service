@@ -201,7 +201,7 @@ describe('SubmittedTable component', () => {
 
     expect(link).toHaveAttribute(
       'href',
-      '/multiples/123/view/39d8e6a1-3f0a-4d98-a875-b2d71566f662?order=asc&page=1'
+      '/multiples/123/view/39d8e6a1-3f0a-4d98-a875-b2d71566f662?sort=asc&page=1'
     );
   });
 });

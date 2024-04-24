@@ -103,7 +103,7 @@ export function SubmittedTable({
                 textAlign={'right'}
               >
                 <GovUK.Link
-                  href={`/multiples/${router.query.id}/view/${transaction.id}?order=${sortOrder}&page=${pageNumber}`}
+                  href={`/multiples/${router.query.id}/view/${transaction.id}?sort=${sortOrder}&page=${pageNumber}`}
                 >
                   {t('multiples.submitted.table.link')}
                 </GovUK.Link>
