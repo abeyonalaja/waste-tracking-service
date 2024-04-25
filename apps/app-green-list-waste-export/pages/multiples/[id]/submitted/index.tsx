@@ -11,6 +11,7 @@ import {
   Transaction,
   Pagination,
   getValidationResult,
+  sortTransactions,
 } from 'features/multiples';
 import useSafePush from 'utils/useRouterChange';
 
@@ -42,6 +43,8 @@ export default function Submitted() {
       return await getValidationResult(router.query.id as string);
     },
     staleTime: 5 * (60 * 1000),
+    gcTime: 10 * (60 * 1000),
+    refetchOnWindowFocus: false,
 
     enabled: !!router.query.id,
   });
@@ -67,17 +70,9 @@ export default function Submitted() {
     }
 
     if (sortOrder === 'asc') {
-      allTransactions = data.data.state.submissions.sort(
-        (a: Transaction, b: Transaction) =>
-          new Date(a.collectionDate).getTime() -
-          new Date(b.collectionDate).getTime()
-      );
+      allTransactions = sortTransactions(allTransactions, 'asc');
     } else {
-      allTransactions = data.data.state.submissions.sort(
-        (a: Transaction, b: Transaction) =>
-          new Date(b.collectionDate).getTime() -
-          new Date(a.collectionDate).getTime()
-      );
+      allTransactions = sortTransactions(allTransactions, 'desc');
     }
 
     displayedTransactions = allTransactions.slice(

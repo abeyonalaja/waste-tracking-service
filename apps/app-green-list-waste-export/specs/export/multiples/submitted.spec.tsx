@@ -35,18 +35,42 @@ jest.mock('@tanstack/react-query', () => ({
             [
               {
                 id: '39d8e6a1-3f0a-4d98-a875-b2d71566f662',
-                transactionId: '2404_D7EDCE05',
                 hasEstimates: true,
-                collectionDate: '2024-04-25T13:28:45.818Z',
-                wasteCode: 'B1030',
+                collectionDate: {
+                  type: 'EstimateDate',
+                  estimateDate: {
+                    day: '03',
+                    month: '01',
+                    year: '2030',
+                  },
+                },
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'NotApplicable',
+                  },
+                  ewcCodes: [{ code: 'B1010' }],
+                  description: 'metal',
+                },
                 reference: 'ref1',
               },
               {
                 id: 'f2715552-5a75-46a4-bc41-3044b5a6b35a',
-                transactionId: '4722_K7EDCE25',
                 hasEstimates: false,
-                collectionDate: '2024-04-23T13:28:45.818Z',
-                wasteCode: 'B1040',
+                collectionDate: {
+                  type: 'ActualDate',
+                  actualDate: {
+                    day: '03',
+                    month: '01',
+                    year: '2030',
+                  },
+                },
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'NotApplicable',
+                  },
+                  ewcCodes: [{ code: 'B1010' }],
+                  description: 'metal',
+                },
                 reference: 'ref2',
               },
             ],

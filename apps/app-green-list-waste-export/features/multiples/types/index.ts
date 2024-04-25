@@ -18,11 +18,28 @@ export type SetShowDeclaration = Dispatch<SetStateAction<boolean>>;
 
 export type Transaction = {
   id: string;
-  transactionId: string;
   hasEstimates: boolean;
-  collectionDate: string;
-  wasteCode: string;
+  collectionDate: {
+    type: 'ActualDate' | 'EstimateDate';
+    actualDate: {
+      day?: string;
+      month?: string;
+      year?: string;
+    };
+    estimateDate: {
+      day?: string;
+      month?: string;
+      year?: string;
+    };
+  };
   reference: string;
+  wasteDescription: {
+    description: string;
+    ewcCodes: { code: string }[];
+    wasteCode: {
+      type?: string;
+    };
+  };
 };
 
 export type ValidationErrorsType = {

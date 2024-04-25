@@ -5,18 +5,44 @@ import { SubmittedTable, Transaction } from 'features/multiples';
 const mockSubmissions: Transaction[] = [
   {
     id: '39d8e6a1-3f0a-4d98-a875-b2d71566f662',
-    transactionId: '2404_D7EDCE05',
     hasEstimates: true,
-    collectionDate: '2024-04-25T13:28:45.818Z',
-    wasteCode: 'B1030',
+    collectionDate: {
+      type: 'EstimateDate',
+      estimateDate: {
+        day: '25',
+        month: '04',
+        year: '2024',
+      },
+      actualDate: {},
+    },
+    wasteDescription: {
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [{ code: 'B1010' }],
+      description: 'metal',
+    },
     reference: 'ref1',
   },
   {
-    id: 'f2715552-5a75-46a4-bc41-3044b5a6b35a',
-    transactionId: '4722_K7EDCE25',
-    hasEstimates: false,
-    collectionDate: '2024-04-23T13:28:45.818Z',
-    wasteCode: 'B1040',
+    id: '39d8e6a1-3f0a-4d98-a875-b2d234234662',
+    hasEstimates: true,
+    collectionDate: {
+      type: 'ActualDate',
+      actualDate: {
+        day: '23',
+        month: '04',
+        year: '2024',
+      },
+      estimateDate: {},
+    },
+    wasteDescription: {
+      wasteCode: {
+        type: 'NotApplicable',
+      },
+      ewcCodes: [{ code: 'B1030' }],
+      description: 'metal',
+    },
     reference: 'ref2',
   },
 ];
@@ -129,7 +155,9 @@ describe('SubmittedTable component', () => {
       );
     });
 
-    const transactionNumber = screen.getByText('2404_D7EDCE05');
+    const transactionNumber = screen.getByText(
+      '39d8e6a1-3f0a-4d98-a875-b2d71566f662'
+    );
     expect(transactionNumber).toBeInTheDocument();
   });
 
@@ -152,7 +180,7 @@ describe('SubmittedTable component', () => {
     expect(collectionDate2).toBeInTheDocument();
   });
 
-  it('Renders waste code', async () => {
+  it('Renders waste code and description', async () => {
     await act(async () => {
       render(
         <SubmittedTable
@@ -164,7 +192,7 @@ describe('SubmittedTable component', () => {
       );
     });
 
-    const wasteCode = screen.getByText('B1030');
+    const wasteCode = screen.getByText('B1010: metal');
     expect(wasteCode).toBeInTheDocument();
   });
 

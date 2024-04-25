@@ -16,7 +16,13 @@ export default function App({
 }) {
   noStore();
   const [queryClient] = useState(() => {
-    return new QueryClient();
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false,
+        },
+      },
+    });
   });
 
   return (

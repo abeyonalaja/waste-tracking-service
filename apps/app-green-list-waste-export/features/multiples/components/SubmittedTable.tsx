@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
-import useRefDataLookup from 'utils/useRefDataLookup';
 import styled from 'styled-components';
 import * as GovUK from 'govuk-react';
 import { Tag } from 'components';
 import { Table, Thead, Tbody, Row, CellHeader, Cell } from 'components/Table';
-import { format } from 'date-fns';
-import { Transaction } from 'features/multiples';
+import { Transaction, formatDate } from 'features/multiples';
 
 const InlineStatusRow = styled.div`
   display: flex;
@@ -40,11 +38,9 @@ interface SubmittedTableProps {
 
 export function SubmittedTable({
   transactions,
-  apiConfig,
   sortOrder,
   pageNumber,
 }: SubmittedTableProps) {
-  const getRefData = useRefDataLookup(apiConfig);
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -77,7 +73,7 @@ export function SubmittedTable({
                 bold
                 label={t('multiples.submitted.table.transactionNumber')}
               >
-                {transaction.transactionId}
+                {transaction.id}
                 {transaction.hasEstimates && (
                   <InlineStatusRow>
                     <StatusLabel>Submission contains</StatusLabel>
@@ -86,13 +82,12 @@ export function SubmittedTable({
                 )}
               </Cell>
               <Cell label={t('multiples.submitted.table.collectionDate')}>
-                {transaction.collectionDate &&
-                  format(new Date(transaction.collectionDate), 'dd/MM/yyyy')}
+                {formatDate(transaction)}
               </Cell>
               <Cell label={t('multiples.submitted.table.wasteCode')}>
                 <>
-                  <strong>{transaction.wasteCode}</strong>:{' '}
-                  {getRefData('WasteCode', transaction.wasteCode)}
+                  {transaction.wasteDescription.ewcCodes[0]['code']}:{' '}
+                  {transaction.wasteDescription.description}
                 </>
               </Cell>
               <Cell label={t('multiples.submitted.table.uniqueReference')}>

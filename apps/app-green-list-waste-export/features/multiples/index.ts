@@ -41,5 +41,7 @@ export type { Transaction } from './types';
 export type { ValidationErrorsType };
 
 // Utils
+export { formatDate } from './utils/formatDate';
 import { getValidationResult } from './utils/getValidationResult';
 export { getValidationResult };
+export { sortTransactions } from './utils/sortTransactions';
