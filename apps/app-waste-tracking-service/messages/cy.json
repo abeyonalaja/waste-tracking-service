@@ -23,14 +23,14 @@
     "button": "Sign in or create an account"
   },
   "startPage": {
-    "title": "Export green list waste: submit Annex VII records on the waste tracking service",
+    "title": "Export green list waste from the UK: submit Annex VII records on the waste tracking service",
     "summary": "Green list waste exporters can use the export waste from the UK service to record all their Annex VII exports.",
     "serviceFeatures": {
       "description": "Exporters can use this service to:",
       "listElementOne": "enter the details of a single green list waste export",
       "listElementTwo": "upload information about multiple exports of green list waste using templates, or as a CSV spreadsheet using the ",
       "listElementTwoLink": "Green list waste multiple exports: CSV file template",
-      "listElementThree": "update any estimates you may have entered – for example, collection date or first carrier ",
+      "listElementThree": "update any estimates you may have entered – for example, collection date or waste quantity",
       "listElementFour": "download and print Annex VIIs to include with your waste shipment (this will be created using the information that you enter)"
     },
     "paragraph": "You will still need to notify your regulators of any movements you intend to make.",
