@@ -73,7 +73,7 @@ export default class BatchController {
             status: 'Submitting',
             timestamp: timestamp,
             transactionId: transactionId,
-            hasEstimates: false,
+            hasEstimates: batch.state.hasEstimates,
             submissions: batch.state.submissions,
           },
         };
