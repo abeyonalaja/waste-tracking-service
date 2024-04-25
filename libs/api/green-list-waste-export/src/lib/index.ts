@@ -1,4 +1,5 @@
 export {
+  createSubmissions,
   createDraft,
   createDraftFromTemplate,
   deleteDraft,
@@ -135,6 +136,8 @@ export type {
 } from './submissionBase.dto';
 
 export type {
+  CreateSubmissionsRequest,
+  CreateSubmissionsResponse,
   Submission,
   CreateDraftRequest,
   CreateDraftFromTemplateRequest,

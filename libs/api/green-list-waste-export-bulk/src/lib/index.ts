@@ -24,6 +24,7 @@ export type {
   TransitCountriesFlattened,
   RecoveryFacilityDetailFlattened,
   PartialSubmission,
+  PartialSubmissionWithId,
   SubmissionSummary,
 } from './dto';
 export * as schema from './schema';

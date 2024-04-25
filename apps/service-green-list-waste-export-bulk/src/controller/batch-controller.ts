@@ -54,16 +54,30 @@ export default class BatchController {
   updateBatch: Handler<api.UpdateBatchRequest, api.UpdateBatchResponse> =
     async ({ id, accountId }) => {
       try {
+        const batch = await this.repository.getBatch(id, accountId);
+
+        if (batch.state.status !== 'PassedValidation') {
+          return fromBoom(Boom.badRequest('Batch has not passed validation.'));
+        }
+
         const timestamp = new Date();
+        const transactionId =
+          timestamp.getFullYear().toString().substring(2) +
+          (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+          '_' +
+          id.substring(0, 8).toUpperCase();
+
         const bulkSubmission: BulkSubmission = {
           id: id,
           state: {
             status: 'Submitting',
             timestamp: timestamp,
-            hasEstimates: true,
-            submissions: [],
+            transactionId: transactionId,
+            hasEstimates: false,
+            submissions: batch.state.submissions,
           },
         };
+
         return success(
           await this.repository.saveBatch(bulkSubmission, accountId)
         );

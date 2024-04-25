@@ -377,6 +377,7 @@ describe('getBatchResponse', () => {
           status: 'Submitting',
           timestamp: new Date(),
           hasEstimates: false,
+          transactionId: '2307_5678ABCD',
           submissions: [
             {
               reference: 'testRef',
@@ -535,10 +536,27 @@ describe('getBatchResponse', () => {
           submissions: [
             {
               id: faker.datatype.uuid(),
-              transactionId: '2307_5678ABCD',
+              submissionDeclaration: {
+                declarationTimestamp: new Date(),
+                transactionId: '3497_1224DCBA',
+              },
               hasEstimates: true,
-              collectionDate: new Date(),
-              wasteCode: 'Not Applicable',
+              collectionDate: {
+                type: 'ActualDate',
+                estimateDate: {},
+                actualDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2030',
+                },
+              },
+              wasteDescription: {
+                wasteCode: {
+                  type: 'NotApplicable',
+                },
+                ewcCodes: [{ code: 'B1010' }],
+                description: 'metal',
+              },
               reference: 'ref1',
             },
           ],

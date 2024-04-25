@@ -6,6 +6,8 @@ export { validation } from '@wts/api/green-list-waste-export';
 export type Submission = api.Submission;
 export type SubmissionBase = api.SubmissionBase;
 export type DraftSubmission = api.DraftSubmission;
+export type PartialSubmission = bulkApi.PartialSubmission;
+export type PartialSubmissionWithId = bulkApi.PartialSubmissionWithId;
 export type DraftWasteDescription = api.DraftWasteDescription;
 export type DraftWasteQuantity = api.DraftWasteQuantity;
 export type DraftCollectionDate = api.DraftCollectionDate;

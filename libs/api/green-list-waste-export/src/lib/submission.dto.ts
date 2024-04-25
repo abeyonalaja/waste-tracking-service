@@ -604,3 +604,29 @@ export const validateSubmissions: Method = {
   name: 'validateSubmissions',
   httpVerb: 'POST',
 };
+
+export type SubmissionRequest = {
+  reference: CustomerReference;
+  wasteDescription: WasteDescriptionData;
+  wasteQuantity: WasteQuantityData;
+  exporterDetail: ExporterDetailData;
+  importerDetail: ImporterDetailData;
+  collectionDate: CollectionDateData;
+  carriers: CarrierData[];
+  collectionDetail: CollectionDetailData;
+  ukExitLocation: ExitLocationData;
+  transitCountries: string[];
+  recoveryFacilityDetail: RecoveryFacilityData[];
+};
+
+export type CreateSubmissionsRequest = AccountIdRequest &
+  IdRequest & {
+    value: SubmissionRequest[];
+  };
+
+export type CreateSubmissionsResponse = Response<Submission[]>;
+
+export const createSubmissions: Method = {
+  name: 'createSubmissions',
+  httpVerb: 'POST',
+};

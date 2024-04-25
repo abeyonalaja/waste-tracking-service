@@ -1,5 +1,8 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
+  CreateSubmissionsRequest,
+  CreateSubmissionsResponse,
+  createSubmissions,
   CreateDraftRequest,
   CreateDraftResponse,
   DeleteDraftRequest,
@@ -165,6 +168,17 @@ import {
 
 export class DaprAnnexViiClient {
   constructor(private daprClient: DaprClient, private annexViiAppId: string) {}
+
+  async createSubmissions(
+    req: CreateSubmissionsRequest
+  ): Promise<CreateSubmissionsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiAppId,
+      createSubmissions.name,
+      HttpMethod.POST,
+      req
+    )) as CreateSubmissionsResponse;
+  }
 
   async getDrafts(req: GetDraftsRequest): Promise<GetDraftsResponse> {
     return (await this.daprClient.invoker.invoke(

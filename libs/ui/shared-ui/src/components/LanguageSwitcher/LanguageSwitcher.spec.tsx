@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NextIntlClientProvider } from 'next-intl';
 import userEvent from '@testing-library/user-event';
@@ -69,7 +69,9 @@ describe('Language Switcher component', () => {
     );
 
     const englishLink = screen.getByRole('link', { name: /english/i });
-    await userEvent.click(englishLink);
+    await act(async () => {
+      await userEvent.click(englishLink);
+    });
 
     expect(mockPush).toHaveBeenCalled();
   });

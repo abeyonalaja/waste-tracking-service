@@ -5,6 +5,7 @@ import winston from 'winston';
 import SubmissionController from './submission-controller';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import { validation } from '../model';
+import { CosmosDraftRepository } from '../data';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -20,8 +21,13 @@ const mockClient = {
   getDisposalCodes: jest.fn<DaprReferenceDataClient['getDisposalCodes']>(),
 };
 
+const mockRepository = {
+  createSubmissions: jest.fn<CosmosDraftRepository['createSubmissions']>(),
+};
+
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
+    mockRepository as unknown as CosmosDraftRepository,
     mockClient as unknown as DaprReferenceDataClient,
     new winston.Logger()
   );
@@ -1391,6 +1397,275 @@ describe(SubmissionController, () => {
           },
         ],
       });
+    });
+  });
+
+  describe('createSubmissions', () => {
+    it('creates submissions', async () => {
+      const response = await subject.createSubmissions({
+        id: faker.datatype.uuid(),
+        accountId: faker.datatype.uuid(),
+        value: [
+          {
+            reference: faker.datatype.string(),
+
+            wasteDescription: {
+              wasteCode: {
+                type: 'BaselAnnexIX',
+                code: faker.datatype.string(),
+              },
+              ewcCodes: [
+                {
+                  code: faker.datatype.string(),
+                },
+                {
+                  code: faker.datatype.string(),
+                },
+              ],
+              description: faker.datatype.string(),
+            },
+            wasteQuantity: {
+              type: 'ActualData',
+              actualData: {
+                quantityType: 'Weight',
+                value: faker.datatype.float(),
+                unit: 'Tonne',
+              },
+              estimateData: {
+                quantityType: 'Weight',
+                value: faker.datatype.float(),
+                unit: 'Tonne',
+              },
+            },
+            exporterDetail: {
+              exporterAddress: {
+                country: faker.datatype.string(),
+                postcode: faker.datatype.string(),
+                townCity: faker.datatype.string(),
+                addressLine1: faker.datatype.string(),
+                addressLine2: faker.datatype.string(),
+              },
+              exporterContactDetails: {
+                organisationName: faker.datatype.string(),
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            importerDetail: {
+              importerAddressDetails: {
+                address: faker.datatype.string(),
+                country: faker.datatype.string(),
+                organisationName: faker.datatype.string(),
+              },
+              importerContactDetails: {
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            collectionDate: {
+              type: 'ActualDate',
+              actualDate: {
+                year: '01',
+                month: '01',
+                day: '2025',
+              },
+              estimateDate: {},
+            },
+            carriers: [
+              {
+                transportDetails: {
+                  type: 'Air',
+                  description: 'RyanAir',
+                },
+                addressDetails: {
+                  address: faker.datatype.string(),
+                  country: faker.datatype.string(),
+                  organisationName: faker.datatype.string(),
+                },
+                contactDetails: {
+                  emailAddress: faker.datatype.string(),
+                  faxNumber: faker.datatype.string(),
+                  fullName: faker.datatype.string(),
+                  phoneNumber: faker.datatype.string(),
+                },
+              },
+            ],
+            collectionDetail: {
+              address: {
+                addressLine1: faker.datatype.string(),
+                addressLine2: faker.datatype.string(),
+                townCity: faker.datatype.string(),
+                postcode: faker.datatype.string(),
+                country: faker.datatype.string(),
+              },
+              contactDetails: {
+                organisationName: faker.datatype.string(),
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            ukExitLocation: {
+              provided: 'Yes',
+              value: faker.datatype.string(),
+            },
+            transitCountries: ['Albania (AL)'],
+            recoveryFacilityDetail: [
+              {
+                addressDetails: {
+                  address: faker.datatype.string(),
+                  country: faker.datatype.string(),
+                  name: faker.datatype.string(),
+                },
+                contactDetails: {
+                  emailAddress: faker.datatype.string(),
+                  faxNumber: faker.datatype.string(),
+                  fullName: faker.datatype.string(),
+                  phoneNumber: faker.datatype.string(),
+                },
+                recoveryFacilityType: {
+                  type: 'Laboratory',
+                  disposalCode: 'D1',
+                },
+              },
+            ],
+          },
+          {
+            reference: faker.datatype.string(),
+
+            wasteDescription: {
+              wasteCode: {
+                type: 'BaselAnnexIX',
+                code: faker.datatype.string(),
+              },
+              ewcCodes: [
+                {
+                  code: faker.datatype.string(),
+                },
+                {
+                  code: faker.datatype.string(),
+                },
+              ],
+              description: faker.datatype.string(),
+            },
+            wasteQuantity: {
+              type: 'ActualData',
+              actualData: {
+                quantityType: 'Weight',
+                value: faker.datatype.float(),
+                unit: 'Tonne',
+              },
+              estimateData: {
+                quantityType: 'Weight',
+                value: faker.datatype.float(),
+                unit: 'Tonne',
+              },
+            },
+            exporterDetail: {
+              exporterAddress: {
+                country: faker.datatype.string(),
+                postcode: faker.datatype.string(),
+                townCity: faker.datatype.string(),
+                addressLine1: faker.datatype.string(),
+                addressLine2: faker.datatype.string(),
+              },
+              exporterContactDetails: {
+                organisationName: faker.datatype.string(),
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            importerDetail: {
+              importerAddressDetails: {
+                address: faker.datatype.string(),
+                country: faker.datatype.string(),
+                organisationName: faker.datatype.string(),
+              },
+              importerContactDetails: {
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            collectionDate: {
+              type: 'ActualDate',
+              actualDate: {
+                year: '01',
+                month: '01',
+                day: '2025',
+              },
+              estimateDate: {},
+            },
+            carriers: [
+              {
+                transportDetails: {
+                  type: 'Air',
+                  description: 'RyanAir',
+                },
+                addressDetails: {
+                  address: faker.datatype.string(),
+                  country: faker.datatype.string(),
+                  organisationName: faker.datatype.string(),
+                },
+                contactDetails: {
+                  emailAddress: faker.datatype.string(),
+                  faxNumber: faker.datatype.string(),
+                  fullName: faker.datatype.string(),
+                  phoneNumber: faker.datatype.string(),
+                },
+              },
+            ],
+            collectionDetail: {
+              address: {
+                addressLine1: faker.datatype.string(),
+                addressLine2: faker.datatype.string(),
+                townCity: faker.datatype.string(),
+                postcode: faker.datatype.string(),
+                country: faker.datatype.string(),
+              },
+              contactDetails: {
+                organisationName: faker.datatype.string(),
+                fullName: faker.datatype.string(),
+                emailAddress: faker.datatype.string(),
+                phoneNumber: faker.datatype.string(),
+              },
+            },
+            ukExitLocation: {
+              provided: 'Yes',
+              value: faker.datatype.string(),
+            },
+            transitCountries: ['Albania (AL)'],
+            recoveryFacilityDetail: [
+              {
+                addressDetails: {
+                  address: faker.datatype.string(),
+                  country: faker.datatype.string(),
+                  name: faker.datatype.string(),
+                },
+                contactDetails: {
+                  emailAddress: faker.datatype.string(),
+                  faxNumber: faker.datatype.string(),
+                  fullName: faker.datatype.string(),
+                  phoneNumber: faker.datatype.string(),
+                },
+                recoveryFacilityType: {
+                  type: 'Laboratory',
+                  disposalCode: 'D1',
+                },
+              },
+            ],
+          },
+        ],
+      });
+      expect(response.success).toBe(true);
+      if (response.success) {
+        return;
+      }
+      expect(mockRepository.createSubmissions).toBeCalled();
+      expect(response.error.statusCode).toBe(500);
     });
   });
 });

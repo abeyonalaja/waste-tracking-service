@@ -227,9 +227,11 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
             submissions: [
               {
                 reference: 'ref1',
+
                 wasteDescription: {
                   wasteCode: {
-                    type: 'NotApplicable',
+                    type: 'BaselAnnexIX',
+                    code: 'B1010',
                   },
                   ewcCodes: [
                     {
@@ -243,33 +245,6 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
                   description: 'WasteDescription',
                 },
                 wasteQuantity: {
-                  type: 'ActualData',
-                  estimateData: {},
-                  actualData: {
-                    quantityType: 'Weight',
-                    unit: 'Kilogram',
-                    value: 12.5,
-                  },
-                },
-              },
-              {
-                reference: 'ref2',
-                wasteDescription: {
-                  wasteCode: {
-                    type: 'BaselAnnexIX',
-                    code: 'B1010',
-                  },
-                  ewcCodes: [
-                    {
-                      code: '101213',
-                    },
-                  ],
-                  nationalCode: {
-                    provided: 'No',
-                  },
-                  description: 'WasteDescription',
-                },
-                wasteQuantity: {
                   type: 'EstimateData',
                   estimateData: {
                     quantityType: 'Volume',
@@ -278,6 +253,101 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
                   },
                   actualData: {},
                 },
+                exporterDetail: {
+                  exporterAddress: {
+                    country: 'United Kingdom [GB]',
+                    postcode: 'SW1A 1AA',
+                    townCity: 'London',
+                    addressLine1: '123 Real Street',
+                    addressLine2: 'Real Avenue',
+                  },
+                  exporterContactDetails: {
+                    organisationName: 'Waste Ltd',
+                    fullName: 'Waste Limited',
+                    emailAddress: 'exporter@wasteltd.com',
+                    phoneNumber: '07142345304',
+                  },
+                },
+                importerDetail: {
+                  importerAddressDetails: {
+                    address: '123 Importer Street, Importer Road',
+                    country: 'France [FR]',
+                    organisationName: 'Waste Importers',
+                  },
+                  importerContactDetails: {
+                    fullName: 'Steve Importer',
+                    emailAddress: 'steve@importers.com',
+                    phoneNumber: '03456203945',
+                  },
+                },
+                collectionDate: {
+                  type: 'ActualDate',
+                  actualDate: {
+                    year: '01',
+                    month: '01',
+                    day: '2025',
+                  },
+                  estimateDate: {},
+                },
+                carriers: [
+                  {
+                    id: uuidv4(),
+                    transportDetails: {
+                      type: 'Air',
+                      description: 'RyanAir',
+                    },
+                    addressDetails: {
+                      address: '132 Carrier Road',
+                      country: 'United Kingdom [GB]',
+                      organisationName: 'Carriers Ltd',
+                    },
+                    contactDetails: {
+                      emailAddress: 'steve@carriers.com',
+                      faxNumber: 'abc123',
+                      fullName: 'Steve Carrier',
+                      phoneNumber: '012345987654',
+                    },
+                  },
+                ],
+                collectionDetail: {
+                  address: {
+                    addressLine1: 'Collector Road',
+                    addressLine2: 'Collector Avenue',
+                    townCity: 'Paris',
+                    postcode: 'SW1A 1AA',
+                    country: 'France [FR]',
+                  },
+                  contactDetails: {
+                    organisationName: 'Collectors Ltd',
+                    fullName: 'Steve Collector',
+                    emailAddress: 'steve@collectors.com',
+                    phoneNumber: '04938493029',
+                  },
+                },
+                exitLocation: {
+                  provided: 'Yes',
+                  value: 'Dover',
+                },
+                transitCountries: ['Albania (AL)'],
+                recoveryFacilityDetail: [
+                  {
+                    addressDetails: {
+                      address: 'Recovery Road, Paris',
+                      country: 'France [FR]',
+                      name: 'Recovery Labs',
+                    },
+                    contactDetails: {
+                      emailAddress: 'technician@recoverylabs.com',
+                      faxNumber: 'abc123',
+                      fullName: 'Recovery Technician',
+                      phoneNumber: '02938493939',
+                    },
+                    recoveryFacilityType: {
+                      type: 'Laboratory',
+                      disposalCode: 'D1',
+                    },
+                  },
+                ],
               },
             ],
           },
@@ -293,7 +363,7 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
             hasEstimates: true,
             submissions: [
               {
-                reference: uuidv4(),
+                reference: 'ref1',
                 wasteDescription: {
                   wasteCode: {
                     type: 'BaselAnnexIX',
@@ -318,6 +388,101 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
                   },
                   actualData: {},
                 },
+                exporterDetail: {
+                  exporterAddress: {
+                    country: 'United Kingdom [GB]',
+                    postcode: 'SW1A 1AA',
+                    townCity: 'London',
+                    addressLine1: '123 Real Street',
+                    addressLine2: 'Real Avenue',
+                  },
+                  exporterContactDetails: {
+                    organisationName: 'Waste Ltd',
+                    fullName: 'Waste Limited',
+                    emailAddress: 'exporter@wasteltd.com',
+                    phoneNumber: '07142345304',
+                  },
+                },
+                importerDetail: {
+                  importerAddressDetails: {
+                    address: '123 Importer Street, Importer Road',
+                    country: 'France [FR]',
+                    organisationName: 'Waste Importers',
+                  },
+                  importerContactDetails: {
+                    fullName: 'Steve Importer',
+                    emailAddress: 'steve@importers.com',
+                    phoneNumber: '03456203945',
+                  },
+                },
+                collectionDate: {
+                  type: 'ActualDate',
+                  actualDate: {
+                    year: '01',
+                    month: '01',
+                    day: '2025',
+                  },
+                  estimateDate: {},
+                },
+                carriers: [
+                  {
+                    id: uuidv4(),
+                    transportDetails: {
+                      type: 'Air',
+                      description: 'RyanAir',
+                    },
+                    addressDetails: {
+                      address: '132 Carrier Road',
+                      country: 'United Kingdom [GB]',
+                      organisationName: 'Carriers Ltd',
+                    },
+                    contactDetails: {
+                      emailAddress: 'steve@carriers.com',
+                      faxNumber: 'abc123',
+                      fullName: 'Steve Carrier',
+                      phoneNumber: '012345987654',
+                    },
+                  },
+                ],
+                collectionDetail: {
+                  address: {
+                    addressLine1: 'Collector Road',
+                    addressLine2: 'Collector Avenue',
+                    townCity: 'Paris',
+                    postcode: 'SW1A 1AA',
+                    country: 'France [FR]',
+                  },
+                  contactDetails: {
+                    organisationName: 'Collectors Ltd',
+                    fullName: 'Steve Collector',
+                    emailAddress: 'steve@collectors.com',
+                    phoneNumber: '04938493029',
+                  },
+                },
+                exitLocation: {
+                  provided: 'Yes',
+                  value: 'Dover',
+                },
+                transitCountries: ['Albania (AL)'],
+                recoveryFacilityDetail: [
+                  {
+                    addressDetails: {
+                      address: 'Recovery Road, Paris',
+                      country: 'France [FR]',
+                      name: 'Recovery Labs',
+                    },
+                    contactDetails: {
+                      emailAddress: 'technician@recoverylabs.com',
+                      faxNumber: 'abc123',
+                      fullName: 'Recovery Technician',
+                      phoneNumber: '02938493939',
+                    },
+                    recoveryFacilityType: {
+                      type: 'Laboratory',
+                      disposalCode: 'D1',
+                    },
+                  },
+                ],
               },
             ],
           },
@@ -334,10 +499,56 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
             submissions: [
               {
                 id: uuidv4(),
-                transactionId: transactionId,
+                submissionDeclaration: {
+                  declarationTimestamp: new Date(),
+                  transactionId: '3497_1224DCBA',
+                },
+                hasEstimates: false,
+                collectionDate: {
+                  type: 'ActualDate',
+                  estimateDate: {},
+                  actualDate: {
+                    day: '01',
+                    month: '01',
+                    year: '2030',
+                  },
+                },
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'NotApplicable',
+                  },
+                  ewcCodes: [{ code: 'B1010' }],
+                  description: 'metal',
+                },
+                reference: 'ref1',
+              },
+              {
+                id: uuidv4(),
+                submissionDeclaration: {
+                  declarationTimestamp: new Date(),
+                  transactionId: '3497_1224DCBA',
+                },
                 hasEstimates: true,
-                collectionDate: new Date(),
-                wasteCode: 'Not Applicable',
+                collectionDate: {
+                  type: 'ActualDate',
+                  estimateDate: {
+                    day: '01',
+                    month: '01',
+                    year: '2030',
+                  },
+                  actualDate: {
+                    day: '01',
+                    month: '01',
+                    year: '2030',
+                  },
+                },
+                wasteDescription: {
+                  wasteCode: {
+                    type: 'NotApplicable',
+                  },
+                  ewcCodes: [{ code: 'B1010' }],
+                  description: 'metal',
+                },
                 reference: 'ref1',
               },
             ],
@@ -374,6 +585,7 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
       submissions: [
         {
           reference: uuidv4(),
+
           wasteDescription: {
             wasteCode: {
               type: 'BaselAnnexIX',
@@ -398,6 +610,101 @@ export class InMemoryBulkSubmissionBackend implements BulkSubmissionBackend {
             },
             actualData: {},
           },
+          exporterDetail: {
+            exporterAddress: {
+              country: 'United Kingdom [GB]',
+              postcode: 'SW1A 1AA',
+              townCity: 'London',
+              addressLine1: '123 Real Street',
+              addressLine2: 'Real Avenue',
+            },
+            exporterContactDetails: {
+              organisationName: 'Waste Ltd',
+              fullName: 'Waste Limited',
+              emailAddress: 'exporter@wasteltd.com',
+              phoneNumber: '07142345304',
+            },
+          },
+          importerDetail: {
+            importerAddressDetails: {
+              address: '123 Importer Street, Importer Road',
+              country: 'France [FR]',
+              organisationName: 'Waste Importers',
+            },
+            importerContactDetails: {
+              fullName: 'Steve Importer',
+              emailAddress: 'steve@importers.com',
+              phoneNumber: '03456203945',
+            },
+          },
+          collectionDate: {
+            type: 'ActualDate',
+            actualDate: {
+              year: '01',
+              month: '01',
+              day: '2025',
+            },
+            estimateDate: {},
+          },
+          carriers: [
+            {
+              id: uuidv4(),
+              transportDetails: {
+                type: 'Air',
+                description: 'RyanAir',
+              },
+              addressDetails: {
+                address: '132 Carrier Road',
+                country: 'United Kingdom [GB]',
+                organisationName: 'Carriers Ltd',
+              },
+              contactDetails: {
+                emailAddress: 'steve@carriers.com',
+                faxNumber: 'abc123',
+                fullName: 'Steve Carrier',
+                phoneNumber: '012345987654',
+              },
+            },
+          ],
+          collectionDetail: {
+            address: {
+              addressLine1: 'Collector Road',
+              addressLine2: 'Collector Avenue',
+              townCity: 'Paris',
+              postcode: 'SW1A 1AA',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              organisationName: 'Collectors Ltd',
+              fullName: 'Steve Collector',
+              emailAddress: 'steve@collectors.com',
+              phoneNumber: '04938493029',
+            },
+          },
+          exitLocation: {
+            provided: 'Yes',
+            value: 'Dover',
+          },
+          transitCountries: ['Albania (AL)'],
+          recoveryFacilityDetail: [
+            {
+              addressDetails: {
+                address: 'Recovery Road, Paris',
+                country: 'France [FR]',
+                name: 'Recovery Labs',
+              },
+              contactDetails: {
+                emailAddress: 'technician@recoverylabs.com',
+                faxNumber: 'abc123',
+                fullName: 'Recovery Technician',
+                phoneNumber: '02938493939',
+              },
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+            },
+          ],
         },
       ],
     };

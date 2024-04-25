@@ -206,9 +206,11 @@ export async function createBatch(
           submissions: [
             {
               reference: 'ref1',
+
               wasteDescription: {
                 wasteCode: {
-                  type: 'NotApplicable',
+                  type: 'BaselAnnexIX',
+                  code: 'B1010',
                 },
                 ewcCodes: [
                   {
@@ -222,33 +224,6 @@ export async function createBatch(
                 description: 'WasteDescription',
               },
               wasteQuantity: {
-                type: 'ActualData',
-                estimateData: {},
-                actualData: {
-                  quantityType: 'Weight',
-                  unit: 'Kilogram',
-                  value: 12.5,
-                },
-              },
-            },
-            {
-              reference: 'ref2',
-              wasteDescription: {
-                wasteCode: {
-                  type: 'BaselAnnexIX',
-                  code: 'B1010',
-                },
-                ewcCodes: [
-                  {
-                    code: '101213',
-                  },
-                ],
-                nationalCode: {
-                  provided: 'No',
-                },
-                description: 'WasteDescription',
-              },
-              wasteQuantity: {
                 type: 'EstimateData',
                 estimateData: {
                   quantityType: 'Volume',
@@ -257,6 +232,101 @@ export async function createBatch(
                 },
                 actualData: {},
               },
+              exporterDetail: {
+                exporterAddress: {
+                  country: 'United Kingdom [GB]',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                },
+                exporterContactDetails: {
+                  organisationName: 'Waste Ltd',
+                  fullName: 'Waste Limited',
+                  emailAddress: 'exporter@wasteltd.com',
+                  phoneNumber: '07142345304',
+                },
+              },
+              importerDetail: {
+                importerAddressDetails: {
+                  address: '123 Importer Street, Importer Road',
+                  country: 'France [FR]',
+                  organisationName: 'Waste Importers',
+                },
+                importerContactDetails: {
+                  fullName: 'Steve Importer',
+                  emailAddress: 'steve@importers.com',
+                  phoneNumber: '03456203945',
+                },
+              },
+              collectionDate: {
+                type: 'ActualDate',
+                actualDate: {
+                  year: '01',
+                  month: '01',
+                  day: '2025',
+                },
+                estimateDate: {},
+              },
+              carriers: [
+                {
+                  id: uuidv4(),
+                  transportDetails: {
+                    type: 'Air',
+                    description: 'RyanAir',
+                  },
+                  addressDetails: {
+                    address: '132 Carrier Road',
+                    country: 'United Kingdom [GB]',
+                    organisationName: 'Carriers Ltd',
+                  },
+                  contactDetails: {
+                    emailAddress: 'steve@carriers.com',
+                    faxNumber: 'abc123',
+                    fullName: 'Steve Carrier',
+                    phoneNumber: '012345987654',
+                  },
+                },
+              ],
+              collectionDetail: {
+                address: {
+                  addressLine1: 'Collector Road',
+                  addressLine2: 'Collector Avenue',
+                  townCity: 'Paris',
+                  postcode: 'SW1A 1AA',
+                  country: 'France [FR]',
+                },
+                contactDetails: {
+                  organisationName: 'Collectors Ltd',
+                  fullName: 'Steve Collector',
+                  emailAddress: 'steve@collectors.com',
+                  phoneNumber: '04938493029',
+                },
+              },
+              exitLocation: {
+                provided: 'Yes',
+                value: 'Dover',
+              },
+              transitCountries: ['Albania (AL)'],
+              recoveryFacilityDetail: [
+                {
+                  addressDetails: {
+                    address: 'Recovery Road, Paris',
+                    country: 'France [FR]',
+                    name: 'Recovery Labs',
+                  },
+                  contactDetails: {
+                    emailAddress: 'technician@recoverylabs.com',
+                    faxNumber: 'abc123',
+                    fullName: 'Recovery Technician',
+                    phoneNumber: '02938493939',
+                  },
+                  recoveryFacilityType: {
+                    type: 'Laboratory',
+                    disposalCode: 'D1',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -273,7 +343,7 @@ export async function createBatch(
           hasEstimates: true,
           submissions: [
             {
-              reference: uuidv4(),
+              reference: 'ref1',
               wasteDescription: {
                 wasteCode: {
                   type: 'BaselAnnexIX',
@@ -298,6 +368,101 @@ export async function createBatch(
                 },
                 actualData: {},
               },
+              exporterDetail: {
+                exporterAddress: {
+                  country: 'United Kingdom [GB]',
+                  postcode: 'SW1A 1AA',
+                  townCity: 'London',
+                  addressLine1: '123 Real Street',
+                  addressLine2: 'Real Avenue',
+                },
+                exporterContactDetails: {
+                  organisationName: 'Waste Ltd',
+                  fullName: 'Waste Limited',
+                  emailAddress: 'exporter@wasteltd.com',
+                  phoneNumber: '07142345304',
+                },
+              },
+              importerDetail: {
+                importerAddressDetails: {
+                  address: '123 Importer Street, Importer Road',
+                  country: 'France [FR]',
+                  organisationName: 'Waste Importers',
+                },
+                importerContactDetails: {
+                  fullName: 'Steve Importer',
+                  emailAddress: 'steve@importers.com',
+                  phoneNumber: '03456203945',
+                },
+              },
+              collectionDate: {
+                type: 'ActualDate',
+                actualDate: {
+                  year: '01',
+                  month: '01',
+                  day: '2025',
+                },
+                estimateDate: {},
+              },
+              carriers: [
+                {
+                  id: uuidv4(),
+                  transportDetails: {
+                    type: 'Air',
+                    description: 'RyanAir',
+                  },
+                  addressDetails: {
+                    address: '132 Carrier Road',
+                    country: 'United Kingdom [GB]',
+                    organisationName: 'Carriers Ltd',
+                  },
+                  contactDetails: {
+                    emailAddress: 'steve@carriers.com',
+                    faxNumber: 'abc123',
+                    fullName: 'Steve Carrier',
+                    phoneNumber: '012345987654',
+                  },
+                },
+              ],
+              collectionDetail: {
+                address: {
+                  addressLine1: 'Collector Road',
+                  addressLine2: 'Collector Avenue',
+                  townCity: 'Paris',
+                  postcode: 'SW1A 1AA',
+                  country: 'France [FR]',
+                },
+                contactDetails: {
+                  organisationName: 'Collectors Ltd',
+                  fullName: 'Steve Collector',
+                  emailAddress: 'steve@collectors.com',
+                  phoneNumber: '04938493029',
+                },
+              },
+              exitLocation: {
+                provided: 'Yes',
+                value: 'Dover',
+              },
+              transitCountries: ['Albania (AL)'],
+              recoveryFacilityDetail: [
+                {
+                  addressDetails: {
+                    address: 'Recovery Road, Paris',
+                    country: 'France [FR]',
+                    name: 'Recovery Labs',
+                  },
+                  contactDetails: {
+                    emailAddress: 'technician@recoverylabs.com',
+                    faxNumber: 'abc123',
+                    fullName: 'Recovery Technician',
+                    phoneNumber: '02938493939',
+                  },
+                  recoveryFacilityType: {
+                    type: 'Laboratory',
+                    disposalCode: 'D1',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -316,35 +481,65 @@ export async function createBatch(
           submissions: [
             {
               id: uuidv4(),
-              transactionId: transactionId,
-              hasEstimates: true,
-              collectionDate: new Date(),
-              wasteCode: 'B1010',
+              submissionDeclaration: {
+                declarationTimestamp: new Date(),
+                transactionId: '3497_1224DCBA',
+              },
+              hasEstimates: false,
+              collectionDate: {
+                type: 'ActualDate',
+                estimateDate: {},
+                actualDate: {
+                  day: '10',
+                  month: '10',
+                  year: '2029',
+                },
+              },
+              wasteDescription: {
+                wasteCode: {
+                  type: 'NotApplicable',
+                },
+                ewcCodes: [
+                  {
+                    code: '101213',
+                  },
+                ],
+                description: 'metal',
+              },
               reference: 'ref1',
-            },
-            {
-              id: 'c79192cd-7545-4e77-9aab-fb60d56462cb',
-              transactionId: transactionId,
-              hasEstimates: true,
-              collectionDate: new Date(),
-              wasteCode: 'B1010',
-              reference: 'singleJourney1',
-            },
-            {
-              id: '64d4cfb0-61b9-411b-90cf-e3451deb56df',
-              transactionId: transactionId,
-              hasEstimates: true,
-              collectionDate: new Date(),
-              wasteCode: 'B1010',
-              reference: 'singleJourneyEstimate',
             },
             {
               id: uuidv4(),
-              transactionId: transactionId,
+              submissionDeclaration: {
+                declarationTimestamp: new Date(),
+                transactionId: '3497_1224DCBA',
+              },
               hasEstimates: true,
-              collectionDate: new Date(),
-              wasteCode: 'B1010',
-              reference: 'ref1',
+              collectionDate: {
+                type: 'ActualDate',
+                estimateDate: {
+                  day: '10',
+                  month: '11',
+                  year: '2028',
+                },
+                actualDate: {
+                  day: '01',
+                  month: '01',
+                  year: '2030',
+                },
+              },
+              wasteDescription: {
+                wasteCode: {
+                  type: 'NotApplicable',
+                },
+                ewcCodes: [
+                  {
+                    code: '010101',
+                  },
+                ],
+                description: 'Collection of metal',
+              },
+              reference: 'export7822',
             },
           ],
         },
@@ -352,7 +547,6 @@ export async function createBatch(
       };
       break;
   }
-
   db.batches.push(value);
 
   return Promise.resolve({ id: value.id });
@@ -391,7 +585,7 @@ export async function finalizeBatch({
     hasEstimates: true,
     submissions: [
       {
-        reference: uuidv4(),
+        reference: 'ref1',
         wasteDescription: {
           wasteCode: {
             type: 'BaselAnnexIX',
@@ -416,6 +610,101 @@ export async function finalizeBatch({
           },
           actualData: {},
         },
+        exporterDetail: {
+          exporterAddress: {
+            country: 'United Kingdom [GB]',
+            postcode: 'SW1A 1AA',
+            townCity: 'London',
+            addressLine1: '123 Real Street',
+            addressLine2: 'Real Avenue',
+          },
+          exporterContactDetails: {
+            organisationName: 'Waste Ltd',
+            fullName: 'Waste Limited',
+            emailAddress: 'exporter@wasteltd.com',
+            phoneNumber: '07142345304',
+          },
+        },
+        importerDetail: {
+          importerAddressDetails: {
+            address: '123 Importer Street, Importer Road',
+            country: 'France [FR]',
+            organisationName: 'Waste Importers',
+          },
+          importerContactDetails: {
+            fullName: 'Steve Importer',
+            emailAddress: 'steve@importers.com',
+            phoneNumber: '03456203945',
+          },
+        },
+        collectionDate: {
+          type: 'ActualDate',
+          actualDate: {
+            year: '12',
+            month: '12',
+            day: '2026',
+          },
+          estimateDate: {},
+        },
+        carriers: [
+          {
+            id: uuidv4(),
+            transportDetails: {
+              type: 'Air',
+              description: 'RyanAir',
+            },
+            addressDetails: {
+              address: '132 Carrier Road',
+              country: 'United Kingdom [GB]',
+              organisationName: 'Carriers Ltd',
+            },
+            contactDetails: {
+              emailAddress: 'steve@carriers.com',
+              faxNumber: 'abc123',
+              fullName: 'Steve Carrier',
+              phoneNumber: '012345987654',
+            },
+          },
+        ],
+        collectionDetail: {
+          address: {
+            addressLine1: 'Collector Road',
+            addressLine2: 'Collector Avenue',
+            townCity: 'Paris',
+            postcode: 'SW1A 1AA',
+            country: 'France [FR]',
+          },
+          contactDetails: {
+            organisationName: 'Collectors Ltd',
+            fullName: 'Steve Collector',
+            emailAddress: 'steve@collectors.com',
+            phoneNumber: '04938493029',
+          },
+        },
+        exitLocation: {
+          provided: 'Yes',
+          value: 'Dover',
+        },
+        transitCountries: ['Albania (AL)'],
+        recoveryFacilityDetail: [
+          {
+            addressDetails: {
+              address: 'Recovery Road, Paris',
+              country: 'France [FR]',
+              name: 'Recovery Labs',
+            },
+            contactDetails: {
+              emailAddress: 'technician@recoverylabs.com',
+              faxNumber: 'abc123',
+              fullName: 'Recovery Technician',
+              phoneNumber: '02938493939',
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+          },
+        ],
       },
     ],
   };

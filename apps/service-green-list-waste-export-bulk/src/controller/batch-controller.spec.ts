@@ -93,7 +93,17 @@ describe(BatchController, () => {
     it('forwards thrown Boom errors', async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
-      mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
+
+      const value: BulkSubmission = {
+        id,
+        state: {
+          status: 'FailedValidation',
+          timestamp: new Date(),
+          rowErrors: [],
+          columnErrors: [],
+        },
+      };
+      mockRepository.getBatch.mockResolvedValue(value);
 
       const response = await subject.updateBatch({ id, accountId });
 
@@ -102,13 +112,24 @@ describe(BatchController, () => {
         return;
       }
 
-      expect(mockRepository.saveBatch).toBeCalled();
-      expect(response.error.statusCode).toBe(418);
+      expect(mockRepository.saveBatch).toBeCalledTimes(0);
+      expect(response.error.statusCode).toBe(400);
     });
 
     it('successfully updates value from the repository', async () => {
       const id = faker.datatype.uuid();
       const accountId = faker.datatype.uuid();
+
+      const value: BulkSubmission = {
+        id,
+        state: {
+          status: 'PassedValidation',
+          timestamp: new Date(),
+          hasEstimates: true,
+          submissions: [],
+        },
+      };
+      mockRepository.getBatch.mockResolvedValue(value);
       mockRepository.saveBatch.mockResolvedValue(undefined);
 
       const response = await subject.updateBatch({

@@ -8,7 +8,7 @@ interface SummaryCardProps {
 
 export function SummaryCard({ title, children, testId }: SummaryCardProps) {
   return (
-    <div className="govuk-summary-card" data-testId={testId}>
+    <div className="govuk-summary-card" data-testid={testId}>
       <div className="govuk-summary-card__title-wrapper">
         <h2 className="govuk-summary-card__title">{title}</h2>
       </div>

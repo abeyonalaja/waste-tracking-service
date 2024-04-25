@@ -3,6 +3,7 @@ import {
   Database,
   PatchOperation,
   SqlQuerySpec,
+  OperationInput,
 } from '@azure/cosmos';
 import { v4 as uuidv4 } from 'uuid';
 import Boom from '@hapi/boom';
@@ -14,6 +15,7 @@ import {
   DraftSubmissionSummaryPage,
   SubmissionBase,
   Submission,
+  PartialSubmissionWithId,
   NumberOfSubmissions,
 } from '../model';
 import { DraftRepository } from './repository';
@@ -377,6 +379,37 @@ export default class CosmosDraftRepository
     accountId: string
   ): Promise<void> {
     this.saveSubmission(getSubmissionData(value), accountId);
+  }
+
+  async createSubmissions(
+    accountId: string,
+    value: PartialSubmissionWithId[]
+  ): Promise<void> {
+    const submissions: OperationInput[] = [];
+
+    value.forEach((submission) => {
+      submissions.push({
+        operationType: 'Create',
+        resourceBody: {
+          value: {
+            accountId: accountId,
+            ...submission,
+          },
+          id: submission.id,
+        },
+      });
+    });
+
+    try {
+      await this.cosmosDb
+        .container(this.submissionContainerName)
+        .items.bulk(submissions);
+    } catch (err) {
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
   }
 
   async createDraftFromTemplate(

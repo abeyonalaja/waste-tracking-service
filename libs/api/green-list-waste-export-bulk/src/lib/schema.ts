@@ -355,6 +355,7 @@ const bulkSubmissionState: SchemaObject = {
       properties: {
         timestamp: { type: 'timestamp' },
         hasEstimates: { type: 'boolean' },
+        transactionId: { type: 'string' },
         submissions: {
           elements: {
             properties: {
@@ -383,10 +384,15 @@ const bulkSubmissionState: SchemaObject = {
           elements: {
             properties: {
               id: { type: 'string' },
-              transactionId: { type: 'string' },
+              submissionDeclaration: {
+                properties: {
+                  declarationTimestamp: { type: 'timestamp' },
+                  transactionId: { type: 'string' },
+                },
+              },
               hasEstimates: { type: 'boolean' },
-              collectionDate: { type: 'timestamp' },
-              wasteCode: { type: 'string' },
+              collectionDate: collectionDate,
+              wasteDescription: wasteDescription,
               reference: { type: 'string' },
             },
           },

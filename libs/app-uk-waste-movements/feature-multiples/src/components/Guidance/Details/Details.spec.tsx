@@ -9,7 +9,8 @@ const messages = {
       details: {
         heading: 'Details',
         content:
-          'Use this CSV template and guidance if you want to submit multiple waste movements at the same time to the {x} {serviceURL}. This is instead of submitting one waste movement record at a time.',
+          'Use this CSV template and guidance if you want to submit multiple waste movements at the same time to the. This is instead of submitting one waste movement record at a time.',
+        listInfo: 'It’s important the information you enter is:',
         listItemOne: 'accurate',
         listItemTwo: 'spelt correctly',
         listItemThree: 'formatted correctly',

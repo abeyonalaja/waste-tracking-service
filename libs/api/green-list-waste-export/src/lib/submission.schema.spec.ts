@@ -12,6 +12,7 @@ import {
   SetDraftSubmissionDeclarationByIdRequest,
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
+  CreateSubmissionsRequest,
 } from './submission.dto';
 import {
   deleteDraftRequest,
@@ -25,6 +26,7 @@ import {
   setDraftSubmissionDeclarationByIdRequest,
   validateSubmissionsRequest,
   validateSubmissionsResponse,
+  createSubmissionsRequest,
 } from './submission.schema';
 
 const ajv = new Ajv();
@@ -666,6 +668,159 @@ describe('validateSubmissionsResponse', () => {
           },
         ],
       },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('createSubmissionsRequest', () => {
+  const validate = ajv.compile<CreateSubmissionsRequest>(
+    createSubmissionsRequest
+  );
+  it('is compatible with dto values', () => {
+    const value: CreateSubmissionsRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+      value: [
+        {
+          reference: 'testRef',
+          wasteDescription: {
+            wasteCode: {
+              type: 'AnnexIIIA',
+              code: 'B1010 and B1050',
+            },
+            ewcCodes: [
+              {
+                code: '010101',
+              },
+              {
+                code: '010102',
+              },
+            ],
+            nationalCode: {
+              provided: 'No',
+            },
+            description: 'test',
+          },
+          wasteQuantity: {
+            type: 'ActualData',
+            estimateData: {},
+            actualData: {
+              quantityType: 'Weight',
+              unit: 'Tonne',
+              value: 2,
+            },
+          },
+          exporterDetail: {
+            exporterAddress: {
+              addressLine1: '1 Some Street',
+              townCity: 'London',
+              postcode: 'EC2N4AY',
+              country: 'England',
+            },
+            exporterContactDetails: {
+              organisationName: 'Test organisation 1',
+              fullName: 'John Smith',
+              emailAddress: 'test1@test.com',
+              phoneNumber: '07888888888',
+            },
+          },
+          importerDetail: {
+            importerAddressDetails: {
+              organisationName: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France',
+            },
+            importerContactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+              faxNumber: '0033140000000',
+            },
+          },
+          collectionDate: {
+            type: 'ActualDate',
+            actualDate: {
+              day: '01',
+              month: '01',
+              year: '0001',
+            },
+            estimateDate: {},
+          },
+          carriers: [
+            {
+              addressDetails: {
+                organisationName: 'Test organisation 3',
+                address: 'Some address, London, EC2N4AY',
+                country: 'United Kingdom (England) [GB-ENG]',
+              },
+              contactDetails: {
+                fullName: 'John Doe',
+                emailAddress: 'test3@test.com',
+                phoneNumber: '07888888844',
+                faxNumber: '07888888844',
+              },
+              transportDetails: {
+                type: 'InlandWaterways',
+                description: 'details',
+              },
+            },
+            {
+              addressDetails: {
+                organisationName: 'Test organisation 4',
+                address: '3 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Doe',
+                emailAddress: 'test4@test.com',
+                phoneNumber: '0033140000044',
+              },
+              transportDetails: {
+                type: 'Road',
+              },
+            },
+          ],
+          collectionDetail: {
+            address: {
+              addressLine1: '5 Some Street',
+              townCity: 'London',
+              postcode: 'EC2N4AY',
+              country: 'England',
+            },
+            contactDetails: {
+              organisationName: 'Test organisation 5',
+              fullName: 'John Johnson',
+              emailAddress: 'test5@test.com',
+              phoneNumber: '07888888855',
+            },
+          },
+          ukExitLocation: {
+            provided: 'Yes',
+            value: 'Dover',
+          },
+          transitCountries: ['France [FR]', 'Belgium [BE]'],
+          recoveryFacilityDetail: [
+            {
+              addressDetails: {
+                name: 'Test organisation 6',
+                address: '4 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jean Philip',
+                emailAddress: 'test6@test.com',
+                phoneNumber: '0033140000066',
+              },
+              recoveryFacilityType: {
+                type: 'RecoveryFacility',
+                recoveryCode: 'R1',
+              },
+            },
+          ],
+        },
+      ],
     };
 
     expect(validate(value)).toBe(true);

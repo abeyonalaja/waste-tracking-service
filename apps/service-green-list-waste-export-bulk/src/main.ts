@@ -22,13 +22,19 @@ import { CsvValidator } from './lib/csv-validator';
 import {
   BulkSubmission,
   ContentProcessingTask,
+  ContentSubmissionTask,
   ContentToBeProcessedTask,
+  ContentToBeSubmittedTask,
 } from './model';
 import { v4 as uuidv4 } from 'uuid';
 import { CloudEvent, HTTP } from 'cloudevents';
 import * as taskValidate from './lib/task-validation';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
-import { ValidateSubmissionsResponse } from '@wts/api/green-list-waste-export';
+import {
+  ValidateSubmissionsResponse,
+  CreateSubmissionsResponse,
+} from '@wts/api/green-list-waste-export';
+import { SubmissionSummary } from '@wts/api/green-list-waste-export-bulk';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -40,6 +46,8 @@ if (!process.env['SERVICE_BUS_HOST_NAME']) {
 
 const tasksQueueName =
   process.env['TASKS_QUEUE_NAME'] || 'annex-vii-bulk-tasks';
+const submissionsQueueName =
+  process.env['SUBMISSIONS_QUEUE_NAME'] || 'annex-vii-bulk-submissions';
 const appId = process.env['APP_ID'] || 'service-green-list-waste-export-bulk';
 const annexViiAppId =
   process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export';
@@ -172,7 +180,7 @@ await server.invoker.listen(
 
 await server.invoker.listen(
   api.updateBatch.name,
-  async ({ body }) => {
+  async ({ body, headers }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
@@ -182,7 +190,59 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest());
     }
 
-    return await batchController.updateBatch(request);
+    const response = await batchController.updateBatch(request);
+    if (!response.success) {
+      return response;
+    }
+
+    try {
+      const task: ContentSubmissionTask = {
+        batchId: request.id,
+        accountId: request.accountId,
+      };
+      const cloudEvent = new CloudEvent({
+        specversion: '1.0',
+        type: `${appId}.event.sent.ContentToBeSubmitted`,
+        source: `${appId}.${api.addContentToBatch.name}`,
+        id: uuidv4(),
+        time: new Date().toJSON(),
+        datacontenttype: 'application/cloudevents+json',
+        data: task,
+        pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
+        queue: submissionsQueueName,
+        traceparent: headers?.traceparent || '',
+        tracestate: headers?.tracestate || '',
+      });
+      const messages = [
+        {
+          body: HTTP.structured(cloudEvent),
+        },
+      ];
+      const sender = serviceBusClient.createSender(submissionsQueueName);
+      let batch = await sender.createMessageBatch();
+      for (const message of messages) {
+        if (!batch.tryAddMessage(message)) {
+          await sender.sendMessages(batch);
+          batch = await sender.createMessageBatch();
+          if (!batch.tryAddMessage(message)) {
+            const message = 'Message too big to fit in a batch';
+            logger.error(message);
+            throw Boom.internal(message);
+          }
+        }
+      }
+
+      await sender.sendMessages(batch);
+      logger.info(
+        `Sent a batch of messages to the queue: ${submissionsQueueName}`
+      );
+      await sender.close();
+    } catch (err) {
+      logger.error('Error publishing work item', { error: err });
+      return fromBoom(Boom.internal());
+    }
+
+    return response;
   },
   { method: HttpMethod.POST }
 );
@@ -206,7 +266,9 @@ while (execute) {
         }
 
         try {
-          const records = await csvValidator.validateBatch(body.data);
+          const records = await csvValidator.validateBatch(
+            body.data as ContentProcessingTask
+          );
           if (!records.success) {
             if (records.error.statusCode !== 400) {
               throw new Boom.Boom(records.error.message, {
@@ -340,4 +402,128 @@ while (execute) {
 
   await delay(20000);
   await receiver.close();
+
+  const submissionsReceiver =
+    serviceBusClient.createReceiver(submissionsQueueName);
+  const submissionsSubscription = submissionsReceiver.subscribe({
+    processMessage: async (brokeredMessage) => {
+      if (HTTP.isEvent(brokeredMessage.body)) {
+        const body = JSON.parse(
+          brokeredMessage.body.body
+        ) as ContentToBeSubmittedTask;
+
+        try {
+          const batchData = await repository.getBatch(
+            body.data.batchId,
+            body.data.accountId
+          );
+          if (batchData.state.status !== 'Submitting') {
+            const message = `The fetched batch ${batchData.id} does not have the correct status. Status expected: 'Submitting'. Status received: '${batchData.state.status}'.`;
+            logger.error(message);
+            throw Boom.internal(message);
+          }
+
+          const submissions: api.PartialSubmission[] =
+            batchData.state.submissions;
+
+          const submissionSummary: SubmissionSummary[] = [];
+
+          const chunkSize = 50;
+          for (let i = 0; i < submissions.length; i += chunkSize) {
+            const chunk = submissions.slice(i, i + chunkSize);
+            let response: CreateSubmissionsResponse;
+            try {
+              response = await daprAnnexViiClient.createSubmissions({
+                id: body.data.batchId,
+                accountId: body.data.accountId,
+                value: chunk,
+              });
+            } catch (err) {
+              logger.error(
+                `Error receiving response from ${annexViiAppId} service`,
+                { error: err }
+              );
+              throw Boom.internal();
+            }
+            if (!response.success) {
+              throw new Boom.Boom(response.error.message, {
+                statusCode: response.error.statusCode,
+              });
+            } else {
+              response.value.forEach((submission) => {
+                const s: SubmissionSummary = {
+                  id: submission.id,
+                  submissionDeclaration: submission.submissionDeclaration,
+                  hasEstimates:
+                    submission.submissionState.status ==
+                    'SubmittedWithEstimates'
+                      ? true
+                      : false,
+                  collectionDate: submission.collectionDate,
+                  wasteDescription: submission.wasteDescription,
+                  reference: submission.reference,
+                };
+
+                submissionSummary.push(s);
+              });
+            }
+            const value: BulkSubmission = {
+              id: body.data.batchId,
+              state: {
+                status: 'Submitted',
+                timestamp: new Date(),
+                hasEstimates: batchData.state.hasEstimates,
+                transactionId: batchData.state.transactionId,
+                submissions: submissionSummary,
+              },
+            };
+            await repository.saveBatch(value, body.data.accountId);
+          }
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            logger.error('Error processing task from queue', {
+              batchId: body.data.batchId,
+              accountId: body.data.accountId,
+              error: error,
+            });
+          } else {
+            logger.error('Unknown error', {
+              batchId: body.data.batchId,
+              accountId: body.data.accountId,
+              error: error,
+            });
+          }
+        }
+      }
+    },
+
+    processError: async (args: ProcessErrorArgs) => {
+      logger.error(
+        `Error from source ${args.errorSource} occurred: `,
+        args.error
+      );
+      if (isServiceBusError(args.error)) {
+        switch (args.error.code) {
+          case 'MessagingEntityDisabled':
+          case 'MessagingEntityNotFound':
+          case 'UnauthorizedAccess':
+            logger.error(
+              `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
+              args.error
+            );
+            await submissionsSubscription.close();
+            break;
+          case 'MessageLockLost':
+            logger.error(`Message lock lost for message`, args.error);
+            break;
+          case 'ServiceBusy':
+            await delay(1000);
+            break;
+        }
+      }
+    },
+  });
+
+  await delay(20000);
+  await submissionsReceiver.close();
 }

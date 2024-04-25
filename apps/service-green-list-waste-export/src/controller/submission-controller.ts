@@ -7,6 +7,7 @@ import {
   FieldFormatError,
   InvalidAttributeCombinationError,
   Value,
+  Submission,
   Error,
   ValidationResult,
   RecoveryFacilityData,
@@ -20,9 +21,13 @@ import {
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
 } from '@wts/api/reference-data';
+import { CosmosDraftRepository } from '../data';
+import { v4 as uuidv4 } from 'uuid';
+import { DraftSubmission } from '@wts/api/green-list-waste-export';
 
 export default class SubmissionController {
   constructor(
+    private repository: CosmosDraftRepository,
     private referenceDataClient: DaprReferenceDataClient,
     private logger: Logger
   ) {}
@@ -465,6 +470,73 @@ export default class SubmissionController {
             };
 
       return success(result);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  createSubmissions: Handler<
+    api.CreateSubmissionsRequest,
+    api.CreateSubmissionsResponse
+  > = async ({ accountId, value }) => {
+    try {
+      const submissions = value.map((s) => {
+        const id = uuidv4();
+        const timestamp = new Date();
+        const submissionState: DraftSubmission['submissionState'] = {
+          status:
+            s.wasteQuantity.type == 'ActualData' &&
+            s.collectionDate.type == 'ActualDate'
+              ? 'SubmittedWithActuals'
+              : 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        };
+        return {
+          id: id,
+          ...s,
+          submissionDeclaration: {
+            declarationTimestamp: new Date(),
+            transactionId:
+              timestamp.getFullYear().toString().substring(2) +
+              (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+              '_' +
+              id.substring(0, 8).toUpperCase(),
+          },
+          submissionState: submissionState,
+        };
+      });
+
+      await this.repository.createSubmissions(accountId, submissions);
+
+      const bulkSubmissions: Submission[] = [];
+      submissions.map((submission) => {
+        bulkSubmissions.push({
+          id: submission.id,
+          reference: submission.reference,
+          wasteDescription: submission.wasteDescription,
+          wasteQuantity: submission.wasteQuantity,
+          exporterDetail: submission.exporterDetail,
+          importerDetail: submission.importerDetail,
+          collectionDate: submission.collectionDate,
+          carriers: submission.carriers,
+          collectionDetail: submission.collectionDetail,
+          ukExitLocation: submission.ukExitLocation,
+          transitCountries: submission.transitCountries,
+          recoveryFacilityDetail: submission.recoveryFacilityDetail,
+          submissionDeclaration: submission.submissionDeclaration,
+          submissionState: submission.submissionState,
+        });
+      });
+
+      return {
+        success: true,
+        value: bulkSubmissions,
+      };
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

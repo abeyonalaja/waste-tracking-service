@@ -24,6 +24,8 @@ export type PartialSubmission = Omit<
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
+export type PartialSubmissionWithId = { id: string } & PartialSubmission;
+
 export type BulkSubmissionState =
   | {
       status: 'Processing';
@@ -50,23 +52,24 @@ export type BulkSubmissionState =
       status: 'Submitting';
       timestamp: Date;
       hasEstimates: boolean;
+      transactionId: string;
       submissions: PartialSubmission[];
     }
   | {
       status: 'Submitted';
       timestamp: Date;
-      hasEstimates: true;
+      hasEstimates: boolean;
       transactionId: string;
       submissions: SubmissionSummary[];
     };
 
 export type SubmissionSummary = {
   id: string;
-  transactionId: string;
+  submissionDeclaration: Submission['submissionDeclaration'];
   hasEstimates: boolean;
-  collectionDate: Date;
-  wasteCode: string;
-  reference: string;
+  collectionDate: Submission['collectionDate'];
+  wasteDescription: Submission['wasteDescription'];
+  reference: Submission['reference'];
 };
 
 export type BulkSubmission = {

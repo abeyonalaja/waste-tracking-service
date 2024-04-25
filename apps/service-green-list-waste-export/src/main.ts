@@ -81,6 +81,14 @@ const templateController = new TemplateController(
 );
 
 const submissionController = new SubmissionController(
+  new CosmosDraftRepository(
+    dbClient,
+    process.env['COSMOS_DATABASE_NAME'] || 'annex-vii',
+    process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+    process.env['COSMOS_SUBMISSIONS_CONTAINER_NAME'] || 'submissions',
+    process.env['COSMOS_TEMPLATES_CONTAINER_NAME'] || 'templates',
+    logger
+  ),
   new DaprReferenceDataClient(
     server.client,
     process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
@@ -1294,6 +1302,23 @@ await server.invoker.listen(
     }
 
     return await submissionController.validateSubmissions(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createSubmissions.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateSubmissionsRequest;
+    if (!validateSubmission.validatePartialSubmissionsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await submissionController.createSubmissions(request);
   },
   { method: HttpMethod.POST }
 );

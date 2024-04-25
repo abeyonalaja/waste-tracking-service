@@ -1106,3 +1106,29 @@ export const validateSubmissionsResponse: SchemaObject = {
     value: validationResult,
   },
 };
+
+export const submission: SchemaObject = {
+  elements: {
+    properties: {
+      reference: customerReference,
+      wasteDescription: wasteDescription,
+      wasteQuantity: wasteQuantity,
+      exporterDetail: exporterDetail,
+      importerDetail: importerDetail,
+      collectionDate: collectionDate,
+      carriers: carriers,
+      collectionDetail: collectionDetail,
+      ukExitLocation: ukExitLocation,
+      transitCountries: transitCountries,
+      recoveryFacilityDetail: recoveryFacilityDetail,
+    },
+  },
+};
+
+export const createSubmissionsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: submission,
+  },
+};
