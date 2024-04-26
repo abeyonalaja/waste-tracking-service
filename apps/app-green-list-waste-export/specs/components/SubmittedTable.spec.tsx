@@ -5,6 +5,10 @@ import { SubmittedTable, Transaction } from 'features/multiples';
 const mockSubmissions: Transaction[] = [
   {
     id: '39d8e6a1-3f0a-4d98-a875-b2d71566f662',
+    submissionDeclaration: {
+      declarationTimestamp: '2024-04-26T09:45:50.656Z',
+      transactionId: '3497_1224DCBA',
+    },
     hasEstimates: true,
     collectionDate: {
       type: 'EstimateDate',
@@ -26,6 +30,10 @@ const mockSubmissions: Transaction[] = [
   },
   {
     id: '39d8e6a1-3f0a-4d98-a875-b2d234234662',
+    submissionDeclaration: {
+      declarationTimestamp: '2024-04-26T09:45:50.656Z',
+      transactionId: '1234_3497_12214DCCG',
+    },
     hasEstimates: true,
     collectionDate: {
       type: 'ActualDate',
@@ -155,9 +163,7 @@ describe('SubmittedTable component', () => {
       );
     });
 
-    const transactionNumber = screen.getByText(
-      '39d8e6a1-3f0a-4d98-a875-b2d71566f662'
-    );
+    const transactionNumber = screen.getByText('3497_1224DCBA');
     expect(transactionNumber).toBeInTheDocument();
   });
 

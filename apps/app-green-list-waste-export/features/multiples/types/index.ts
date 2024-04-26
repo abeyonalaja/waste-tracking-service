@@ -19,6 +19,10 @@ export type SetShowDeclaration = Dispatch<SetStateAction<boolean>>;
 export type Transaction = {
   id: string;
   hasEstimates: boolean;
+  submissionDeclaration: {
+    declarationTimestamp: string;
+    transactionId: string;
+  };
   collectionDate: {
     type: 'ActualDate' | 'EstimateDate';
     actualDate: {

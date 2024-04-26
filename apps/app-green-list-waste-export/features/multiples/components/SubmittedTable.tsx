@@ -73,7 +73,7 @@ export function SubmittedTable({
                 bold
                 label={t('multiples.submitted.table.transactionNumber')}
               >
-                {transaction.id}
+                {transaction.submissionDeclaration.transactionId}
                 {transaction.hasEstimates && (
                   <InlineStatusRow>
                     <StatusLabel>Submission contains</StatusLabel>

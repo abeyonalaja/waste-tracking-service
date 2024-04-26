@@ -4,6 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import useSafePush from 'utils/useRouterChange';
 import { PageLayout, Loader } from 'features/multiples';
 import { getValidationResult } from 'features/multiples';
+import styled from 'styled-components';
+import * as GovUK from 'govuk-react';
+
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export default function Index() {
   const router = useRouter();
@@ -17,11 +25,7 @@ export default function Index() {
       return;
     }
 
-    if (
-      uploadStatus === 'Submitted' ||
-      uploadStatus === 'PassedValidation' ||
-      uploadStatus === 'FailedValidation'
-    ) {
+    if (uploadStatus === 'Submitted') {
       return;
     }
 
@@ -45,25 +49,6 @@ export default function Index() {
     if (apiData) {
       const uploadStatus = apiData.data.state.status || null;
 
-      if (uploadStatus === 'FailedCsvValidation') {
-        const errorMessage = apiData.data.state.error;
-        safePush(`/multiples/?error=${errorMessage}`);
-      }
-
-      if (uploadStatus === 'FailedValidation') {
-        safePush(`/multiples/${router.query.id}/errors?errors=true`);
-        return;
-      }
-
-      if (uploadStatus === 'PassedValidation') {
-        safePush(`/multiples/${router.query.id}/submit`);
-        return;
-      }
-
-      if (uploadStatus === 'Submitting') {
-        safePush(`/multiples/${router.query.id}/submitting`);
-      }
-
       if (uploadStatus === 'Submitted') {
         safePush(`/multiples/${router.query.id}/submitted?sort=asc&page=1`);
       }
@@ -77,7 +62,12 @@ export default function Index() {
 
   return (
     <PageLayout setWidth="full">
-      <Loader filename={router.query.filename as string} />
+      <StyledDiv>
+        <GovUK.Heading size={'LARGE'}>
+          Loading submission confirmation
+        </GovUK.Heading>
+        <Loader />
+      </StyledDiv>
     </PageLayout>
   );
 }

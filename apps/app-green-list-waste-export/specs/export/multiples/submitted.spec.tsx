@@ -35,6 +35,10 @@ jest.mock('@tanstack/react-query', () => ({
             [
               {
                 id: '39d8e6a1-3f0a-4d98-a875-b2d71566f662',
+                submissionDeclaration: {
+                  declarationTimestamp: '2024-04-26T09:45:50.656Z',
+                  transactionId: '3497_1224DCBA',
+                },
                 hasEstimates: true,
                 collectionDate: {
                   type: 'EstimateDate',
@@ -55,6 +59,10 @@ jest.mock('@tanstack/react-query', () => ({
               },
               {
                 id: 'f2715552-5a75-46a4-bc41-3044b5a6b35a',
+                submissionDeclaration: {
+                  declarationTimestamp: '2024-04-26T09:45:50.656Z',
+                  transactionId: '3497_1224DCBA',
+                },
                 hasEstimates: false,
                 collectionDate: {
                   type: 'ActualDate',
