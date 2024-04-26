@@ -542,7 +542,7 @@ export default class CosmosDraftRepository
     };
 
     const completedWithActualsResultsPromise = this.cosmosDb
-      .container(this.draftContainerName)
+      .container(this.submissionContainerName)
       .items.query(completedWithActualsQuerySpec)
       .fetchNext();
 
@@ -552,7 +552,7 @@ export default class CosmosDraftRepository
       .fetchNext();
 
     const completedWithEstimatesResultsPromise = this.cosmosDb
-      .container(this.draftContainerName)
+      .container(this.submissionContainerName)
       .items.query(completedWithEstimatesQuerySpec)
       .fetchNext();
 
