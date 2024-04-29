@@ -50,7 +50,7 @@ export default function Index() {
       const uploadStatus = apiData.data.state.status || null;
 
       if (uploadStatus === 'Submitted') {
-        safePush(`/multiples/${router.query.id}/confirmation`);
+        safePush(`/multiples/${router.query.id}/submit/confirmation`);
       }
     }
   }, [data, router.query.id]);
