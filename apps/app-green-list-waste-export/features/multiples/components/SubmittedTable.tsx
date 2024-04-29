@@ -5,6 +5,7 @@ import * as GovUK from 'govuk-react';
 import { Tag } from 'components';
 import { Table, Thead, Tbody, Row, CellHeader, Cell } from 'components/Table';
 import { Transaction, formatDate } from 'features/multiples';
+import useRefDataLookup from 'utils/useRefDataLookup';
 
 const InlineStatusRow = styled.div`
   display: flex;
@@ -39,8 +40,11 @@ interface SubmittedTableProps {
 export function SubmittedTable({
   transactions,
   sortOrder,
+  apiConfig,
   pageNumber,
 }: SubmittedTableProps) {
+  const getRefData = useRefDataLookup(apiConfig);
+
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -86,8 +90,19 @@ export function SubmittedTable({
               </Cell>
               <Cell label={t('multiples.submitted.table.wasteCode')}>
                 <>
-                  {transaction.wasteDescription.ewcCodes[0]['code']}:{' '}
-                  {transaction.wasteDescription.description}
+                  {transaction.wasteDescription.wasteCode.type ===
+                  'NotApplicable' ? (
+                    t('notApplicable')
+                  ) : (
+                    <>
+                      {transaction.wasteDescription.wasteCode.code}:{' '}
+                      {getRefData(
+                        'WasteCode',
+                        transaction.wasteDescription.wasteCode.code,
+                        transaction.wasteDescription.wasteCode.type
+                      )}
+                    </>
+                  )}
                 </>
               </Cell>
               <Cell label={t('multiples.submitted.table.uniqueReference')}>

@@ -56,7 +56,7 @@ export default function Index() {
   }, [data, router.query.id]);
 
   if (error) {
-    router.push('/404');
+    router.push(`/multiples/${router.query.id}/submit/error`);
     return;
   }
 

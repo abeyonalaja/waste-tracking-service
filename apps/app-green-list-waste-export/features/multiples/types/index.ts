@@ -41,7 +41,8 @@ export type Transaction = {
     description: string;
     ewcCodes: { code: string }[];
     wasteCode: {
-      type?: string;
+      code?: string;
+      type: string;
     };
   };
 };

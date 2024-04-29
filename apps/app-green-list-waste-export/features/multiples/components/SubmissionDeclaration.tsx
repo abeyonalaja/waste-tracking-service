@@ -33,7 +33,7 @@ export function SubmissionDeclaration({
     },
     onError: async (err) => {
       console.error(err);
-      router.push(`/multiples/${router.query.id}/submit/error`);
+      router.push(`/404`);
     },
     onSuccess: async () => {
       router.push(`/multiples/${router.query.id}/submit/submitting`);

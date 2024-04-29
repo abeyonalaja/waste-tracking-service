@@ -186,7 +186,7 @@ describe('SubmittedTable component', () => {
     expect(collectionDate2).toBeInTheDocument();
   });
 
-  it('Renders waste code and description', async () => {
+  it('Renders waste code', async () => {
     await act(async () => {
       render(
         <SubmittedTable
@@ -198,8 +198,8 @@ describe('SubmittedTable component', () => {
       );
     });
 
-    const wasteCode = screen.getByText('B1010: metal');
-    expect(wasteCode).toBeInTheDocument();
+    const wasteCode = screen.getAllByText(/Not applicable/);
+    expect(wasteCode).toBeTruthy();
   });
 
   it('Renders unique reference', async () => {
