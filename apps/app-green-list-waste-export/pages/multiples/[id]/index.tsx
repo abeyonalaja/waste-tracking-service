@@ -65,7 +65,7 @@ export default function Index() {
       }
 
       if (uploadStatus === 'Submitted') {
-        safePush(`/multiples/${router.query.id}/submitted?sort=asc&page=1`);
+        safePush(`/multiples/${router.query.id}/submit/confirmation`);
       }
     }
   }, [data, router.query.id]);
