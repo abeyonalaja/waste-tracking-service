@@ -25,7 +25,6 @@ import {
   ContentSubmissionTask,
   ContentToBeProcessedTask,
   ContentToBeSubmittedTask,
-  SubmissionFromBulkSummary,
 } from './model';
 import { v4 as uuidv4 } from 'uuid';
 import { CloudEvent, HTTP } from 'cloudevents';
@@ -442,62 +441,50 @@ while (execute) {
             throw Boom.internal(message);
           }
 
-          const submissions: Omit<submission.PartialSubmission, 'id'>[] =
-            batchData.state.submissions;
+          let response: submission.CreateSubmissionsResponse;
+          try {
+            response = await daprAnnexViiClient.createSubmissions({
+              id: body.data.batchId,
+              accountId: body.data.accountId,
+              values: batchData.state.submissions,
+            });
+          } catch (err) {
+            logger.error(
+              `Error receiving response from ${annexViiAppId} service`,
+              { error: err }
+            );
+            throw Boom.internal();
+          }
 
-          const submissionSummary: SubmissionFromBulkSummary[] = [];
+          if (!response.success) {
+            throw new Boom.Boom(response.error.message, {
+              statusCode: response.error.statusCode,
+            });
+          }
 
-          const chunkSize = 50;
-          for (let i = 0; i < submissions.length; i += chunkSize) {
-            const chunk = submissions.slice(i, i + chunkSize);
-            let response: submission.CreateSubmissionsResponse;
-            try {
-              response = await daprAnnexViiClient.createSubmissions({
-                id: body.data.batchId,
-                accountId: body.data.accountId,
-                values: chunk,
-              });
-            } catch (err) {
-              logger.error(
-                `Error receiving response from ${annexViiAppId} service`,
-                { error: err }
-              );
-              throw Boom.internal();
-            }
-            if (!response.success) {
-              throw new Boom.Boom(response.error.message, {
-                statusCode: response.error.statusCode,
-              });
-            } else {
-              response.value.forEach((submission) => {
-                const s: SubmissionFromBulkSummary = {
-                  id: submission.id,
-                  submissionDeclaration: submission.submissionDeclaration,
+          const value: BulkSubmission = {
+            id: body.data.batchId,
+            state: {
+              status: 'Submitted',
+              timestamp: new Date(),
+              hasEstimates: batchData.state.hasEstimates,
+              transactionId: batchData.state.transactionId,
+              submissions: response.value.map((s) => {
+                return {
+                  id: s.id,
+                  submissionDeclaration: s.submissionDeclaration,
                   hasEstimates:
-                    submission.submissionState.status ==
-                    'SubmittedWithEstimates'
+                    s.submissionState.status == 'SubmittedWithEstimates'
                       ? true
                       : false,
-                  collectionDate: submission.collectionDate,
-                  wasteDescription: submission.wasteDescription,
-                  reference: submission.reference,
+                  collectionDate: s.collectionDate,
+                  wasteDescription: s.wasteDescription,
+                  reference: s.reference,
                 };
-
-                submissionSummary.push(s);
-              });
-            }
-            const value: BulkSubmission = {
-              id: body.data.batchId,
-              state: {
-                status: 'Submitted',
-                timestamp: new Date(),
-                hasEstimates: batchData.state.hasEstimates,
-                transactionId: batchData.state.transactionId,
-                submissions: submissionSummary,
-              },
-            };
-            await repository.saveBatch(value, body.data.accountId);
-          }
+              }),
+            },
+          };
+          await repository.saveBatch(value, body.data.accountId);
         } catch (error) {
           if (error instanceof Boom.Boom) {
             logger.error('Error processing task from queue', {

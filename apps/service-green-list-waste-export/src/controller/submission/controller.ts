@@ -761,7 +761,7 @@ export default class SubmissionController {
           timestamp: new Date(),
         };
         return {
-          id: id,
+          id,
           ...s,
           submissionDeclaration: {
             declarationTimestamp: new Date(),
@@ -771,7 +771,7 @@ export default class SubmissionController {
               '_' +
               id.substring(0, 8).toUpperCase(),
           },
-          submissionState: submissionState,
+          submissionState,
         };
       });
 
@@ -781,29 +781,9 @@ export default class SubmissionController {
         submissions
       );
 
-      const bulkSubmissions: Submission[] = [];
-      submissions.map((submission) => {
-        bulkSubmissions.push({
-          id: submission.id,
-          reference: submission.reference,
-          wasteDescription: submission.wasteDescription,
-          wasteQuantity: submission.wasteQuantity,
-          exporterDetail: submission.exporterDetail,
-          importerDetail: submission.importerDetail,
-          collectionDate: submission.collectionDate,
-          carriers: submission.carriers,
-          collectionDetail: submission.collectionDetail,
-          ukExitLocation: submission.ukExitLocation,
-          transitCountries: submission.transitCountries,
-          recoveryFacilityDetail: submission.recoveryFacilityDetail,
-          submissionDeclaration: submission.submissionDeclaration,
-          submissionState: submission.submissionState,
-        });
-      });
-
       return {
         success: true,
-        value: bulkSubmissions,
+        value: submissions,
       };
     } catch (err) {
       if (err instanceof Boom.Boom) {

@@ -1,7 +1,6 @@
 import {
   CosmosClient,
   Database,
-  OperationInput,
   PatchOperation,
   SqlQuerySpec,
 } from '@azure/cosmos';
@@ -18,7 +17,6 @@ import {
   SubmissionSummary,
   TemplateSummary,
   DbContainerNameKey,
-  PartialSubmission,
 } from '../model';
 import { IRepository } from './repository';
 
@@ -496,27 +494,27 @@ export default class CosmosRepository
   async createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: PartialSubmission[]
+    values: Submission[]
   ): Promise<void> {
-    const submissions: OperationInput[] = [];
-
-    values.forEach((submission) => {
-      submissions.push({
-        operationType: 'Create',
-        resourceBody: {
-          value: {
-            accountId: accountId,
-            ...submission,
-          },
-          id: submission.id,
+    const submissions = values.map((s) => {
+      return {
+        value: {
+          accountId,
+          ...s,
         },
-      });
+        id: s.id,
+      };
     });
 
     try {
-      await this.cosmosDb
-        .container(this.cosmosContainerMap.get(containerName) as string)
-        .items.bulk(submissions);
+      const chunkSize = 50;
+      for (let i = 0; i < submissions.length; i += chunkSize) {
+        const chunk = submissions.slice(i, i + chunkSize);
+        await this.cosmosDb
+          .container(this.cosmosContainerMap.get(containerName) as string)
+          .scripts.storedProcedure('createBulkSubmissions')
+          .execute(accountId, [chunk]);
+      }
     } catch (err) {
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,
