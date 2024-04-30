@@ -143,6 +143,8 @@ export const Pagination = ({
     return range;
   };
 
+  const pageRange = getPageRange();
+
   return (
     <>
       {totalPages > 1 && (
@@ -183,7 +185,7 @@ export const Pagination = ({
                     $isCurrent={page === currentPage}
                     aria-label={`Page ${page}`}
                     href={{
-                      pathname: `${url}?sort=${order}&page=${index + 1}`,
+                      pathname: `${url}?sort=${order}&page=${pageRange[index]}`,
                     }}
                   >
                     {page}
