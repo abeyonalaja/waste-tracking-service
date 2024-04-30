@@ -37,8 +37,9 @@ export function ViewRecord() {
   const router = useRouter();
   const apiConfig = useApiConfig();
 
+  console.log(router.query);
   async function getSubmission() {
-    const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${router.query.submissionId}?submitted=true`;
+    const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${router.query.submission}?submitted=true`;
     const headers = {
       Authorization: apiConfig.Authorization,
     };
@@ -50,11 +51,12 @@ export function ViewRecord() {
     queryFn: getSubmission,
     staleTime: 5 * (60 * 1000),
 
-    enabled: !!router.query.submissionId,
+    enabled: !!router.query.submission,
   });
   if (error) {
     router.push('/404');
   }
+
   const BreadCrumbs = () => {
     return (
       <BreadcrumbWrap>
