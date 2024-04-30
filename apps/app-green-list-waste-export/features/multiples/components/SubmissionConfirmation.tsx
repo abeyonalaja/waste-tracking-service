@@ -5,6 +5,8 @@ import { YELLOW, GREY_3, BLACK } from 'govuk-colours';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import useApiConfig from 'utils/useApiConfig';
+import { DownloadMultiplePDFLink } from 'components';
 
 const LinkWrapper = styled.div`
   margin-top: 20px;
@@ -57,16 +59,21 @@ const StyledLinkAsButton = styled(Link)`
 `;
 
 type SubmissionConfirmationProps = {
+  submissionId: string;
+  transactionId: string;
   recordCount: number;
-  pageCount?: number;
+  pageCount: number;
 };
 
 export function SubmissionConfirmation({
+  submissionId,
+  transactionId,
   recordCount,
   pageCount = 200,
 }: SubmissionConfirmationProps) {
   const { t } = useTranslation();
   const router = useRouter();
+  const apiConfig = useApiConfig();
 
   return (
     <>
@@ -76,7 +83,6 @@ export function SubmissionConfirmation({
           plural: recordCount > 1 ? 's' : '',
         })}
       />
-      {/* TODO: Add link to actual page once backend capable */}
       <LinkWrapper>
         <AppLink
           href={`/multiples/${router.query.id}/submitted`}
@@ -100,12 +106,15 @@ export function SubmissionConfirmation({
       </UnorderedList>
       <Paragraph mb={7}>
         <span>{t('multiples.confirmation.legalStatementp1')}</span>
-        {/* TODO: Add link to actual page once backend capable */}
-        <AppLink href="">
+        <DownloadMultiplePDFLink
+          submissionId={submissionId}
+          transactionId={transactionId}
+          apiConfig={apiConfig}
+        >
           {t('multiples.confirmation.legalStatementLink', {
             count: pageCount,
           })}
-        </AppLink>
+        </DownloadMultiplePDFLink>
         <span>{t('multiples.confirmation.legalStatementp2')}</span>
       </Paragraph>
       <StyledLinkAsButton href="/">

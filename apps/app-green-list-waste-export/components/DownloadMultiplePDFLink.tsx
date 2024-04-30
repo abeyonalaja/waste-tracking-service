@@ -144,8 +144,8 @@ const PDFDownloadLinkContainer = forwardRef(function PDFDownloadLinkContainer(
     }
   }, [loading]);
   return (
-    <div ref={ref as RefObject<HTMLDivElement>}>
+    <span ref={ref as RefObject<HTMLSpanElement>}>
       {loading ? <DownloadLoading>{linkText}</DownloadLoading> : linkText}
-    </div>
+    </span>
   );
 });

@@ -33,10 +33,18 @@ export default function ConfirmationPage() {
   }
 
   const recordCount: number = data.data.state.submissions.length;
+  const submissionId = data.data.id;
+  const transactionId = data.data.state.transactionId;
+  const pageCount = data.data.state.submissions.length * 2;
 
   return (
     <PageLayout breadCrumbs={<SubmissionConfirmationBreadCrumbs />}>
-      <SubmissionConfirmation recordCount={recordCount} />
+      <SubmissionConfirmation
+        submissionId={submissionId}
+        transactionId={transactionId}
+        recordCount={recordCount}
+        pageCount={pageCount}
+      />
     </PageLayout>
   );
 }
