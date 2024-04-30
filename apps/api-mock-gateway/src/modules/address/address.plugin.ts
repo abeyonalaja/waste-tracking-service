@@ -1,7 +1,7 @@
 import { Application } from 'express';
 import { DB } from '../../db';
 import { listAddresses } from './address.backend';
-import { BadRequestError, InternalServerError } from '../../libs/errors';
+import { BadRequestError, InternalServerError } from '../../lib/errors';
 
 export default class AddressPlugin {
   constructor(

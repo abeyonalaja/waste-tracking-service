@@ -5,8 +5,8 @@ import {
   BadRequestError,
   CustomError,
   InternalServerError,
-} from '../../libs/errors';
-import { User } from '../../libs/user';
+} from '../../lib/errors';
+import { User } from '../../lib/user';
 
 export interface Backend {
   addUser(dcidSubjectId: string, invitationToken: string): Promise<void>;

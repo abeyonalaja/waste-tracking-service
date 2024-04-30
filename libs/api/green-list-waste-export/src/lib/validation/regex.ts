@@ -44,3 +44,5 @@ export const faxInternationalRegex = phoneInternationalRegex;
 export const ukExitLocationRegex = new RegExp(
   `^[${alphaNumeric}\\-.,']{${UkExitLocationChar.min},${UkExitLocationChar.max}}$`
 );
+
+export const templateNameRegex = new RegExp(`^[${alphaNumeric}\\-._'/() ]+$`);

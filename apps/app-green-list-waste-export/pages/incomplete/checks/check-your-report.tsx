@@ -21,18 +21,18 @@ import {
   SubmissionSummary,
 } from 'components';
 
-import { Submission } from '@wts/api/waste-tracking-gateway';
+import { DraftSubmission } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {
-  data: Submission;
+  data: DraftSubmission;
   isLoading: boolean;
   isError: boolean;
 };
 
 type Action = {
   type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
-  payload?: Submission;
+  payload?: DraftSubmission;
 };
 
 const initialWasteDescState: State = {
@@ -196,7 +196,7 @@ const CheckYourReport = () => {
             history.back();
           }}
         >
-          {t('Back')}
+          {t('back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

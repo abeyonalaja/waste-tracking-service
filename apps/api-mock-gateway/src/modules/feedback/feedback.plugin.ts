@@ -1,7 +1,7 @@
 import { Application } from 'express';
 import { validateSendFeedback } from './feedback.validation';
 import { sendFeedback } from './feedback.backend';
-import { BadRequestError, InternalServerError } from '../../libs/errors';
+import { BadRequestError, InternalServerError } from '../../lib/errors';
 
 export default class FeedbackPlugin {
   constructor(private server: Application, private prefix: string) {}

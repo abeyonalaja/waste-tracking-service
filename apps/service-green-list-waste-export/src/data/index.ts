@@ -1,2 +1,2 @@
 export * from './repository';
-export { default as CosmosDraftRepository } from './cosmos-drafts';
+export { default as CosmosRepository } from './cosmos-repository';

@@ -1,7 +1,7 @@
 import { Application } from 'express';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import multer from 'multer';
-import { User } from '../../libs/user';
+import { User } from '../../lib/user';
 import {
   createBatch,
   getBatch,
@@ -11,7 +11,7 @@ import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
-} from '../../libs/errors';
+} from '../../lib/errors';
 
 const upload = multer();
 

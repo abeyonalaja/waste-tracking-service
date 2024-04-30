@@ -92,7 +92,7 @@ export function SubmittedTable({
                 <>
                   {transaction.wasteDescription.wasteCode.type ===
                   'NotApplicable' ? (
-                    t('notApplicable')
+                    t('na')
                   ) : (
                     <>
                       {transaction.wasteDescription.wasteCode.code}:{' '}

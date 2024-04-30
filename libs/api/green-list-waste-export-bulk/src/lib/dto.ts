@@ -1,6 +1,6 @@
 import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
-import { Submission } from '@wts/api/green-list-waste-export';
+import { submission } from '@wts/api/green-list-waste-export';
 
 export type BulkSubmissionValidationRowError = {
   rowNumber: number;
@@ -19,12 +19,14 @@ export type BulkSubmissionValidationColumnError = {
   errorDetails: BulkSubmissionValidationRowErrorDetails[];
 };
 
-export type PartialSubmission = Omit<
-  Submission,
-  'id' | 'submissionDeclaration' | 'submissionState'
->;
-
-export type PartialSubmissionWithId = { id: string } & PartialSubmission;
+export type SubmissionFromBulkSummary = {
+  id: string;
+  hasEstimates: boolean;
+  reference: submission.Submission['reference'];
+  wasteDescription: submission.Submission['wasteDescription'];
+  collectionDate: submission.Submission['collectionDate'];
+  submissionDeclaration: submission.Submission['submissionDeclaration'];
+};
 
 export type BulkSubmissionState =
   | {
@@ -46,31 +48,22 @@ export type BulkSubmissionState =
       status: 'PassedValidation';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: PartialSubmission[];
+      submissions: Omit<submission.PartialSubmission, 'id'>[];
     }
   | {
       status: 'Submitting';
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      submissions: PartialSubmission[];
+      submissions: Omit<submission.PartialSubmission, 'id'>[];
     }
   | {
       status: 'Submitted';
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      submissions: SubmissionSummary[];
+      submissions: SubmissionFromBulkSummary[];
     };
-
-export type SubmissionSummary = {
-  id: string;
-  submissionDeclaration: Submission['submissionDeclaration'];
-  hasEstimates: boolean;
-  collectionDate: Submission['collectionDate'];
-  wasteDescription: Submission['wasteDescription'];
-  reference: Submission['reference'];
-};
 
 export type BulkSubmission = {
   id: string;
@@ -321,3 +314,10 @@ export type SubmissionFlattened = CustomerReferenceFlattened &
   ExitLocationFlattened &
   TransitCountriesFlattened &
   RecoveryFacilityDetailFlattened;
+
+export type GetBatchContentRequest = IdRequest & AccountIdRequest;
+export type GetBatchContentResponse = Response<submission.Submission[]>;
+export const getBatchContent: Method = {
+  name: 'getBatchContent',
+  httpVerb: 'POST',
+};

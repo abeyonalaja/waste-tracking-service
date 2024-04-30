@@ -1,4 +1,4 @@
-import { Submission } from '../submission.dto';
+import { Submission } from '../submission/dto';
 
 type Field =
   | 'CustomerReference'

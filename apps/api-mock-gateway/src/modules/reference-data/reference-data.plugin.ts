@@ -9,7 +9,7 @@ import {
   listHazardousCodes,
   listPops,
 } from './reference-data.backend';
-import { InternalServerError } from '../../libs/errors';
+import { InternalServerError } from '../../lib/errors';
 
 export default class ReferenceDataPlugin {
   constructor(
@@ -41,7 +41,7 @@ export default class ReferenceDataPlugin {
           includeHazardous = JSON.parse(includeHazardousStr.toLowerCase());
         } catch (err) {
           return res
-            .status(404)
+            .status(400)
             .send("Query parameter 'includeHazardous' must be of type boolean");
         }
       }
@@ -64,7 +64,7 @@ export default class ReferenceDataPlugin {
           includeUk = JSON.parse(includeUkStr.toLowerCase());
         } catch (err) {
           return res
-            .status(404)
+            .status(400)
             .send("Query parameter 'includeUk' must be of type boolean");
         }
       }

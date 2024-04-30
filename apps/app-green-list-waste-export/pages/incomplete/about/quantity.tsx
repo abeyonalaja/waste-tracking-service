@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { isNotEmpty, validateQuantityType } from 'utils/validators';
 import {
   PutWasteQuantityRequest,
-  Submission,
+  DraftSubmission,
 } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 const Quantity = () => {
@@ -153,7 +153,7 @@ const Quantity = () => {
               setIsError(true);
             }
           })
-          .then((data: Submission) => {
+          .then((data: DraftSubmission) => {
             if (data !== undefined) {
               setData(data.wasteQuantity);
               setIsLoading(false);
@@ -230,7 +230,7 @@ const Quantity = () => {
             });
           }}
         >
-          {t('Back')}
+          {t('back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );

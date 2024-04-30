@@ -1,4 +1,8 @@
-import { CustomerReference, SubmissionDeclarationData } from './submission';
+import {
+  CustomerReference,
+  Submission,
+  SubmissionDeclarationData,
+} from './submission';
 
 export type BulkSubmissionValidationRowError = {
   rowNumber: number;
@@ -31,23 +35,19 @@ type WasteDescription = {
   description: string;
 };
 
-type WasteQuantity =
-  | {
-      type: 'NotApplicable';
-    }
-  | {
-      type: 'EstimateData' | 'ActualData';
-      estimateData: {
-        quantityType?: 'Volume' | 'Weight';
-        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
-        value?: number;
-      };
-      actualData: {
-        quantityType?: 'Volume' | 'Weight';
-        unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
-        value?: number;
-      };
-    };
+type WasteQuantity = {
+  type: 'EstimateData' | 'ActualData';
+  estimateData: {
+    quantityType?: 'Volume' | 'Weight';
+    unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+    value?: number;
+  };
+  actualData: {
+    quantityType?: 'Volume' | 'Weight';
+    unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
+    value?: number;
+  };
+};
 
 type ExporterDetail = {
   exporterAddress: {
@@ -81,13 +81,12 @@ type ImporterDetail = {
 };
 
 type Carrier = {
-  id: string;
-  addressDetails?: {
+  addressDetails: {
     organisationName: string;
     address: string;
     country: string;
   };
-  contactDetails?: {
+  contactDetails: {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
@@ -132,19 +131,21 @@ type CollectionDate = {
   };
 };
 
-type RecoveryFacility = {
-  addressDetails?: {
+type TransitCountry = string;
+
+type RecoveryFacilityDetail = {
+  addressDetails: {
     name: string;
     address: string;
     country: string;
   };
-  contactDetails?: {
+  contactDetails: {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
     faxNumber?: string;
   };
-  recoveryFacilityType?:
+  recoveryFacilityType:
     | {
         type: 'Laboratory';
         disposalCode: string;
@@ -159,7 +160,8 @@ type RecoveryFacility = {
       };
 };
 
-export type PartialSubmission = {
+type PartialSubmission = {
+  id: string;
   reference: string;
   wasteDescription: WasteDescription;
   wasteQuantity: WasteQuantity;
@@ -169,13 +171,17 @@ export type PartialSubmission = {
   carriers: Carrier[];
   collectionDetail: CollectionDetail;
   exitLocation: ExitLocation;
-  transitCountries: string[];
-  recoveryFacilityDetail: RecoveryFacility[];
+  transitCountries: TransitCountry[];
+  recoveryFacilityDetail: RecoveryFacilityDetail[];
 };
 
-export type SubmissionReference = {
+type SubmissionFromBulkSummary = {
   id: string;
-  transactionId: string;
+  hasEstimates: boolean;
+  reference: CustomerReference;
+  wasteDescription: WasteDescription;
+  collectionDate: CollectionDate;
+  submissionDeclaration: SubmissionDeclarationData;
 };
 
 export type BulkSubmissionState =
@@ -198,30 +204,21 @@ export type BulkSubmissionState =
       status: 'PassedValidation';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: PartialSubmission[];
+      submissions: Omit<PartialSubmission, 'id'>[];
     }
   | {
       status: 'Submitting';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: PartialSubmission[];
+      submissions: Omit<PartialSubmission, 'id'>[];
     }
   | {
       status: 'Submitted';
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      submissions: CreatedSubmissionSummary[];
+      submissions: SubmissionFromBulkSummary[];
     };
-
-export type CreatedSubmissionSummary = {
-  id: string;
-  submissionDeclaration: SubmissionDeclarationData;
-  hasEstimates: boolean;
-  collectionDate: CollectionDate;
-  wasteDescription: WasteDescription;
-  reference: CustomerReference;
-};
 
 export type BulkSubmission = {
   id: string;
@@ -229,3 +226,5 @@ export type BulkSubmission = {
 };
 
 export type GetBulkSubmissionResponse = BulkSubmission;
+
+export type GetBulkSubmissionsResponse = Submission[];

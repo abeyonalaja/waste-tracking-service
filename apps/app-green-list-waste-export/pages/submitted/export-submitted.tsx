@@ -126,7 +126,7 @@ const ExportSubmitted = () => {
 
       if (id !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
           }
@@ -204,15 +204,14 @@ const ExportSubmitted = () => {
                   'UpdatedWithActuals'
                     ? t('exportJourney.exportSubmitted.panelUpdate')
                     : t('exportJourney.exportSubmitted.panel')}
-                  {exportSubmittedPage?.data.submissionDeclaration.status ===
-                    'Complete' && (
+                  {
                     <IdDisplay id="transaction-id">
                       {
-                        exportSubmittedPage.data.submissionDeclaration.values
+                        exportSubmittedPage.data.submissionDeclaration
                           .transactionId
                       }
                     </IdDisplay>
-                  )}
+                  }
                 </StyledPanel>
 
                 <StyledHeading size="SMALL">

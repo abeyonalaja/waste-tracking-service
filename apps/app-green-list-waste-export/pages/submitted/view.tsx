@@ -14,7 +14,7 @@ import {
   SaveReturnButton,
   Loading,
   DownloadPDFLink,
-  SubmissionSummary,
+  SubmittedSummary,
   AppLink,
 } from 'components';
 import styled from 'styled-components';
@@ -91,7 +91,7 @@ const ViewRecord = () => {
       dispatchViewRecordPage({ type: 'DATA_FETCH_INIT' });
       if (id !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
           }
@@ -126,7 +126,7 @@ const ViewRecord = () => {
             });
           }}
         >
-          {t('Back')}
+          {t('back')}
         </GovUK.BackLink>
       </BreadcrumbWrap>
     );
@@ -150,8 +150,7 @@ const ViewRecord = () => {
         {viewRecordPage.isLoading && <Loading />}
         {!viewRecordPage.isError && !viewRecordPage.isLoading && (
           <>
-            {viewRecordPage.data.submissionDeclaration.status ===
-              'Complete' && (
+            {
               <GovUK.GridRow>
                 <GovUK.GridCol setWidth="two-thirds">
                   <GovUK.Caption id="my-reference">
@@ -159,12 +158,9 @@ const ViewRecord = () => {
                   </GovUK.Caption>
                   <GovUK.Heading size="LARGE" id="template-heading">
                     {t('exportJourney.submittedView.title')}:{' '}
-                    {
-                      viewRecordPage.data.submissionDeclaration.values
-                        .transactionId
-                    }
+                    {viewRecordPage.data.submissionDeclaration.transactionId}
                   </GovUK.Heading>
-                  <SubmissionSummary
+                  <SubmittedSummary
                     data={viewRecordPage.data}
                     showChangeLinks={false}
                     apiConfig={apiConfig}
@@ -188,8 +184,7 @@ const ViewRecord = () => {
                   <DownloadPDFLink
                     submissionId={id}
                     transactionId={
-                      viewRecordPage.data.submissionDeclaration.values
-                        .transactionId
+                      viewRecordPage.data.submissionDeclaration.transactionId
                     }
                     data={viewRecordPage.data}
                   >
@@ -208,7 +203,7 @@ const ViewRecord = () => {
                   </AppLink>
                 </GovUK.GridCol>
               </GovUK.GridRow>
-            )}
+            }
           </>
         )}
       </GovUK.Page>

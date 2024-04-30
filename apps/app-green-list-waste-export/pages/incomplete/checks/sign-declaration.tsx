@@ -16,11 +16,11 @@ import {
 
 import styled from 'styled-components';
 
-import { Submission } from '@wts/api/waste-tracking-gateway';
+import { DraftSubmission } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {
-  data: Submission;
+  data: DraftSubmission;
   isLoading: boolean;
   isError: boolean;
 };
@@ -31,7 +31,7 @@ type Action = {
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'DATA_UPDATE';
-  payload?: Submission;
+  payload?: DraftSubmission;
 };
 
 const initialWasteDescState: State = {

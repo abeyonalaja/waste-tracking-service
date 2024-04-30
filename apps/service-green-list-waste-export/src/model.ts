@@ -3,40 +3,8 @@ import * as bulkApi from '@wts/api/green-list-waste-export-bulk';
 
 export { validation } from '@wts/api/green-list-waste-export';
 
-export type Submission = api.Submission;
-export type SubmissionBase = api.SubmissionBase;
-export type DraftSubmission = api.DraftSubmission;
-export type PartialSubmission = bulkApi.PartialSubmission;
-export type PartialSubmissionWithId = bulkApi.PartialSubmissionWithId;
-export type DraftWasteDescription = api.DraftWasteDescription;
-export type DraftWasteQuantity = api.DraftWasteQuantity;
-export type DraftCollectionDate = api.DraftCollectionDate;
-export type DraftExporterDetail = api.DraftExporterDetail;
-export type DraftImporterDetail = api.DraftImporterDetail;
-export type DraftCarriers = api.DraftCarriers;
-export type Carrier = api.Carrier;
-export type CarrierData = api.CarrierData;
-export type DraftCollectionDetail = api.DraftCollectionDetail;
-export type DraftExitLocation = api.DraftExitLocation;
-export type DraftTransitCountries = api.DraftTransitCountries;
-export type RecoveryFacility = api.RecoveryFacility;
-export type RecoveryFacilityData = api.RecoveryFacilityData;
-export type DraftRecoveryFacilityDetail = api.DraftRecoveryFacilityDetail;
-export type DraftSubmissionSummary = api.DraftSubmissionSummary;
-export type DraftSubmissionSummaryPage = api.DraftSubmissionSummaryPage;
-export type DraftSubmissionPageMetadata = api.DraftSubmissionPageMetadata;
-export type Template = api.Template;
-export type TemplateSummary = api.TemplateSummary;
-export type TemplateSummaryPage = api.TemplateSummaryPage;
-export type TemplatePageMetadata = api.TemplatePageMetadata;
-export type NumberOfSubmissions = api.NumberOfSubmissions;
-
-export type FieldFormatError = api.validation.FieldFormatError;
-export type InvalidAttributeCombinationError =
-  api.validation.InvalidAttributeCombinationError;
-export type ValidationResult = api.validation.ValidationResult;
-export type Value = api.validation.Value;
-export type Error = api.validation.Error;
+export type Submission = api.submission.Submission;
+export type SubmissionSummary = api.submission.SubmissionSummary;
 
 export type CustomerReference = Submission['reference'];
 export type WasteDescription = Submission['wasteDescription'];
@@ -49,9 +17,64 @@ export type ImporterDetail = Submission['importerDetail'];
 export type CollectionDate = Submission['collectionDate'];
 export type Carriers = Submission['carriers'];
 export type CollectionDetail = Submission['collectionDetail'];
-export type ExitLocation = Submission['ukExitLocation'];
+export type UkExitLocation = Submission['ukExitLocation'];
 export type TransitCountries = Submission['transitCountries'];
-export type RecoveryFacilityDetail = Submission['recoveryFacilityDetail'];
+export type RecoveryFacilityDetails = Submission['recoveryFacilityDetail'];
+
+export type Carrier = api.submission.Carrier;
+export type RecoveryFacilityDetail = api.submission.RecoveryFacilityDetail;
+export type PartialSubmission = api.submission.PartialSubmission;
+
+export type SubmissionState = api.submission.SubmissionState;
+
+export type DbContainerNameKey = api.common.DbContainerNameKey;
+export type RecordStateStatus = api.common.RecordStateStatus;
+export type RecordState = api.common.RecordState;
+export type RecordSummaryPage<T> = api.common.RecordSummaryPage<T>;
+export type PageMetadata = api.common.PageMetadata;
+
+export type DraftSubmission = api.draft.DraftSubmission;
+export type DraftSubmissionSummary = api.draft.DraftSubmissionSummary;
+
+export type DraftWasteDescription = DraftSubmission['wasteDescription'];
+export type DraftWasteQuantity = DraftSubmission['wasteQuantity'];
+export type DraftExporterDetail = DraftSubmission['exporterDetail'];
+export type DraftImporterDetail = DraftSubmission['importerDetail'];
+export type DraftCollectionDate = DraftSubmission['collectionDate'];
+export type DraftCarriers = DraftSubmission['carriers'];
+export type DraftCollectionDetail = DraftSubmission['collectionDetail'];
+export type DraftUkExitLocation = DraftSubmission['ukExitLocation'];
+export type DraftTransitCountries = DraftSubmission['transitCountries'];
+export type DraftRecoveryFacilityDetails =
+  DraftSubmission['recoveryFacilityDetail'];
+
+export type DraftCarrier = api.draft.DraftCarrier;
+export type DraftCarrierPartial = api.draft.DraftCarrierPartial;
+export type DraftRecoveryFacility = api.draft.DraftRecoveryFacility;
+export type DraftRecoveryFacilityPartial =
+  api.draft.DraftRecoveryFacilityPartial;
+
+export type SubmissionBase = { id: string } & Omit<
+  DraftSubmission,
+  | 'reference'
+  | 'wasteQuantity'
+  | 'collectionDate'
+  | 'submissionConfirmation'
+  | 'submissionDeclaration'
+  | 'submissionState'
+>;
+
+export type Template = api.template.Template;
+export type TemplateSummary = api.template.TemplateSummary;
+
+export type NumberOfSubmissions = api.submission.NumberOfSubmissions;
+
+export type FieldFormatError = api.validation.FieldFormatError;
+export type InvalidAttributeCombinationError =
+  api.validation.InvalidAttributeCombinationError;
+export type ValidationResult = api.validation.ValidationResult;
+export type Value = api.validation.Value;
+export type Error = api.validation.Error;
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type CustomerReferenceFlattened = bulkApi.CustomerReferenceFlattened;

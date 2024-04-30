@@ -53,3 +53,4 @@ export type ValidateCsvContentResponse = Response<{
 }>;
 
 export type BulkSubmission = api.BulkSubmission;
+export type SubmissionFromBulkSummary = api.SubmissionFromBulkSummary;

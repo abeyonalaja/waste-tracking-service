@@ -17,7 +17,6 @@ import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { isNotEmpty, validateDate, validateDateType } from 'utils/validators';
-import { GetCollectionDateResponse } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
 const CollectionDate = () => {
@@ -63,7 +62,7 @@ const CollectionDate = () => {
               setIsError(true);
             }
           })
-          .then((data: GetCollectionDateResponse) => {
+          .then((data) => {
             if (data !== undefined) {
               if (data.status === 'Complete') {
                 setData(data);

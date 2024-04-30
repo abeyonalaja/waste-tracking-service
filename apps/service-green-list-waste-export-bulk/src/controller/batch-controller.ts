@@ -6,9 +6,15 @@ import { BatchRepository } from '../data/repository';
 import { Handler } from '@wts/api/common';
 import * as api from '@wts/api/green-list-waste-export-bulk';
 import { BulkSubmission } from '../model';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
+import { submission } from '@wts/api/green-list-waste-export';
 
 export default class BatchController {
-  constructor(private repository: BatchRepository, private logger: Logger) {}
+  constructor(
+    private repository: BatchRepository,
+    private daprAnnexViiClient: DaprAnnexViiClient,
+    private logger: Logger
+  ) {}
 
   addContentToBatch: Handler<
     api.AddContentToBatchRequest,
@@ -90,4 +96,48 @@ export default class BatchController {
         return fromBoom(Boom.internal());
       }
     };
+
+  getBatchContent: Handler<
+    api.GetBatchContentRequest,
+    api.GetBatchContentResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const batch = await this.repository.getBatch(id, accountId);
+
+      if (batch.state.status !== 'Submitted') {
+        return fromBoom(Boom.badRequest('Batch has not submitted records.'));
+      }
+
+      const submissionIds = batch.state.submissions.map((s) => {
+        return s.id;
+      });
+
+      let submissions: submission.GetBulkSubmissionsResponse;
+      try {
+        submissions = await this.daprAnnexViiClient.getBulkSubmissions({
+          accountId,
+          submissionIds,
+        });
+      } catch (error) {
+        this.logger.error(error);
+        throw Boom.internal();
+      }
+
+      if (!submissions.success) {
+        this.logger.error(
+          `Failed to get submissions for bulk record with accountId: ${accountId} and id: ${id}`
+        );
+        throw Boom.internal();
+      }
+
+      return success(submissions.value);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

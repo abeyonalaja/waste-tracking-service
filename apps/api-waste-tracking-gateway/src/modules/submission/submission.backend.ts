@@ -1,178 +1,47 @@
 import Boom from '@hapi/boom';
+import { draft, submission } from '@wts/api/green-list-waste-export';
 import {
-  CancelDraftByIdResponse,
-  CreateDraftCarriersResponse,
-  CreateDraftRecoveryFacilityDetailsResponse,
-  CreateDraftResponse,
-  DeleteDraftCarriersResponse,
-  DeleteDraftRecoveryFacilityDetailsResponse,
-  DeleteDraftResponse,
+  Carriers,
+  CollectionDate,
+  CollectionDetail,
+  CustomerReference,
+  ExitLocation,
+  ExporterDetail,
+  ImporterDetail,
+  NumberOfSubmissions,
+  RecoveryFacilityDetail,
+  SubmissionBase,
+  CancellationType,
+  SubmissionConfirmation,
+  SubmissionDeclaration,
+  DraftSubmissionState,
+  SubmissionSummaryPage,
+  TransitCountries,
+  WasteDescription,
+  WasteQuantity,
   DraftSubmission,
-  DraftWasteDescription,
-  GetDraftCarriersResponse,
-  GetDraftCollectionDateByIdResponse,
-  GetDraftCollectionDetailResponse,
-  GetDraftCustomerReferenceByIdResponse,
-  GetDraftExitLocationByIdResponse,
-  GetDraftExporterDetailByIdResponse,
-  GetDraftImporterDetailByIdResponse,
-  GetDraftRecoveryFacilityDetailsResponse,
-  GetDraftSubmissionConfirmationByIdResponse,
-  GetDraftSubmissionDeclarationByIdResponse,
-  GetDraftTransitCountriesResponse,
-  GetDraftWasteDescriptionByIdResponse,
-  GetDraftWasteQuantityByIdResponse,
-  GetDraftsResponse,
-  GetNumberOfSubmissionsResponse,
-  ListDraftCarriersResponse,
-  ListDraftRecoveryFacilityDetailsResponse,
-  SetDraftCarriersResponse,
-  SetDraftCollectionDateByIdResponse,
-  SetDraftCollectionDetailResponse,
-  SetDraftCustomerReferenceByIdResponse,
-  SetDraftExitLocationByIdResponse,
-  SetDraftExporterDetailByIdResponse,
-  SetDraftImporterDetailByIdResponse,
-  SetDraftRecoveryFacilityDetailsResponse,
-  SetDraftSubmissionConfirmationByIdResponse,
-  SetDraftSubmissionDeclarationByIdResponse,
-  SetDraftTransitCountriesResponse,
-  SetDraftWasteDescriptionByIdResponse,
-  SetDraftWasteQuantityByIdResponse,
-  Template,
-} from '@wts/api/green-list-waste-export';
-import * as dto from '@wts/api/waste-tracking-gateway';
+  Submission,
+  WasteQuantityData,
+  CollectionDateData,
+} from '@wts/api/waste-tracking-gateway';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
+import { Logger } from 'winston';
 
-import { v4 as uuidv4 } from 'uuid';
-import {
-  AnnexViiServiceSubmissionBaseBackend,
-  InMemorySubmissionBaseBackend,
-  SubmissionBaseBackend,
-  SubmissionBasePlusId,
-} from '../submissionBase/submissionBase.backend';
-import { TemplateRef } from '../template';
-
-export type Submission = dto.Submission;
-export type SubmissionSummary = dto.SubmissionSummary;
-export type SubmissionSummaryPage = dto.SubmissionSummaryPage;
-export type CustomerReference = dto.CustomerReference;
-export type WasteDescription = dto.WasteDescription;
-export type WasteQuantity = dto.WasteQuantity;
-export type ExporterDetail = dto.ExporterDetail;
-export type ImporterDetail = dto.ImporterDetail;
-export type CollectionDate = dto.CollectionDate;
-export type Carriers = dto.Carriers;
-export type CarrierData = dto.CarrierData;
-export type CollectionDetail = dto.CollectionDetail;
-export type ExitLocation = dto.ExitLocation;
-export type TransitCountries = dto.TransitCountries;
-export type RecoveryFacilityDetail = dto.RecoveryFacilityDetail;
-export type RecoveryFacilityData = dto.RecoveryFacilityData;
-export type SubmissionConfirmation = dto.SubmissionConfirmation;
-export type SubmissionDeclaration = dto.SubmissionDeclaration;
-export type SubmissionState = dto.SubmissionState;
-export type SubmissionCancellationType = dto.SubmissionCancellationType;
-export type NumberOfSubmissions = dto.NumberOfSubmissions;
-
-function setSubmissionConfirmation(
-  submission: Submission
-): SubmissionConfirmation {
-  const {
-    id,
-    reference,
-    submissionConfirmation,
-    submissionDeclaration,
-    submissionState,
-    ...filteredValues
-  } = submission;
-
-  if (
-    Object.values(filteredValues).every((value) => value.status === 'Complete')
-  ) {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
-
-function setSubmissionDeclaration(
-  submission: Submission
-): SubmissionDeclaration {
-  if (submission.submissionConfirmation.status === 'Complete') {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
-
-function isCollectionDateValid(date: CollectionDate) {
-  if (date.status !== 'NotStarted') {
-    const {
-      day: dayStr,
-      month: monthStr,
-      year: yearStr,
-    } = date.value[
-      date.value.type === 'ActualDate' ? 'actualDate' : 'estimateDate'
-    ];
-    const [day, month, year] = [
-      parseInt(dayStr as string),
-      parseInt(monthStr as string) - 1,
-      parseInt(yearStr as string),
-    ];
-
-    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function setWasteQuantityUnit(
-  wasteQuantity: WasteQuantity,
-  submission: dto.Submission
-) {
-  if (
-    submission.wasteDescription.status !== 'NotStarted' &&
-    wasteQuantity.status !== 'CannotStart' &&
-    wasteQuantity.status !== 'NotStarted'
-  ) {
-    if (submission.wasteDescription.wasteCode?.type === 'NotApplicable') {
-      if (wasteQuantity.value?.type === 'ActualData') {
-        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
-          wasteQuantity.value.actualData.unit = 'Litre';
-        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
-          wasteQuantity.value.actualData.unit = 'Kilogram';
-        }
-      } else if (wasteQuantity.value?.type === 'EstimateData') {
-        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
-          wasteQuantity.value.estimateData.unit = 'Litre';
-        } else if (
-          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
-        ) {
-          wasteQuantity.value.estimateData.unit = 'Kilogram';
-        }
-      }
-    } else {
-      if (wasteQuantity.value?.type === 'ActualData') {
-        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
-          wasteQuantity.value.actualData.unit = 'Cubic Metre';
-        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
-          wasteQuantity.value.actualData.unit = 'Tonne';
-        }
-      } else if (wasteQuantity.value?.type === 'EstimateData') {
-        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
-          wasteQuantity.value.estimateData.unit = 'Cubic Metre';
-        } else if (
-          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
-        ) {
-          wasteQuantity.value.estimateData.unit = 'Tonne';
-        }
-      }
-    }
-  }
-}
+export type SubmissionBasePlusId = {
+  submissionBase: SubmissionBase;
+  id: string;
+};
 
 export type SubmissionRef = {
+  id: string;
+  accountId: string;
+};
+
+export type SubmissionTypeRef = SubmissionRef & {
+  submitted: boolean;
+};
+
+export type TemplateRef = {
   id: string;
   accountId: string;
 };
@@ -181,11 +50,62 @@ export type OrderRef = {
   order: 'ASC' | 'DESC';
 };
 
-export interface SubmissionBackend extends SubmissionBaseBackend {
+export interface SubmissionBackend {
+  getSubmission(ref: SubmissionTypeRef): Promise<DraftSubmission | Submission>;
+  getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
+  setWasteDescription(
+    { id }: SubmissionRef,
+    value: WasteDescription
+  ): Promise<void>;
+  getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
+  setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
+  getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
+  setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
+  listCarriers(ref: SubmissionRef): Promise<Carriers>;
+  getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
+  createCarriers(
+    ref: SubmissionRef,
+    value: Omit<Carriers, 'transport' | 'values'>
+  ): Promise<Carriers>;
+  setCarriers(
+    ref: SubmissionRef,
+    carrerId: string,
+    value: Carriers
+  ): Promise<void>;
+  deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
+  getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
+  setCollectionDetail(
+    ref: SubmissionRef,
+    value: CollectionDetail
+  ): Promise<void>;
+  getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
+  setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
+  getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
+  setTransitCountries(
+    ref: SubmissionRef,
+    value: TransitCountries
+  ): Promise<void>;
+  listRecoveryFacilityDetail(
+    ref: SubmissionRef
+  ): Promise<RecoveryFacilityDetail>;
+  createRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    value: Omit<RecoveryFacilityDetail, 'values'>
+  ): Promise<RecoveryFacilityDetail>;
+  getRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    id: string
+  ): Promise<RecoveryFacilityDetail>;
+  setRecoveryFacilityDetail(
+    ref: SubmissionRef,
+    id: string,
+    value: RecoveryFacilityDetail
+  ): Promise<void>;
+  deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
   createSubmission(
     accountId: string,
     reference: CustomerReference
-  ): Promise<Submission>;
+  ): Promise<DraftSubmission>;
   createSubmissionFromTemplate(
     id: string,
     accountId: string,
@@ -194,13 +114,13 @@ export interface SubmissionBackend extends SubmissionBaseBackend {
   deleteSubmission(ref: SubmissionRef): Promise<void>;
   cancelSubmission(
     ref: SubmissionRef,
-    cancellationType: dto.SubmissionCancellationType
+    cancellationType: CancellationType
   ): Promise<void>;
   getSubmissions(
     accountId: string,
     order: OrderRef,
     pageLimit?: number,
-    state?: SubmissionState['status'][],
+    state?: DraftSubmissionState['status'][],
     token?: string
   ): Promise<SubmissionSummaryPage>;
   getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
@@ -208,10 +128,20 @@ export interface SubmissionBackend extends SubmissionBaseBackend {
     ref: SubmissionRef,
     value: CustomerReference
   ): Promise<void>;
-  getWasteQuantity(ref: SubmissionRef): Promise<WasteQuantity>;
-  setWasteQuantity(ref: SubmissionRef, value: WasteQuantity): Promise<void>;
-  getCollectionDate(ref: SubmissionRef): Promise<CollectionDate>;
-  setCollectionDate(ref: SubmissionRef, value: CollectionDate): Promise<void>;
+  getWasteQuantity(
+    ref: SubmissionTypeRef
+  ): Promise<WasteQuantity | WasteQuantityData>;
+  setWasteQuantity(
+    ref: SubmissionTypeRef,
+    value: WasteQuantity | WasteQuantityData
+  ): Promise<void>;
+  getCollectionDate(
+    ref: SubmissionTypeRef
+  ): Promise<CollectionDate | CollectionDateData>;
+  setCollectionDate(
+    ref: SubmissionTypeRef,
+    value: CollectionDate | CollectionDateData
+  ): Promise<void>;
   getSubmissionConfirmation(
     ref: SubmissionRef
   ): Promise<SubmissionConfirmation>;
@@ -227,1215 +157,48 @@ export interface SubmissionBackend extends SubmissionBaseBackend {
   getNumberOfSubmissions(accountId: string): Promise<NumberOfSubmissions>;
 }
 
-/**
- * This is a mock backend and should not be used in production.
- */
-export class InMemorySubmissionBackend
-  extends InMemorySubmissionBaseBackend
-  implements SubmissionBackend
-{
-  constructor(
-    protected submissions: Map<string, Submission>,
-    protected templates: Map<string, Template>
-  ) {
-    super(submissions, templates);
-  }
+export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
+  constructor(protected client: DaprAnnexViiClient, protected logger: Logger) {}
 
-  createSubmission(
-    accountId: string,
-    reference: CustomerReference
-  ): Promise<Submission> {
-    if (reference.length > 20) {
-      return Promise.reject(
-        Boom.badRequest('Supplied reference cannot exceed 20 characters')
-      );
-    }
-
-    const id = uuidv4();
-    const value: Submission = {
-      id,
-      reference,
-      wasteDescription: { status: 'NotStarted' },
-      wasteQuantity: { status: 'CannotStart' },
-      exporterDetail: { status: 'NotStarted' },
-      importerDetail: { status: 'NotStarted' },
-      collectionDate: { status: 'NotStarted' },
-      carriers: {
-        status: 'NotStarted',
-        transport: true,
-      },
-      collectionDetail: { status: 'NotStarted' },
-      ukExitLocation: { status: 'NotStarted' },
-      transitCountries: { status: 'NotStarted' },
-      recoveryFacilityDetail: { status: 'CannotStart' },
-      submissionConfirmation: { status: 'CannotStart' },
-      submissionDeclaration: { status: 'CannotStart' },
-      submissionState: {
-        status: 'InProgress',
-        timestamp: new Date(),
-      },
-    };
-
-    this.submissions.set(JSON.stringify({ id, accountId }), value);
-    return Promise.resolve(value);
-  }
-
-  async createSubmissionFromTemplate(
-    id: string,
-    accountId: string,
-    reference: CustomerReference
-  ): Promise<DraftSubmission> {
-    if (reference.length > 20) {
-      return Promise.reject(
-        Boom.badRequest('Supplied reference cannot exceed 20 characters')
-      );
-    }
-
-    const template = await this.getTemplate({ id, accountId } as TemplateRef);
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    id = uuidv4();
-
-    const value: DraftSubmission = {
-      id,
-      reference,
-      wasteDescription: template.wasteDescription,
-      wasteQuantity:
-        template.wasteDescription.status === 'NotStarted'
-          ? { status: 'CannotStart' }
-          : { status: 'NotStarted' },
-      exporterDetail: template.exporterDetail,
-      importerDetail: template.importerDetail,
-      collectionDate: { status: 'NotStarted' },
-      carriers: this.copyCarriersNoTransport(
-        template.carriers,
-        this.isSmallWaste(template.wasteDescription)
-      ),
-      collectionDetail: template.collectionDetail,
-      ukExitLocation: template.ukExitLocation,
-      transitCountries: template.transitCountries,
-      recoveryFacilityDetail: this.copyRecoveryFacilities(
-        template.recoveryFacilityDetail
-      ),
-      submissionConfirmation: { status: 'CannotStart' },
-      submissionDeclaration: { status: 'CannotStart' },
-      submissionState: {
-        status: 'InProgress',
-        timestamp: new Date(),
-      },
-    };
-
-    this.submissions.set(
-      JSON.stringify({ id, accountId }),
-      value as Submission
-    );
-    return Promise.resolve(value);
-  }
-
-  deleteSubmission({ id, accountId }: SubmissionRef): Promise<void> {
-    const value = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (value === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    value.submissionState = { status: 'Deleted', timestamp: new Date() };
-
-    this.submissions.set(JSON.stringify({ id, accountId }), value);
-    return Promise.resolve();
-  }
-
-  cancelSubmission(
-    { id, accountId }: SubmissionRef,
-    cancellationType: dto.SubmissionCancellationType
-  ): Promise<void> {
-    const value = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (value === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    value.submissionState = {
-      status: 'Cancelled',
-      timestamp: new Date(),
-      cancellationType: cancellationType,
-    };
-
-    this.submissions.set(JSON.stringify({ id, accountId }), value);
-    return Promise.resolve();
-  }
-
-  getSubmissions(
-    accountId: string,
-    { order }: OrderRef,
-    pageLimit = 15,
-    state?: SubmissionState['status'][],
-    token?: string
-  ): Promise<SubmissionSummaryPage> {
-    const rawKeys: string[] = [...this.submissions.keys()].filter(
-      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
-    );
-    const rawValues: Submission[] = [];
-    rawKeys.forEach((ref) =>
-      rawValues.push(this.submissions.get(ref) as Submission)
-    );
-    let values: ReadonlyArray<SubmissionSummary> = rawValues
-      .map((s) => {
-        return {
-          id: s.id,
-          reference: s.reference,
-          wasteDescription: s.wasteDescription,
-          wasteQuantity: { status: s.wasteQuantity.status },
-          exporterDetail: { status: s.exporterDetail.status },
-          importerDetail: { status: s.exporterDetail.status },
-          collectionDate: s.collectionDate,
-          carriers: { status: s.carriers.status },
-          collectionDetail: { status: s.collectionDetail.status },
-          ukExitLocation: { status: s.ukExitLocation.status },
-          transitCountries: { status: s.transitCountries.status },
-          recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
-          submissionConfirmation: { status: s.submissionConfirmation.status },
-          submissionDeclaration: s.submissionDeclaration,
-          submissionState: s.submissionState,
-        };
-      })
-      .sort((x, y) => {
-        return x.submissionState.timestamp > y.submissionState.timestamp
-          ? 1
-          : -1;
-      });
-
-    if (order === 'DESC') {
-      values = rawValues
-        .map((s) => {
-          return {
-            id: s.id,
-            reference: s.reference,
-            wasteDescription: s.wasteDescription,
-            wasteQuantity: { status: s.wasteQuantity.status },
-            exporterDetail: { status: s.exporterDetail.status },
-            importerDetail: { status: s.exporterDetail.status },
-            collectionDate: s.collectionDate,
-            carriers: { status: s.carriers.status },
-            collectionDetail: { status: s.collectionDetail.status },
-            ukExitLocation: { status: s.ukExitLocation.status },
-            transitCountries: { status: s.transitCountries.status },
-            recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
-            submissionConfirmation: { status: s.submissionConfirmation.status },
-            submissionDeclaration: s.submissionDeclaration,
-            submissionState: s.submissionState,
-          };
-        })
-        .sort((x, y) => {
-          return x.submissionState.timestamp > y.submissionState.timestamp
-            ? 1
-            : -1;
-        })
-        .reverse();
-    }
-
-    if (state) {
-      values = values.filter((i) =>
-        state.some((val) => i.submissionState.status.includes(val))
-      );
-    }
-
-    if (!Array.isArray(values) || values.length === 0) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    let hasMoreResults = true;
-    let totalSubmissions = 0;
-    let totalPages = 0;
-    let currentPage = 0;
-    let pageNumber = 0;
-    let contToken = '';
-    const metadataArray: dto.SubmissionPageMetadata[] = [];
-    let pageValues: ReadonlyArray<SubmissionSummary> = [];
-
-    while (hasMoreResults) {
-      totalPages += 1;
-      pageNumber += 1;
-
-      const paginatedValues = this.paginateArray(values, pageLimit, pageNumber);
-
-      if ((!token && pageNumber === 1) || token === contToken) {
-        pageValues = paginatedValues;
-        currentPage = pageNumber;
-      }
-
-      const nextPaginatedValues = this.paginateArray(
-        values,
-        pageLimit,
-        pageNumber + 1
-      );
-
-      hasMoreResults = nextPaginatedValues.length === 0 ? false : true;
-      totalSubmissions += paginatedValues.length;
-      contToken = nextPaginatedValues.length === 0 ? '' : pageNumber.toString();
-
-      const pageMetadata: dto.SubmissionPageMetadata = {
-        pageNumber: pageNumber,
-        token: nextPaginatedValues.length === 0 ? '' : pageNumber.toString(),
-      };
-      metadataArray.push(pageMetadata);
-
-      if (!hasMoreResults && token === '') {
-        break;
-      }
-    }
-
-    return Promise.resolve({
-      totalSubmissions: totalSubmissions,
-      totalPages: totalPages,
-      currentPage: currentPage,
-      pages: metadataArray,
-      values: pageValues,
-    });
-  }
-
-  getCustomerReference({
+  async getSubmission({
     id,
     accountId,
-  }: SubmissionRef): Promise<CustomerReference> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.reference);
-  }
-
-  setCustomerReference(
-    { id, accountId }: SubmissionRef,
-    reference: CustomerReference
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (reference.length > 20) {
-      return Promise.reject(
-        Boom.badRequest('Supplied reference cannot exceed 20 characters')
-      );
-    }
-
-    submission.reference = reference;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-    return Promise.resolve();
-  }
-
-  getWasteDescription({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<WasteDescription> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.wasteDescription);
-  }
-
-  setWasteDescription(
-    { id, accountId }: SubmissionRef,
-    value: DraftWasteDescription
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    let wasteQuantity: dto.Submission['wasteQuantity'] =
-      submission.wasteQuantity;
-
-    if (
-      wasteQuantity.status === 'CannotStart' &&
-      (value.status === 'Started' || value.status === 'Complete')
-    ) {
-      wasteQuantity = { status: 'NotStarted' };
-    }
-
-    if (
-      this.isWasteCodeChangingBulkToSmall(submission.wasteDescription, value)
-    ) {
-      wasteQuantity = { status: 'NotStarted' };
-    }
-
-    if (
-      this.isWasteCodeChangingSmallToBulk(submission.wasteDescription, value)
-    ) {
-      wasteQuantity = { status: 'NotStarted' };
-    }
-
-    if (
-      this.isWasteCodeChangingBulkToBulkDifferentType(
-        submission.wasteDescription,
-        value
-      )
-    ) {
-      wasteQuantity = { status: 'NotStarted' };
-    }
-
-    if (
-      this.isWasteCodeChangingBulkToBulkSameType(
-        submission.wasteDescription,
-        value
-      )
-    ) {
-      if (
-        submission.wasteQuantity.status !== 'CannotStart' &&
-        submission.wasteQuantity.status !== 'NotStarted'
-      ) {
-        wasteQuantity = {
-          status: 'Started',
-          value: submission.wasteQuantity.value,
-        };
-      }
-    }
-
-    const submissionBase = this.setBaseWasteDescription(
-      submission as dto.SubmissionBase,
-      value
-    );
-    submission.wasteDescription = submissionBase.wasteDescription;
-    submission.carriers = submissionBase.carriers;
-    submission.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
-
-    submission.wasteQuantity = wasteQuantity;
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getWasteQuantity({ id, accountId }: SubmissionRef): Promise<WasteQuantity> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.wasteQuantity);
-  }
-
-  setWasteQuantity(
-    { id, accountId }: SubmissionRef,
-    value: WasteQuantity
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-    setWasteQuantityUnit(value, submission);
-
-    let wasteQuantity = value;
-    if (
-      value.status !== 'CannotStart' &&
-      value.status !== 'NotStarted' &&
-      value.value &&
-      value.value.type &&
-      value.value.type !== 'NotApplicable' &&
-      submission.wasteQuantity.status !== 'CannotStart' &&
-      submission.wasteQuantity.status !== 'NotStarted' &&
-      submission.wasteQuantity.value &&
-      submission.wasteQuantity.value.type &&
-      submission.wasteQuantity.value.type !== 'NotApplicable'
-    ) {
-      if (
-        value.value.type === 'ActualData' &&
-        submission.wasteQuantity.value.estimateData
-      ) {
-        wasteQuantity = {
-          status: value.status,
-          value: {
-            type: value.value.type,
-            actualData: value.value.actualData ?? {},
-            estimateData: submission.wasteQuantity.value.estimateData,
-          },
-        };
-      }
-
-      if (
-        value.value.type === 'EstimateData' &&
-        submission.wasteQuantity.value.actualData
-      ) {
-        wasteQuantity = {
-          status: value.status,
-          value: {
-            type: value.value.type,
-            actualData: submission.wasteQuantity.value.actualData,
-            estimateData: value.value.estimateData ?? {},
-          },
-        };
-      }
-    }
-
-    submission.wasteQuantity = wasteQuantity as WasteQuantity;
-
-    if (submission.submissionConfirmation.status !== 'Complete') {
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    }
-
-    if (submission.submissionDeclaration.status !== 'Complete') {
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-    }
-
-    submission.submissionState =
-      submission.collectionDate.status === 'Complete' &&
-      submission.collectionDate.value.type === 'ActualDate' &&
-      submission.submissionState.status === 'SubmittedWithEstimates' &&
-      value.status === 'Complete' &&
-      value.value.type === 'ActualData'
-        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
-        : submission.submissionState;
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-    return Promise.resolve();
-  }
-
-  getExporterDetail({ id, accountId }: SubmissionRef): Promise<ExporterDetail> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.exporterDetail);
-  }
-
-  setExporterDetail(
-    { id, accountId }: SubmissionRef,
-    value: ExporterDetail
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.exporterDetail = this.setBaseExporterDetail(
-      submission as dto.SubmissionBase,
-      value
-    ).exporterDetail;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getImporterDetail({ id, accountId }: SubmissionRef): Promise<ImporterDetail> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.importerDetail);
-  }
-
-  setImporterDetail(
-    { id, accountId }: SubmissionRef,
-    value: ImporterDetail
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.importerDetail = this.setBaseImporterDetail(
-      submission as dto.SubmissionBase,
-      value
-    ).importerDetail;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getCollectionDate({ id, accountId }: SubmissionRef): Promise<CollectionDate> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.collectionDate);
-  }
-
-  setCollectionDate(
-    { id, accountId }: SubmissionRef,
-    value: CollectionDate
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    let collectionDate = value;
-    if (
-      value.status !== 'NotStarted' &&
-      submission.collectionDate.status !== 'NotStarted'
-    ) {
-      if (value.value.type === 'ActualDate') {
-        collectionDate = {
-          status: value.status,
-          value: {
-            type: value.value.type,
-            actualDate: value.value.actualDate,
-            estimateDate: submission.collectionDate.value.estimateDate,
-          },
-        };
+    submitted,
+  }: SubmissionTypeRef): Promise<DraftSubmission | Submission> {
+    let response: draft.GetDraftResponse | submission.GetSubmissionResponse;
+    try {
+      if (!submitted) {
+        response = (await this.client.getDraft({
+          id,
+          accountId,
+        })) as draft.GetDraftResponse;
       } else {
-        collectionDate = {
-          status: value.status,
-          value: {
-            type: value.value.type,
-            actualDate: submission.collectionDate.value.actualDate,
-            estimateDate: value.value.estimateDate,
-          },
-        };
+        response = (await this.client.getSubmission({
+          id,
+          accountId,
+        })) as submission.GetSubmissionResponse;
       }
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
     }
 
-    submission.collectionDate = collectionDate;
-
-    if (submission.submissionConfirmation.status !== 'Complete') {
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    }
-
-    if (submission.submissionDeclaration.status !== 'Complete') {
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-    }
-
-    submission.submissionState =
-      submission.wasteQuantity.status === 'Complete' &&
-      submission.wasteQuantity.value.type === 'ActualData' &&
-      submission.submissionState.status === 'SubmittedWithEstimates' &&
-      value.status === 'Complete' &&
-      value.value.type === 'ActualDate'
-        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
-        : submission.submissionState;
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-    return Promise.resolve();
-  }
-
-  listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.carriers);
-  }
-
-  createCarriers(
-    { id, accountId }: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
-  ): Promise<Carriers> {
-    if (value.status !== 'Started') {
-      return Promise.reject(
-        Boom.badRequest(
-          `"Status cannot be ${value.status} on carrier detail creation"`
-        )
-      );
-    }
-
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.carriers.status !== 'NotStarted') {
-      if (submission.carriers.values.length === 5) {
-        return Promise.reject(
-          Boom.badRequest('Cannot add more than 5 carriers')
-        );
-      }
-    }
-
-    const submissionBasePlusId: SubmissionBasePlusId = this.createBaseCarriers(
-      submission as dto.SubmissionBase,
-      value
-    );
-
-    submission.carriers = submissionBasePlusId.submissionBase.carriers;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve({
-      status: value.status,
-      transport: submission.carriers.transport,
-      values: [{ id: submissionBasePlusId.id }],
-    });
-  }
-
-  getCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string
-  ): Promise<Carriers> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const carrier = submission.carriers.values.find((c) => {
-      return c.id === carrierId;
-    });
-
-    if (carrier === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const value: dto.Carriers = {
-      status: submission.carriers.status,
-      transport: submission.carriers.transport,
-      values: [carrier],
-    };
-
-    return Promise.resolve(value);
-  }
-
-  setCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string,
-    value: Carriers
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (value.status === 'NotStarted') {
-      submission.carriers = this.setBaseNoCarriers(
-        submission as dto.SubmissionBase,
-        carrierId,
-        value
-      ).carriers;
-    } else {
-      const carrier = value.values.find((c) => {
-        return c.id === carrierId;
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
       });
-      if (carrier === undefined) {
-        return Promise.reject(Boom.badRequest());
-      }
-
-      const index = submission.carriers.values.findIndex((c) => {
-        return c.id === carrierId;
-      });
-      if (index === -1) {
-        return Promise.reject(Boom.notFound());
-      }
-      submission.carriers = this.setBaseCarriers(
-        submission as dto.SubmissionBase,
-        carrierId,
-        value,
-        carrier,
-        index
-      ).carriers;
     }
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
+    return !submitted
+      ? (response.value as DraftSubmission)
+      : (response.value as unknown as Submission);
   }
 
-  deleteCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const index = submission.carriers.values.findIndex((c) => {
-      return c.id === carrierId;
-    });
-
-    if (index === -1) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.carriers = this.deleteBaseCarriers(
-      submission as dto.SubmissionBase,
-      carrierId
-    ).carriers;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getCollectionDetail({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<CollectionDetail> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.collectionDetail);
-  }
-
-  setCollectionDetail(
-    { id, accountId }: SubmissionRef,
-    value: CollectionDetail
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.collectionDetail = this.setBaseCollectionDetail(
-      submission as dto.SubmissionBase,
-      value
-    ).collectionDetail;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getExitLocation({ id, accountId }: SubmissionRef): Promise<ExitLocation> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.ukExitLocation);
-  }
-
-  setExitLocation(
-    { id, accountId }: SubmissionRef,
-    value: ExitLocation
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.ukExitLocation = this.setBaseExitLocation(
-      submission as dto.SubmissionBase,
-      value as ExitLocation
-    ).ukExitLocation;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getTransitCountries({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<TransitCountries> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.transitCountries as TransitCountries);
-  }
-
-  setTransitCountries(
-    { id, accountId }: SubmissionRef,
-    value: TransitCountries
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.transitCountries = this.setBaseTransitCountries(
-      submission as dto.SubmissionBase,
-      value as TransitCountries
-    ).transitCountries;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  listRecoveryFacilityDetail({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.recoveryFacilityDetail);
-  }
-
-  createRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
-  ): Promise<RecoveryFacilityDetail> {
-    if (value.status !== 'Started') {
-      return Promise.reject(
-        Boom.badRequest(
-          `"Status cannot be ${value.status} on recovery facility detail creation"`
-        )
-      );
-    }
-
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      submission.recoveryFacilityDetail.status === 'Started' ||
-      submission.recoveryFacilityDetail.status === 'Complete'
-    ) {
-      if (submission.recoveryFacilityDetail.values.length === 6) {
-        return Promise.reject(
-          Boom.badRequest(
-            'Cannot add more than 6 facilities(1 InterimSite and 5 RecoveryFacilities)'
-          )
-        );
-      }
-    }
-
-    const submissionBasePlusId: SubmissionBasePlusId =
-      this.createBaseRecoveryFacilityDetail(
-        submission as dto.SubmissionBase,
-        value
-      );
-
-    submission.recoveryFacilityDetail =
-      submissionBasePlusId.submissionBase.recoveryFacilityDetail;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve({
-      status: value.status,
-      values: [{ id: submissionBasePlusId.id }],
-    });
-  }
-
-  getRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string
-  ): Promise<RecoveryFacilityDetail> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      submission.recoveryFacilityDetail.status !== 'Started' &&
-      submission.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const recoveryFacility = submission.recoveryFacilityDetail.values.find(
-      (rf) => {
-        return rf.id === rfdId;
-      }
-    );
-
-    if (recoveryFacility === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const value: dto.RecoveryFacilityDetail = {
-      status: submission.recoveryFacilityDetail.status,
-      values: [recoveryFacility],
-    };
-    return Promise.resolve(value);
-  }
-
-  setRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string,
-    value: RecoveryFacilityDetail
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      submission.recoveryFacilityDetail.status !== 'Started' &&
-      submission.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (value.status === 'Started' || value.status === 'Complete') {
-      const recoveryFacility = value.values.find((rf) => {
-        return rf.id === rfdId;
-      });
-
-      if (recoveryFacility === undefined) {
-        return Promise.reject(Boom.badRequest());
-      }
-      const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
-        return rf.id === rfdId;
-      });
-      if (index === -1) {
-        return Promise.reject(Boom.notFound());
-      }
-    }
-
-    submission.recoveryFacilityDetail = this.setBaseRecoveryFacilityDetail(
-      submission as dto.SubmissionBase,
-      rfdId,
-      value
-    ).recoveryFacilityDetail;
-
-    if (
-      submission.recoveryFacilityDetail.status !== 'Started' &&
-      submission.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  deleteRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-    if (
-      submission.recoveryFacilityDetail.status !== 'Started' &&
-      submission.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const index = submission.recoveryFacilityDetail.values.findIndex((rf) => {
-      return rf.id === rfdId;
-    });
-
-    if (index === -1) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    submission.recoveryFacilityDetail = this.deleteBaseRecoveryFacilityDetail(
-      submission as dto.SubmissionBase,
-      rfdId
-    ).recoveryFacilityDetail;
-
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-
-    return Promise.resolve();
-  }
-
-  getSubmissionConfirmation({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<SubmissionConfirmation> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.submissionConfirmation);
-  }
-
-  setSubmissionConfirmation(
-    { id, accountId }: SubmissionRef,
-    value: SubmissionConfirmation
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.submissionConfirmation.status === 'CannotStart') {
-      return Promise.reject(Boom.badRequest());
-    }
-
-    if (!isCollectionDateValid(submission.collectionDate)) {
-      submission.collectionDate = { status: 'NotStarted' };
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-
-      this.submissions.set(JSON.stringify({ id, accountId }), submission);
-      return Promise.reject(Boom.badRequest('Invalid collection date'));
-    }
-
-    submission.submissionConfirmation = value;
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-    this.submissions.set(JSON.stringify({ id, accountId }), submission);
-    return Promise.resolve();
-  }
-
-  getSubmissionDeclaration({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<SubmissionDeclaration> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(submission.submissionDeclaration);
-  }
-
-  setSubmissionDeclaration(
-    { id, accountId }: SubmissionRef,
-    value: Omit<SubmissionDeclaration, 'values'>
-  ): Promise<void> {
-    const submission = this.submissions.get(JSON.stringify({ id, accountId }));
-    if (submission === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (submission.submissionDeclaration.status === 'CannotStart') {
-      return Promise.reject(Boom.badRequest());
-    }
-
-    if (!isCollectionDateValid(submission.collectionDate)) {
-      submission.collectionDate = { status: 'NotStarted' };
-
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
-
-      this.submissions.set(JSON.stringify({ id, accountId }), submission);
-      return Promise.reject(Boom.badRequest('Invalid collection date'));
-    }
-
-    if (
-      value.status === 'Complete' &&
-      submission.submissionDeclaration.status === 'NotStarted'
-    ) {
-      const timeStamp = new Date();
-      const transactionId =
-        timeStamp.getFullYear().toString().substring(2) +
-        (timeStamp.getMonth() + 1).toString().padStart(2, '0') +
-        '_' +
-        id.substring(0, 8).toUpperCase();
-      submission.submissionDeclaration = {
-        status: value.status,
-        values: {
-          declarationTimestamp: timeStamp,
-          transactionId: transactionId,
-        },
-      };
-
-      const timestamp = new Date();
-      submission.submissionState =
-        submission.collectionDate.status === 'Complete' &&
-        submission.wasteQuantity.status === 'Complete' &&
-        submission.collectionDate.value.type === 'ActualDate' &&
-        submission.wasteQuantity.value.type === 'ActualData'
-          ? { status: 'SubmittedWithActuals', timestamp: timestamp }
-          : { status: 'SubmittedWithEstimates', timestamp: timestamp };
-
-      this.submissions.set(JSON.stringify({ id, accountId }), submission);
-    }
-
-    return Promise.resolve();
-  }
-
-  async getNumberOfSubmissions(
-    accountId: string
-  ): Promise<NumberOfSubmissions> {
-    const numberOfSubmissions: NumberOfSubmissions = {
-      completedWithActuals: 0,
-      completedWithEstimates: 0,
-      incomplete: 0,
-    };
-
-    const rawKeys: string[] = [...this.submissions.keys()].filter(
-      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
-    );
-    const rawValues: Submission[] = [];
-    rawKeys.forEach((id) =>
-      rawValues.push(this.submissions.get(id) as Submission)
-    );
-
-    numberOfSubmissions.completedWithActuals = rawValues.filter(
-      (i) =>
-        (i.submissionState as SubmissionState).status ===
-          'SubmittedWithActuals' ||
-        (i.submissionState as SubmissionState).status === 'UpdatedWithActuals'
-    ).length;
-
-    numberOfSubmissions.completedWithEstimates = rawValues.filter(
-      (i) =>
-        (i.submissionState as SubmissionState).status ===
-        'SubmittedWithEstimates'
-    ).length;
-
-    numberOfSubmissions.incomplete = rawValues.filter(
-      (i) => (i.submissionState as SubmissionState).status === 'InProgress'
-    ).length;
-
-    return Promise.resolve(numberOfSubmissions);
-  }
-}
-
-export class AnnexViiServiceSubmissionBackend
-  extends AnnexViiServiceSubmissionBaseBackend
-  implements SubmissionBackend
-{
   async createSubmission(
     accountId: string,
     reference: CustomerReference
-  ): Promise<Submission> {
-    let response: CreateDraftResponse;
+  ): Promise<DraftSubmission> {
+    let response: draft.CreateDraftResponse;
     try {
       response = await this.client.createDraft({ accountId, reference });
     } catch (err) {
@@ -1449,15 +212,15 @@ export class AnnexViiServiceSubmissionBackend
       });
     }
 
-    return response.value as Submission;
+    return response.value as DraftSubmission;
   }
 
   async createSubmissionFromTemplate(
     id: string,
     accountId: string,
     reference: CustomerReference
-  ): Promise<DraftSubmission> {
-    let response: CreateDraftResponse;
+  ): Promise<draft.DraftSubmission> {
+    let response: draft.CreateDraftResponse;
     try {
       response = await this.client.createDraftFromTemplate({
         id,
@@ -1479,7 +242,7 @@ export class AnnexViiServiceSubmissionBackend
   }
 
   async deleteSubmission({ id, accountId }: SubmissionRef): Promise<void> {
-    let response: DeleteDraftResponse;
+    let response: draft.DeleteDraftResponse;
     try {
       response = await this.client.deleteDraft({
         id,
@@ -1499,11 +262,11 @@ export class AnnexViiServiceSubmissionBackend
 
   async cancelSubmission(
     { id, accountId }: SubmissionRef,
-    cancellationType: dto.SubmissionCancellationType
+    cancellationType: CancellationType
   ): Promise<void> {
-    let response: CancelDraftByIdResponse;
+    let response: submission.CancelSubmissionResponse;
     try {
-      response = await this.client.cancelDraft({
+      response = await this.client.cancelSubmission({
         id,
         accountId,
         cancellationType,
@@ -1524,18 +287,33 @@ export class AnnexViiServiceSubmissionBackend
     accountId: string,
     { order }: OrderRef,
     pageLimit?: number,
-    state?: SubmissionState['status'][],
+    state?: DraftSubmissionState['status'][],
     token?: string
   ): Promise<SubmissionSummaryPage> {
-    let response: GetDraftsResponse;
+    let response: draft.GetDraftsResponse | submission.GetSubmissionsResponse;
     try {
-      response = await this.client.getDrafts({
-        accountId,
-        order,
-        pageLimit,
-        state,
-        token,
-      });
+      if (
+        state?.includes('SubmittedWithEstimates') ||
+        state?.includes('SubmittedWithActuals') ||
+        state?.includes('UpdatedWithActuals') ||
+        state?.includes('Cancelled')
+      ) {
+        response = (await this.client.getSubmissions({
+          accountId,
+          order,
+          pageLimit,
+          state,
+          token,
+        })) as submission.GetSubmissionsResponse;
+      } else {
+        response = (await this.client.getDrafts({
+          accountId,
+          order,
+          pageLimit,
+          state,
+          token,
+        })) as draft.GetDraftsResponse;
+      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1554,9 +332,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<CustomerReference> {
-    let response: GetDraftCustomerReferenceByIdResponse;
+    let response: draft.GetDraftCustomerReferenceResponse;
     try {
-      response = await this.client.getDraftCustomerReferenceById({
+      response = await this.client.getDraftCustomerReference({
         id,
         accountId,
       });
@@ -1578,9 +356,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     reference: CustomerReference
   ): Promise<void> {
-    let response: SetDraftCustomerReferenceByIdResponse;
+    let response: draft.SetDraftCustomerReferenceResponse;
     try {
-      response = await this.client.setDraftCustomerReferenceById({
+      response = await this.client.setDraftCustomerReference({
         id,
         accountId,
         reference,
@@ -1601,9 +379,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<WasteDescription> {
-    let response: GetDraftWasteDescriptionByIdResponse;
+    let response: draft.GetDraftWasteDescriptionResponse;
     try {
-      response = await this.client.getDraftWasteDescriptionById({
+      response = await this.client.getDraftWasteDescription({
         id,
         accountId,
       });
@@ -1623,11 +401,11 @@ export class AnnexViiServiceSubmissionBackend
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
-    value: DraftWasteDescription
+    value: WasteDescription
   ): Promise<void> {
-    let response: SetDraftWasteDescriptionByIdResponse;
+    let response: draft.SetDraftWasteDescriptionResponse;
     try {
-      response = await this.client.setDraftWasteDescriptionById({
+      response = await this.client.setDraftWasteDescription({
         id,
         accountId,
         value,
@@ -1647,10 +425,23 @@ export class AnnexViiServiceSubmissionBackend
   async getWasteQuantity({
     id,
     accountId,
-  }: SubmissionRef): Promise<WasteQuantity> {
-    let response: GetDraftWasteQuantityByIdResponse;
+    submitted,
+  }: SubmissionTypeRef): Promise<WasteQuantity | WasteQuantityData> {
+    let response:
+      | draft.GetDraftWasteQuantityResponse
+      | submission.GetWasteQuantityResponse;
     try {
-      response = await this.client.getDraftWasteQuantityById({ id, accountId });
+      if (!submitted) {
+        response = (await this.client.getDraftWasteQuantity({
+          id,
+          accountId,
+        })) as draft.GetDraftWasteQuantityResponse;
+      } else {
+        response = (await this.client.getWasteQuantity({
+          id,
+          accountId,
+        })) as submission.GetWasteQuantityResponse;
+      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1662,20 +453,32 @@ export class AnnexViiServiceSubmissionBackend
       });
     }
 
-    return response.value as WasteQuantity;
+    return !submitted
+      ? (response.value as WasteQuantity)
+      : (response.value as WasteQuantityData);
   }
 
   async setWasteQuantity(
-    { id, accountId }: SubmissionRef,
-    value: WasteQuantity
+    { id, accountId, submitted }: SubmissionTypeRef,
+    value: WasteQuantity | WasteQuantityData
   ): Promise<void> {
-    let response: SetDraftWasteQuantityByIdResponse;
+    let response:
+      | draft.SetDraftWasteQuantityResponse
+      | submission.SetWasteQuantityResponse;
     try {
-      response = await this.client.setDraftWasteQuantityById({
-        id,
-        accountId,
-        value,
-      });
+      if (!submitted) {
+        response = await this.client.setDraftWasteQuantity({
+          id,
+          accountId,
+          value: value as WasteQuantity,
+        });
+      } else {
+        response = await this.client.setWasteQuantity({
+          id,
+          accountId,
+          value: value as WasteQuantityData,
+        });
+      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1692,9 +495,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<ExporterDetail> {
-    let response: GetDraftExporterDetailByIdResponse;
+    let response: draft.GetDraftExporterDetailResponse;
     try {
-      response = await this.client.getDraftExporterDetailById({
+      response = await this.client.getDraftExporterDetail({
         id,
         accountId,
       });
@@ -1716,9 +519,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: ExporterDetail
   ): Promise<void> {
-    let response: SetDraftExporterDetailByIdResponse;
+    let response: draft.SetDraftExporterDetailResponse;
     try {
-      response = await this.client.setDraftExporterDetailById({
+      response = await this.client.setDraftExporterDetail({
         id,
         accountId,
         value,
@@ -1739,9 +542,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<ImporterDetail> {
-    let response: GetDraftImporterDetailByIdResponse;
+    let response: draft.GetDraftImporterDetailResponse;
     try {
-      response = await this.client.getDraftImporterDetailById({
+      response = await this.client.getDraftImporterDetail({
         id,
         accountId,
       });
@@ -1763,9 +566,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: ImporterDetail
   ): Promise<void> {
-    let response: SetDraftImporterDetailByIdResponse;
+    let response: draft.SetDraftImporterDetailResponse;
     try {
-      response = await this.client.setDraftImporterDetailById({
+      response = await this.client.setDraftImporterDetail({
         id,
         accountId,
         value,
@@ -1785,13 +588,23 @@ export class AnnexViiServiceSubmissionBackend
   async getCollectionDate({
     id,
     accountId,
-  }: SubmissionRef): Promise<CollectionDate> {
-    let response: GetDraftCollectionDateByIdResponse;
+    submitted,
+  }: SubmissionTypeRef): Promise<CollectionDate | CollectionDateData> {
+    let response:
+      | draft.GetDraftCollectionDateResponse
+      | submission.GetCollectionDateResponse;
     try {
-      response = await this.client.getDraftCollectionDateById({
-        id,
-        accountId,
-      });
+      if (!submitted) {
+        response = (await this.client.getDraftCollectionDate({
+          id,
+          accountId,
+        })) as draft.GetDraftCollectionDateResponse;
+      } else {
+        response = (await this.client.getCollectionDate({
+          id,
+          accountId,
+        })) as submission.GetCollectionDateResponse;
+      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1803,20 +616,32 @@ export class AnnexViiServiceSubmissionBackend
       });
     }
 
-    return response.value;
+    return !submitted
+      ? (response.value as CollectionDate)
+      : (response.value as CollectionDateData);
   }
 
   async setCollectionDate(
-    { id, accountId }: SubmissionRef,
-    value: CollectionDate
+    { id, accountId, submitted }: SubmissionTypeRef,
+    value: CollectionDate | CollectionDateData
   ): Promise<void> {
-    let response: SetDraftCollectionDateByIdResponse;
+    let response:
+      | draft.SetDraftCollectionDateResponse
+      | submission.SetCollectionDateRequest;
     try {
-      response = await this.client.setDraftCollectionDatelById({
-        id,
-        accountId,
-        value,
-      });
+      if (!submitted) {
+        response = await this.client.setDraftCollectionDate({
+          id,
+          accountId,
+          value: value as CollectionDate,
+        });
+      } else {
+        response = await this.client.setCollectionDate({
+          id,
+          accountId,
+          value: value as CollectionDateData,
+        });
+      }
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -1830,7 +655,7 @@ export class AnnexViiServiceSubmissionBackend
   }
 
   async listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
-    let response: ListDraftCarriersResponse;
+    let response: draft.ListDraftCarriersResponse;
     try {
       response = await this.client.listDraftCarriers({ id, accountId });
     } catch (err) {
@@ -1851,7 +676,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
-    let response: CreateDraftCarriersResponse;
+    let response: draft.CreateDraftCarriersResponse;
     try {
       response = await this.client.createDraftCarriers({
         id,
@@ -1876,7 +701,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     carrierId: string
   ): Promise<Carriers> {
-    let response: GetDraftCarriersResponse;
+    let response: draft.GetDraftCarriersResponse;
     try {
       response = await this.client.getDraftCarriers({
         id,
@@ -1908,13 +733,13 @@ export class AnnexViiServiceSubmissionBackend
       }
     }
 
-    let response: SetDraftCarriersResponse;
+    let response: draft.SetDraftCarriersResponse;
     try {
       response = await this.client.setDraftCarriers({
         id,
         accountId,
         carrierId,
-        value,
+        value: value as draft.DraftCarriers,
       });
     } catch (err) {
       this.logger.error(err);
@@ -1932,7 +757,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     carrierId: string
   ): Promise<void> {
-    let response: DeleteDraftCarriersResponse;
+    let response: draft.DeleteDraftCarriersResponse;
     try {
       response = await this.client.deleteDraftCarriers({
         id,
@@ -1955,7 +780,7 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<CollectionDetail> {
-    let response: GetDraftCollectionDetailResponse;
+    let response: draft.GetDraftCollectionDetailResponse;
     try {
       response = await this.client.getDraftCollectionDetail({
         id,
@@ -1979,7 +804,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: CollectionDetail
   ): Promise<void> {
-    let response: SetDraftCollectionDetailResponse;
+    let response: draft.SetDraftCollectionDetailResponse;
     try {
       response = await this.client.setDraftCollectionDetail({
         id,
@@ -2002,9 +827,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<ExitLocation> {
-    let response: GetDraftExitLocationByIdResponse;
+    let response: draft.GetDraftUkExitLocationResponse;
     try {
-      response = await this.client.getDraftExitLocationById({
+      response = await this.client.getDraftUkExitLocation({
         id,
         accountId,
       });
@@ -2026,9 +851,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: ExitLocation
   ): Promise<void> {
-    let response: SetDraftExitLocationByIdResponse;
+    let response: draft.SetDraftUkExitLocationResponse;
     try {
-      response = await this.client.setDraftExitLocationById({
+      response = await this.client.setDraftUkExitLocation({
         id,
         accountId,
         value,
@@ -2049,7 +874,7 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<TransitCountries> {
-    let response: GetDraftTransitCountriesResponse;
+    let response: draft.GetDraftTransitCountriesResponse;
     try {
       response = await this.client.getDraftTransitCountries({
         id,
@@ -2073,7 +898,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: TransitCountries
   ): Promise<void> {
-    let response: SetDraftTransitCountriesResponse;
+    let response: draft.SetDraftTransitCountriesResponse;
     try {
       response = await this.client.setDraftTransitCountries({
         id,
@@ -2096,7 +921,7 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    let response: ListDraftRecoveryFacilityDetailsResponse;
+    let response: draft.ListDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.listDraftRecoveryFacilityDetails({
         id,
@@ -2120,7 +945,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: Omit<RecoveryFacilityDetail, 'values'>
   ): Promise<RecoveryFacilityDetail> {
-    let response: CreateDraftRecoveryFacilityDetailsResponse;
+    let response: draft.CreateDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.createDraftRecoveryFacilityDetails({
         id,
@@ -2145,7 +970,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<RecoveryFacilityDetail> {
-    let response: GetDraftRecoveryFacilityDetailsResponse;
+    let response: draft.GetDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.getDraftRecoveryFacilityDetails({
         id,
@@ -2177,13 +1002,13 @@ export class AnnexViiServiceSubmissionBackend
       }
     }
 
-    let response: SetDraftRecoveryFacilityDetailsResponse;
+    let response: draft.SetDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.setDraftRecoveryFacilityDetails({
         id,
         accountId,
         rfdId,
-        value,
+        value: value as draft.DraftRecoveryFacilityDetails,
       });
     } catch (err) {
       this.logger.error(err);
@@ -2201,7 +1026,7 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<void> {
-    let response: DeleteDraftRecoveryFacilityDetailsResponse;
+    let response: draft.DeleteDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.deleteDraftRecoveryFacilityDetails({
         id,
@@ -2224,9 +1049,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<SubmissionConfirmation> {
-    let response: GetDraftSubmissionConfirmationByIdResponse;
+    let response: draft.GetDraftSubmissionConfirmationResponse;
     try {
-      response = await this.client.getDraftSubmissionConfirmationById({
+      response = await this.client.getDraftSubmissionConfirmation({
         id,
         accountId,
       });
@@ -2248,9 +1073,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: SubmissionConfirmation
   ): Promise<void> {
-    let response: SetDraftSubmissionConfirmationByIdResponse;
+    let response: draft.SetDraftSubmissionConfirmationResponse;
     try {
-      response = await this.client.setDraftSubmissionConfirmationById({
+      response = await this.client.setDraftSubmissionConfirmation({
         id,
         accountId,
         value,
@@ -2271,9 +1096,9 @@ export class AnnexViiServiceSubmissionBackend
     id,
     accountId,
   }: SubmissionRef): Promise<SubmissionDeclaration> {
-    let response: GetDraftSubmissionDeclarationByIdResponse;
+    let response: draft.GetDraftSubmissionDeclarationResponse;
     try {
-      response = await this.client.getDraftSubmissionDeclarationById({
+      response = await this.client.getDraftSubmissionDeclaration({
         id,
         accountId,
       });
@@ -2295,9 +1120,9 @@ export class AnnexViiServiceSubmissionBackend
     { id, accountId }: SubmissionRef,
     value: Omit<SubmissionDeclaration, 'values'>
   ): Promise<void> {
-    let response: SetDraftSubmissionDeclarationByIdResponse;
+    let response: draft.SetDraftSubmissionDeclarationResponse;
     try {
-      response = await this.client.setDraftSubmissionDeclarationById({
+      response = await this.client.setDraftSubmissionDeclaration({
         id,
         accountId,
         value,
@@ -2317,7 +1142,7 @@ export class AnnexViiServiceSubmissionBackend
   async getNumberOfSubmissions(
     accountId: string
   ): Promise<NumberOfSubmissions> {
-    let response: GetNumberOfSubmissionsResponse;
+    let response: submission.GetNumberOfSubmissionsResponse;
     try {
       response = await this.client.getNumberOfSubmissions({ accountId });
     } catch (err) {

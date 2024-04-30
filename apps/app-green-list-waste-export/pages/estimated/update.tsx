@@ -13,7 +13,7 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   Loading,
-  SubmissionSummary,
+  SubmittedSummary,
   NotificationBanner,
 } from 'components';
 
@@ -84,7 +84,7 @@ const UpdateRecord = () => {
       dispatchViewRecordPage({ type: 'DATA_FETCH_INIT' });
       if (id !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
           }
@@ -144,8 +144,7 @@ const UpdateRecord = () => {
         {viewRecordPage.isLoading && <Loading />}
         {!viewRecordPage.isError && !viewRecordPage.isLoading && (
           <>
-            {viewRecordPage.data.submissionDeclaration.status ===
-              'Complete' && (
+            {
               <GovUK.GridRow>
                 <GovUK.GridCol setWidth="two-thirds">
                   {router.query.success && (
@@ -159,10 +158,7 @@ const UpdateRecord = () => {
                   )}
                   <GovUK.Caption id="my-reference">
                     {t('exportJourney.submittedView.title')}:{' '}
-                    {
-                      viewRecordPage.data.submissionDeclaration.values
-                        .transactionId
-                    }
+                    {viewRecordPage.data.submissionDeclaration.transactionId}
                   </GovUK.Caption>
                   <GovUK.Heading size="LARGE" id="template-heading">
                     {t('exportJourney.updateActual.title')}
@@ -173,7 +169,7 @@ const UpdateRecord = () => {
                     </GovUK.WarningText>
                   </div>
 
-                  <SubmissionSummary
+                  <SubmittedSummary
                     data={viewRecordPage.data}
                     showChangeLinks={false}
                     estimate={true}
@@ -214,7 +210,7 @@ const UpdateRecord = () => {
                   </ButtonGroup>
                 </GovUK.GridCol>
               </GovUK.GridRow>
-            )}
+            }
           </>
         )}
       </GovUK.Page>

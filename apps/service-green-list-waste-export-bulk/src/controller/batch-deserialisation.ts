@@ -1,4 +1,5 @@
 import {
+  GetBatchContentRequest,
   GetBatchRequest,
   UpdateBatchRequest,
   schema,
@@ -13,4 +14,8 @@ export const getBatchRequest = ajv.compileParser<GetBatchRequest>(
 
 export const updateBatchRequest = ajv.compileParser<UpdateBatchRequest>(
   schema.updateBatchRequest
+);
+
+export const getBatchContentRequest = ajv.compileParser<GetBatchContentRequest>(
+  schema.getBatchContentRequest
 );

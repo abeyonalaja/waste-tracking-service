@@ -198,7 +198,7 @@ describe('SubmittedTable component', () => {
       );
     });
 
-    const wasteCode = screen.getAllByText(/Not applicable/);
+    const wasteCode = screen.getAllByText('N/A');
     expect(wasteCode).toBeTruthy();
   });
 

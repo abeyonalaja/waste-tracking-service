@@ -4,6 +4,9 @@ import {
   AddContentToBatchRequest,
   AddContentToBatchResponse,
   getBatch,
+  getBatchContent,
+  GetBatchContentRequest,
+  GetBatchContentResponse,
   GetBatchRequest,
   GetBatchResponse,
   updateBatch,
@@ -44,5 +47,16 @@ export class DaprAnnexViiBulkClient {
       HttpMethod.POST,
       req
     )) as UpdateBatchResponse;
+  }
+
+  async getBatchContent(
+    req: GetBatchContentRequest
+  ): Promise<GetBatchContentResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.annexViiBulkAppId,
+      getBatchContent.name,
+      HttpMethod.POST,
+      req
+    )) as GetBatchContentResponse;
   }
 }

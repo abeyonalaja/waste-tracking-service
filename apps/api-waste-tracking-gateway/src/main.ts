@@ -1,6 +1,5 @@
 import { DaprClient } from '@dapr/dapr';
 import { server } from '@hapi/hapi';
-import { Template } from '@wts/api/green-list-waste-export';
 import { DaprAddressClient } from '@wts/client/address';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { DaprAnnexViiBulkClient } from '@wts/client/green-list-waste-export-bulk';
@@ -14,50 +13,41 @@ import { configureStrategy, getWellKnownParams, userFilter } from './lib/auth';
 import {
   AddressBackend,
   AddressServiceBackend,
-  AddressStub,
   addressPlugin,
 } from './modules/address';
 import {
   AnnexViiBulkServiceBackend,
   BulkSubmissionBackend,
-  InMemoryBulkSubmissionBackend,
   bulkSubmissionPlugin,
 } from './modules/bulk-submission';
 import { feedbackPlugin } from './modules/feedback';
 import {
   FeedbackBackend,
   FeedbackServiceBackend,
-  FeedbackStub,
 } from './modules/feedback/feedback.backend';
 import {
   PrivateAudienceServiceBackend,
   Backend as PrivateBetaBackend,
-  PrivateBetaStub,
   privateBetaPlugin,
 } from './modules/private-beta';
 import {
   ReferenceDataBackend,
   ReferenceDataServiceBackend,
-  ReferenceDataStub,
   referenceDataPlugin,
 } from './modules/reference-data';
 import {
   AnnexViiServiceSubmissionBackend,
-  InMemorySubmissionBackend,
-  Submission,
   SubmissionBackend,
   submissionPlugin,
 } from './modules/submission';
 import {
   AnnexViiServiceTemplateBackend,
-  InMemoryTemplateBackend,
   TemplateBackend,
   templatePlugin,
 } from './modules/template';
 import {
   ServiceUkWasteMovementsBulkSubmissionBackend,
   UkWasteMovementsBulkSubmissionBackend,
-  InMemoryUkWasteMovementsBulkSubmissionBackend,
   ukWasteMovementsBulkSubmissionPlugin,
 } from './modules/uk-waste-movements-bulk-submission';
 import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
@@ -89,19 +79,9 @@ let backend: {
 };
 
 if (process.env['NODE_ENV'] === 'development') {
-  logger.warn('service is using mock-backends; NOT for production use');
-  const submissions = new Map<string, Submission>();
-  const templates = new Map<string, Template>();
-  backend = {
-    address: new AddressStub(),
-    feedback: new FeedbackStub(),
-    submission: new InMemorySubmissionBackend(submissions, templates),
-    template: new InMemoryTemplateBackend(submissions, templates),
-    referenceData: new ReferenceDataStub(),
-    bulkSubmission: new InMemoryBulkSubmissionBackend(),
-    privateBeta: new PrivateBetaStub(),
-    ukWasteMovements: new InMemoryUkWasteMovementsBulkSubmissionBackend(),
-  };
+  throw new Error(
+    'Use "nx serve api-mock-gateway" to start the development server instead'
+  );
 } else {
   const client = new DaprClient();
   backend = {

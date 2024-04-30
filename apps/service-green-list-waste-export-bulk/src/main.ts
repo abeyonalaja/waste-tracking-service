@@ -25,16 +25,13 @@ import {
   ContentSubmissionTask,
   ContentToBeProcessedTask,
   ContentToBeSubmittedTask,
+  SubmissionFromBulkSummary,
 } from './model';
 import { v4 as uuidv4 } from 'uuid';
 import { CloudEvent, HTTP } from 'cloudevents';
 import * as taskValidate from './lib/task-validation';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
-import {
-  ValidateSubmissionsResponse,
-  CreateSubmissionsResponse,
-} from '@wts/api/green-list-waste-export';
-import { SubmissionSummary } from '@wts/api/green-list-waste-export-bulk';
+import { submission } from '@wts/api/green-list-waste-export';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -87,9 +84,14 @@ const serviceBusClient = new ServiceBusClient(
   process.env['SERVICE_BUS_HOST_NAME'],
   aadCredentials
 );
-const batchController = new BatchController(repository, logger);
-const csvValidator = new CsvValidator(logger);
+
 const daprAnnexViiClient = new DaprAnnexViiClient(server.client, annexViiAppId);
+const batchController = new BatchController(
+  repository,
+  daprAnnexViiClient,
+  logger
+);
+const csvValidator = new CsvValidator(logger);
 
 await server.invoker.listen(
   api.addContentToBatch.name,
@@ -247,6 +249,23 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getBatchContent.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = parse.getBatchContentRequest(body);
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await batchController.getBatchContent(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();
 
 const execute = true;
@@ -285,12 +304,12 @@ while (execute) {
             };
             await repository.saveBatch(value, body.data.accountId);
           } else {
-            const submissions: api.PartialSubmission[] = [];
+            const submissions: Omit<submission.PartialSubmission, 'id'>[] = [];
             const rowErrors: api.BulkSubmissionValidationRowError[] = [];
             const chunkSize = 50;
             for (let i = 0; i < records.value.rows.length; i += chunkSize) {
               const chunk = records.value.rows.slice(i, i + chunkSize);
-              let response: ValidateSubmissionsResponse;
+              let response: submission.ValidateSubmissionsResponse;
               try {
                 response = await daprAnnexViiClient.validateSubmissions({
                   accountId: body.data.accountId,
@@ -423,20 +442,20 @@ while (execute) {
             throw Boom.internal(message);
           }
 
-          const submissions: api.PartialSubmission[] =
+          const submissions: Omit<submission.PartialSubmission, 'id'>[] =
             batchData.state.submissions;
 
-          const submissionSummary: SubmissionSummary[] = [];
+          const submissionSummary: SubmissionFromBulkSummary[] = [];
 
           const chunkSize = 50;
           for (let i = 0; i < submissions.length; i += chunkSize) {
             const chunk = submissions.slice(i, i + chunkSize);
-            let response: CreateSubmissionsResponse;
+            let response: submission.CreateSubmissionsResponse;
             try {
               response = await daprAnnexViiClient.createSubmissions({
                 id: body.data.batchId,
                 accountId: body.data.accountId,
-                value: chunk,
+                values: chunk,
               });
             } catch (err) {
               logger.error(
@@ -451,7 +470,7 @@ while (execute) {
               });
             } else {
               response.value.forEach((submission) => {
-                const s: SubmissionSummary = {
+                const s: SubmissionFromBulkSummary = {
                   id: submission.id,
                   submissionDeclaration: submission.submissionDeclaration,
                   hasEstimates:

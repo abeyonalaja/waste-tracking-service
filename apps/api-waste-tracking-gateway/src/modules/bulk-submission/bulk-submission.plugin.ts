@@ -95,6 +95,27 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/submissions',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getBatchSubmissions({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.GetBulkSubmissionsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

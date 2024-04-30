@@ -2,10 +2,8 @@ import {
   CreateSubmissionRequest,
   PutReferenceRequest,
   PutWasteDescriptionRequest,
-  PutWasteQuantityRequest,
   PutExporterDetailRequest,
   PutImporterDetailRequest,
-  PutCollectionDateRequest,
   CreateCarriersRequest,
   SetCarriersRequest,
   SetCollectionDetailRequest,
@@ -16,6 +14,10 @@ import {
   PutSubmissionConfirmationRequest,
   PutSubmissionDeclarationRequest,
   PutSubmissionCancellationRequest,
+  WasteQuantity,
+  WasteQuantityData,
+  CollectionDateData,
+  CollectionDate,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -90,91 +92,141 @@ export const validatePutWasteDescriptionRequest =
     },
   });
 
-export const validatePutWasteQuantityRequest =
-  ajv.compile<PutWasteQuantityRequest>({
-    discriminator: 'status',
-    mapping: {
-      CannotStart: {
-        properties: {},
+export const validatePutDraftWasteQuantityRequest = ajv.compile<WasteQuantity>({
+  discriminator: 'status',
+  mapping: {
+    CannotStart: {
+      properties: {},
+    },
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      properties: {},
+      optionalProperties: {
+        value: {
+          properties: {},
+          optionalProperties: {
+            type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
+            estimateData: {
+              optionalProperties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
+                value: { type: 'float64' },
+              },
+            },
+            actualData: {
+              optionalProperties: {
+                quantityType: { enum: ['Volume', 'Weight'] },
+                unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
+                value: { type: 'float64' },
+              },
+            },
+          },
+        },
       },
-      NotStarted: {
-        properties: {},
-      },
-      Started: {
-        properties: {},
-        optionalProperties: {
-          value: {
-            properties: {},
-            optionalProperties: {
-              type: { enum: ['NotApplicable', 'EstimateData', 'ActualData'] },
-              estimateData: {
-                optionalProperties: {
-                  quantityType: { enum: ['Volume', 'Weight'] },
-                  unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
-                  value: { type: 'float64' },
+    },
+    Complete: {
+      properties: {
+        value: {
+          discriminator: 'type',
+          mapping: {
+            NotApplicable: { properties: {} },
+            EstimateData: {
+              properties: {
+                estimateData: {
+                  optionalProperties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
+                    value: { type: 'float64' },
+                  },
+                },
+                actualData: {
+                  optionalProperties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
+                    value: { type: 'float64' },
+                  },
                 },
               },
-              actualData: {
-                optionalProperties: {
-                  quantityType: { enum: ['Volume', 'Weight'] },
-                  unit: { enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'] },
-                  value: { type: 'float64' },
+            },
+            ActualData: {
+              properties: {
+                estimateData: {
+                  optionalProperties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
+                    value: { type: 'float64' },
+                  },
+                },
+                actualData: {
+                  optionalProperties: {
+                    quantityType: { enum: ['Volume', 'Weight'] },
+                    unit: {
+                      enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+                    },
+                    value: { type: 'float64' },
+                  },
                 },
               },
             },
           },
         },
       },
-      Complete: {
+    },
+  },
+});
+
+export const validatePutSubmissionWasteQuantityRequest =
+  ajv.compile<WasteQuantityData>({
+    discriminator: 'type',
+    mapping: {
+      EstimateData: {
         properties: {
-          value: {
-            discriminator: 'type',
-            mapping: {
-              NotApplicable: { properties: {} },
-              EstimateData: {
-                properties: {
-                  estimateData: {
-                    optionalProperties: {
-                      quantityType: { enum: ['Volume', 'Weight'] },
-                      unit: {
-                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
-                      },
-                      value: { type: 'float64' },
-                    },
-                  },
-                  actualData: {
-                    optionalProperties: {
-                      quantityType: { enum: ['Volume', 'Weight'] },
-                      unit: {
-                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
-                      },
-                      value: { type: 'float64' },
-                    },
-                  },
-                },
+          estimateData: {
+            optionalProperties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              unit: {
+                enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
               },
-              ActualData: {
-                properties: {
-                  estimateData: {
-                    optionalProperties: {
-                      quantityType: { enum: ['Volume', 'Weight'] },
-                      unit: {
-                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
-                      },
-                      value: { type: 'float64' },
-                    },
-                  },
-                  actualData: {
-                    optionalProperties: {
-                      quantityType: { enum: ['Volume', 'Weight'] },
-                      unit: {
-                        enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
-                      },
-                      value: { type: 'float64' },
-                    },
-                  },
-                },
+              value: { type: 'float64' },
+            },
+          },
+          actualData: {
+            optionalProperties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              unit: {
+                enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
               },
+              value: { type: 'float64' },
+            },
+          },
+        },
+      },
+      ActualData: {
+        properties: {
+          estimateData: {
+            optionalProperties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              unit: {
+                enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+              },
+              value: { type: 'float64' },
+            },
+          },
+          actualData: {
+            optionalProperties: {
+              quantityType: { enum: ['Volume', 'Weight'] },
+              unit: {
+                enum: ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'],
+              },
+              value: { type: 'float64' },
             },
           },
         },
@@ -271,8 +323,8 @@ export const validatePutImporterDetailRequest =
     },
   });
 
-export const validatePutCollectionDateRequest =
-  ajv.compile<PutCollectionDateRequest>({
+export const validatePutDraftCollectionDateRequest =
+  ajv.compile<CollectionDate>({
     discriminator: 'status',
     mapping: {
       NotStarted: {
@@ -299,6 +351,27 @@ export const validatePutCollectionDateRequest =
               },
             },
           },
+        },
+      },
+    },
+  });
+
+export const validatePutSubmissionCollectionDateRequest =
+  ajv.compile<CollectionDateData>({
+    properties: {
+      type: { enum: ['EstimateDate', 'ActualDate'] },
+      actualDate: {
+        optionalProperties: {
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
+        },
+      },
+      estimateDate: {
+        optionalProperties: {
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
         },
       },
     },

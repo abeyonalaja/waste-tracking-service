@@ -19,7 +19,7 @@ import {
   TextareaCharCount,
   ButtonGroup,
   SaveReturnButton,
-  SubmissionSummary,
+  SubmittedSummary,
 } from 'components';
 import {
   isNotEmpty,
@@ -126,7 +126,7 @@ const TemplateCreateFromRecord = () => {
       dispatchTemplatePage({ type: 'DATA_FETCH_INIT' });
       if (id !== null) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
           }
@@ -247,10 +247,7 @@ const TemplateCreateFromRecord = () => {
                   <>
                     <GovUK.Caption size="L">
                       {t('exportJourney.updateAnnexSeven.delete.caption')}{' '}
-                      {
-                        templatePage.data.submissionDeclaration.values
-                          .transactionId
-                      }
+                      {templatePage.data.submissionDeclaration.transactionId}
                     </GovUK.Caption>
                     <GovUK.Heading size="L">
                       {t('templates.create.fromRecord.title')}
@@ -311,7 +308,7 @@ const TemplateCreateFromRecord = () => {
                         </SaveReturnButton>
                       </ButtonGroup>
                     </form>
-                    <SubmissionSummary
+                    <SubmittedSummary
                       data={templatePage.data}
                       showChangeLinks={false}
                       isTemplate={true}

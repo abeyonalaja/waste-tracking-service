@@ -31,6 +31,7 @@ import { RadioList } from './RadioList';
 import { SaveReturnButton } from './SaveReturnButton';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SubmissionSummary } from './SubmissionSummary';
+import { SubmittedSummary } from './SubmittedSummary';
 import { SummaryCard } from './SummaryCard';
 import { SummaryList } from './SummaryList';
 import { SummaryListWithActions } from './SummaryListWithActions';
@@ -72,6 +73,7 @@ export {
   SaveReturnButton,
   SubmissionNotFound,
   SubmissionSummary,
+  SubmittedSummary,
   SummaryCard,
   SummaryList,
   SummaryListWithActions,

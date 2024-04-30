@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Submission } from '@wts/api/waste-tracking-gateway';
+import type { DraftSubmission } from '@wts/api/waste-tracking-gateway';
 import { Accordion } from './Accordion';
 import { AccordionSection } from './AccordionSection';
 import { AppLink } from './AppLink';
@@ -16,7 +16,7 @@ import { Tag } from 'govuk-react';
 import useRefDataLookup from '../utils/useRefDataLookup';
 
 interface Props {
-  data: Submission;
+  data: DraftSubmission;
   apiConfig: HeadersInit;
   showChangeLinks?: boolean;
   estimate?: boolean;

@@ -1,5 +1,8 @@
 import { db } from '../../db';
 import {
+  CancellationType,
+  Carrier,
+  CarrierPartial,
   Carriers,
   CollectionDate,
   CollectionDetail,
@@ -8,85 +11,59 @@ import {
   ExporterDetail,
   ImporterDetail,
   NumberOfSubmissions,
+  PageMetadata,
+  RecoveryFacility,
   RecoveryFacilityDetail,
-  Submission,
+  RecoveryFacilityPartial,
+  DraftSubmission,
+  SubmissionBase,
   SubmissionConfirmation,
   SubmissionDeclaration,
-  SubmissionState,
+  DraftSubmissionState,
   SubmissionSummary,
   SubmissionSummaryPage,
   TransitCountries,
   WasteDescription,
   WasteQuantity,
+  Submission,
+  WasteQuantityData,
+  CollectionDateData,
 } from '@wts/api/waste-tracking-gateway';
-import {
-  DraftSubmission,
-  DraftWasteDescription,
-  Template,
-} from '@wts/api/green-list-waste-export';
 import { v4 as uuidv4 } from 'uuid';
-import * as dto from '@wts/api/waste-tracking-gateway';
-import { BadRequestError, NotFoundError } from '../../libs/errors';
-
-function setWasteQuantityUnit(
-  wasteQuantity: WasteQuantity,
-  submission: dto.Submission
-) {
-  if (
-    submission.wasteDescription.status !== 'NotStarted' &&
-    wasteQuantity.status !== 'CannotStart' &&
-    wasteQuantity.status !== 'NotStarted'
-  ) {
-    if (submission.wasteDescription.wasteCode?.type === 'NotApplicable') {
-      if (wasteQuantity.value?.type === 'ActualData') {
-        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
-          wasteQuantity.value.actualData.unit = 'Litre';
-        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
-          wasteQuantity.value.actualData.unit = 'Kilogram';
-        }
-      } else if (wasteQuantity.value?.type === 'EstimateData') {
-        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
-          wasteQuantity.value.estimateData.unit = 'Litre';
-        } else if (
-          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
-        ) {
-          wasteQuantity.value.estimateData.unit = 'Kilogram';
-        }
-      }
-    } else {
-      if (wasteQuantity.value?.type === 'ActualData') {
-        if (wasteQuantity.value?.actualData?.quantityType === 'Volume') {
-          wasteQuantity.value.actualData.unit = 'Cubic Metre';
-        } else if (wasteQuantity.value?.actualData?.quantityType === 'Weight') {
-          wasteQuantity.value.actualData.unit = 'Tonne';
-        }
-      } else if (wasteQuantity.value?.type === 'EstimateData') {
-        if (wasteQuantity.value?.estimateData?.quantityType === 'Volume') {
-          wasteQuantity.value.estimateData.unit = 'Cubic Metre';
-        } else if (
-          wasteQuantity.value?.estimateData?.quantityType === 'Weight'
-        ) {
-          wasteQuantity.value.estimateData.unit = 'Tonne';
-        }
-      }
-    }
-  }
-}
-
-export type OrderRef = {
-  order: 'ASC' | 'DESC';
-};
-
-function paginateArray<T>(
-  array: T[],
-  pageSize: number,
-  pageNumber: number
-): T[] {
-  return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-}
+import { BadRequestError, NotFoundError } from '../../lib/errors';
+import {
+  copyCarriersNoTransport,
+  isSmallWaste,
+  copyRecoveryFacilities,
+  isWasteCodeChangingBulkToSmall,
+  isWasteCodeChangingSmallToBulk,
+  isWasteCodeChangingBulkToBulkDifferentType,
+  isWasteCodeChangingBulkToBulkSameType,
+  setBaseWasteDescription,
+  setBaseExporterDetail,
+  setBaseImporterDetail,
+  createBaseCarriers,
+  setBaseNoCarriers,
+  setBaseCarriers,
+  deleteBaseCarriers,
+  setBaseCollectionDetail,
+  setBaseExitLocation,
+  setBaseTransitCountries,
+  createBaseRecoveryFacilityDetail,
+  setBaseRecoveryFacilityDetail,
+  deleteBaseRecoveryFacilityDetail,
+  isCollectionDateValid,
+  paginateArray,
+  setDraftWasteQuantityUnit,
+  setSubmissionConfirmation,
+  setSubmissionDeclaration,
+  setWasteQuantityUnit,
+  getSubmissionData,
+} from '../../lib/util';
+import { validation } from '@wts/api/green-list-waste-export';
 
 export type SubmissionBasePlusId = {
-  submissionBase: dto.SubmissionBase;
+  submissionBase: SubmissionBase;
   id: string;
 };
 
@@ -95,21 +72,41 @@ export type SubmissionRef = {
   accountId: string;
 };
 
+export type SubmissionTypeRef = SubmissionRef & {
+  submitted: boolean;
+};
+
 export type TemplateRef = {
   id: string;
   accountId: string;
+};
+
+export type OrderRef = {
+  order: 'ASC' | 'DESC';
 };
 
 export async function getSubmissions(
   accountId: string,
   { order }: OrderRef,
   pageLimit = 15,
-  state?: SubmissionState['status'][],
+  state?: DraftSubmissionState['status'][],
   token?: string
 ): Promise<SubmissionSummaryPage> {
-  const rawValues: Submission[] = db.submissions.filter(
-    (s) => s.accountId === accountId
-  );
+  let rawValues: DraftSubmission[] | Submission[];
+  if (
+    state?.includes('SubmittedWithEstimates') ||
+    state?.includes('SubmittedWithActuals') ||
+    state?.includes('UpdatedWithActuals') ||
+    state?.includes('Cancelled')
+  ) {
+    rawValues = db.submissions.filter(
+      (s) => s.accountId === accountId
+    ) as Submission[];
+  } else {
+    rawValues = db.drafts.filter(
+      (s) => s.accountId === accountId
+    ) as DraftSubmission[];
+  }
 
   let values: ReadonlyArray<SubmissionSummary> = rawValues
     .map((s) => {
@@ -117,16 +114,7 @@ export async function getSubmissions(
         id: s.id,
         reference: s.reference,
         wasteDescription: s.wasteDescription,
-        wasteQuantity: { status: s.wasteQuantity.status },
-        exporterDetail: { status: s.exporterDetail.status },
-        importerDetail: { status: s.exporterDetail.status },
         collectionDate: s.collectionDate,
-        carriers: { status: s.carriers.status },
-        collectionDetail: { status: s.collectionDetail.status },
-        ukExitLocation: { status: s.ukExitLocation.status },
-        transitCountries: { status: s.transitCountries.status },
-        recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
-        submissionConfirmation: { status: s.submissionConfirmation.status },
         submissionDeclaration: s.submissionDeclaration,
         submissionState: s.submissionState,
       };
@@ -142,16 +130,7 @@ export async function getSubmissions(
           id: s.id,
           reference: s.reference,
           wasteDescription: s.wasteDescription,
-          wasteQuantity: { status: s.wasteQuantity.status },
-          exporterDetail: { status: s.exporterDetail.status },
-          importerDetail: { status: s.exporterDetail.status },
           collectionDate: s.collectionDate,
-          carriers: { status: s.carriers.status },
-          collectionDetail: { status: s.collectionDetail.status },
-          ukExitLocation: { status: s.ukExitLocation.status },
-          transitCountries: { status: s.transitCountries.status },
-          recoveryFacilityDetail: { status: s.recoveryFacilityDetail.status },
-          submissionConfirmation: { status: s.submissionConfirmation.status },
           submissionDeclaration: s.submissionDeclaration,
           submissionState: s.submissionState,
         };
@@ -180,7 +159,7 @@ export async function getSubmissions(
   let currentPage = 0;
   let pageNumber = 0;
   let contToken = '';
-  const metadataArray: dto.SubmissionPageMetadata[] = [];
+  const metadataArray: PageMetadata[] = [];
   let pageValues: ReadonlyArray<SubmissionSummary> = [];
 
   while (hasMoreResults) {
@@ -204,7 +183,7 @@ export async function getSubmissions(
     totalSubmissions += paginatedValues.length;
     contToken = nextPaginatedValues.length === 0 ? '' : pageNumber.toString();
 
-    const pageMetadata: dto.SubmissionPageMetadata = {
+    const pageMetadata: PageMetadata = {
       pageNumber: pageNumber,
       token: nextPaginatedValues.length === 0 ? '' : pageNumber.toString(),
     };
@@ -216,7 +195,7 @@ export async function getSubmissions(
   }
 
   return Promise.resolve({
-    totalSubmissions: totalSubmissions,
+    totalRecords: totalSubmissions,
     totalPages: totalPages,
     currentPage: currentPage,
     pages: metadataArray,
@@ -227,10 +206,15 @@ export async function getSubmissions(
 export async function getSubmission({
   id,
   accountId,
-}: SubmissionRef): Promise<Submission> {
-  const value = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  ) as Submission;
+  submitted,
+}: SubmissionTypeRef): Promise<DraftSubmission | Submission> {
+  const value = !submitted
+    ? (db.drafts.find(
+        (s) => s.id == id && s.accountId == accountId
+      ) as DraftSubmission)
+    : (db.submissions.find(
+        (s) => s.id == id && s.accountId == accountId
+      ) as Submission);
 
   if (
     value === undefined ||
@@ -239,39 +223,64 @@ export async function getSubmission({
   ) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
-  const submission: Submission = {
-    id: value.id,
-    reference: value.reference,
-    wasteQuantity: value.wasteQuantity,
-    collectionDate: value.collectionDate,
-    submissionConfirmation: value.submissionConfirmation,
-    submissionDeclaration: value.submissionDeclaration,
-    submissionState: value.submissionState,
-    wasteDescription: value.wasteDescription,
-    exporterDetail: value.exporterDetail,
-    importerDetail: value.importerDetail,
-    carriers: value.carriers,
-    collectionDetail: value.collectionDetail,
-    ukExitLocation: value.ukExitLocation,
-    transitCountries: value.transitCountries,
-    recoveryFacilityDetail: value.recoveryFacilityDetail,
-  };
 
-  return Promise.resolve(submission);
+  if (!submitted) {
+    const v = value as DraftSubmission;
+    const submission: DraftSubmission = {
+      id: v.id,
+      reference: v.reference,
+      wasteQuantity: v.wasteQuantity,
+      collectionDate: v.collectionDate,
+      submissionConfirmation: v.submissionConfirmation,
+      submissionDeclaration: v.submissionDeclaration,
+      submissionState: v.submissionState,
+      wasteDescription: v.wasteDescription,
+      exporterDetail: v.exporterDetail,
+      importerDetail: v.importerDetail,
+      carriers: v.carriers,
+      collectionDetail: v.collectionDetail,
+      ukExitLocation: v.ukExitLocation,
+      transitCountries: v.transitCountries,
+      recoveryFacilityDetail: v.recoveryFacilityDetail,
+    } as DraftSubmission;
+    return Promise.resolve(submission);
+  } else {
+    const v = value as Submission;
+    const submission = {
+      id: v.id,
+      reference: v.reference,
+      wasteQuantity: v.wasteQuantity,
+      collectionDate: v.collectionDate,
+      submissionDeclaration: v.submissionDeclaration,
+      submissionState: v.submissionState,
+      wasteDescription: v.wasteDescription,
+      exporterDetail: v.exporterDetail,
+      importerDetail: v.importerDetail,
+      carriers: v.carriers,
+      collectionDetail: v.collectionDetail,
+      ukExitLocation: v.ukExitLocation,
+      transitCountries: v.transitCountries,
+      recoveryFacilityDetail: v.recoveryFacilityDetail,
+    } as Submission;
+
+    return Promise.resolve(submission);
+  }
 }
+
 export async function createSubmission(
   accountId: string,
   reference: CustomerReference
-): Promise<Submission> {
-  if (reference.length > 20) {
+): Promise<DraftSubmission> {
+  if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
-      new BadRequestError('Supplied reference cannot exceed 20 characters')
+      new BadRequestError(
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
+      )
     );
   }
 
   const id = uuidv4();
-  // Create the new submission object
-  const value: Submission & { accountId: string } = {
+  const value: DraftSubmission & { accountId: string } = {
     id,
     reference,
     wasteDescription: { status: 'NotStarted' },
@@ -296,11 +305,8 @@ export async function createSubmission(
     accountId: accountId,
   };
 
-  // Add the new submission to the database
+  db.drafts.push(value);
 
-  db.submissions.push(value);
-
-  // Return the new submission
   return Promise.resolve(value);
 }
 
@@ -309,20 +315,24 @@ export async function createSubmissionFromTemplate(
   accountId: string,
   reference: CustomerReference
 ): Promise<DraftSubmission> {
-  if (reference.length > 20) {
+  if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
-      new BadRequestError('Supplied reference cannot exceed 20 characters')
+      new BadRequestError(
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
+      )
     );
   }
 
-  const template = await getTemplate({ id, accountId } as TemplateRef);
+  const template = db.templates.find(
+    (t) => t.id == id && t.accountId == accountId
+  );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found'));
   }
 
   id = uuidv4();
 
-  const value: Submission & { accountId: string } = {
+  const value: DraftSubmission & { accountId: string } = {
     id,
     reference,
     wasteDescription: template.wasteDescription,
@@ -352,7 +362,7 @@ export async function createSubmissionFromTemplate(
     accountId: accountId,
   };
 
-  db.submissions.push(value);
+  db.drafts.push(value);
 
   return Promise.resolve(value);
 }
@@ -361,20 +371,18 @@ export async function deleteSubmission({
   id,
   accountId,
 }: SubmissionRef): Promise<void> {
-  const value = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  );
+  const value = db.drafts.find((s) => s.id == id && s.accountId == accountId);
   if (value === undefined) {
     return Promise.reject(new NotFoundError('Submission not found'));
   }
   value.submissionState = { status: 'Deleted', timestamp: new Date() };
-  db.submissions.push(value);
+  db.drafts.push(value);
   return Promise.resolve();
 }
 
 export async function cancelSubmission(
   { id, accountId }: SubmissionRef,
-  cancellationType: dto.SubmissionCancellationType
+  cancellationType: CancellationType
 ): Promise<void> {
   const value = db.submissions.find(
     (s) => s.id == id && s.accountId == accountId
@@ -396,7 +404,7 @@ export async function getWasteDescription({
   id,
   accountId,
 }: SubmissionRef): Promise<WasteDescription> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -408,16 +416,17 @@ export async function getWasteDescription({
 
 export async function setWasteDescription(
   { id, accountId }: SubmissionRef,
-  value: DraftWasteDescription
+  value: WasteDescription
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  let wasteQuantity: dto.Submission['wasteQuantity'] = submission.wasteQuantity;
+  let wasteQuantity: DraftSubmission['wasteQuantity'] =
+    submission.wasteQuantity;
 
   if (
     wasteQuantity.status === 'CannotStart' &&
@@ -458,7 +467,7 @@ export async function setWasteDescription(
   }
 
   const submissionBase = setBaseWasteDescription(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   );
   submission.wasteDescription = submissionBase.wasteDescription;
@@ -474,10 +483,11 @@ export async function setWasteDescription(
 export async function getWasteQuantity({
   id,
   accountId,
-}: SubmissionRef): Promise<WasteQuantity> {
-  const submission = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  );
+  submitted,
+}: SubmissionTypeRef): Promise<WasteQuantity | WasteQuantityData> {
+  const submission = !submitted
+    ? db.drafts.find((s) => s.id == id && s.accountId == accountId)
+    : db.submissions.find((s) => s.id == id && s.accountId == accountId);
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
@@ -486,76 +496,84 @@ export async function getWasteQuantity({
 }
 
 export async function setWasteQuantity(
-  { id, accountId }: SubmissionRef,
-  value: WasteQuantity
+  { id, accountId, submitted }: SubmissionTypeRef,
+  value: WasteQuantity | WasteQuantityData
 ): Promise<void> {
-  const submission = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  );
-  if (submission === undefined) {
-    return Promise.reject(new NotFoundError('Submission not found.'));
-  }
-  setWasteQuantityUnit(value, submission);
-  let wasteQuantity = value;
-  if (
-    value.status !== 'CannotStart' &&
-    value.status !== 'NotStarted' &&
-    value.value &&
-    value.value.type &&
-    value.value.type !== 'NotApplicable' &&
-    submission.wasteQuantity.status !== 'CannotStart' &&
-    submission.wasteQuantity.status !== 'NotStarted' &&
-    submission.wasteQuantity.value &&
-    submission.wasteQuantity.value.type &&
-    submission.wasteQuantity.value.type !== 'NotApplicable'
-  ) {
-    if (
-      value.value.type === 'ActualData' &&
-      submission.wasteQuantity.value.estimateData
-    ) {
-      wasteQuantity = {
-        status: value.status,
-        value: {
-          type: value.value.type,
-          actualData: value.value.actualData ?? {},
-          estimateData: submission.wasteQuantity.value.estimateData,
-        },
-      };
+  if (!submitted) {
+    const submission = db.drafts.find(
+      (s) => s.id == id && s.accountId == accountId
+    ) as DraftSubmission;
+    if (submission === undefined) {
+      return Promise.reject(new NotFoundError('Submission not found.'));
     }
 
+    const v = value as WasteQuantity;
+    setDraftWasteQuantityUnit(v, submission);
+    let wasteQuantity = v;
     if (
-      value.value.type === 'EstimateData' &&
-      submission.wasteQuantity.value.actualData
+      v.status !== 'CannotStart' &&
+      v.status !== 'NotStarted' &&
+      v.value &&
+      v.value.type &&
+      v.value.type !== 'NotApplicable' &&
+      submission.wasteQuantity.status !== 'CannotStart' &&
+      submission.wasteQuantity.status !== 'NotStarted' &&
+      submission.wasteQuantity.value &&
+      submission.wasteQuantity.value.type &&
+      submission.wasteQuantity.value.type !== 'NotApplicable'
     ) {
-      wasteQuantity = {
-        status: value.status,
-        value: {
-          type: value.value.type,
-          actualData: submission.wasteQuantity.value.actualData,
-          estimateData: value.value.estimateData ?? {},
-        },
-      };
+      if (
+        v.value.type === 'ActualData' &&
+        submission.wasteQuantity.value.estimateData
+      ) {
+        wasteQuantity = {
+          status: v.status,
+          value: {
+            type: v.value.type,
+            actualData: v.value.actualData ?? {},
+            estimateData: submission.wasteQuantity.value.estimateData,
+          },
+        };
+      }
+
+      if (
+        v.value.type === 'EstimateData' &&
+        submission.wasteQuantity.value.actualData
+      ) {
+        wasteQuantity = {
+          status: v.status,
+          value: {
+            type: v.value.type,
+            actualData: submission.wasteQuantity.value.actualData,
+            estimateData: v.value.estimateData ?? {},
+          },
+        };
+      }
     }
-  }
 
-  submission.wasteQuantity = wasteQuantity;
+    submission.wasteQuantity = wasteQuantity;
 
-  if (submission.submissionConfirmation.status !== 'Complete') {
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  }
-
-  if (submission.submissionDeclaration.status !== 'Complete') {
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
-  }
+  } else {
+    const submission = db.submissions.find(
+      (s) => s.id == id && s.accountId == accountId
+    ) as Submission;
+    if (submission === undefined) {
+      return Promise.reject(new NotFoundError('Submission not found.'));
+    }
 
-  submission.submissionState =
-    submission.collectionDate.status === 'Complete' &&
-    submission.collectionDate.value.type === 'ActualDate' &&
-    submission.submissionState.status === 'SubmittedWithEstimates' &&
-    value.status === 'Complete' &&
-    value.value.type === 'ActualData'
-      ? { status: 'UpdatedWithActuals', timestamp: new Date() }
-      : submission.submissionState;
+    const v = value as WasteQuantityData;
+    setWasteQuantityUnit(v, submission);
+    submission.wasteQuantity = v;
+
+    submission.submissionState =
+      submission.collectionDate.type === 'ActualDate' &&
+      submission.submissionState.status === 'SubmittedWithEstimates' &&
+      v.type === 'ActualData'
+        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
+        : submission.submissionState;
+  }
 
   return Promise.resolve();
 }
@@ -564,7 +582,7 @@ export async function getCustomerReference({
   id,
   accountId,
 }: SubmissionRef): Promise<CustomerReference> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -578,16 +596,18 @@ export async function setCustomerReference(
   { id, accountId }: SubmissionRef,
   reference: CustomerReference
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (reference.length > 20) {
+  if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
-      new BadRequestError('Supplied reference cannot exceed 20 characters')
+      new BadRequestError(
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
+      )
     );
   }
 
@@ -603,7 +623,7 @@ export async function getExporterDetail({
   id,
   accountId,
 }: SubmissionRef): Promise<ExporterDetail> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -616,7 +636,7 @@ export async function setExporterDetail(
   { id, accountId }: SubmissionRef,
   value: ExporterDetail
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -624,7 +644,7 @@ export async function setExporterDetail(
   }
 
   submission.exporterDetail = setBaseExporterDetail(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   ).exporterDetail;
 
@@ -638,7 +658,7 @@ export async function getImporterDetail({
   id,
   accountId,
 }: SubmissionRef): Promise<ImporterDetail> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
 
@@ -653,7 +673,7 @@ export async function setImporterDetail(
   { id, accountId }: SubmissionRef,
   value: ImporterDetail
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -661,7 +681,7 @@ export async function setImporterDetail(
   }
 
   submission.importerDetail = setBaseImporterDetail(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   ).importerDetail;
 
@@ -674,10 +694,11 @@ export async function setImporterDetail(
 export async function getCollectionDate({
   id,
   accountId,
-}: SubmissionRef): Promise<CollectionDate> {
-  const submission = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  );
+  submitted,
+}: SubmissionTypeRef): Promise<CollectionDate | CollectionDateData> {
+  const submission = !submitted
+    ? db.drafts.find((s) => s.id == id && s.accountId == accountId)
+    : db.submissions.find((s) => s.id == id && s.accountId == accountId);
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
@@ -686,60 +707,89 @@ export async function getCollectionDate({
 }
 
 export async function setCollectionDate(
-  { id, accountId }: SubmissionRef,
-  value: CollectionDate
+  { id, accountId, submitted }: SubmissionTypeRef,
+  value: CollectionDate | CollectionDateData
 ): Promise<void> {
-  const submission = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
-  );
-  if (submission === undefined) {
-    return Promise.reject(new NotFoundError('Submission not found.'));
-  }
+  if (!submitted) {
+    const submission = db.drafts.find(
+      (s) => s.id == id && s.accountId == accountId
+    ) as DraftSubmission;
+    if (submission === undefined) {
+      return Promise.reject(new NotFoundError('Submission not found.'));
+    }
 
-  let collectionDate = value;
-  if (
-    value.status !== 'NotStarted' &&
-    submission.collectionDate.status !== 'NotStarted'
-  ) {
-    if (value.value.type === 'ActualDate') {
+    const v = value as CollectionDate;
+    let collectionDate = v;
+    if (
+      v.status !== 'NotStarted' &&
+      submission.collectionDate.status !== 'NotStarted'
+    ) {
+      if (v.value.type === 'ActualDate') {
+        collectionDate = {
+          status: v.status,
+          value: {
+            type: v.value.type,
+            actualDate: v.value.actualDate,
+            estimateDate: submission.collectionDate.value.estimateDate,
+          },
+        };
+      } else {
+        collectionDate = {
+          status: v.status,
+          value: {
+            type: v.value.type,
+            actualDate: submission.collectionDate.value.actualDate,
+            estimateDate: v.value.estimateDate,
+          },
+        };
+      }
+    }
+
+    submission.collectionDate = collectionDate;
+
+    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+    submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  } else {
+    const submission = db.submissions.find(
+      (s) => s.id == id && s.accountId == accountId
+    ) as Submission;
+    if (submission === undefined) {
+      return Promise.reject(new NotFoundError('Submission not found.'));
+    }
+
+    const v = value as CollectionDateData;
+    let collectionDate = v;
+    if (v.type === 'ActualDate') {
       collectionDate = {
-        status: value.status,
-        value: {
-          type: value.value.type,
-          actualDate: value.value.actualDate,
-          estimateDate: submission.collectionDate.value.estimateDate,
+        type: v.type,
+        actualDate: {
+          day: v.actualDate.day,
+          month: v.actualDate.month,
+          year: v.actualDate.year,
         },
+        estimateDate: submission.collectionDate.estimateDate,
       };
     } else {
       collectionDate = {
-        status: value.status,
-        value: {
-          type: value.value.type,
-          actualDate: submission.collectionDate.value.actualDate,
-          estimateDate: value.value.estimateDate,
+        type: v.type,
+        estimateDate: {
+          day: v.estimateDate.day,
+          month: v.estimateDate.month,
+          year: v.estimateDate.year,
         },
+        actualDate: submission.collectionDate.actualDate,
       };
     }
+
+    submission.collectionDate = collectionDate;
+
+    submission.submissionState =
+      submission.wasteQuantity.type === 'ActualData' &&
+      submission.submissionState.status === 'SubmittedWithEstimates' &&
+      v.type === 'ActualDate'
+        ? { status: 'UpdatedWithActuals', timestamp: new Date() }
+        : submission.submissionState;
   }
-
-  submission.collectionDate = collectionDate;
-
-  if (submission.submissionConfirmation.status !== 'Complete') {
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  }
-
-  if (submission.submissionDeclaration.status !== 'Complete') {
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-  }
-
-  submission.submissionState =
-    submission.wasteQuantity.status === 'Complete' &&
-    submission.wasteQuantity.value.type === 'ActualData' &&
-    submission.submissionState.status === 'SubmittedWithEstimates' &&
-    value.status === 'Complete' &&
-    value.value.type === 'ActualDate'
-      ? { status: 'UpdatedWithActuals', timestamp: new Date() }
-      : submission.submissionState;
 
   return Promise.resolve();
 }
@@ -748,7 +798,7 @@ export async function listCarriers({
   id,
   accountId,
 }: SubmissionRef): Promise<Carriers> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -770,7 +820,7 @@ export async function createCarriers(
     );
   }
 
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -778,15 +828,17 @@ export async function createCarriers(
   }
 
   if (submission.carriers.status !== 'NotStarted') {
-    if (submission.carriers.values.length === 5) {
+    if (submission.carriers.values.length === validation.CarrierLength.max) {
       return Promise.reject(
-        new BadRequestError('Cannot add more than 5 carriers')
+        new BadRequestError(
+          `Cannot add more than ${validation.CarrierLength.max} carriers`
+        )
       );
     }
   }
 
   const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   );
 
@@ -806,7 +858,7 @@ export async function getCarriers(
   { id, accountId }: SubmissionRef,
   carrierId: string
 ): Promise<Carriers> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -825,11 +877,18 @@ export async function getCarriers(
     return Promise.reject(new NotFoundError('Carrier not found.'));
   }
 
-  const value: dto.Carriers = {
-    status: submission.carriers.status,
-    transport: submission.carriers.transport,
-    values: [carrier],
-  };
+  const value: Carriers =
+    submission.carriers.status !== 'Complete'
+      ? {
+          status: submission.carriers.status,
+          transport: submission.carriers.transport,
+          values: [carrier as CarrierPartial],
+        }
+      : {
+          status: submission.carriers.status,
+          transport: submission.carriers.transport,
+          values: [carrier as Carrier],
+        };
 
   return Promise.resolve(value);
 }
@@ -839,7 +898,7 @@ export async function setCarriers(
   carrierId: string,
   value: Carriers
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -852,7 +911,7 @@ export async function setCarriers(
 
   if (value.status === 'NotStarted') {
     submission.carriers = setBaseNoCarriers(
-      submission as dto.SubmissionBase,
+      submission as SubmissionBase,
       carrierId,
       value
     ).carriers;
@@ -871,7 +930,7 @@ export async function setCarriers(
       return Promise.reject('Index not found.');
     }
     submission.carriers = setBaseCarriers(
-      submission as dto.SubmissionBase,
+      submission as SubmissionBase,
       carrierId,
       value,
       carrier,
@@ -889,7 +948,7 @@ export async function deleteCarriers(
   { id, accountId }: SubmissionRef,
   carrierId: string
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -909,7 +968,7 @@ export async function deleteCarriers(
   }
 
   submission.carriers = deleteBaseCarriers(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     carrierId
   ).carriers;
 
@@ -923,7 +982,7 @@ export async function getCollectionDetail({
   id,
   accountId,
 }: SubmissionRef): Promise<CollectionDetail> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
 
@@ -938,7 +997,7 @@ export async function setCollectionDetail(
   { id, accountId }: SubmissionRef,
   value: CollectionDetail
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -946,7 +1005,7 @@ export async function setCollectionDetail(
   }
 
   submission.collectionDetail = setBaseCollectionDetail(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   ).collectionDetail;
 
@@ -960,7 +1019,7 @@ export async function getExitLocation({
   id,
   accountId,
 }: SubmissionRef): Promise<ExitLocation> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -974,7 +1033,7 @@ export async function setExitLocation(
   { id, accountId }: SubmissionRef,
   value: ExitLocation
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -982,7 +1041,7 @@ export async function setExitLocation(
   }
 
   submission.ukExitLocation = setBaseExitLocation(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   ).ukExitLocation;
 
@@ -996,7 +1055,7 @@ export async function getTransitCountries({
   id,
   accountId,
 }: SubmissionRef): Promise<TransitCountries> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1010,7 +1069,7 @@ export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
   value: TransitCountries
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1018,7 +1077,7 @@ export async function setTransitCountries(
   }
 
   submission.transitCountries = setBaseTransitCountries(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     value
   ).transitCountries;
 
@@ -1032,7 +1091,7 @@ export async function listRecoveryFacilityDetail({
   id,
   accountId,
 }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1054,7 +1113,7 @@ export async function createRecoveryFacilityDetail(
     );
   }
 
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1065,17 +1124,19 @@ export async function createRecoveryFacilityDetail(
     submission.recoveryFacilityDetail.status === 'Started' ||
     submission.recoveryFacilityDetail.status === 'Complete'
   ) {
-    if (submission.recoveryFacilityDetail.values.length === 6) {
+    const maxFacilities =
+      validation.InterimSiteLength.max + validation.RecoveryFacilityLength.max;
+    if (submission.recoveryFacilityDetail.values.length === maxFacilities) {
       return Promise.reject(
         new BadRequestError(
-          'Cannot add more than 6 facilities(1 InterimSite and 5 RecoveryFacilities)'
+          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`
         )
       );
     }
   }
 
   const submissionBasePlusId: SubmissionBasePlusId =
-    createBaseRecoveryFacilityDetail(submission as dto.SubmissionBase, value);
+    createBaseRecoveryFacilityDetail(submission as SubmissionBase, value);
 
   submission.recoveryFacilityDetail =
     submissionBasePlusId.submissionBase.recoveryFacilityDetail;
@@ -1093,7 +1154,7 @@ export async function getRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
   rfdId: string
 ): Promise<RecoveryFacilityDetail> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1117,10 +1178,16 @@ export async function getRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('RecoveyFacility not found.'));
   }
 
-  const value: dto.RecoveryFacilityDetail = {
-    status: submission.recoveryFacilityDetail.status,
-    values: [recoveryFacility],
-  };
+  const value: RecoveryFacilityDetail =
+    submission.recoveryFacilityDetail.status !== 'Complete'
+      ? {
+          status: submission.carriers.status as 'Started',
+          values: [recoveryFacility as RecoveryFacilityPartial],
+        }
+      : {
+          status: submission.carriers.status,
+          values: [recoveryFacility as RecoveryFacility],
+        };
   return Promise.resolve(value);
 }
 
@@ -1129,7 +1196,7 @@ export async function setRecoveryFacilityDetail(
   rfdId: string,
   value: RecoveryFacilityDetail
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1160,7 +1227,7 @@ export async function setRecoveryFacilityDetail(
   }
 
   submission.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     rfdId,
     value
   ).recoveryFacilityDetail;
@@ -1182,7 +1249,7 @@ export async function deleteRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
   rfdId: string
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1204,7 +1271,7 @@ export async function deleteRecoveryFacilityDetail(
   }
 
   submission.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-    submission as dto.SubmissionBase,
+    submission as SubmissionBase,
     rfdId
   ).recoveryFacilityDetail;
 
@@ -1218,7 +1285,7 @@ export async function getSubmissionConfirmation({
   id,
   accountId,
 }: SubmissionRef): Promise<SubmissionConfirmation> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1232,7 +1299,7 @@ export async function updateSubmissionConfirmation(
   { id, accountId }: SubmissionRef,
   value: SubmissionConfirmation
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1249,7 +1316,7 @@ export async function updateSubmissionConfirmation(
     submission.collectionDate = { status: 'NotStarted' };
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
 
-    db.submissions.push(submission);
+    db.drafts.push(submission);
     return Promise.reject(new Error('Invalid collection date'));
   }
 
@@ -1263,7 +1330,7 @@ export async function getSubmissionDeclaration({
   id,
   accountId,
 }: SubmissionRef): Promise<SubmissionDeclaration> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1277,7 +1344,7 @@ export async function updateSubmissionDeclaration(
   { id, accountId }: SubmissionRef,
   value: Omit<SubmissionDeclaration, 'values'>
 ): Promise<void> {
-  const submission = db.submissions.find(
+  const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId
   );
   if (submission === undefined) {
@@ -1296,7 +1363,7 @@ export async function updateSubmissionDeclaration(
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-    db.submissions.push(submission);
+    db.drafts.push(submission);
     return Promise.reject(new BadRequestError('Invalid collection date'));
   }
 
@@ -1326,6 +1393,14 @@ export async function updateSubmissionDeclaration(
       submission.wasteQuantity.value.type === 'ActualData'
         ? { status: 'SubmittedWithActuals', timestamp: timestamp }
         : { status: 'SubmittedWithEstimates', timestamp: timestamp };
+
+    db.submissions.push(getSubmissionData(accountId, submission));
+
+    const index = db.drafts.findIndex((d) => {
+      return d.id === submission.id;
+    });
+
+    db.drafts.splice(index, 1);
   }
 
   return Promise.resolve();
@@ -1339,7 +1414,7 @@ export async function getNumberOfSubmissions(
     incomplete: 0,
     completedWithEstimates: 0,
   };
-  numberOfSubmissions.incomplete = db.submissions.filter(
+  numberOfSubmissions.incomplete = db.drafts.filter(
     (submission) =>
       submission.accountId === accountId &&
       submission.submissionState.status === 'InProgress'
@@ -1351,546 +1426,10 @@ export async function getNumberOfSubmissions(
       submission.submissionState.status === 'SubmittedWithEstimates'
   ).length;
 
-  const submittedStates = [
-    'UpdatedWithActuals',
-    'SubmittedWithEstimates',
-    'SubmittedWithActuals',
-  ];
-
   numberOfSubmissions.completedWithActuals = db.submissions.filter(
     (submission) =>
       submission.accountId === accountId &&
-      submittedStates.includes(submission.submissionState.status)
+      submission.submissionState.status !== 'SubmittedWithEstimates'
   ).length;
   return Promise.resolve(numberOfSubmissions);
-}
-
-function getTemplate({ id, accountId }: TemplateRef): Promise<Template> {
-  const value = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
-  ) as Template;
-  if (value === undefined) {
-    return Promise.reject(new NotFoundError('Template not found.'));
-  }
-  const template: Template = {
-    templateDetails: value.templateDetails,
-    id: value.id,
-    wasteDescription: value.wasteDescription,
-    exporterDetail: value.exporterDetail,
-    importerDetail: value.importerDetail,
-    carriers: value.carriers,
-    collectionDetail: value.collectionDetail,
-    ukExitLocation: value.ukExitLocation,
-    transitCountries: value.transitCountries,
-    recoveryFacilityDetail: value.recoveryFacilityDetail,
-  };
-  return Promise.resolve(template);
-}
-
-function copyCarriersNoTransport(
-  sourceCarriers: dto.Carriers,
-  isSmallWaste: boolean
-): dto.Carriers {
-  let targetCarriers: dto.Carriers = {
-    status: 'NotStarted',
-    transport: true,
-  };
-
-  if (sourceCarriers.status !== 'NotStarted') {
-    const carriers: dto.Carrier[] = [];
-    for (const c of sourceCarriers.values) {
-      const carrier: dto.Carrier = {
-        id: uuidv4(),
-        addressDetails: c.addressDetails,
-        contactDetails: c.contactDetails,
-      };
-      carriers.push(carrier);
-    }
-    targetCarriers = {
-      status: isSmallWaste ? sourceCarriers.status : 'Started',
-      transport: true,
-      values: carriers,
-    };
-  }
-
-  return targetCarriers;
-}
-
-function isSmallWaste(wasteDescription: DraftWasteDescription): boolean {
-  return (
-    wasteDescription.status === 'Complete' &&
-    wasteDescription.wasteCode.type === 'NotApplicable'
-  );
-}
-
-function copyRecoveryFacilities(
-  sourceFacilities: dto.RecoveryFacilityDetail
-): dto.RecoveryFacilityDetail {
-  let targetFacilities: dto.RecoveryFacilityDetail = { status: 'NotStarted' };
-
-  if (
-    sourceFacilities.status === 'Started' ||
-    sourceFacilities.status === 'Complete'
-  ) {
-    const facilities: dto.RecoveryFacility[] = [];
-    for (const r of sourceFacilities.values) {
-      const facility: dto.RecoveryFacility = {
-        id: uuidv4(),
-        addressDetails: r.addressDetails,
-        contactDetails: r.contactDetails,
-        recoveryFacilityType: r.recoveryFacilityType,
-      };
-      facilities.push(facility);
-    }
-    targetFacilities = {
-      status: sourceFacilities.status,
-      values: facilities,
-    };
-  } else {
-    targetFacilities = {
-      status: sourceFacilities.status,
-    };
-  }
-
-  return targetFacilities;
-}
-
-function isWasteCodeChangingBulkToSmall(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type === 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingSmallToBulk(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type === 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable'
-  );
-}
-
-function isWasteCodeChangingBulkToBulkDifferentType(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    newWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    currentWasteDescription.wasteCode?.type !==
-      newWasteDescription.wasteCode?.type
-  );
-}
-
-function isWasteCodeChangingBulkToBulkSameType(
-  currentWasteDescription: WasteDescription,
-  newWasteDescription: DraftWasteDescription
-): boolean {
-  return (
-    currentWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
-    newWasteDescription.status !== 'NotStarted' &&
-    currentWasteDescription.wasteCode?.type ===
-      newWasteDescription.wasteCode?.type &&
-    currentWasteDescription.wasteCode?.code !==
-      newWasteDescription.wasteCode?.code
-  );
-}
-
-function setBaseWasteDescription(
-  submissionBase: dto.SubmissionBase,
-  value: DraftWasteDescription
-): dto.SubmissionBase {
-  let recoveryFacilityDetail: dto.Submission['recoveryFacilityDetail'] =
-    submissionBase.recoveryFacilityDetail.status === 'CannotStart' &&
-    value.status !== 'NotStarted' &&
-    value.wasteCode !== undefined
-      ? { status: 'NotStarted' }
-      : submissionBase.recoveryFacilityDetail;
-
-  let carriers: dto.Submission['carriers'] = submissionBase.carriers;
-
-  if (
-    submissionBase.wasteDescription.status === 'NotStarted' &&
-    value.status !== 'NotStarted' &&
-    value.wasteCode?.type === 'NotApplicable'
-  ) {
-    carriers.transport = false;
-  }
-
-  if (isWasteCodeChangingBulkToSmall(submissionBase.wasteDescription, value)) {
-    if (value.status === 'Started') {
-      value.ewcCodes = undefined;
-      value.nationalCode = undefined;
-      value.description = undefined;
-    }
-
-    carriers = { status: 'NotStarted', transport: false };
-
-    recoveryFacilityDetail = { status: 'NotStarted' };
-  }
-
-  if (isWasteCodeChangingSmallToBulk(submissionBase.wasteDescription, value)) {
-    if (value.status === 'Started') {
-      value.ewcCodes = undefined;
-      value.nationalCode = undefined;
-      value.description = undefined;
-    }
-
-    carriers = { status: 'NotStarted', transport: true };
-
-    recoveryFacilityDetail = { status: 'NotStarted' };
-  }
-
-  if (
-    isWasteCodeChangingBulkToBulkDifferentType(
-      submissionBase.wasteDescription,
-      value
-    )
-  ) {
-    if (value.status === 'Started') {
-      value.ewcCodes = undefined;
-      value.nationalCode = undefined;
-      value.description = undefined;
-    }
-
-    carriers = { status: 'NotStarted', transport: true };
-
-    recoveryFacilityDetail = { status: 'NotStarted' };
-  }
-
-  if (
-    isWasteCodeChangingBulkToBulkSameType(
-      submissionBase.wasteDescription,
-      value
-    )
-  ) {
-    if (value.status === 'Started') {
-      value.ewcCodes = undefined;
-      value.nationalCode = undefined;
-      value.description = undefined;
-    }
-
-    if (submissionBase.carriers.status !== 'NotStarted') {
-      carriers = {
-        status: 'Started',
-        transport: true,
-        values: submissionBase.carriers.values,
-      };
-    }
-
-    if (
-      submissionBase.recoveryFacilityDetail.status === 'Started' ||
-      submissionBase.recoveryFacilityDetail.status === 'Complete'
-    ) {
-      recoveryFacilityDetail = {
-        status: 'Started',
-        values: submissionBase.recoveryFacilityDetail.values,
-      };
-    }
-  }
-
-  submissionBase.wasteDescription = value as WasteDescription;
-  submissionBase.carriers = carriers;
-  submissionBase.recoveryFacilityDetail = recoveryFacilityDetail;
-
-  return submissionBase;
-}
-
-function setSubmissionConfirmation(
-  submission: Submission
-): SubmissionConfirmation {
-  const {
-    id,
-    reference,
-    submissionConfirmation,
-    submissionDeclaration,
-    submissionState,
-    ...filteredValues
-  } = submission;
-
-  if (
-    Object.entries(filteredValues).every(
-      ([key, value]) =>
-        key === 'accountId' || (value.status && value.status === 'Complete')
-    )
-  ) {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
-
-function setSubmissionDeclaration(
-  submission: Submission
-): SubmissionDeclaration {
-  if (submission.submissionConfirmation.status === 'Complete') {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
-
-function setBaseExporterDetail(
-  submissionBase: dto.SubmissionBase,
-  value: ExporterDetail
-): dto.SubmissionBase {
-  submissionBase.exporterDetail = value;
-
-  return submissionBase;
-}
-
-function setBaseImporterDetail(
-  submissionBase: dto.SubmissionBase,
-  value: ImporterDetail
-): dto.SubmissionBase {
-  submissionBase.importerDetail = value;
-
-  return submissionBase;
-}
-
-function createBaseCarriers(
-  submissionBase: dto.SubmissionBase,
-  value: Omit<Carriers, 'transport' | 'values'>
-): SubmissionBasePlusId {
-  const submissionBasePlusId = {
-    submissionBase: submissionBase,
-    id: uuidv4(),
-  };
-  const transport: Carriers['transport'] =
-    submissionBase.wasteDescription.status !== 'NotStarted' &&
-    submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
-      ? false
-      : true;
-
-  if (submissionBase.carriers.status === 'NotStarted') {
-    submissionBasePlusId.submissionBase.carriers = {
-      status: value.status,
-      transport: transport,
-      values: [{ id: submissionBasePlusId.id }],
-    };
-
-    return submissionBasePlusId;
-  }
-
-  const carriers: dto.Carrier[] = [];
-  for (const c of submissionBase.carriers.values) {
-    carriers.push(c);
-  }
-  carriers.push({ id: submissionBasePlusId.id });
-  submissionBasePlusId.submissionBase.carriers = {
-    status: value.status,
-    transport: transport,
-    values: carriers,
-  };
-
-  return submissionBasePlusId;
-}
-
-function setBaseNoCarriers(
-  submissionBase: dto.SubmissionBase,
-  carrierId: string,
-  value: Carriers
-): dto.SubmissionBase {
-  if (value.status === 'NotStarted') {
-    submissionBase.carriers = value;
-
-    return submissionBase;
-  }
-
-  return submissionBase;
-}
-
-function setBaseCarriers(
-  submissionBase: dto.SubmissionBase,
-  carrierId: string,
-  value: Carriers,
-  carrier: dto.Carrier,
-  index: number
-): dto.SubmissionBase {
-  if (
-    submissionBase !== undefined &&
-    submissionBase.carriers.status !== 'NotStarted' &&
-    value.status !== 'NotStarted'
-  ) {
-    submissionBase.carriers.status = value.status;
-    submissionBase.carriers.values[index] = carrier as dto.Carrier;
-  }
-  return submissionBase;
-}
-
-function deleteBaseCarriers(
-  submissionBase: dto.SubmissionBase,
-  carrierId: string
-): dto.SubmissionBase {
-  if (submissionBase.carriers.status !== 'NotStarted') {
-    const index = submissionBase.carriers.values.findIndex((c) => {
-      return c.id === carrierId;
-    });
-
-    submissionBase.carriers.values.splice(index, 1);
-    if (submissionBase.carriers.values.length === 0) {
-      const transport: Carriers['transport'] =
-        submissionBase.wasteDescription.status !== 'NotStarted' &&
-        submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
-
-      submissionBase.carriers = {
-        status: 'NotStarted',
-        transport: transport,
-      };
-    }
-  }
-
-  return submissionBase;
-}
-
-function setBaseCollectionDetail(
-  submissionBase: dto.SubmissionBase,
-  value: CollectionDetail
-): dto.SubmissionBase {
-  submissionBase.collectionDetail = value;
-
-  return submissionBase;
-}
-
-function setBaseExitLocation(
-  submissionBase: dto.SubmissionBase,
-  value: ExitLocation
-): dto.SubmissionBase {
-  submissionBase.ukExitLocation = value;
-
-  return submissionBase;
-}
-
-function setBaseTransitCountries(
-  submissionBase: dto.SubmissionBase,
-  value: TransitCountries
-): dto.SubmissionBase {
-  submissionBase.transitCountries = value;
-
-  return submissionBase;
-}
-
-function createBaseRecoveryFacilityDetail(
-  submissionBase: dto.SubmissionBase,
-  value: Omit<RecoveryFacilityDetail, 'values'>
-): SubmissionBasePlusId {
-  const submissionBasePlusId = {
-    submissionBase: submissionBase,
-    id: uuidv4(),
-  };
-  if (
-    submissionBase.recoveryFacilityDetail.status !== 'Started' &&
-    submissionBase.recoveryFacilityDetail.status !== 'Complete'
-  ) {
-    submissionBasePlusId.submissionBase.recoveryFacilityDetail = {
-      status: value.status,
-      values: [{ id: submissionBasePlusId.id }],
-    };
-
-    return submissionBasePlusId;
-  }
-
-  const facilities: dto.RecoveryFacility[] = [];
-  for (const rf of submissionBase.recoveryFacilityDetail.values) {
-    facilities.push(rf);
-  }
-  facilities.push({ id: submissionBasePlusId.id });
-  submissionBasePlusId.submissionBase.recoveryFacilityDetail = {
-    status: value.status,
-    values: facilities,
-  };
-
-  return submissionBasePlusId;
-}
-function setBaseRecoveryFacilityDetail(
-  submissionBase: dto.SubmissionBase,
-  rfdId: string,
-  value: RecoveryFacilityDetail
-): dto.SubmissionBase {
-  if (submissionBase !== undefined) {
-    if (
-      submissionBase.recoveryFacilityDetail.status === 'Started' ||
-      submissionBase.recoveryFacilityDetail.status === 'Complete'
-    ) {
-      if (value.status !== 'Started' && value.status !== 'Complete') {
-        submissionBase.recoveryFacilityDetail = value;
-        return submissionBase;
-      }
-
-      const recoveryFacility = value.values.find((rf) => {
-        return rf.id === rfdId;
-      });
-
-      const index = submissionBase.recoveryFacilityDetail.values.findIndex(
-        (rf) => {
-          return rf.id === rfdId;
-        }
-      );
-      submissionBase.recoveryFacilityDetail.status = value.status;
-      submissionBase.recoveryFacilityDetail.values[index] =
-        recoveryFacility as dto.RecoveryFacility;
-    }
-  }
-
-  return submissionBase;
-}
-
-function deleteBaseRecoveryFacilityDetail(
-  submissionBase: dto.SubmissionBase,
-  rfdId: string
-): dto.SubmissionBase {
-  if (
-    submissionBase.recoveryFacilityDetail.status === 'Started' ||
-    submissionBase.recoveryFacilityDetail.status === 'Complete'
-  ) {
-    const index = submissionBase.recoveryFacilityDetail.values.findIndex(
-      (rf) => {
-        return rf.id === rfdId;
-      }
-    );
-
-    if (index !== -1) {
-      submissionBase.recoveryFacilityDetail.values.splice(index, 1);
-      if (submissionBase.recoveryFacilityDetail.values.length === 0) {
-        submissionBase.recoveryFacilityDetail = { status: 'NotStarted' };
-      }
-    }
-  }
-
-  return submissionBase;
-}
-function isCollectionDateValid(date: CollectionDate) {
-  if (date.status !== 'NotStarted') {
-    const {
-      day: dayStr,
-      month: monthStr,
-      year: yearStr,
-    } = date.value[
-      date.value.type === 'ActualDate' ? 'actualDate' : 'estimateDate'
-    ];
-    const [day, month, year] = [
-      parseInt(dayStr as string),
-      parseInt(monthStr as string) - 1,
-      parseInt(yearStr as string),
-    ];
-
-    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-      return false;
-    }
-  }
-  return true;
 }

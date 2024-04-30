@@ -1,31 +1,66 @@
 import {
-  DraftSubmission,
-  DraftSubmissionSummaryPage,
-  Submission,
-  NumberOfSubmissions,
+  DbContainerNameKey,
+  RecordStateStatus,
+  RecordSummaryPage,
 } from '../model';
-import { BaseRepository } from './base-repository';
 
-export interface DraftRepository extends BaseRepository {
-  getDrafts(
+export interface IRepository<T> {
+  getRecords(
+    containerName: DbContainerNameKey,
     accountId: string,
     order: 'ASC' | 'DESC',
     pageLimit?: number,
-    state?: DraftSubmission['submissionState']['status'][],
-    token?: string
-  ): Promise<DraftSubmissionSummaryPage>;
-  getDraft(id: string, accountId: string): Promise<DraftSubmission>;
-  getSubmission(id: string, accountId: string): Promise<Submission>;
-  saveSubmission(value: Submission, accountId: string): Promise<void>;
-  saveDraft(value: DraftSubmission, accountId: string): Promise<void>;
-  createSubmissionFromDraft(
-    value: DraftSubmission,
+    token?: string,
+    state?: RecordStateStatus[]
+  ): Promise<
+    RecordSummaryPage<
+      | Omit<
+          T,
+          | 'wasteQuantity'
+          | 'exporterDetail'
+          | 'importerDetail'
+          | 'carriers'
+          | 'collectionDetail'
+          | 'ukExitLocation'
+          | 'transitCountries'
+          | 'recoveryFacilityDetail'
+          | 'submissionConfirmation'
+        >
+      | Omit<
+          T,
+          | 'wasteDescription'
+          | 'exporterDetail'
+          | 'importerDetail'
+          | 'carriers'
+          | 'collectionDetail'
+          | 'ukExitLocation'
+          | 'transitCountries'
+          | 'recoveryFacilityDetail'
+        >
+    >
+  >;
+  getRecord(
+    containerName: DbContainerNameKey,
+    id: string,
+    accountId: string
+  ): Promise<T>;
+  saveRecord(
+    containerName: DbContainerNameKey,
+    value: T,
     accountId: string
   ): Promise<void>;
-  createDraftFromTemplate(
-    id: string,
+  createBulkRecords(
+    containerName: DbContainerNameKey,
     accountId: string,
-    reference: string
-  ): Promise<DraftSubmission>;
-  getNumberOfSubmissions(accountId: string): Promise<NumberOfSubmissions>;
+    values: Omit<T, 'submissionDeclaration' | 'submissionState'>[]
+  ): Promise<void>;
+  deleteRecord(
+    containerName: DbContainerNameKey,
+    id: string,
+    accountId: string
+  ): Promise<void>;
+  getTotalNumber(
+    containerName: DbContainerNameKey,
+    accountId: string
+  ): Promise<number>;
 }

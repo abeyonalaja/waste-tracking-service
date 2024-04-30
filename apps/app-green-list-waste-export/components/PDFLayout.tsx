@@ -130,24 +130,15 @@ const styles = StyleSheet.create({
 
 export const PDFLayout = (props: PDFProps) => {
   const data = props.data;
-  const recFacCount =
-    data.recoveryFacilityDetail.status === 'Complete'
-      ? data.recoveryFacilityDetail.values.length
-      : 0;
-  let ewcCodesCount =
-    data.wasteDescription.status === 'Complete'
-      ? data.wasteDescription.ewcCodes.length
-      : 0;
+  const recFacCount = data.recoveryFacilityDetail.values.length | 0;
+  let ewcCodesCount = data.wasteDescription.ewcCodes.length | 0;
 
   let extraEwcCodesCount = 0;
   if (ewcCodesCount > 3) {
     extraEwcCodesCount = ewcCodesCount - 3;
     ewcCodesCount = 3;
   }
-  const transitCount =
-    data.transitCountries.status === 'Complete'
-      ? data.transitCountries.values.length
-      : 0;
+  const transitCount = data.transitCountries.values.length | 0;
   let transitColumns = 1;
   if (transitCount === 2) {
     transitColumns = 2;
@@ -164,11 +155,7 @@ export const PDFLayout = (props: PDFProps) => {
     >
       <Page style={styles.page} size="A4">
         <Reference
-          transactionId={
-            data.submissionDeclaration.status === 'Complete'
-              ? data.submissionDeclaration.values.transactionId
-              : ''
-          }
+          transactionId={data.submissionDeclaration.transactionId}
           reference={data.reference}
         />
         <View style={styles.pageHeader}>
@@ -186,81 +173,69 @@ export const PDFLayout = (props: PDFProps) => {
             <Text style={styles.cellTitle}>
               1. Person who arranges the shipment (exporter)
             </Text>
-            {data.exporterDetail.status === 'Complete' && (
-              <AddressDetails
-                address={data.exporterDetail.exporterAddress}
-                contact={data.exporterDetail.exporterContactDetails}
-              />
-            )}
+
+            <AddressDetails
+              address={data.exporterDetail.exporterAddress}
+              contact={data.exporterDetail.exporterContactDetails}
+            />
           </View>
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>2. Importer/consignee</Text>
-            {data.importerDetail.status === 'Complete' && (
-              <AddressDetails
-                address={data.importerDetail.importerAddressDetails}
-                contact={data.importerDetail.importerContactDetails}
-              />
-            )}
+
+            <AddressDetails
+              address={data.importerDetail.importerAddressDetails}
+              contact={data.importerDetail.importerContactDetails}
+            />
           </View>
         </View>
         <View style={styles.row}>
-          {data.wasteQuantity.status === 'Complete' &&
-            data.wasteDescription.status === 'Complete' && (
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>
-                  3. Actual quantity:{' '}
-                  <Text style={styles.standardText}>
-                    {data.wasteQuantity.value.type === 'EstimateData' && (
-                      <>
-                        {data.wasteDescription.wasteCode.type ===
-                        'NotApplicable' ? (
-                          <>&nbsp;kg: __________</>
-                        ) : (
-                          <>&nbsp;Tonnes (Mg): __________ m3: __________</>
-                        )}
-                      </>
+          <View style={styles.cell}>
+            <Text style={styles.cellTitle}>
+              3. Actual quantity:{' '}
+              <Text style={styles.standardText}>
+                {data.wasteQuantity.type === 'EstimateData' && (
+                  <>
+                    {data.wasteDescription.wasteCode.type ===
+                    'NotApplicable' ? (
+                      <>&nbsp;kg: __________</>
+                    ) : (
+                      <>&nbsp;Tonnes (Mg): __________ m3: __________</>
                     )}
+                  </>
+                )}
 
-                    {data.wasteQuantity.value.type === 'ActualData' && (
-                      <>
-                        &nbsp;
-                        {data.wasteQuantity.value.actualData.value}
-                        <UnitDisplay
-                          quantityType={
-                            data.wasteQuantity.value.actualData.quantityType
-                          }
-                          type={data.wasteDescription.wasteCode.type}
-                        />
-                      </>
-                    )}
-                  </Text>
-                </Text>
-              </View>
-            )}
+                {data.wasteQuantity.type === 'ActualData' && (
+                  <>
+                    &nbsp;
+                    {data.wasteQuantity.actualData.value}
+                    <UnitDisplay
+                      quantityType={data.wasteQuantity.actualData.quantityType}
+                      type={data.wasteDescription.wasteCode.type}
+                    />
+                  </>
+                )}
+              </Text>
+            </Text>
+          </View>
+
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>
               4. Actual date of shipment:
-              {data.collectionDate.status === 'Complete' && (
-                <Text style={styles.standardText}>
-                  {data.collectionDate.value.type === 'ActualDate' &&
-                    format(
-                      new Date(
-                        Number(data.collectionDate.value.actualDate.year),
-                        Number(data.collectionDate.value.actualDate.month) - 1,
-                        Number(data.collectionDate.value.actualDate.day)
-                      ),
-                      'd MMMM y'
-                    )}
-                </Text>
-              )}
+              <Text style={styles.standardText}>
+                {data.collectionDate.type === 'ActualDate' &&
+                  format(
+                    new Date(
+                      Number(data.collectionDate.actualDate.year),
+                      Number(data.collectionDate.actualDate.month) - 1,
+                      Number(data.collectionDate.actualDate.day)
+                    ),
+                    'd MMMM y'
+                  )}
+              </Text>
             </Text>
           </View>
         </View>
-        <CarrierDetails
-          carriers={
-            data.carriers.status === 'Complete' ? data.carriers.values : null
-          }
-        />
+        <CarrierDetails carriers={data.carriers} />
         <View style={styles.row}>
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>
@@ -269,12 +244,11 @@ export const PDFLayout = (props: PDFProps) => {
             <Text style={styles.cellTitle}>
               Original producer(s), new producer(s) or collector:
             </Text>
-            {data.collectionDetail.status === 'Complete' && (
-              <AddressDetails
-                address={data.collectionDetail.address}
-                contact={data.collectionDetail.contactDetails}
-              />
-            )}
+
+            <AddressDetails
+              address={data.collectionDetail.address}
+              contact={data.collectionDetail.contactDetails}
+            />
           </View>
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>
@@ -282,110 +256,99 @@ export const PDFLayout = (props: PDFProps) => {
               case of waste referred to in Article 3(4)):
             </Text>
             <Text>
-              {data.recoveryFacilityDetail.status === 'Complete' &&
-                data.recoveryFacilityDetail.values.map((facility, index) => {
-                  if (facility.recoveryFacilityType.type === 'Laboratory') {
-                    return (
-                      <Text key={`facility${index}`}>
-                        Disposal Code:{' '}
-                        {facility.recoveryFacilityType.disposalCode}
-                        {index + 1 !== recFacCount ? ', ' : ''}
-                      </Text>
-                    );
-                  }
-                  if (facility.recoveryFacilityType.type === 'InterimSite') {
-                    return (
-                      <Text key={`facility${index}`}>
-                        Recovery Code:{' '}
-                        {facility.recoveryFacilityType.recoveryCode}{' '}
-                        (Interim-site){index + 1 !== recFacCount ? ', ' : ''}
-                      </Text>
-                    );
-                  }
-                  if (
-                    facility.recoveryFacilityType.type === 'RecoveryFacility'
-                  ) {
-                    return (
-                      <Text key={`facility${index}`}>
-                        {facility.recoveryFacilityType.recoveryCode}
-                        {index + 1 !== recFacCount ? ', ' : ''}
-                      </Text>
-                    );
-                  }
-                })}
+              {data.recoveryFacilityDetail.map((facility, index) => {
+                if (facility.recoveryFacilityType.type === 'Laboratory') {
+                  return (
+                    <Text key={`facility${index}`}>
+                      Disposal Code:{' '}
+                      {facility.recoveryFacilityType.disposalCode}
+                      {index + 1 !== recFacCount ? ', ' : ''}
+                    </Text>
+                  );
+                }
+                if (facility.recoveryFacilityType.type === 'InterimSite') {
+                  return (
+                    <Text key={`facility${index}`}>
+                      Recovery Code:{' '}
+                      {facility.recoveryFacilityType.recoveryCode}{' '}
+                      (Interim-site){index + 1 !== recFacCount ? ', ' : ''}
+                    </Text>
+                  );
+                }
+                if (facility.recoveryFacilityType.type === 'RecoveryFacility') {
+                  return (
+                    <Text key={`facility${index}`}>
+                      {facility.recoveryFacilityType.recoveryCode}
+                      {index + 1 !== recFacCount ? ', ' : ''}
+                    </Text>
+                  );
+                }
+              })}
             </Text>
             <View style={styles.line} />
             <Text style={styles.cellTitle}>
               9. Usual description of the waste
             </Text>
-            <Text>
-              {data.wasteDescription.status === 'Complete' &&
-                data.wasteDescription.description}
-            </Text>
+            <Text>{data.wasteDescription.description}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>
-              {data.wasteDescription.status === 'Complete' &&
-              data.wasteDescription.wasteCode.type === 'NotApplicable'
+              {data.wasteDescription.wasteCode.type === 'NotApplicable'
                 ? '7. Laboratory'
                 : '7. Recovery facility'}
             </Text>
-            {data.recoveryFacilityDetail.status === 'Complete' &&
-              data.wasteDescription.status === 'Complete' && (
-                <SiteDetails
-                  data={data.recoveryFacilityDetail}
-                  type={
-                    data.wasteDescription.wasteCode.type === 'NotApplicable'
-                      ? 'Laboratory'
-                      : 'RecoveryFacility'
-                  }
-                  index={0}
-                  inlineFax={true}
-                />
-              )}
+
+            <SiteDetails
+              data={data.recoveryFacilityDetail}
+              type={
+                data.wasteDescription.wasteCode.type === 'NotApplicable'
+                  ? 'Laboratory'
+                  : 'RecoveryFacility'
+              }
+              index={0}
+              inlineFax={true}
+            />
           </View>
           <View style={styles.cell}>
             <Text style={styles.cellTitle}>10. Waste identification:</Text>
-            {data.wasteDescription.status === 'Complete' && (
-              <>
-                <Text>
-                  {data.wasteDescription.wasteCode.type === 'NotApplicable' ? (
-                    <>
-                      <Text style={styles.label}>Waste code: </Text>
-                      Not applicable
-                    </>
-                  ) : (
-                    <>
-                      <Text style={styles.label}>
-                        {data.wasteDescription.wasteCode.type}:{' '}
-                      </Text>
-                      {data.wasteDescription.wasteCode.code}
-                    </>
-                  )}
-                </Text>
-                <Text>
-                  <Text style={styles.label}>EC list of wastes: </Text>
-                  {data.wasteDescription.ewcCodes
-                    .slice(0, 3)
-                    .map((item: EwcCodeType, index) => (
-                      <Text key={`ewcCode${item.code}`}>
-                        {item.code}
-                        {index + 1 !== ewcCodesCount ? ', ' : ''}
-                      </Text>
-                    ))}
-                </Text>
-                <Text>
-                  <Text style={styles.label}>National code: </Text>
+
+            <>
+              <Text>
+                {data.wasteDescription.wasteCode.type === 'NotApplicable' ? (
                   <>
-                    {data.wasteDescription.status === 'Complete' &&
-                      data.wasteDescription.nationalCode?.provided === 'Yes' &&
-                      data.wasteDescription.nationalCode?.value}
+                    <Text style={styles.label}>Waste code: </Text>
+                    Not applicable
                   </>
-                </Text>
-              </>
-            )}
+                ) : (
+                  <>
+                    <Text style={styles.label}>
+                      {data.wasteDescription.wasteCode.type}:{' '}
+                    </Text>
+                    {data.wasteDescription.wasteCode.code}
+                  </>
+                )}
+              </Text>
+              <Text>
+                <Text style={styles.label}>EC list of wastes: </Text>
+                {data.wasteDescription.ewcCodes
+                  .slice(0, 3)
+                  .map((item: EwcCodeType, index) => (
+                    <Text key={`ewcCode${item.code}`}>
+                      {item.code}
+                      {index + 1 !== ewcCodesCount ? ', ' : ''}
+                    </Text>
+                  ))}
+              </Text>
+              <Text>
+                <Text style={styles.label}>National code: </Text>
+                <>
+                  {data.wasteDescription.nationalCode?.provided === 'Yes' &&
+                    data.wasteDescription.nationalCode?.value}
+                </>
+              </Text>
+            </>
           </View>
         </View>
         <View style={styles.row}>
@@ -425,25 +388,19 @@ export const PDFLayout = (props: PDFProps) => {
                   styles[`flexRowCell${transitColumns}`],
                 ]}
               >
-                <Text>
-                  {data.exporterDetail.status === 'Complete' &&
-                    data.exporterDetail.exporterAddress.country}
-                </Text>
+                <Text>{data.exporterDetail.exporterAddress.country}</Text>
               </View>
-              {data.transitCountries.status === 'Complete' &&
-                data.transitCountries.values
-                  .slice(0, 3)
-                  .map((country, index) => (
-                    <View
-                      style={[
-                        styles.flexRowCell,
-                        styles[`flexRowCell${transitColumns}`],
-                      ]}
-                      key={`tc-${index}`}
-                    >
-                      <Text>{country}</Text>
-                    </View>
-                  ))}
+              {data.transitCountries.slice(0, 3).map((country, index) => (
+                <View
+                  style={[
+                    styles.flexRowCell,
+                    styles[`flexRowCell${transitColumns}`],
+                  ]}
+                  key={`tc-${index}`}
+                >
+                  <Text>{country}</Text>
+                </View>
+              ))}
               {transitCount === 0 && (
                 <View
                   style={[
@@ -461,8 +418,7 @@ export const PDFLayout = (props: PDFProps) => {
                 ]}
               >
                 <Text>
-                  {data.importerDetail.status === 'Complete' &&
-                    data.importerDetail.importerAddressDetails.country}
+                  {data.importerDetail.importerAddressDetails.country}
                 </Text>
               </View>
             </View>
@@ -494,8 +450,7 @@ export const PDFLayout = (props: PDFProps) => {
         <View style={styles.row}>
           <View style={[styles.cellFullWidth, { backgroundColor: '#f5f5f5' }]}>
             <Text style={styles.cellTitle}>
-              {data.wasteDescription.status === 'Complete' &&
-              data.wasteDescription.wasteCode.type === 'NotApplicable' ? (
+              {data.wasteDescription.wasteCode.type === 'NotApplicable' ? (
                 <Text style={styles.warning}>
                   To be completed by the Laboratory
                 </Text>
@@ -510,21 +465,19 @@ export const PDFLayout = (props: PDFProps) => {
         <View style={styles.row}>
           <View style={styles.cellFullWidth}>
             <Text style={styles.cellTitle}>
-              {data.wasteDescription.status === 'Complete' &&
-              data.wasteDescription.wasteCode.type === 'NotApplicable'
+              {data.wasteDescription.wasteCode.type === 'NotApplicable'
                 ? '14. Shipment received at laboratory '
                 : '14. Shipment received at recovery facility '}
 
               <Text style={styles.standardText}>
                 Quantity received:
-                {data.wasteDescription.status === 'Complete' && (
+                {
                   <>
-                    {data.wasteQuantity.status === 'Complete' &&
-                    data.wasteQuantity.value.type === 'ActualData' ? (
+                    {data.wasteQuantity.type === 'ActualData' ? (
                       <>
                         <UnitDisplay
                           quantityType={
-                            data.wasteQuantity.value.actualData.quantityType
+                            data.wasteQuantity.actualData.quantityType
                           }
                           type={data.wasteDescription.wasteCode.type}
                         />
@@ -541,7 +494,7 @@ export const PDFLayout = (props: PDFProps) => {
                       </>
                     )}
                   </>
-                )}
+                }
               </Text>
             </Text>
             <NameDateSignature />
@@ -594,11 +547,7 @@ export const PDFLayout = (props: PDFProps) => {
       </Page>
       <Page style={styles.page} size="A4">
         <Reference
-          transactionId={
-            data.submissionDeclaration.status === 'Complete'
-              ? data.submissionDeclaration.values.transactionId
-              : ''
-          }
+          transactionId={data.submissionDeclaration.transactionId}
           reference={data.reference}
         />
         <View style={styles.pageHeader}>
@@ -611,238 +560,220 @@ export const PDFLayout = (props: PDFProps) => {
         <Text style={styles.subtitle}>
           Additional information for the Annex VII
         </Text>
-        {data.carriers.status === 'Complete' && (
-          <>
-            <View style={styles.row}>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5. (d) 4th carrier</Text>
-                <AddressDetails
-                  address={data.carriers.values[3]?.addressDetails}
-                  contact={data.carriers.values[3]?.contactDetails}
-                  inlineFax={false}
-                />
-                <TransportMeans
-                  transportDetails={data.carriers.values[3]?.transportDetails}
-                />
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}> 5. (e) 5th carrier</Text>
-                <AddressDetails
-                  address={data.carriers.values[4]?.addressDetails}
-                  contact={data.carriers.values[4]?.contactDetails}
-                  inlineFax={false}
-                />
-                <TransportMeans
-                  transportDetails={data.carriers.values[4]?.transportDetails}
-                />
-              </View>
+
+        <>
+          <View style={styles.row}>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5. (d) 4th carrier</Text>
+              <AddressDetails
+                address={data.carriers.values[3]?.addressDetails}
+                contact={data.carriers.values[3]?.contactDetails}
+                inlineFax={false}
+              />
+              <TransportMeans
+                transportDetails={data.carriers.values[3]?.transportDetails}
+              />
             </View>
-            <View style={styles.row}>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>
-                  5 cont. Means of transport details (if provided)
-                </Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5.(a) 1st carrier (2)</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5.(b) 2nd carrier</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5.(c) 3rd carrier</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5.(d) 4th carrier</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.cellTitle}>5.(e) 5th carrier</Text>
-              </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}> 5. (e) 5th carrier</Text>
+              <AddressDetails
+                address={data.carriers.values[4]?.addressDetails}
+                contact={data.carriers.values[4]?.contactDetails}
+                inlineFax={false}
+              />
+              <TransportMeans
+                transportDetails={data.carriers.values[4]?.transportDetails}
+              />
             </View>
-            <View style={styles.row}>
-              <View style={styles.cell}>
-                <Text />
-              </View>
-              <View style={styles.cell}>
-                <Text>
-                  {formatTransportType(
-                    data.carriers.values[0]?.transportDetails?.type
-                  )}
-                </Text>
-                <Text style={styles.label}>
-                  {data.carriers.values[0]?.transportDetails?.description}
-                </Text>
-              </View>
-              <View style={styles.cell}>
-                <Text>
-                  {formatTransportType(
-                    data.carriers.values[1]?.transportDetails?.type
-                  )}
-                </Text>
-                <Text style={styles.label}>
-                  {data.carriers.values[1]?.transportDetails?.description}
-                </Text>
-              </View>
-              <View style={styles.cell}>
-                <Text>
-                  {formatTransportType(
-                    data.carriers.values[2]?.transportDetails?.type
-                  )}
-                </Text>
-                <Text style={styles.label}>
-                  {data.carriers.values[2]?.transportDetails?.description}
-                </Text>
-              </View>
-              <View style={styles.cell}>
-                <Text>
-                  {formatTransportType(
-                    data.carriers.values[3]?.transportDetails?.type
-                  )}
-                </Text>
-                <Text style={styles.label}>
-                  {data.carriers.values[3]?.transportDetails?.description}
-                </Text>
-              </View>
-              <View style={styles.cell}>
-                <Text>
-                  {formatTransportType(
-                    data.carriers.values[4]?.transportDetails?.type
-                  )}
-                </Text>
-                <Text style={styles.label}>
-                  {data.carriers.values[4]?.transportDetails?.description}
-                </Text>
-              </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                5 cont. Means of transport details (if provided)
+              </Text>
             </View>
-          </>
-        )}
-        {data.wasteDescription.status === 'Complete' &&
-          data.recoveryFacilityDetail.status === 'Complete' && (
-            <>
-              <View style={styles.row}>
-                <View style={styles.cell}>
-                  <Text style={styles.cellTitle}>
-                    7. Second recovery site details:
-                  </Text>
-                  <SiteDetails
-                    data={data.recoveryFacilityDetail}
-                    type={
-                      data.wasteDescription.wasteCode.type === 'NotApplicable'
-                        ? 'Laboratory'
-                        : 'RecoveryFacility'
-                    }
-                    index={1}
-                  />
-                </View>
-                <View style={styles.cell}>
-                  <Text style={styles.cellTitle}>
-                    7. Third recovery site details:
-                  </Text>
-                  <SiteDetails
-                    data={data.recoveryFacilityDetail}
-                    type={
-                      data.wasteDescription.wasteCode.type === 'NotApplicable'
-                        ? 'Laboratory'
-                        : 'RecoveryFacility'
-                    }
-                    index={2}
-                  />
-                </View>
-                <View style={styles.cell}>
-                  <Text style={styles.cellTitle}>
-                    7. Fourth recovery site details:
-                  </Text>
-                  <SiteDetails
-                    data={data.recoveryFacilityDetail}
-                    type={
-                      data.wasteDescription.wasteCode.type === 'NotApplicable'
-                        ? 'Laboratory'
-                        : 'RecoveryFacility'
-                    }
-                    index={3}
-                  />
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.cell, { flexGrow: 1, width: '33.33%' }]}>
-                  <Text style={styles.cellTitle}>
-                    7. Fifth recovery site details:
-                  </Text>
-                  <SiteDetails
-                    data={data.recoveryFacilityDetail}
-                    type={
-                      data.wasteDescription.wasteCode.type === 'NotApplicable'
-                        ? 'Laboratory'
-                        : 'RecoveryFacility'
-                    }
-                    index={4}
-                  />
-                </View>
-                <View style={[styles.cell, { flexGrow: 2, width: '66.66%' }]}>
-                  <Text style={styles.cellTitle}>Interim site:</Text>
-                  <SiteDetails
-                    data={data.recoveryFacilityDetail}
-                    type="InterimSite"
-                    index={0}
-                  />
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={styles.cellFullWidth}>
-                  <Text style={styles.cellTitle}>
-                    10. Additional EWC waste identification codes:{' '}
-                    <Text style={styles.standardText}>
-                      {data.wasteDescription.ewcCodes
-                        .slice(3, 5)
-                        .map((item: EwcCodeType, index) => (
-                          <Text key={`ewcCode${item.code}`}>
-                            {item.code}
-                            {index + 1 !== extraEwcCodesCount ? ', ' : ''}
-                          </Text>
-                        ))}
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={styles.cell}>
-                  <Text style={styles.cellTitle}>
-                    11. Countries/states concerned:{' '}
-                  </Text>
-                  <Text style={styles.cellTitle}>
-                    4th:{' '}
-                    <Text style={styles.standardText}>
-                      {data.transitCountries.status === 'Complete' &&
-                        data.transitCountries.values.length > 3 &&
-                        data.transitCountries.values[3]}
-                    </Text>
-                  </Text>
-                </View>
-                <View style={styles.cell}>
-                  <Text style={styles.cellTitle}>
-                    5th:{' '}
-                    <Text style={styles.standardText}>
-                      {data.transitCountries.status === 'Complete' &&
-                        data.transitCountries.values.length > 4 &&
-                        data.transitCountries.values[4]}
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={styles.cellFullWidth}>
-                  <Text style={styles.cellTitle}>
-                    15. Location the waste will leave the UK:{' '}
-                    <Text style={styles.standardText}>
-                      {data.ukExitLocation.status === 'Complete' &&
-                        data.ukExitLocation.exitLocation.provided === 'Yes' &&
-                        data.ukExitLocation.exitLocation.value}
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-            </>
-          )}
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5.(a) 1st carrier (2)</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5.(b) 2nd carrier</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5.(c) 3rd carrier</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5.(d) 4th carrier</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>5.(e) 5th carrier</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell}>
+              <Text />
+            </View>
+            <View style={styles.cell}>
+              <Text>
+                {formatTransportType(data.carriers[0]?.transportDetails?.type)}
+              </Text>
+              <Text style={styles.label}>
+                {data.carriers[0]?.transportDetails?.description}
+              </Text>
+            </View>
+            <View style={styles.cell}>
+              <Text>
+                {formatTransportType(data.carriers[1]?.transportDetails?.type)}
+              </Text>
+              <Text style={styles.label}>
+                {data.carriers[1]?.transportDetails?.description}
+              </Text>
+            </View>
+            <View style={styles.cell}>
+              <Text>
+                {formatTransportType(data.carriers[2]?.transportDetails?.type)}
+              </Text>
+              <Text style={styles.label}>
+                {data.carriers[2]?.transportDetails?.description}
+              </Text>
+            </View>
+            <View style={styles.cell}>
+              <Text>
+                {formatTransportType(data.carriers[3]?.transportDetails?.type)}
+              </Text>
+              <Text style={styles.label}>
+                {data.carriers[3]?.transportDetails?.description}
+              </Text>
+            </View>
+            <View style={styles.cell}>
+              <Text>
+                {formatTransportType(data.carriers[4]?.transportDetails?.type)}
+              </Text>
+              <Text style={styles.label}>
+                {data.carriers[4]?.transportDetails?.description}
+              </Text>
+            </View>
+          </View>
+        </>
+
+        <>
+          <View style={styles.row}>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                7. Second recovery site details:
+              </Text>
+              <SiteDetails
+                data={data.recoveryFacilityDetail}
+                type={
+                  data.wasteDescription.wasteCode.type === 'NotApplicable'
+                    ? 'Laboratory'
+                    : 'RecoveryFacility'
+                }
+                index={1}
+              />
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                7. Third recovery site details:
+              </Text>
+              <SiteDetails
+                data={data.recoveryFacilityDetail}
+                type={
+                  data.wasteDescription.wasteCode.type === 'NotApplicable'
+                    ? 'Laboratory'
+                    : 'RecoveryFacility'
+                }
+                index={2}
+              />
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                7. Fourth recovery site details:
+              </Text>
+              <SiteDetails
+                data={data.recoveryFacilityDetail}
+                type={
+                  data.wasteDescription.wasteCode.type === 'NotApplicable'
+                    ? 'Laboratory'
+                    : 'RecoveryFacility'
+                }
+                index={3}
+              />
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.cell, { flexGrow: 1, width: '33.33%' }]}>
+              <Text style={styles.cellTitle}>
+                7. Fifth recovery site details:
+              </Text>
+              <SiteDetails
+                data={data.recoveryFacilityDetail}
+                type={
+                  data.wasteDescription.wasteCode.type === 'NotApplicable'
+                    ? 'Laboratory'
+                    : 'RecoveryFacility'
+                }
+                index={4}
+              />
+            </View>
+            <View style={[styles.cell, { flexGrow: 2, width: '66.66%' }]}>
+              <Text style={styles.cellTitle}>Interim site:</Text>
+              <SiteDetails
+                data={data.recoveryFacilityDetail}
+                type="InterimSite"
+                index={0}
+              />
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cellFullWidth}>
+              <Text style={styles.cellTitle}>
+                10. Additional EWC waste identification codes:{' '}
+                <Text style={styles.standardText}>
+                  {data.wasteDescription.ewcCodes
+                    .slice(3, 5)
+                    .map((item: EwcCodeType, index) => (
+                      <Text key={`ewcCode${item.code}`}>
+                        {item.code}
+                        {index + 1 !== extraEwcCodesCount ? ', ' : ''}
+                      </Text>
+                    ))}
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                11. Countries/states concerned:{' '}
+              </Text>
+              <Text style={styles.cellTitle}>
+                4th:{' '}
+                <Text style={styles.standardText}>
+                  {data.transitCountries.length > 3 && data.transitCountries[3]}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.cellTitle}>
+                5th:{' '}
+                <Text style={styles.standardText}>
+                  {data.transitCountries.length > 4 && data.transitCountries[4]}
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cellFullWidth}>
+              <Text style={styles.cellTitle}>
+                15. Location the waste will leave the UK:{' '}
+                <Text style={styles.standardText}>
+                  {data.ukExitLocation.provided === 'Yes' &&
+                    data.ukExitLocation.value}
+                </Text>
+              </Text>
+            </View>
+          </View>
+        </>
       </Page>
     </Document>
   );
@@ -993,9 +924,7 @@ const formatTransportType = (type) => {
 };
 
 const SiteDetails = ({ data, type, index, inlineFax = false }) => {
-  const facilities = data.values.filter(
-    (f) => f.recoveryFacilityType.type === type
-  );
+  const facilities = data.filter((f) => f.recoveryFacilityType.type === type);
   let facility;
 
   if (index === 0 && facilities.length > 0) {

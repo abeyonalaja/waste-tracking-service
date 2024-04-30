@@ -50,9 +50,12 @@ const CollectionDate = () => {
       setIsLoading(true);
       setIsError(false);
       if (id !== null) {
-        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
-          headers: apiConfig,
-        })
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
+          {
+            headers: apiConfig,
+          }
+        )
           .then((response) => {
             if (response.ok) return response.json();
             else {
@@ -62,14 +65,14 @@ const CollectionDate = () => {
           })
           .then((data) => {
             if (data !== undefined) {
-              if (data.collectionDate.value.type === 'ActualDate') {
+              if (data.collectionDate.type === 'ActualDate') {
                 router.push({
                   pathname: `/estimated/update`,
                   query: { id },
                 });
               }
               setData(data.collectionDate);
-              setTransactionId(data.submissionDeclaration.values.transactionId);
+              setTransactionId(data.submissionDeclaration.transactionId);
               setIsLoading(false);
               setIsError(false);
             }
@@ -96,19 +99,16 @@ const CollectionDate = () => {
         setErrors(null);
 
         const body = {
-          status: 'Complete',
-          value: {
-            type: 'ActualDate',
-            actualDate: { ...data?.value?.actualDate },
-            estimateDate: { ...data?.value?.estimateDate },
-          },
+          type: 'ActualDate',
+          actualDate: { ...data?.actualDate },
+          estimateDate: { ...data?.estimateDate },
         };
 
-        body.value.actualDate = collectionDate;
+        body.actualDate = collectionDate;
 
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date?submitted=true`,
             {
               method: 'PUT',
               headers: apiConfig,

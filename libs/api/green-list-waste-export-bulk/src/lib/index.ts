@@ -1,4 +1,9 @@
-export { addContentToBatch, getBatch, updateBatch } from './dto';
+export {
+  addContentToBatch,
+  getBatch,
+  updateBatch,
+  getBatchContent,
+} from './dto';
 export type {
   BulkSubmission,
   AddContentToBatchRequest,
@@ -23,8 +28,8 @@ export type {
   ExitLocationFlattened,
   TransitCountriesFlattened,
   RecoveryFacilityDetailFlattened,
-  PartialSubmission,
-  PartialSubmissionWithId,
-  SubmissionSummary,
+  SubmissionFromBulkSummary,
+  GetBatchContentRequest,
+  GetBatchContentResponse,
 } from './dto';
 export * as schema from './schema';

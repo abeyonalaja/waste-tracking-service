@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { BulkSubmission } from '@wts/api/waste-tracking-gateway';
+import { BulkSubmission, Submission } from '@wts/api/waste-tracking-gateway';
 import { Readable } from 'stream';
 import { parse } from 'csv-parse';
 import { finished } from 'stream/promises';
@@ -8,7 +8,7 @@ import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
-} from '../../libs/errors';
+} from '../../lib/errors';
 
 export type BatchRef = {
   id: string;
@@ -83,7 +83,7 @@ export async function createBatch(
     },
     accountId: accountId,
   };
-  console.log(records[0].state);
+
   switch (records[0].state) {
     case 'Processing':
       value = {
@@ -270,7 +270,6 @@ export async function createBatch(
               },
               carriers: [
                 {
-                  id: uuidv4(),
                   transportDetails: {
                     type: 'Air',
                     description: 'RyanAir',
@@ -406,7 +405,6 @@ export async function createBatch(
               },
               carriers: [
                 {
-                  id: uuidv4(),
                   transportDetails: {
                     type: 'Air',
                     description: 'RyanAir',
@@ -480,19 +478,52 @@ export async function createBatch(
           hasEstimates: true,
           submissions: [
             {
-              id: uuidv4(),
+              id: '8d1cb87d-9349-4d84-acf2-30aa4df4d2cb',
               submissionDeclaration: {
                 declarationTimestamp: new Date(),
-                transactionId: '3497_1224DCBA',
+                transactionId: '2404_8D1CB87D',
+              },
+              hasEstimates: true,
+              collectionDate: {
+                type: 'EstimateDate',
+                estimateDate: {
+                  day: '15',
+                  month: '01',
+                  year: '2050',
+                },
+                actualDate: {},
+              },
+              wasteDescription: {
+                wasteCode: {
+                  type: 'BaselAnnexIX',
+                  code: 'B1010',
+                },
+                ewcCodes: [
+                  {
+                    code: '101213',
+                  },
+                ],
+                nationalCode: {
+                  provided: 'No',
+                },
+                description: 'WasteDescription',
+              },
+              reference: 'ref1',
+            },
+            {
+              id: '4909acad-c100-4419-b73e-181dfd553bfe',
+              submissionDeclaration: {
+                declarationTimestamp: new Date(),
+                transactionId: '2404_4909ACAD',
               },
               hasEstimates: false,
               collectionDate: {
                 type: 'ActualDate',
                 estimateDate: {},
                 actualDate: {
-                  day: '10',
-                  month: '10',
-                  year: '2029',
+                  day: '08',
+                  month: '01',
+                  year: '2050',
                 },
               },
               wasteDescription: {
@@ -504,47 +535,288 @@ export async function createBatch(
                     code: '101213',
                   },
                 ],
-                description: 'metal',
-              },
-              reference: 'ref1',
-            },
-            {
-              id: uuidv4(),
-              submissionDeclaration: {
-                declarationTimestamp: new Date(),
-                transactionId: '3497_1224DCBA',
-              },
-              hasEstimates: true,
-              collectionDate: {
-                type: 'ActualDate',
-                estimateDate: {
-                  day: '10',
-                  month: '11',
-                  year: '2028',
+                nationalCode: {
+                  provided: 'Yes',
+                  value: 'NatCode',
                 },
-                actualDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2030',
-                },
+                description: 'WasteDescription',
               },
-              wasteDescription: {
-                wasteCode: {
-                  type: 'NotApplicable',
-                },
-                ewcCodes: [
-                  {
-                    code: '010101',
-                  },
-                ],
-                description: 'Collection of metal',
-              },
-              reference: 'export7822',
+              reference: 'ref2',
             },
           ],
         },
         accountId: accountId,
       };
+
+      db.submissions.push({
+        accountId,
+        id: '8d1cb87d-9349-4d84-acf2-30aa4df4d2cb',
+        reference: 'ref1',
+        wasteDescription: {
+          wasteCode: {
+            type: 'BaselAnnexIX',
+            code: 'B1010',
+          },
+          ewcCodes: [
+            {
+              code: '101213',
+            },
+          ],
+          nationalCode: {
+            provided: 'No',
+          },
+          description: 'WasteDescription',
+        },
+        wasteQuantity: {
+          type: 'EstimateData',
+          estimateData: {
+            quantityType: 'Volume',
+            unit: 'Cubic Metre',
+            value: 10,
+          },
+          actualData: {},
+        },
+        exporterDetail: {
+          exporterAddress: {
+            addressLine1: 'Test organisation 1',
+            addressLine2: 'Address line',
+            townCity: 'London',
+            postcode: 'EC2N4AY',
+            country: 'England',
+          },
+          exporterContactDetails: {
+            organisationName: 'Test organisation 1',
+            fullName: 'John Smith',
+            emailAddress: 'test1@test.com',
+            phoneNumber: '00-44788-888 8888',
+            faxNumber: '07888888888',
+          },
+        },
+        importerDetail: {
+          importerAddressDetails: {
+            organisationName: 'Test organisation 2',
+            address: '2 Some Street, Paris, 75002',
+            country: 'France [FR]',
+          },
+          importerContactDetails: {
+            fullName: 'Jane Smith',
+            emailAddress: 'test2@test.com',
+            phoneNumber: '0033140000000',
+            faxNumber: '00 33140000000',
+          },
+        },
+        collectionDate: {
+          type: 'EstimateDate',
+          estimateDate: {
+            day: '15',
+            month: '01',
+            year: '2050',
+          },
+          actualDate: {},
+        },
+        carriers: [
+          {
+            addressDetails: {
+              organisationName: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+              faxNumber: '00 33140000000',
+            },
+            transportDetails: {
+              type: 'Sea',
+            },
+          },
+        ],
+        collectionDetail: {
+          address: {
+            addressLine1: 'Test organisation 1',
+            addressLine2: 'Address line',
+            townCity: 'London',
+            postcode: 'EC2N4AY',
+            country: 'England',
+          },
+          contactDetails: {
+            organisationName: 'Test organisation 1',
+            fullName: 'John Smith',
+            emailAddress: 'test1@test.com',
+            phoneNumber: '00-44788-888 8888',
+            faxNumber: '07888888888',
+          },
+        },
+        ukExitLocation: {
+          provided: 'No',
+        },
+        transitCountries: [],
+        recoveryFacilityDetail: [
+          {
+            addressDetails: {
+              name: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+              faxNumber: '00 33140000000',
+            },
+            recoveryFacilityType: {
+              type: 'InterimSite',
+              recoveryCode: 'R13',
+            },
+          },
+          {
+            addressDetails: {
+              name: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+              faxNumber: '00 33140000000',
+            },
+            recoveryFacilityType: {
+              type: 'RecoveryFacility',
+              recoveryCode: 'R1',
+            },
+          },
+        ],
+        submissionDeclaration: {
+          declarationTimestamp: new Date(),
+          transactionId: '2404_8D1CB87D',
+        },
+        submissionState: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      });
+      db.submissions.push({
+        accountId,
+        id: '4909acad-c100-4419-b73e-181dfd553bfe',
+        reference: 'ref2',
+        wasteDescription: {
+          wasteCode: {
+            type: 'NotApplicable',
+          },
+          ewcCodes: [
+            {
+              code: '101213',
+            },
+          ],
+          nationalCode: {
+            provided: 'Yes',
+            value: 'NatCode',
+          },
+          description: 'WasteDescription',
+        },
+        wasteQuantity: {
+          type: 'ActualData',
+          estimateData: {},
+          actualData: {
+            quantityType: 'Weight',
+            unit: 'Kilogram',
+            value: 12.5,
+          },
+        },
+        exporterDetail: {
+          exporterAddress: {
+            addressLine1: 'Test organisation 1',
+            townCity: 'London',
+            country: 'England',
+          },
+          exporterContactDetails: {
+            organisationName: 'Test organisation 1',
+            fullName: 'John Smith',
+            emailAddress: 'test1@test.com',
+            phoneNumber: '07888888888',
+          },
+        },
+        importerDetail: {
+          importerAddressDetails: {
+            organisationName: 'Test organisation 2',
+            address: '2 Some Street, Paris, 75002',
+            country: 'France [FR]',
+          },
+          importerContactDetails: {
+            fullName: 'Jane Smith',
+            emailAddress: 'test2@test.com',
+            phoneNumber: '0033140000000',
+          },
+        },
+        collectionDate: {
+          type: 'ActualDate',
+          estimateDate: {},
+          actualDate: {
+            day: '08',
+            month: '01',
+            year: '2050',
+          },
+        },
+        carriers: [
+          {
+            addressDetails: {
+              organisationName: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+            },
+          },
+        ],
+        collectionDetail: {
+          address: {
+            addressLine1: 'Test organisation 1',
+            townCity: 'London',
+            country: 'England',
+          },
+          contactDetails: {
+            organisationName: 'Test organisation 1',
+            fullName: 'John Smith',
+            emailAddress: 'test1@test.com',
+            phoneNumber: '07888888888',
+          },
+        },
+        ukExitLocation: {
+          provided: 'No',
+        },
+        transitCountries: [],
+        recoveryFacilityDetail: [
+          {
+            addressDetails: {
+              name: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D2',
+            },
+          },
+        ],
+        submissionDeclaration: {
+          declarationTimestamp: new Date(),
+          transactionId: '2404_4909ACAD',
+        },
+        submissionState: {
+          status: 'SubmittedWithActuals',
+          timestamp: new Date(),
+        },
+      });
       break;
   }
   db.batches.push(value);
@@ -648,7 +920,6 @@ export async function finalizeBatch({
         },
         carriers: [
           {
-            id: uuidv4(),
             transportDetails: {
               type: 'Air',
               description: 'RyanAir',
@@ -710,4 +981,58 @@ export async function finalizeBatch({
   };
 
   return Promise.resolve();
+}
+
+export async function getBatchSubmissions({
+  id,
+  accountId,
+}: BatchRef): Promise<Submission[]> {
+  const batch = db.batches.find((b) => b.id == id && b.accountId == accountId);
+  const submissions = db.submissions.filter((b) => b.accountId == accountId);
+
+  if (!batch || !submissions) {
+    return Promise.reject(new NotFoundError());
+  }
+
+  if (batch.state.status !== 'Submitted') {
+    return Promise.reject(
+      new BadRequestError('Batch has not submitted records.')
+    );
+  }
+
+  const submissionIds = batch.state.submissions.map((s) => {
+    return s.id;
+  });
+
+  const values = submissions
+    .filter((x) => submissionIds.some((y) => y.valueOf() === x.id))
+    .sort((x, y) => {
+      return x.submissionState.timestamp > y.submissionState.timestamp ? 1 : -1;
+    })
+    .reverse();
+
+  if (!Array.isArray(values) || values.length === 0) {
+    return Promise.reject(new NotFoundError('Not found.'));
+  }
+
+  return Promise.resolve(
+    values.map((s) => {
+      return {
+        id: s.id,
+        reference: s.reference,
+        wasteDescription: s.wasteDescription,
+        wasteQuantity: s.wasteQuantity,
+        exporterDetail: s.exporterDetail,
+        importerDetail: s.importerDetail,
+        collectionDate: s.collectionDate,
+        carriers: s.carriers,
+        collectionDetail: s.collectionDetail,
+        ukExitLocation: s.ukExitLocation,
+        transitCountries: s.transitCountries,
+        recoveryFacilityDetail: s.recoveryFacilityDetail,
+        submissionDeclaration: s.submissionDeclaration,
+        submissionState: s.submissionState,
+      };
+    })
+  );
 }

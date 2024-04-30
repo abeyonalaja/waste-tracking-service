@@ -3,10 +3,10 @@ import {
   validateCreateSubmissionRequest,
   validatePutReferenceRequest,
   validatePutWasteDescriptionRequest,
-  validatePutWasteQuantityRequest,
+  validatePutDraftWasteQuantityRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
-  validatePutCollectionDateRequest,
+  validatePutDraftCollectionDateRequest,
   validateSetCarriersRequest,
   validateSetCollectionDetailRequest,
   validatePutExitLocationRequest,
@@ -15,6 +15,8 @@ import {
   validatePutSubmissionConfirmationRequest,
   validatePutSubmissionDeclarationRequest,
   validatePutSubmissionCancellationRequest,
+  validatePutSubmissionWasteQuantityRequest,
+  validatePutSubmissionCollectionDateRequest,
 } from './submission.validation';
 
 describe('validateCreateSubmissionRequest', () => {
@@ -116,8 +118,8 @@ describe('validatePutWasteDescriptionRequest', () => {
   });
 });
 
-describe('validatePutWasteQuantityRequest', () => {
-  const validate = validatePutWasteQuantityRequest;
+describe('validatePutDraftWasteQuantityRequest', () => {
+  const validate = validatePutDraftWasteQuantityRequest;
 
   it('Rejects invalid values', () => {
     expect(validate({})).toBe(false);
@@ -209,6 +211,71 @@ describe('validatePutWasteQuantityRequest', () => {
             value: faker.datatype.float({ precision: 0.01 }),
           },
           estimateData: {},
+        },
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutSubmissionWasteQuantityRequest', () => {
+  const validate = validatePutSubmissionWasteQuantityRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        type: 'NotApplicable',
+        value: faker.datatype.string(10),
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        type: 'ActualData',
+        quantityType: 'Volume',
+        value: faker.datatype.number(),
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        type: 'EstimateData',
+        value: faker.datatype.number(),
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        type: 'ActualData',
+        quantityType: 'Weight',
+        value: faker.datatype.string(10),
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.datatype.float({ precision: 0.01 }),
+        },
+        estimateData: {},
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        type: 'EstimateData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.datatype.float({ precision: 0.01 }),
+        },
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.datatype.float({ precision: 0.01 }),
         },
       })
     ).toBe(true);
@@ -379,8 +446,8 @@ describe('validatePutImporterDetailRequest', () => {
   });
 });
 
-describe('validatePutCollectionDateRequest', () => {
-  const validate = validatePutCollectionDateRequest;
+describe('validatePutDraftCollectionDateRequest', () => {
+  const validate = validatePutDraftCollectionDateRequest;
 
   it('Rejects invalid values', () => {
     expect(validate({})).toBe(false);
@@ -443,6 +510,70 @@ describe('validatePutCollectionDateRequest', () => {
             year: '2020',
           },
           estimateDate: {},
+        },
+      })
+    ).toBe(true);
+  });
+});
+
+describe('validatePutSubmissionCollectionDateRequest', () => {
+  const validate = validatePutSubmissionCollectionDateRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        type: 'ActualDate',
+      })
+    ).toBe(false);
+
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        type: 'EstimateData',
+      })
+    ).toBe(false);
+
+    expect(
+      validate({
+        type: 'ActualDate',
+        actualDate: {
+          day: 10,
+          month: 12,
+          year: 2020,
+        },
+        estimateDate: {},
+      })
+    ).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        type: 'ActualDate',
+        actualDate: {
+          day: '10',
+          month: '07',
+          year: '2020',
+        },
+        estimateDate: {},
+      })
+    ).toBe(true);
+
+    expect(
+      validate({
+        type: 'EstimateDate',
+        actualDate: {
+          day: '10',
+          month: '07',
+          year: '2020',
+        },
+        estimateDate: {
+          day: '10',
+          month: '07',
+          year: '2020',
         },
       })
     ).toBe(true);

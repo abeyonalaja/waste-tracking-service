@@ -16,20 +16,19 @@ import {
 } from 'components';
 import styled from 'styled-components';
 import { format } from 'date-fns';
-import { GetSubmissionsResponse } from '@wts/api/waste-tracking-gateway';
 
 import useRefDataLookup from '../../utils/useRefDataLookup';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {
-  data: GetSubmissionsResponse;
+  data: any | null;
   isLoading: boolean;
   isError: boolean;
 };
 
 type Action = {
   type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
-  payload?: GetSubmissionsResponse;
+  payload?: any;
 };
 
 const initialWasteDescState: State = {
@@ -224,63 +223,46 @@ const Index = () => {
                       {submittedAnnex7Page.data.values.map((item, index) => (
                         <GovUK.Table.Row key={index}>
                           <TableCell id={'transaction-id-' + index}>
-                            {item.submissionDeclaration.status ===
-                              'Complete' && (
-                              <b>
-                                {
-                                  item.submissionDeclaration.values
-                                    .transactionId
-                                }
-                              </b>
-                            )}
+                            <b>{item.submissionDeclaration.transactionId}</b>
                           </TableCell>
                           <TableCell id={'date-' + index}>
-                            {item.collectionDate.status === 'Complete' && (
-                              <>
-                                {format(
-                                  new Date(
-                                    Number(
-                                      item.collectionDate.value.actualDate.year
-                                    ),
-                                    Number(
-                                      item.collectionDate.value.actualDate.month
-                                    ) - 1,
-                                    Number(
-                                      item.collectionDate.value.actualDate.day
-                                    )
-                                  ),
-                                  'd MMM y'
-                                )}
-                              </>
-                            )}
+                            <>
+                              {format(
+                                new Date(
+                                  Number(item.collectionDate.actualDate.year),
+                                  Number(item.collectionDate.actualDate.month) -
+                                    1,
+                                  Number(item.collectionDate.actualDate.day)
+                                ),
+                                'd MMM y'
+                              )}
+                            </>
                           </TableCell>
 
                           <TableCell id={'waste-code-' + index}>
-                            {item.wasteDescription?.status === 'Complete' && (
-                              <>
-                                {item.wasteDescription?.wasteCode.type !==
-                                  'NotApplicable' && (
-                                  <>
-                                    <strong>
-                                      {item.wasteDescription?.wasteCode.code}:{' '}
-                                    </strong>
-                                    {getRefData(
-                                      'WasteCode',
-                                      item.wasteDescription?.wasteCode.code,
-                                      item.wasteDescription?.wasteCode.type
-                                    )}
-                                  </>
-                                )}
-                                {item.wasteDescription?.wasteCode.type ===
-                                  'NotApplicable' && (
-                                  <span id="waste-code-not-provided">
-                                    {t(
-                                      'exportJourney.updateAnnexSeven.notApplicable'
-                                    )}
-                                  </span>
-                                )}
-                              </>
-                            )}
+                            <>
+                              {item.wasteDescription?.wasteCode.type !==
+                                'NotApplicable' && (
+                                <>
+                                  <strong>
+                                    {item.wasteDescription?.wasteCode.code}:{' '}
+                                  </strong>
+                                  {getRefData(
+                                    'WasteCode',
+                                    item.wasteDescription?.wasteCode.code,
+                                    item.wasteDescription?.wasteCode.type
+                                  )}
+                                </>
+                              )}
+                              {item.wasteDescription?.wasteCode.type ===
+                                'NotApplicable' && (
+                                <span id="waste-code-not-provided">
+                                  {t(
+                                    'exportJourney.updateAnnexSeven.notApplicable'
+                                  )}
+                                </span>
+                              )}
+                            </>
                           </TableCell>
                           <TableCell id={'your-reference-' + index}>
                             {' '}

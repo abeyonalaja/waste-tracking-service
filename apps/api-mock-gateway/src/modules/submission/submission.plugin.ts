@@ -4,10 +4,8 @@ import {
   validateCreateSubmissionRequest,
   validatePutWasteDescriptionRequest,
   validatePutReferenceRequest,
-  validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
-  validatePutCollectionDateRequest,
   validateCreateCarriersRequest,
   validateSetCarriersRequest,
   validateSetCollectionDetailRequest,
@@ -18,9 +16,11 @@ import {
   validatePutSubmissionConfirmationRequest,
   validatePutSubmissionDeclarationRequest,
   validatePutSubmissionCancellationRequest,
+  validatePutDraftCollectionDateRequest,
+  validatePutDraftWasteQuantityRequest,
+  validatePutSubmissionCollectionDateRequest,
+  validatePutSubmissionWasteQuantityRequest,
 } from './submission.validation';
-
-import { DraftWasteDescription } from '@wts/api/green-list-waste-export';
 import {
   getSubmissions,
   getSubmission,
@@ -66,8 +66,8 @@ import {
   BadRequestError,
   CustomError,
   InternalServerError,
-} from '../../libs/errors';
-import { User } from '../../libs/user';
+} from '../../lib/errors';
+import { User } from '../../lib/user';
 
 export default class SubmissionPlugin {
   constructor(private server: Application, private prefix: string) {}
@@ -148,11 +148,23 @@ export default class SubmissionPlugin {
     });
 
     this.server.get(`${this.prefix}/:id`, async (req, res) => {
+      const submittedStr = req.query['submitted'] as string | undefined;
+      let submitted = false;
+      if (submittedStr) {
+        try {
+          submitted = JSON.parse(submittedStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(400)
+            .send("Query parameter 'submitted' must be of type boolean");
+        }
+      }
       try {
         const user = req.user as User;
         const value = await getSubmission({
           id: req.params.id,
           accountId: user.credentials.accountId,
+          submitted,
         });
 
         return res.json(value as dto.GetSubmissionResponse);
@@ -297,7 +309,7 @@ export default class SubmissionPlugin {
           return res.status(400).jsonp(new BadRequestError('Bad Request'));
         }
 
-        const request = req.body as DraftWasteDescription;
+        const request = req.body as dto.WasteDescription;
         const user = req.user as User;
         try {
           await setWasteDescription(
@@ -323,11 +335,23 @@ export default class SubmissionPlugin {
     );
 
     this.server.get(`${this.prefix}/:id/waste-quantity`, async (req, res) => {
+      const submittedStr = req.query['submitted'] as string | undefined;
+      let submitted = false;
+      if (submittedStr) {
+        try {
+          submitted = JSON.parse(submittedStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(400)
+            .send("Query parameter 'submitted' must be of type boolean");
+        }
+      }
       const user = req.user as User;
       try {
         const value = await getWasteQuantity({
           id: req.params.id,
           accountId: user.credentials.accountId,
+          submitted,
         });
         return res.json(value as dto.GetWasteQuantityResponse);
       } catch (err) {
@@ -342,16 +366,26 @@ export default class SubmissionPlugin {
     });
 
     this.server.put(`${this.prefix}/:id/waste-quantity`, async (req, res) => {
-      //Removing unit property,so that the object can pass validation.
-      if (req.body.value.estimateData && req.body.value.estimateData.unit) {
-        delete req.body.value.estimateData.unit;
-      }
-      if (req.body.value.actualData && req.body.value.actualData.unit) {
-        delete req.body.value.actualData.unit;
+      const submittedStr = req.query['submitted'] as string | undefined;
+      let submitted = false;
+      if (submittedStr) {
+        try {
+          submitted = JSON.parse(submittedStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(400)
+            .send("Query parameter 'submitted' must be of type boolean");
+        }
       }
 
-      if (!validatePutWasteQuantityRequest(req.body)) {
-        return res.status(400).jsonp(new BadRequestError('Bad Request'));
+      if (!submitted) {
+        if (!validatePutDraftWasteQuantityRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+      } else {
+        if (!validatePutSubmissionWasteQuantityRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
       }
 
       const request = req.body as dto.PutWasteQuantityRequest;
@@ -361,6 +395,7 @@ export default class SubmissionPlugin {
           {
             id: req.params.id,
             accountId: user.credentials.accountId,
+            submitted,
           },
           request
         );
@@ -515,11 +550,23 @@ export default class SubmissionPlugin {
     });
 
     this.server.get(`${this.prefix}/:id/collection-date`, async (req, res) => {
+      const submittedStr = req.query['submitted'] as string | undefined;
+      let submitted = false;
+      if (submittedStr) {
+        try {
+          submitted = JSON.parse(submittedStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(400)
+            .send("Query parameter 'submitted' must be of type boolean");
+        }
+      }
       const user = req.user as User;
       try {
         const value = await getCollectionDate({
           id: req.params.id,
           accountId: user.credentials.accountId,
+          submitted,
         });
         return res.json(value as dto.GetCollectionDateResponse);
       } catch (err) {
@@ -534,8 +581,26 @@ export default class SubmissionPlugin {
     });
 
     this.server.put(`${this.prefix}/:id/collection-date`, async (req, res) => {
-      if (!validatePutCollectionDateRequest(req.body)) {
-        return res.status(400).jsonp(new BadRequestError('Bad Request'));
+      const submittedStr = req.query['submitted'] as string | undefined;
+      let submitted = false;
+      if (submittedStr) {
+        try {
+          submitted = JSON.parse(submittedStr.toLowerCase());
+        } catch (err) {
+          return res
+            .status(400)
+            .send("Query parameter 'submitted' must be of type boolean");
+        }
+      }
+
+      if (!submitted) {
+        if (!validatePutDraftCollectionDateRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+      } else {
+        if (!validatePutSubmissionCollectionDateRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
       }
 
       const request = req.body as dto.PutCollectionDateRequest;
@@ -545,6 +610,7 @@ export default class SubmissionPlugin {
           {
             id: req.params.id,
             accountId: user.credentials.accountId,
+            submitted,
           },
           request
         );

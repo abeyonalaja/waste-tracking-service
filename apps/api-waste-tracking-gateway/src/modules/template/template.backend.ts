@@ -1,64 +1,43 @@
 import Boom from '@hapi/boom';
+import { draft, template } from '@wts/api/green-list-waste-export';
 import {
-  CreateDraftCarriersResponse,
-  CreateDraftRecoveryFacilityDetailsResponse,
-  CreateTemplateResponse,
-  DeleteDraftCarriersResponse,
-  DeleteDraftRecoveryFacilityDetailsResponse,
-  DeleteTemplateResponse,
-  DraftExitLocation,
-  DraftTransitCountries,
-  DraftWasteDescription,
-  GetDraftCarriersResponse,
-  GetDraftCollectionDetailResponse,
-  GetDraftExitLocationByIdResponse,
-  GetDraftExporterDetailByIdResponse,
-  GetDraftImporterDetailByIdResponse,
-  GetDraftRecoveryFacilityDetailsResponse,
-  GetDraftTransitCountriesResponse,
-  GetDraftWasteDescriptionByIdResponse,
-  GetNumberOfTemplatesResponse,
-  GetTemplatesResponse,
-  ListDraftCarriersResponse,
-  ListDraftRecoveryFacilityDetailsResponse,
-  SetDraftCarriersResponse,
-  SetDraftCollectionDetailResponse,
-  SetDraftExitLocationByIdResponse,
-  SetDraftExporterDetailByIdResponse,
-  SetDraftImporterDetailByIdResponse,
-  SetDraftRecoveryFacilityDetailsResponse,
-  SetDraftTransitCountriesResponse,
-  SetDraftWasteDescriptionByIdResponse,
-  Template,
-  TemplateSummary,
-  TemplateSummaryPage,
-  UpdateTemplateResponse,
-} from '@wts/api/green-list-waste-export';
-import * as dto from '@wts/api/waste-tracking-gateway';
-import { v4 as uuidv4 } from 'uuid';
-import {
-  AnnexViiServiceSubmissionBaseBackend,
   Carriers,
   CollectionDetail,
+  ExitLocation,
   ExporterDetail,
   ImporterDetail,
-  InMemorySubmissionBaseBackend,
   RecoveryFacilityDetail,
-  SubmissionBaseBackend,
-  SubmissionBasePlusId,
-  SubmissionRef,
+  Template,
+  TemplateSummaryPage,
+  TransitCountries,
   WasteDescription,
-} from '../submissionBase/submissionBase.backend';
+} from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { Logger } from 'winston';
-import { OrderRef, Submission } from '../submission';
+
+export type SubmissionRef = {
+  id: string;
+  accountId: string;
+};
 
 export type TemplateRef = {
   id: string;
   accountId: string;
 };
 
-export interface TemplateBackend extends SubmissionBaseBackend {
+export type OrderRef = {
+  order: 'ASC' | 'DESC';
+};
+
+export interface TemplateBackend {
+  getTemplates(
+    accountId: string,
+    { order }: OrderRef,
+    pageLimit?: number,
+    token?: string
+  ): Promise<TemplateSummaryPage>;
+  getNumberOfTemplates(accountId: string): Promise<number>;
+  getTemplate({ id }: TemplateRef): Promise<Template>;
   createTemplate(
     accountId: string,
     templateDetails: {
@@ -90,942 +69,78 @@ export interface TemplateBackend extends SubmissionBaseBackend {
       description: string;
     }
   ): Promise<Template>;
-  getTemplates(
-    accountId: string,
-    { order }: OrderRef,
-    pageLimit?: number,
-    token?: string
-  ): Promise<TemplateSummaryPage>;
   deleteTemplate(ref: TemplateRef): Promise<void>;
-  getNumberOfTemplates(accountId: string): Promise<number>;
-}
-
-function isTemplateNameValid(name: string): boolean {
-  let valid = true;
-  if (
-    !name ||
-    name.length < 1 ||
-    name.length > 50 ||
-    !/^[a-zA-Z0-9-._'/() ]+$/.test(name)
-  ) {
-    valid = false;
-  }
-
-  return valid;
-}
-
-/**
- * This is a mock backend and should not be used in production.
- */
-export class InMemoryTemplateBackend
-  extends InMemorySubmissionBaseBackend
-  implements TemplateBackend
-{
-  constructor(
-    protected submissions: Map<string, Submission>,
-    protected templates: Map<string, Template>
-  ) {
-    super(submissions, templates);
-  }
-
-  createTemplate(
-    accountId: string,
-    templateDetails: { name: string; description: string }
-  ): Promise<Template> {
-    if (!isTemplateNameValid(templateDetails.name)) {
-      throw Boom.badRequest(
-        'Template name must be unique and between 1 and 50 alphanumeric characters.'
-      );
-    }
-    if (
-      templateDetails.description &&
-      templateDetails.description.length > 100
-    ) {
-      throw Boom.badRequest(
-        'Template description cannot exceed 100 characters.'
-      );
-    }
-
-    if (this.doesTemplateAlreadyExist(accountId, templateDetails.name)) {
-      throw Boom.conflict('A template with this name already exists');
-    }
-
-    const id = uuidv4();
-
-    const template: Template = {
-      id,
-      templateDetails: {
-        name: templateDetails.name,
-        description: templateDetails.description,
-        created: new Date(),
-        lastModified: new Date(),
-      },
-      wasteDescription: { status: 'NotStarted' },
-      exporterDetail: { status: 'NotStarted' },
-      importerDetail: { status: 'NotStarted' },
-      carriers: {
-        status: 'NotStarted',
-        transport: true,
-      },
-      collectionDetail: { status: 'NotStarted' },
-      ukExitLocation: { status: 'NotStarted' },
-      transitCountries: { status: 'NotStarted' },
-      recoveryFacilityDetail: { status: 'CannotStart' },
-    };
-
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-    return Promise.resolve(template);
-  }
-
-  async createTemplateFromSubmission(
-    id: string,
-    accountId: string,
-    templateDetails: { name: string; description: string }
-  ): Promise<Template> {
-    if (!isTemplateNameValid(templateDetails.name)) {
-      throw Boom.badRequest(
-        'Template name must be unique and between 1 and 50 alphanumeric characters.'
-      );
-    }
-    if (
-      templateDetails.description &&
-      templateDetails.description.length > 100
-    ) {
-      throw Boom.badRequest(
-        'Template description cannot exceed 100 characters.'
-      );
-    }
-
-    if (this.doesTemplateAlreadyExist(accountId, templateDetails.name)) {
-      throw Boom.conflict('A template with this name already exists');
-    }
-
-    const submission = await this.getSubmission({
-      id,
-      accountId,
-    } as SubmissionRef);
-
-    id = uuidv4();
-
-    const template: Template = {
-      id,
-      templateDetails: {
-        name: templateDetails.name,
-        description: templateDetails.description,
-        created: new Date(),
-        lastModified: new Date(),
-      },
-      wasteDescription: submission.wasteDescription as DraftWasteDescription,
-      exporterDetail: submission.exporterDetail,
-      importerDetail: submission.importerDetail,
-      carriers: this.copyCarriersNoTransport(
-        submission.carriers,
-        this.isSmallWaste(submission.wasteDescription)
-      ),
-      collectionDetail: submission.collectionDetail,
-      ukExitLocation: submission.ukExitLocation,
-      transitCountries: submission.transitCountries,
-      recoveryFacilityDetail: this.copyRecoveryFacilities(
-        submission.recoveryFacilityDetail
-      ),
-    };
-
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-    return Promise.resolve(template);
-  }
-
-  async createTemplateFromTemplate(
-    id: string,
-    accountId: string,
-    templateDetails: { name: string; description: string }
-  ): Promise<Template> {
-    if (!isTemplateNameValid(templateDetails.name)) {
-      throw Boom.badRequest(
-        'Template name must be unique and between 1 and 50 alphanumeric characters.'
-      );
-    }
-    if (
-      templateDetails.description &&
-      templateDetails.description.length > 100
-    ) {
-      throw Boom.badRequest(
-        'Template description cannot exceed 100 characters.'
-      );
-    }
-
-    if (this.doesTemplateAlreadyExist(accountId, templateDetails.name)) {
-      throw Boom.conflict('A template with this name already exists');
-    }
-
-    const template = await this.getTemplate({ id, accountId } as SubmissionRef);
-
-    id = uuidv4();
-
-    const newTemplate: Template = {
-      id,
-      templateDetails: {
-        name: templateDetails.name,
-        description: templateDetails.description,
-        created: new Date(),
-        lastModified: new Date(),
-      },
-      wasteDescription: template.wasteDescription,
-      exporterDetail: template.exporterDetail,
-      importerDetail: template.importerDetail,
-      carriers: this.copyCarriersNoTransport(
-        template.carriers,
-        this.isSmallWaste(template.wasteDescription)
-      ),
-      collectionDetail: template.collectionDetail,
-      ukExitLocation: template.ukExitLocation,
-      transitCountries: template.transitCountries,
-      recoveryFacilityDetail: this.copyRecoveryFacilities(
-        template.recoveryFacilityDetail
-      ),
-    };
-
-    this.templates.set(JSON.stringify({ id, accountId }), newTemplate);
-    return Promise.resolve(newTemplate);
-  }
-
-  updateTemplate(
-    id: string,
-    accountId: string,
-    templateDetails: { name: string; description: string }
-  ): Promise<Template> {
-    if (!isTemplateNameValid(templateDetails.name)) {
-      throw Boom.badRequest(
-        'Template name must be unique and between 1 and 50 alphanumeric characters.'
-      );
-    }
-    if (
-      templateDetails.description &&
-      templateDetails.description.length > 100
-    ) {
-      throw Boom.badRequest(
-        'Template description cannot exceed 100 characters.'
-      );
-    }
-
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      template.templateDetails.name !== templateDetails.name ||
-      template.templateDetails.description !== templateDetails.description
-    ) {
-      if (template.templateDetails.name !== templateDetails.name) {
-        if (this.doesTemplateAlreadyExist(accountId, templateDetails.name)) {
-          throw Boom.conflict('A template with this name already exists');
-        }
-      }
-
-      if (template === undefined) {
-        return Promise.reject(Boom.notFound());
-      }
-
-      template.templateDetails.name = templateDetails.name;
-      template.templateDetails.description = templateDetails.description;
-      template.templateDetails.lastModified = new Date();
-
-      this.templates.set(JSON.stringify({ id, accountId }), template);
-    }
-
-    return Promise.resolve(template);
-  }
-
-  doesTemplateAlreadyExist(accountId: string, templateName: string): boolean {
-    let exists = false;
-    const keys: string[] = [...this.templates.keys()].filter(
-      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
-    );
-    const templates: Template[] = [];
-    keys.forEach((ref) => templates.push(this.templates.get(ref) as Template));
-
-    Object.values(templates).map((template) => {
-      if (template.templateDetails.name === templateName) {
-        exists = true;
-        return;
-      }
-    });
-
-    return exists;
-  }
-
-  getNumberOfTemplates(accountId: string): Promise<number> {
-    return Promise.resolve(
-      [...this.templates.keys()].filter(
-        (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
-      ).length
-    );
-  }
-
-  getTemplates(
-    accountId: string,
-    { order }: OrderRef,
-    pageLimit = 15,
-    token?: string
-  ): Promise<TemplateSummaryPage> {
-    const rawKeys: string[] = [...this.templates.keys()].filter(
-      (i) => (JSON.parse(i) as SubmissionRef).accountId === accountId
-    );
-    const rawValues: Template[] = [];
-    rawKeys.forEach((ref) =>
-      rawValues.push(this.templates.get(ref) as Template)
-    );
-    let templates: ReadonlyArray<TemplateSummary> = rawValues
-      .map((s) => {
-        return {
-          id: s.id,
-          templateDetails: s.templateDetails,
-          wasteDescription: s.wasteDescription,
-          exporterDetail: s.exporterDetail,
-          importerDetail: s.exporterDetail,
-          carriers: s.carriers,
-          collectionDetail: s.collectionDetail,
-          ukExitLocation: s.ukExitLocation,
-          transitCountries: s.transitCountries,
-          recoveryFacilityDetail: s.recoveryFacilityDetail,
-        };
-      })
-      .sort((x, y) => {
-        return x.templateDetails.lastModified > y.templateDetails.lastModified
-          ? 1
-          : -1;
-      });
-
-    if (order === 'DESC') {
-      templates = rawValues
-        .map((s) => {
-          return {
-            id: s.id,
-            templateDetails: s.templateDetails,
-            wasteDescription: s.wasteDescription,
-            exporterDetail: s.exporterDetail,
-            importerDetail: s.exporterDetail,
-            carriers: s.carriers,
-            collectionDetail: s.collectionDetail,
-            ukExitLocation: s.ukExitLocation,
-            transitCountries: s.transitCountries,
-            recoveryFacilityDetail: s.recoveryFacilityDetail,
-          };
-        })
-        .sort((x, y) => {
-          return x.templateDetails.lastModified > y.templateDetails.lastModified
-            ? 1
-            : -1;
-        })
-        .reverse();
-    }
-
-    if (!Array.isArray(templates) || templates.length === 0) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    let hasMoreResults = true;
-    let totalTemplates = 0;
-    let totalPages = 0;
-    let currentPage = 0;
-    let pageNumber = 0;
-    let contToken = '';
-    const metadataArray: dto.TemplatePageMetadata[] = [];
-    let pageValues: ReadonlyArray<TemplateSummary> = [];
-
-    while (hasMoreResults) {
-      totalPages += 1;
-      pageNumber += 1;
-
-      const paginatedValues = this.paginateArray(
-        templates,
-        pageLimit,
-        pageNumber
-      );
-
-      if ((!token && pageNumber === 1) || token === contToken) {
-        pageValues = paginatedValues;
-        currentPage = pageNumber;
-      }
-
-      const nextPaginatedValues = this.paginateArray(
-        templates,
-        pageLimit,
-        pageNumber + 1
-      );
-
-      hasMoreResults = nextPaginatedValues.length === 0 ? false : true;
-      totalTemplates += paginatedValues.length;
-      contToken = nextPaginatedValues.length === 0 ? '' : pageNumber.toString();
-
-      const pageMetadata: dto.SubmissionPageMetadata = {
-        pageNumber: pageNumber,
-        token: nextPaginatedValues.length === 0 ? '' : pageNumber.toString(),
-      };
-      metadataArray.push(pageMetadata);
-
-      if (!hasMoreResults && token === '') {
-        break;
-      }
-    }
-
-    return Promise.resolve({
-      totalTemplates: totalTemplates,
-      totalPages: totalPages,
-      currentPage: currentPage,
-      pages: metadataArray,
-      values: pageValues,
-    });
-  }
-
-  deleteTemplate({ id, accountId }: TemplateRef): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    this.templates.delete(JSON.stringify({ id, accountId }));
-    return Promise.resolve();
-  }
-
-  getWasteDescription({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<WasteDescription> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.wasteDescription as WasteDescription);
-  }
-
+  getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
   setWasteDescription(
-    { id, accountId }: SubmissionRef,
-    value: DraftWasteDescription
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const submissionBase = super.setBaseWasteDescription(
-      template as dto.SubmissionBase,
-      value
-    );
-    template.wasteDescription =
-      submissionBase.wasteDescription as DraftWasteDescription;
-    template.carriers = submissionBase.carriers;
-    template.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  getExporterDetail({ id, accountId }: SubmissionRef): Promise<ExporterDetail> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.exporterDetail);
-  }
-
-  setExporterDetail(
-    { id, accountId }: SubmissionRef,
-    value: ExporterDetail
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.exporterDetail = super.setBaseExporterDetail(
-      template as dto.SubmissionBase,
-      value
-    ).exporterDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  getImporterDetail({ id, accountId }: SubmissionRef): Promise<ImporterDetail> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.importerDetail);
-  }
-
-  setImporterDetail(
-    { id, accountId }: SubmissionRef,
-    value: ImporterDetail
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.importerDetail = super.setBaseImporterDetail(
-      template as dto.SubmissionBase,
-      value
-    ).importerDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.carriers);
-  }
-
+    { id }: SubmissionRef,
+    value: WasteDescription
+  ): Promise<void>;
+  getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
+  setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
+  getImporterDetail(ref: SubmissionRef): Promise<ImporterDetail>;
+  setImporterDetail(ref: SubmissionRef, value: ImporterDetail): Promise<void>;
+  listCarriers(ref: SubmissionRef): Promise<Carriers>;
+  getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
   createCarriers(
-    { id, accountId }: SubmissionRef,
+    ref: SubmissionRef,
     value: Omit<Carriers, 'transport' | 'values'>
-  ): Promise<Carriers> {
-    if (value.status !== 'Started') {
-      return Promise.reject(
-        Boom.badRequest(
-          `"Status cannot be ${value.status} on carrier detail creation"`
-        )
-      );
-    }
-
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (template.carriers.status !== 'NotStarted') {
-      if (template.carriers.values.length === 5) {
-        return Promise.reject(
-          Boom.badRequest('Cannot add more than 5 carriers')
-        );
-      }
-    }
-
-    const submissionBasePlusId: SubmissionBasePlusId = this.createBaseCarriers(
-      template as dto.SubmissionBase,
-      value
-    );
-
-    template.carriers = submissionBasePlusId.submissionBase.carriers;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve({
-      status: value.status,
-      transport: template.carriers.transport,
-      values: [{ id: submissionBasePlusId.id }],
-    });
-  }
-
-  getCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string
-  ): Promise<Carriers> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (template.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const carrier = template.carriers.values.find((c) => {
-      return c.id === carrierId;
-    });
-
-    if (carrier === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const value: dto.Carriers = {
-      status: template.carriers.status,
-      transport: template.carriers.transport,
-      values: [carrier],
-    };
-
-    return Promise.resolve(value);
-  }
-
+  ): Promise<Carriers>;
   setCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string,
+    ref: SubmissionRef,
+    carrerId: string,
     value: Carriers
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (template.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (value.status === 'NotStarted') {
-      template.carriers = super.setBaseNoCarriers(
-        template as dto.SubmissionBase,
-        carrierId,
-        value
-      ).carriers;
-    } else {
-      const carrier = value.values.find((c) => {
-        return c.id === carrierId;
-      });
-      if (carrier === undefined) {
-        return Promise.reject(Boom.badRequest());
-      }
-
-      const index = template.carriers.values.findIndex((c) => {
-        return c.id === carrierId;
-      });
-      if (index === -1) {
-        return Promise.reject(Boom.notFound());
-      }
-      template.carriers = super.setBaseCarriers(
-        template as dto.SubmissionBase,
-        carrierId,
-        value,
-        carrier,
-        index
-      ).carriers;
-    }
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  deleteCarriers(
-    { id, accountId }: SubmissionRef,
-    carrierId: string
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (template.carriers.status === 'NotStarted') {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const index = template.carriers.values.findIndex((c) => {
-      return c.id === carrierId;
-    });
-
-    if (index === -1) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.carriers = super.deleteBaseCarriers(
-      template as dto.SubmissionBase,
-      carrierId
-    ).carriers;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  getCollectionDetail({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<CollectionDetail> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.collectionDetail);
-  }
-
+  ): Promise<void>;
+  deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
+  getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
   setCollectionDetail(
-    { id, accountId }: SubmissionRef,
+    ref: SubmissionRef,
     value: CollectionDetail
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.collectionDetail = super.setBaseCollectionDetail(
-      template as dto.SubmissionBase,
-      value
-    ).collectionDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  getExitLocation({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<DraftExitLocation> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.ukExitLocation);
-  }
-
-  setExitLocation(
-    { id, accountId }: SubmissionRef,
-    value: DraftExitLocation
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.ukExitLocation = super.setBaseExitLocation(
-      template as dto.SubmissionBase,
-      value as dto.ExitLocation
-    ).ukExitLocation;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  getTransitCountries({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<DraftTransitCountries> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.transitCountries);
-  }
-
+  ): Promise<void>;
+  getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
+  setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
+  getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
   setTransitCountries(
-    { id, accountId }: SubmissionRef,
-    value: DraftTransitCountries
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.transitCountries = super.setBaseTransitCountries(
-      template as dto.SubmissionBase,
-      value as dto.TransitCountries
-    ).transitCountries as DraftTransitCountries;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  listRecoveryFacilityDetail({
-    id,
-    accountId,
-  }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    return Promise.resolve(template.recoveryFacilityDetail);
-  }
-
+    ref: SubmissionRef,
+    value: TransitCountries
+  ): Promise<void>;
+  listRecoveryFacilityDetail(
+    ref: SubmissionRef
+  ): Promise<RecoveryFacilityDetail>;
   createRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
+    ref: SubmissionRef,
     value: Omit<RecoveryFacilityDetail, 'values'>
-  ): Promise<RecoveryFacilityDetail> {
-    if (value.status !== 'Started') {
-      return Promise.reject(
-        Boom.badRequest(
-          `"Status cannot be ${value.status} on recovery facility detail creation"`
-        )
-      );
-    }
-
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      template.recoveryFacilityDetail.status === 'Started' ||
-      template.recoveryFacilityDetail.status === 'Complete'
-    ) {
-      if (template.recoveryFacilityDetail.values.length === 3) {
-        return Promise.reject(
-          Boom.badRequest(
-            'Cannot add more than 3 facilities(1 InterimSite and 2 RecoveryFacilities)'
-          )
-        );
-      }
-    }
-
-    const submissionBasePlusId: SubmissionBasePlusId =
-      this.createBaseRecoveryFacilityDetail(
-        template as dto.SubmissionBase,
-        value
-      );
-
-    template.recoveryFacilityDetail =
-      submissionBasePlusId.submissionBase.recoveryFacilityDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve({
-      status: value.status,
-      values: [{ id: submissionBasePlusId.id }],
-    });
-  }
-
+  ): Promise<RecoveryFacilityDetail>;
   getRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string
-  ): Promise<RecoveryFacilityDetail> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      template.recoveryFacilityDetail.status !== 'Started' &&
-      template.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const recoveryFacility = template.recoveryFacilityDetail.values.find(
-      (rf) => {
-        return rf.id === rfdId;
-      }
-    );
-
-    if (recoveryFacility === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const value: dto.RecoveryFacilityDetail = {
-      status: template.recoveryFacilityDetail.status,
-      values: [recoveryFacility],
-    };
-    return Promise.resolve(value);
-  }
-
+    ref: SubmissionRef,
+    id: string
+  ): Promise<RecoveryFacilityDetail>;
   setRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string,
+    ref: SubmissionRef,
+    id: string,
     value: RecoveryFacilityDetail
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (
-      template.recoveryFacilityDetail.status !== 'Started' &&
-      template.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    if (value.status === 'Started' || value.status === 'Complete') {
-      const recoveryFacility = value.values.find((rf) => {
-        return rf.id === rfdId;
-      });
-
-      if (recoveryFacility === undefined) {
-        return Promise.reject(Boom.badRequest());
-      }
-      const index = template.recoveryFacilityDetail.values.findIndex((rf) => {
-        return rf.id === rfdId;
-      });
-      if (index === -1) {
-        return Promise.reject(Boom.notFound());
-      }
-    }
-
-    template.recoveryFacilityDetail = super.setBaseRecoveryFacilityDetail(
-      template as dto.SubmissionBase,
-      rfdId,
-      value
-    ).recoveryFacilityDetail;
-
-    if (
-      template.recoveryFacilityDetail.status !== 'Started' &&
-      template.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
-
-  deleteRecoveryFacilityDetail(
-    { id, accountId }: SubmissionRef,
-    rfdId: string
-  ): Promise<void> {
-    const template = this.templates.get(JSON.stringify({ id, accountId }));
-    if (template === undefined) {
-      return Promise.reject(Boom.notFound());
-    }
-    if (
-      template.recoveryFacilityDetail.status !== 'Started' &&
-      template.recoveryFacilityDetail.status !== 'Complete'
-    ) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    const index = template.recoveryFacilityDetail.values.findIndex((rf) => {
-      return rf.id === rfdId;
-    });
-
-    if (index === -1) {
-      return Promise.reject(Boom.notFound());
-    }
-
-    template.recoveryFacilityDetail = super.deleteBaseRecoveryFacilityDetail(
-      template as dto.SubmissionBase,
-      rfdId
-    ).recoveryFacilityDetail;
-
-    template.templateDetails.lastModified = new Date();
-    this.templates.set(JSON.stringify({ id, accountId }), template);
-
-    return Promise.resolve();
-  }
+  ): Promise<void>;
+  deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
 }
 
-export class AnnexViiServiceTemplateBackend
-  extends AnnexViiServiceSubmissionBaseBackend
-  implements TemplateBackend
-{
-  constructor(protected client: DaprAnnexViiClient, protected logger: Logger) {
-    super(client, logger);
+export class AnnexViiServiceTemplateBackend implements TemplateBackend {
+  constructor(protected client: DaprAnnexViiClient, protected logger: Logger) {}
+
+  async getTemplate({ id, accountId }: TemplateRef): Promise<Template> {
+    let response: template.GetTemplateResponse;
+    try {
+      response = await this.client.getTemplate({ id, accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 
   async createTemplate(
@@ -1035,7 +150,7 @@ export class AnnexViiServiceTemplateBackend
       description: string;
     }
   ): Promise<Template> {
-    let response: CreateTemplateResponse;
+    let response: template.CreateTemplateResponse;
     try {
       response = await this.client.createTemplate({
         accountId,
@@ -1063,7 +178,7 @@ export class AnnexViiServiceTemplateBackend
       description: string;
     }
   ): Promise<Template> {
-    let response: CreateTemplateResponse;
+    let response: template.CreateTemplateResponse;
     try {
       response = await this.client.createTemplateFromSubmission({
         id,
@@ -1092,7 +207,7 @@ export class AnnexViiServiceTemplateBackend
       description: string;
     }
   ): Promise<Template> {
-    let response: CreateTemplateResponse;
+    let response: template.CreateTemplateResponse;
     try {
       response = await this.client.createTemplateFromTemplate({
         id,
@@ -1121,7 +236,7 @@ export class AnnexViiServiceTemplateBackend
       description: string;
     }
   ): Promise<Template> {
-    let response: UpdateTemplateResponse;
+    let response: template.UpdateTemplateResponse;
     try {
       response = await this.client.updateTemplate({
         id,
@@ -1148,7 +263,7 @@ export class AnnexViiServiceTemplateBackend
     pageLimit?: number,
     token?: string
   ): Promise<TemplateSummaryPage> {
-    let response: GetTemplatesResponse;
+    let response: template.GetTemplatesResponse;
     try {
       response = await this.client.getTemplates({
         accountId,
@@ -1171,7 +286,7 @@ export class AnnexViiServiceTemplateBackend
   }
 
   async getNumberOfTemplates(accountId: string): Promise<number> {
-    let response: GetNumberOfTemplatesResponse;
+    let response: template.GetNumberOfTemplatesResponse;
     try {
       response = await this.client.getNumberOfTemplates({ accountId });
     } catch (err) {
@@ -1189,7 +304,7 @@ export class AnnexViiServiceTemplateBackend
   }
 
   async deleteTemplate({ id, accountId }: TemplateRef): Promise<void> {
-    let response: DeleteTemplateResponse;
+    let response: template.DeleteTemplateResponse;
     try {
       response = await this.client.deleteTemplate({
         id,
@@ -1211,9 +326,9 @@ export class AnnexViiServiceTemplateBackend
     id,
     accountId,
   }: SubmissionRef): Promise<WasteDescription> {
-    let response: GetDraftWasteDescriptionByIdResponse;
+    let response: draft.GetDraftWasteDescriptionResponse;
     try {
-      response = await this.client.getTemplateWasteDescriptionById({
+      response = await this.client.getTemplateWasteDescription({
         id,
         accountId,
       });
@@ -1233,11 +348,11 @@ export class AnnexViiServiceTemplateBackend
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
-    value: DraftWasteDescription
+    value: WasteDescription
   ): Promise<void> {
-    let response: SetDraftWasteDescriptionByIdResponse;
+    let response: draft.SetDraftWasteDescriptionResponse;
     try {
-      response = await this.client.setTemplateWasteDescriptionById({
+      response = await this.client.setTemplateWasteDescription({
         id,
         accountId,
         value,
@@ -1258,9 +373,9 @@ export class AnnexViiServiceTemplateBackend
     id,
     accountId,
   }: SubmissionRef): Promise<ExporterDetail> {
-    let response: GetDraftExporterDetailByIdResponse;
+    let response: draft.GetDraftExporterDetailResponse;
     try {
-      response = await this.client.getTemplateExporterDetailById({
+      response = await this.client.getTemplateExporterDetail({
         id,
         accountId,
       });
@@ -1282,9 +397,9 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     value: ExporterDetail
   ): Promise<void> {
-    let response: SetDraftExporterDetailByIdResponse;
+    let response: draft.SetDraftExporterDetailResponse;
     try {
-      response = await this.client.setTemplateExporterDetailById({
+      response = await this.client.setTemplateExporterDetail({
         id,
         accountId,
         value,
@@ -1305,9 +420,9 @@ export class AnnexViiServiceTemplateBackend
     id,
     accountId,
   }: SubmissionRef): Promise<ImporterDetail> {
-    let response: GetDraftImporterDetailByIdResponse;
+    let response: draft.GetDraftImporterDetailResponse;
     try {
-      response = await this.client.getTemplateImporterDetailById({
+      response = await this.client.getTemplateImporterDetail({
         id,
         accountId,
       });
@@ -1329,9 +444,9 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     value: ImporterDetail
   ): Promise<void> {
-    let response: SetDraftImporterDetailByIdResponse;
+    let response: draft.SetDraftImporterDetailResponse;
     try {
-      response = await this.client.setTemplateImporterDetailById({
+      response = await this.client.setTemplateImporterDetail({
         id,
         accountId,
         value,
@@ -1349,7 +464,7 @@ export class AnnexViiServiceTemplateBackend
   }
 
   async listCarriers({ id, accountId }: SubmissionRef): Promise<Carriers> {
-    let response: ListDraftCarriersResponse;
+    let response: draft.ListDraftCarriersResponse;
     try {
       response = await this.client.listTemplateCarriers({ id, accountId });
     } catch (err) {
@@ -1370,7 +485,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     value: Omit<Carriers, 'transport' | 'values'>
   ): Promise<Carriers> {
-    let response: CreateDraftCarriersResponse;
+    let response: draft.CreateDraftCarriersResponse;
     try {
       response = await this.client.createTemplateCarriers({
         id,
@@ -1395,7 +510,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     carrierId: string
   ): Promise<Carriers> {
-    let response: GetDraftCarriersResponse;
+    let response: draft.GetDraftCarriersResponse;
     try {
       response = await this.client.getTemplateCarriers({
         id,
@@ -1427,7 +542,7 @@ export class AnnexViiServiceTemplateBackend
       }
     }
 
-    let response: SetDraftCarriersResponse;
+    let response: draft.SetDraftCarriersResponse;
     try {
       response = await this.client.setTemplateCarriers({
         id,
@@ -1451,7 +566,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     carrierId: string
   ): Promise<void> {
-    let response: DeleteDraftCarriersResponse;
+    let response: draft.DeleteDraftCarriersResponse;
     try {
       response = await this.client.deleteTemplateCarriers({
         id,
@@ -1474,7 +589,7 @@ export class AnnexViiServiceTemplateBackend
     id,
     accountId,
   }: SubmissionRef): Promise<CollectionDetail> {
-    let response: GetDraftCollectionDetailResponse;
+    let response: draft.GetDraftCollectionDetailResponse;
     try {
       response = await this.client.getTemplateCollectionDetail({
         id,
@@ -1498,7 +613,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     value: CollectionDetail
   ): Promise<void> {
-    let response: SetDraftCollectionDetailResponse;
+    let response: draft.SetDraftCollectionDetailResponse;
     try {
       response = await this.client.setTemplateCollectionDetail({
         id,
@@ -1520,10 +635,10 @@ export class AnnexViiServiceTemplateBackend
   async getExitLocation({
     id,
     accountId,
-  }: SubmissionRef): Promise<DraftExitLocation> {
-    let response: GetDraftExitLocationByIdResponse;
+  }: SubmissionRef): Promise<ExitLocation> {
+    let response: draft.GetDraftUkExitLocationResponse;
     try {
-      response = await this.client.getTemplateExitLocationById({
+      response = await this.client.getTemplateUkExitLocation({
         id,
         accountId,
       });
@@ -1543,11 +658,11 @@ export class AnnexViiServiceTemplateBackend
 
   async setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: DraftExitLocation
+    value: ExitLocation
   ): Promise<void> {
-    let response: SetDraftExitLocationByIdResponse;
+    let response: draft.SetDraftUkExitLocationResponse;
     try {
-      response = await this.client.setTemplateExitLocationById({
+      response = await this.client.setTemplateUkExitLocation({
         id,
         accountId,
         value,
@@ -1567,8 +682,8 @@ export class AnnexViiServiceTemplateBackend
   async getTransitCountries({
     id,
     accountId,
-  }: SubmissionRef): Promise<DraftTransitCountries> {
-    let response: GetDraftTransitCountriesResponse;
+  }: SubmissionRef): Promise<TransitCountries> {
+    let response: draft.GetDraftTransitCountriesResponse;
     try {
       response = await this.client.getTemplateTransitCountries({
         id,
@@ -1590,9 +705,9 @@ export class AnnexViiServiceTemplateBackend
 
   async setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: DraftTransitCountries
+    value: TransitCountries
   ): Promise<void> {
-    let response: SetDraftTransitCountriesResponse;
+    let response: draft.SetDraftTransitCountriesResponse;
     try {
       response = await this.client.setTemplateTransitCountries({
         id,
@@ -1615,7 +730,7 @@ export class AnnexViiServiceTemplateBackend
     id,
     accountId,
   }: SubmissionRef): Promise<RecoveryFacilityDetail> {
-    let response: ListDraftRecoveryFacilityDetailsResponse;
+    let response: draft.ListDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.listTemplateRecoveryFacilityDetails({
         id,
@@ -1639,7 +754,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     value: Omit<RecoveryFacilityDetail, 'values'>
   ): Promise<RecoveryFacilityDetail> {
-    let response: CreateDraftRecoveryFacilityDetailsResponse;
+    let response: draft.CreateDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.createTemplateRecoveryFacilityDetails({
         id,
@@ -1664,7 +779,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<RecoveryFacilityDetail> {
-    let response: GetDraftRecoveryFacilityDetailsResponse;
+    let response: draft.GetDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.getTemplateRecoveryFacilityDetails({
         id,
@@ -1696,7 +811,7 @@ export class AnnexViiServiceTemplateBackend
       }
     }
 
-    let response: SetDraftRecoveryFacilityDetailsResponse;
+    let response: draft.SetDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.setTemplateRecoveryFacilityDetails({
         id,
@@ -1720,7 +835,7 @@ export class AnnexViiServiceTemplateBackend
     { id, accountId }: SubmissionRef,
     rfdId: string
   ): Promise<void> {
-    let response: DeleteDraftRecoveryFacilityDetailsResponse;
+    let response: draft.DeleteDraftRecoveryFacilityDetailsResponse;
     try {
       response = await this.client.deleteTemplateRecoveryFacilityDetails({
         id,

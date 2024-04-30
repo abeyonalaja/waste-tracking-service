@@ -1,5 +1,5 @@
 import {
-  Submission,
+  DraftSubmission,
   Template,
   ListAddressesResponse,
   ListWasteCodesResponse,
@@ -11,8 +11,12 @@ import {
   ListHazardousCodesResponse,
   ListPopsResponse,
   UkwmBulkSubmission,
+  Submission,
 } from '@wts/api/waste-tracking-gateway';
 
+export type DraftSubmissionWithAccount = DraftSubmission & {
+  accountId: string;
+};
 export type SubmissionWithAccount = Submission & { accountId: string };
 export type TemplateWithAccount = Template & { accountId: string };
 export type BulkWithAccount = BulkSubmission & { accountId: string };
@@ -20,6 +24,7 @@ export type UkwmBulkWithAccount = UkwmBulkSubmission & { accountId: string };
 
 export interface DB {
   addresses: ListAddressesResponse;
+  drafts: DraftSubmissionWithAccount[];
   submissions: SubmissionWithAccount[];
   templates: TemplateWithAccount[];
   wasteCodes: ListWasteCodesResponse;
@@ -65,6 +70,7 @@ export const db: DB = {
     },
   ],
 
+  drafts: [],
   submissions: [],
   templates: [],
   batches: [],

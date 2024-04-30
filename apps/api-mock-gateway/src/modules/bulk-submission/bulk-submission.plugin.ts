@@ -3,6 +3,7 @@ import {
   createBatch,
   finalizeBatch,
   getBatch,
+  getBatchSubmissions,
 } from './bulk-submission.backend';
 import multer from 'multer';
 import * as dto from '@wts/api/waste-tracking-gateway';
@@ -10,8 +11,8 @@ import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
-} from '../../libs/errors';
-import { User } from '../../libs/user';
+} from '../../lib/errors';
+import { User } from '../../lib/user';
 
 const upload = multer();
 
@@ -73,6 +74,25 @@ export default class BulkSubmissionPlugin {
             accountId: user.credentials.accountId,
           })) as undefined
         );
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          return err;
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.get(`${this.prefix}/:id/submissions`, async (req, res) => {
+      const user = req.user as User;
+      try {
+        const value = await getBatchSubmissions({
+          id: req.params.id,
+          accountId: user.credentials.accountId,
+        });
+        return res.json(value as dto.GetBulkSubmissionsResponse);
       } catch (err) {
         if (err instanceof NotFoundError) {
           return err;

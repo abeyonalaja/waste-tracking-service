@@ -1,5 +1,5 @@
-import { AccountIdRequest, SectionSummary } from '@wts/api/common';
-import { SubmissionBase } from './submissionBase';
+import { AccountIdRequest } from '@wts/api/common';
+import { PageMetadata, SubmissionBase } from './submission';
 
 export type TemplateDetails = {
   name: string;
@@ -18,24 +18,16 @@ export type TemplatePageMetadata = {
 };
 
 export type TemplateSummaryPage = {
-  totalTemplates: number;
+  totalRecords: number;
   totalPages: number;
   currentPage: number;
-  pages: TemplatePageMetadata[];
+  pages: PageMetadata[];
   values: ReadonlyArray<TemplateSummary>;
 };
 
 export type TemplateSummary = {
   id: string;
   templateDetails: TemplateDetails;
-  wasteDescription: SectionSummary;
-  exporterDetail: SectionSummary;
-  importerDetail: SectionSummary;
-  carriers: SectionSummary;
-  collectionDetail: SectionSummary;
-  ukExitLocation: SectionSummary;
-  transitCountries: SectionSummary;
-  recoveryFacilityDetail: SectionSummary;
 };
 
 export type GetTemplatesResponse = TemplateSummaryPage;

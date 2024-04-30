@@ -3,6 +3,8 @@ import Ajv from 'ajv/dist/jtd';
 import {
   AddContentToBatchRequest,
   AddContentToBatchResponse,
+  GetBatchContentRequest,
+  GetBatchContentResponse,
   GetBatchRequest,
   GetBatchResponse,
   UpdateBatchRequest,
@@ -11,6 +13,8 @@ import {
 import {
   addContentToBatchRequest,
   addContentToBatchResponse,
+  getBatchContentRequest,
+  getBatchContentResponse,
   getBatchRequest,
   getBatchResponse,
   updateBatchRequest,
@@ -588,6 +592,302 @@ describe('updateBatchResponse', () => {
     const value: UpdateBatchResponse = {
       success: true,
       value: undefined,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getBatchContentRequest', () => {
+  const validate = ajv.compile<GetBatchContentRequest>(getBatchContentRequest);
+
+  it('is compatible with dto values', () => {
+    const value: GetBatchContentRequest = {
+      id: faker.datatype.uuid(),
+      accountId: faker.datatype.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getBatchContentResponse', () => {
+  const validate = ajv.compile<GetBatchContentResponse>(
+    getBatchContentResponse
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetBatchContentResponse = {
+      success: true,
+      value: [
+        {
+          id: '8d1cb87d-9349-4d84-acf2-30aa4df4d2cb',
+          reference: 'ref9',
+          wasteDescription: {
+            wasteCode: {
+              type: 'BaselAnnexIX',
+              code: 'B1010',
+            },
+            ewcCodes: [
+              {
+                code: '101213',
+              },
+            ],
+            nationalCode: {
+              provided: 'No',
+            },
+            description: 'WasteDescription',
+          },
+          wasteQuantity: {
+            type: 'EstimateData',
+            estimateData: {
+              quantityType: 'Volume',
+              unit: 'Cubic Metre',
+              value: 10,
+            },
+            actualData: {},
+          },
+          exporterDetail: {
+            exporterAddress: {
+              addressLine1: 'Test organisation 1',
+              addressLine2: 'Address line',
+              townCity: 'London',
+              postcode: 'EC2N4AY',
+              country: 'England',
+            },
+            exporterContactDetails: {
+              organisationName: 'Test organisation 1',
+              fullName: 'John Smith',
+              emailAddress: 'test1@test.com',
+              phoneNumber: '00-44788-888 8888',
+              faxNumber: '07888888888',
+            },
+          },
+          importerDetail: {
+            importerAddressDetails: {
+              organisationName: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            importerContactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+              faxNumber: '00 33140000000',
+            },
+          },
+          collectionDate: {
+            type: 'EstimateDate',
+            estimateDate: {
+              day: '15',
+              month: '01',
+              year: '2050',
+            },
+            actualDate: {},
+          },
+          carriers: [
+            {
+              addressDetails: {
+                organisationName: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+                faxNumber: '00 33140000000',
+              },
+              transportDetails: {
+                type: 'Sea',
+              },
+            },
+          ],
+          collectionDetail: {
+            address: {
+              addressLine1: 'Test organisation 1',
+              addressLine2: 'Address line',
+              townCity: 'London',
+              postcode: 'EC2N4AY',
+              country: 'England',
+            },
+            contactDetails: {
+              organisationName: 'Test organisation 1',
+              fullName: 'John Smith',
+              emailAddress: 'test1@test.com',
+              phoneNumber: '00-44788-888 8888',
+              faxNumber: '07888888888',
+            },
+          },
+          ukExitLocation: {
+            provided: 'No',
+          },
+          transitCountries: [],
+          recoveryFacilityDetail: [
+            {
+              addressDetails: {
+                name: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+                faxNumber: '00 33140000000',
+              },
+              recoveryFacilityType: {
+                type: 'InterimSite',
+                recoveryCode: 'R13',
+              },
+            },
+            {
+              addressDetails: {
+                name: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+                faxNumber: '00 33140000000',
+              },
+              recoveryFacilityType: {
+                type: 'RecoveryFacility',
+                recoveryCode: 'R1',
+              },
+            },
+          ],
+          submissionDeclaration: {
+            declarationTimestamp: new Date(),
+            transactionId: '2404_8D1CB87D',
+          },
+          submissionState: {
+            status: 'SubmittedWithEstimates',
+            timestamp: new Date(),
+          },
+        },
+        {
+          id: '4909acad-c100-4419-b73e-181dfd553bfe',
+          reference: 'ref8',
+          wasteDescription: {
+            wasteCode: {
+              type: 'NotApplicable',
+            },
+            ewcCodes: [
+              {
+                code: '101213',
+              },
+            ],
+            nationalCode: {
+              provided: 'Yes',
+              value: 'NatCode',
+            },
+            description: 'WasteDescription',
+          },
+          wasteQuantity: {
+            type: 'ActualData',
+            estimateData: {},
+            actualData: {
+              quantityType: 'Weight',
+              unit: 'Kilogram',
+              value: 12.5,
+            },
+          },
+          exporterDetail: {
+            exporterAddress: {
+              addressLine1: 'Test organisation 1',
+              townCity: 'London',
+              country: 'England',
+            },
+            exporterContactDetails: {
+              organisationName: 'Test organisation 1',
+              fullName: 'John Smith',
+              emailAddress: 'test1@test.com',
+              phoneNumber: '07888888888',
+            },
+          },
+          importerDetail: {
+            importerAddressDetails: {
+              organisationName: 'Test organisation 2',
+              address: '2 Some Street, Paris, 75002',
+              country: 'France [FR]',
+            },
+            importerContactDetails: {
+              fullName: 'Jane Smith',
+              emailAddress: 'test2@test.com',
+              phoneNumber: '0033140000000',
+            },
+          },
+          collectionDate: {
+            type: 'ActualDate',
+            estimateDate: {},
+            actualDate: {
+              day: '08',
+              month: '01',
+              year: '2050',
+            },
+          },
+          carriers: [
+            {
+              addressDetails: {
+                organisationName: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+              },
+            },
+          ],
+          collectionDetail: {
+            address: {
+              addressLine1: 'Test organisation 1',
+              townCity: 'London',
+              country: 'England',
+            },
+            contactDetails: {
+              organisationName: 'Test organisation 1',
+              fullName: 'John Smith',
+              emailAddress: 'test1@test.com',
+              phoneNumber: '07888888888',
+            },
+          },
+          ukExitLocation: {
+            provided: 'No',
+          },
+          transitCountries: [],
+          recoveryFacilityDetail: [
+            {
+              addressDetails: {
+                name: 'Test organisation 2',
+                address: '2 Some Street, Paris, 75002',
+                country: 'France [FR]',
+              },
+              contactDetails: {
+                fullName: 'Jane Smith',
+                emailAddress: 'test2@test.com',
+                phoneNumber: '0033140000000',
+              },
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D2',
+              },
+            },
+          ],
+          submissionDeclaration: {
+            declarationTimestamp: new Date(),
+            transactionId: '2404_4909ACAD',
+          },
+          submissionState: {
+            status: 'SubmittedWithActuals',
+            timestamp: new Date(),
+          },
+        },
+      ],
     };
 
     expect(validate(value)).toBe(true);

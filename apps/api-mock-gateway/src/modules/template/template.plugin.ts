@@ -4,7 +4,7 @@ import {
   BadRequestError,
   CustomError,
   InternalServerError,
-} from '../../libs/errors';
+} from '../../lib/errors';
 import {
   getTemplates,
   getTemplate,
@@ -50,8 +50,7 @@ import {
   validateSetCollectionDetailRequest,
   validateSetRecoveryFacilityDetailRequest,
 } from '../submission/submission.validation';
-import { DraftWasteDescription } from '@wts/api/green-list-waste-export';
-import { User } from '../../libs/user';
+import { User } from '../../lib/user';
 
 export default class TemplatePlugin {
   constructor(private server: Application, private prefix: string) {}
@@ -295,7 +294,7 @@ export default class TemplatePlugin {
           return res.status(400).jsonp(new BadRequestError('Bad Request'));
         }
 
-        const request = req.body as DraftWasteDescription;
+        const request = req.body as dto.WasteDescription;
         const user = req.user as User;
         try {
           await setWasteDescription(

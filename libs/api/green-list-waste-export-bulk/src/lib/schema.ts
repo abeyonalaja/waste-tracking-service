@@ -1,9 +1,11 @@
 import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 import {
   AddContentToBatchRequest,
+  GetBatchContentRequest,
   GetBatchRequest,
   UpdateBatchRequest,
 } from './dto';
+import { submission } from '@wts/api/green-list-waste-export';
 
 const errorResponseValue: SchemaObject = {
   properties: {
@@ -465,5 +467,24 @@ export const updateBatchResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: { properties: {} },
+  },
+};
+
+export const getBatchContentRequest: JTDSchemaType<GetBatchContentRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const getBatchContentResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      elements: {
+        ...submission.schema.submission,
+      },
+    },
   },
 };

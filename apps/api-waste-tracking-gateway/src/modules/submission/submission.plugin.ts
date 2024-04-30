@@ -4,10 +4,8 @@ import {
   validateCreateSubmissionRequest,
   validatePutWasteDescriptionRequest,
   validatePutReferenceRequest,
-  validatePutWasteQuantityRequest,
   validatePutExporterDetailRequest,
   validatePutImporterDetailRequest,
-  validatePutCollectionDateRequest,
   validateCreateCarriersRequest,
   validateSetCarriersRequest,
   validateSetCollectionDetailRequest,
@@ -18,6 +16,10 @@ import {
   validatePutSubmissionConfirmationRequest,
   validatePutSubmissionDeclarationRequest,
   validatePutSubmissionCancellationRequest,
+  validatePutDraftWasteQuantityRequest,
+  validatePutDraftCollectionDateRequest,
+  validatePutSubmissionCollectionDateRequest,
+  validatePutSubmissionWasteQuantityRequest,
 } from './submission.validation';
 import Boom from '@hapi/boom';
 import { SubmissionBackend } from './submission.backend';
@@ -87,11 +89,24 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}',
-      handler: async function ({ params }, h) {
+      handler: async function ({ params, query }, h) {
+        const submittedStr = query['submitted'] as string | undefined;
+        let submitted = false;
+        if (submittedStr) {
+          try {
+            submitted = JSON.parse(submittedStr.toLowerCase());
+          } catch (err) {
+            return Boom.badRequest(
+              "Query parameter 'submitted' must be of type boolean"
+            );
+          }
+        }
+
         try {
           const value = await backend.getSubmission({
             id: params.id,
             accountId: h.request.auth.credentials.accountId as string,
+            submitted,
           });
           return value as dto.GetSubmissionResponse;
         } catch (err) {
@@ -271,11 +286,24 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/waste-quantity',
-      handler: async function ({ params }, h) {
+      handler: async function ({ params, query }, h) {
+        const submittedStr = query['submitted'] as string | undefined;
+        let submitted = false;
+        if (submittedStr) {
+          try {
+            submitted = JSON.parse(submittedStr.toLowerCase());
+          } catch (err) {
+            return Boom.badRequest(
+              "Query parameter 'submitted' must be of type boolean"
+            );
+          }
+        }
+
         try {
           const value = await backend.getWasteQuantity({
             id: params.id,
             accountId: h.request.auth.credentials.accountId as string,
+            submitted,
           });
           return value as dto.GetWasteQuantityResponse;
         } catch (err) {
@@ -292,9 +320,27 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/waste-quantity',
-      handler: async function ({ params, payload }, h) {
-        if (!validatePutWasteQuantityRequest(payload)) {
-          return Boom.badRequest();
+      handler: async function ({ params, query, payload }, h) {
+        const submittedStr = query['submitted'] as string | undefined;
+        let submitted = false;
+        if (submittedStr) {
+          try {
+            submitted = JSON.parse(submittedStr.toLowerCase());
+          } catch (err) {
+            return Boom.badRequest(
+              "Query parameter 'submitted' must be of type boolean"
+            );
+          }
+        }
+
+        if (!submitted) {
+          if (!validatePutDraftWasteQuantityRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validatePutSubmissionWasteQuantityRequest(payload)) {
+            return Boom.badRequest();
+          }
         }
 
         const request = payload as dto.PutWasteQuantityRequest;
@@ -303,6 +349,7 @@ const plugin: Plugin<PluginOptions> = {
             {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
+              submitted,
             },
             request
           );
@@ -471,11 +518,24 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/{id}/collection-date',
-      handler: async function ({ params }, h) {
+      handler: async function ({ params, query }, h) {
+        const submittedStr = query['submitted'] as string | undefined;
+        let submitted = false;
+        if (submittedStr) {
+          try {
+            submitted = JSON.parse(submittedStr.toLowerCase());
+          } catch (err) {
+            return Boom.badRequest(
+              "Query parameter 'submitted' must be of type boolean"
+            );
+          }
+        }
+
         try {
           const value = await backend.getCollectionDate({
             id: params.id,
             accountId: h.request.auth.credentials.accountId as string,
+            submitted,
           });
           return value as dto.GetCollectionDateResponse;
         } catch (err) {
@@ -492,9 +552,27 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'PUT',
       path: '/{id}/collection-date',
-      handler: async function ({ params, payload }, h) {
-        if (!validatePutCollectionDateRequest(payload)) {
-          return Boom.badRequest();
+      handler: async function ({ params, query, payload }, h) {
+        const submittedStr = query['submitted'] as string | undefined;
+        let submitted = false;
+        if (submittedStr) {
+          try {
+            submitted = JSON.parse(submittedStr.toLowerCase());
+          } catch (err) {
+            return Boom.badRequest(
+              "Query parameter 'submitted' must be of type boolean"
+            );
+          }
+        }
+
+        if (!submitted) {
+          if (!validatePutDraftCollectionDateRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validatePutSubmissionCollectionDateRequest(payload)) {
+            return Boom.badRequest();
+          }
         }
 
         const request = payload as dto.PutCollectionDateRequest;
@@ -503,6 +581,7 @@ const plugin: Plugin<PluginOptions> = {
             {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
+              submitted,
             },
             request
           );

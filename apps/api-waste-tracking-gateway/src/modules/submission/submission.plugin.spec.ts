@@ -3,7 +3,14 @@ import Boom from '@hapi/boom';
 import { server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
 import winston from 'winston';
+import submissionPlugin from './submission.plugin';
 import {
+  OrderRef,
+  SubmissionBackend,
+  SubmissionRef,
+} from './submission.backend';
+import {
+  CancellationType,
   Carriers,
   CollectionDate,
   CollectionDetail,
@@ -12,20 +19,15 @@ import {
   ExporterDetail,
   ImporterDetail,
   NumberOfSubmissions,
-  OrderRef,
   RecoveryFacilityDetail,
   Submission,
-  SubmissionBackend,
-  SubmissionCancellationType,
   SubmissionConfirmation,
   SubmissionDeclaration,
-  SubmissionRef,
   SubmissionSummaryPage,
   TransitCountries,
   WasteDescription,
   WasteQuantity,
-} from './submission.backend';
-import submissionPlugin from './submission.plugin';
+} from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -44,10 +46,7 @@ const mockBackend = {
   deleteSubmission: jest.fn<(ref: SubmissionRef) => Promise<void>>(),
   cancelSubmission:
     jest.fn<
-      (
-        ref: SubmissionRef,
-        cancellationType: SubmissionCancellationType
-      ) => Promise<void>
+      (ref: SubmissionRef, cancellationType: CancellationType) => Promise<void>
     >(),
   getSubmissions:
     jest.fn<

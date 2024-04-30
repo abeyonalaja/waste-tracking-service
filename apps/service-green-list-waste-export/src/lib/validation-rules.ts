@@ -24,17 +24,17 @@ import {
   CollectionDateFlattened,
   CollectionDate,
   CarriersFlattened,
-  CarrierData,
   CollectionDetail,
   CollectionDetailFlattened,
   ExitLocationFlattened,
-  ExitLocation,
+  UkExitLocation,
   TransitCountries,
   TransitCountriesFlattened,
-  RecoveryFacilityData,
   RecoveryFacilityDetailFlattened,
   WasteDescriptionSubSectionFlattened,
   WasteCodeSubSectionFlattened,
+  Carrier,
+  RecoveryFacilityDetail,
 } from '../model';
 
 function titleCase(str: string) {
@@ -582,7 +582,6 @@ export function validateWasteCodeSubSectionAndQuantityCrossSection(
 ): { valid: false; value: InvalidAttributeCombinationError } | { valid: true } {
   if (
     wasteCodeSubSection.type !== 'NotApplicable' &&
-    wasteQuantity.type !== 'NotApplicable' &&
     (wasteQuantity.actualData.unit === 'Kilogram' ||
       wasteQuantity.estimateData.unit === 'Kilogram')
   ) {
@@ -1067,7 +1066,7 @@ export function validateCarriersSection(
   countryIncludingUkList: Country[]
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: CarrierData[] } {
+  | { valid: true; value: Carrier[] } {
   const carriersArr = [
     {
       carrierOrganisationName: value.firstCarrierOrganisationName,
@@ -1130,7 +1129,7 @@ export function validateCarriersSection(
 
   let index = 0;
   const errors: FieldFormatError[] = [];
-  const carriers: CarrierData[] = [];
+  const carriers: Carrier[] = [];
   carriersArr.forEach((c) => {
     index += 1;
 
@@ -1631,9 +1630,9 @@ export function validateUkExitLocationSection(
   value: ExitLocationFlattened
 ):
   | { valid: false; value: FieldFormatError }
-  | { valid: true; value: ExitLocation } {
+  | { valid: true; value: UkExitLocation } {
   value.whereWasteLeavesUk = value.whereWasteLeavesUk.trim();
-  let location: ExitLocation = { provided: 'No' };
+  let location: UkExitLocation = { provided: 'No' };
 
   if (value.whereWasteLeavesUk) {
     if (value.whereWasteLeavesUk.length > validation.UkExitLocationChar.max) {
@@ -1746,9 +1745,9 @@ function validateRecoveryFacilityEntry(
   disposalCodeList: WasteCode[]
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: RecoveryFacilityData[] } {
+  | { valid: true; value: RecoveryFacilityDetail[] } {
   const errors: FieldFormatError[] = [];
-  const recoveryFacilities: RecoveryFacilityData[] = [];
+  const recoveryFacilities: RecoveryFacilityDetail[] = [];
   let index = 0;
   values.forEach((v) => {
     index += 1;
@@ -1969,9 +1968,9 @@ export function validateRecoveryFacilityDetailSection(
   disposalCodeList: WasteCode[]
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: RecoveryFacilityData[] } {
+  | { valid: true; value: RecoveryFacilityDetail[] } {
   let errors: FieldFormatError[] = [];
-  let recoveryFacilityEntries: RecoveryFacilityData[] = [];
+  let recoveryFacilityEntries: RecoveryFacilityDetail[] = [];
 
   if (smallWaste) {
     const laboratory = validateRecoveryFacilityEntry(

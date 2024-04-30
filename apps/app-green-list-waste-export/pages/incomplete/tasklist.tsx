@@ -18,19 +18,19 @@ import {
 } from 'components';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
-import { Submission } from '@wts/api/waste-tracking-gateway';
+import { DraftSubmission } from '@wts/api/waste-tracking-gateway';
 import { differenceInSeconds, parseISO } from 'date-fns';
 import useApiConfig from 'utils/useApiConfig';
 
 type State = {
-  data: Submission;
+  data: DraftSubmission;
   isLoading: boolean;
   isError: boolean;
 };
 
 type Action = {
   type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
-  payload?: Submission;
+  payload?: DraftSubmission;
 };
 
 const initialWasteDescState: State = {

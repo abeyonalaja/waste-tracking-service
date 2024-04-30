@@ -402,15 +402,11 @@ const UpdateAnnex7 = () => {
                           {updateAnnex7Page.data.values.map((item, index) => (
                             <GovUK.Table.Row key={index}>
                               <TableCell id={'transaction-id-' + index}>
-                                {item.submissionDeclaration.status ===
-                                  'Complete' && (
+                                {
                                   <b>
-                                    {
-                                      item.submissionDeclaration.values
-                                        .transactionId
-                                    }
+                                    {item.submissionDeclaration.transactionId}
                                   </b>
-                                )}
+                                }
                               </TableCell>
 
                               <TableCell id={'date-' + index}>
@@ -418,8 +414,7 @@ const UpdateAnnex7 = () => {
                               </TableCell>
 
                               <TableCell id={'waste-code-' + index}>
-                                {item.wasteDescription?.status ===
-                                  'Complete' && (
+                                {
                                   <>
                                     {item.wasteDescription?.wasteCode.type !==
                                       'NotApplicable' && (
@@ -447,7 +442,7 @@ const UpdateAnnex7 = () => {
                                       </span>
                                     )}
                                   </>
-                                )}
+                                }
                               </TableCell>
                               <TableCell id={'your-reference-' + index}>
                                 {' '}
@@ -516,10 +511,10 @@ const UpdateAnnex7 = () => {
                         />
                       )}
 
-                    {item.submissionDeclaration.values.transactionId && (
+                    {item.submissionDeclaration.transactionId && (
                       <GovUK.Caption>
                         {t('exportJourney.updateAnnexSeven.delete.caption')}
-                        {item.submissionDeclaration.values.transactionId}
+                        {item.submissionDeclaration.transactionId}
                       </GovUK.Caption>
                     )}
                     <GovUK.Fieldset>

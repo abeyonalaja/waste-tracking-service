@@ -50,7 +50,7 @@ const QuantityEntry = () => {
   const [id, setId] = useState<string | string[]>(null);
   const [data, setData] = useState(null);
   const [bulkWaste, setBulkWaste] = useState<boolean>(true);
-  const [quantityType, setQuantityType] = useState(null);
+  const [quantityType, setQuantityType] = useState<'Volume' | 'Weight'>(null);
   const [transactionId, setTransactionId] = useState('');
   const [weight, setWeight] = useState('');
   const [volume, setVolume] = useState('');
@@ -74,9 +74,12 @@ const QuantityEntry = () => {
       setIsLoading(true);
       setIsError(false);
       if (id !== null) {
-        fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`, {
-          headers: apiConfig,
-        })
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
+          {
+            headers: apiConfig,
+          }
+        )
           .then((response) => {
             if (response.ok) return response.json();
             else {
@@ -88,20 +91,20 @@ const QuantityEntry = () => {
             if (data !== undefined) {
               setData(data.wasteQuantity);
               setQuantityType(
-                data.wasteQuantity.value.estimateData.quantityType || null
+                data.wasteQuantity.estimateData.quantityType || null
               );
 
-              if (data.wasteQuantity.value.quantityType === 'Weight')
-                setWeight(data.wasteQuantity.value.value);
-              if (data.wasteQuantity.value.quantityType === 'Volume')
-                setVolume(data.wasteQuantity.value.value);
+              if (data.wasteQuantity.quantityType === 'Weight')
+                setWeight(data.wasteQuantity.value);
+              if (data.wasteQuantity.quantityType === 'Volume')
+                setVolume(data.wasteQuantity.value);
 
               if (data.wasteDescription.wasteCode.type === 'NotApplicable') {
                 setBulkWaste(false);
                 setQuantityType('Weight');
               }
 
-              setTransactionId(data.submissionDeclaration.values.transactionId);
+              setTransactionId(data.submissionDeclaration.transactionId);
 
               setIsLoading(false);
               setIsError(false);
@@ -138,24 +141,27 @@ const QuantityEntry = () => {
         setErrors(null);
 
         const updatedData: PutWasteQuantityRequest = {
-          status: 'Complete',
-          value: {
-            type: 'ActualData',
-            estimateData: { ...data.value.estimateData },
-            actualData: { ...data.value.actualData },
-          },
+          type: 'ActualData',
+          estimateData: { ...data.estimateData },
+          actualData: { ...data.actualData },
         };
 
-        if (updatedData.value.type === 'ActualData') {
-          updatedData.value.actualData = {
+        if (updatedData.type === 'ActualData') {
+          updatedData.actualData = {
             quantityType: quantityType,
+            unit:
+              quantityType === 'Volume'
+                ? 'Cubic Metre'
+                : bulkWaste
+                ? 'Tonne'
+                : 'Kilogram',
             value: parseFloat(quantityType === 'Weight' ? weight : volume),
           };
         }
 
         try {
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity`,
+            `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-quantity?submitted=true`,
             {
               method: 'PUT',
               headers: apiConfig,

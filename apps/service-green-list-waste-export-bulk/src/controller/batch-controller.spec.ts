@@ -4,12 +4,17 @@ import winston from 'winston';
 import Boom from '@hapi/boom';
 import BatchController from './batch-controller';
 import { BulkSubmission } from '../model';
+import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
   })),
 }));
+
+const mockClient = {
+  getBulkSubmissions: jest.fn<DaprAnnexViiClient['getBulkSubmissions']>(),
+};
 
 const mockRepository = {
   saveBatch:
@@ -19,7 +24,11 @@ const mockRepository = {
 };
 
 describe(BatchController, () => {
-  const subject = new BatchController(mockRepository, new winston.Logger());
+  const subject = new BatchController(
+    mockRepository,
+    mockClient as unknown as DaprAnnexViiClient,
+    new winston.Logger()
+  );
 
   beforeEach(() => {
     mockRepository.saveBatch.mockClear();
