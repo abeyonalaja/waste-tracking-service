@@ -20,7 +20,7 @@ type WellKnownObj = {
 };
 
 interface SignOutLinkProps {
-  wellKnownObj: WellKnownObj;
+  wellKnownObj: WellKnownObj | string;
 }
 
 export function SignOutLink({ wellKnownObj }: SignOutLinkProps) {
@@ -28,7 +28,9 @@ export function SignOutLink({ wellKnownObj }: SignOutLinkProps) {
   async function handleSignOut(e: React.MouseEvent) {
     e.preventDefault();
     await signOut();
-    router.push(wellKnownObj.end_session_endpoint);
+    if (typeof wellKnownObj === 'object') {
+      router.push(wellKnownObj.end_session_endpoint);
+    }
   }
   return (
     <Link

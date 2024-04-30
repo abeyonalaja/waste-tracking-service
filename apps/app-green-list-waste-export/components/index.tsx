@@ -18,6 +18,7 @@ import { CookieBanner } from './CookieBanner';
 import { CountrySelector } from './CountrySelector';
 import { DocumentStatus } from './DocumentStatus';
 import { DownloadPDFLink } from './DownloadPDFLink';
+import { DownloadMultiplePDFLink } from './DownloadMultiplePDFLink';
 import { Error404Content } from './Error404Content';
 import { ErrorSummary } from './ErrorSummary';
 import { InputWithSuffix } from './InputWithSuffix';
@@ -59,6 +60,7 @@ export {
   CountrySelector,
   DocumentStatus,
   DownloadPDFLink,
+  DownloadMultiplePDFLink,
   Error404Content,
   FileUpload,
   ErrorSummary,

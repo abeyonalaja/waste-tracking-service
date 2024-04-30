@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import * as GovUK from 'govuk-react';
-import { Tag } from 'components';
+import { AppLink, Tag } from 'components';
 import { Table, Thead, Tbody, Row, CellHeader, Cell } from 'components/Table';
 import { Transaction, formatDate } from 'features/multiples';
 import useRefDataLookup from 'utils/useRefDataLookup';
@@ -112,11 +111,11 @@ export function SubmittedTable({
                 label={t('multiples.submitted.table.action')}
                 textAlign={'right'}
               >
-                <GovUK.Link
+                <AppLink
                   href={`/multiples/${router.query.id}/view/${transaction.id}?sort=${sortOrder}&page=${pageNumber}`}
                 >
                   {t('multiples.submitted.table.link')}
-                </GovUK.Link>
+                </AppLink>
               </Cell>
             </Row>
           ))}

@@ -8,7 +8,7 @@ export type PDFProps = {
   title: string;
   author: string;
   description: string;
-  data: Submission;
+  data: Submission | Submission[];
 };
 
 const styles = StyleSheet.create({
@@ -17,10 +17,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     fontWeight: 'light',
     lineHeight: '1.2',
-    height: '100vh',
-    width: '100vw',
     display: 'flex',
-    overflow: 'hidden',
     padding: 20,
   },
   pageHeader: {
@@ -129,8 +126,25 @@ const styles = StyleSheet.create({
 });
 
 export const PDFLayout = (props: PDFProps) => {
-  const data = props.data;
-  const recFacCount = data.recoveryFacilityDetail.values.length | 0;
+  return (
+    <Document
+      title={props.title}
+      author={props.author}
+      subject={props.description}
+    >
+      <>
+        {Array.isArray(props.data) &&
+          props.data.map((page, index) => (
+            <Pages data={page} key={`page${index}`} />
+          ))}
+        {!Array.isArray(props.data) && <Pages data={props.data} />}
+      </>
+    </Document>
+  );
+};
+
+const Pages = ({ data }) => {
+  const recFacCount = data.recoveryFacilityDetail.length | 0;
   let ewcCodesCount = data.wasteDescription.ewcCodes.length | 0;
 
   let extraEwcCodesCount = 0;
@@ -138,7 +152,7 @@ export const PDFLayout = (props: PDFProps) => {
     extraEwcCodesCount = ewcCodesCount - 3;
     ewcCodesCount = 3;
   }
-  const transitCount = data.transitCountries.values.length | 0;
+  const transitCount = data.transitCountries.length | 0;
   let transitColumns = 1;
   if (transitCount === 2) {
     transitColumns = 2;
@@ -148,12 +162,8 @@ export const PDFLayout = (props: PDFProps) => {
   }
 
   return (
-    <Document
-      title={props.title}
-      author={props.author}
-      subject={props.description}
-    >
-      <Page style={styles.page} size="A4">
+    <>
+      <Page style={styles.page} size="A4" wrap={false}>
         <Reference
           transactionId={data.submissionDeclaration.transactionId}
           reference={data.reference}
@@ -545,7 +555,7 @@ export const PDFLayout = (props: PDFProps) => {
           </View>
         </View>
       </Page>
-      <Page style={styles.page} size="A4">
+      <Page style={styles.page} size="A4" wrap={true}>
         <Reference
           transactionId={data.submissionDeclaration.transactionId}
           reference={data.reference}
@@ -775,7 +785,7 @@ export const PDFLayout = (props: PDFProps) => {
           </View>
         </>
       </Page>
-    </Document>
+    </>
   );
 };
 

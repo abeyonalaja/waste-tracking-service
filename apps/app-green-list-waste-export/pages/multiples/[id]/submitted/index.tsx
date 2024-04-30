@@ -3,7 +3,11 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import useApiConfig from 'utils/useApiConfig';
 import * as GovUK from 'govuk-react';
-import { BreadcrumbWrap, BreadCrumbLink } from 'components';
+import {
+  BreadcrumbWrap,
+  BreadCrumbLink,
+  DownloadMultiplePDFLink,
+} from 'components';
 import {
   PageLayout,
   SubmittedTable,
@@ -14,6 +18,8 @@ import {
   sortTransactions,
 } from 'features/multiples';
 import useSafePush from 'utils/useRouterChange';
+import React from 'react';
+import styled from 'styled-components';
 
 function SubmittedBreadCrumbs() {
   const { t } = useTranslation();
@@ -31,6 +37,12 @@ function SubmittedBreadCrumbs() {
   );
 }
 
+const ActionHeader = styled(GovUK.H2)`
+  border-top: 2px solid #1d70b8;
+  padding-top: 1em;
+  margin-bottom: 0.5em;
+`;
+
 export default function Submitted() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -45,7 +57,6 @@ export default function Submitted() {
     staleTime: 5 * (60 * 1000),
     gcTime: 10 * (60 * 1000),
     refetchOnWindowFocus: false,
-
     enabled: !!router.query.id,
   });
 
@@ -93,6 +104,24 @@ export default function Submitted() {
             {t('multiples.submitted.heading')}
           </GovUK.Heading>
         </GovUK.GridCol>
+        {data && (
+          <GovUK.GridCol setWidth={'one-third'}>
+            <ActionHeader size="S">{t('actions')}</ActionHeader>
+            <GovUK.UnorderedList listStyleType={'none'}>
+              <GovUK.ListItem>
+                <DownloadMultiplePDFLink
+                  submissionId={data.data.id}
+                  transactionId={data.data.state.transactionId}
+                  apiConfig={apiConfig}
+                >
+                  {t('multiples.submitted.action.link', {
+                    pageCount: allTransactions.length * 2,
+                  })}
+                </DownloadMultiplePDFLink>
+              </GovUK.ListItem>
+            </GovUK.UnorderedList>
+          </GovUK.GridCol>
+        )}
       </GovUK.GridRow>
       <GovUK.GridRow>
         <GovUK.GridCol setWidth={'full'}>
