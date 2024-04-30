@@ -37,7 +37,6 @@ export function ViewRecord() {
   const router = useRouter();
   const apiConfig = useApiConfig();
 
-  console.log(router.query);
   async function getSubmission() {
     const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${router.query.submission}?submitted=true`;
     const headers = {
