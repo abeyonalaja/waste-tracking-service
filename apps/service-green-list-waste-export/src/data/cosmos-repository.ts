@@ -484,6 +484,19 @@ export default class CosmosRepository
           .patch(replaceOperation);
       }
     } catch (err) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 409
+      ) {
+        throw Boom.conflict(
+          `A ${containerName.substring(
+            0,
+            containerName.length - 1
+          )} with this name already exists`
+        );
+      }
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,
       });
