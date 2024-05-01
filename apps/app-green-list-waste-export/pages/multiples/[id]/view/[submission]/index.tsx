@@ -149,7 +149,7 @@ export function ViewRecord() {
               <GovUK.GridCol setWidth="one-third">
                 <ActionHeader size="S">{t('actions')}</ActionHeader>
                 <DownloadPDFLink
-                  submissionId={String(router.query.submissionId)}
+                  submissionId={String(router.query.submission)}
                   transactionId={data.data.submissionDeclaration.transactionId}
                   data={data.data}
                 >
@@ -162,7 +162,7 @@ export function ViewRecord() {
                   href={{
                     pathname: `/templates/create-from-record`,
                     query: {
-                      id: router.query.submissionId,
+                      id: router.query.submission,
                       context: 'view',
                     },
                   }}
