@@ -1670,25 +1670,27 @@ export function validateTransitCountriesSection(
 ):
   | { valid: false; value: FieldFormatError }
   | { valid: true; value: TransitCountries } {
-  let countries: string[] = [];
+  const countries: string[] = [];
   if (value.transitCountries && value.transitCountries.trim()) {
     const countryArr = [
       ...new Set(value.transitCountries.trim().toUpperCase().split(';')),
     ];
-    const filteredCountryList = countryList.filter((v) =>
-      countryArr.find((c) => v.name.toUpperCase().includes(c.trim()))
-    );
-    if (filteredCountryList.length !== countryArr.length) {
-      return {
-        valid: false,
-        value: {
-          field: 'TransitCountries',
-          message: validation.TransitCountriesValidationErrorMessages.invalid,
-        },
-      };
-    }
 
-    countries = filteredCountryList.map((s) => s.name);
+    for (let i = 0; i < countryArr.length; i++) {
+      const filteredCountryList = countryList.filter((v) =>
+        v.name.toUpperCase().includes(countryArr[i].trim())
+      );
+      if (filteredCountryList.length !== 1) {
+        return {
+          valid: false,
+          value: {
+            field: 'TransitCountries',
+            message: validation.TransitCountriesValidationErrorMessages.invalid,
+          },
+        };
+      }
+      countries.push(filteredCountryList[0].name);
+    }
   }
 
   return { valid: true, value: countries };
