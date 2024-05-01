@@ -46,7 +46,7 @@ export function ViewRecord() {
   }
 
   const { isPending, data, error } = useQuery({
-    queryKey: ['single', router.query.submissionId],
+    queryKey: ['single', router.query.submission],
     queryFn: getSubmission,
     staleTime: 5 * (60 * 1000),
 

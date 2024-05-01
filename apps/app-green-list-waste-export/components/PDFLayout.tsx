@@ -576,23 +576,23 @@ const Pages = ({ data }) => {
             <View style={styles.cell}>
               <Text style={styles.cellTitle}>5. (d) 4th carrier</Text>
               <AddressDetails
-                address={data.carriers.values[3]?.addressDetails}
-                contact={data.carriers.values[3]?.contactDetails}
+                address={data.carriers[3]?.addressDetails}
+                contact={data.carriers[3]?.contactDetails}
                 inlineFax={false}
               />
               <TransportMeans
-                transportDetails={data.carriers.values[3]?.transportDetails}
+                transportDetails={data.carriers[3]?.transportDetails}
               />
             </View>
             <View style={styles.cell}>
               <Text style={styles.cellTitle}> 5. (e) 5th carrier</Text>
               <AddressDetails
-                address={data.carriers.values[4]?.addressDetails}
-                contact={data.carriers.values[4]?.contactDetails}
+                address={data.carriers[4]?.addressDetails}
+                contact={data.carriers[4]?.contactDetails}
                 inlineFax={false}
               />
               <TransportMeans
-                transportDetails={data.carriers.values[4]?.transportDetails}
+                transportDetails={data.carriers[4]?.transportDetails}
               />
             </View>
           </View>

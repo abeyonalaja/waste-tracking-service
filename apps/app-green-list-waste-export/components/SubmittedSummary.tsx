@@ -998,7 +998,7 @@ export const SubmittedSummary = ({
                     {t('exportJourney.wasteTransitCountries.listTitle')}
                   </Key>
                   <Value id="transit-countries">
-                    {data.transitCountries.values.length > 0 && (
+                    {data.transitCountries.length > 0 && (
                       <GovUK.OrderedList mb={0}>
                         {data.transitCountries?.map((item, index) => (
                           <GovUK.ListItem key={index}>{item}</GovUK.ListItem>

@@ -489,7 +489,7 @@ export async function createBatch(
                 estimateDate: {
                   day: '15',
                   month: '01',
-                  year: '2050',
+                  year: '3050',
                 },
                 actualDate: {},
               },
@@ -555,7 +555,7 @@ export async function createBatch(
         wasteDescription: {
           wasteCode: {
             type: 'BaselAnnexIX',
-            code: 'B1010',
+            code: 'B1070',
           },
           ewcCodes: [
             {
@@ -565,7 +565,7 @@ export async function createBatch(
           nationalCode: {
             provided: 'No',
           },
-          description: 'WasteDescription',
+          description: 'Bulk data,5 WC, No Transit and Countries',
         },
         wasteQuantity: {
           type: 'EstimateData',
@@ -578,109 +578,179 @@ export async function createBatch(
         },
         exporterDetail: {
           exporterAddress: {
-            addressLine1: 'Test organisation 1',
-            addressLine2: 'Address line',
+            addressLine1: 'Armira Capital Ltd,,LONDON,EC2N 4AYUnited Kingdom',
+            addressLine2: '110 Bishopsgate',
             townCity: 'London',
             postcode: 'EC2N4AY',
             country: 'England',
           },
           exporterContactDetails: {
-            organisationName: 'Test organisation 1',
-            fullName: 'John Smith',
-            emailAddress: 'test1@test.com',
-            phoneNumber: '00-44788-888 8888',
-            faxNumber: '07888888888',
+            organisationName: 'Exporter TestOrg ltd',
+            fullName: 'Exp Conn name',
+            emailAddress: 'Testemail@gmail.com',
+            phoneNumber: '07811111111',
+            faxNumber: '0113598988555',
           },
         },
         importerDetail: {
           importerAddressDetails: {
-            organisationName: 'Test organisation 2',
-            address: '2 Some Street, Paris, 75002',
-            country: 'France [FR]',
+            organisationName: 'Importer TestImpOrg ltd',
+            address: '111,love avenue,Finalnd,500232',
+            country: 'Finland [FI]',
           },
           importerContactDetails: {
-            fullName: 'Jane Smith',
-            emailAddress: 'test2@test.com',
-            phoneNumber: '0033140000000',
-            faxNumber: '00 33140000000',
+            fullName: 'TestImpCont',
+            emailAddress: 'impoter@gmail.com',
+            phoneNumber: '012333434343',
+            faxNumber: '01233430000000',
           },
         },
         collectionDate: {
           type: 'EstimateDate',
           estimateDate: {
             day: '15',
-            month: '01',
-            year: '2050',
+            month: '03',
+            year: '2030',
           },
           actualDate: {},
         },
         carriers: [
           {
             addressDetails: {
-              organisationName: 'Test organisation 2',
-              address: '2 Some Street, Paris, 75002',
+              organisationName: 'First carrier',
+              address: 'First carrier address',
+              country: 'United Kingdom (Wales) [GB-WLS]',
+            },
+            contactDetails: {
+              fullName: 'John David',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
+            },
+            transportDetails: {
+              type: 'Road',
+              description: 'road details',
+            },
+          },
+          {
+            addressDetails: {
+              organisationName: 'org name',
+              address:
+                'test address 1, something , somehwere in this world, sl12rd,121213',
               country: 'France [FR]',
             },
             contactDetails: {
-              fullName: 'Jane Smith',
-              emailAddress: 'test2@test.com',
-              phoneNumber: '0033140000000',
-              faxNumber: '00 33140000000',
+              fullName: 'Peter Banks',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
             },
             transportDetails: {
-              type: 'Sea',
+              type: 'Road',
+              description: 'road details',
+            },
+          },
+          {
+            addressDetails: {
+              organisationName: 'org name',
+              address:
+                'test address 1, something , somehwere in this world, sl12rd,121213',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Ben Davies',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
+            },
+            transportDetails: {
+              type: 'Air',
+              description: 'Air details',
+            },
+          },
+          {
+            addressDetails: {
+              organisationName: 'Org name',
+              address: 'test address 1',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Phil James',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
+            },
+            transportDetails: {
+              type: 'Road',
+              description: 'road details',
+            },
+          },
+          {
+            addressDetails: {
+              organisationName: 'org name',
+              address: ', 98273 , *^*^&@,jsdfj',
+              country: 'France [FR]',
+            },
+            contactDetails: {
+              fullName: 'Peter Banks',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
+            },
+            transportDetails: {
+              type: 'Road',
+              description: 'road details',
             },
           },
         ],
         collectionDetail: {
           address: {
-            addressLine1: 'Test organisation 1',
-            addressLine2: 'Address line',
+            addressLine1: 'Test address 1',
+            addressLine2: 'Test address 83',
             townCity: 'London',
-            postcode: 'EC2N4AY',
+            postcode: 'AL3 8QE',
             country: 'England',
           },
           contactDetails: {
-            organisationName: 'Test organisation 1',
-            fullName: 'John Smith',
-            emailAddress: 'test1@test.com',
-            phoneNumber: '00-44788-888 8888',
-            faxNumber: '07888888888',
+            organisationName: 'org name',
+            fullName: 'John Brooks',
+            emailAddress: 'maill@mail.com',
+            phoneNumber: '00442087599036',
           },
         },
         ukExitLocation: {
           provided: 'No',
         },
-        transitCountries: [],
+        transitCountries: [
+          'Albania [AL]',
+          'Cyprus [CY]',
+          'Germany [DE]',
+          'Mali [ML]',
+          'Somalia [SO]',
+          'Spain [ES]',
+        ],
         recoveryFacilityDetail: [
           {
             addressDetails: {
-              name: 'Test organisation 2',
-              address: '2 Some Street, Paris, 75002',
-              country: 'France [FR]',
+              name: 'Org name',
+              address: 'Test address 1',
+              country: 'Albania [AL]',
             },
             contactDetails: {
-              fullName: 'Jane Smith',
-              emailAddress: 'test2@test.com',
-              phoneNumber: '0033140000000',
-              faxNumber: '00 33140000000',
+              fullName: 'Dave Johns',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+442081234567',
             },
             recoveryFacilityType: {
               type: 'InterimSite',
-              recoveryCode: 'R13',
+              recoveryCode: 'R12',
             },
           },
           {
             addressDetails: {
-              name: 'Test organisation 2',
-              address: '2 Some Street, Paris, 75002',
-              country: 'France [FR]',
+              name: 'Org name',
+              address: "test address 1, 592038, 'street",
+              country: 'Italy [IT]',
             },
             contactDetails: {
-              fullName: 'Jane Smith',
-              emailAddress: 'test2@test.com',
-              phoneNumber: '0033140000000',
-              faxNumber: '00 33140000000',
+              fullName: 'Ben James',
+              emailAddress: 'mail@mail.com',
+              phoneNumber: '+359-89 88-1(434)55 5',
             },
             recoveryFacilityType: {
               type: 'RecoveryFacility',
@@ -690,7 +760,7 @@ export async function createBatch(
         ],
         submissionDeclaration: {
           declarationTimestamp: new Date(),
-          transactionId: '2404_8D1CB87D',
+          transactionId: '2405_A148B186',
         },
         submissionState: {
           status: 'SubmittedWithEstimates',
