@@ -9,7 +9,7 @@ resources:
     memory: 1024Mi
 secret:
   env:
-    NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'
+    NEXT_PUBLIC_MULTIPLES_ENABLED: 'true'
     NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
 ingress:
   enabled: true

@@ -70,7 +70,7 @@ secret:
     NEXTAUTH_SECRET: ''
     NEXTAUTH_URL: ''
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ACCOUNT: ''
-    NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'
+    NEXT_PUBLIC_MULTIPLES_ENABLED: 'true'
     NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas

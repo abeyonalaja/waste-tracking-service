@@ -56,7 +56,7 @@ const TemplateCreate = () => {
           })
             .then((response) => response.json())
             .then((data) => {
-              if (data?.statusCode === 409) {
+              if (data?.message !== undefined) {
                 const newErrors = {
                   templateName: data?.message,
                 };
