@@ -19,6 +19,7 @@ export const ErrorSummary = ({
   errors,
 }: ErrorSummaryProps) => {
   const router = useRouter();
+
   return (
     <div
       className="govuk-error-summary"

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useRouter } from '@wts/ui/navigation';
+import { TotalErrorSummary } from '../TotalErrorSummary';
 
 interface UploadFormProps {
   strings: {
@@ -12,14 +13,24 @@ interface UploadFormProps {
     errorLabel: string;
     summaryLabel: string;
   };
+  totalErrorSummaryStrings?: {
+    heading: string;
+    prompt: string;
+    linkText: string;
+  };
   validationError?: string;
+  showHint?: boolean;
+  totalErrorCount?: number;
   token: string;
   children: React.ReactNode;
 }
 
 export function UploadForm({
   strings,
+  totalErrorSummaryStrings,
   validationError,
+  showHint = true,
+  totalErrorCount,
   token,
   children,
 }: UploadFormProps) {
@@ -55,31 +66,44 @@ export function UploadForm({
     const formData = new FormData();
     formData.append('input', file!);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches`,
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          // Mock API only works with no defined content type
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-          // TODO: Get token from context
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    let response: Response;
 
-    if (response.status === 201) {
-      const data = await response.json();
+    try {
+      response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches`,
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            // Mock API only works with no defined content type
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            // TODO: Get token from context
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      router.push(`/404`);
+    }
+
+    if (response!.status === 201) {
+      const data = await response!.json();
       router.push(`/multiples/${data.id}?filename=${file!.name}`);
     } else {
-      // TODO handle error
-      console.log('error');
+      router.push(`/404`);
     }
   }
 
   return (
     <>
+      {!errors && totalErrorCount && (
+        <TotalErrorSummary
+          strings={totalErrorSummaryStrings!}
+          href="#error-tabs"
+        />
+      )}
+
       {errors && (
         <GovUK.ErrorSummary
           headingErrorText={strings.summaryLabel}
@@ -87,12 +111,12 @@ export function UploadForm({
         />
       )}
       {children}
-      <GovUK.SectionBreak size="l" />
+      {showHint && <GovUK.SectionBreak size="l" />}
       <form onSubmit={handleSubmit}>
         <GovUK.Heading level={2} size="m">
           {strings.heading}
         </GovUK.Heading>
-        <GovUK.Hint>{strings.hint}</GovUK.Hint>
+        {showHint && <GovUK.Hint>{strings.hint}</GovUK.Hint>}
         <GovUK.FileUpload
           id="file-upload"
           name="csvUpload"
