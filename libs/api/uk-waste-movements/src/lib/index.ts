@@ -17,6 +17,7 @@ export type {
   WasteTransportationDetail,
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
+  WasteQuantityType,
 } from './submission.dto';
 
 export type { Field } from './validation';

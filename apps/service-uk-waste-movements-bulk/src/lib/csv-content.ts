@@ -3,29 +3,29 @@ export type BulkSubmissionCsvRow = {
   producerOrganisationName: string;
   producerAddressLine1: string;
   producerAddressLine2: string;
-  producerTownOrCity: string;
+  producerTownCity: string;
   producerCountry: string;
   producerPostcode: string;
   producerContactName: string;
   producerContactEmail: string;
-  producerContactPhoneNumber: string;
+  producerContactPhone: string;
   producerSicCode: string;
   wasteCollectionAddressLine1: string;
   wasteCollectionAddressLine2: string;
-  wasteCollectionTownOrCity: string;
+  wasteCollectionTownCity: string;
   wasteCollectionCountry: string;
   wasteCollectionPostcode: string;
-  wasteCollectionSource: string;
-  brokerRegistrationNumber: string;
-  carrierRegistrationNumber: string;
-  wasteModeTransport: string;
-  wasteExpectedDate: string;
-  receiverAuthorisationType: string;
+  wasteCollectionWasteSource: string;
+  wasteCollectionBrokerRegistrationNumber: string;
+  wasteCollectionCarrierRegistrationNumber: string;
+  wasteCollectionModeOfWasteTransport: string;
+  wasteCollectionExpectedWasteCollectionDate: string;
+  receiverAuthorizationType: string;
   receiverEnvironmentalPermitNumber: string;
   receiverOrganisationName: string;
   receiverAddressLine1: string;
   receiverAddressLine2: string;
-  receiverTownOrCity: string;
+  receiverTownCity: string;
   receiverCountry: string;
   receiverPostcode: string;
   receiverContactName: string;
@@ -33,116 +33,156 @@ export type BulkSubmissionCsvRow = {
   receiverContactPhone: string;
   wasteTransportationNumberAndTypeOfContainers: string;
   wasteTransportationSpecialHandlingRequirements: string;
-  ewcCode: string;
-  wasteDescription: string;
-  physicalForm: string;
-  wasteQuantity: string;
-  quantityUnits: string;
-  quantityWaste: string;
-  hasHazardousProperties: string;
-  containPersistentOrganicPollutants: string;
-  hazardousWasteCode: string;
-  popDetails: string;
   firstWasteTypeEwcCode: string;
-  firstWasteTypeDescription: string;
+  firstWasteTypeWasteDescription: string;
   firstWasteTypePhysicalForm: string;
-  firstWasteTypeQuantity: string;
-  firstWasteTypeQuantityUnits: string;
-  firstWasteTypeQuantityWaste: string;
-  firstWasteTypeHazardousProperties: string;
-  firstWasteTypeContainPersistentOrganicPollutants: string;
-  firstWasteTypeHazardousWasteCode: string;
-  firstWasteTypePopDetails: string;
+  firstWasteTypeWasteQuantity: string;
+  firstWasteTypeWasteQuantityUnit: string;
+  firstWasteTypeWasteQuantityType: string;
+  firstWasteTypeChemicalAndBiologicalComponentsString: string;
+  firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  firstWasteTypeHasHazardousProperties: string;
+  firstWasteTypeHazardousWasteCodesString: string;
+  firstWasteTypeContainsPops: string;
+  firstWasteTypePopsString: string;
+  firstWasteTypePopsConcentrationsString: string;
+  firstWasteTypePopsConcentrationUnitsString: string;
   secondWasteTypeEwcCode: string;
-  secondWasteTypeDescription: string;
+  secondWasteTypeWasteDescription: string;
   secondWasteTypePhysicalForm: string;
-  secondWasteTypeQuantity: string;
-  secondWasteTypeQuantityUnits: string;
-  secondWasteTypeQuantityWaste: string;
-  secondWasteTypeHazardousProperties: string;
-  secondWasteTypeContainPersistentOrganicPollutants: string;
-  secondWasteTypeHazardousWasteCode: string;
-  secondWasteTypePopDetails: string;
+  secondWasteTypeWasteQuantity: string;
+  secondWasteTypeWasteQuantityUnit: string;
+  secondWasteTypeWasteQuantityType: string;
+  secondWasteTypeChemicalAndBiologicalComponentsString: string;
+  secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  secondWasteTypeHasHazardousProperties: string;
+  secondWasteTypeHazardousWasteCodesString: string;
+  secondWasteTypeContainsPops: string;
+  secondWasteTypePopsString: string;
+  secondWasteTypePopsConcentrationsString: string;
+  secondWasteTypePopsConcentrationUnitsString: string;
   thirdWasteTypeEwcCode: string;
-  thirdWasteTypeDescription: string;
+  thirdWasteTypeWasteDescription: string;
   thirdWasteTypePhysicalForm: string;
-  thirdWasteTypeQuantity: string;
-  thirdWasteTypeQuantityUnits: string;
-  thirdWasteTypeQuantityWaste: string;
-  thirdWasteTypeHazardousProperties: string;
-  thirdWasteTypeContainPersistentOrganicPollutants: string;
-  thirdWasteTypeHazardousWasteCode: string;
-  thirdWasteTypePopDetails: string;
+  thirdWasteTypeWasteQuantity: string;
+  thirdWasteTypeWasteQuantityUnit: string;
+  thirdWasteTypeWasteQuantityType: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsString: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  thirdWasteTypeHasHazardousProperties: string;
+  thirdWasteTypeHazardousWasteCodesString: string;
+  thirdWasteTypeContainsPops: string;
+  thirdWasteTypePopsString: string;
+  thirdWasteTypePopsConcentrationsString: string;
+  thirdWasteTypePopsConcentrationUnitsString: string;
   fourthWasteTypeEwcCode: string;
-  fourthWasteTypeDescription: string;
+  fourthWasteTypeWasteDescription: string;
   fourthWasteTypePhysicalForm: string;
-  fourthWasteTypeQuantity: string;
-  fourthWasteTypeQuantityUnits: string;
-  fourthWasteTypeQuantityWaste: string;
-  fourthWasteTypeHazardousProperties: string;
-  fourthWasteTypeContainPersistentOrganicPollutants: string;
-  fourthWasteTypeHazardousWasteCode: string;
-  fourthWasteTypePopDetails: string;
+  fourthWasteTypeWasteQuantity: string;
+  fourthWasteTypeWasteQuantityUnit: string;
+  fourthWasteTypeWasteQuantityType: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsString: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  fourthWasteTypeHasHazardousProperties: string;
+  fourthWasteTypeHazardousWasteCodesString: string;
+  fourthWasteTypeContainsPops: string;
+  fourthWasteTypePopsString: string;
+  fourthWasteTypePopsConcentrationsString: string;
+  fourthWasteTypePopsConcentrationUnitsString: string;
   fifthWasteTypeEwcCode: string;
-  fifthWasteTypeDescription: string;
+  fifthWasteTypeWasteDescription: string;
   fifthWasteTypePhysicalForm: string;
-  fifthWasteTypeQuantity: string;
-  fifthWasteTypeQuantityUnits: string;
-  fifthWasteTypeQuantityWaste: string;
-  fifthWasteTypeHazardousProperties: string;
-  fifthWasteTypeContainPersistentOrganicPollutants: string;
-  fifthWasteTypeHazardousWasteCode: string;
-  fifthWasteTypePopDetails: string;
+  fifthWasteTypeWasteQuantity: string;
+  fifthWasteTypeWasteQuantityUnit: string;
+  fifthWasteTypeWasteQuantityType: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsString: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  fifthWasteTypeHasHazardousProperties: string;
+  fifthWasteTypeHazardousWasteCodesString: string;
+  fifthWasteTypeContainsPops: string;
+  fifthWasteTypePopsString: string;
+  fifthWasteTypePopsConcentrationsString: string;
+  fifthWasteTypePopsConcentrationUnitsString: string;
   sixthWasteTypeEwcCode: string;
-  sixthWasteTypeDescription: string;
+  sixthWasteTypeWasteDescription: string;
   sixthWasteTypePhysicalForm: string;
-  sixthWasteTypeQuantity: string;
-  sixthWasteTypeQuantityUnits: string;
-  sixthWasteTypeQuantityWaste: string;
-  sixthWasteTypeHazardousProperties: string;
-  sixthWasteTypeContainPersistentOrganicPollutants: string;
-  sixthWasteTypeHazardousWasteCode: string;
-  sixthWasteTypePopDetails: string;
+  sixthWasteTypeWasteQuantity: string;
+  sixthWasteTypeWasteQuantityUnit: string;
+  sixthWasteTypeWasteQuantityType: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsString: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  sixthWasteTypeHasHazardousProperties: string;
+  sixthWasteTypeHazardousWasteCodesString: string;
+  sixthWasteTypeContainsPops: string;
+  sixthWasteTypePopsString: string;
+  sixthWasteTypePopsConcentrationsString: string;
+  sixthWasteTypePopsConcentrationUnitsString: string;
   seventhWasteTypeEwcCode: string;
-  seventhWasteTypeDescription: string;
+  seventhWasteTypeWasteDescription: string;
   seventhWasteTypePhysicalForm: string;
-  seventhWasteTypeQuantity: string;
-  seventhWasteTypeQuantityUnits: string;
-  seventhWasteTypeQuantityWaste: string;
-  seventhWasteTypeHazardousProperties: string;
-  seventhWasteTypeContainPersistentOrganicPollutants: string;
-  seventhWasteTypeHazardousWasteCode: string;
-  seventhWasteTypePopDetails: string;
+  seventhWasteTypeWasteQuantity: string;
+  seventhWasteTypeWasteQuantityUnit: string;
+  seventhWasteTypeWasteQuantityType: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsString: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  seventhWasteTypeHasHazardousProperties: string;
+  seventhWasteTypeHazardousWasteCodesString: string;
+  seventhWasteTypeContainsPops: string;
+  seventhWasteTypePopsString: string;
+  seventhWasteTypePopsConcentrationsString: string;
+  seventhWasteTypePopsConcentrationUnitsString: string;
   eighthWasteTypeEwcCode: string;
-  eighthWasteTypeDescription: string;
+  eighthWasteTypeWasteDescription: string;
   eighthWasteTypePhysicalForm: string;
-  eighthWasteTypeQuantity: string;
-  eighthWasteTypeQuantityUnits: string;
-  eighthWasteTypeQuantityWaste: string;
-  eighthWasteTypeHazardousProperties: string;
-  eighthWasteTypeContainPersistentOrganicPollutants: string;
-  eighthWasteTypeHazardousWasteCode: string;
-  eighthWasteTypePopDetails: string;
+  eighthWasteTypeWasteQuantity: string;
+  eighthWasteTypeWasteQuantityUnit: string;
+  eighthWasteTypeWasteQuantityType: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsString: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  eighthWasteTypeHasHazardousProperties: string;
+  eighthWasteTypeHazardousWasteCodesString: string;
+  eighthWasteTypeContainsPops: string;
+  eighthWasteTypePopsString: string;
+  eighthWasteTypePopsConcentrationsString: string;
+  eighthWasteTypePopsConcentrationUnitsString: string;
   ninthWasteTypeEwcCode: string;
-  ninthWasteTypeDescription: string;
+  ninthWasteTypeWasteDescription: string;
   ninthWasteTypePhysicalForm: string;
-  ninthWasteTypeQuantity: string;
-  ninthWasteTypeQuantityUnits: string;
-  ninthWasteTypeQuantityWaste: string;
-  ninthWasteTypeHazardousProperties: string;
-  ninthWasteTypeContainPersistentOrganicPollutants: string;
-  ninthWasteTypeHazardousWasteCode: string;
-  ninthWasteTypePopDetails: string;
+  ninthWasteTypeWasteQuantity: string;
+  ninthWasteTypeWasteQuantityUnit: string;
+  ninthWasteTypeWasteQuantityType: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsString: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  ninthWasteTypeHasHazardousProperties: string;
+  ninthWasteTypeHazardousWasteCodesString: string;
+  ninthWasteTypeContainsPops: string;
+  ninthWasteTypePopsString: string;
+  ninthWasteTypePopsConcentrationsString: string;
+  ninthWasteTypePopsConcentrationUnitsString: string;
   tenthWasteTypeEwcCode: string;
-  tenthWasteTypeDescription: string;
+  tenthWasteTypeWasteDescription: string;
   tenthWasteTypePhysicalForm: string;
-  tenthWasteTypeQuantity: string;
-  tenthWasteTypeQuantityUnits: string;
-  tenthWasteTypeQuantityWaste: string;
-  tenthWasteTypeHazardousProperties: string;
-  tenthWasteTypeContainPersistentOrganicPollutants: string;
-  tenthWasteTypeHazardousWasteCode: string;
-  tenthWasteTypePopDetails: string;
+  tenthWasteTypeWasteQuantity: string;
+  tenthWasteTypeWasteQuantityUnit: string;
+  tenthWasteTypeWasteQuantityType: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsString: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  tenthWasteTypeHasHazardousProperties: string;
+  tenthWasteTypeHazardousWasteCodesString: string;
+  tenthWasteTypeContainsPops: string;
+  tenthWasteTypePopsString: string;
+  tenthWasteTypePopsConcentrationsString: string;
+  tenthWasteTypePopsConcentrationUnitsString: string;
 };
 
 export const headersFormatted = [
@@ -150,29 +190,29 @@ export const headersFormatted = [
   'producerOrganisationName',
   'producerAddressLine1',
   'producerAddressLine2',
-  'producerTownOrCity',
+  'producerTownCity',
   'producerCountry',
   'producerPostcode',
   'producerContactName',
   'producerContactEmail',
-  'producerContactPhoneNumber',
+  'producerContactPhone',
   'producerSicCode',
   'wasteCollectionAddressLine1',
   'wasteCollectionAddressLine2',
-  'wasteCollectionTownOrCity',
+  'wasteCollectionTownCity',
   'wasteCollectionCountry',
   'wasteCollectionPostcode',
-  'wasteCollectionSource',
-  'brokerRegistrationNumber',
-  'carrierRegistrationNumber',
-  'wasteModeTransport',
-  'wasteExpectedDate',
-  'receiverAuthorisationType',
+  'wasteCollectionWasteSource',
+  'wasteCollectionBrokerRegistrationNumber',
+  'wasteCollectionCarrierRegistrationNumber',
+  'wasteCollectionModeOfWasteTransport',
+  'wasteCollectionExpectedWasteCollectionDate',
+  'receiverAuthorizationType',
   'receiverEnvironmentalPermitNumber',
   'receiverOrganisationName',
   'receiverAddressLine1',
   'receiverAddressLine2',
-  'receiverTownOrCity',
+  'receiverTownCity',
   'receiverCountry',
   'receiverPostcode',
   'receiverContactName',
@@ -180,114 +220,154 @@ export const headersFormatted = [
   'receiverContactPhone',
   'wasteTransportationNumberAndTypeOfContainers',
   'wasteTransportationSpecialHandlingRequirements',
-  'ewcCode',
-  'wasteDescription',
-  'physicalForm',
-  'wasteQuantity',
-  'quantityUnits',
-  'quantityWaste',
-  'hasHazardousProperties',
-  'containPersistentOrganicPollutants',
-  'hazardousWasteCode',
-  'popDetails',
   'firstWasteTypeEwcCode',
-  'firstWasteTypeDescription',
+  'firstWasteTypeWasteDescription',
   'firstWasteTypePhysicalForm',
-  'firstWasteTypeQuantity',
-  'firstWasteTypeQuantityUnits',
-  'firstWasteTypeQuantityWaste',
-  'firstWasteTypeHazardousProperties',
-  'firstWasteTypeContainPersistentOrganicPollutants',
-  'firstWasteTypeHazardousWasteCode',
-  'firstWasteTypePopDetails',
+  'firstWasteTypeWasteQuantity',
+  'firstWasteTypeWasteQuantityUnit',
+  'firstWasteTypeWasteQuantityType',
+  'firstWasteTypeChemicalAndBiologicalComponentsString',
+  'firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'firstWasteTypeHasHazardousProperties',
+  'firstWasteTypeHazardousWasteCodesString',
+  'firstWasteTypeContainsPops',
+  'firstWasteTypePopsString',
+  'firstWasteTypePopsConcentrationsString',
+  'firstWasteTypePopsConcentrationUnitsString',
   'secondWasteTypeEwcCode',
-  'secondWasteTypeDescription',
+  'secondWasteTypeWasteDescription',
   'secondWasteTypePhysicalForm',
-  'secondWasteTypeQuantity',
-  'secondWasteTypeQuantityUnits',
-  'secondWasteTypeQuantityWaste',
-  'secondWasteTypeHazardousProperties',
-  'secondWasteTypeContainPersistentOrganicPollutants',
-  'secondWasteTypeHazardousWasteCode',
-  'secondWasteTypePopDetails',
+  'secondWasteTypeWasteQuantity',
+  'secondWasteTypeWasteQuantityUnit',
+  'secondWasteTypeWasteQuantityType',
+  'secondWasteTypeChemicalAndBiologicalComponentsString',
+  'secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'secondWasteTypeHasHazardousProperties',
+  'secondWasteTypeHazardousWasteCodesString',
+  'secondWasteTypeContainsPops',
+  'secondWasteTypePopsString',
+  'secondWasteTypePopsConcentrationsString',
+  'secondWasteTypePopsConcentrationUnitsString',
   'thirdWasteTypeEwcCode',
-  'thirdWasteTypeDescription',
+  'thirdWasteTypeWasteDescription',
   'thirdWasteTypePhysicalForm',
-  'thirdWasteTypeQuantity',
-  'thirdWasteTypeQuantityUnits',
-  'thirdWasteTypeQuantityWaste',
-  'thirdWasteTypeHazardousProperties',
-  'thirdWasteTypeContainPersistentOrganicPollutants',
-  'thirdWasteTypeHazardousWasteCode',
-  'thirdWasteTypePopDetails',
+  'thirdWasteTypeWasteQuantity',
+  'thirdWasteTypeWasteQuantityUnit',
+  'thirdWasteTypeWasteQuantityType',
+  'thirdWasteTypeChemicalAndBiologicalComponentsString',
+  'thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'thirdWasteTypeHasHazardousProperties',
+  'thirdWasteTypeHazardousWasteCodesString',
+  'thirdWasteTypeContainsPops',
+  'thirdWasteTypePopsString',
+  'thirdWasteTypePopsConcentrationsString',
+  'thirdWasteTypePopsConcentrationUnitsString',
   'fourthWasteTypeEwcCode',
-  'fourthWasteTypeDescription',
+  'fourthWasteTypeWasteDescription',
   'fourthWasteTypePhysicalForm',
-  'fourthWasteTypeQuantity',
-  'fourthWasteTypeQuantityUnits',
-  'fourthWasteTypeQuantityWaste',
-  'fourthWasteTypeHazardousProperties',
-  'fourthWasteTypeContainPersistentOrganicPollutants',
-  'fourthWasteTypeHazardousWasteCode',
-  'fourthWasteTypePopDetails',
+  'fourthWasteTypeWasteQuantity',
+  'fourthWasteTypeWasteQuantityUnit',
+  'fourthWasteTypeWasteQuantityType',
+  'fourthWasteTypeChemicalAndBiologicalComponentsString',
+  'fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'fourthWasteTypeHasHazardousProperties',
+  'fourthWasteTypeHazardousWasteCodesString',
+  'fourthWasteTypeContainsPops',
+  'fourthWasteTypePopsString',
+  'fourthWasteTypePopsConcentrationsString',
+  'fourthWasteTypePopsConcentrationUnitsString',
   'fifthWasteTypeEwcCode',
-  'fifthWasteTypeDescription',
+  'fifthWasteTypeWasteDescription',
   'fifthWasteTypePhysicalForm',
-  'fifthWasteTypeQuantity',
-  'fifthWasteTypeQuantityUnits',
-  'fifthWasteTypeQuantityWaste',
-  'fifthWasteTypeHazardousProperties',
-  'fifthWasteTypeContainPersistentOrganicPollutants',
-  'fifthWasteTypeHazardousWasteCode',
-  'fifthWasteTypePopDetails',
+  'fifthWasteTypeWasteQuantity',
+  'fifthWasteTypeWasteQuantityUnit',
+  'fifthWasteTypeWasteQuantityType',
+  'fifthWasteTypeChemicalAndBiologicalComponentsString',
+  'fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'fifthWasteTypeHasHazardousProperties',
+  'fifthWasteTypeHazardousWasteCodesString',
+  'fifthWasteTypeContainsPops',
+  'fifthWasteTypePopsString',
+  'fifthWasteTypePopsConcentrationsString',
+  'fifthWasteTypePopsConcentrationUnitsString',
   'sixthWasteTypeEwcCode',
-  'sixthWasteTypeDescription',
+  'sixthWasteTypeWasteDescription',
   'sixthWasteTypePhysicalForm',
-  'sixthWasteTypeQuantity',
-  'sixthWasteTypeQuantityUnits',
-  'sixthWasteTypeQuantityWaste',
-  'sixthWasteTypeHazardousProperties',
-  'sixthWasteTypeContainPersistentOrganicPollutants',
-  'sixthWasteTypeHazardousWasteCode',
-  'sixthWasteTypePopDetails',
+  'sixthWasteTypeWasteQuantity',
+  'sixthWasteTypeWasteQuantityUnit',
+  'sixthWasteTypeWasteQuantityType',
+  'sixthWasteTypeChemicalAndBiologicalComponentsString',
+  'sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'sixthWasteTypeHasHazardousProperties',
+  'sixthWasteTypeHazardousWasteCodesString',
+  'sixthWasteTypeContainsPops',
+  'sixthWasteTypePopsString',
+  'sixthWasteTypePopsConcentrationsString',
+  'sixthWasteTypePopsConcentrationUnitsString',
   'seventhWasteTypeEwcCode',
-  'seventhWasteTypeDescription',
+  'seventhWasteTypeWasteDescription',
   'seventhWasteTypePhysicalForm',
-  'seventhWasteTypeQuantity',
-  'seventhWasteTypeQuantityUnits',
-  'seventhWasteTypeQuantityWaste',
-  'seventhWasteTypeHazardousProperties',
-  'seventhWasteTypeContainPersistentOrganicPollutants',
-  'seventhWasteTypeHazardousWasteCode',
-  'seventhWasteTypePopDetails',
+  'seventhWasteTypeWasteQuantity',
+  'seventhWasteTypeWasteQuantityUnit',
+  'seventhWasteTypeWasteQuantityType',
+  'seventhWasteTypeChemicalAndBiologicalComponentsString',
+  'seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'seventhWasteTypeHasHazardousProperties',
+  'seventhWasteTypeHazardousWasteCodesString',
+  'seventhWasteTypeContainsPops',
+  'seventhWasteTypePopsString',
+  'seventhWasteTypePopsConcentrationsString',
+  'seventhWasteTypePopsConcentrationUnitsString',
   'eighthWasteTypeEwcCode',
-  'eighthWasteTypeDescription',
+  'eighthWasteTypeWasteDescription',
   'eighthWasteTypePhysicalForm',
-  'eighthWasteTypeQuantity',
-  'eighthWasteTypeQuantityUnits',
-  'eighthWasteTypeQuantityWaste',
-  'eighthWasteTypeHazardousProperties',
-  'eighthWasteTypeContainPersistentOrganicPollutants',
-  'eighthWasteTypeHazardousWasteCode',
-  'eighthWasteTypePopDetails',
+  'eighthWasteTypeWasteQuantity',
+  'eighthWasteTypeWasteQuantityUnit',
+  'eighthWasteTypeWasteQuantityType',
+  'eighthWasteTypeChemicalAndBiologicalComponentsString',
+  'eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'eighthWasteTypeHasHazardousProperties',
+  'eighthWasteTypeHazardousWasteCodesString',
+  'eighthWasteTypeContainsPops',
+  'eighthWasteTypePopsString',
+  'eighthWasteTypePopsConcentrationsString',
+  'eighthWasteTypePopsConcentrationUnitsString',
   'ninthWasteTypeEwcCode',
-  'ninthWasteTypeDescription',
+  'ninthWasteTypeWasteDescription',
   'ninthWasteTypePhysicalForm',
-  'ninthWasteTypeQuantity',
-  'ninthWasteTypeQuantityUnits',
-  'ninthWasteTypeQuantityWaste',
-  'ninthWasteTypeHazardousProperties',
-  'ninthWasteTypeContainPersistentOrganicPollutants',
-  'ninthWasteTypeHazardousWasteCode',
-  'ninthWasteTypePopDetails',
+  'ninthWasteTypeWasteQuantity',
+  'ninthWasteTypeWasteQuantityUnit',
+  'ninthWasteTypeWasteQuantityType',
+  'ninthWasteTypeChemicalAndBiologicalComponentsString',
+  'ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'ninthWasteTypeHasHazardousProperties',
+  'ninthWasteTypeHazardousWasteCodesString',
+  'ninthWasteTypeContainsPops',
+  'ninthWasteTypePopsString',
+  'ninthWasteTypePopsConcentrationsString',
+  'ninthWasteTypePopsConcentrationUnitsString',
   'tenthWasteTypeEwcCode',
-  'tenthWasteTypeDescription',
+  'tenthWasteTypeWasteDescription',
   'tenthWasteTypePhysicalForm',
-  'tenthWasteTypeQuantity',
-  'tenthWasteTypeQuantityUnits',
-  'tenthWasteTypeQuantityWaste',
-  'tenthWasteTypeHazardousProperties',
-  'tenthWasteTypeContainPersistentOrganicPollutants',
-  'tenthWasteTypeHazardousWasteCode',
-  'tenthWasteTypePopDetails',
+  'tenthWasteTypeWasteQuantity',
+  'tenthWasteTypeWasteQuantityUnit',
+  'tenthWasteTypeWasteQuantityType',
+  'tenthWasteTypeChemicalAndBiologicalComponentsString',
+  'tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString',
+  'tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString',
+  'tenthWasteTypeHasHazardousProperties',
+  'tenthWasteTypeHazardousWasteCodesString',
+  'tenthWasteTypeContainsPops',
+  'tenthWasteTypePopsString',
+  'tenthWasteTypePopsConcentrationsString',
+  'tenthWasteTypePopsConcentrationUnitsString',
 ];

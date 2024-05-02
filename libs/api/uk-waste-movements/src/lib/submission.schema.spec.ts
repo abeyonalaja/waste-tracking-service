@@ -62,17 +62,17 @@ describe('wasteTypeDetails', () => {
       wasteQuantityType: 'ActualData',
       hasHazardousProperties: false,
       containsPops: false,
+      chemicalAndBiologicalComponents: [
+        {
+          concentration: 1,
+          name: 'test',
+          concentrationUnit: 'Milligram',
+        },
+      ],
       hazardousWasteCodes: [
         {
           code: 'HP1',
-          concentration: 1,
-          concentrationUnit: 'Kilogram',
           name: 'test',
-          packageGroup: 'I',
-          properShippingName: 'test',
-          specialHandlingRequirements: 'test',
-          unClass: '1.1',
-          unIdentificationNumber: '1234',
         },
       ],
       pops: [
@@ -223,15 +223,15 @@ describe('validateSubmissionsRequest', () => {
         {
           producerOrganisationName: 'Producer Organisation Name',
           producerContactName: 'Producer Contact Name',
-          producerEmail: 'Producer Email',
-          producerPhone: 'Producer Phone',
+          producerContactEmail: 'Producer Email',
+          producerContactPhone: 'Producer Phone',
           producerAddressLine1: 'Producer Address Line 1',
           producerAddressLine2: 'Producer Address Line 2',
           producerTownCity: 'Producer Town/City',
           producerPostcode: 'Producer Postcode',
           producerCountry: 'Producer Country',
           producerSicCode: 'Producer SIC Code',
-          reference: 'Reference',
+          customerReference: 'Reference',
           receiverAuthorizationType: 'Receiver Authorization Type',
           receiverEnvironmentalPermitNumber:
             'Receiver Environmental Permit Number',
@@ -248,18 +248,34 @@ describe('validateSubmissionsRequest', () => {
             'Waste Transportation Number And Type Of Containers',
           wasteTransportationSpecialHandlingRequirements:
             'Waste Transportation Special Handling Requirements',
-          wasteCollectionDetailsExpectedWasteCollectionDate: '2022-01-01',
-          wasteCollectionDetailsModeOfWasteTransport: 'Road',
-          wasteCollectionDetailsWasteSource: 'Household',
-          wasteCollectionDetailsAddressLine1: 'Waste Collection Address Line 1',
-          wasteCollectionDetailsAddressLine2: 'Waste Collection Address Line 2',
-          wasteCollectionDetailsBrokerRegistrationNumber:
+          wasteCollectionExpectedWasteCollectionDate: '2022-01-01',
+          wasteCollectionModeOfWasteTransport: 'Road',
+          wasteCollectionWasteSource: 'Household',
+          wasteCollectionAddressLine1: 'Waste Collection Address Line 1',
+          wasteCollectionAddressLine2: 'Waste Collection Address Line 2',
+          wasteCollectionBrokerRegistrationNumber:
             'Waste Collection Broker Registration Number',
-          wasteCollectionDetailsCarrierRegistrationNumber:
+          wasteCollectionCarrierRegistrationNumber:
             'Waste Collection Carrier Registration Number',
-          wasteCollectionDetailsCountry: 'Waste Collection Country',
-          wasteCollectionDetailsPostcode: 'Waste Collection Postcode',
-          wasteCollectionDetailsTownCity: 'Waste Collection Town/City',
+          wasteCollectionCountry: 'Waste Collection Country',
+          wasteCollectionPostcode: 'Waste Collection Postcode',
+          wasteCollectionTownCity: 'Waste Collection Town/City',
+          firstWasteTypeEwcCode: '010203',
+          firstWasteTypeWasteDescription: 'Waste',
+          firstWasteTypePhysicalForm: 'Solid',
+          firstWasteTypeWasteQuantity: '15',
+          firstWasteTypeWasteQuantityUnit: 'Tonne',
+          firstWasteTypeWasteQuantityType: 'EstimateData',
+          firstWasteTypeHasHazardousProperties: 'Yes',
+          firstWasteTypeHazardousWasteCodesString: 'HP1',
+          firstWasteTypeContainsPops: 'No',
+          firstWasteTypePopsString: '',
+          firstWasteTypePopsConcentrationsString: '',
+          firstWasteTypePopsConcentrationUnitsString: '',
+          firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          firstWasteTypeChemicalAndBiologicalComponentsString: '',
         },
       ],
     };
@@ -315,17 +331,17 @@ describe('validateSubmissionsResponse', () => {
                 wasteQuantityType: 'ActualData',
                 hasHazardousProperties: false,
                 containsPops: false,
+                chemicalAndBiologicalComponents: [
+                  {
+                    concentration: 1,
+                    name: 'test',
+                    concentrationUnit: 'Milligram',
+                  },
+                ],
                 hazardousWasteCodes: [
                   {
                     code: 'HP1',
-                    concentration: 1,
-                    concentrationUnit: 'Kilogram',
                     name: 'test',
-                    packageGroup: 'I',
-                    properShippingName: 'test',
-                    specialHandlingRequirements: 'test',
-                    unClass: '1.1',
-                    unIdentificationNumber: '1234',
                   },
                 ],
                 pops: [

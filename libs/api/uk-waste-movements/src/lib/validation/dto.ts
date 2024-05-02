@@ -1,7 +1,6 @@
 import { Submission } from '../submission.dto';
 
 export type Field =
-  | 'WasteTypeDetails'
   | 'Reference'
   | 'Producer organisation name'
   | 'Producer address line 1'
@@ -35,7 +34,22 @@ export type Field =
   | 'Waste Collection Details Broker Registration Number'
   | 'Waste Collection Details Carrier Registration Number'
   | 'Waste Collection Details Mode of Waste Transport'
-  | 'Waste Collection Details Expected Waste Collection Date';
+  | 'Waste Collection Details Expected Waste Collection Date'
+  | 'EWC Code'
+  | 'Waste Description'
+  | 'Physical Form'
+  | 'Waste Quantity'
+  | 'Waste Quantity Units'
+  | 'Quantity of waste (actual or estimate)'
+  | 'Waste Has Hazardous Properties'
+  | 'Hazardous Waste Codes'
+  | 'Waste Contains POPs'
+  | 'Persistant organic pollutants (POPs)'
+  | 'Persistant organic pollutants (POPs) Concentrations'
+  | 'Persistant organic pollutants (POPs) Concentration Units'
+  | 'Chemical and biological components of the waste'
+  | 'Chemical and biological concentration values'
+  | 'Chemical and biological concentration units of measure';
 
 export type FieldFormatError = {
   field: Field;
@@ -47,13 +61,10 @@ export type InvalidAttributeCombinationError = {
   message: string;
 };
 
-export type Value = {
-  producer: Submission['producer'];
-  wasteType: Submission['wasteType'];
-  receiver: Submission['receiver'];
-  wasteCollection: Submission['wasteCollection'];
-  wasteTransportation: Submission['wasteTransportation'];
-};
+export type Value = Omit<
+  Submission,
+  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+>;
 
 export type Error = {
   index: number;

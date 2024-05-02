@@ -11,7 +11,83 @@ jest.mock('winston', () => ({
   })),
 }));
 
-const mockClient = {};
+const mockClient = {
+  getEWCCodes: jest.fn<DaprReferenceDataClient['getEWCCodes']>(),
+  getHazardousCodes: jest.fn<DaprReferenceDataClient['getHazardousCodes']>(),
+  getPops: jest.fn<DaprReferenceDataClient['getPops']>(),
+};
+
+const ewcCodes = [
+  {
+    code: '010101',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+  {
+    code: '010102',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
+const hazardousCodes = [
+  {
+    code: 'H1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+  {
+    code: 'H2',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+  {
+    code: 'H3',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
+const pops = [
+  {
+    name: {
+      en: 'POP1',
+      cy: 'POP1',
+    },
+  },
+  {
+    name: {
+      en: 'POP2',
+      cy: 'POP2',
+    },
+  },
+  {
+    name: {
+      en: 'POP3',
+      cy: 'POP3',
+    },
+  },
+];
 
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
@@ -19,35 +95,53 @@ describe(SubmissionController, () => {
     new winston.Logger()
   );
 
-  beforeEach(() => {});
+  beforeEach(() => {
+    mockClient.getHazardousCodes.mockClear();
+    mockClient.getEWCCodes.mockClear();
+    mockClient.getPops.mockClear();
+  });
 
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
       const accountId = faker.datatype.uuid();
+      mockClient.getEWCCodes.mockResolvedValueOnce({
+        success: true,
+        value: ewcCodes,
+      });
+
+      mockClient.getHazardousCodes.mockResolvedValueOnce({
+        success: true,
+        value: hazardousCodes,
+      });
+
+      mockClient.getPops.mockResolvedValueOnce({
+        success: true,
+        value: pops,
+      });
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
         values: [
           {
-            reference: 'testRef',
-            wasteCollectionDetailsAddressLine1: '123 Real Street',
-            wasteCollectionDetailsAddressLine2: 'Real Avenue',
-            wasteCollectionDetailsTownCity: 'London',
-            wasteCollectionDetailsPostcode: 'SW1A 1AA',
-            wasteCollectionDetailsCountry: 'England',
-            wasteCollectionDetailsBrokerRegistrationNumber: 'CBDL349812',
-            wasteCollectionDetailsCarrierRegistrationNumber: 'CBDL349812',
-            wasteCollectionDetailsWasteSource: 'Local Authority',
-            wasteCollectionDetailsModeOfWasteTransport: 'Rail',
-            wasteCollectionDetailsExpectedWasteCollectionDate: '01/01/2028',
+            customerReference: 'testRef',
+            wasteCollectionAddressLine1: '123 Real Street',
+            wasteCollectionAddressLine2: 'Real Avenue',
+            wasteCollectionTownCity: 'London',
+            wasteCollectionPostcode: 'SW1A 1AA',
+            wasteCollectionCountry: 'England',
+            wasteCollectionBrokerRegistrationNumber: 'CBDL349812',
+            wasteCollectionCarrierRegistrationNumber: 'CBDL349812',
+            wasteCollectionWasteSource: 'Local Authority',
+            wasteCollectionModeOfWasteTransport: 'Rail',
+            wasteCollectionExpectedWasteCollectionDate: '01/01/2028',
             producerAddressLine1: '123 Real Street',
             producerAddressLine2: '',
             producerContactName: 'John Smith',
             producerCountry: 'England',
-            producerEmail: 'john.smith@john.smith',
+            producerContactEmail: 'john.smith@john.smith',
             producerOrganisationName: 'Test organization',
-            producerPhone: '0044140000000',
+            producerContactPhone: '0044140000000',
             producerPostcode: 'AB1 1AB',
             producerSicCode: '123456',
             producerTownCity: 'London',
@@ -64,6 +158,24 @@ describe(SubmissionController, () => {
             receiverTownCity: 'London',
             wasteTransportationNumberAndTypeOfContainers: 'test',
             wasteTransportationSpecialHandlingRequirements: 'test',
+            firstWasteTypeEwcCode: '010101',
+            firstWasteTypePhysicalForm: 'Solid',
+            firstWasteTypeWasteDescription: 'Test waste',
+            firstWasteTypeWasteQuantity: '100',
+            firstWasteTypeWasteQuantityType: 'Estimate',
+            firstWasteTypeWasteQuantityUnit: 'Kilogram',
+            firstWasteTypeContainsPops: 'y',
+            firstWasteTypeHasHazardousProperties: 'y',
+            firstWasteTypeHazardousWasteCodesString: 'H1;H2;h3',
+            firstWasteTypePopsString: 'POP1;POP2;POP3',
+            firstWasteTypePopsConcentrationsString: '0.1;0.2;5',
+            firstWasteTypePopsConcentrationUnitsString: 'g/kg;%;g/kg',
+            firstWasteTypeChemicalAndBiologicalComponentsString:
+              'test; test 2; test 3',
+            firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+              '1;2;0.05',
+            firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+              'kg;%;g/kg',
           },
         ],
       });
@@ -72,6 +184,10 @@ describe(SubmissionController, () => {
       if (!response.success) {
         return;
       }
+
+      expect(mockClient.getHazardousCodes).toBeCalled();
+      expect(mockClient.getEWCCodes).toBeCalled();
+      expect(mockClient.getPops).toBeCalled();
 
       expect(response.value).toEqual({
         valid: true,
@@ -112,7 +228,66 @@ describe(SubmissionController, () => {
                 townCity: 'London',
               },
             },
-            wasteType: [],
+            wasteType: [
+              {
+                containsPops: true,
+                ewcCode: '010101',
+                hasHazardousProperties: true,
+                hazardousWasteCodes: [
+                  {
+                    code: 'H1',
+                    name: 'English Description',
+                  },
+                  {
+                    code: 'H2',
+                    name: 'English Description',
+                  },
+                  {
+                    code: 'H3',
+                    name: 'English Description',
+                  },
+                ],
+                physicalForm: 'Solid',
+                pops: [
+                  {
+                    concentration: 0.1,
+                    concentrationUnit: 'g/kg',
+                    name: 'POP1',
+                  },
+                  {
+                    concentration: 0.2,
+                    concentrationUnit: '%',
+                    name: 'POP2',
+                  },
+                  {
+                    concentration: 5,
+                    concentrationUnit: 'g/kg',
+                    name: 'POP3',
+                  },
+                ],
+                chemicalAndBiologicalComponents: [
+                  {
+                    concentration: 1,
+                    concentrationUnit: 'kg',
+                    name: 'test',
+                  },
+                  {
+                    concentration: 2,
+                    concentrationUnit: '%',
+                    name: 'test 2',
+                  },
+                  {
+                    concentration: 0.05,
+                    concentrationUnit: 'g/kg',
+                    name: 'test 3',
+                  },
+                ],
+                quantityUnit: 'Kilogram',
+                wasteDescription: 'Test waste',
+                wasteQuantity: 100,
+                wasteQuantityType: 'EstimateData',
+              },
+            ],
             wasteTransportation: {
               numberAndTypeOfContainers: 'test',
               specialHandlingRequirements: 'test',
@@ -143,28 +318,43 @@ describe(SubmissionController, () => {
     it('fails submission validation on all sections', async () => {
       const accountId = faker.datatype.uuid();
 
+      mockClient.getEWCCodes.mockResolvedValueOnce({
+        success: true,
+        value: ewcCodes,
+      });
+
+      mockClient.getHazardousCodes.mockResolvedValueOnce({
+        success: true,
+        value: hazardousCodes,
+      });
+
+      mockClient.getPops.mockResolvedValueOnce({
+        success: true,
+        value: pops,
+      });
+
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
         values: [
           {
-            reference: '@!"?',
+            customerReference: '@!"?',
             producerAddressLine1: '     ',
             producerContactName: '     ',
             producerCountry: '     ',
-            producerEmail: 'not_an_email',
+            producerContactEmail: 'not_an_email',
             producerOrganisationName: '     ',
-            producerPhone: '+123567578',
+            producerContactPhone: '+123567578',
             producerPostcode: '     ',
             producerSicCode: '     ',
             producerTownCity: '     ',
-            wasteCollectionDetailsAddressLine1: '     ',
-            wasteCollectionDetailsTownCity: '     ',
-            wasteCollectionDetailsPostcode: 'AAAAAAAAAA',
-            wasteCollectionDetailsCountry: '     ',
-            wasteCollectionDetailsWasteSource: '     ',
-            wasteCollectionDetailsModeOfWasteTransport: '     ',
-            wasteCollectionDetailsExpectedWasteCollectionDate: '31/31/2099',
+            wasteCollectionAddressLine1: '     ',
+            wasteCollectionTownCity: '     ',
+            wasteCollectionPostcode: 'AAAAAAAAAA',
+            wasteCollectionCountry: '     ',
+            wasteCollectionWasteSource: '     ',
+            wasteCollectionModeOfWasteTransport: '     ',
+            wasteCollectionExpectedWasteCollectionDate: '31/31/2099',
             receiverAuthorizationType: '     ',
             receiverEnvironmentalPermitNumber: '     ',
             receiverOrganisationName: '     ',
@@ -177,14 +367,38 @@ describe(SubmissionController, () => {
             receiverTownCity: '     ',
             wasteTransportationNumberAndTypeOfContainers: '     ',
             wasteTransportationSpecialHandlingRequirements: '     ',
+            firstWasteTypeEwcCode: '',
+            firstWasteTypePhysicalForm: '',
+            firstWasteTypeWasteDescription: '',
+            firstWasteTypeWasteQuantity: '',
+            firstWasteTypeWasteQuantityType: '',
+            firstWasteTypeWasteQuantityUnit: '',
+            firstWasteTypeContainsPops: '',
+            firstWasteTypeHasHazardousProperties: '',
+            firstWasteTypeHazardousWasteCodesString: '',
+            firstWasteTypePopsString: '',
+            firstWasteTypePopsConcentrationsString: '',
+            firstWasteTypePopsConcentrationUnitsString: '',
+            firstWasteTypeChemicalAndBiologicalComponentsString: '',
+            firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+              '',
+            firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+              '',
           },
         ],
       });
+
+      const firstWasteTypeErrorMessages =
+        validation.WasteTypeValidationErrorMessages(1);
 
       expect(response.success).toBe(true);
       if (!response.success) {
         return;
       }
+
+      expect(mockClient.getHazardousCodes).toBeCalled();
+      expect(mockClient.getEWCCodes).toBeCalled();
+      expect(mockClient.getPops).toBeCalled();
 
       expect(response.value).toEqual({
         valid: false,
@@ -243,44 +457,38 @@ describe(SubmissionController, () => {
               {
                 field: 'Waste Collection Details Address Line 1',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
-                    .emptyAddressLine1,
+                  validation.WasteCollectionErrorMessages.emptyAddressLine1,
               },
               {
                 field: 'Waste Collection Details Town or City',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
-                    .emptyTownOrCity,
+                  validation.WasteCollectionErrorMessages.emptyTownOrCity,
               },
               {
                 field: 'Waste Collection Details Country',
-                message:
-                  validation.WasteCollectionDetailsErrorMessages.emptyCountry,
+                message: validation.WasteCollectionErrorMessages.emptyCountry,
               },
               {
                 field: 'Waste Collection Details Postcode',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
-                    .invalidPostcode,
+                  validation.WasteCollectionErrorMessages.invalidPostcode,
               },
               {
                 field: 'Waste Collection Details Waste Source',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
-                    .missingWasteSource,
+                  validation.WasteCollectionErrorMessages.missingWasteSource,
               },
               {
                 field: 'Waste Collection Details Mode of Waste Transport',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
-                    .emptyModeOfTransport,
+                  validation.WasteCollectionErrorMessages.emptyModeOfTransport,
               },
 
               {
                 field:
                   'Waste Collection Details Expected Waste Collection Date',
                 message:
-                  validation.WasteCollectionDetailsErrorMessages
+                  validation.WasteCollectionErrorMessages
                     .invalidFormatWasteCollectionDate,
               },
               {
@@ -331,6 +539,54 @@ describe(SubmissionController, () => {
                 message:
                   validation.WasteTransportationValidationErrorMessages
                     .emptyNameAndTypeOfContainers,
+              },
+              {
+                field: 'EWC Code',
+                message: firstWasteTypeErrorMessages.emptyEwcCode,
+              },
+              {
+                field: 'Waste Description',
+                message: firstWasteTypeErrorMessages.emptyWasteDescription,
+              },
+              {
+                field: 'Physical Form',
+                message: firstWasteTypeErrorMessages.emptyPhysicalForm,
+              },
+              {
+                field: 'Waste Quantity',
+                message: firstWasteTypeErrorMessages.emptyWasteQuantity,
+              },
+              {
+                field: 'Waste Quantity Units',
+                message: firstWasteTypeErrorMessages.emptyWasteQuantityUnit,
+              },
+              {
+                field: 'Quantity of waste (actual or estimate)',
+                message: firstWasteTypeErrorMessages.invalidWasteQuantityType,
+              },
+              {
+                field: 'Chemical and biological components of the waste',
+                message:
+                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
+              },
+              {
+                field: 'Chemical and biological concentration values',
+                message:
+                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
+              },
+              {
+                field: 'Chemical and biological concentration units of measure',
+                message:
+                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
+              },
+              {
+                field: 'Waste Has Hazardous Properties',
+                message:
+                  firstWasteTypeErrorMessages.invalidHasHazardousProperties,
+              },
+              {
+                field: 'Waste Contains POPs',
+                message: firstWasteTypeErrorMessages.invalidContainsPops,
               },
             ],
             invalidStructureErrors: [],

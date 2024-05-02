@@ -30,13 +30,10 @@ export type GetBatchResponse = Response<BulkSubmission>;
 export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
 
-export type PartialSubmission = {
-  receiver: Submission['receiver'];
-  producer: Submission['producer'];
-  wasteCollection: Submission['wasteCollection'];
-  wasteType: Submission['wasteType'];
-  wasteTransportation: Submission['wasteTransportation'];
-};
+export type PartialSubmission = Omit<
+  Submission,
+  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+>;
 
 export type BulkSubmissionValidationRowError = {
   rowNumber: number;
@@ -104,11 +101,11 @@ export type BulkSubmission = {
 };
 
 export type ProducerDetailFlattened = {
-  reference: string;
+  customerReference: string;
   producerOrganisationName: string;
   producerContactName: string;
-  producerEmail: string;
-  producerPhone: string;
+  producerContactEmail: string;
+  producerContactPhone: string;
   producerAddressLine1: string;
   producerAddressLine2?: string;
   producerTownCity: string;
@@ -123,11 +120,11 @@ export type WasteCollectionDetailFlattened = {
   wasteCollectionTownCity?: string;
   wasteCollectionCountry?: string;
   wasteCollectionPostcode?: string;
-  wasteSource: string;
-  brokerRegNumber?: string;
-  carrierRegNumber?: string;
-  modeOfWasteTransport: string;
-  expectedWasteCollectionDate: string;
+  wasteCollectionWasteSource: string;
+  wasteCollectionBrokerRegistrationNumber?: string;
+  wasteCollectionCarrierRegistrationNumber?: string;
+  wasteCollectionModeOfWasteTransport: string;
+  wasteCollectionExpectedWasteCollectionDate: string;
 };
 
 export type ReceiverDetailFlattened = {
@@ -149,7 +146,161 @@ export type WasteTransportationDetailFlattened = {
   wasteTransportationSpecialHandlingRequirements?: string;
 };
 
+export type WasteTypeDetailFlattened = {
+  firstWasteTypeEwcCode: string;
+  firstWasteTypeWasteDescription: string;
+  firstWasteTypePhysicalForm: string;
+  firstWasteTypeWasteQuantity: string;
+  firstWasteTypeWasteQuantityUnit: string;
+  firstWasteTypeWasteQuantityType: string;
+  firstWasteTypeChemicalAndBiologicalComponentsString: string;
+  firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString: string;
+  firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString: string;
+  firstWasteTypeHasHazardousProperties: string;
+  firstWasteTypeHazardousWasteCodesString?: string;
+  firstWasteTypeContainsPops: string;
+  firstWasteTypePopsString?: string;
+  firstWasteTypePopsConcentrationsString?: string;
+  firstWasteTypePopsConcentrationUnitsString?: string;
+  secondWasteTypeEwcCode?: string;
+  secondWasteTypeWasteDescription?: string;
+  secondWasteTypePhysicalForm?: string;
+  secondWasteTypeWasteQuantity?: string;
+  secondWasteTypeWasteQuantityUnit?: string;
+  secondWasteTypeWasteQuantityType?: string;
+  secondWasteTypeChemicalAndBiologicalComponentsString?: string;
+  secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  secondWasteTypeHasHazardousProperties?: string;
+  secondWasteTypeHazardousWasteCodesString?: string;
+  secondWasteTypeContainsPops?: string;
+  secondWasteTypePopsString?: string;
+  secondWasteTypePopsConcentrationsString?: string;
+  secondWasteTypePopsConcentrationUnitsString?: string;
+  thirdWasteTypeEwcCode?: string;
+  thirdWasteTypeWasteDescription?: string;
+  thirdWasteTypePhysicalForm?: string;
+  thirdWasteTypeWasteQuantity?: string;
+  thirdWasteTypeWasteQuantityUnit?: string;
+  thirdWasteTypeWasteQuantityType?: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsString?: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  thirdWasteTypeHasHazardousProperties?: string;
+  thirdWasteTypeHazardousWasteCodesString?: string;
+  thirdWasteTypeContainsPops?: string;
+  thirdWasteTypePopsString?: string;
+  thirdWasteTypePopsConcentrationsString?: string;
+  thirdWasteTypePopsConcentrationUnitsString?: string;
+  fourthWasteTypeEwcCode?: string;
+  fourthWasteTypeWasteDescription?: string;
+  fourthWasteTypePhysicalForm?: string;
+  fourthWasteTypeWasteQuantity?: string;
+  fourthWasteTypeWasteQuantityUnit?: string;
+  fourthWasteTypeWasteQuantityType?: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  fourthWasteTypeHasHazardousProperties?: string;
+  fourthWasteTypeHazardousWasteCodesString?: string;
+  fourthWasteTypeContainsPops?: string;
+  fourthWasteTypePopsString?: string;
+  fourthWasteTypePopsConcentrationsString?: string;
+  fourthWasteTypePopsConcentrationUnitsString?: string;
+  fifthWasteTypeEwcCode?: string;
+  fifthWasteTypeWasteDescription?: string;
+  fifthWasteTypePhysicalForm?: string;
+  fifthWasteTypeWasteQuantity?: string;
+  fifthWasteTypeWasteQuantityUnit?: string;
+  fifthWasteTypeWasteQuantityType?: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  fifthWasteTypeHasHazardousProperties?: string;
+  fifthWasteTypeHazardousWasteCodesString?: string;
+  fifthWasteTypeContainsPops?: string;
+  fifthWasteTypePopsString?: string;
+  fifthWasteTypePopsConcentrationsString?: string;
+  fifthWasteTypePopsConcentrationUnitsString?: string;
+  sixthWasteTypeEwcCode?: string;
+  sixthWasteTypeWasteDescription?: string;
+  sixthWasteTypePhysicalForm?: string;
+  sixthWasteTypeWasteQuantity?: string;
+  sixthWasteTypeWasteQuantityUnit?: string;
+  sixthWasteTypeWasteQuantityType?: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  sixthWasteTypeHasHazardousProperties?: string;
+  sixthWasteTypeHazardousWasteCodesString?: string;
+  sixthWasteTypeContainsPops?: string;
+  sixthWasteTypePopsString?: string;
+  sixthWasteTypePopsConcentrationsString?: string;
+  sixthWasteTypePopsConcentrationUnitsString?: string;
+  seventhWasteTypeEwcCode?: string;
+  seventhWasteTypeWasteDescription?: string;
+  seventhWasteTypePhysicalForm?: string;
+  seventhWasteTypeWasteQuantity?: string;
+  seventhWasteTypeWasteQuantityUnit?: string;
+  seventhWasteTypeWasteQuantityType?: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsString?: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  seventhWasteTypeHasHazardousProperties?: string;
+  seventhWasteTypeHazardousWasteCodesString?: string;
+  seventhWasteTypeContainsPops?: string;
+  seventhWasteTypePopsString?: string;
+  seventhWasteTypePopsConcentrationsString?: string;
+  seventhWasteTypePopsConcentrationUnitsString?: string;
+  eighthWasteTypeEwcCode?: string;
+  eighthWasteTypeWasteDescription?: string;
+  eighthWasteTypePhysicalForm?: string;
+  eighthWasteTypeWasteQuantity?: string;
+  eighthWasteTypeWasteQuantityUnit?: string;
+  eighthWasteTypeWasteQuantityType?: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  eighthWasteTypeHasHazardousProperties?: string;
+  eighthWasteTypeHazardousWasteCodesString?: string;
+  eighthWasteTypeContainsPops?: string;
+  eighthWasteTypePopsString?: string;
+  eighthWasteTypePopsConcentrationsString?: string;
+  eighthWasteTypePopsConcentrationUnitsString?: string;
+  ninthWasteTypeEwcCode?: string;
+  ninthWasteTypeWasteDescription?: string;
+  ninthWasteTypePhysicalForm?: string;
+  ninthWasteTypeWasteQuantity?: string;
+  ninthWasteTypeWasteQuantityUnit?: string;
+  ninthWasteTypeWasteQuantityType?: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  ninthWasteTypeHasHazardousProperties?: string;
+  ninthWasteTypeHazardousWasteCodesString?: string;
+  ninthWasteTypeContainsPops?: string;
+  ninthWasteTypePopsString?: string;
+  ninthWasteTypePopsConcentrationsString?: string;
+  ninthWasteTypePopsConcentrationUnitsString?: string;
+  tenthWasteTypeEwcCode?: string;
+  tenthWasteTypeWasteDescription?: string;
+  tenthWasteTypePhysicalForm?: string;
+  tenthWasteTypeWasteQuantity?: string;
+  tenthWasteTypeWasteQuantityUnit?: string;
+  tenthWasteTypeWasteQuantityType?: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsString?: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
+  tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
+  tenthWasteTypeHasHazardousProperties?: string;
+  tenthWasteTypeHazardousWasteCodesString?: string;
+  tenthWasteTypeContainsPops?: string;
+  tenthWasteTypePopsString?: string;
+  tenthWasteTypePopsConcentrationsString?: string;
+  tenthWasteTypePopsConcentrationUnitsString?: string;
+};
+
 export type SubmissionFlattened = ProducerDetailFlattened &
   ReceiverDetailFlattened &
   WasteTransportationDetailFlattened &
-  WasteCollectionDetailFlattened;
+  WasteCollectionDetailFlattened &
+  WasteTypeDetailFlattened;

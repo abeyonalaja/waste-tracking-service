@@ -233,6 +233,13 @@ describe('getBatchResponse', () => {
                   wasteQuantityType: 'EstimateData',
                   hasHazardousProperties: false,
                   containsPops: false,
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Kilogram',
+                      name: 'test',
+                    },
+                  ],
                 },
               ],
             },
@@ -318,19 +325,19 @@ describe('getBatchResponse', () => {
                   wasteQuantity: 1,
                   quantityUnit: 'Kilogram',
                   wasteQuantityType: 'EstimateData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Kilogram',
+                      name: 'test',
+                    },
+                  ],
                   hasHazardousProperties: false,
                   containsPops: false,
                   hazardousWasteCodes: [
                     {
                       code: 'HP1',
-                      concentration: 1,
-                      concentrationUnit: 'Microgram',
                       name: 'test',
-                      packageGroup: 'I',
-                      properShippingName: 'test',
-                      specialHandlingRequirements: 'test',
-                      unClass: '1.1',
-                      unIdentificationNumber: '1234',
                     },
                   ],
                   pops: [

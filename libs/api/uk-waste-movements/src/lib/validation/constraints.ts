@@ -33,3 +33,24 @@ export const WasteCollectionChar = {
   min: 1,
   max: 20,
 };
+
+export const WasteDescriptionChar = {
+  max: 100,
+};
+
+export const WasteQuantityValue = {
+  greaterThan: 0,
+};
+
+export const DecimalPlacesChar = {
+  min: 0,
+  max: 10,
+};
+
+export const PopConcentrationUnitChar = {
+  max: 50,
+};
+
+export const ChemicalAndBiologicalConcentrationUnitChar = {
+  max: 50,
+};

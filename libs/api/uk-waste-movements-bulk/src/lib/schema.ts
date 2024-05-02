@@ -108,6 +108,15 @@ export const wasteType: JTDSchemaType<WasteTypeDetail> = {
     wasteQuantityType: { enum: ['EstimateData', 'ActualData'] },
     hasHazardousProperties: { type: 'boolean' },
     containsPops: { type: 'boolean' },
+    chemicalAndBiologicalComponents: {
+      elements: {
+        properties: {
+          name: { type: 'string' },
+          concentration: { type: 'float64' },
+          concentrationUnit: { type: 'string' },
+        },
+      },
+    },
   },
   optionalProperties: {
     hazardousWasteCodes: {
@@ -115,15 +124,6 @@ export const wasteType: JTDSchemaType<WasteTypeDetail> = {
         properties: {
           code: { type: 'string' },
           name: { type: 'string' },
-          concentration: { type: 'float64' },
-          concentrationUnit: {
-            enum: ['Microgram', 'Milligram', 'Kilogram'],
-          },
-          unIdentificationNumber: { type: 'string' },
-          properShippingName: { type: 'string' },
-          unClass: { type: 'string' },
-          packageGroup: { type: 'string' },
-          specialHandlingRequirements: { type: 'string' },
         },
       },
     },
@@ -132,9 +132,7 @@ export const wasteType: JTDSchemaType<WasteTypeDetail> = {
         properties: {
           name: { type: 'string' },
           concentration: { type: 'float64' },
-          concentrationUnit: {
-            enum: ['Microgram', 'Milligram', 'Kilogram'],
-          },
+          concentrationUnit: { type: 'string' },
         },
       },
     },

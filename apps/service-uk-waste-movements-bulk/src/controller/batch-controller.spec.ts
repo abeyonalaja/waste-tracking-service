@@ -203,6 +203,13 @@ describe(BatchController, () => {
                   wasteDescription: 'Waste description',
                   wasteQuantity: 100,
                   wasteQuantityType: 'ActualData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 10,
+                      name: 'Component name',
+                      concentrationUnit: 'Percentage',
+                    },
+                  ],
                 },
               ],
             },

@@ -27,3 +27,7 @@ export const referenceRegex = new RegExp(
 export const producerSicCodeRegex = new RegExp(
   `^[${numeric}]{${constraints.ProducerSicCodeChar.max}}$`
 );
+
+export const deicmalNumberRegex = new RegExp(
+  `^[${numeric}]*(\\.[${numeric}]{${constraints.DecimalPlacesChar.min},${constraints.DecimalPlacesChar.max}})?$`
+);

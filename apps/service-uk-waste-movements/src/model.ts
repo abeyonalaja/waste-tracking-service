@@ -7,6 +7,10 @@ export type Submission = api.Submission;
 export type ProducerDetail = api.ProducerDetail;
 export type ReceiverDetail = api.ReceiverDetail;
 export type WasteTransportationDetail = api.WasteTransportationDetail;
+export type WasteTypeDetail = api.WasteTypeDetail;
+export type WasteQuantityType = api.WasteQuantityType;
+export type QuantityUnit = api.QuantityUnit;
+export type PhysicalForm = api.PhysicalForm;
 
 export type FieldFormatError = api.validation.FieldFormatError;
 export type InvalidAttributeCombinationError =
@@ -14,6 +18,7 @@ export type InvalidAttributeCombinationError =
 export type ValidationResult = api.validation.ValidationResult;
 export type Value = api.validation.Value;
 export type Error = api.validation.Error;
+export type WasteTypeErrorMessage = api.validation.WasteTypeErrorMessage;
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type ProducerDetailFlattened = bulkApi.ProducerDetailFlattened;
@@ -23,3 +28,4 @@ export type WasteCollectionDetailFlattened =
 export type ReceiverDetailFlattened = bulkApi.ReceiverDetailFlattened;
 export type WasteTransportationDetailFlattened =
   bulkApi.WasteTransportationDetailFlattened;
+export type WasteTypeDetailFlattened = bulkApi.WasteTypeDetailFlattened;

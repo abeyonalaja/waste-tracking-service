@@ -231,53 +231,6 @@ while (execute) {
             };
             await repository.saveBatch(value, body.data.accountId);
           } else {
-            const partialSubmission = records.value.rows.map((s) => {
-              return {
-                reference: s.customerReference,
-                producerOrganisationName: s.producerOrganisationName,
-                producerContactName: s.producerContactName,
-                producerEmail: s.producerContactEmail,
-                producerPhone: s.producerContactPhoneNumber,
-                producerAddressLine1: s.producerAddressLine1,
-                producerAddressLine2: s.producerAddressLine2,
-                producerTownCity: s.producerTownOrCity,
-                producerPostcode: s.producerPostcode,
-                producerCountry: s.producerCountry,
-                producerSicCode: s.producerSicCode,
-                wasteCollectionDetailsAddressLine1:
-                  s.wasteCollectionAddressLine1,
-                wasteCollectionDetailsAddressLine2:
-                  s.wasteCollectionAddressLine2,
-                wasteCollectionDetailsTownCity: s.wasteCollectionTownOrCity,
-                wasteCollectionDetailsCountry: s.wasteCollectionCountry,
-                wasteCollectionDetailsPostcode: s.wasteCollectionPostcode,
-                wasteCollectionDetailsBrokerRegistrationNumber:
-                  s.carrierRegistrationNumber,
-                wasteCollectionDetailsCarrierRegistrationNumber:
-                  s.brokerRegistrationNumber,
-                wasteCollectionDetailsWasteSource: s.wasteCollectionSource,
-                wasteCollectionDetailsModeOfWasteTransport:
-                  s.wasteModeTransport,
-                wasteCollectionDetailsExpectedWasteCollectionDate:
-                  s.wasteExpectedDate,
-                receiverAuthorizationType: s.receiverAuthorisationType,
-                receiverEnvironmentalPermitNumber:
-                  s.receiverEnvironmentalPermitNumber,
-                receiverOrganisationName: s.receiverOrganisationName,
-                receiverContactName: s.receiverContactName,
-                receiverContactEmail: s.receiverContactEmail,
-                receiverContactPhone: s.receiverContactPhone,
-                receiverAddressLine1: s.receiverAddressLine1,
-                receiverAddressLine2: s.receiverAddressLine2,
-                receiverTownCity: s.receiverTownOrCity,
-                receiverPostcode: s.receiverPostcode,
-                receiverCountry: s.receiverCountry,
-                wasteTransportationNumberAndTypeOfContainers:
-                  s.wasteTransportationNumberAndTypeOfContainers,
-                wasteTransportationSpecialHandlingRequirements:
-                  s.wasteTransportationSpecialHandlingRequirements,
-              };
-            });
             const submissions: api.PartialSubmission[] = [];
             const rowErrors: api.BulkSubmissionValidationRowError[] = [];
             const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
@@ -317,14 +270,27 @@ while (execute) {
               'Waste Collection Details Expected Waste Collection Date': [],
               'Number and type of transportation containers': [],
               'Special handling requirements details': [],
-
+              'EWC Code': [],
+              'Waste Description': [],
+              'Physical Form': [],
+              'Waste Quantity': [],
+              'Waste Quantity Units': [],
+              'Quantity of waste (actual or estimate)': [],
+              'Waste Has Hazardous Properties': [],
+              'Hazardous Waste Codes': [],
+              'Waste Contains POPs': [],
+              'Persistant organic pollutants (POPs)': [],
+              'Persistant organic pollutants (POPs) Concentrations': [],
+              'Persistant organic pollutants (POPs) Concentration Units': [],
+              'Chemical and biological components of the waste': [],
+              'Chemical and biological concentration units of measure': [],
+              'Chemical and biological concentration values': [],
               Reference: [],
-              WasteTypeDetails: [],
             };
 
             const chunkSize = 50;
-            for (let i = 0; i < partialSubmission.length; i += chunkSize) {
-              const chunk = partialSubmission.slice(i, i + chunkSize);
+            for (let i = 0; i < records.value.rows.length; i += chunkSize) {
+              const chunk = records.value.rows.slice(i, i + chunkSize);
               let response: ValidateSubmissionsResponse;
               try {
                 response = await daprUkwmClient.validateSubmissions({
