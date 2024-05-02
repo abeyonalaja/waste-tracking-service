@@ -1,12 +1,12 @@
 image:
-  tag: '3.0.0'
+  tag: '3.0.1'
 resources:
   requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
     cpu: 100m
     memory: 512Mi
-  limits:
-    cpu: 150m
-    memory: 1024Mi
 secret:
   env:
     NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'

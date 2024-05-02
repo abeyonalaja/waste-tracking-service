@@ -1,5 +1,5 @@
 image:
-  tag: '3.0.0'
+  tag: '4.0.0'
 resources:
   requests:
     cpu: 50m
@@ -14,7 +14,7 @@ podAnnotations:
   dapr.io/sidecar-memory-limit: '256Mi'
 secret:
   env:
-    IS_MULTIPLE_UPLOAD_ENABLED: 'false'
+    IS_MULTIPLE_UPLOAD_ENABLED: 'true'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
     FEATURE_PRIVATE_AUDIENCE_CHECKS: 'true'
     IS_UKWM_BATCHES_ENABLED: 'false'
