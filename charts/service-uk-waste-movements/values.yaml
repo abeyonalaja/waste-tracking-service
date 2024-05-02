@@ -73,6 +73,7 @@ secret:
   env:
     APPINSIGHTS_CONNECTION_STRING: ''
     COSMOS_DB_ACCOUNT_URI: ''
+    REFERENCE_DATA_APP_ID: 'service-reference-data.service-reference-data'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
