@@ -12,17 +12,6 @@ export interface FeedbackBackend {
   ): Promise<api.SendFeedbackResponse>;
 }
 
-/**
- * This is a stub backend and should not be used in production.
- */
-export class FeedbackStub implements FeedbackBackend {
-  async sendFeedback(): Promise<api.SendFeedbackResponse> {
-    return {
-      response: `Successfully submitted feedback.`,
-    } as api.SendFeedbackResponse;
-  }
-}
-
 export class FeedbackServiceBackend implements FeedbackBackend {
   constructor(private client: DaprFeedbackClient, private logger: Logger) {}
 

@@ -64,7 +64,7 @@ export async function listDisposalCodes(
 export async function listHazardousCodes(
   db: DB
 ): Promise<ListHazardousCodesResponse> {
-  const hazardousCodes: ListHazardousCodesResponse = db.hazarodusCodes;
+  const hazardousCodes: ListHazardousCodesResponse = db.hazardousCodes;
   return hazardousCodes;
 }
 

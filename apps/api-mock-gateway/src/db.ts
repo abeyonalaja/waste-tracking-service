@@ -32,7 +32,7 @@ export interface DB {
   countries: ListCountriesResponse;
   recoveryCodes: ListRecoveryCodesResponse;
   disposalCodes: ListDisposalCodesResponse;
-  hazarodusCodes: ListHazardousCodesResponse;
+  hazardousCodes: ListHazardousCodesResponse;
   pops: ListPopsResponse;
   batches: BulkWithAccount[];
   ukwmBatches: UkwmBulkWithAccount[];
@@ -1513,7 +1513,7 @@ export const db: DB = {
       },
     },
   ],
-  hazarodusCodes: [
+  hazardousCodes: [
     {
       code: 'HP1',
       value: {

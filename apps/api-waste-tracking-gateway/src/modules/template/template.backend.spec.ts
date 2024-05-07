@@ -4,6 +4,7 @@ import { AnnexViiServiceTemplateBackend } from './template.backend';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { Logger } from 'winston';
 import { template } from '@wts/api/green-list-waste-export';
+import { Submission } from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -148,5 +149,230 @@ describe(AnnexViiServiceTemplateBackend, () => {
     const result = await subject.getTemplate({ id, accountId });
     expect(result.id).toEqual(id);
     expect(result.wasteDescription.status).toEqual('NotStarted');
+  });
+
+  it('persists a template created from a submission', async () => {
+    const mockSubmission = {
+      id: faker.datatype.uuid(),
+      reference: 'abc',
+      wasteDescription: {
+        status: 'Complete',
+        wasteCode: {
+          type: faker.datatype.string(),
+          code: faker.datatype.string(),
+        },
+        ewcCodes: [faker.datatype.string()],
+        nationalCode: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+        description: faker.datatype.string(),
+      },
+      wasteQuantity: {
+        status: 'Complete',
+        value: {
+          type: 'ActualData',
+          actualData: {
+            quantityType: 'Weight',
+            value: faker.datatype.number(),
+          },
+          estimateData: {},
+        },
+      },
+      exporterDetail: {
+        status: 'Complete',
+        exporterAddress: {
+          country: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      importerDetail: {
+        status: 'Complete',
+        importerAddressDetails: {
+          address: faker.datatype.string(),
+          country: faker.datatype.string(),
+          organisationName: faker.datatype.string(),
+        },
+        importerContactDetails: {
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      collectionDate: {
+        status: 'Complete',
+        value: {
+          type: 'ActualDate',
+          actualDate: {
+            year: faker.datatype.string(),
+            month: faker.datatype.string(),
+            day: faker.datatype.string(),
+          },
+          estimateDate: {},
+        },
+      },
+      carriers: {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              type: 'Sea',
+              description: 'Somewhere beyond the sea...',
+            },
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              organisationName: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      collectionDetail: {
+        status: 'Complete',
+        address: {
+          addressLine1: faker.datatype.string(),
+          addressLine2: faker.datatype.string(),
+          townCity: faker.datatype.string(),
+          postcode: faker.datatype.string(),
+          country: faker.datatype.string(),
+        },
+        contactDetails: {
+          organisationName: faker.datatype.string(),
+          fullName: faker.datatype.string(),
+          emailAddress: faker.datatype.string(),
+          phoneNumber: faker.datatype.string(),
+        },
+      },
+      ukExitLocation: {
+        status: 'Complete',
+        exitLocation: {
+          provided: 'Yes',
+          value: faker.datatype.string(),
+        },
+      },
+      transitCountries: {
+        status: 'Complete',
+        values: ['Albania (AL)'],
+      },
+      recoveryFacilityDetail: {
+        status: 'Complete',
+        values: [
+          {
+            addressDetails: {
+              address: faker.datatype.string(),
+              country: faker.datatype.string(),
+              name: faker.datatype.string(),
+            },
+            contactDetails: {
+              emailAddress: faker.datatype.string(),
+              faxNumber: faker.datatype.string(),
+              fullName: faker.datatype.string(),
+              phoneNumber: faker.datatype.string(),
+            },
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            id: faker.datatype.uuid(),
+          },
+        ],
+      },
+      submissionConfirmation: {
+        status: 'NotStarted',
+      },
+      submissionDeclaration: {
+        status: 'CannotStart',
+      },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    } as unknown as Submission;
+
+    const mockCreateTemplateFromSubmissionResponse: template.CreateTemplateResponse =
+      {
+        success: true,
+        value: {
+          templateDetails: {
+            name: '',
+            description: '',
+            created: new Date(),
+            lastModified: new Date(),
+          },
+          id: '',
+          wasteDescription: {
+            status: 'Complete',
+            wasteCode: {
+              type: 'BaselAnnexIX',
+              code: 'B1010',
+            },
+            ewcCodes: [{ code: 'EWC1' }, { code: 'EWC2' }],
+            nationalCode: {
+              provided: 'Yes',
+              value: 'NC123',
+            },
+            description: 'This is a sample waste description.',
+          },
+          exporterDetail: {
+            status: 'NotStarted',
+          },
+          importerDetail: {
+            status: 'NotStarted',
+          },
+          carriers: {
+            status: 'NotStarted',
+            transport: false,
+          },
+          collectionDetail: {
+            status: 'NotStarted',
+          },
+          ukExitLocation: {
+            status: 'NotStarted',
+          },
+          transitCountries: {
+            status: 'NotStarted',
+          },
+          recoveryFacilityDetail: {
+            status: 'NotStarted',
+          },
+        },
+      };
+    mockClient.createTemplateFromSubmission.mockResolvedValueOnce(
+      mockCreateTemplateFromSubmissionResponse
+    );
+    const { id } = await subject.createTemplateFromSubmission(
+      mockSubmission.id,
+      accountId,
+      {
+        name: 'My Template From Submission',
+        description: 'My template from submission description',
+      }
+    );
+    const mockGetTemplateByIdResponse: template.GetTemplateResponse = {
+      success: true,
+      value: mockCreateTemplateFromSubmissionResponse.value,
+    };
+
+    mockClient.getTemplate.mockResolvedValueOnce(mockGetTemplateByIdResponse);
+    const result = await subject.getTemplate({ id, accountId });
+    expect(result.id).toEqual(id);
+    expect(result.wasteDescription.status).toEqual('Complete');
   });
 });

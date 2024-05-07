@@ -16,14 +16,6 @@ export interface PluginOptions {
   logger: Logger;
 }
 
-export class PrivateBetaStub implements Backend {
-  addUser(): Promise<void> {
-    return Promise.resolve();
-  }
-
-  userFilter: UserFilter = async () => true;
-}
-
 export class PrivateAudienceServiceBackend implements Backend {
   constructor(
     private client: DaprLimitedAudienceClient,
