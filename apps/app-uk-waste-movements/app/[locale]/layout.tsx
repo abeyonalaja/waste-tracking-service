@@ -16,7 +16,7 @@ export default function RootLayout({
 }: LayoutProps) {
   const t = useTranslations('app');
   return (
-    <html lang={locale} className={'govuk-template'}>
+    <html lang={locale} className={'govuk-template govuk-frontend-supported'}>
       <body className={'govuk-template__body'}>
         <GovUK.SkipLink />
         <GovUK.Header

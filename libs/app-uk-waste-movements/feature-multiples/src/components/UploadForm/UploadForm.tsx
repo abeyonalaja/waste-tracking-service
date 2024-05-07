@@ -36,6 +36,7 @@ export function UploadForm({
 }: UploadFormProps) {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [errors, setErrors] = useState(() =>
     validationError ? [{ text: validationError, href: '#file-upload' }] : null
   );
@@ -55,9 +56,11 @@ export function UploadForm({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setButtonDisabled(true);
     setErrors(null);
 
     if (validateFile(file)) {
+      setButtonDisabled(false);
       setFile(null);
       setErrors([{ text: validateFile(file)!, href: '#file-upload' }]);
       return;
@@ -114,7 +117,7 @@ export function UploadForm({
       {showHint && <GovUK.SectionBreak size="l" />}
       <form onSubmit={handleSubmit}>
         <GovUK.Heading level={2} size="m">
-          {strings.heading}
+          <label htmlFor="file-upload">{strings.heading}</label>
         </GovUK.Heading>
         {showHint && <GovUK.Hint>{strings.hint}</GovUK.Hint>}
         <GovUK.FileUpload
@@ -125,7 +128,7 @@ export function UploadForm({
           errorMessage={errors && errors[0]['text']}
           onChange={handleFileChange}
         />
-        <GovUK.Button>{strings.button}</GovUK.Button>
+        <GovUK.Button disabled={buttonDisabled}>{strings.button}</GovUK.Button>
       </form>
     </>
   );

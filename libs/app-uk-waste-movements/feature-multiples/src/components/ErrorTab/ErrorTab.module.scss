@@ -1,0 +1,12 @@
+.byColumn > thead tr th:first-of-type,
+.errorTable > thead tr th:nth-of-type(3) {
+  width: 25%;
+}
+
+.byColumn > thead tr th:nth-of-type(2) {
+  width: 50%;
+}
+
+.byRow > thead tr th {
+  width: 33.333%;
+}

@@ -1,0 +1,69 @@
+'use client';
+
+import {
+  UkwmBulkSubmissionValidationRowError,
+  UkwmBulkSubmissionValidationColumnError,
+} from '@wts/api/waste-tracking-gateway';
+import { ErrorRow } from '../ErrorRow';
+import type { ErrorRowStrings } from '../ErrorRow/ErrorRow';
+import styles from './ErrorTab.module.scss';
+
+type ErrorTabStrings = {
+  columnType: string;
+  rowType: string;
+  errorType: string;
+  action: string;
+  rowStrings: ErrorRowStrings;
+};
+
+interface ErrorTabProps {
+  type: 'column' | 'row';
+  errors:
+    | UkwmBulkSubmissionValidationRowError[]
+    | UkwmBulkSubmissionValidationColumnError[];
+  strings: ErrorTabStrings;
+}
+
+export function ErrorTab({ type, errors, strings }: ErrorTabProps) {
+  return (
+    <table
+      className={`govuk-table ${
+        type === 'column' ? styles.byColumn : styles.byRow
+      }`}
+    >
+      <thead className="govuk-table__head">
+        <tr className="govuk-table__row">
+          <th scope="col" className="govuk-table__header">
+            {type === 'column' ? strings.columnType : strings.rowType}
+          </th>
+          <th scope="col" className="govuk-table__header">
+            {strings.errorType}
+          </th>
+          <th scope="col" className="govuk-table__header">
+            {strings.action}
+          </th>
+        </tr>
+      </thead>
+      <tbody className="govuk-table__body">
+        {errors.map((error) => {
+          if ('columnName' in error) {
+            return (
+              <ErrorRow
+                error={error}
+                key={error.columnName}
+                strings={strings.rowStrings}
+              />
+            );
+          }
+          return (
+            <ErrorRow
+              error={error}
+              key={error.rowNumber}
+              strings={strings.rowStrings}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}

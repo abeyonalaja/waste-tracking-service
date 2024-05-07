@@ -24,16 +24,18 @@ export function TotalErrorSummary({ strings, href }: TotalErrorSummaryProps) {
         <div className="govuk-error-summary__body">
           <p>{strings.prompt}</p>
           <ul className="govuk-list govuk-error-summary__list">
-            <Link
-              href="#"
-              onClick={(e: React.MouseEvent<HTMLElement>) => {
-                e.preventDefault();
-                router.replace(href);
-              }}
-              className="govuk-link"
-            >
-              {strings.linkText}
-            </Link>
+            <li>
+              <Link
+                href="#"
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  e.preventDefault();
+                  router.replace(href);
+                }}
+                className="govuk-link"
+              >
+                {strings.linkText}
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

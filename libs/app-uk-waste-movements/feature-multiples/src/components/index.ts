@@ -1,4 +1,5 @@
 // Client Components
+export { ErrorTab } from './ErrorTab';
 export { InterruptionButton } from './InterruptionButton';
 export { StatusChecker } from './StatusChecker';
 export { UploadForm } from './UploadForm';
@@ -7,6 +8,7 @@ export { UploadForm } from './UploadForm';
 export { Content } from './Guidance/Content/';
 export { CSVSummary } from './Guidance/CSVGuidance/CSVSummary/';
 export { Details } from './Guidance/Details/';
+export { ErrorRow } from './ErrorRow/';
 export { ErrorInstructions } from './ErrorInstructions';
 export { EWC } from './Guidance/CSVGuidance/EWC';
 export { Instructions } from './Instructions';

@@ -153,6 +153,22 @@
       },
       "uploadForm": {
         "heading": "Upload your corrected CSV file"
+      },
+      "errorTab": {
+        "byColumn": "Errors by column",
+        "byRow": "Errors by row",
+        "columnType": "Column name",
+        "rowType": "Row number",
+        "errorType": "Error type",
+        "action": "Action"
+      },
+      "errorRow": {
+        "errorCount": "errors",
+        "rowNumber": "Row number",
+        "reason": "Error reason",
+        "details": "Error details",
+        "show": "Show errors",
+        "hide": "Hide errors"
       }
     },
     "instructions": {

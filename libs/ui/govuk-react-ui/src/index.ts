@@ -31,6 +31,8 @@ export { SectionBreak } from './components/SectionBreak';
 export { SkipLink } from './components/SkipLink';
 export { SummaryCard } from './components/SummaryCard';
 export { SummaryList } from './components/SummaryList';
+export { Tabs } from './components/Tabs';
+export { TabsPanel } from './components/TabsPanel';
 export { Tag } from './components/Tag';
 export { Textarea } from './components/Textarea';
 export { TextInput } from './components/TextInput';

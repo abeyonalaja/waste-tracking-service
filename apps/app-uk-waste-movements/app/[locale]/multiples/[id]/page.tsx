@@ -11,6 +11,7 @@ import {
   ErrorInstructions,
 } from '@wts/app-uk-waste-movements/feature-multiples/server';
 import {
+  ErrorTab,
   UploadForm,
   StatusChecker,
   getSubmissionStatus,
@@ -39,14 +40,6 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
 
   const uploadFormStrings = {
     heading: t('uploadForm.heading'),
-    hint: t('uploadForm.hint'),
-    button: t('uploadForm.button'),
-    errorLabel: t('uploadForm.errorLabel'),
-    summaryLabel: t('uploadForm.summaryLabel'),
-  };
-
-  const failedValidationdFormStrings = {
-    heading: t('errors.uploadForm.heading'),
     hint: t('uploadForm.hint'),
     button: t('uploadForm.button'),
     errorLabel: t('uploadForm.errorLabel'),
@@ -104,10 +97,33 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
       state.columnErrors
     );
 
+    const failedValidationdFormStrings = {
+      heading: t('errors.uploadForm.heading'),
+      hint: t('uploadForm.hint'),
+      button: t('uploadForm.button'),
+      errorLabel: t('uploadForm.errorLabel'),
+      summaryLabel: t('uploadForm.summaryLabel'),
+    };
+
     const totalErrorSummaryStrings = {
       heading: t('errors.totalErrorsSummary.heading', { totalErrorCount }),
       prompt: t('errors.totalErrorsSummary.prompt'),
       linkText: t('errors.totalErrorsSummary.linkText'),
+    };
+
+    const tabStrings = {
+      columnType: t('errors.errorTab.columnType'),
+      rowType: t('errors.errorTab.rowType'),
+      errorType: t('errors.errorTab.errorType'),
+      action: t('errors.errorTab.action'),
+      rowStrings: {
+        errorCount: t('errors.errorRow.errorCount'),
+        rowNumber: t('errors.errorRow.rowNumber'),
+        reason: t('errors.errorRow.reason'),
+        details: t('errors.errorRow.details'),
+        show: t('errors.errorRow.show'),
+        hide: t('errors.errorRow.hide'),
+      },
     };
 
     return (
@@ -125,10 +141,37 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
                 {t('errors.page.headingOne')}
               </GovUK.Heading>
               <ErrorInstructions />
-              <GovUK.Heading size={'m'} level={2}>
+              <GovUK.Heading size={'m'} level={2} id="error-tabs">
                 {t('errors.page.headingTwo')}
               </GovUK.Heading>
               <GovUK.Paragraph>{t('errors.page.paragraphOne')}</GovUK.Paragraph>
+              <GovUK.Tabs
+                labels={[
+                  {
+                    panelId: 'by-column',
+                    label: t('errors.errorTab.byColumn'),
+                  },
+                  {
+                    panelId: 'by-row',
+                    label: t('errors.errorTab.byRow'),
+                  },
+                ]}
+              >
+                <GovUK.TabsPanel id={'by-column'}>
+                  <ErrorTab
+                    type="column"
+                    errors={state.columnErrors}
+                    strings={tabStrings}
+                  />
+                </GovUK.TabsPanel>
+                <GovUK.TabsPanel id={'by-row'}>
+                  <ErrorTab
+                    type="row"
+                    errors={state.rowErrors}
+                    strings={tabStrings}
+                  />
+                </GovUK.TabsPanel>
+              </GovUK.Tabs>
               <GovUK.Paragraph>{t('errors.page.paragraphTwo')}</GovUK.Paragraph>
             </UploadForm>
           </GovUK.GridCol>

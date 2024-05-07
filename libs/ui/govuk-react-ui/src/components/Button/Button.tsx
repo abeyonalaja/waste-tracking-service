@@ -9,6 +9,7 @@ type Props = {
   text?: string;
   href?: string;
   onClick?: () => void;
+  disabled?: boolean;
   testId?: string;
 };
 
@@ -20,6 +21,7 @@ export const Button = ({
   text,
   href,
   onClick,
+  disabled,
   testId,
 }: Props) => {
   if (href === undefined) {
@@ -30,6 +32,7 @@ export const Button = ({
         } ${start && `govuk-button--start`}`}
         data-testid={testId}
         onClick={onClick}
+        disabled={disabled}
       >
         {text || children}
         {start && (
