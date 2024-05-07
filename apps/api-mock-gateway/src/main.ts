@@ -15,6 +15,7 @@ import PrivateBetaPlugin, {
   PrivateBetaMock,
 } from './modules/private-beta/private-beta.plugin';
 import { UkwmBulkSubmissionPlugin } from './modules/uk-waste-movements-bulk-submission';
+import { UkwmSubmissionPlugin } from './modules/uk-waste-movements-submission';
 
 const server = jsonServer.create();
 const router = jsonServer.router(db);
@@ -88,6 +89,7 @@ const registerPlugins = () => {
   new BulkSubmissionPlugin(server, '/api/batches').register();
   new PrivateBetaPlugin(server, '/api/private-beta', backend).register();
   new UkwmBulkSubmissionPlugin(server, '/api/ukwm-batches').register();
+  new UkwmSubmissionPlugin(server, '/api/ukwm').register();
 };
 
 (async () => {

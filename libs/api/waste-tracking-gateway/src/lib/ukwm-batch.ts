@@ -1,101 +1,9 @@
-export type UkwmPhysicalForm =
-  | 'Gas'
-  | 'Liquid'
-  | 'Solid'
-  | 'Sludge'
-  | 'Powder'
-  | 'Mixed';
+import { UkwmSubmission } from './ukwm';
 
-export type UkwmQuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
-export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
-
-export type UkwmAddress = {
-  addressLine1: string;
-  addressLine2?: string;
-  townCity: string;
-  postcode: string;
-  country: string;
-};
-
-export type UkwmContact = {
-  organisationName: string;
-  name: string;
-  email: string;
-  phone: string;
-};
-
-export type UkwmProducerDetail = {
-  reference: string;
-  sicCode: string;
-  contact: UkwmContact;
-  address: UkwmAddress;
-};
-
-export type UkwmReceiverDetail = {
-  authorizationType: string;
-  environmentalPermitNumber: string;
-  contact: UkwmContact;
-  address: UkwmAddress;
-};
-
-export type UkwmHazardousWasteCode = {
-  code: string;
-  name: string;
-  concentration: number;
-  concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
-  unIdentificationNumber: string;
-  properShippingName: string;
-  unClass: string;
-  packageGroup: string;
-  specialHandlingRequirements: string;
-};
-
-export type UkwmPop = {
-  name: string;
-  concentration: number;
-  concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
-};
-
-export type UkwmWasteTypeDetail = {
-  ewcCode: string;
-  wasteDescription: string;
-  physicalForm: UkwmPhysicalForm;
-  wasteQuantity: number;
-  quantityUnit: UkwmQuantityUnit;
-  wasteQuantityType: UkwmWasteQuantityType;
-  hasHazardousProperties: boolean;
-  containsPops: boolean;
-  hazardousWasteCodes?: UkwmHazardousWasteCode[];
-  pops?: UkwmPop[];
-};
-
-export type UkwmExpectedWasteCollectionDate = {
-  day: string;
-  month: string;
-  year: string;
-};
-
-export type UkwmWasteCollectionDetail = {
-  wasteSource: string;
-  brokerRegistrationNumber?: string;
-  carrierRegistrationNumber?: string;
-  modeOfWasteTransport: string;
-  expectedWasteCollectionDate: UkwmExpectedWasteCollectionDate;
-  address: UkwmAddress;
-};
-
-export type UkwmWasteTransportationDetail = {
-  numberAndTypeOfContainers: string;
-  specialHandlingRequirements?: string;
-};
-
-export type UkwmPartialSubmission = {
-  producer: UkwmProducerDetail;
-  wasteType: UkwmWasteTypeDetail;
-  receiver: UkwmReceiverDetail;
-  wasteCollection: UkwmWasteCollectionDetail;
-  wasteTransportation: UkwmWasteTransportationDetail;
-};
+export type UkwmPartialSubmission = Omit<
+  UkwmSubmission,
+  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+>;
 
 export type UkwmBulkSubmissionValidationRowError = {
   rowNumber: number;
@@ -116,8 +24,14 @@ export type UkwmBulkSubmissionValidationColumnError = {
 
 export type UkwmSubmissionReference = {
   id: string;
-  transactionId: string;
-  reference: string;
+  wasteMovementId: string;
+  producerName: string;
+  ewcCode: string;
+  collectionDate: {
+    day: string;
+    month: string;
+    year: string;
+  };
 };
 
 export type UkwmBulkSubmissionState =

@@ -411,16 +411,25 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: {
-                containsPops: false,
-                ewcCode: '01 03 04',
-                hasHazardousProperties: false,
-                physicalForm: 'Solid',
-                quantityUnit: 'Tonne',
-                wasteDescription: 'Waste description',
-                wasteQuantity: 100,
-                wasteQuantityType: 'ActualData',
-              },
+              wasteType: [
+                {
+                  containsPops: false,
+                  ewcCode: '01 03 04',
+                  hasHazardousProperties: false,
+                  physicalForm: 'Solid',
+                  quantityUnit: 'Tonne',
+                  wasteDescription: 'Waste description',
+                  wasteQuantity: 100,
+                  wasteQuantityType: 'ActualData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Microgram',
+                      name: 'Chemical 1',
+                    },
+                  ],
+                },
+              ],
               wasteCollection: {
                 address: {
                   addressLine1: '123 Real Street',
@@ -479,16 +488,25 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: {
-                containsPops: true,
-                ewcCode: '02 03 02',
-                hasHazardousProperties: true,
-                physicalForm: 'Liquid',
-                quantityUnit: 'Cubic Metre',
-                wasteDescription: 'Waste description',
-                wasteQuantity: 200,
-                wasteQuantityType: 'EstimateData',
-              },
+              wasteType: [
+                {
+                  containsPops: true,
+                  ewcCode: '02 03 02',
+                  hasHazardousProperties: true,
+                  physicalForm: 'Liquid',
+                  quantityUnit: 'Cubic Metre',
+                  wasteDescription: 'Waste description',
+                  wasteQuantity: 200,
+                  wasteQuantityType: 'EstimateData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Microgram',
+                      name: 'Chemical 1',
+                    },
+                  ],
+                },
+              ],
               wasteCollection: {
                 address: {
                   addressLine1: '123 Real Street',
@@ -560,16 +578,25 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: {
-                containsPops: false,
-                ewcCode: '01 03 04',
-                hasHazardousProperties: false,
-                physicalForm: 'Solid',
-                quantityUnit: 'Tonne',
-                wasteDescription: 'Waste description',
-                wasteQuantity: 100,
-                wasteQuantityType: 'ActualData',
-              },
+              wasteType: [
+                {
+                  containsPops: false,
+                  ewcCode: '01 03 04',
+                  hasHazardousProperties: false,
+                  physicalForm: 'Solid',
+                  quantityUnit: 'Tonne',
+                  wasteDescription: 'Waste description',
+                  wasteQuantity: 100,
+                  wasteQuantityType: 'ActualData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Microgram',
+                      name: 'Chemical 1',
+                    },
+                  ],
+                },
+              ],
               wasteCollection: {
                 address: {
                   addressLine1: '123 Real Street',
@@ -628,16 +655,25 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: {
-                containsPops: true,
-                ewcCode: '02 03 02',
-                hasHazardousProperties: true,
-                physicalForm: 'Liquid',
-                quantityUnit: 'Cubic Metre',
-                wasteDescription: 'Waste description',
-                wasteQuantity: 200,
-                wasteQuantityType: 'EstimateData',
-              },
+              wasteType: [
+                {
+                  containsPops: true,
+                  ewcCode: '02 03 02',
+                  hasHazardousProperties: true,
+                  physicalForm: 'Liquid',
+                  quantityUnit: 'Kilogram',
+                  wasteDescription: 'Waste description',
+                  wasteQuantity: 200,
+                  wasteQuantityType: 'EstimateData',
+                  chemicalAndBiologicalComponents: [
+                    {
+                      concentration: 1,
+                      concentrationUnit: 'Microgram',
+                      name: 'Chemical 1',
+                    },
+                  ],
+                },
+              ],
               wasteCollection: {
                 address: {
                   addressLine1: '123 Real Street',
@@ -674,13 +710,17 @@ export async function createBatch(
           status: 'Submitted',
           transactionId: transactionId,
           timestamp: timestamp,
-          submissions: [
-            {
-              id: uuidv4(),
-              transactionId: transactionId,
-              reference: 'ref1',
+          submissions: [...Array(155).keys()].map((i) => ({
+            id: uuidv4(),
+            wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
+            producerName: `Producer Org ${i}`,
+            ewcCode: `${i.toString().padStart(3, '0')}012`,
+            collectionDate: {
+              day: ((i % 31) + 1).toString(),
+              month: ((i % 12) + 1).toString(),
+              year: '2024',
             },
-          ],
+          })),
         },
       };
       break;
@@ -714,6 +754,7 @@ export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
 
   const timestamp = new Date();
   const transactionId =
+    'WM' +
     timestamp.getFullYear().toString().substring(2) +
     (timestamp.getMonth() + 1).toString().padStart(2, '0') +
     '_' +
@@ -726,8 +767,14 @@ export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
     submissions: [
       {
         id: id,
-        transactionId: transactionId,
-        reference: '12345',
+        collectionDate: {
+          day: '01',
+          month: '01',
+          year: '2028',
+        },
+        ewcCode: '01 03 04',
+        producerName: 'Example Ltd',
+        wasteMovementId: transactionId,
       },
     ],
   };

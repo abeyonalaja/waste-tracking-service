@@ -75,7 +75,7 @@ let backend: {
   referenceData: ReferenceDataBackend;
   bulkSubmission: BulkSubmissionBackend;
   privateBeta: PrivateBetaBackend;
-  ukWasteMovements: UkWasteMovementsBulkSubmissionBackend;
+  ukWasteMovementsBulkSubmission: UkWasteMovementsBulkSubmissionBackend;
 };
 
 if (process.env['NODE_ENV'] === 'development') {
@@ -141,13 +141,14 @@ if (process.env['NODE_ENV'] === 'development') {
       }),
       logger
     ),
-    ukWasteMovements: new ServiceUkWasteMovementsBulkSubmissionBackend(
-      new DaprUkWasteMovementsBulkClient(
-        client,
-        process.env['UKWM_BULK_APP_ID'] || 'service-uk-waste-movements-bulk'
+    ukWasteMovementsBulkSubmission:
+      new ServiceUkWasteMovementsBulkSubmissionBackend(
+        new DaprUkWasteMovementsBulkClient(
+          client,
+          process.env['UKWM_BULK_APP_ID'] || 'service-uk-waste-movements-bulk'
+        ),
+        logger
       ),
-      logger
-    ),
   };
 }
 
@@ -279,7 +280,7 @@ if (process.env['IS_UKWM_BATCHES_ENABLED'] === 'true') {
   await app.register({
     plugin: ukWasteMovementsBulkSubmissionPlugin,
     options: {
-      backend: backend.ukWasteMovements,
+      backend: backend.ukWasteMovementsBulkSubmission,
       logger,
     },
     routes: {
