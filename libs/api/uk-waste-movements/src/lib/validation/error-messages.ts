@@ -79,8 +79,8 @@ export const ReceiverValidationErrorMessages = {
 
 export const WasteTransportationValidationErrorMessages = {
   emptyNameAndTypeOfContainers: `Enter the number and type of containers`,
-  charTooManyNameAndTypeOfContainers: `Number and type of transportation details must be less than ${constraints.WasteTransportationDetailsChar.max} characters`,
-  charTooManySpecialHandlingRequirements: `The special handling requirements must be less than ${constraints.WasteTransportationDetailsChar.max} characters`,
+  charTooManyNameAndTypeOfContainers: `Number and type of transportation details must be less than ${constraints.FreeTextChar.max} characters`,
+  charTooManySpecialHandlingRequirements: `The special handling requirements must be less than ${constraints.FreeTextChar.max} characters`,
 };
 
 export type WasteTypeErrorMessage = {

@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './submission-controller';
-import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import { validation } from '../model';
 
 jest.mock('winston', () => ({
@@ -10,12 +9,6 @@ jest.mock('winston', () => ({
     error: jest.fn(),
   })),
 }));
-
-const mockClient = {
-  getEWCCodes: jest.fn<DaprReferenceDataClient['getEWCCodes']>(),
-  getHazardousCodes: jest.fn<DaprReferenceDataClient['getHazardousCodes']>(),
-  getPops: jest.fn<DaprReferenceDataClient['getPops']>(),
-};
 
 const ewcCodes = [
   {
@@ -91,34 +84,15 @@ const pops = [
 
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
-    mockClient as unknown as DaprReferenceDataClient,
-    new winston.Logger()
+    new winston.Logger(),
+    hazardousCodes,
+    pops,
+    ewcCodes
   );
-
-  beforeEach(() => {
-    mockClient.getHazardousCodes.mockClear();
-    mockClient.getEWCCodes.mockClear();
-    mockClient.getPops.mockClear();
-  });
 
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
       const accountId = faker.datatype.uuid();
-      mockClient.getEWCCodes.mockResolvedValueOnce({
-        success: true,
-        value: ewcCodes,
-      });
-
-      mockClient.getHazardousCodes.mockResolvedValueOnce({
-        success: true,
-        value: hazardousCodes,
-      });
-
-      mockClient.getPops.mockResolvedValueOnce({
-        success: true,
-        value: pops,
-      });
-
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -184,10 +158,6 @@ describe(SubmissionController, () => {
       if (!response.success) {
         return;
       }
-
-      expect(mockClient.getHazardousCodes).toBeCalled();
-      expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getPops).toBeCalled();
 
       expect(response.value).toEqual({
         valid: true,
@@ -318,21 +288,6 @@ describe(SubmissionController, () => {
     it('fails submission validation on all sections', async () => {
       const accountId = faker.datatype.uuid();
 
-      mockClient.getEWCCodes.mockResolvedValueOnce({
-        success: true,
-        value: ewcCodes,
-      });
-
-      mockClient.getHazardousCodes.mockResolvedValueOnce({
-        success: true,
-        value: hazardousCodes,
-      });
-
-      mockClient.getPops.mockResolvedValueOnce({
-        success: true,
-        value: pops,
-      });
-
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -395,10 +350,6 @@ describe(SubmissionController, () => {
       if (!response.success) {
         return;
       }
-
-      expect(mockClient.getHazardousCodes).toBeCalled();
-      expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getPops).toBeCalled();
 
       expect(response.value).toEqual({
         valid: false,

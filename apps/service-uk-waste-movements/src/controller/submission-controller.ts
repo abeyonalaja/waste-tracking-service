@@ -12,17 +12,14 @@ import {
   WasteTypeDetailFlattened,
 } from '../model';
 import { validationRules } from '../lib';
-import { DaprReferenceDataClient } from '@wts/client/reference-data';
-import {
-  GetHazardousCodesResponse,
-  GetPopsResponse,
-  GetEWCCodesResponse,
-} from '@wts/api/reference-data';
+import { Pop, WasteCode } from '@wts/api/reference-data';
 
 export default class SubmissionController {
   constructor(
-    private referenceDataClient: DaprReferenceDataClient,
-    private logger: Logger
+    private logger: Logger,
+    private hazardousCodes: WasteCode[],
+    private pops: Pop[],
+    private ewcCodes: WasteCode[]
   ) {}
 
   validateSubmissions: Handler<
@@ -30,33 +27,6 @@ export default class SubmissionController {
     api.ValidateSubmissionsResponse
   > = async ({ accountId, padIndex, values }) => {
     try {
-      let hazardousCodesResponse: GetHazardousCodesResponse;
-      let popsResponse: GetPopsResponse;
-      let ewcCodesResponse: GetEWCCodesResponse;
-      try {
-        hazardousCodesResponse =
-          await this.referenceDataClient.getHazardousCodes();
-        popsResponse = await this.referenceDataClient.getPops();
-        ewcCodesResponse = await this.referenceDataClient.getEWCCodes({
-          includeHazardous: true,
-        });
-      } catch (error) {
-        this.logger.error(error);
-        throw Boom.internal();
-      }
-
-      if (
-        !hazardousCodesResponse.success ||
-        !popsResponse.success ||
-        !ewcCodesResponse.success
-      ) {
-        this.logger.error('Failed to get reference datasets');
-        throw Boom.internal();
-      }
-      const hazardousCodes = hazardousCodesResponse.value;
-      const pops = popsResponse.value;
-      const ewcCodes = ewcCodesResponse.value;
-
       let index = padIndex;
       const errors: Error[] = [];
       const submissions: Value[] = [];
@@ -364,9 +334,9 @@ export default class SubmissionController {
 
         const wasteType = validationRules.validateWasteTypeDetailSection(
           wasteTypeDetailFlattened,
-          hazardousCodes,
-          pops,
-          ewcCodes
+          this.hazardousCodes,
+          this.pops,
+          this.ewcCodes
         );
 
         if (!wasteType.valid) {

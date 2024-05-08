@@ -288,68 +288,64 @@ while (execute) {
               Reference: [],
             };
 
-            const chunkSize = 50;
-            for (let i = 0; i < records.value.rows.length; i += chunkSize) {
-              const chunk = records.value.rows.slice(i, i + chunkSize);
-              let response: ValidateSubmissionsResponse;
-              try {
-                response = await daprUkwmClient.validateSubmissions({
-                  accountId: body.data.accountId,
-                  padIndex: i + 2,
-                  values: chunk,
-                });
-              } catch (err) {
-                logger.error(
-                  `Error receiving response from ${ukwmAppId} service`,
-                  { error: err }
-                );
-                throw Boom.internal();
-              }
+            let response: ValidateSubmissionsResponse;
+            try {
+              response = await daprUkwmClient.validateSubmissions({
+                accountId: body.data.accountId,
+                padIndex: 2,
+                values: records.value.rows,
+              });
+            } catch (err) {
+              logger.error(
+                `Error receiving response from ${ukwmAppId} service`,
+                { error: err }
+              );
+              throw Boom.internal();
+            }
 
-              if (!response.success) {
-                throw new Boom.Boom(response.error.message, {
-                  statusCode: response.error.statusCode,
-                });
-              }
+            if (!response.success) {
+              throw new Boom.Boom(response.error.message, {
+                statusCode: response.error.statusCode,
+              });
+            }
 
-              if (!response.value.valid) {
-                response.value.values.forEach((v) =>
-                  rowErrors.push({
-                    rowNumber: v.index,
-                    errorAmount:
-                      v.fieldFormatErrors.length +
-                      v.invalidStructureErrors.length,
-                    errorDetails: v.fieldFormatErrors
-                      .map((f) => f.message)
-                      .concat(v.invalidStructureErrors.map((i) => i.message)),
-                  })
-                );
+            if (!response.value.valid) {
+              response.value.values.forEach((v) =>
+                rowErrors.push({
+                  rowNumber: v.index,
+                  errorAmount:
+                    v.fieldFormatErrors.length +
+                    v.invalidStructureErrors.length,
+                  errorDetails: v.fieldFormatErrors
+                    .map((f) => f.message)
+                    .concat(v.invalidStructureErrors.map((i) => i.message)),
+                })
+              );
 
-                for (const error of response.value.values) {
-                  for (const fieldError of error.fieldFormatErrors) {
-                    if (!columnErrorsObj[fieldError.field]) {
-                      continue;
-                    }
-
-                    columnErrorsObj[fieldError.field].push({
-                      rowNumber: error.index,
-                      errorReason: fieldError.message,
-                    });
+              for (const error of response.value.values) {
+                for (const fieldError of error.fieldFormatErrors) {
+                  if (!columnErrorsObj[fieldError.field]) {
+                    continue;
                   }
-                }
 
-                for (const key in columnErrorsObj) {
-                  const keyAsField = key as Field;
-                  const errorDetails = columnErrorsObj[keyAsField];
-                  columnErrors.push({
-                    columnName: keyAsField,
-                    errorAmount: errorDetails.length,
-                    errorDetails: errorDetails,
+                  columnErrorsObj[fieldError.field].push({
+                    rowNumber: error.index,
+                    errorReason: fieldError.message,
                   });
                 }
-              } else {
-                response.value.values.forEach((v) => submissions.push(v));
               }
+
+              for (const key in columnErrorsObj) {
+                const keyAsField = key as Field;
+                const errorDetails = columnErrorsObj[keyAsField];
+                columnErrors.push({
+                  columnName: keyAsField,
+                  errorAmount: errorDetails.length,
+                  errorDetails: errorDetails,
+                });
+              }
+            } else {
+              submissions.push(...response.value.values);
             }
 
             const value: BulkSubmission =

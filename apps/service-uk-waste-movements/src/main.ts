@@ -6,6 +6,11 @@ import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
 import { SubmissionController, validateSubmission } from './controller';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
+import {
+  GetEWCCodesResponse,
+  GetHazardousCodesResponse,
+  GetPopsResponse,
+} from '@wts/api/reference-data';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -29,12 +34,43 @@ const server = new DaprServer({
   },
 });
 
+const referenceDataClient = new DaprReferenceDataClient(
+  server.client,
+  process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
+);
+
+let hazardousCodesResponse: GetHazardousCodesResponse;
+let popsResponse: GetPopsResponse;
+let ewcCodesResponse: GetEWCCodesResponse;
+
+try {
+  hazardousCodesResponse = await referenceDataClient.getHazardousCodes();
+  popsResponse = await referenceDataClient.getPops();
+  ewcCodesResponse = await referenceDataClient.getEWCCodes({
+    includeHazardous: true,
+  });
+} catch (error) {
+  logger.error(error);
+  throw new Error('Failed to get reference datasets');
+}
+
+if (
+  !hazardousCodesResponse.success ||
+  !popsResponse.success ||
+  !ewcCodesResponse.success
+) {
+  throw new Error('Failed to get reference datasets');
+}
+
+const hazardousCodes = hazardousCodesResponse.value;
+const pops = popsResponse.value;
+const ewcCodes = ewcCodesResponse.value;
+
 const submissionController = new SubmissionController(
-  new DaprReferenceDataClient(
-    server.client,
-    process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
-  ),
-  logger
+  logger,
+  hazardousCodes,
+  pops,
+  ewcCodes
 );
 
 await server.invoker.listen(

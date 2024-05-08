@@ -69,7 +69,16 @@ const wastePhysicalForms = [
   'Mixed',
 ];
 
-const wasteQuantityUnits = ['Tonne', 'Cubic Metre', 'Kilogram', 'Litre'];
+const wasteQuantitiesMap: { [key: string]: QuantityUnit } = {
+  Tonne: 'Tonne',
+  Tonnes: 'Tonne',
+  'Cubic Metre': 'Cubic Metre',
+  'Cubic Metres': 'Cubic Metre',
+  Kilogram: 'Kilogram',
+  Kilograms: 'Kilogram',
+  Litre: 'Litre',
+  Litres: 'Litre',
+};
 
 const modeOfWasteTransport = ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'];
 
@@ -681,7 +690,7 @@ export function validateWasteTransportationDetailSection(
   } else if (
     value.wasteTransportationNumberAndTypeOfContainers?.trim() &&
     value.wasteTransportationNumberAndTypeOfContainers.length >
-      validation.WasteTransportationDetailsChar.max
+      validation.FreeTextChar.max
   ) {
     errors.push({
       field: 'Number and type of transportation containers',
@@ -694,7 +703,7 @@ export function validateWasteTransportationDetailSection(
   if (
     value.wasteTransportationSpecialHandlingRequirements?.trim() &&
     value.wasteTransportationSpecialHandlingRequirements.length >
-      validation.WasteTransportationDetailsChar.max
+      validation.FreeTextChar.max
   ) {
     errors.push({
       field: 'Special handling requirements details',
@@ -1043,7 +1052,6 @@ function validateWasteTypeEntry(
     ?.replace(/'/g, '')
     ?.replace(/\s/g, '')
     ?.replace(/\*/g, '');
-  console.log(wasteType);
 
   if (!wasteType.wasteTypeEwcCode) {
     errors.push({
@@ -1129,10 +1137,9 @@ function validateWasteTypeEntry(
       message: errorMessage.emptyWasteQuantityUnit,
     });
   } else {
-    wasteType.wasteTypeWasteQuantityUnit = titleCase(
-      wasteType.wasteTypeWasteQuantityUnit
-    );
-    if (!wasteQuantityUnits.includes(wasteType.wasteTypeWasteQuantityUnit)) {
+    wasteType.wasteTypeWasteQuantityUnit =
+      wasteQuantitiesMap[titleCase(wasteType.wasteTypeWasteQuantityUnit)];
+    if (!wasteType.wasteTypeWasteQuantityUnit) {
       errors.push({
         field: 'Waste Quantity Units',
         message: errorMessage.invalidWasteQuantityUnit,
