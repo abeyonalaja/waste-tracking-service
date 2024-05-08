@@ -176,13 +176,13 @@ export const WasteTypeValidationErrorMessages: (
       invalidHazardousCodes.length === 1
         ? `${invalidHazardousCodes[0]} is an invalid hazardous code for the ${wasteTypeOrdinal} waste type`
         : invalidHazardousCodes.join('; ') +
-          `are invalid hazardous codes for the ${wasteTypeOrdinal} waste type`,
+          ` are invalid hazardous codes for the ${wasteTypeOrdinal} waste type`,
     invalidContainsPops: `Enter Y or N if the waste contains POPs`,
     invalidPops: (invalidPops: string[]) =>
       invalidPops.length === 1
         ? `${invalidPops[0]} is an invalid persistent organic pollutant (POP) for the ${wasteTypeOrdinal} waste type`
         : invalidPops.join('; ') +
-          `are invalid persistent organic pollutants (POPs) for the ${wasteTypeOrdinal} waste type`,
+          ` are invalid persistent organic pollutants (POPs) for the ${wasteTypeOrdinal} waste type`,
     invalidPopConcentration: `The ${wasteTypeOrdinal} POPs concentration can only be entered using numbers and decimal points`,
     wrongAmountPopContentration: `The amount of POPs concentration values for the ${wasteTypeOrdinal} waste type must be the same as the amount of POPs entered`,
     emptyPopConcentration: `Enter the ${wasteTypeOrdinal} POPs concentration value`,
