@@ -128,6 +128,10 @@
     "backText": "Back"
   },
   "multiples": {
+    "breadcrumbs": {
+      "accountHome": "Home",
+      "ukwmHome": "Move waste in the UK"
+    },
     "uploadPage": {
       "title": "Creating multiple waste movements"
     },
@@ -209,6 +213,16 @@
       "body": "If you cancel creating these now, you will have to upload the CSV file again.",
       "button": "Continue and create records",
       "cancelLink": "Cancel"
+    },
+    "confirmation": {
+      "banner": "{count} waste {count, plural, =1 {movement} other {movements}} created",
+      "subHeading1": "What you must do next",
+      "bodyP1": "Now you have created these waste movements, you need to notify other involved parties of any relevant movements.",
+      "bodyP2": "You can also:",
+      "bullet1": "view all these created waste movement records (opens in new tab)",
+      "subHeading2": "What happens next",
+      "bodyP3": "The receivers of the waste will need to confirm collection and receipt of the waste using the waste tracking service.",
+      "button": "Return to move waste in the UK"
     },
     "interruption": {
       "heading": "Use the guidance to create multiple new waste movements using a CSV template",

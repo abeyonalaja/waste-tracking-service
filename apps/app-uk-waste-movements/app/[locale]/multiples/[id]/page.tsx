@@ -9,6 +9,7 @@ import { Page, BackLink } from '@wts/ui/shared-ui/server';
 import {
   Instructions,
   ErrorInstructions,
+  SubmissionConfirmation,
   ValidationSuccess,
 } from '@wts/app-uk-waste-movements/feature-multiples/server';
 import {
@@ -200,8 +201,30 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
 
   if (state.status === 'Submitted') {
     return (
-      <Page beforeChildren={<BackLink href="/" />}>
-        <p>Submitted multiples page to go here</p>
+      <Page
+        beforeChildren={
+          <GovUK.Breadcrumbs
+            items={[
+              {
+                text: t('breadcrumbs.accountHome'),
+                href: '/account',
+              },
+              {
+                text: t('breadcrumbs.ukwmHome'),
+                href: process.env.UKWM_URL,
+              },
+            ]}
+          />
+        }
+      >
+        <GovUK.GridRow>
+          <GovUK.GridCol size="two-thirds">
+            <SubmissionConfirmation
+              submissionId={params.id}
+              recordCount={state.submissions.length}
+            />
+          </GovUK.GridCol>
+        </GovUK.GridRow>
       </Page>
     );
   }
