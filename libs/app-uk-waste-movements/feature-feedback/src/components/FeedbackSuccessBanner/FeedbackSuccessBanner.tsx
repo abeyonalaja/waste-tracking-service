@@ -18,7 +18,7 @@ export function FeedbackSuccessBanner({ strings }: FeedbackSuccessBannerProps) {
   const isNewWindow = useNewWindow();
   const router = useRouter();
   return (
-    <GovUK.NotificationBanner title={strings.bannerTitle} success="success">
+    <GovUK.NotificationBanner title={strings.bannerTitle} success={true}>
       <GovUK.Heading
         size="m"
         level={3}

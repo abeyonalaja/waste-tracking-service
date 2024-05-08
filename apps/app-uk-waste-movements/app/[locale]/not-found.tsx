@@ -16,6 +16,7 @@ export default function NotFound() {
           href={{
             pathname: '/account',
           }}
+          className={'govuk-link govuk-link--no-visited-state'}
         >
           {t('link')}
         </Link>

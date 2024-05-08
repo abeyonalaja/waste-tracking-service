@@ -17,7 +17,11 @@ export function Interruption() {
         <HTML />
         <div>
           <GovUK.Paragraph size="l" mb={1}>
-            <Link href="/multiples/guidance" target="_blank">
+            <Link
+              href="/multiples/guidance"
+              target="_blank"
+              className={'govuk-link--inverse'}
+            >
               {strings('link')}
             </Link>
           </GovUK.Paragraph>

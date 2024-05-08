@@ -1,5 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { LanguageSwitcher } from '../index';
+import styles from './Page.module.scss';
 
 interface PageProps {
   beforeChildren?: React.ReactNode;
@@ -9,8 +10,10 @@ interface PageProps {
 export function Page({ beforeChildren, children }: PageProps) {
   return (
     <GovUK.WidthContainer>
-      {beforeChildren && beforeChildren}
-      <LanguageSwitcher />
+      <div className={styles.navContainer}>
+        {beforeChildren && beforeChildren}
+        <LanguageSwitcher />
+      </div>
       <GovUK.Main>{children}</GovUK.Main>
     </GovUK.WidthContainer>
   );

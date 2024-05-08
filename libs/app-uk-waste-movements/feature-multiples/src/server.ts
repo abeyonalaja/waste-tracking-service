@@ -11,3 +11,4 @@ export { ReceiverDetails } from './components/index';
 export { EWC } from './components/index';
 export { Interruption } from './components/index';
 export { TotalErrorSummary } from './components/index';
+export { ValidationSuccess } from './components';

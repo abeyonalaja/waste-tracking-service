@@ -10,12 +10,19 @@ export function DashboardCard() {
           {t('cardTitle')}
         </GovUK.Heading>
         <GovUK.Paragraph> {t('cardParagraphOne')}</GovUK.Paragraph>
-        <GovUK.SectionBreak size="m" visible={false} />
         <GovUK.Heading size={'s'} level={3}>
           {t('cardTitleTwo')}
         </GovUK.Heading>
-        <Link href="/multiples"> {t('cardLink')} </Link>
-        <GovUK.SectionBreak size="l" visible={false} />
+        <GovUK.Paragraph>
+          {' '}
+          <Link
+            href="/multiples"
+            className={'govuk-link govuk-link--no-visited-state'}
+          >
+            {' '}
+            {t('cardLink')}{' '}
+          </Link>
+        </GovUK.Paragraph>
       </div>
     </div>
   );

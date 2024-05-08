@@ -9,6 +9,7 @@ import { Page, BackLink } from '@wts/ui/shared-ui/server';
 import {
   Instructions,
   ErrorInstructions,
+  ValidationSuccess,
 } from '@wts/app-uk-waste-movements/feature-multiples/server';
 import {
   ErrorTab,
@@ -30,6 +31,7 @@ interface PageProps {
   };
   searchParams: {
     filename: string;
+    hasCorrectedErrors?: string;
   };
 }
 
@@ -97,7 +99,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
       state.columnErrors
     );
 
-    const failedValidationdFormStrings = {
+    const failedValidationFormStrings = {
       heading: t('errors.uploadForm.heading'),
       hint: t('uploadForm.hint'),
       button: t('uploadForm.button'),
@@ -132,7 +134,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
           <GovUK.GridCol size="two-thirds">
             <UploadForm
               token={token!}
-              strings={failedValidationdFormStrings}
+              strings={failedValidationFormStrings}
               totalErrorSummaryStrings={totalErrorSummaryStrings}
               showHint={false}
               totalErrorCount={totalErrorCount}
@@ -182,8 +184,16 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
 
   if (state.status === 'PassedValidation') {
     return (
-      <Page beforeChildren={<BackLink href="/" />}>
-        <p>Passed Validation of CSV fields page to go here</p>
+      <Page beforeChildren={<BackLink href="/multiples" />}>
+        <GovUK.GridRow>
+          <GovUK.GridCol size="two-thirds">
+            <ValidationSuccess
+              hasEstimates={state.hasEstimates}
+              hasCorrectedErrors={searchParams.hasCorrectedErrors === 'true'}
+              recordCount={state.submissions.length}
+            />
+          </GovUK.GridCol>
+        </GovUK.GridRow>
       </Page>
     );
   }

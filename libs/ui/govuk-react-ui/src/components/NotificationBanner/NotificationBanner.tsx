@@ -2,35 +2,43 @@ import { ReactNode } from 'react';
 
 type Props = {
   children?: ReactNode;
+  headingLevel?: number;
   title?: string;
+  id?: string;
   testId?: string;
-  success?: 'success';
+  success?: boolean;
 };
 
 export const NotificationBanner = ({
   children,
+  headingLevel = 2,
   title,
+  id,
   testId,
   success,
 }: Props) => {
+  const HeadingLevel = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return (
     <div
       className={`govuk-notification-banner ${
         success && `govuk-notification-banner--success`
       }`}
+      id={id}
       data-testid={testId}
     >
       {title && (
         <div className="govuk-notification-banner__header">
-          <h2
+          <HeadingLevel
             className="govuk-notification-banner__title"
             id="govuk-notification-banner-title"
           >
             {title}
-          </h2>
+          </HeadingLevel>
         </div>
       )}
-      <div className="govuk-notification-banner__content">{children}</div>
+      <div className="govuk-notification-banner__content">
+        <p className="govuk-notification-banner__heading">{children}</p>
+      </div>
     </div>
   );
 };

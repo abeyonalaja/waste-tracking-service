@@ -17,3 +17,4 @@ export { ProducerAndCollectionDetails } from './Guidance/CSVGuidance/ProducerAnd
 export { ReceiverDetails } from './Guidance/CSVGuidance/ReceiverDetails';
 export { TotalErrorSummary } from './TotalErrorSummary';
 export { UniqueReference } from './Guidance/CSVGuidance/UniqueReference';
+export { ValidationSuccess } from './ValidationSuccess';

@@ -78,14 +78,6 @@ export function Instructions() {
           </GovUK.Paragraph>
         </div>
       </div>
-      <GovUK.GridRow mb={7}>
-        <GovUK.GridCol size="one-quarter"></GovUK.GridCol>
-        <GovUK.GridCol size="two-thirds"></GovUK.GridCol>
-      </GovUK.GridRow>
-      <GovUK.GridRow>
-        <GovUK.GridCol size="one-quarter"></GovUK.GridCol>
-        <GovUK.GridCol size="three-quarters"></GovUK.GridCol>
-      </GovUK.GridRow>
     </>
   );
 }

@@ -1,9 +1,7 @@
 {
   "app": {
     "title": "Move and track waste",
-    "phaseBannerPartOne": "This is a new service - your ",
-    "phaseBannerLink": "feedback ",
-    "phaseBannerPartTwo": "will help us to improve it."
+    "phaseBanner": "This is a new service - your <link>feedback</link> will help us improve it."
   },
   "404": {
     "title": "Page not found",
@@ -201,6 +199,16 @@
     },
     "processingPage": {
       "label": "Uploading"
+    },
+    "success": {
+      "notificationTitle": "Success",
+      "heading": "You have no errors in your {count} waste movement {count, plural, =1 {record} other {records}} and can now create them all.",
+      "headingAfterCorrection": "You have corrected all your errors and can now create {count} new waste movement {count, plural, =1 {record} other {records}}.",
+      "pageHeading": "Create {count} new waste movement {count, plural, =1 {record} other {records}}",
+      "warning": "You'll need to update all estimated details in your records with actual details as soon as possible after submitting",
+      "body": "If you cancel creating these now, you will have to upload the CSV file again.",
+      "button": "Continue and create records",
+      "cancelLink": "Cancel"
     },
     "interruption": {
       "heading": "Use the guidance to create multiple new waste movements using a CSV template",

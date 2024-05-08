@@ -6,6 +6,7 @@ export async function getSubmissionStatus(
     `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches/${submissionId}`,
     {
       method: 'GET',
+      cache: 'no-store',
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,9 +1,7 @@
 {
   "app": {
     "title": "Move and track waste",
-    "phaseBannerPartOne": "This is a new service - your ",
-    "phaseBannerLink": "feedback ",
-    "phaseBannerPartTwo": "will help us to improve it."
+    "phaseBanner": "This is a new service - your <link>feedback</link> will help us improve it."
   },
   "404": {
     "title": "Page not found",

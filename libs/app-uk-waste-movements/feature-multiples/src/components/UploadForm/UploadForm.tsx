@@ -30,7 +30,7 @@ export function UploadForm({
   totalErrorSummaryStrings,
   validationError,
   showHint = true,
-  totalErrorCount,
+  totalErrorCount = 0,
   token,
   children,
 }: UploadFormProps) {
@@ -92,7 +92,11 @@ export function UploadForm({
 
     if (response!.status === 201) {
       const data = await response!.json();
-      router.push(`/multiples/${data.id}?filename=${file!.name}`);
+      const hasCorrectedErrors =
+        totalErrorCount > 0 ? '&hasCorrectedErrors=true' : '';
+      router.push(
+        `/multiples/${data.id}?filename=${file!.name}${hasCorrectedErrors}`
+      );
     } else {
       router.push(`/404`);
     }
@@ -100,7 +104,7 @@ export function UploadForm({
 
   return (
     <>
-      {!errors && totalErrorCount && (
+      {!errors && totalErrorCount > 0 && (
         <TotalErrorSummary
           strings={totalErrorSummaryStrings!}
           href="#error-tabs"

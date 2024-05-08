@@ -3,15 +3,17 @@
 .interruption {
   padding: 20px;
   background-color: $govuk-brand-colour;
+  color: #fff;
   @include govuk-media-query(tablet) {
     padding: 30px;
   }
 }
 
-.interruption h1,
-.interruption p,
-.interruption a {
-  color: govuk-colour('white');
+.interruption {
+  h1,
+  p {
+    color: inherit;
+  }
 }
 
 .row {

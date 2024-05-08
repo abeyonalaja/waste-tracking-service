@@ -23,7 +23,7 @@ export function LanguageSwitcher() {
                 e.preventDefault();
                 router.push(intlPathname, { locale: 'en' });
               }}
-              className={`govuk-link`}
+              className={`govuk-link govuk-link--no-visited-state`}
             >
               <span className="govuk-visually-hidden">
                 Use this service in{' '}
@@ -43,7 +43,7 @@ export function LanguageSwitcher() {
                 e.preventDefault();
                 router.push(intlPathname, { locale: 'cy' });
               }}
-              className={`govuk-link`}
+              className={`govuk-link govuk-link--no-visited-state`}
             >
               <span className="govuk-visually-hidden">
                 Use this service in{' '}

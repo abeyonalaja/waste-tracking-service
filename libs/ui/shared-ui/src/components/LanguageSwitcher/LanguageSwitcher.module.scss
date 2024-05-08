@@ -2,18 +2,15 @@ $govuk-include-default-font-face: false;
 @import 'node_modules/govuk-frontend/dist/govuk/base';
 
 .container {
-  margin-top: 1rem;
-  @include govuk-media-query(tablet) {
-    float: right;
-  }
+  margin-left: auto;
 }
 
 .languageToggle {
-  @include govuk-font($size: 19);
+  @include govuk-font($size: 16);
   @include govuk-text-colour;
-  text-align: right;
   white-space: nowrap;
-  margin: 0;
+  margin-top: govuk-spacing(3);
+  margin-bottom: govuk-spacing(3);
   padding: 0;
 }
 

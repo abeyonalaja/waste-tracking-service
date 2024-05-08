@@ -15,6 +15,7 @@ export default function RootLayout({
   params: { locale },
 }: LayoutProps) {
   const t = useTranslations('app');
+
   return (
     <html lang={locale} className={'govuk-template govuk-frontend-supported'}>
       <body className={'govuk-template__body'}>
@@ -29,10 +30,16 @@ export default function RootLayout({
         />
         <GovUK.WidthContainer>
           <GovUK.PhaseBanner tag={`Private beta`}>
-            {' '}
-            {t('phaseBannerPartOne')}{' '}
-            <Link href="/feedback">{t('phaseBannerLink')}</Link>{' '}
-            {t('phaseBannerPartTwo')}
+            {t.rich('phaseBanner', {
+              link: (chunks) => (
+                <Link
+                  href="/feedback"
+                  className={'govuk-link govuk-link--no-visited-state'}
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
           </GovUK.PhaseBanner>
         </GovUK.WidthContainer>
         {children}

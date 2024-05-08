@@ -3,15 +3,11 @@ import { ReactNode } from 'react';
 interface GridRowProps {
   children?: ReactNode;
   testId?: string;
-  mb?: number;
 }
 
-export function GridRow({ children, testId, mb }: GridRowProps) {
+export function GridRow({ children, testId }: GridRowProps) {
   return (
-    <div
-      className={`govuk-grid-row govuk-!-margin-bottom-${mb}`}
-      data-testid={testId}
-    >
+    <div className={`govuk-grid-row`} data-testid={testId}>
       {children}
     </div>
   );
