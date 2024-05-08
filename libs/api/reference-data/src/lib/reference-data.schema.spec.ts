@@ -5,6 +5,7 @@ import {
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
   GetHazardousCodesResponse,
+  GetLocalAuthoritiesResponse,
   GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
@@ -15,6 +16,7 @@ import {
   getDisposalCodesResponse,
   getEWCCodesResponse,
   getHazardousCodesResponse,
+  getLocalAuthoritiesResponse,
   getPopsResponse,
   getRecoveryCodesResponse,
   getWasteCodesResponse,
@@ -279,6 +281,43 @@ describe('Reference-Data tests', () => {
             name: {
               en: 'Pentabromodiphenyl ether',
               cy: 'Ether Pentabromodiphenyl',
+            },
+          },
+        ],
+      };
+
+      expect(validate(value)).toBe(true);
+    });
+
+    it('is compatible with error value', () => {
+      validate({
+        success: false,
+        error: {
+          statusCode: 400,
+          name: 'BadRequest',
+          message: 'Bad request',
+        },
+      });
+    });
+  });
+
+  describe('GetLocalAuthoritiesResponse', () => {
+    const validate = ajv.compile<GetLocalAuthoritiesResponse>(
+      getLocalAuthoritiesResponse
+    );
+
+    it('getLocalAuthorities is compatible with success value', () => {
+      const value: GetLocalAuthoritiesResponse = {
+        success: true,
+        value: [
+          {
+            name: {
+              en: 'Hartlepool',
+              cy: 'Hartlepool',
+            },
+            country: {
+              en: 'England',
+              cy: 'Lloegr',
             },
           },
         ],

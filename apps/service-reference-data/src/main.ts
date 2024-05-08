@@ -128,6 +128,14 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
+  api.getLocalAuthorities.name,
+  async () => {
+    return await referenceDataController.getLocalAuthorities(null);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
   api.createWasteCodes.name,
   async ({ body }) => {
     if (body === undefined) {

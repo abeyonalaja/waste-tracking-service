@@ -7,6 +7,7 @@ import {
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
   GetHazardousCodesResponse,
+  GetLocalAuthoritiesResponse,
   GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
@@ -26,6 +27,8 @@ const mockClientReferenceData = {
   getDisposalCodes: jest.fn<DaprReferenceDataClient['getDisposalCodes']>(),
   getHazardousCodes: jest.fn<DaprReferenceDataClient['getHazardousCodes']>(),
   getPops: jest.fn<DaprReferenceDataClient['getPops']>(),
+  getLocalAuthorities:
+    jest.fn<DaprReferenceDataClient['getLocalAuthorities']>(),
 };
 
 describe('ReferenceDataServiceBackend', () => {
@@ -319,5 +322,46 @@ describe('ReferenceDataServiceBackend', () => {
 
     await expect(subject.listPops()).rejects.toThrow();
     expect(mockClientReferenceData.getPops).toHaveBeenCalled();
+  });
+
+  it('should return local authorities when response is successful', async () => {
+    const mockResponse: GetLocalAuthoritiesResponse = {
+      success: true,
+      value: [
+        {
+          name: {
+            en: 'Hartlepool',
+            cy: 'Hartlepool',
+          },
+          country: {
+            en: 'England',
+            cy: 'Lloegr',
+          },
+        },
+      ],
+    };
+
+    mockClientReferenceData.getLocalAuthorities.mockResolvedValue(mockResponse);
+
+    const result = await subject.listLocalAuthorities();
+
+    expect(result).toEqual(mockResponse.value);
+    expect(mockClientReferenceData.getLocalAuthorities).toHaveBeenCalled();
+  });
+
+  it('should throw an error when listLocalAuthorities response is not successful', async () => {
+    const mockResponse: GetLocalAuthoritiesResponse = {
+      success: false,
+      error: {
+        message: 'Error message',
+        statusCode: 500,
+        name: '',
+      },
+    };
+
+    mockClientReferenceData.getLocalAuthorities.mockResolvedValue(mockResponse);
+
+    await expect(subject.listLocalAuthorities()).rejects.toThrow();
+    expect(mockClientReferenceData.getLocalAuthorities).toHaveBeenCalled();
   });
 });

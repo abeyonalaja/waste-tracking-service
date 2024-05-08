@@ -6,6 +6,7 @@ import {
   listDisposalCodes,
   listHazardousCodes,
   listPops,
+  listLocalAuthorities,
 } from './reference-data.backend';
 import { DB } from '../../db';
 
@@ -21,6 +22,7 @@ describe('Reference Data Backend', () => {
       disposalCodes: [],
       hazarodusCodes: [],
       pops: [],
+      localAuthorities: [],
     } as unknown as DB;
   });
 
@@ -61,5 +63,10 @@ describe('Reference Data Backend', () => {
   it('returns pops', async () => {
     const result = await listPops(db);
     expect(result).toEqual(db.pops);
+  });
+
+  it('returns local authorities', async () => {
+    const result = await listLocalAuthorities(db);
+    expect(result).toEqual(db.localAuthorities);
   });
 });

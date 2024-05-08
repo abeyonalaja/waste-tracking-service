@@ -4,7 +4,14 @@ import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
 import { ReferenceDataRepository } from '../data/repository';
 import { Handler } from '@wts/api/common';
-import { Country, RecoveryCode, WasteCode, WasteCodeType, Pop } from '../model';
+import {
+  Country,
+  RecoveryCode,
+  WasteCode,
+  WasteCodeType,
+  Pop,
+  LocalAuthority,
+} from '../model';
 
 const wasteCodesId = 'waste-codes';
 const ewcCodesId = 'ewc-codes';
@@ -13,6 +20,7 @@ const recoveryCodesId = 'recovery-codes';
 const disposalCodesId = 'disposal-codes';
 const hazardousCodesId = 'hazardous-codes';
 const popCodesId = 'pops';
+const localAuthoritiesId = 'local-authorities';
 
 export default class ReferenceDataController {
   constructor(
@@ -128,6 +136,22 @@ export default class ReferenceDataController {
       return fromBoom(Boom.internal());
     }
   };
+
+  getLocalAuthorities: Handler<null, api.GetLocalAuthoritiesResponse> =
+    async () => {
+      try {
+        return success(
+          await this.repository.getList<LocalAuthority>(localAuthoritiesId)
+        );
+      } catch (err) {
+        if (err instanceof Boom.Boom) {
+          return fromBoom(err);
+        }
+
+        this.logger.error('Unknown error', { error: err });
+        return fromBoom(Boom.internal());
+      }
+    };
 
   createWasteCodes: Handler<
     api.CreateWasteCodesRequest,

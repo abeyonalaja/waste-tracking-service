@@ -83,4 +83,14 @@ describe('ReferenceDataPlugin', () => {
       expect.any(Function)
     );
   });
+
+  it('Expect POSTing instead of GETting Local Authorities to not be allowed', async () => {
+    const mockPost = jest.fn();
+    server.post = mockPost;
+    await plugin.register();
+    expect(mockPost).not.toHaveBeenCalledWith(
+      '/reference-data/local-authorities',
+      expect.any(Function)
+    );
+  });
 });

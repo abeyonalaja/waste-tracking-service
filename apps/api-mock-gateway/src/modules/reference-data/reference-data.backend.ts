@@ -6,6 +6,7 @@ import {
   ListPopsResponse,
   ListRecoveryCodesResponse,
   ListWasteCodesResponse,
+  ListlocalAuthoritiesResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { DB } from '../../db';
 
@@ -71,4 +72,11 @@ export async function listHazardousCodes(
 export async function listPops(db: DB): Promise<ListPopsResponse> {
   const pops: ListPopsResponse = db.pops;
   return pops;
+}
+
+export async function listLocalAuthorities(
+  db: DB
+): Promise<ListlocalAuthoritiesResponse> {
+  const localAuthorities: ListlocalAuthoritiesResponse = db.localAuthorities;
+  return localAuthorities;
 }

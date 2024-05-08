@@ -12,6 +12,7 @@ import {
   ListPopsResponse,
   UkwmBulkSubmission,
   Submission,
+  ListlocalAuthoritiesResponse,
 } from '@wts/api/waste-tracking-gateway';
 
 export type DraftSubmissionWithAccount = DraftSubmission & {
@@ -34,6 +35,7 @@ export interface DB {
   disposalCodes: ListDisposalCodesResponse;
   hazardousCodes: ListHazardousCodesResponse;
   pops: ListPopsResponse;
+  localAuthorities: ListlocalAuthoritiesResponse;
   batches: BulkWithAccount[];
   ukwmBatches: UkwmBulkWithAccount[];
 }
@@ -1820,6 +1822,128 @@ export const db: DB = {
       name: {
         en: 'Perfluorooctanoic acid (PFOA), its salts and PFOA-related compounds',
         cy: "Asid perfflworooctanoic (PFOA), ei halwynau a chyfansoddion sy'n gysylltiedig â PFOA",
+      },
+    },
+  ],
+  localAuthorities: [
+    {
+      name: {
+        en: 'Hartlepool',
+        cy: 'Hartlepool',
+      },
+      country: {
+        en: 'England',
+        cy: 'Lloegr',
+      },
+    },
+    {
+      name: {
+        en: 'Middlesbrough',
+        cy: 'Middlesbrough',
+      },
+      country: {
+        en: 'England',
+        cy: 'Lloegr',
+      },
+    },
+    {
+      name: {
+        en: 'Redcar and Cleveland',
+        cy: 'Redcar a Cleveland',
+      },
+      country: {
+        en: 'England',
+        cy: 'Lloegr',
+      },
+    },
+    {
+      name: {
+        en: 'Aberdeen',
+        cy: 'Aberdeen',
+      },
+      country: {
+        en: 'Scotland',
+        cy: 'Yr Alban',
+      },
+    },
+    {
+      name: {
+        en: 'Aberdeenshire',
+        cy: 'Siorrachd Obar Dheathain',
+      },
+      country: {
+        en: 'Scotland',
+        cy: 'Yr Alban',
+      },
+    },
+    {
+      name: {
+        en: 'Angus',
+        cy: 'Angus',
+      },
+      country: {
+        en: 'Scotland',
+        cy: 'Yr Alban',
+      },
+    },
+    {
+      name: {
+        en: 'Antrim and Newtownabbey',
+        cy: 'Antrim a Newtownabbey',
+      },
+      country: {
+        en: 'Northern Ireland',
+        cy: 'Gogledd Iwerddon',
+      },
+    },
+    {
+      name: {
+        en: 'Ards and North Down Borough',
+        cy: 'Bwrdeistref Ards a Gogledd Down',
+      },
+      country: {
+        en: 'Northern Ireland',
+        cy: 'Gogledd Iwerddon',
+      },
+    },
+    {
+      name: {
+        en: 'Armagh City, Banbridge and Craigavon Borough',
+        cy: 'Dinas Armagh, Bwrdeistref Banbridge a Craigavon',
+      },
+      country: {
+        en: 'Northern Ireland',
+        cy: 'Gogledd Iwerddon',
+      },
+    },
+    {
+      name: {
+        en: 'Isle of Anglesey',
+        cy: 'Ynys Môn',
+      },
+      country: {
+        en: 'Wales',
+        cy: 'Cymru',
+      },
+    },
+    {
+      name: {
+        en: 'Gwynedd',
+        cy: 'Gwynedd',
+      },
+      country: {
+        en: 'Wales',
+        cy: 'Cymru',
+      },
+    },
+    {
+      name: {
+        en: 'Conwy',
+        cy: 'Conwy',
+      },
+      country: {
+        en: 'Wales',
+        cy: 'Cymru',
       },
     },
   ],

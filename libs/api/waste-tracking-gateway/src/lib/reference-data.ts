@@ -28,6 +28,11 @@ export type Pop = {
   name: LanguageDescription;
 };
 
+export type LocalAuthority = {
+  name: LanguageDescription;
+  country: LanguageDescription;
+};
+
 export type ListWasteCodesResponse = WasteCodeType[];
 export type ListEWCCodesResponse = WasteCode[];
 export type ListCountriesResponse = Country[];
@@ -35,3 +40,4 @@ export type ListRecoveryCodesResponse = RecoveryCode[];
 export type ListDisposalCodesResponse = WasteCode[];
 export type ListHazardousCodesResponse = WasteCode[];
 export type ListPopsResponse = Pop[];
+export type ListlocalAuthoritiesResponse = LocalAuthority[];

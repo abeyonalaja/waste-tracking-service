@@ -209,3 +209,32 @@ export const getPopsResponse: SchemaObject = {
     },
   },
 };
+
+export const getLocalAuthoritiesResponse: SchemaObject = {
+  properties: {
+    success: {
+      type: 'boolean',
+    },
+  },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      elements: {
+        properties: {
+          name: {
+            properties: {
+              en: { type: 'string' },
+              cy: { type: 'string' },
+            },
+          },
+          country: {
+            properties: {
+              en: { type: 'string' },
+              cy: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};

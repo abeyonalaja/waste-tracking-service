@@ -149,6 +149,22 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'GET',
+      path: '/local-authorities',
+      handler: async function () {
+        try {
+          return await backend.listLocalAuthorities();
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            return error;
+          }
+          logger.error('Unknown error', { error: error });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

@@ -7,7 +7,14 @@ import ReferenceDataDraftRepository, {
   CacheItem,
 } from './cosmos-reference-data';
 import { LRUCache } from 'lru-cache';
-import { Country, Pop, RecoveryCode, WasteCode, WasteCodeType } from '../model';
+import {
+  Country,
+  Pop,
+  RecoveryCode,
+  WasteCode,
+  WasteCodeType,
+  LocalAuthority,
+} from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -365,6 +372,52 @@ describe(ReferenceDataDraftRepository, () => {
           name: {
             en: 'Endosulfan',
             cy: 'Endosulfan',
+          },
+        },
+      ]);
+      expect(mockRead).toBeCalledTimes(1);
+    });
+
+    it('retrieves list of local-authorities', async () => {
+      const id = 'local-authorities';
+      const mockResponse = {
+        id,
+        value: {
+          type: id,
+          values: [
+            {
+              name: {
+                en: 'Hartlepool',
+                cy: 'Hartlepool',
+              },
+              country: {
+                en: 'England',
+                cy: 'Lloegr',
+              },
+            },
+          ],
+        },
+        partitionKey: id,
+        _rid: faker.datatype.string(),
+        _self: faker.datatype.string(),
+        _etag: faker.datatype.string(),
+        _attachments: faker.datatype.string(),
+        _ts: faker.datatype.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
+
+      const result = await subject.getList<LocalAuthority>(id);
+      expect(result).toEqual([
+        {
+          name: {
+            en: 'Hartlepool',
+            cy: 'Hartlepool',
+          },
+          country: {
+            en: 'England',
+            cy: 'Lloegr',
           },
         },
       ]);

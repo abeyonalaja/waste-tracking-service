@@ -30,6 +30,10 @@ export type RecoveryCode = {
 export type Pop = {
   name: LanguageDescription;
 };
+export type LocalAuthority = {
+  name: LanguageDescription;
+  country: LanguageDescription;
+};
 
 export type GetCountriesRequest = {
   includeUk?: boolean;
@@ -46,6 +50,7 @@ export type GetRecoveryCodesResponse = Response<RecoveryCode[]>;
 export type GetDisposalCodesResponse = Response<WasteCode[]>;
 export type GetHazardousCodesResponse = Response<WasteCode[]>;
 export type GetPopsResponse = Response<Pop[]>;
+export type GetLocalAuthoritiesResponse = Response<LocalAuthority[]>;
 
 export type CreateWasteCodesRequest = WasteCodeType[];
 export type CreateWasteCodesResponse = Response<WasteCodeType[]>;
@@ -94,6 +99,11 @@ export const getHazardousCodes: Method = {
 
 export const getPops: Method = {
   name: 'getPops',
+  httpVerb: 'GET',
+};
+
+export const getLocalAuthorities: Method = {
+  name: 'getLocalAuthorities',
   httpVerb: 'GET',
 };
 

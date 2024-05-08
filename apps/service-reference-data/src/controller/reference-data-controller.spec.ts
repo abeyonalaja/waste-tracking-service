@@ -257,6 +257,34 @@ describe(ReferenceDataController, () => {
 
       expect(response.value[0].name.en).toEqual('Endosulfan');
     });
+
+    it('listLocalAuthorities', async () => {
+      const value = [
+        {
+          name: {
+            en: 'Hartlepool',
+            cy: 'Hartlepool',
+          },
+          country: {
+            en: 'England',
+            cy: 'Lloegr',
+          },
+        },
+      ];
+
+      mockRepository.getList.mockResolvedValueOnce(value);
+
+      const response = await subject.getLocalAuthorities(null);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value[0].name.en).toEqual('Hartlepool');
+      expect(response.value[0].name.cy).toEqual('Hartlepool');
+      expect(response.value[0].country.en).toEqual('England');
+      expect(response.value[0].country.cy).toEqual('Lloegr');
+    });
   });
 
   describe('Create Codes', () => {

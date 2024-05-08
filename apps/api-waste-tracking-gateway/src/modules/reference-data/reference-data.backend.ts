@@ -4,6 +4,7 @@ import {
   GetDisposalCodesResponse,
   GetEWCCodesResponse,
   GetHazardousCodesResponse,
+  GetLocalAuthoritiesResponse,
   GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
@@ -20,6 +21,7 @@ export interface ReferenceDataBackend {
   listDisposalCodes(): Promise<api.ListDisposalCodesResponse>;
   listHazardousCodes(): Promise<api.ListHazardousCodesResponse>;
   listPops(): Promise<api.ListPopsResponse>;
+  listLocalAuthorities(): Promise<api.ListlocalAuthoritiesResponse>;
 }
 
 export class ReferenceDataServiceBackend implements ReferenceDataBackend {
@@ -136,6 +138,23 @@ export class ReferenceDataServiceBackend implements ReferenceDataBackend {
     let response: GetPopsResponse;
     try {
       response = await this.client.getPops();
+    } catch (error) {
+      this.logger.error(error);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+    return response.value;
+  }
+
+  async listLocalAuthorities(): Promise<api.ListlocalAuthoritiesResponse> {
+    let response: GetLocalAuthoritiesResponse;
+    try {
+      response = await this.client.getLocalAuthorities();
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();
