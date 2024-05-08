@@ -14,6 +14,13 @@ import {
 import { CosmosRepository } from './data';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import { DbContainerNameKey } from './model';
+import {
+  GetWasteCodesResponse,
+  GetEWCCodesResponse,
+  GetCountriesResponse,
+  GetRecoveryCodesResponse,
+  GetDisposalCodesResponse,
+} from '@wts/api/reference-data';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -67,12 +74,58 @@ const repository = new CosmosRepository(
 
 const draftController = new draft.DraftController(repository, logger);
 
+const referenceDataClient = new DaprReferenceDataClient(
+  server.client,
+  process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
+);
+
+let wasteCodesResponse: GetWasteCodesResponse;
+let ewcCodesResponse: GetEWCCodesResponse;
+let countriesResponse: GetCountriesResponse;
+let countriesIncludingUkResponse: GetCountriesResponse;
+let recoveryCodesResponse: GetRecoveryCodesResponse;
+let disposalCodesResponse: GetDisposalCodesResponse;
+
+try {
+  wasteCodesResponse = await referenceDataClient.getWasteCodes();
+  ewcCodesResponse = await referenceDataClient.getEWCCodes({});
+  countriesResponse = await referenceDataClient.getCountries({});
+  countriesIncludingUkResponse = await referenceDataClient.getCountries({
+    includeUk: true,
+  });
+  recoveryCodesResponse = await referenceDataClient.getRecoveryCodes();
+  disposalCodesResponse = await referenceDataClient.getDisposalCodes();
+} catch (error) {
+  logger.error(error);
+  throw new Error('Failed to get reference datasets');
+}
+
+if (
+  !wasteCodesResponse.success ||
+  !ewcCodesResponse.success ||
+  !countriesResponse.success ||
+  !countriesIncludingUkResponse.success ||
+  !recoveryCodesResponse.success ||
+  !disposalCodesResponse.success
+) {
+  throw new Error('Failed to get reference datasets');
+}
+
+const wasteCodeList = wasteCodesResponse.value;
+const ewcCodeList = ewcCodesResponse.value;
+const countryList = countriesResponse.value;
+const countryIncludingUkList = countriesIncludingUkResponse.value;
+const recoveryCodeList = recoveryCodesResponse.value;
+const disposalCodeList = disposalCodesResponse.value;
+
 const submissionController = new submission.SubmissionController(
   repository,
-  new DaprReferenceDataClient(
-    server.client,
-    process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
-  ),
+  wasteCodeList,
+  ewcCodeList,
+  countryList,
+  countryIncludingUkList,
+  recoveryCodeList,
+  disposalCodeList,
   logger
 );
 

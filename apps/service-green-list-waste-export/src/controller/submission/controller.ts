@@ -14,13 +14,11 @@ import {
   Submission,
 } from '../../model';
 import { validationRules } from '../../lib';
-import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import {
-  GetCountriesResponse,
-  GetDisposalCodesResponse,
-  GetEWCCodesResponse,
-  GetRecoveryCodesResponse,
-  GetWasteCodesResponse,
+  Country,
+  RecoveryCode,
+  WasteCode,
+  WasteCodeType,
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
 import { setWasteQuantityUnit } from '../../lib/util';
@@ -31,7 +29,12 @@ const submissionContainerName = 'submissions';
 export default class SubmissionController {
   constructor(
     private repository: CosmosRepository,
-    private referenceDataClient: DaprReferenceDataClient,
+    private wasteCodeList: WasteCodeType[],
+    private ewcCodeList: WasteCode[],
+    private countryList: Country[],
+    private countryIncludingUkList: Country[],
+    private recoveryCodeList: RecoveryCode[],
+    private disposalCodeList: WasteCode[],
     private logger: Logger
   ) {}
 
@@ -301,45 +304,6 @@ export default class SubmissionController {
     api.ValidateSubmissionsResponse
   > = async ({ accountId, padIndex, values }) => {
     try {
-      let wasteCodesResponse: GetWasteCodesResponse;
-      let ewcCodesResponse: GetEWCCodesResponse;
-      let countriesResponse: GetCountriesResponse;
-      let countriesIncludingUkResponse: GetCountriesResponse;
-      let recoveryCodesResponse: GetRecoveryCodesResponse;
-      let disposalCodesResponse: GetDisposalCodesResponse;
-      try {
-        wasteCodesResponse = await this.referenceDataClient.getWasteCodes();
-        ewcCodesResponse = await this.referenceDataClient.getEWCCodes({});
-        countriesResponse = await this.referenceDataClient.getCountries({});
-        countriesIncludingUkResponse =
-          await this.referenceDataClient.getCountries({ includeUk: true });
-        recoveryCodesResponse =
-          await this.referenceDataClient.getRecoveryCodes();
-        disposalCodesResponse =
-          await this.referenceDataClient.getDisposalCodes();
-      } catch (error) {
-        this.logger.error(error);
-        throw Boom.internal();
-      }
-
-      if (
-        !wasteCodesResponse.success ||
-        !ewcCodesResponse.success ||
-        !countriesResponse.success ||
-        !countriesIncludingUkResponse.success ||
-        !recoveryCodesResponse.success ||
-        !disposalCodesResponse.success
-      ) {
-        this.logger.error('Failed to get reference datasets');
-        throw Boom.internal();
-      }
-      const wasteCodeList = wasteCodesResponse.value;
-      const ewcCodeList = ewcCodesResponse.value;
-      const countryList = countriesResponse.value;
-      const countryIncludingUkList = countriesIncludingUkResponse.value;
-      const recoveryCodeList = recoveryCodesResponse.value;
-      const disposalCodeList = disposalCodesResponse.value;
-
       let index = padIndex;
       const errors: Error[] = [];
       const submissions: Value[] = [];
@@ -361,7 +325,7 @@ export default class SubmissionController {
             annexIIIBCode: s.annexIIIBCode,
             laboratory: s.laboratory,
           },
-          wasteCodeList
+          this.wasteCodeList
         );
         if (!wasteCodeSubSection.valid) {
           fieldFormatErrors.push(wasteCodeSubSection.value);
@@ -374,7 +338,7 @@ export default class SubmissionController {
               nationalCode: s.nationalCode,
               wasteDescription: s.wasteDescription,
             },
-            ewcCodeList
+            this.ewcCodeList
           );
         if (!wasteDescriptionSubSection.valid) {
           fieldFormatErrors.push(...wasteDescriptionSubSection.value);
@@ -428,7 +392,7 @@ export default class SubmissionController {
             importerFaxNumber: s.importerFaxNumber,
             importerEmailAddress: s.importerEmailAddress,
           },
-          countryList
+          this.countryList
         );
         if (!importerDetail.valid) {
           fieldFormatErrors.push(...importerDetail.value);
@@ -501,7 +465,7 @@ export default class SubmissionController {
         const carriers = validationRules.validateCarriersSection(
           carriersFlattened,
           transport,
-          countryIncludingUkList
+          this.countryIncludingUkList
         );
         if (!carriers.valid) {
           fieldFormatErrors.push(...carriers.value);
@@ -548,7 +512,7 @@ export default class SubmissionController {
             {
               transitCountries: s.transitCountries,
             },
-            countryList
+            this.countryList
           );
         if (!transitCountries.valid) {
           fieldFormatErrors.push(transitCountries.value);
@@ -659,9 +623,9 @@ export default class SubmissionController {
             validationRules.validateRecoveryFacilityDetailSection(
               recoveryFacilityDetailFlattened,
               wasteCodeSubSection.value.type === 'NotApplicable',
-              countryList,
-              recoveryCodeList,
-              disposalCodeList
+              this.countryList,
+              this.recoveryCodeList,
+              this.disposalCodeList
             );
 
           if (!recoveryFacilityDetail.valid) {

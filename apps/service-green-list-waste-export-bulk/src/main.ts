@@ -305,45 +305,42 @@ while (execute) {
           } else {
             const submissions: Omit<submission.PartialSubmission, 'id'>[] = [];
             const rowErrors: api.BulkSubmissionValidationRowError[] = [];
-            const chunkSize = 50;
-            for (let i = 0; i < records.value.rows.length; i += chunkSize) {
-              const chunk = records.value.rows.slice(i, i + chunkSize);
-              let response: submission.ValidateSubmissionsResponse;
-              try {
-                response = await daprAnnexViiClient.validateSubmissions({
-                  accountId: body.data.accountId,
-                  padIndex: i + 2,
-                  values: chunk,
-                });
-              } catch (err) {
-                logger.error(
-                  `Error receiving response from ${annexViiAppId} service`,
-                  { error: err }
-                );
-                throw Boom.internal();
-              }
 
-              if (!response.success) {
-                throw new Boom.Boom(response.error.message, {
-                  statusCode: response.error.statusCode,
-                });
-              }
+            let response: submission.ValidateSubmissionsResponse;
+            try {
+              response = await daprAnnexViiClient.validateSubmissions({
+                accountId: body.data.accountId,
+                padIndex: 2,
+                values: records.value.rows,
+              });
+            } catch (err) {
+              logger.error(
+                `Error receiving response from ${annexViiAppId} service`,
+                { error: err }
+              );
+              throw Boom.internal();
+            }
 
-              if (!response.value.valid) {
-                response.value.values.map((v) =>
-                  rowErrors.push({
-                    rowNumber: v.index,
-                    errorAmount:
-                      v.fieldFormatErrors.length +
-                      v.invalidStructureErrors.length,
-                    errorDetails: v.fieldFormatErrors
-                      .map((f) => f.message)
-                      .concat(v.invalidStructureErrors.map((i) => i.message)),
-                  })
-                );
-              } else {
-                response.value.values.map((v) => submissions.push(v));
-              }
+            if (!response.success) {
+              throw new Boom.Boom(response.error.message, {
+                statusCode: response.error.statusCode,
+              });
+            }
+
+            if (!response.value.valid) {
+              response.value.values.map((v) =>
+                rowErrors.push({
+                  rowNumber: v.index,
+                  errorAmount:
+                    v.fieldFormatErrors.length +
+                    v.invalidStructureErrors.length,
+                  errorDetails: v.fieldFormatErrors
+                    .map((f) => f.message)
+                    .concat(v.invalidStructureErrors.map((i) => i.message)),
+                })
+              );
+            } else {
+              submissions.push(...response.value.values);
             }
 
             const value: BulkSubmission =

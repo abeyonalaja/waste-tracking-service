@@ -1,9 +1,7 @@
 import { faker } from '@faker-js/faker';
-import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './controller';
-import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import { DbContainerNameKey, Submission, validation } from '../../model';
 import { CosmosRepository } from '../../data';
 
@@ -16,14 +14,6 @@ jest.mock('winston', () => ({
 const draftContainerName: DbContainerNameKey = 'drafts';
 const submissionContainerName: DbContainerNameKey = 'submissions';
 
-const mockClient = {
-  getWasteCodes: jest.fn<DaprReferenceDataClient['getWasteCodes']>(),
-  getEWCCodes: jest.fn<DaprReferenceDataClient['getEWCCodes']>(),
-  getCountries: jest.fn<DaprReferenceDataClient['getCountries']>(),
-  getRecoveryCodes: jest.fn<DaprReferenceDataClient['getRecoveryCodes']>(),
-  getDisposalCodes: jest.fn<DaprReferenceDataClient['getDisposalCodes']>(),
-};
-
 const mockRepository = {
   getRecords: jest.fn<CosmosRepository['getRecords']>(),
   getRecord: jest.fn<CosmosRepository['getRecord']>(),
@@ -33,19 +23,173 @@ const mockRepository = {
   getTotalNumber: jest.fn<CosmosRepository['getTotalNumber']>(),
 };
 
+const wasteCodes = [
+  {
+    type: 'BaselAnnexIX',
+    values: [
+      {
+        code: 'B1010',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'OECD',
+    values: [
+      {
+        code: 'GB040',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'AnnexIIIA',
+    values: [
+      {
+        code: 'B1010 and B1050',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'AnnexIIIB',
+    values: [
+      {
+        code: 'BEU04',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+];
+
+const ewcCodes = [
+  {
+    code: '010101',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+  {
+    code: '010102',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
+const countries = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+];
+
+const countriesIncludingUk = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'United Kingdom (England) [GB-ENG]',
+  },
+];
+
+const recoveryCodes = [
+  {
+    code: 'R1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: false,
+    },
+  },
+  {
+    code: 'R13',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: true,
+    },
+  },
+];
+
+const disposalCodes = [
+  {
+    code: 'D1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
     mockRepository as unknown as CosmosRepository,
-    mockClient as unknown as DaprReferenceDataClient,
+    wasteCodes,
+    ewcCodes,
+    countries,
+    countriesIncludingUk,
+    recoveryCodes,
+    disposalCodes,
     new winston.Logger()
   );
 
   beforeEach(() => {
-    mockClient.getWasteCodes.mockClear();
-    mockClient.getEWCCodes.mockClear();
-    mockClient.getCountries.mockClear();
-    mockClient.getRecoveryCodes.mockClear();
-    mockClient.getDisposalCodes.mockClear();
     mockRepository.getRecords.mockClear();
     mockRepository.getRecord.mockClear();
     mockRepository.saveRecord.mockClear();
@@ -189,277 +333,8 @@ describe(SubmissionController, () => {
   });
 
   describe('validateSubmissions', () => {
-    it('forwards thrown Boom errors', async () => {
-      mockClient.getWasteCodes.mockRejectedValue(Boom.teapot());
-      const response = await subject.validateSubmissions({
-        accountId: faker.datatype.uuid(),
-        padIndex: 2,
-        values: [
-          {
-            reference: 'testRef',
-            baselAnnexIXCode: '',
-            oecdCode: '',
-            annexIIIACode: 'B1010;B1050',
-            annexIIIBCode: '',
-            laboratory: '',
-            ewcCodes: '010101;010102',
-            nationalCode: '',
-            wasteDescription: 'test',
-            wasteQuantityTonnes: '2',
-            wasteQuantityCubicMetres: '',
-            wasteQuantityKilograms: '',
-            estimatedOrActualWasteQuantity: 'Actual',
-            exporterOrganisationName: 'Test organisation 1',
-            exporterAddressLine1: '1 Some Street',
-            exporterAddressLine2: '',
-            exporterTownOrCity: 'London',
-            exporterCountry: 'England',
-            exporterPostcode: 'EC2N4AY',
-            exporterContactFullName: 'John Smith',
-            exporterContactPhoneNumber: '07888888888',
-            exporterFaxNumber: '',
-            exporterEmailAddress: 'test1@test.com',
-            importerOrganisationName: 'Test organisation 2',
-            importerAddress: '2 Some Street, Paris, 75002',
-            importerCountry: 'France',
-            importerContactFullName: 'Jane Smith',
-            importerContactPhoneNumber: '0033140000000',
-            importerFaxNumber: '0033140000000',
-            importerEmailAddress: 'test2@test.com',
-            wasteCollectionDate: '01/01/2050',
-            estimatedOrActualCollectionDate: 'actual',
-            firstCarrierOrganisationName: 'Test organisation 3',
-            firstCarrierAddress: 'Some address, London, EC2N4AY',
-            firstCarrierCountry: 'England',
-            firstCarrierContactFullName: 'John Doe',
-            firstCarrierContactPhoneNumber: '07888888844',
-            firstCarrierFaxNumber: '07888888844',
-            firstCarrierEmailAddress: 'test3@test.com',
-            firstCarrierMeansOfTransport: 'inland waterways',
-            firstCarrierMeansOfTransportDetails: 'details',
-            secondCarrierOrganisationName: 'Test organisation 4',
-            secondCarrierAddress: '3 Some Street, Paris, 75002',
-            secondCarrierCountry: 'France',
-            secondCarrierContactFullName: 'Jane Doe',
-            secondCarrierContactPhoneNumber: '0033140000044',
-            secondCarrierFaxNumber: '',
-            secondCarrierEmailAddress: 'test4@test.com',
-            secondCarrierMeansOfTransport: 'Road',
-            secondCarrierMeansOfTransportDetails: '',
-            thirdCarrierOrganisationName: '',
-            thirdCarrierAddress: '',
-            thirdCarrierCountry: '',
-            thirdCarrierContactFullName: '',
-            thirdCarrierContactPhoneNumber: '',
-            thirdCarrierFaxNumber: '',
-            thirdCarrierEmailAddress: '',
-            thirdCarrierMeansOfTransport: '',
-            thirdCarrierMeansOfTransportDetails: '',
-            fourthCarrierOrganisationName: '',
-            fourthCarrierAddress: '',
-            fourthCarrierCountry: '',
-            fourthCarrierContactFullName: '',
-            fourthCarrierContactPhoneNumber: '',
-            fourthCarrierFaxNumber: '',
-            fourthCarrierEmailAddress: '',
-            fourthCarrierMeansOfTransport: '',
-            fourthCarrierMeansOfTransportDetails: '',
-            fifthCarrierOrganisationName: '',
-            fifthCarrierAddress: '',
-            fifthCarrierCountry: '',
-            fifthCarrierContactFullName: '',
-            fifthCarrierContactPhoneNumber: '',
-            fifthCarrierFaxNumber: '',
-            fifthCarrierEmailAddress: '',
-            fifthCarrierMeansOfTransport: '',
-            fifthCarrierMeansOfTransportDetails: '',
-            wasteCollectionOrganisationName: 'Test organisation 5',
-            wasteCollectionAddressLine1: '5 Some Street',
-            wasteCollectionAddressLine2: '',
-            wasteCollectionTownOrCity: 'London',
-            wasteCollectionCountry: 'England',
-            wasteCollectionPostcode: 'EC2N4AY',
-            wasteCollectionContactFullName: 'John Johnson',
-            wasteCollectionContactPhoneNumber: '07888888855',
-            wasteCollectionFaxNumber: '07888888855',
-            wasteCollectionEmailAddress: 'test5@test.com',
-            whereWasteLeavesUk: 'Dover',
-            transitCountries: 'France;Belgium',
-            interimSiteOrganisationName: '',
-            interimSiteAddress: '',
-            interimSiteCountry: '',
-            interimSiteContactFullName: '',
-            interimSiteContactPhoneNumber: '',
-            interimSiteFaxNumber: '',
-            interimSiteEmailAddress: '',
-            interimSiteRecoveryCode: '',
-            laboratoryOrganisationName: '',
-            laboratoryAddress: '',
-            laboratoryCountry: '',
-            laboratoryContactFullName: '',
-            laboratoryContactPhoneNumber: '',
-            laboratoryFaxNumber: '',
-            laboratoryEmailAddress: '',
-            laboratoryDisposalCode: '',
-            firstRecoveryFacilityOrganisationName: 'Test organisation 6',
-            firstRecoveryFacilityAddress: '4 Some Street, Paris, 75002',
-            firstRecoveryFacilityCountry: 'France',
-            firstRecoveryFacilityContactFullName: 'Jean Philip',
-            firstRecoveryFacilityContactPhoneNumber: '0033140000066',
-            firstRecoveryFacilityFaxNumber: '',
-            firstRecoveryFacilityEmailAddress: 'test6@test.com',
-            firstRecoveryFacilityRecoveryCode: 'r1',
-            secondRecoveryFacilityOrganisationName: '',
-            secondRecoveryFacilityAddress: '',
-            secondRecoveryFacilityCountry: '',
-            secondRecoveryFacilityContactFullName: '',
-            secondRecoveryFacilityContactPhoneNumber: '',
-            secondRecoveryFacilityFaxNumber: '',
-            secondRecoveryFacilityEmailAddress: '',
-            secondRecoveryFacilityRecoveryCode: '',
-            thirdRecoveryFacilityOrganisationName: '',
-            thirdRecoveryFacilityAddress: '',
-            thirdRecoveryFacilityCountry: '',
-            thirdRecoveryFacilityContactFullName: '',
-            thirdRecoveryFacilityContactPhoneNumber: '',
-            thirdRecoveryFacilityFaxNumber: '',
-            thirdRecoveryFacilityEmailAddress: '',
-            thirdRecoveryFacilityRecoveryCode: '',
-            fourthRecoveryFacilityOrganisationName: '',
-            fourthRecoveryFacilityAddress: '',
-            fourthRecoveryFacilityCountry: '',
-            fourthRecoveryFacilityContactFullName: '',
-            fourthRecoveryFacilityContactPhoneNumber: '',
-            fourthRecoveryFacilityFaxNumber: '',
-            fourthRecoveryFacilityEmailAddress: '',
-            fourthRecoveryFacilityRecoveryCode: '',
-            fifthRecoveryFacilityOrganisationName: '',
-            fifthRecoveryFacilityAddress: '',
-            fifthRecoveryFacilityCountry: '',
-            fifthRecoveryFacilityContactFullName: '',
-            fifthRecoveryFacilityContactPhoneNumber: '',
-            fifthRecoveryFacilityFaxNumber: '',
-            fifthRecoveryFacilityEmailAddress: '',
-            fifthRecoveryFacilityRecoveryCode: '',
-          },
-        ],
-      });
-
-      expect(response.success).toBe(false);
-      if (response.success) {
-        return;
-      }
-
-      expect(mockClient.getWasteCodes).toBeCalled();
-      expect(response.error.statusCode).toBe(500);
-    });
-
     it('passes submission validation', async () => {
       const accountId = faker.datatype.uuid();
-
-      mockClient.getWasteCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            type: 'AnnexIIIA',
-            values: [
-              {
-                code: 'B1010 and B1050',
-                value: {
-                  description: {
-                    en: 'English Description',
-                    cy: 'Welsh Description',
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      });
-      mockClient.getEWCCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: '010101',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-          {
-            code: '010102',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'Afghanistan [AF]',
-          },
-          {
-            name: 'France [FR]',
-          },
-          {
-            name: 'Belgium [BE]',
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'Afghanistan [AF]',
-          },
-          {
-            name: 'France [FR]',
-          },
-          {
-            name: 'Belgium [BE]',
-          },
-          {
-            name: 'United Kingdom (England) [GB-ENG]',
-          },
-        ],
-      });
-      mockClient.getRecoveryCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'R1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-              interim: false,
-            },
-          },
-        ],
-      });
-      mockClient.getDisposalCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'D1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -619,12 +494,6 @@ describe(SubmissionController, () => {
         return;
       }
 
-      expect(mockClient.getWasteCodes).toBeCalled();
-      expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalledTimes(2);
-      expect(mockClient.getRecoveryCodes).toBeCalled();
-      expect(mockClient.getDisposalCodes).toBeCalled();
-
       expect(response.value).toEqual({
         valid: true,
         accountId: accountId,
@@ -773,95 +642,6 @@ describe(SubmissionController, () => {
 
     it('fails submission validation on all sections', async () => {
       const accountId = faker.datatype.uuid();
-
-      mockClient.getWasteCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            type: 'AnnexIIIA',
-            values: [
-              {
-                code: 'B1010 and B1050',
-                value: {
-                  description: {
-                    en: 'English Description',
-                    cy: 'Welsh Description',
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      });
-      mockClient.getEWCCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: '010101',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-          {
-            code: '010102',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'Afghanistan [AF]',
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'United Kingdom (England) [GB-ENG]',
-          },
-        ],
-      });
-      mockClient.getRecoveryCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'R1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-              interim: false,
-            },
-          },
-        ],
-      });
-      mockClient.getDisposalCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'D1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -1020,12 +800,6 @@ describe(SubmissionController, () => {
       if (!response.success) {
         return;
       }
-
-      expect(mockClient.getWasteCodes).toBeCalled();
-      expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalledTimes(2);
-      expect(mockClient.getRecoveryCodes).toBeCalled();
-      expect(mockClient.getDisposalCodes).toBeCalled();
 
       const carrierErrorMessages = validation.CarrierValidationErrorMessages(1);
 
@@ -1246,101 +1020,6 @@ describe(SubmissionController, () => {
 
     it('fails submission validation on cross sections', async () => {
       const accountId = faker.datatype.uuid();
-
-      mockClient.getWasteCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            type: 'AnnexIIIA',
-            values: [
-              {
-                code: 'B1010 and B1050',
-                value: {
-                  description: {
-                    en: 'English Description',
-                    cy: 'Welsh Description',
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      });
-      mockClient.getEWCCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: '010101',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-          {
-            code: '010102',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'Afghanistan [AF]',
-          },
-          {
-            name: 'France [FR]',
-          },
-          {
-            name: 'Belgium [BE]',
-          },
-        ],
-      });
-      mockClient.getCountries.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            name: 'United Kingdom (England) [GB-ENG]',
-          },
-        ],
-      });
-      mockClient.getRecoveryCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'R1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-              interim: false,
-            },
-          },
-        ],
-      });
-      mockClient.getDisposalCodes.mockResolvedValueOnce({
-        success: true,
-        value: [
-          {
-            code: 'D1',
-            value: {
-              description: {
-                en: 'English Description',
-                cy: 'Welsh Description',
-              },
-            },
-          },
-        ],
-      });
-
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -1499,12 +1178,6 @@ describe(SubmissionController, () => {
       if (!response.success) {
         return;
       }
-
-      expect(mockClient.getWasteCodes).toBeCalled();
-      expect(mockClient.getEWCCodes).toBeCalled();
-      expect(mockClient.getCountries).toBeCalledTimes(2);
-      expect(mockClient.getRecoveryCodes).toBeCalled();
-      expect(mockClient.getDisposalCodes).toBeCalled();
 
       expect(response.value).toEqual({
         valid: false,
