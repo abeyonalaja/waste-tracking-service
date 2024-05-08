@@ -26,7 +26,7 @@ export type UkwmSubmissionReference = {
   id: string;
   wasteMovementId: string;
   producerName: string;
-  ewcCode: string;
+  ewcCodes: string[];
   collectionDate: {
     day: string;
     month: string;

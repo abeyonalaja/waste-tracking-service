@@ -714,7 +714,9 @@ export async function createBatch(
             id: uuidv4(),
             wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
             producerName: `Producer Org ${i}`,
-            ewcCode: `${i.toString().padStart(3, '0')}012`,
+            ewcCodes: [...Array((i % 5) + 1).keys()].map(
+              (ewc) => `${ewc.toString().padStart(3, '0')}012`
+            ),
             collectionDate: {
               day: ((i % 31) + 1).toString(),
               month: ((i % 12) + 1).toString(),
@@ -772,7 +774,7 @@ export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
           month: '01',
           year: '2028',
         },
-        ewcCode: '01 03 04',
+        ewcCodes: ['01 03 04'],
         producerName: 'Example Ltd',
         wasteMovementId: transactionId,
       },
