@@ -22,9 +22,10 @@ interface ErrorRowProps {
     | UkwmBulkSubmissionValidationRowError
     | UkwmBulkSubmissionValidationColumnError;
   strings: ErrorRowStrings;
+  rowIndex: number;
 }
 
-export function ErrorRow({ error, strings }: ErrorRowProps) {
+export function ErrorRow({ error, strings, rowIndex }: ErrorRowProps) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   function toggleExpanded() {
@@ -36,16 +37,32 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
     const formattedColumnName = formatColumnName(columnName);
     return (
       <>
-        <tr className="govuk-table__row" key={formattedColumnName}>
-          <td className="govuk-table__cell govuk-body govuk-!-font-weight-bold">
+        <tr
+          className="govuk-table__row"
+          id={`column-row-${rowIndex}`}
+          key={formattedColumnName}
+        >
+          <td
+            className="govuk-table__cell govuk-body govuk-!-font-weight-bold"
+            id={`column-row-${rowIndex}-column-name`}
+          >
             {errorAmount} {strings.errorCount}
           </td>
-          <td className="govuk-table__cell">{columnName}</td>
-          <td className="govuk-table__cell">
+          <td
+            className="govuk-table__cell"
+            id={`column-row-${rowIndex}-error-type`}
+          >
+            {columnName}
+          </td>
+          <td
+            className="govuk-table__cell"
+            id={`column-row-${rowIndex}-action`}
+          >
             <button
               className={`govuk-accordion__show-all ${styles.showBtn}`}
+              id={`column-row-${rowIndex}-action-button`}
               onClick={toggleExpanded}
-              aria-controls={`error-row-${formatColumnName(columnName)}`}
+              aria-controls={`column-row-${rowIndex}-details`}
               aria-expanded={detailsExpanded}
             >
               <span
@@ -61,7 +78,7 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
         </tr>
         {detailsExpanded && (
           <tr
-            id={`error-row-${formatColumnName(columnName)}`}
+            id={`column-row-${rowIndex}-details`}
             className={`govuk-table__row`}
           >
             <td colSpan={3} className={styles.spacer}>
@@ -77,15 +94,22 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
                   </tr>
                 </thead>
                 <tbody className="govuk-table__body">
-                  {errorDetails.map((errorDetail) => (
+                  {errorDetails.map((errorDetail, index) => (
                     <tr
                       className="govuk-table__row"
+                      id={`column-row-${rowIndex}-details-${index}`}
                       key={errorDetail.rowNumber}
                     >
-                      <td className="govuk-table__cell govuk-!-font-weight-bold">
+                      <td
+                        className="govuk-table__cell govuk-!-font-weight-bold"
+                        id={`column-row-${rowIndex}-details-${index}-row-number`}
+                      >
                         {errorDetail.rowNumber}
                       </td>
-                      <td className="govuk-table__cell">
+                      <td
+                        className="govuk-table__cell"
+                        id={`column-row-${rowIndex}-details-${index}-error-reason`}
+                      >
                         {errorDetail.errorReason}
                       </td>
                     </tr>
@@ -103,18 +127,29 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
 
   return (
     <>
-      <tr className="govuk-table__row" key={rowNumber}>
-        <td className="govuk-table__cell govuk-body govuk-!-font-weight-bold">
+      <tr
+        className="govuk-table__row"
+        id={`row-row-${rowIndex}`}
+        key={rowNumber}
+      >
+        <td
+          className="govuk-table__cell govuk-body govuk-!-font-weight-bold"
+          id={`row-row-${rowIndex}-row-number`}
+        >
           {rowNumber}
         </td>
-        <td className="govuk-table__cell">
+        <td
+          className="govuk-table__cell"
+          id={`row-row-${rowIndex}-error-amount`}
+        >
           {errorAmount} {strings.errorCount}
         </td>
-        <td className="govuk-table__cell">
+        <td className="govuk-table__cell" id={`row-row-${rowIndex}-action`}>
           <button
             className={`govuk-accordion__show-all ${styles.showBtn}`}
+            id={`row-row-${rowIndex}-action-button`}
             onClick={toggleExpanded}
-            aria-controls={`error-row-${rowNumber}`}
+            aria-controls={`row-row-${rowIndex}-details`}
             aria-expanded={detailsExpanded}
           >
             <span
@@ -129,7 +164,7 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
         </td>
       </tr>
       {detailsExpanded && (
-        <tr id={`error-row-${rowNumber}`} className={`govuk-table__row`}>
+        <tr id={`row-row-${rowIndex}-details`} className={`govuk-table__row`}>
           <td colSpan={3} className={styles.spacer}>
             <table className={`govuk-table`}>
               <thead className="govuk-table__head">
@@ -140,9 +175,18 @@ export function ErrorRow({ error, strings }: ErrorRowProps) {
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {errorDetails.map((errorDetail) => (
-                  <tr className="govuk-table__row" key={errorDetail}>
-                    <td className="govuk-table__cell">{errorDetail}</td>
+                {errorDetails.map((errorDetail, index) => (
+                  <tr
+                    className="govuk-table__row"
+                    key={errorDetail}
+                    id={`row-row-${rowIndex}-details-${index}`}
+                  >
+                    <td
+                      className="govuk-table__cell"
+                      id={`row-row-${rowIndex}-details-${index}-error-details`}
+                    >
+                      {errorDetail}
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -8,6 +8,7 @@ const strings = {
   columnType: 'Column name',
   rowType: 'Row number',
   errorType: 'Error type',
+  errorAmount: 'Error amount',
   action: 'Action',
   rowStrings: {
     errorCount: 'errors',
@@ -91,7 +92,7 @@ describe('ErrorTab component', () => {
     render(<ErrorTab type="row" errors={mockRowErrors} strings={strings} />);
 
     expect(screen.getByText('Row number')).toBeInTheDocument();
-    expect(screen.getByText('Error type')).toBeInTheDocument();
+    expect(screen.getByText('Error amount')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
   });
 

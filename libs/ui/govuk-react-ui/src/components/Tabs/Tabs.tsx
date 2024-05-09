@@ -9,6 +9,7 @@ export const TabContext = createContext<string>('');
 type Label = {
   panelId: string;
   label: string;
+  href?: string;
 };
 
 interface TabsProps {
@@ -34,13 +35,17 @@ export function Tabs({ labels, children }: TabsProps) {
           >
             <Link
               className="govuk-tabs__tab"
-              href={`#`}
+              href={label.href ? label.href : '#'}
               id={`tab_${label.panelId}`}
               role={'tab'}
               aria-controls={label.panelId}
               aria-selected={activeTab === label.panelId}
               onClick={(e) => {
                 e.preventDefault();
+                if (window.innerWidth < 641) {
+                  const panel = document.getElementById(label.panelId);
+                  panel?.scrollIntoView();
+                }
                 setActiveTab(label.panelId);
               }}
             >

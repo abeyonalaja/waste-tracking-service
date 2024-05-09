@@ -118,6 +118,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
       columnType: t('errors.errorTab.columnType'),
       rowType: t('errors.errorTab.rowType'),
       errorType: t('errors.errorTab.errorType'),
+      errorAmount: t('errors.errorTab.errorAmount'),
       action: t('errors.errorTab.action'),
       rowStrings: {
         errorCount: t('errors.errorRow.errorCount'),
@@ -153,10 +154,12 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
                   {
                     panelId: 'by-column',
                     label: t('errors.errorTab.byColumn'),
+                    href: '#by-column',
                   },
                   {
                     panelId: 'by-row',
                     label: t('errors.errorTab.byRow'),
+                    href: '#by-row',
                   },
                 ]}
               >

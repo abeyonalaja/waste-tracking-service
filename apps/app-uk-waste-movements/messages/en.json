@@ -162,6 +162,7 @@
         "columnType": "Column name",
         "rowType": "Row number",
         "errorType": "Error type",
+        "errorAmount": "Error amount",
         "action": "Action"
       },
       "errorRow": {

@@ -12,6 +12,7 @@ type ErrorTabStrings = {
   columnType: string;
   rowType: string;
   errorType: string;
+  errorAmount: string;
   action: string;
   rowStrings: ErrorRowStrings;
 };
@@ -37,7 +38,7 @@ export function ErrorTab({ type, errors, strings }: ErrorTabProps) {
             {type === 'column' ? strings.columnType : strings.rowType}
           </th>
           <th scope="col" className="govuk-table__header">
-            {strings.errorType}
+            {type === 'column' ? strings.errorType : strings.errorAmount}
           </th>
           <th scope="col" className="govuk-table__header">
             {strings.action}
@@ -45,13 +46,14 @@ export function ErrorTab({ type, errors, strings }: ErrorTabProps) {
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {errors.map((error) => {
+        {errors.map((error, index) => {
           if ('columnName' in error) {
             return (
               <ErrorRow
                 error={error}
                 key={error.columnName}
                 strings={strings.rowStrings}
+                rowIndex={index}
               />
             );
           }
@@ -60,6 +62,7 @@ export function ErrorTab({ type, errors, strings }: ErrorTabProps) {
               error={error}
               key={error.rowNumber}
               strings={strings.rowStrings}
+              rowIndex={index}
             />
           );
         })}
