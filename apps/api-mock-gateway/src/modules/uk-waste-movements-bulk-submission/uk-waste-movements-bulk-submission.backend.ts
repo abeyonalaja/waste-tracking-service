@@ -411,7 +411,7 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: [
+              wasteTypes: [
                 {
                   containsPops: false,
                   ewcCode: '01 03 04',
@@ -488,7 +488,7 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: [
+              wasteTypes: [
                 {
                   containsPops: true,
                   ewcCode: '02 03 02',
@@ -578,7 +578,7 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: [
+              wasteTypes: [
                 {
                   containsPops: false,
                   ewcCode: '01 03 04',
@@ -655,7 +655,7 @@ export async function createBatch(
                   postcode: 'FA1 2KE',
                 },
               },
-              wasteType: [
+              wasteTypes: [
                 {
                   containsPops: true,
                   ewcCode: '02 03 02',

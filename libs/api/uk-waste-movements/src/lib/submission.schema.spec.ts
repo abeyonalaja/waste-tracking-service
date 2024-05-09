@@ -321,7 +321,7 @@ describe('validateSubmissionsResponse', () => {
               carrierRegistrationNumber:
                 'Waste Collection Carrier Registration Number',
             },
-            wasteType: [
+            wasteTypes: [
               {
                 ewcCode: '01 03 04',
                 wasteDescription: 'waste description',

@@ -11,6 +11,16 @@ import {
   GetHazardousCodesResponse,
   GetPopsResponse,
 } from '@wts/api/reference-data';
+import { CosmosClient } from '@azure/cosmos';
+import { CosmosRepository } from './data';
+
+import {
+  AzureCliCredential,
+  ChainedTokenCredential,
+  WorkloadIdentityCredential,
+} from '@azure/identity';
+
+import { DbContainerNameKey } from './model';
 
 if (!process.env['COSMOS_DB_ACCOUNT_URI']) {
   throw new Error('Missing COSMOS_DB_ACCOUNT_URI configuration.');
@@ -66,7 +76,29 @@ const hazardousCodes = hazardousCodesResponse.value;
 const pops = popsResponse.value;
 const ewcCodes = ewcCodesResponse.value;
 
+const aadCredentials = new ChainedTokenCredential(
+  new AzureCliCredential(),
+  new WorkloadIdentityCredential()
+);
+
+const dbClient = new CosmosClient({
+  endpoint: process.env['COSMOS_DB_ACCOUNT_URI'],
+  aadCredentials,
+});
+
+const cosmosContainerMap = new Map<DbContainerNameKey, string>([
+  ['drafts', process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts'],
+]);
+
+const repository = new CosmosRepository(
+  dbClient,
+  process.env['COSMOS_DATABASE_NAME'] || 'uk-waste-movements',
+  cosmosContainerMap,
+  logger
+);
+
 const submissionController = new SubmissionController(
+  repository,
   logger,
   hazardousCodes,
   pops,
@@ -86,6 +118,23 @@ await server.invoker.listen(
     }
 
     return await submissionController.validateSubmissions(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.createSubmissions.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateSubmissionsRequest;
+    if (!validateSubmission.validateCreateSubmissionsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await submissionController.createSubmissions(request);
   },
   { method: HttpMethod.POST }
 );

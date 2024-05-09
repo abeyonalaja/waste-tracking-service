@@ -12,7 +12,6 @@ export type {
   BulkSubmissionValidationRowError,
   BulkSubmissionValidationColumnError,
   BulkSubmissionValidationRowErrorDetails,
-  SubmissionReference,
   ProducerDetailFlattened,
   WasteCollectionDetailFlattened,
   SubmissionFlattened,

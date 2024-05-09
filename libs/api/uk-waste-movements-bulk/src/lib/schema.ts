@@ -148,6 +148,20 @@ export const wasteTransportation: JTDSchemaType<WasteTransportationDetail> = {
   },
 };
 
+const submissionDeclaration: SchemaObject = {
+  properties: {
+    transactionId: { type: 'string' },
+    declarationTimestamp: { type: 'timestamp' },
+  },
+};
+
+const submissionState: SchemaObject = {
+  properties: {
+    status: { type: 'string' },
+    timestamp: { type: 'timestamp' },
+  },
+};
+
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -203,7 +217,7 @@ const bulkSubmissionState: SchemaObject = {
               producer,
               wasteCollection,
               wasteTransportation,
-              wasteType: {
+              wasteTypes: {
                 elements: {
                   ...wasteType,
                 },
@@ -225,7 +239,7 @@ const bulkSubmissionState: SchemaObject = {
               producer,
               wasteCollection,
               wasteTransportation,
-              wasteType: {
+              wasteTypes: {
                 elements: {
                   ...wasteType,
                 },
@@ -238,14 +252,21 @@ const bulkSubmissionState: SchemaObject = {
     Submitted: {
       properties: {
         timestamp: { type: 'timestamp' },
-        transactionId: { type: 'string' },
         hasEstimates: { type: 'boolean' },
+        transactionId: { type: 'string' },
         submissions: {
           elements: {
             properties: {
               id: { type: 'string' },
-              transactionId: { type: 'string' },
-              reference: { type: 'string' },
+              producer,
+              wasteCollection,
+              wasteTypes: {
+                elements: {
+                  ...wasteType,
+                },
+              },
+              submissionDeclaration,
+              submissionState,
             },
           },
         },

@@ -18,9 +18,12 @@ export type {
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
   WasteQuantityType,
+  CreateSubmissionsRequest,
+  CreateSubmissionsResponse,
+  DbContainerNameKey,
 } from './submission.dto';
 
 export type { Field } from './validation';
 
-export { validateSubmissions } from './submission.dto';
+export { validateSubmissions, createSubmissions } from './submission.dto';
 export * as validation from './validation';

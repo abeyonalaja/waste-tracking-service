@@ -11,6 +11,7 @@ export type WasteTypeDetail = api.WasteTypeDetail;
 export type WasteQuantityType = api.WasteQuantityType;
 export type QuantityUnit = api.QuantityUnit;
 export type PhysicalForm = api.PhysicalForm;
+export type DbContainerNameKey = api.DbContainerNameKey;
 
 export type FieldFormatError = api.validation.FieldFormatError;
 export type InvalidAttributeCombinationError =

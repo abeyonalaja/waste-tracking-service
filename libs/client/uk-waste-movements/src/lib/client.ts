@@ -1,5 +1,7 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
+  CreateSubmissionsRequest,
+  CreateSubmissionsResponse,
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
   validateSubmissions,
@@ -20,5 +22,16 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req
     )) as ValidateSubmissionsResponse;
+  }
+
+  async createSubmissions(
+    req: CreateSubmissionsRequest
+  ): Promise<CreateSubmissionsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      this.createSubmissions.name,
+      HttpMethod.POST,
+      req
+    )) as CreateSubmissionsResponse;
   }
 }

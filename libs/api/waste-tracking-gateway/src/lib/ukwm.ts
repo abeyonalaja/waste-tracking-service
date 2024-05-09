@@ -100,7 +100,7 @@ export type UkwmSubmission = {
   wasteCollection: UkwmWasteCollectionDetail;
   receiver: UkwmReceiverDetail;
   wasteTransportation: UkwmWasteTransportationDetail;
-  wasteType: UkwmWasteTypeDetail[];
+  wasteTypes: UkwmWasteTypeDetail[];
   submissionState: UkwmSubmissionState;
 };
 

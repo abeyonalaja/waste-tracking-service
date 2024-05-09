@@ -80,21 +80,25 @@ export const wasteCollection: SchemaObject = {
         'Construction',
       ],
     },
-    brokerRegistrationNumber: { type: 'string' },
-    carrierRegistrationNumber: { type: 'string' },
     modeOfWasteTransport: {
       enum: ['Road', 'Rail', 'Air', 'Sea', 'InlandWaterways'],
     },
     expectedWasteCollectionDate: wasteCollectionDate,
+  },
+  optionalProperties: {
+    brokerRegistrationNumber: { type: 'string' },
+    carrierRegistrationNumber: { type: 'string' },
   },
 };
 
 export const receiver: SchemaObject = {
   properties: {
     authorizationType: { type: 'string' },
-    environmentalPermitNumber: { type: 'string' },
     contact: contact,
     address: address,
+  },
+  optionalProperties: {
+    environmentalPermitNumber: { type: 'string' },
   },
 };
 
@@ -411,7 +415,7 @@ const validationResult: SchemaObject = {
           wasteCollection: wasteCollection,
           receiver: receiver,
           wasteTransportation,
-          wasteType: {
+          wasteTypes: {
             elements: {
               ...wasteType,
             },
@@ -525,5 +529,48 @@ export const validateSubmissionsResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: validationResult,
+  },
+};
+
+export const submissionState: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    SubmittedWithEstimates: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    SubmittedWithActuals: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+    UpdatedWithActuals: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+      },
+    },
+  },
+};
+
+export const createSubmissionsRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    values: {
+      elements: {
+        properties: {
+          producer: producer,
+          wasteCollection: wasteCollection,
+          receiver: receiver,
+          wasteTransportation: wasteTransportation,
+          wasteTypes: {
+            elements: {
+              ...wasteType,
+            },
+          },
+        },
+      },
+    },
   },
 };

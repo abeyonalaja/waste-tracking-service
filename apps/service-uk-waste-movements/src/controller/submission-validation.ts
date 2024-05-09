@@ -1,4 +1,5 @@
 import {
+  CreateSubmissionsRequest,
   ValidateSubmissionsRequest,
   submissionSchema,
 } from '@wts/api/uk-waste-movements';
@@ -9,4 +10,9 @@ const ajv = new Ajv();
 export const validateSubmissionsRequest =
   ajv.compile<ValidateSubmissionsRequest>(
     submissionSchema.validateSubmissionsRequest
+  );
+
+export const validateCreateSubmissionsRequest =
+  ajv.compile<CreateSubmissionsRequest>(
+    submissionSchema.createSubmissionsRequest
   );

@@ -193,7 +193,7 @@ describe(BatchController, () => {
                 numberAndTypeOfContainers: '10x20ft',
                 specialHandlingRequirements: 'Special handling requirements',
               },
-              wasteType: [
+              wasteTypes: [
                 {
                   containsPops: false,
                   ewcCode: '01 03 04',

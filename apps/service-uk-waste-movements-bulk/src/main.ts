@@ -18,6 +18,8 @@ import {
   BulkSubmission,
   ContentProcessingTask,
   ContentToBeProcessedTask,
+  ContentToBeSubmittedTask,
+  ContentSubmissionTask,
 } from './model';
 import * as taskValidate from './lib/task-validation';
 import { CsvValidator } from './lib/csv-validator';
@@ -28,6 +30,7 @@ import {
   isServiceBusError,
 } from '@azure/service-bus';
 import {
+  CreateSubmissionsResponse,
   ValidateSubmissionsResponse,
   Field,
 } from '@wts/api/uk-waste-movements';
@@ -45,6 +48,9 @@ const appId = process.env['APP_ID'] || 'service-uk-waste-movements-bulk';
 const ukwmAppId = process.env['UKWM_APP_ID'] || 'service-uk-waste-movements';
 const tasksQueueName =
   process.env['TASKS_QUEUE_NAME'] || 'uk-waste-movements-bulk-tasks';
+const submissionsQueueName =
+  process.env['SUBMISSIONS_QUEUE_NAME'] ||
+  'uk-waste-movements-bulk-submissions';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -181,7 +187,7 @@ await server.invoker.listen(
 
 await server.invoker.listen(
   api.finalizeBatch.name,
-  async ({ body }) => {
+  async ({ body, headers }) => {
     if (body === undefined) {
       return fromBoom(Boom.badRequest('Missing body'));
     }
@@ -191,7 +197,61 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest());
     }
 
-    return await batchController.finalizeBatch(request);
+    const response = await batchController.finalizeBatch(request);
+
+    if (!response.success) {
+      return response;
+    }
+    try {
+      const task: ContentSubmissionTask = {
+        batchId: request.id,
+        accountId: request.accountId,
+      };
+      const cloudEvent = new CloudEvent({
+        specversion: '1.0',
+        type: `${appId}.event.sent.ContentToBeSubmitted`,
+        source: `${appId}.${api.addContentToBatch.name}`,
+        id: uuidv4(),
+        time: new Date().toJSON(),
+        datacontenttype: 'application/cloudevents+json',
+        data: task,
+        pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
+        queue: submissionsQueueName,
+        traceparent: headers?.traceparent || '',
+        tracestate: headers?.tracestate || '',
+      });
+      const messages = [
+        {
+          body: HTTP.structured(cloudEvent),
+        },
+      ];
+
+      const sender = serviceBusClient.createSender(submissionsQueueName);
+
+      let batch = await sender.createMessageBatch();
+      for (const message of messages) {
+        if (!batch.tryAddMessage(message)) {
+          await sender.sendMessages(batch);
+          batch = await sender.createMessageBatch();
+          if (!batch.tryAddMessage(message)) {
+            const message = 'Message too big to fit in a batch';
+            logger.error(message);
+            throw Boom.internal(message);
+          }
+        }
+      }
+
+      await sender.sendMessages(batch);
+      logger.info(
+        `Sent a batch of messages to the queue: ${submissionsQueueName}`
+      );
+      await sender.close();
+    } catch (err) {
+      logger.error('Error publishing work item', { error: err });
+      return fromBoom(Boom.internal());
+    }
+
+    return response;
   },
   { method: HttpMethod.POST }
 );
@@ -367,7 +427,7 @@ while (execute) {
                       status: 'PassedValidation',
                       timestamp: new Date(),
                       hasEstimates: submissions.some((s) =>
-                        s.wasteType.some(
+                        s.wasteTypes.some(
                           (wasteType) =>
                             wasteType.wasteQuantityType === 'EstimateData'
                         )
@@ -425,4 +485,105 @@ while (execute) {
 
   await delay(20000);
   await receiver.close();
+
+  const submissionsReceiver =
+    serviceBusClient.createReceiver(submissionsQueueName);
+  const submissionsSubscription = submissionsReceiver.subscribe({
+    processMessage: async (brokeredMessage) => {
+      if (HTTP.isEvent(brokeredMessage.body)) {
+        const body = JSON.parse(
+          brokeredMessage.body.body
+        ) as ContentToBeSubmittedTask;
+
+        if (!taskValidate.receiveContentToBeSubmittedTask(body)) {
+          const message = `Data validation failed for queue message ID: ${brokeredMessage.messageId}`;
+          logger.error(message);
+          throw Boom.internal(message);
+        }
+
+        const batch = await repository.getBatch(
+          body.data.batchId,
+          body.data.accountId
+        );
+
+        if (batch.state.status !== 'Submitting') {
+          const message = `The fetched batch ${batch.id} does not have the correct status. Status expected: 'Submitting'. Status received: '${batch.state.status}'.`;
+          logger.error(message);
+          throw Boom.internal(message);
+        }
+
+        let response: CreateSubmissionsResponse;
+        try {
+          response = await daprUkwmClient.createSubmissions({
+            id: body.data.batchId,
+            accountId: body.data.accountId,
+            values: batch.state.submissions,
+          });
+        } catch (err) {
+          logger.error(
+            `Error receiving response from ${daprUkwmClient} service`,
+            { error: err }
+          );
+          throw Boom.internal();
+        }
+        if (!response.success) {
+          throw new Boom.Boom(response.error.message, {
+            statusCode: response.error.statusCode,
+          });
+        }
+        const value: BulkSubmission = {
+          id: body.data.batchId,
+          state: {
+            status: 'Submitted',
+            timestamp: new Date(),
+            hasEstimates: batch.state.hasEstimates,
+            transactionId: batch.state.transactionId,
+            submissions: response.value.map((s) => {
+              return {
+                id: s.id,
+                producer: s.producer,
+                wasteCollection: s.wasteCollection,
+                wasteTypes: s.wasteTypes,
+                submissionState: s.submissionState,
+                submissionDeclaration: s.submissionDeclaration,
+                hasEstimates:
+                  s.submissionState.status == 'SubmittedWithEstimates'
+                    ? true
+                    : false,
+              };
+            }),
+          },
+        };
+        await repository.saveBatch(value, body.data.accountId);
+      }
+    },
+    processError: async (args: ProcessErrorArgs) => {
+      logger.error(
+        `Error from source ${args.errorSource} occurred: `,
+        args.error
+      );
+      if (isServiceBusError(args.error)) {
+        switch (args.error.code) {
+          case 'MessagingEntityDisabled':
+          case 'MessagingEntityNotFound':
+          case 'UnauthorizedAccess':
+            logger.error(
+              `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
+              args.error
+            );
+            await submissionsSubscription.close();
+            break;
+          case 'MessageLockLost':
+            logger.error(`Message lock lost for message`, args.error);
+            break;
+          case 'ServiceBusy':
+            await delay(1000);
+            break;
+        }
+      }
+    },
+  });
+
+  await delay(20000);
+  await submissionsReceiver.close();
 }

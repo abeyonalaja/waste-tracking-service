@@ -101,6 +101,28 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
       });
     }
 
+    if (response.value.state.status == 'Submitted') {
+      return {
+        id: response.value.id,
+        state: {
+          status: response.value.state.status,
+          timestamp: response.value.state.timestamp,
+          transactionId: response.value.state.transactionId,
+          submissions: response.value.state.submissions.map((v) => ({
+            id: v.id,
+            wasteMovementId: v.submissionDeclaration.transactionId,
+            producerName: v.producer.contact.organisationName,
+            ewcCodes: v.wasteTypes.map((wt) => wt.ewcCode),
+            collectionDate: {
+              day: v.wasteCollection.expectedWasteCollectionDate.day,
+              month: v.wasteCollection.expectedWasteCollectionDate.month,
+              year: v.wasteCollection.expectedWasteCollectionDate.year,
+            },
+          })),
+        },
+      } as UkwmBulkSubmission;
+    }
+
     return response.value as UkwmBulkSubmission;
   }
 

@@ -3,12 +3,17 @@ import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './submission-controller';
 import { validation } from '../model';
+import { CosmosRepository } from '../data';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
   })),
 }));
+
+const mockRepository = {
+  createBulkRecords: jest.fn<CosmosRepository['createBulkRecords']>(),
+};
 
 const ewcCodes = [
   {
@@ -84,6 +89,7 @@ const pops = [
 
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
+    mockRepository as unknown as CosmosRepository,
     new winston.Logger(),
     hazardousCodes,
     pops,
@@ -198,7 +204,7 @@ describe(SubmissionController, () => {
                 townCity: 'London',
               },
             },
-            wasteType: [
+            wasteTypes: [
               {
                 containsPops: true,
                 ewcCode: '010101',
@@ -544,6 +550,115 @@ describe(SubmissionController, () => {
           },
         ],
       });
+    });
+  });
+
+  describe('createSubmissions', () => {
+    it('creates submissions', async () => {
+      const response = await subject.createSubmissions({
+        accountId: faker.datatype.uuid(),
+        id: faker.datatype.uuid(),
+        values: [
+          {
+            wasteTransportation: {
+              numberAndTypeOfContainers: 'test',
+              specialHandlingRequirements: 'test',
+            },
+            wasteCollection: {
+              address: {
+                addressLine1: 'Waste Collection Address Line 1',
+                addressLine2: 'Waste Collection Address Line 2',
+                country: 'Waste Collection Country',
+                postcode: 'Waste Collection Postcode',
+                townCity: 'Waste Collection Town/City',
+              },
+              expectedWasteCollectionDate: {
+                day: '01',
+                month: '01',
+                year: '2024',
+              },
+              modeOfWasteTransport: 'Road',
+              wasteSource: 'Household',
+              brokerRegistrationNumber:
+                'Waste Collection Broker Registration Number',
+              carrierRegistrationNumber:
+                'Waste Collection Carrier Registration Number',
+            },
+            wasteTypes: [
+              {
+                ewcCode: '01 03 04',
+                wasteDescription: 'waste description',
+                physicalForm: 'Solid',
+                wasteQuantity: 100,
+                quantityUnit: 'Tonne',
+                wasteQuantityType: 'ActualData',
+                hasHazardousProperties: false,
+                containsPops: false,
+                chemicalAndBiologicalComponents: [
+                  {
+                    concentration: 1,
+                    name: 'test',
+                    concentrationUnit: 'Milligram',
+                  },
+                ],
+                hazardousWasteCodes: [
+                  {
+                    code: 'HP1',
+                    name: 'test',
+                  },
+                ],
+                pops: [
+                  {
+                    concentration: 1,
+                    name: 'test',
+                    concentrationUnit: 'Milligram',
+                  },
+                ],
+              },
+            ],
+            receiver: {
+              address: {
+                addressLine1: 'Receiver Address Line 1',
+                addressLine2: 'Receiver Address Line 2',
+                country: 'Receiver Country',
+                postcode: 'Receiver Postcode',
+                townCity: 'Receiver Town/City',
+              },
+              contact: {
+                email: 'Receiver Email',
+                name: 'Receiver Contact Name',
+                organisationName: 'Receiver Organisation Name',
+                phone: 'Receiver Phone',
+              },
+              authorizationType: 'permit',
+              environmentalPermitNumber: '123456',
+            },
+            producer: {
+              reference: 'ref',
+              sicCode: '123456',
+              address: {
+                addressLine1: 'Producer Address Line 1',
+                addressLine2: 'Producer Address Line 2',
+                country: 'Producer Country',
+                postcode: 'Producer Postcode',
+                townCity: 'Producer Town/City',
+              },
+              contact: {
+                email: 'Producer Email',
+                name: 'Producer Contact Name',
+                organisationName: 'Producer Organisation Name',
+                phone: 'Producer Phone',
+              },
+            },
+          },
+        ],
+      });
+      expect(response.success).toBe(true);
+      if (response.success) {
+        return;
+      }
+      expect(mockRepository.createBulkRecords).toBeCalled();
+      expect(response.error.statusCode).toBe(201);
     });
   });
 });

@@ -63,7 +63,7 @@ const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
     brokerRegistrationNumber: `BRN ${i}`,
     carrierRegistrationNumber: `CRN ${i}`,
   },
-  wasteType: [
+  wasteTypes: [
     {
       ewcCode: `${i.toString().padStart(3, '0')}012`,
       physicalForm: 'Solid',
@@ -131,7 +131,7 @@ export function getDrafts(
 
   if (ewcCode) {
     filteredSubmissions = filteredSubmissions.filter((s) =>
-      s.wasteType.some((wt) => wt.ewcCode === ewcCode)
+      s.wasteTypes.some((wt) => wt.ewcCode === ewcCode)
     );
   }
 
@@ -154,7 +154,7 @@ export function getDrafts(
       id: s.id,
       wasteMovementId: s.transactionId,
       producerName: s.producer.contact.organisationName,
-      ewcCode: s.wasteType[0].ewcCode,
+      ewcCode: s.wasteTypes[0].ewcCode,
       collectionDate: s.wasteCollection.expectedWasteCollectionDate,
     })),
   };

@@ -26,6 +26,25 @@ export type ContentToBeProcessedTask = {
   data: ContentProcessingTask;
 };
 
+export type ContentSubmissionTask = {
+  batchId: string;
+  accountId: string;
+};
+
+export type ContentToBeSubmittedTask = {
+  id: string;
+  time: string;
+  type: string;
+  source: string;
+  specversion: string;
+  datacontenttype: string;
+  pubsubname: string;
+  queue: string;
+  traceparent: string;
+  tracestate: string;
+  data: ContentSubmissionTask;
+};
+
 export type ValidateCsvContentRequest = api.AddContentToBatchRequest;
 export type ValidateCsvContentResponse = Response<{
   batchId: string | undefined;

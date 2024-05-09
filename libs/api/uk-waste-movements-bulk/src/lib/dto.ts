@@ -32,7 +32,7 @@ export type FinalizeBatchResponse = Response<void>;
 
 export type PartialSubmission = Omit<
   Submission,
-  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+  'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
 export type BulkSubmissionValidationRowError = {
@@ -52,11 +52,9 @@ export type BulkSubmissionValidationColumnError = {
   errorDetails: BulkSubmissionValidationRowErrorDetails[];
 };
 
-export type SubmissionReference = {
-  id: string;
-  transactionId: string;
-  reference: string;
-};
+export type BulkSubmissionSummary = Readonly<
+  Omit<Submission, 'receiver' | 'wasteTransportation'>
+>;
 
 export type BulkSubmissionState =
   | {
@@ -92,7 +90,7 @@ export type BulkSubmissionState =
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      submissions: SubmissionReference[];
+      submissions: BulkSubmissionSummary[];
     };
 
 export type BulkSubmission = {

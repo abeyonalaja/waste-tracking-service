@@ -1,4 +1,4 @@
-import { AccountIdRequest, Method } from '@wts/api/common';
+import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { ValidationResult } from './validation';
 
@@ -42,8 +42,13 @@ export type ChemicalAndBiologicalComponent = {
 
 export type QuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 
+export type SubmissionStateStatus =
+  | 'SubmittedWithEstimates'
+  | 'SubmittedWithActuals'
+  | 'UpdatedWithActuals';
+
 export type SubmissionState = {
-  status: 'InProgress' | 'Submitted';
+  status: SubmissionStateStatus;
   timestamp: Date;
 };
 
@@ -127,19 +132,20 @@ export type WasteTypeDetail = {
   pops?: Pop[];
 };
 
-export type SubmissionBase = {
-  id: string;
+export type SubmissionDeclaration = {
+  declarationTimestamp: Date;
   transactionId: string;
+};
+
+export type Submission = {
+  id: string;
   producer: ProducerDetail;
   wasteCollection: WasteCollectionDetail;
   receiver: ReceiverDetail;
   wasteTransportation: WasteTransportationDetail;
-  wasteType: WasteTypeDetail[];
+  wasteTypes: WasteTypeDetail[];
+  submissionDeclaration: SubmissionDeclaration;
   submissionState: SubmissionState;
-};
-
-export type Submission = SubmissionBase & {
-  submissionConfirmation: SubmissionConfirmation;
 };
 
 export type ProducerDetailFlattened = {
@@ -357,3 +363,21 @@ export const validateSubmissions: Method = {
   name: 'validateSubmissions',
   httpVerb: 'POST',
 };
+
+export type PartialSubmission = Omit<
+  Submission,
+  'id' | 'submissionDeclaration' | 'submissionState'
+>;
+
+export type CreateSubmissionsRequest = IdRequest &
+  AccountIdRequest & {
+    values: PartialSubmission[];
+  };
+export type CreateSubmissionsResponse = Response<Submission[]>;
+
+export const createSubmissions: Method = {
+  name: 'createSubmissions',
+  httpVerb: 'POST',
+};
+
+export type DbContainerNameKey = 'drafts';

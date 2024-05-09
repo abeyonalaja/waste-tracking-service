@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom';
 import * as api from '@wts/api/uk-waste-movements';
+import { v4 as uuidv4 } from 'uuid';
 import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
 import { Handler } from '@wts/api/common';
@@ -13,9 +14,13 @@ import {
 } from '../model';
 import { validationRules } from '../lib';
 import { Pop, WasteCode } from '@wts/api/reference-data';
+import { CosmosRepository } from '../data';
+
+const submissionsContainerName = 'drafts';
 
 export default class SubmissionController {
   constructor(
+    private repository: CosmosRepository,
     private logger: Logger,
     private hazardousCodes: WasteCode[],
     private pops: Pop[],
@@ -332,15 +337,15 @@ export default class SubmissionController {
             s.tenthWasteTypePopsConcentrationUnitsString,
         };
 
-        const wasteType = validationRules.validateWasteTypeDetailSection(
+        const wasteTypes = validationRules.validateWasteTypeDetailSection(
           wasteTypeDetailFlattened,
           this.hazardousCodes,
           this.pops,
           this.ewcCodes
         );
 
-        if (!wasteType.valid) {
-          fieldFormatErrors.push(...wasteType.value);
+        if (!wasteTypes.valid) {
+          fieldFormatErrors.push(...wasteTypes.value);
         }
 
         if (
@@ -348,7 +353,7 @@ export default class SubmissionController {
           producer.valid &&
           wasteCollection.valid &&
           wasteTransportation.valid &&
-          wasteType.valid
+          wasteTypes.valid
         ) {
           if (!wasteCollection.value.address.addressLine1?.trim()) {
             wasteCollection.value.address = producer.value.address;
@@ -357,7 +362,7 @@ export default class SubmissionController {
           submissions.push({
             producer: producer.value,
             receiver: receiver.value,
-            wasteType: wasteType.value,
+            wasteTypes: wasteTypes.value,
             wasteCollection: wasteCollection.value,
             wasteTransportation: wasteTransportation.value,
           });
@@ -384,6 +389,61 @@ export default class SubmissionController {
             };
 
       return success(result);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  createSubmissions: Handler<
+    api.CreateSubmissionsRequest,
+    api.CreateSubmissionsResponse
+  > = async ({ accountId, values }) => {
+    try {
+      const submissions = values.map((s) => {
+        const id = uuidv4();
+        const timestamp = new Date();
+
+        const transactionId =
+          'WM' +
+          timestamp.getFullYear().toString().substring(2) +
+          (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+          '_' +
+          id.substring(0, 8).toUpperCase();
+
+        const submissionState: api.Submission['submissionState'] = {
+          status: s.wasteTypes.some((wt) => {
+            wt.wasteQuantityType == 'EstimateData';
+          })
+            ? 'SubmittedWithEstimates'
+            : 'SubmittedWithActuals',
+          timestamp: new Date(),
+        };
+
+        return {
+          id,
+          ...s,
+          submissionDeclaration: {
+            declarationTimestamp: new Date(),
+            transactionId: transactionId,
+          },
+          submissionState,
+          transactionId,
+        };
+      });
+      await this.repository.createBulkRecords(
+        submissionsContainerName,
+        accountId,
+        submissions
+      );
+      return {
+        success: true,
+        value: submissions,
+      };
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

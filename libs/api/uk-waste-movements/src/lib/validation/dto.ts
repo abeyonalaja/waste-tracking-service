@@ -63,7 +63,7 @@ export type InvalidAttributeCombinationError = {
 
 export type Value = Omit<
   Submission,
-  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+  'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
 export type Error = {
