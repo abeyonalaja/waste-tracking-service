@@ -71,18 +71,25 @@ export function UploadForm({
 
     let response: Response;
 
+    let headers;
+    headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    if (process.env['NODE_ENV'] === 'production') {
+      headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+    }
+
     try {
       response = await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches`,
         {
           method: 'POST',
           body: formData,
-          headers: {
-            // Mock API only works with no defined content type
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-            // TODO: Get token from context
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         }
       );
     } catch (error) {

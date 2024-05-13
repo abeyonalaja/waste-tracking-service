@@ -12,8 +12,6 @@ export async function getSubmissionStatus(
 
   const apiUrl = `${protocol}://${hostname}/api`;
 
-  console.log(apiUrl);
-
   const response = await fetch(`${apiUrl}/ukwm-batches/${submissionId}`, {
     method: 'GET',
     cache: 'no-store',
