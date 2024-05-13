@@ -30,13 +30,13 @@ Before do |scenario|
     TestStatus.set_test_status('Test ENV', Env.test_env)
     TestStatus.set_test_status('Start url', Env.app_page_url)
     visit(Env.app_page_url)
-    click_link('dashboard_link')
+    click_link('Start now')
     sleep 1
     user = "USER#{@current_process}"
     OverviewPage.new.login_to_dcid(user)
     sleep 2
-    visit("#{Env.app_page_url}/api/auth/session")
-    sleep 2
+    visit("#{Env.app_page_url}/export-annex-VII-waste/api/auth/session")
+    sleep 5
     page_source = page.body
     puts page.body
     token = page_source.match(/"token":"([^"]+)"/)[1]
@@ -47,6 +47,7 @@ Before do |scenario|
     $token = token
 
     puts '&&&&&&&&&&&&&'
+    # https://track-waste-tst.azure.defra.cloud/en/export-annex-VII-waste/api/auth/session
     # # https://track-waste-tst.azure.defra.cloud/api/auth/session
     # path = '/api/auth/session'
     # uri = URI.parse Env.app_page_url.to_s

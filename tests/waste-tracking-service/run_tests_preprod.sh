@@ -2,7 +2,7 @@ rm -r reports/*
 mkdir -p reports
 mkdir -p reports/parallel
 export ENVIRONMENT='preprod'
-export START_PAGE_URL=https://track-waste-pre.azure.defra.cloud/
+export START_PAGE_URL=
 rm -f failed_scenarios.txt
 
 if [ -z "$1" ]; then

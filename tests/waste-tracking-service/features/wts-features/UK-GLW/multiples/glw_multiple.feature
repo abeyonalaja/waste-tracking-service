@@ -38,7 +38,6 @@ Feature: GLW multiple
     And I click the upload button
     Then I should see glw csv is successfully uploaded
     And I should see glw csv upload page correctly translated
-    When I wait for a second
     When I click the "Continue and submit all records" button
     Then I should see glw csv declaration page is displayed
     When I click the "I confirm - submit all records" button

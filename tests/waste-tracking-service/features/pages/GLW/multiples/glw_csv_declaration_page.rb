@@ -15,7 +15,7 @@ class GlwCsvDeclarationPage < GenericPage
 
   def check_page_displayed(rows)
     title = TITLE.gsub('{{count}}', rows.to_s)
-    expect(self).to have_css 'h1', text: title, exact_text: true
+    expect(self).to have_css 'h1', text: title, exact_text: true, wait: 10
   end
 
   def check_page_translation

@@ -5,7 +5,7 @@ module FileUploadHelper
 
   @file_type = {
     PDF: 'testpdf.pdf',
-    VALID: 'test-csv.csv',
+    VALID: '9_data.csv',
     INVALID: 'test-csv-failed.csv'
   }
 

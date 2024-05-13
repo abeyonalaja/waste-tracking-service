@@ -1,6 +1,4 @@
 server: hub.browserstack.com
-user: 'spappula_6OcXAI'
-key: 'imSyUqSoKAcd6x2juGz4'
 
 common_caps:
   build: browserstack-build-2

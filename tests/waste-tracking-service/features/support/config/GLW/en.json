@@ -594,7 +594,7 @@
   "multiples.submit.list.itemThree": "you've checked with the relevant authorities if there are any local controls that apply in any country involved in the journey of the waste",
   "multiples.submit.list.itemFour": "you've classified the waste appropriately",
   "multiples.submit.button": "I confirm - submit all records",
-  "multiples.exportSubmitted.panelTitle": "{{count}} Annex VII record submitted",
+  "multiples.exportSubmitted.panelTitle": "{{count}} Annex VII records submitted",
   "nextPage": "Next page",
   "notApplicable": "Not applicable",
   "numberAdjective.1": "First",

@@ -13,7 +13,7 @@ end
 
 Given(/^I upload a CSV with wrong data$/) do
   @wts = WasteTracking.new(@region)
-  @response = @wts.post_glw_multiples 'about_waste_errors'
+  @response = @wts.post_glw_multiples 'glw_errors'
   @incorrect_csv_response = JSON.parse(@response.body)
   Log.info("GLW wrong data CSV id is  #{@incorrect_csv_response}")
 end

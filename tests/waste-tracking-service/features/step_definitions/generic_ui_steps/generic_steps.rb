@@ -59,6 +59,10 @@ And(/^I wait for a second$/) do
   sleep 1
 end
 
+And(/^I wait for 10 second$/) do
+  sleep 10
+end
+
 And(/^I wait for a second long$/) do
   sleep 100
 end

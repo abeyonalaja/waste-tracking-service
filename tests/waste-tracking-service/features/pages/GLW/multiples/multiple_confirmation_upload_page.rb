@@ -22,7 +22,7 @@ class MultipleConfirmationUploadPage < GenericPage
 
   def check_page_displayed(rows)
     title = TITLE.gsub('{{count}}', rows.to_s)
-    expect(self).to have_css 'h1', text: title, exact_text: true
+    expect(self).to have_css 'h1', text: title, exact_text: true, wait: 10
   end
 
   def check_page_translation
@@ -39,5 +39,16 @@ class MultipleConfirmationUploadPage < GenericPage
     expect(self).to have_text LEGAL_ONE
     expect(self).to have_text LEGAL_TWO
     expect(self).to have_link RETURN_BUTTON
+  end
+
+  def upload_successful
+    max_wait_time = 30
+    begin
+      Timeout.timeout(max_wait_time) do
+        sleep 0.1 until page.has_css?('h2', text: STATEMENT, exact_text: true)
+      end
+    rescue Timeout::Error
+      puts 'Submission did not complete successfully within the specified time.'
+    end
   end
 end

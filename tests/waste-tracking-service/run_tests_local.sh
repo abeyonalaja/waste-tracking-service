@@ -2,7 +2,7 @@ rm -r reports/parallel
 mkdir -p reports
 mkdir -p reports/parallel
 export ENVIRONMENT='LOCAL'
-export START_PAGE_URL=http://localhost:4200/
+export START_PAGE_URL=
 rm -f failed_scenarios.txt
 
 if [ -z "$1" ]; then

@@ -8,7 +8,8 @@ When(/^I upload valid glw csv$/) do
 end
 
 Then(/^I should see glw csv is successfully uploaded$/) do
-  GlwUploadSuccessPage.new.check_page_displayed
+  GlwUploadSuccessPage.new.wait_to_upload
+  GlwUploadSuccessPage.new.check_page_displayed '9'
 end
 
 When(/^I upload invalid glw csv$/) do
@@ -66,7 +67,7 @@ And(/^I should see cancel glw csv upload page is correctly translated$/) do
 end
 
 Then(/^I should see glw csv declaration page is displayed$/) do
-  GlwCsvDeclarationPage.new.check_page_displayed 1
+  GlwCsvDeclarationPage.new.check_page_displayed 9
 end
 
 And(/^I should see glw csv declaration page is correctly translated$/) do
@@ -74,7 +75,8 @@ And(/^I should see glw csv declaration page is correctly translated$/) do
 end
 
 Then(/^I should see glw csv submitted successful page$/) do
-  MultipleConfirmationUploadPage.new.check_page_displayed 1
+  MultipleConfirmationUploadPage.new.upload_successful
+  MultipleConfirmationUploadPage.new.check_page_displayed 9
 end
 
 And(/^I should see glw csv submitted successful page is correctly translated$/) do
