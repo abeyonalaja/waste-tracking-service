@@ -71,17 +71,9 @@ export function UploadForm({
 
     let response: Response;
 
-    let headers;
-    headers = {
+    const headers = {
       Authorization: `Bearer ${token}`,
     };
-
-    if (process.env['NODE_ENV'] === 'production') {
-      headers = {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
-    }
 
     try {
       response = await fetch(
