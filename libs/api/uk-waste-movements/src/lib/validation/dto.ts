@@ -45,20 +45,33 @@ export type Field =
   | 'Hazardous Waste Codes'
   | 'Waste Contains POPs'
   | 'Persistant organic pollutants (POPs)'
-  | 'Persistant organic pollutants (POPs) Concentrations'
+  | 'Persistant organic pollutants (POPs) Concentration Values'
   | 'Persistant organic pollutants (POPs) Concentration Units'
   | 'Chemical and biological components of the waste'
   | 'Chemical and biological concentration values'
   | 'Chemical and biological concentration units of measure';
 
+export type ErrorCodeData =
+  | {
+      type: 'message';
+      message: string;
+      field: Field;
+    }
+  | {
+      type: 'builder';
+      builder: (args: string[]) => string;
+      field: Field;
+    };
+
 export type FieldFormatError = {
   field: Field;
-  message: string;
+  code: number;
+  args?: string[];
 };
 
 export type InvalidAttributeCombinationError = {
   fields: Field[];
-  message: string;
+  code: number;
 };
 
 export type Value = Omit<

@@ -25,7 +25,7 @@ export const finalizeBatch: Method = {
 };
 
 export type GetBatchRequest = { id: string } & AccountIdRequest;
-export type GetBatchResponse = Response<BulkSubmission>;
+export type GetBatchResponse = Response<BulkSubmissionDetail>;
 
 export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
@@ -35,13 +35,25 @@ export type PartialSubmission = Omit<
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
+export type BulkSubmissionValidationRowCodeError = {
+  rowNumber: number;
+  errorAmount: number;
+  errorCodes: (
+    | number
+    | {
+        code: number;
+        args: string[];
+      }
+  )[];
+};
+
 export type BulkSubmissionValidationRowError = {
   rowNumber: number;
   errorAmount: number;
   errorDetails: string[];
 };
 
-export type BulkSubmissionValidationRowErrorDetails = {
+export type BulkSubmissionValidationColumnErrorDetail = {
   rowNumber: number;
   errorReason: string;
 };
@@ -49,14 +61,27 @@ export type BulkSubmissionValidationRowErrorDetails = {
 export type BulkSubmissionValidationColumnError = {
   errorAmount: number;
   columnName: string;
-  errorDetails: BulkSubmissionValidationRowErrorDetails[];
+  errorDetails: BulkSubmissionValidationColumnErrorDetail[];
 };
 
 export type BulkSubmissionSummary = Readonly<
   Omit<Submission, 'receiver' | 'wasteTransportation'>
 >;
 
-export type BulkSubmissionState =
+type FailedValidationCodeState = {
+  status: 'FailedValidation';
+  timestamp: Date;
+  rowErrors: BulkSubmissionValidationRowCodeError[];
+};
+
+type FailedValidationDetailState = {
+  status: 'FailedValidation';
+  timestamp: Date;
+  rowErrors: BulkSubmissionValidationRowError[];
+  columnErrors?: BulkSubmissionValidationColumnError[];
+};
+
+type BulkSubmissionStateBase =
   | {
       status: 'Processing';
       timestamp: Date;
@@ -65,12 +90,6 @@ export type BulkSubmissionState =
       status: 'FailedCsvValidation';
       timestamp: Date;
       error: string;
-    }
-  | {
-      status: 'FailedValidation';
-      timestamp: Date;
-      rowErrors: BulkSubmissionValidationRowError[];
-      columnErrors: BulkSubmissionValidationColumnError[];
     }
   | {
       status: 'PassedValidation';
@@ -93,9 +112,18 @@ export type BulkSubmissionState =
       submissions: BulkSubmissionSummary[];
     };
 
+export type BulkSubmissionState =
+  | BulkSubmissionStateBase
+  | FailedValidationCodeState;
+
 export type BulkSubmission = {
   id: string;
   state: BulkSubmissionState;
+};
+
+export type BulkSubmissionDetail = {
+  id: string;
+  state: BulkSubmissionStateBase | FailedValidationDetailState;
 };
 
 export type ProducerDetailFlattened = {

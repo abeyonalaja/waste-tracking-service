@@ -6,6 +6,7 @@ import { BatchRepository } from '../data';
 import { Handler } from '@wts/api/common';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 import { BulkSubmission } from '../model';
+import { Field, ErrorCodeData, validation } from '@wts/api/uk-waste-movements';
 
 export class BatchController {
   constructor(private repository: BatchRepository, private logger: Logger) {}
@@ -44,7 +45,138 @@ export class BatchController {
         id,
         accountId
       );
-      const response: api.GetBatchResponse = success(data);
+      const response: api.GetBatchResponse = success(
+        data as unknown as api.BulkSubmissionDetail
+      );
+
+      if (data.state.status === 'FailedValidation') {
+        const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
+        const columnErrorsObj: {
+          [key in Field]: api.BulkSubmissionValidationColumnErrorDetail[];
+        } = {
+          'Producer address line 1': [],
+          'Producer address line 2': [],
+          'Producer contact name': [],
+          'Producer contact email address': [],
+          'Producer contact phone number': [],
+          'Producer country': [],
+          'Producer organisation name': [],
+          'Producer postcode': [],
+          'Producer Standard Industrial Classification (SIC) code': [],
+          'Producer town or city': [],
+          'Receiver address line 1': [],
+          'Receiver address line 2': [],
+          'Receiver postcode': [],
+          'Receiver contact name': [],
+          'Receiver contact email address': [],
+          'Receiver contact phone number': [],
+          'Receiver country': [],
+          'Receiver environmental permit number': [],
+          'Receiver organisation name': [],
+          'Receiver town or city': [],
+          'Receiver authorization type': [],
+          'Waste Collection Details Address Line 1': [],
+          'Waste Collection Details Address Line 2': [],
+          'Waste Collection Details Town or City': [],
+          'Waste Collection Details Country': [],
+          'Waste Collection Details Postcode': [],
+          'Waste Collection Details Waste Source': [],
+          'Waste Collection Details Broker Registration Number': [],
+          'Waste Collection Details Carrier Registration Number': [],
+          'Waste Collection Details Mode of Waste Transport': [],
+          'Waste Collection Details Expected Waste Collection Date': [],
+          'Number and type of transportation containers': [],
+          'Special handling requirements details': [],
+          'EWC Code': [],
+          'Waste Description': [],
+          'Physical Form': [],
+          'Waste Quantity': [],
+          'Waste Quantity Units': [],
+          'Quantity of waste (actual or estimate)': [],
+          'Waste Has Hazardous Properties': [],
+          'Hazardous Waste Codes': [],
+          'Waste Contains POPs': [],
+          'Persistant organic pollutants (POPs)': [],
+          'Persistant organic pollutants (POPs) Concentration Values': [],
+          'Persistant organic pollutants (POPs) Concentration Units': [],
+          'Chemical and biological components of the waste': [],
+          'Chemical and biological concentration units of measure': [],
+          'Chemical and biological concentration values': [],
+          Reference: [],
+        };
+
+        const rowErrors: api.BulkSubmissionValidationRowError[] = [];
+
+        for (const rowCodeError of data.state.rowErrors) {
+          rowErrors.push({
+            errorAmount: rowCodeError.errorAmount,
+            rowNumber: rowCodeError.rowNumber,
+            errorDetails: rowCodeError.errorCodes.map((ec) => {
+              let errorData: ErrorCodeData;
+              let args: string[] = [];
+
+              if (typeof ec === 'number') {
+                errorData = validation.UkwmErrorData[ec];
+              } else {
+                args = ec.args;
+                errorData = validation.UkwmErrorData[ec.code];
+              }
+
+              if (errorData.type === 'message') {
+                return errorData.message;
+              } else {
+                return errorData.builder(args);
+              }
+            }),
+          });
+        }
+
+        for (const rowError of data.state.rowErrors) {
+          for (const errorCode of rowError.errorCodes) {
+            let errorData: ErrorCodeData;
+            let args: string[] = [];
+
+            if (typeof errorCode === 'number') {
+              errorData = validation.UkwmErrorData[errorCode];
+            } else {
+              args = errorCode.args;
+              errorData = validation.UkwmErrorData[errorCode.code];
+            }
+
+            if (!columnErrorsObj[errorData.field]) {
+              continue;
+            }
+
+            columnErrorsObj[errorData.field].push({
+              rowNumber: rowError.rowNumber,
+              errorReason:
+                errorData.type === 'message'
+                  ? errorData.message
+                  : errorData.builder(args),
+            });
+          }
+        }
+
+        for (const key in columnErrorsObj) {
+          const keyAsField = key as Field;
+          const errorDetails = columnErrorsObj[keyAsField];
+          columnErrors.push({
+            columnName: keyAsField,
+            errorAmount: errorDetails.length,
+            errorDetails: errorDetails,
+          });
+        }
+
+        if (
+          response.success &&
+          response.value.state.status === 'FailedValidation'
+        ) {
+          response.value.state.columnErrors = columnErrors.filter(
+            (ce) => ce.errorAmount > 0
+          );
+          response.value.state.rowErrors = rowErrors;
+        }
+      }
       return response;
     } catch (err) {
       if (err instanceof Boom.Boom) {

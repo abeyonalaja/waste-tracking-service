@@ -19,7 +19,7 @@ export type InvalidAttributeCombinationError =
 export type ValidationResult = api.validation.ValidationResult;
 export type Value = api.validation.Value;
 export type Error = api.validation.Error;
-export type WasteTypeErrorMessage = api.validation.WasteTypeErrorMessage;
+export type WasteTypeErrorCode = api.validation.errorCodes.WasteTypeErrorCode;
 
 export type SubmissionFlattened = bulkApi.SubmissionFlattened;
 export type ProducerDetailFlattened = bulkApi.ProducerDetailFlattened;

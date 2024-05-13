@@ -117,37 +117,35 @@ describe(validateProducerDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Reference',
-        message: validation.ProducerValidationErrorMessages.emptyReference,
+        code: validation.errorCodes.producerEmptyReference,
       },
       {
         field: 'Producer organisation name',
-        message:
-          validation.ProducerValidationErrorMessages.emptyOrganisationName,
+        code: validation.errorCodes.producerEmptyOrganisationName,
       },
       {
         field: 'Producer address line 1',
-        message: validation.ProducerValidationErrorMessages.emptyAddressLine1,
+        code: validation.errorCodes.producerEmptyAddressLine1,
       },
       {
         field: 'Producer town or city',
-        message: validation.ProducerValidationErrorMessages.emptyTownOrCity,
+        code: validation.errorCodes.producerEmptyTownOrCity,
       },
       {
         field: 'Producer country',
-        message: validation.ProducerValidationErrorMessages.emptyCountry,
+        code: validation.errorCodes.producerEmptyCountry,
       },
       {
         field: 'Producer contact name',
-        message:
-          validation.ProducerValidationErrorMessages.emptyContactFullName,
+        code: validation.errorCodes.producerEmptyContactFullName,
       },
       {
         field: 'Producer contact phone number',
-        message: validation.ProducerValidationErrorMessages.emptyPhone,
+        code: validation.errorCodes.producerEmptyPhone,
       },
       {
         field: 'Producer contact email address',
-        message: validation.ProducerValidationErrorMessages.emptyEmail,
+        code: validation.errorCodes.producerEmptyEmail,
       },
     ]);
 
@@ -169,45 +167,43 @@ describe(validateProducerDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Reference',
-        message: validation.ProducerValidationErrorMessages.invalidReference,
+        code: validation.errorCodes.producerInvalidReference,
       },
       {
         field: 'Producer organisation name',
-        message:
-          validation.ProducerValidationErrorMessages.emptyOrganisationName,
+        code: validation.errorCodes.producerEmptyOrganisationName,
       },
       {
         field: 'Producer address line 1',
-        message: validation.ProducerValidationErrorMessages.emptyAddressLine1,
+        code: validation.errorCodes.producerEmptyAddressLine1,
       },
       {
         field: 'Producer town or city',
-        message: validation.ProducerValidationErrorMessages.emptyTownOrCity,
+        code: validation.errorCodes.producerEmptyTownOrCity,
       },
       {
         field: 'Producer country',
-        message: validation.ProducerValidationErrorMessages.emptyCountry,
+        code: validation.errorCodes.producerEmptyCountry,
       },
       {
         field: 'Producer postcode',
-        message: validation.ProducerValidationErrorMessages.invalidPostcode,
+        code: validation.errorCodes.producerInvalidPostcode,
       },
       {
         field: 'Producer contact name',
-        message:
-          validation.ProducerValidationErrorMessages.emptyContactFullName,
+        code: validation.errorCodes.producerEmptyContactFullName,
       },
       {
         field: 'Producer contact phone number',
-        message: validation.ProducerValidationErrorMessages.invalidPhone,
+        code: validation.errorCodes.producerInvalidPhone,
       },
       {
         field: 'Producer contact email address',
-        message: validation.ProducerValidationErrorMessages.invalidEmail,
+        code: validation.errorCodes.producerInvalidEmail,
       },
       {
         field: 'Producer Standard Industrial Classification (SIC) code',
-        message: validation.ProducerValidationErrorMessages.invalidSicCode,
+        code: validation.errorCodes.producerInvalidSicCode,
       },
     ]);
 
@@ -230,54 +226,47 @@ describe(validateProducerDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Reference',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyReference,
+        code: validation.errorCodes.producerCharTooManyReference,
       },
       {
         field: 'Producer organisation name',
-        message:
-          validation.ProducerValidationErrorMessages
-            .charTooManyOrganisationName,
+        code: validation.errorCodes.producerCharTooManyOrganisationName,
       },
       {
         field: 'Producer address line 1',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyAddressLine1,
+        code: validation.errorCodes.producerCharTooManyAddressLine1,
       },
       {
         field: 'Producer address line 2',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyAddressLine2,
+        code: validation.errorCodes.producerCharTooManyAddressLine2,
       },
       {
         field: 'Producer town or city',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyTownOrCity,
+        code: validation.errorCodes.producerCharTooManyTownOrCity,
       },
       {
         field: 'Producer country',
-        message: validation.ProducerValidationErrorMessages.invalidCountry,
+        code: validation.errorCodes.producerInvalidCountry,
       },
       {
         field: 'Producer postcode',
-        message: validation.ProducerValidationErrorMessages.invalidPostcode,
+        code: validation.errorCodes.producerInvalidPostcode,
       },
       {
         field: 'Producer contact name',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyContactFullName,
+        code: validation.errorCodes.producerCharTooManyContactFullName,
       },
       {
         field: 'Producer contact phone number',
-        message: validation.ProducerValidationErrorMessages.invalidPhone,
+        code: validation.errorCodes.producerInvalidPhone,
       },
       {
         field: 'Producer contact email address',
-        message: validation.ProducerValidationErrorMessages.invalidEmail,
+        code: validation.errorCodes.producerInvalidEmail,
       },
       {
         field: 'Producer Standard Industrial Classification (SIC) code',
-        message: validation.ProducerValidationErrorMessages.invalidSicCode,
+        code: validation.errorCodes.producerInvalidSicCode,
       },
     ]);
   });
@@ -321,44 +310,41 @@ describe(validateReceiverDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Receiver environmental permit number',
-        message:
-          validation.ReceiverValidationErrorMessages
-            .invalidEnvironmentalPermitNumberLength,
+        code: validation.errorCodes
+          .receiverInvalidEnvironmentalPermitNumberLength,
       },
       {
         field: 'Receiver organisation name',
-        message:
-          validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+        code: validation.errorCodes.receiverEmptyOrganisationName,
       },
       {
         field: 'Receiver address line 1',
-        message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+        code: validation.errorCodes.receiverEmptyAddressLine1,
       },
       {
         field: 'Receiver town or city',
-        message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+        code: validation.errorCodes.receiverEmptyTownOrCity,
       },
       {
         field: 'Receiver country',
-        message: validation.ReceiverValidationErrorMessages.emptyCountry,
+        code: validation.errorCodes.receiverEmptyCountry,
       },
       {
         field: 'Receiver contact name',
-        message:
-          validation.ReceiverValidationErrorMessages.emptyContactFullName,
+        code: validation.errorCodes.receiverEmptyContactFullName,
       },
       {
         field: 'Receiver contact phone number',
-        message: validation.ReceiverValidationErrorMessages.emptyPhone,
+        code: validation.errorCodes.receiverEmptyPhone,
       },
       {
         field: 'Receiver contact email address',
-        message: validation.ReceiverValidationErrorMessages.emptyEmail,
+        code: validation.errorCodes.receiverEmptyEmail,
       },
     ]);
 
     result = validateReceiverDetailSection({
-      receiverEnvironmentalPermitNumber: '             ',
+      receiverEnvironmentalPermitNumber: '   ',
       receiverAddressLine1: '     ',
       receiverContactName: '     ',
       receiverCountry: '     ',
@@ -375,42 +361,39 @@ describe(validateReceiverDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Receiver authorization type',
-        message:
-          validation.ReceiverValidationErrorMessages.emptyAuthorizationType,
+        code: validation.errorCodes.receiverEmptyAuthorizationType,
       },
       {
         field: 'Receiver organisation name',
-        message:
-          validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+        code: validation.errorCodes.receiverEmptyOrganisationName,
       },
       {
         field: 'Receiver address line 1',
-        message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+        code: validation.errorCodes.receiverEmptyAddressLine1,
       },
       {
         field: 'Receiver town or city',
-        message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+        code: validation.errorCodes.receiverEmptyTownOrCity,
       },
       {
         field: 'Receiver country',
-        message: validation.ReceiverValidationErrorMessages.emptyCountry,
+        code: validation.errorCodes.receiverEmptyCountry,
       },
       {
         field: 'Receiver postcode',
-        message: validation.ReceiverValidationErrorMessages.invalidPostcode,
+        code: validation.errorCodes.receiverInvalidPostcode,
       },
       {
         field: 'Receiver contact name',
-        message:
-          validation.ReceiverValidationErrorMessages.emptyContactFullName,
+        code: validation.errorCodes.receiverEmptyContactFullName,
       },
       {
         field: 'Receiver contact phone number',
-        message: validation.ReceiverValidationErrorMessages.invalidPhone,
+        code: validation.errorCodes.receiverInvalidPhone,
       },
       {
         field: 'Receiver contact email address',
-        message: validation.ReceiverValidationErrorMessages.invalidEmail,
+        code: validation.errorCodes.receiverInvalidEmail,
       },
     ]);
 
@@ -433,57 +416,48 @@ describe(validateReceiverDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Receiver authorization type',
-        message:
-          validation.ReceiverValidationErrorMessages
-            .invalidAuthorizationTypeLength,
+        code: validation.errorCodes.receiverInvalidAuthorizationTypeLength,
       },
       {
         field: 'Receiver environmental permit number',
-        message:
-          validation.ReceiverValidationErrorMessages
-            .invalidEnvironmentalPermitNumberLength,
+        code: validation.errorCodes
+          .receiverInvalidEnvironmentalPermitNumberLength,
       },
       {
         field: 'Receiver organisation name',
-        message:
-          validation.ReceiverValidationErrorMessages
-            .charTooManyOrganisationName,
+        code: validation.errorCodes.receiverCharTooManyOrganisationName,
       },
       {
         field: 'Receiver address line 1',
-        message:
-          validation.ReceiverValidationErrorMessages.charTooManyAddressLine1,
+        code: validation.errorCodes.receiverCharTooManyAddressLine1,
       },
       {
         field: 'Receiver address line 2',
-        message:
-          validation.ReceiverValidationErrorMessages.charTooManyAddressLine2,
+        code: validation.errorCodes.receiverCharTooManyAddressLine2,
       },
       {
         field: 'Receiver town or city',
-        message:
-          validation.ReceiverValidationErrorMessages.charTooManyTownOrCity,
+        code: validation.errorCodes.receiverCharTooManyTownOrCity,
       },
       {
         field: 'Receiver country',
-        message: validation.ReceiverValidationErrorMessages.invalidCountry,
+        code: validation.errorCodes.receiverInvalidCountry,
       },
       {
         field: 'Receiver postcode',
-        message: validation.ReceiverValidationErrorMessages.invalidPostcode,
+        code: validation.errorCodes.receiverInvalidPostcode,
       },
       {
         field: 'Receiver contact name',
-        message:
-          validation.ReceiverValidationErrorMessages.charTooManyContactFullName,
+        code: validation.errorCodes.receiverCharTooManyContactFullName,
       },
       {
         field: 'Receiver contact phone number',
-        message: validation.ReceiverValidationErrorMessages.invalidPhone,
+        code: validation.errorCodes.receiverInvalidPhone,
       },
       {
         field: 'Receiver contact email address',
-        message: validation.ReceiverValidationErrorMessages.invalidEmail,
+        code: validation.errorCodes.receiverInvalidEmail,
       },
     ]);
   });
@@ -508,9 +482,8 @@ describe(validateWasteTransportationDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Number and type of transportation containers',
-        message:
-          validation.WasteTransportationValidationErrorMessages
-            .emptyNameAndTypeOfContainers,
+        code: validation.errorCodes
+          .wasteTransportationEmptyNameAndTypeOfContainers,
       },
     ]);
 
@@ -525,15 +498,13 @@ describe(validateWasteTransportationDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Number and type of transportation containers',
-        message:
-          validation.WasteTransportationValidationErrorMessages
-            .charTooManyNameAndTypeOfContainers,
+        code: validation.errorCodes
+          .wasteTransportationCharTooManyNameAndTypeOfContainers,
       },
       {
         field: 'Special handling requirements details',
-        message:
-          validation.WasteTransportationValidationErrorMessages
-            .charTooManySpecialHandlingRequirements,
+        code: validation.errorCodes
+          .wasteTransportationCharTooManySpecialHandlingRequirements,
       },
     ]);
   });
@@ -592,16 +563,15 @@ describe(validateWasteCollectionDetailSection, () => {
     expect(response.value).toEqual([
       {
         field: 'Waste Collection Details Waste Source',
-        message: validation.WasteCollectionErrorMessages.missingWasteSource,
+        code: validation.errorCodes.wasteCollectionMissingWasteSource,
       },
       {
         field: 'Waste Collection Details Mode of Waste Transport',
-        message: validation.WasteCollectionErrorMessages.emptyModeOfTransport,
+        code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
       },
       {
         field: 'Waste Collection Details Expected Waste Collection Date',
-        message:
-          validation.WasteCollectionErrorMessages.missingWasteCollectionDate,
+        code: validation.errorCodes.wasteCollectionMissingWasteCollectionDate,
       },
     ]);
 
@@ -621,52 +591,46 @@ describe(validateWasteCollectionDetailSection, () => {
     expect(response.value).toEqual([
       {
         field: 'Waste Collection Details Address Line 1',
-        message:
-          validation.WasteCollectionErrorMessages.charTooManyAddressLine1,
+        code: validation.errorCodes.wasteCollectionCharTooManyAddressLine1,
       },
       {
         field: 'Waste Collection Details Address Line 2',
-        message:
-          validation.WasteCollectionErrorMessages.charTooManyAddressLine2,
+        code: validation.errorCodes.wasteCollectionCharTooManyAddressLine2,
       },
       {
         field: 'Waste Collection Details Town or City',
-        message: validation.WasteCollectionErrorMessages.charTooManyTownOrCity,
+        code: validation.errorCodes.wasteCollectionCharTooManyTownOrCity,
       },
       {
         field: 'Waste Collection Details Country',
-        message: validation.WasteCollectionErrorMessages.invalidCountry,
+        code: validation.errorCodes.wasteCollectionInvalidCountry,
       },
       {
         field: 'Waste Collection Details Postcode',
-        message: validation.WasteCollectionErrorMessages.invalidPostcode,
+        code: validation.errorCodes.wasteCollectionInvalidPostcode,
       },
       {
         field: 'Waste Collection Details Waste Source',
-        message: validation.WasteCollectionErrorMessages.invalidWasteSource,
+        code: validation.errorCodes.wasteCollectionInvalidWasteSource,
       },
       {
         field: 'Waste Collection Details Broker Registration Number',
-        message:
-          validation.WasteCollectionErrorMessages
-            .charTooManyBrokerRegistrationNumber,
+        code: validation.errorCodes
+          .wasteCollectionCharTooManyBrokerRegistrationNumber,
       },
       {
         field: 'Waste Collection Details Carrier Registration Number',
-        message:
-          validation.WasteCollectionErrorMessages
-            .charTooManyCarrierRegistrationNumber,
+        code: validation.errorCodes
+          .wasteCollectionCharTooManyCarrierRegistrationNumber,
       },
       {
         field: 'Waste Collection Details Mode of Waste Transport',
-        message:
-          validation.WasteCollectionErrorMessages.invalidModeOfWasteTransport,
+        code: validation.errorCodes.wasteCollectionInvalidModeOfWasteTransport,
       },
       {
         field: 'Waste Collection Details Expected Waste Collection Date',
-        message:
-          validation.WasteCollectionErrorMessages
-            .invalidFormatWasteCollectionDate,
+        code: validation.errorCodes
+          .wasteCollectionInvalidFormatWasteCollectionDate,
       },
     ]);
   });
@@ -729,54 +693,51 @@ describe(validateWasteTypeDetailSection, () => {
     );
 
     const firstWasteTypeErrorMessages =
-      validation.WasteTypeValidationErrorMessages(1);
+      validation.errorCodes.WasteTypeValidationErrorCode(1);
 
     expect(result.valid).toBe(false);
 
     expect(result.value).toEqual([
-      { field: 'EWC Code', message: firstWasteTypeErrorMessages.emptyEwcCode },
+      { field: 'EWC Code', code: firstWasteTypeErrorMessages.emptyEwcCode },
       {
         field: 'Waste Description',
-        message: firstWasteTypeErrorMessages.emptyWasteDescription,
+        code: firstWasteTypeErrorMessages.emptyWasteDescription,
       },
       {
         field: 'Physical Form',
-        message: firstWasteTypeErrorMessages.emptyPhysicalForm,
+        code: firstWasteTypeErrorMessages.emptyPhysicalForm,
       },
       {
         field: 'Waste Quantity',
-        message: firstWasteTypeErrorMessages.emptyWasteQuantity,
+        code: firstWasteTypeErrorMessages.emptyWasteQuantity,
       },
       {
         field: 'Waste Quantity Units',
-        message: firstWasteTypeErrorMessages.emptyWasteQuantityUnit,
+        code: firstWasteTypeErrorMessages.emptyWasteQuantityUnit,
       },
       {
         field: 'Quantity of waste (actual or estimate)',
-        message: firstWasteTypeErrorMessages.invalidWasteQuantityType,
+        code: firstWasteTypeErrorMessages.invalidWasteQuantityType,
       },
       {
         field: 'Chemical and biological components of the waste',
-        message:
-          firstWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
+        code: firstWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
       },
       {
         field: 'Chemical and biological concentration values',
-        message:
-          firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
+        code: firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
       },
       {
         field: 'Chemical and biological concentration units of measure',
-        message:
-          firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
+        code: firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
       },
       {
         field: 'Waste Has Hazardous Properties',
-        message: firstWasteTypeErrorMessages.invalidHasHazardousProperties,
+        code: firstWasteTypeErrorMessages.invalidHasHazardousProperties,
       },
       {
         field: 'Waste Contains POPs',
-        message: firstWasteTypeErrorMessages.invalidContainsPops,
+        code: firstWasteTypeErrorMessages.invalidContainsPops,
       },
     ]);
 
@@ -805,50 +766,47 @@ describe(validateWasteTypeDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'EWC Code',
-        message: firstWasteTypeErrorMessages.invalidEwcCode,
+        code: firstWasteTypeErrorMessages.invalidEwcCode,
       },
       {
         field: 'Waste Description',
-        message: firstWasteTypeErrorMessages.charTooManyWasteDescription,
+        code: firstWasteTypeErrorMessages.charTooManyWasteDescription,
       },
       {
         field: 'Physical Form',
-        message: firstWasteTypeErrorMessages.invalidPhysicalForm,
+        code: firstWasteTypeErrorMessages.invalidPhysicalForm,
       },
       {
         field: 'Waste Quantity',
-        message: firstWasteTypeErrorMessages.invalidWasteQuantity,
+        code: firstWasteTypeErrorMessages.invalidWasteQuantity,
       },
       {
         field: 'Waste Quantity Units',
-        message: firstWasteTypeErrorMessages.invalidWasteQuantityUnit,
+        code: firstWasteTypeErrorMessages.invalidWasteQuantityUnit,
       },
       {
         field: 'Quantity of waste (actual or estimate)',
-        message: firstWasteTypeErrorMessages.invalidWasteQuantityType,
+        code: firstWasteTypeErrorMessages.invalidWasteQuantityType,
       },
       {
         field: 'Chemical and biological components of the waste',
-        message:
-          firstWasteTypeErrorMessages.charTooManyChemicalAndBiologicalComponents,
+        code: firstWasteTypeErrorMessages.charTooManyChemicalAndBiologicalComponents,
       },
       {
         field: 'Chemical and biological concentration values',
-        message:
-          firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
+        code: firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
       },
       {
         field: 'Chemical and biological concentration units of measure',
-        message:
-          firstWasteTypeErrorMessages.charTooManyChemicalAndBiologicalConcentrationUnit,
+        code: firstWasteTypeErrorMessages.charTooManyChemicalAndBiologicalConcentrationUnit,
       },
       {
         field: 'Waste Has Hazardous Properties',
-        message: firstWasteTypeErrorMessages.invalidHasHazardousProperties,
+        code: firstWasteTypeErrorMessages.invalidHasHazardousProperties,
       },
       {
         field: 'Waste Contains POPs',
-        message: firstWasteTypeErrorMessages.invalidContainsPops,
+        code: firstWasteTypeErrorMessages.invalidContainsPops,
       },
     ]);
 
@@ -877,13 +835,11 @@ describe(validateWasteTypeDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Chemical and biological concentration values',
-        message:
-          firstWasteTypeErrorMessages.invalidChemicalAndBiologicalConcentration,
+        code: firstWasteTypeErrorMessages.invalidChemicalAndBiologicalConcentration,
       },
       {
         field: 'Chemical and biological concentration units of measure',
-        message:
-          firstWasteTypeErrorMessages.wrongAmountChemicalAndBiologicalContentrationUnit,
+        code: firstWasteTypeErrorMessages.wrongAmountChemicalAndBiologicalContentrationUnit,
       },
     ]);
 
@@ -912,8 +868,7 @@ describe(validateWasteTypeDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Chemical and biological concentration values',
-        message:
-          firstWasteTypeErrorMessages.wrongAmountChemicalAndBiologicalContentration,
+        code: firstWasteTypeErrorMessages.wrongAmountChemicalAndBiologicalContentration,
       },
     ]);
 
@@ -947,15 +902,16 @@ describe(validateWasteTypeDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Hazardous Waste Codes',
-        message: firstWasteTypeErrorMessages.invalidHazardousWasteCodes(['h5']),
+        code: firstWasteTypeErrorMessages.invalidHazardousWasteCodes,
+        args: ['h5'],
       },
       {
-        field: 'Persistant organic pollutants (POPs) Concentrations',
-        message: firstWasteTypeErrorMessages.wrongAmountPopContentration,
+        field: 'Persistant organic pollutants (POPs) Concentration Values',
+        code: firstWasteTypeErrorMessages.wrongAmountPopContentration,
       },
       {
         field: 'Persistant organic pollutants (POPs) Concentration Units',
-        message: firstWasteTypeErrorMessages.wrongAmountPopContentrationUnit,
+        code: firstWasteTypeErrorMessages.wrongAmountPopContentrationUnit,
       },
     ]);
 
@@ -989,7 +945,8 @@ describe(validateWasteTypeDetailSection, () => {
     expect(result.value).toEqual([
       {
         field: 'Persistant organic pollutants (POPs)',
-        message: firstWasteTypeErrorMessages.invalidPops(['POP5']),
+        code: firstWasteTypeErrorMessages.invalidPops,
+        args: ['POP5'],
       },
     ]);
 
@@ -1020,53 +977,50 @@ describe(validateWasteTypeDetailSection, () => {
     );
 
     const secondWasteTypeErrorMessages =
-      validation.WasteTypeValidationErrorMessages(2);
+      validation.errorCodes.WasteTypeValidationErrorCode(2);
 
     expect(result.valid).toBe(false);
 
     expect(result.value).toEqual([
       {
         field: 'Waste Description',
-        message: secondWasteTypeErrorMessages.emptyWasteDescription,
+        code: secondWasteTypeErrorMessages.emptyWasteDescription,
       },
       {
         field: 'Physical Form',
-        message: secondWasteTypeErrorMessages.emptyPhysicalForm,
+        code: secondWasteTypeErrorMessages.emptyPhysicalForm,
       },
       {
         field: 'Waste Quantity',
-        message: secondWasteTypeErrorMessages.emptyWasteQuantity,
+        code: secondWasteTypeErrorMessages.emptyWasteQuantity,
       },
       {
         field: 'Waste Quantity Units',
-        message: secondWasteTypeErrorMessages.emptyWasteQuantityUnit,
+        code: secondWasteTypeErrorMessages.emptyWasteQuantityUnit,
       },
       {
         field: 'Quantity of waste (actual or estimate)',
-        message: secondWasteTypeErrorMessages.invalidWasteQuantityType,
+        code: secondWasteTypeErrorMessages.invalidWasteQuantityType,
       },
       {
         field: 'Chemical and biological components of the waste',
-        message:
-          secondWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
+        code: secondWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
       },
       {
         field: 'Chemical and biological concentration values',
-        message:
-          secondWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
+        code: secondWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
       },
       {
         field: 'Chemical and biological concentration units of measure',
-        message:
-          secondWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
+        code: secondWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
       },
       {
         field: 'Waste Has Hazardous Properties',
-        message: secondWasteTypeErrorMessages.invalidHasHazardousProperties,
+        code: secondWasteTypeErrorMessages.invalidHasHazardousProperties,
       },
       {
         field: 'Waste Contains POPs',
-        message: secondWasteTypeErrorMessages.invalidContainsPops,
+        code: secondWasteTypeErrorMessages.invalidContainsPops,
       },
     ]);
   });

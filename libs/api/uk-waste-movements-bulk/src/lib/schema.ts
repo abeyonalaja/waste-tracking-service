@@ -162,7 +162,7 @@ const submissionState: SchemaObject = {
   },
 };
 
-const bulkSubmissionState: SchemaObject = {
+const bulkSubmissionStateBase: SchemaObject = {
   discriminator: 'status',
   mapping: {
     Processing: {
@@ -275,10 +275,93 @@ const bulkSubmissionState: SchemaObject = {
   },
 };
 
+const bulkSubmissionState: SchemaObject = {
+  discriminator: bulkSubmissionStateBase.discriminator,
+  mapping: {
+    ...bulkSubmissionStateBase.mapping,
+    FailedValidation: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+        rowErrors: {
+          elements: {
+            properties: {
+              rowNumber: { type: 'uint16' },
+              errorAmount: { type: 'uint16' },
+              errorDetails: { elements: { type: 'string' } },
+            },
+          },
+        },
+        columnErrors: {
+          elements: {
+            properties: {
+              errorAmount: { type: 'uint16' },
+              columnName: { type: 'string' },
+              errorDetails: {
+                elements: {
+                  properties: {
+                    rowNumber: { type: 'uint16' },
+                    errorReason: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 const bulkSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
     state: bulkSubmissionState,
+  },
+};
+
+const codeWithArgs: JTDSchemaType<{
+  code: number;
+  args: string[];
+}> = {
+  properties: {
+    code: { type: 'int32' },
+    args: {
+      elements: {
+        type: 'string',
+      },
+    },
+  },
+};
+
+const bulkSubmissionCodeState: SchemaObject = {
+  discriminator: bulkSubmissionStateBase.discriminator,
+  mapping: {
+    ...bulkSubmissionStateBase.mapping,
+    FailedValidation: {
+      properties: {
+        timestamp: { type: 'timestamp' },
+        rowErrors: {
+          elements: {
+            properties: {
+              rowNumber: { type: 'uint16' },
+              errorAmount: { type: 'uint16' },
+              errorCodes: {
+                elements: {
+                  ...codeWithArgs,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const bulkSubmissionCode: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    state: bulkSubmissionCodeState,
   },
 };
 

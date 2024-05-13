@@ -23,7 +23,7 @@ export type {
   DbContainerNameKey,
 } from './submission.dto';
 
-export type { Field } from './validation';
+export type { Field, ErrorCodeData } from './validation';
 
 export { validateSubmissions, createSubmissions } from './submission.dto';
 export * as validation from './validation';

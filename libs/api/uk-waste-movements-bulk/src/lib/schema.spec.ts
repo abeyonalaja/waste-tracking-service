@@ -7,6 +7,7 @@ import {
   GetBatchResponse,
   FinalizeBatchRequest,
   FinalizeBatchResponse,
+  BulkSubmission,
 } from './dto';
 import {
   addContentToBatchRequest,
@@ -15,6 +16,7 @@ import {
   getBatchResponse,
   finalizeBatchRequest,
   finalizeBatchResponse,
+  bulkSubmissionCode,
 } from './schema';
 
 const ajv = new Ajv();
@@ -499,6 +501,34 @@ describe('finalizeBatchResponse', () => {
         message: '',
         name: '',
         statusCode: 0,
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('bulkSubmissionCode', () => {
+  const validate = ajv.compile<BulkSubmission>(bulkSubmissionCode);
+
+  it('is compatible with dto values', () => {
+    const value: BulkSubmission = {
+      id: faker.datatype.uuid(),
+      state: {
+        status: 'FailedValidation',
+        timestamp: new Date(),
+        rowErrors: [
+          {
+            errorAmount: 3,
+            rowNumber: 1,
+            errorCodes: [
+              {
+                code: 1234,
+                args: ['test'],
+              },
+            ],
+          },
+        ],
       },
     };
 

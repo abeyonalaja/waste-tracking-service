@@ -11,13 +11,15 @@ export type {
   PartialSubmission,
   BulkSubmissionValidationRowError,
   BulkSubmissionValidationColumnError,
-  BulkSubmissionValidationRowErrorDetails,
+  BulkSubmissionValidationColumnErrorDetail,
   ProducerDetailFlattened,
   WasteCollectionDetailFlattened,
   SubmissionFlattened,
   ReceiverDetailFlattened,
   WasteTransportationDetailFlattened,
   WasteTypeDetailFlattened,
+  BulkSubmissionValidationRowCodeError,
+  BulkSubmissionDetail,
 } from './dto';
 
 export * as schema from './schema';

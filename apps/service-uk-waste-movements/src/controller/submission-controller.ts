@@ -37,6 +37,19 @@ export default class SubmissionController {
       const submissions: Value[] = [];
       values.forEach((s) => {
         index += 1;
+
+        let hasAnyPopulatedProp = false;
+        for (const key in s) {
+          if ((s as { [key: string]: string })[key]?.trim()) {
+            hasAnyPopulatedProp = true;
+            break;
+          }
+        }
+
+        if (!hasAnyPopulatedProp) {
+          return;
+        }
+
         const fieldFormatErrors: FieldFormatError[] = [];
 
         const producer = validationRules.validateProducerDetailSection({

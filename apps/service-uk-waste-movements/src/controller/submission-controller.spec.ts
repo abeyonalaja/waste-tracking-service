@@ -349,8 +349,8 @@ describe(SubmissionController, () => {
         ],
       });
 
-      const firstWasteTypeErrorMessages =
-        validation.WasteTypeValidationErrorMessages(1);
+      const firstWasteTypeErrorCodes =
+        validation.errorCodes.WasteTypeValidationErrorCode(1);
 
       expect(response.success).toBe(true);
       if (!response.success) {
@@ -366,184 +366,150 @@ describe(SubmissionController, () => {
             fieldFormatErrors: [
               {
                 field: 'Reference',
-                message:
-                  validation.ProducerValidationErrorMessages.invalidReference,
+                code: validation.errorCodes.producerInvalidReference,
               },
               {
                 field: 'Producer organisation name',
-                message:
-                  validation.ProducerValidationErrorMessages
-                    .emptyOrganisationName,
+                code: validation.errorCodes.producerEmptyOrganisationName,
               },
               {
                 field: 'Producer address line 1',
-                message:
-                  validation.ProducerValidationErrorMessages.emptyAddressLine1,
+                code: validation.errorCodes.producerEmptyAddressLine1,
               },
               {
                 field: 'Producer town or city',
-                message:
-                  validation.ProducerValidationErrorMessages.emptyTownOrCity,
+                code: validation.errorCodes.producerEmptyTownOrCity,
               },
               {
                 field: 'Producer country',
-                message:
-                  validation.ProducerValidationErrorMessages.emptyCountry,
+                code: validation.errorCodes.producerEmptyCountry,
               },
               {
                 field: 'Producer contact name',
-                message:
-                  validation.ProducerValidationErrorMessages
-                    .emptyContactFullName,
+                code: validation.errorCodes.producerEmptyContactFullName,
               },
               {
                 field: 'Producer contact phone number',
-                message:
-                  validation.ProducerValidationErrorMessages.invalidPhone,
+                code: validation.errorCodes.producerInvalidPhone,
               },
               {
                 field: 'Producer contact email address',
-                message:
-                  validation.ProducerValidationErrorMessages.invalidEmail,
+                code: validation.errorCodes.producerInvalidEmail,
               },
               {
                 field: 'Producer Standard Industrial Classification (SIC) code',
-                message:
-                  validation.ProducerValidationErrorMessages.invalidSicCode,
+                code: validation.errorCodes.producerInvalidSicCode,
               },
               {
                 field: 'Waste Collection Details Address Line 1',
-                message:
-                  validation.WasteCollectionErrorMessages.emptyAddressLine1,
+                code: validation.errorCodes.wasteCollectionEmptyAddressLine1,
               },
               {
                 field: 'Waste Collection Details Town or City',
-                message:
-                  validation.WasteCollectionErrorMessages.emptyTownOrCity,
+                code: validation.errorCodes.wasteCollectionEmptyTownOrCity,
               },
               {
                 field: 'Waste Collection Details Country',
-                message: validation.WasteCollectionErrorMessages.emptyCountry,
+                code: validation.errorCodes.wasteCollectionEmptyCountry,
               },
               {
                 field: 'Waste Collection Details Postcode',
-                message:
-                  validation.WasteCollectionErrorMessages.invalidPostcode,
+                code: validation.errorCodes.wasteCollectionInvalidPostcode,
               },
               {
                 field: 'Waste Collection Details Waste Source',
-                message:
-                  validation.WasteCollectionErrorMessages.missingWasteSource,
+                code: validation.errorCodes.wasteCollectionMissingWasteSource,
               },
               {
                 field: 'Waste Collection Details Mode of Waste Transport',
-                message:
-                  validation.WasteCollectionErrorMessages.emptyModeOfTransport,
+                code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
               },
-
               {
                 field:
                   'Waste Collection Details Expected Waste Collection Date',
-                message:
-                  validation.WasteCollectionErrorMessages
-                    .invalidFormatWasteCollectionDate,
+                code: validation.errorCodes
+                  .wasteCollectionInvalidFormatWasteCollectionDate,
               },
               {
                 field: 'Receiver authorization type',
-                message:
-                  validation.ReceiverValidationErrorMessages
-                    .emptyAuthorizationType,
+                code: validation.errorCodes.receiverEmptyAuthorizationType,
               },
               {
                 field: 'Receiver organisation name',
-                message:
-                  validation.ReceiverValidationErrorMessages
-                    .emptyOrganisationName,
+                code: validation.errorCodes.receiverEmptyOrganisationName,
               },
               {
                 field: 'Receiver address line 1',
-                message:
-                  validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+                code: validation.errorCodes.receiverEmptyAddressLine1,
               },
               {
                 field: 'Receiver town or city',
-                message:
-                  validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+                code: validation.errorCodes.receiverEmptyTownOrCity,
               },
               {
                 field: 'Receiver country',
-                message:
-                  validation.ReceiverValidationErrorMessages.emptyCountry,
+                code: validation.errorCodes.receiverEmptyCountry,
               },
               {
                 field: 'Receiver contact name',
-                message:
-                  validation.ReceiverValidationErrorMessages
-                    .emptyContactFullName,
+                code: validation.errorCodes.receiverEmptyContactFullName,
               },
               {
                 field: 'Receiver contact phone number',
-                message:
-                  validation.ReceiverValidationErrorMessages.invalidPhone,
+                code: validation.errorCodes.receiverInvalidPhone,
               },
               {
                 field: 'Receiver contact email address',
-                message:
-                  validation.ReceiverValidationErrorMessages.invalidEmail,
+                code: validation.errorCodes.receiverInvalidEmail,
               },
               {
                 field: 'Number and type of transportation containers',
-                message:
-                  validation.WasteTransportationValidationErrorMessages
-                    .emptyNameAndTypeOfContainers,
+                code: validation.errorCodes
+                  .wasteTransportationEmptyNameAndTypeOfContainers,
               },
               {
                 field: 'EWC Code',
-                message: firstWasteTypeErrorMessages.emptyEwcCode,
+                code: firstWasteTypeErrorCodes.emptyEwcCode,
               },
               {
                 field: 'Waste Description',
-                message: firstWasteTypeErrorMessages.emptyWasteDescription,
+                code: firstWasteTypeErrorCodes.emptyWasteDescription,
               },
               {
                 field: 'Physical Form',
-                message: firstWasteTypeErrorMessages.emptyPhysicalForm,
+                code: firstWasteTypeErrorCodes.emptyPhysicalForm,
               },
               {
                 field: 'Waste Quantity',
-                message: firstWasteTypeErrorMessages.emptyWasteQuantity,
+                code: firstWasteTypeErrorCodes.emptyWasteQuantity,
               },
               {
                 field: 'Waste Quantity Units',
-                message: firstWasteTypeErrorMessages.emptyWasteQuantityUnit,
+                code: firstWasteTypeErrorCodes.emptyWasteQuantityUnit,
               },
               {
                 field: 'Quantity of waste (actual or estimate)',
-                message: firstWasteTypeErrorMessages.invalidWasteQuantityType,
+                code: firstWasteTypeErrorCodes.invalidWasteQuantityType,
               },
               {
                 field: 'Chemical and biological components of the waste',
-                message:
-                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalComponents,
+                code: firstWasteTypeErrorCodes.emptyChemicalAndBiologicalComponents,
               },
               {
                 field: 'Chemical and biological concentration values',
-                message:
-                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentration,
+                code: firstWasteTypeErrorCodes.emptyChemicalAndBiologicalConcentration,
               },
               {
                 field: 'Chemical and biological concentration units of measure',
-                message:
-                  firstWasteTypeErrorMessages.emptyChemicalAndBiologicalConcentrationUnit,
+                code: firstWasteTypeErrorCodes.emptyChemicalAndBiologicalConcentrationUnit,
               },
               {
                 field: 'Waste Has Hazardous Properties',
-                message:
-                  firstWasteTypeErrorMessages.invalidHasHazardousProperties,
+                code: firstWasteTypeErrorCodes.invalidHasHazardousProperties,
               },
               {
                 field: 'Waste Contains POPs',
-                message: firstWasteTypeErrorMessages.invalidContainsPops,
+                code: firstWasteTypeErrorCodes.invalidContainsPops,
               },
             ],
             invalidStructureErrors: [],

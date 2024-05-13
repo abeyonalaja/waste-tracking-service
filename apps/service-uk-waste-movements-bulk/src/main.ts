@@ -32,7 +32,6 @@ import {
 import {
   CreateSubmissionsResponse,
   ValidateSubmissionsResponse,
-  Field,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 
@@ -292,120 +291,48 @@ while (execute) {
             await repository.saveBatch(value, body.data.accountId);
           } else {
             const submissions: api.PartialSubmission[] = [];
-            const rowErrors: api.BulkSubmissionValidationRowError[] = [];
-            const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
-            const columnErrorsObj: {
-              [key in Field]: api.BulkSubmissionValidationRowErrorDetails[];
-            } = {
-              'Producer address line 1': [],
-              'Producer address line 2': [],
-              'Producer contact name': [],
-              'Producer contact email address': [],
-              'Producer contact phone number': [],
-              'Producer country': [],
-              'Producer organisation name': [],
-              'Producer postcode': [],
-              'Producer Standard Industrial Classification (SIC) code': [],
-              'Producer town or city': [],
-              'Receiver address line 1': [],
-              'Receiver address line 2': [],
-              'Receiver postcode': [],
-              'Receiver contact name': [],
-              'Receiver contact email address': [],
-              'Receiver contact phone number': [],
-              'Receiver country': [],
-              'Receiver environmental permit number': [],
-              'Receiver organisation name': [],
-              'Receiver town or city': [],
-              'Receiver authorization type': [],
-              'Waste Collection Details Address Line 1': [],
-              'Waste Collection Details Address Line 2': [],
-              'Waste Collection Details Town or City': [],
-              'Waste Collection Details Country': [],
-              'Waste Collection Details Postcode': [],
-              'Waste Collection Details Waste Source': [],
-              'Waste Collection Details Broker Registration Number': [],
-              'Waste Collection Details Carrier Registration Number': [],
-              'Waste Collection Details Mode of Waste Transport': [],
-              'Waste Collection Details Expected Waste Collection Date': [],
-              'Number and type of transportation containers': [],
-              'Special handling requirements details': [],
-              'EWC Code': [],
-              'Waste Description': [],
-              'Physical Form': [],
-              'Waste Quantity': [],
-              'Waste Quantity Units': [],
-              'Quantity of waste (actual or estimate)': [],
-              'Waste Has Hazardous Properties': [],
-              'Hazardous Waste Codes': [],
-              'Waste Contains POPs': [],
-              'Persistant organic pollutants (POPs)': [],
-              'Persistant organic pollutants (POPs) Concentrations': [],
-              'Persistant organic pollutants (POPs) Concentration Units': [],
-              'Chemical and biological components of the waste': [],
-              'Chemical and biological concentration units of measure': [],
-              'Chemical and biological concentration values': [],
-              Reference: [],
-            };
+            const rowErrors: api.BulkSubmissionValidationRowCodeError[] = [];
 
-            let response: ValidateSubmissionsResponse;
-            try {
-              response = await daprUkwmClient.validateSubmissions({
-                accountId: body.data.accountId,
-                padIndex: 2,
-                values: records.value.rows,
-              });
-            } catch (err) {
-              logger.error(
-                `Error receiving response from ${ukwmAppId} service`,
-                { error: err }
-              );
-              throw Boom.internal();
-            }
+            const chunkSize = 50;
+            for (let i = 0; i < records.value.rows.length; i += chunkSize) {
+              const chunk = records.value.rows.slice(i, i + chunkSize);
 
-            if (!response.success) {
-              throw new Boom.Boom(response.error.message, {
-                statusCode: response.error.statusCode,
-              });
-            }
-
-            if (!response.value.valid) {
-              response.value.values.forEach((v) =>
-                rowErrors.push({
-                  rowNumber: v.index,
-                  errorAmount:
-                    v.fieldFormatErrors.length +
-                    v.invalidStructureErrors.length,
-                  errorDetails: v.fieldFormatErrors
-                    .map((f) => f.message)
-                    .concat(v.invalidStructureErrors.map((i) => i.message)),
-                })
-              );
-
-              for (const error of response.value.values) {
-                for (const fieldError of error.fieldFormatErrors) {
-                  if (!columnErrorsObj[fieldError.field]) {
-                    continue;
-                  }
-
-                  columnErrorsObj[fieldError.field].push({
-                    rowNumber: error.index,
-                    errorReason: fieldError.message,
-                  });
-                }
+              let response: ValidateSubmissionsResponse;
+              try {
+                response = await daprUkwmClient.validateSubmissions({
+                  accountId: body.data.accountId,
+                  padIndex: i + 2,
+                  values: chunk,
+                });
+              } catch (err) {
+                logger.error(
+                  `Error receiving response from ${ukwmAppId} service`,
+                  { error: err }
+                );
+                throw Boom.internal();
               }
 
-              for (const key in columnErrorsObj) {
-                const keyAsField = key as Field;
-                const errorDetails = columnErrorsObj[keyAsField];
-                columnErrors.push({
-                  columnName: keyAsField,
-                  errorAmount: errorDetails.length,
-                  errorDetails: errorDetails,
+              if (!response.success) {
+                throw new Boom.Boom(response.error.message, {
+                  statusCode: response.error.statusCode,
                 });
               }
-            } else {
-              submissions.push(...response.value.values);
+
+              if (!response.value.valid) {
+                response.value.values.forEach((v) => {
+                  rowErrors.push({
+                    rowNumber: v.index,
+                    errorAmount: v.fieldFormatErrors.length,
+                    errorCodes: v.fieldFormatErrors
+                      .map((f) =>
+                        f.args?.length ? { code: f.code, args: f.args } : f.code
+                      )
+                      .concat(v.invalidStructureErrors.map((i) => i.code)),
+                  });
+                });
+              } else {
+                submissions.push(...response.value.values);
+              }
             }
 
             const value: BulkSubmission =
@@ -416,9 +343,6 @@ while (execute) {
                       status: 'FailedValidation',
                       timestamp: new Date(),
                       rowErrors: rowErrors,
-                      columnErrors: columnErrors.filter(
-                        (ce) => ce.errorAmount > 0
-                      ),
                     },
                   }
                 : {

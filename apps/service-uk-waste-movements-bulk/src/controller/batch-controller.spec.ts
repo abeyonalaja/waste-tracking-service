@@ -94,19 +94,7 @@ describe(BatchController, () => {
             {
               errorAmount: 3,
               rowNumber: 1,
-              errorDetails: ['error1', 'error2'],
-            },
-          ],
-          columnErrors: [
-            {
-              columnName: 'column1',
-              errorAmount: 3,
-              errorDetails: [
-                {
-                  errorReason: 'error1',
-                  rowNumber: 1,
-                },
-              ],
+              errorCodes: [1001, 1002],
             },
           ],
         },

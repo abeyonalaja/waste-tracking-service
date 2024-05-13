@@ -15,7 +15,7 @@ import {
   QuantityUnit,
   WasteQuantityType,
   PhysicalForm,
-  WasteTypeErrorMessage,
+  WasteTypeErrorCode,
 } from '../model';
 
 import { parse, isValid } from 'date-fns';
@@ -93,45 +93,43 @@ export function validateProducerDetailSection(
   if (!trimmedReference) {
     errors.push({
       field: 'Reference',
-      message: validation.ProducerValidationErrorMessages.emptyReference,
+      code: validation.errorCodes.producerEmptyReference,
     });
   } else if (trimmedReference.length > validation.ReferenceChar.max) {
     errors.push({
       field: 'Reference',
-      message: validation.ProducerValidationErrorMessages.charTooManyReference,
+      code: validation.errorCodes.producerCharTooManyReference,
     });
   } else if (!validation.referenceRegex.test(trimmedReference)) {
     errors.push({
       field: 'Reference',
-      message: validation.ProducerValidationErrorMessages.invalidReference,
+      code: validation.errorCodes.producerInvalidReference,
     });
   }
 
   if (!value.producerOrganisationName?.trim()) {
     errors.push({
       field: 'Producer organisation name',
-      message: validation.ProducerValidationErrorMessages.emptyOrganisationName,
+      code: validation.errorCodes.producerEmptyOrganisationName,
     });
   } else if (
     value.producerOrganisationName.length > validation.FreeTextChar.max
   ) {
     errors.push({
       field: 'Producer organisation name',
-      message:
-        validation.ProducerValidationErrorMessages.charTooManyOrganisationName,
+      code: validation.errorCodes.producerCharTooManyOrganisationName,
     });
   }
 
   if (!value.producerAddressLine1?.trim()) {
     errors.push({
       field: 'Producer address line 1',
-      message: validation.ProducerValidationErrorMessages.emptyAddressLine1,
+      code: validation.errorCodes.producerEmptyAddressLine1,
     });
   } else if (value.producerAddressLine1.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Producer address line 1',
-      message:
-        validation.ProducerValidationErrorMessages.charTooManyAddressLine1,
+      code: validation.errorCodes.producerCharTooManyAddressLine1,
     });
   }
 
@@ -141,22 +139,20 @@ export function validateProducerDetailSection(
   ) {
     errors.push({
       field: 'Producer address line 2',
-      message:
-        validation.ProducerValidationErrorMessages.charTooManyAddressLine2,
+      code: validation.errorCodes.producerCharTooManyAddressLine2,
     });
   }
 
   if (!value.producerTownCity?.trim()) {
     errors.push({
       field: 'Producer town or city',
-      message: validation.ProducerValidationErrorMessages.emptyTownOrCity,
+      code: validation.errorCodes.producerEmptyTownOrCity,
     });
   } else {
     if (value.producerTownCity.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'Producer town or city',
-        message:
-          validation.ProducerValidationErrorMessages.charTooManyTownOrCity,
+        code: validation.errorCodes.producerCharTooManyTownOrCity,
       });
     }
   }
@@ -164,14 +160,14 @@ export function validateProducerDetailSection(
   if (!value.producerCountry?.trim()) {
     errors.push({
       field: 'Producer country',
-      message: validation.ProducerValidationErrorMessages.emptyCountry,
+      code: validation.errorCodes.producerEmptyCountry,
     });
   } else {
     value.producerCountry = titleCase(value.producerCountry);
     if (!fourNationsCountries.includes(value.producerCountry)) {
       errors.push({
         field: 'Producer country',
-        message: validation.ProducerValidationErrorMessages.invalidCountry,
+        code: validation.errorCodes.producerInvalidCountry,
       });
     }
   }
@@ -182,20 +178,19 @@ export function validateProducerDetailSection(
   ) {
     errors.push({
       field: 'Producer postcode',
-      message: validation.ProducerValidationErrorMessages.invalidPostcode,
+      code: validation.errorCodes.producerInvalidPostcode,
     });
   }
 
   if (!value.producerContactName?.trim()) {
     errors.push({
       field: 'Producer contact name',
-      message: validation.ProducerValidationErrorMessages.emptyContactFullName,
+      code: validation.errorCodes.producerEmptyContactFullName,
     });
   } else if (value.producerContactName.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Producer contact name',
-      message:
-        validation.ProducerValidationErrorMessages.charTooManyContactFullName,
+      code: validation.errorCodes.producerCharTooManyContactFullName,
     });
   }
 
@@ -205,31 +200,31 @@ export function validateProducerDetailSection(
   if (!reformattedReceiverContactPhoneNumber) {
     errors.push({
       field: 'Producer contact phone number',
-      message: validation.ProducerValidationErrorMessages.emptyPhone,
+      code: validation.errorCodes.producerEmptyPhone,
     });
   } else if (
     !validation.phoneRegex.test(reformattedReceiverContactPhoneNumber)
   ) {
     errors.push({
       field: 'Producer contact phone number',
-      message: validation.ProducerValidationErrorMessages.invalidPhone,
+      code: validation.errorCodes.producerInvalidPhone,
     });
   }
 
   if (!value.producerContactEmail?.trim()) {
     errors.push({
       field: 'Producer contact email address',
-      message: validation.ProducerValidationErrorMessages.emptyEmail,
+      code: validation.errorCodes.producerEmptyEmail,
     });
   } else if (!validation.emailRegex.test(value.producerContactEmail)) {
     errors.push({
       field: 'Producer contact email address',
-      message: validation.ProducerValidationErrorMessages.invalidEmail,
+      code: validation.errorCodes.producerInvalidEmail,
     });
   } else if (value.producerContactEmail.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Producer contact email address',
-      message: validation.ProducerValidationErrorMessages.charTooManyEmail,
+      code: validation.errorCodes.producerCharTooManyEmail,
     });
   }
 
@@ -239,7 +234,7 @@ export function validateProducerDetailSection(
   ) {
     errors.push({
       field: 'Producer Standard Industrial Classification (SIC) code',
-      message: validation.ProducerValidationErrorMessages.invalidSicCode,
+      code: validation.errorCodes.producerInvalidSicCode,
     });
   }
 
@@ -291,7 +286,7 @@ export function validateWasteCollectionDetailSection(
     if (!value.wasteCollectionAddressLine1?.trim()) {
       errors.push({
         field: 'Waste Collection Details Address Line 1',
-        message: validation.WasteCollectionErrorMessages.emptyAddressLine1,
+        code: validation.errorCodes.wasteCollectionEmptyAddressLine1,
       });
     } else {
       if (
@@ -300,8 +295,7 @@ export function validateWasteCollectionDetailSection(
       ) {
         errors.push({
           field: 'Waste Collection Details Address Line 1',
-          message:
-            validation.WasteCollectionErrorMessages.charTooManyAddressLine1,
+          code: validation.errorCodes.wasteCollectionCharTooManyAddressLine1,
         });
       }
     }
@@ -312,15 +306,14 @@ export function validateWasteCollectionDetailSection(
     ) {
       errors.push({
         field: 'Waste Collection Details Address Line 2',
-        message:
-          validation.WasteCollectionErrorMessages.charTooManyAddressLine2,
+        code: validation.errorCodes.wasteCollectionCharTooManyAddressLine2,
       });
     }
 
     if (!value.wasteCollectionTownCity?.trim()) {
       errors.push({
         field: 'Waste Collection Details Town or City',
-        message: validation.WasteCollectionErrorMessages.emptyTownOrCity,
+        code: validation.errorCodes.wasteCollectionEmptyTownOrCity,
       });
     } else {
       if (
@@ -329,22 +322,21 @@ export function validateWasteCollectionDetailSection(
       ) {
         errors.push({
           field: 'Waste Collection Details Town or City',
-          message:
-            validation.WasteCollectionErrorMessages.charTooManyTownOrCity,
+          code: validation.errorCodes.wasteCollectionCharTooManyTownOrCity,
         });
       }
     }
     if (!value.wasteCollectionCountry?.trim()) {
       errors.push({
         field: 'Waste Collection Details Country',
-        message: validation.WasteCollectionErrorMessages.emptyCountry,
+        code: validation.errorCodes.wasteCollectionEmptyCountry,
       });
     } else {
       value.wasteCollectionCountry = titleCase(value.wasteCollectionCountry);
       if (!fourNationsCountries.includes(value.wasteCollectionCountry)) {
         errors.push({
           field: 'Waste Collection Details Country',
-          message: validation.WasteCollectionErrorMessages.invalidCountry,
+          code: validation.errorCodes.wasteCollectionInvalidCountry,
         });
       }
     }
@@ -355,7 +347,7 @@ export function validateWasteCollectionDetailSection(
     ) {
       errors.push({
         field: 'Waste Collection Details Postcode',
-        message: validation.WasteCollectionErrorMessages.invalidPostcode,
+        code: validation.errorCodes.wasteCollectionInvalidPostcode,
       });
     }
   }
@@ -363,7 +355,7 @@ export function validateWasteCollectionDetailSection(
   if (!value.wasteCollectionWasteSource?.trim()) {
     errors.push({
       field: 'Waste Collection Details Waste Source',
-      message: validation.WasteCollectionErrorMessages.missingWasteSource,
+      code: validation.errorCodes.wasteCollectionMissingWasteSource,
     });
   } else {
     value.wasteCollectionWasteSource = titleCaseSpacesRemoved(
@@ -372,7 +364,7 @@ export function validateWasteCollectionDetailSection(
     if (!wasteSources.includes(value.wasteCollectionWasteSource)) {
       errors.push({
         field: 'Waste Collection Details Waste Source',
-        message: validation.WasteCollectionErrorMessages.invalidWasteSource,
+        code: validation.errorCodes.wasteCollectionInvalidWasteSource,
       });
     }
   }
@@ -384,9 +376,8 @@ export function validateWasteCollectionDetailSection(
   ) {
     errors.push({
       field: 'Waste Collection Details Broker Registration Number',
-      message:
-        validation.WasteCollectionErrorMessages
-          .charTooManyBrokerRegistrationNumber,
+      code: validation.errorCodes
+        .wasteCollectionCharTooManyBrokerRegistrationNumber,
     });
   }
 
@@ -397,16 +388,15 @@ export function validateWasteCollectionDetailSection(
   ) {
     errors.push({
       field: 'Waste Collection Details Carrier Registration Number',
-      message:
-        validation.WasteCollectionErrorMessages
-          .charTooManyCarrierRegistrationNumber,
+      code: validation.errorCodes
+        .wasteCollectionCharTooManyCarrierRegistrationNumber,
     });
   }
 
   if (!value.wasteCollectionModeOfWasteTransport?.trim()) {
     errors.push({
       field: 'Waste Collection Details Mode of Waste Transport',
-      message: validation.WasteCollectionErrorMessages.emptyModeOfTransport,
+      code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
     });
   } else {
     value.wasteCollectionModeOfWasteTransport = titleCaseSpacesRemoved(
@@ -417,8 +407,7 @@ export function validateWasteCollectionDetailSection(
     ) {
       errors.push({
         field: 'Waste Collection Details Mode of Waste Transport',
-        message:
-          validation.WasteCollectionErrorMessages.invalidModeOfWasteTransport,
+        code: validation.errorCodes.wasteCollectionInvalidModeOfWasteTransport,
       });
     }
   }
@@ -426,8 +415,7 @@ export function validateWasteCollectionDetailSection(
   if (!value.wasteCollectionExpectedWasteCollectionDate) {
     errors.push({
       field: 'Waste Collection Details Expected Waste Collection Date',
-      message:
-        validation.WasteCollectionErrorMessages.missingWasteCollectionDate,
+      code: validation.errorCodes.wasteCollectionMissingWasteCollectionDate,
     });
   } else {
     const parsedDate = parse(
@@ -440,9 +428,8 @@ export function validateWasteCollectionDetailSection(
     if (value.wasteCollectionExpectedWasteCollectionDate && !isValidDate) {
       errors.push({
         field: 'Waste Collection Details Expected Waste Collection Date',
-        message:
-          validation.WasteCollectionErrorMessages
-            .invalidFormatWasteCollectionDate,
+        code: validation.errorCodes
+          .wasteCollectionInvalidFormatWasteCollectionDate,
       });
     }
   }
@@ -490,17 +477,14 @@ export function validateReceiverDetailSection(
   if (!value.receiverAuthorizationType?.trim()) {
     errors.push({
       field: 'Receiver authorization type',
-      message:
-        validation.ReceiverValidationErrorMessages.emptyAuthorizationType,
+      code: validation.errorCodes.receiverEmptyAuthorizationType,
     });
   } else if (
     value.receiverAuthorizationType.length > validation.FreeTextChar.max
   ) {
     errors.push({
       field: 'Receiver authorization type',
-      message:
-        validation.ReceiverValidationErrorMessages
-          .invalidAuthorizationTypeLength,
+      code: validation.errorCodes.receiverInvalidAuthorizationTypeLength,
     });
   }
 
@@ -511,37 +495,34 @@ export function validateReceiverDetailSection(
   ) {
     errors.push({
       field: 'Receiver environmental permit number',
-      message:
-        validation.ReceiverValidationErrorMessages
-          .invalidEnvironmentalPermitNumberLength,
+      code: validation.errorCodes
+        .receiverInvalidEnvironmentalPermitNumberLength,
     });
   }
 
   if (!value.receiverOrganisationName?.trim()) {
     errors.push({
       field: 'Receiver organisation name',
-      message: validation.ReceiverValidationErrorMessages.emptyOrganisationName,
+      code: validation.errorCodes.receiverEmptyOrganisationName,
     });
   } else if (
     value.receiverOrganisationName.length > validation.FreeTextChar.max
   ) {
     errors.push({
       field: 'Receiver organisation name',
-      message:
-        validation.ReceiverValidationErrorMessages.charTooManyOrganisationName,
+      code: validation.errorCodes.receiverCharTooManyOrganisationName,
     });
   }
 
   if (!value.receiverAddressLine1?.trim()) {
     errors.push({
       field: 'Receiver address line 1',
-      message: validation.ReceiverValidationErrorMessages.emptyAddressLine1,
+      code: validation.errorCodes.receiverEmptyAddressLine1,
     });
   } else if (value.receiverAddressLine1.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Receiver address line 1',
-      message:
-        validation.ReceiverValidationErrorMessages.charTooManyAddressLine1,
+      code: validation.errorCodes.receiverCharTooManyAddressLine1,
     });
   }
 
@@ -551,22 +532,20 @@ export function validateReceiverDetailSection(
   ) {
     errors.push({
       field: 'Receiver address line 2',
-      message:
-        validation.ReceiverValidationErrorMessages.charTooManyAddressLine2,
+      code: validation.errorCodes.receiverCharTooManyAddressLine2,
     });
   }
 
   if (!value.receiverTownCity?.trim()) {
     errors.push({
       field: 'Receiver town or city',
-      message: validation.ReceiverValidationErrorMessages.emptyTownOrCity,
+      code: validation.errorCodes.receiverEmptyTownOrCity,
     });
   } else {
     if (value.receiverTownCity.length > validation.FreeTextChar.max) {
       errors.push({
         field: 'Receiver town or city',
-        message:
-          validation.ReceiverValidationErrorMessages.charTooManyTownOrCity,
+        code: validation.errorCodes.receiverCharTooManyTownOrCity,
       });
     }
   }
@@ -574,14 +553,14 @@ export function validateReceiverDetailSection(
   if (!value.receiverCountry?.trim()) {
     errors.push({
       field: 'Receiver country',
-      message: validation.ReceiverValidationErrorMessages.emptyCountry,
+      code: validation.errorCodes.receiverEmptyCountry,
     });
   } else {
     value.receiverCountry = titleCase(value.receiverCountry);
     if (!fourNationsCountries.includes(value.receiverCountry)) {
       errors.push({
         field: 'Receiver country',
-        message: validation.ReceiverValidationErrorMessages.invalidCountry,
+        code: validation.errorCodes.receiverInvalidCountry,
       });
     }
   }
@@ -592,20 +571,19 @@ export function validateReceiverDetailSection(
   ) {
     errors.push({
       field: 'Receiver postcode',
-      message: validation.ReceiverValidationErrorMessages.invalidPostcode,
+      code: validation.errorCodes.receiverInvalidPostcode,
     });
   }
 
   if (!value.receiverContactName?.trim()) {
     errors.push({
       field: 'Receiver contact name',
-      message: validation.ReceiverValidationErrorMessages.emptyContactFullName,
+      code: validation.errorCodes.receiverEmptyContactFullName,
     });
   } else if (value.receiverContactName.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Receiver contact name',
-      message:
-        validation.ReceiverValidationErrorMessages.charTooManyContactFullName,
+      code: validation.errorCodes.receiverCharTooManyContactFullName,
     });
   }
 
@@ -614,31 +592,31 @@ export function validateReceiverDetailSection(
   if (!reformattedReceiverContactPhoneNumber) {
     errors.push({
       field: 'Receiver contact phone number',
-      message: validation.ReceiverValidationErrorMessages.emptyPhone,
+      code: validation.errorCodes.receiverEmptyPhone,
     });
   } else if (
     !validation.phoneRegex.test(reformattedReceiverContactPhoneNumber)
   ) {
     errors.push({
       field: 'Receiver contact phone number',
-      message: validation.ReceiverValidationErrorMessages.invalidPhone,
+      code: validation.errorCodes.receiverInvalidPhone,
     });
   }
 
   if (!value.receiverContactEmail) {
     errors.push({
       field: 'Receiver contact email address',
-      message: validation.ReceiverValidationErrorMessages.emptyEmail,
+      code: validation.errorCodes.receiverEmptyEmail,
     });
   } else if (!validation.emailRegex.test(value.receiverContactEmail)) {
     errors.push({
       field: 'Receiver contact email address',
-      message: validation.ReceiverValidationErrorMessages.invalidEmail,
+      code: validation.errorCodes.receiverInvalidEmail,
     });
   } else if (value.receiverContactEmail.length > validation.FreeTextChar.max) {
     errors.push({
       field: 'Receiver contact email address',
-      message: validation.ReceiverValidationErrorMessages.charTooManyEmail,
+      code: validation.errorCodes.receiverCharTooManyEmail,
     });
   }
 
@@ -683,9 +661,8 @@ export function validateWasteTransportationDetailSection(
   if (!value.wasteTransportationNumberAndTypeOfContainers?.trim()) {
     errors.push({
       field: 'Number and type of transportation containers',
-      message:
-        validation.WasteTransportationValidationErrorMessages
-          .emptyNameAndTypeOfContainers,
+      code: validation.errorCodes
+        .wasteTransportationEmptyNameAndTypeOfContainers,
     });
   } else if (
     value.wasteTransportationNumberAndTypeOfContainers?.trim() &&
@@ -694,9 +671,8 @@ export function validateWasteTransportationDetailSection(
   ) {
     errors.push({
       field: 'Number and type of transportation containers',
-      message:
-        validation.WasteTransportationValidationErrorMessages
-          .charTooManyNameAndTypeOfContainers,
+      code: validation.errorCodes
+        .wasteTransportationCharTooManyNameAndTypeOfContainers,
     });
   }
 
@@ -707,9 +683,8 @@ export function validateWasteTransportationDetailSection(
   ) {
     errors.push({
       field: 'Special handling requirements details',
-      message:
-        validation.WasteTransportationValidationErrorMessages
-          .charTooManySpecialHandlingRequirements,
+      code: validation.errorCodes
+        .wasteTransportationCharTooManySpecialHandlingRequirements,
     });
   }
 
@@ -1008,10 +983,12 @@ export function validateWasteTypeDetailSection(
       return;
     }
 
-    const errorMessage = validation.WasteTypeValidationErrorMessages(index + 1);
+    const errorCodes = validation.errorCodes.WasteTypeValidationErrorCode(
+      index + 1
+    );
     const entryValidationResult = validateWasteTypeEntry(
       wasteType,
-      errorMessage,
+      errorCodes,
       hazardousCodesRefData,
       popsRefData,
       ewcCodes
@@ -1039,7 +1016,7 @@ export function validateWasteTypeDetailSection(
 
 function validateWasteTypeEntry(
   wasteType: WasteTypeEntry,
-  errorMessage: WasteTypeErrorMessage,
+  errorCode: WasteTypeErrorCode,
   hazardousCodesRefData: WasteCode[],
   popsRefData: Pop[],
   ewcCodes: WasteCode[]
@@ -1056,7 +1033,7 @@ function validateWasteTypeEntry(
   if (!wasteType.wasteTypeEwcCode) {
     errors.push({
       field: 'EWC Code',
-      message: errorMessage.emptyEwcCode,
+      code: errorCode.emptyEwcCode,
     });
   } else if (
     !ewcCodes.some(
@@ -1067,14 +1044,14 @@ function validateWasteTypeEntry(
   ) {
     errors.push({
       field: 'EWC Code',
-      message: errorMessage.invalidEwcCode,
+      code: errorCode.invalidEwcCode,
     });
   }
 
   if (!wasteType.wasteTypeWasteDescription?.trim()) {
     errors.push({
       field: 'Waste Description',
-      message: errorMessage.emptyWasteDescription,
+      code: errorCode.emptyWasteDescription,
     });
   } else if (
     wasteType.wasteTypeWasteDescription?.trim() &&
@@ -1083,14 +1060,14 @@ function validateWasteTypeEntry(
   ) {
     errors.push({
       field: 'Waste Description',
-      message: errorMessage.charTooManyWasteDescription,
+      code: errorCode.charTooManyWasteDescription,
     });
   }
 
   if (!wasteType.wasteTypePhysicalForm?.trim()) {
     errors.push({
       field: 'Physical Form',
-      message: errorMessage.emptyPhysicalForm,
+      code: errorCode.emptyPhysicalForm,
     });
   } else {
     wasteType.wasteTypePhysicalForm = titleCase(
@@ -1099,7 +1076,7 @@ function validateWasteTypeEntry(
     if (!wastePhysicalForms.includes(wasteType.wasteTypePhysicalForm)) {
       errors.push({
         field: 'Physical Form',
-        message: errorMessage.invalidPhysicalForm,
+        code: errorCode.invalidPhysicalForm,
       });
     }
   }
@@ -1109,13 +1086,13 @@ function validateWasteTypeEntry(
   if (!wasteType.wasteTypeWasteQuantity?.trim()) {
     errors.push({
       field: 'Waste Quantity',
-      message: errorMessage.emptyWasteQuantity,
+      code: errorCode.emptyWasteQuantity,
     });
   } else {
     if (!validation.deicmalNumberRegex.test(wasteType.wasteTypeWasteQuantity)) {
       errors.push({
         field: 'Waste Quantity',
-        message: errorMessage.invalidWasteQuantity,
+        code: errorCode.invalidWasteQuantity,
       });
     } else {
       wasteQuantity = Number(
@@ -1125,7 +1102,7 @@ function validateWasteTypeEntry(
       if (!(wasteQuantity > validation.WasteQuantityValue.greaterThan)) {
         errors.push({
           field: 'Waste Quantity',
-          message: errorMessage.valueTooSmallWasteQuantity,
+          code: errorCode.valueTooSmallWasteQuantity,
         });
       }
     }
@@ -1134,7 +1111,7 @@ function validateWasteTypeEntry(
   if (!wasteType.wasteTypeWasteQuantityUnit?.trim()) {
     errors.push({
       field: 'Waste Quantity Units',
-      message: errorMessage.emptyWasteQuantityUnit,
+      code: errorCode.emptyWasteQuantityUnit,
     });
   } else {
     wasteType.wasteTypeWasteQuantityUnit =
@@ -1142,7 +1119,7 @@ function validateWasteTypeEntry(
     if (!wasteType.wasteTypeWasteQuantityUnit) {
       errors.push({
         field: 'Waste Quantity Units',
-        message: errorMessage.invalidWasteQuantityUnit,
+        code: errorCode.invalidWasteQuantityUnit,
       });
     }
   }
@@ -1159,7 +1136,7 @@ function validateWasteTypeEntry(
   } else {
     errors.push({
       field: 'Quantity of waste (actual or estimate)',
-      message: errorMessage.invalidWasteQuantityType,
+      code: errorCode.invalidWasteQuantityType,
     });
   }
 
@@ -1172,7 +1149,7 @@ function validateWasteTypeEntry(
   if (!chemicalAndBiologicalComponents?.length) {
     errors.push({
       field: 'Chemical and biological components of the waste',
-      message: errorMessage.emptyChemicalAndBiologicalComponents,
+      code: errorCode.emptyChemicalAndBiologicalComponents,
     });
   } else if (
     chemicalAndBiologicalComponents.length &&
@@ -1181,7 +1158,7 @@ function validateWasteTypeEntry(
   ) {
     errors.push({
       field: 'Chemical and biological components of the waste',
-      message: errorMessage.charTooManyChemicalAndBiologicalComponents,
+      code: errorCode.charTooManyChemicalAndBiologicalComponents,
     });
   }
 
@@ -1198,7 +1175,7 @@ function validateWasteTypeEntry(
   if (!chemicalAndBiologicalConcentrationStrings?.length) {
     errors.push({
       field: 'Chemical and biological concentration values',
-      message: errorMessage.emptyChemicalAndBiologicalConcentration,
+      code: errorCode.emptyChemicalAndBiologicalConcentration,
     });
   } else if (chemicalAndBiologicalConcentrationStrings?.length) {
     if (
@@ -1207,14 +1184,14 @@ function validateWasteTypeEntry(
     ) {
       errors.push({
         field: 'Chemical and biological concentration values',
-        message: errorMessage.wrongAmountChemicalAndBiologicalContentration,
+        code: errorCode.wrongAmountChemicalAndBiologicalContentration,
       });
     } else {
       for (const concentration of chemicalAndBiologicalConcentrationStrings) {
         if (!validation.deicmalNumberRegex.test(concentration)) {
           errors.push({
             field: 'Chemical and biological concentration values',
-            message: errorMessage.invalidChemicalAndBiologicalConcentration,
+            code: errorCode.invalidChemicalAndBiologicalConcentration,
           });
           break;
         }
@@ -1237,7 +1214,7 @@ function validateWasteTypeEntry(
   if (!chemicalAndBiologicalConcentrationUnits?.length) {
     errors.push({
       field: 'Chemical and biological concentration units of measure',
-      message: errorMessage.emptyChemicalAndBiologicalConcentrationUnit,
+      code: errorCode.emptyChemicalAndBiologicalConcentrationUnit,
     });
   } else if (chemicalAndBiologicalConcentrationUnits?.length) {
     if (
@@ -1246,7 +1223,7 @@ function validateWasteTypeEntry(
     ) {
       errors.push({
         field: 'Chemical and biological concentration units of measure',
-        message: errorMessage.wrongAmountChemicalAndBiologicalContentrationUnit,
+        code: errorCode.wrongAmountChemicalAndBiologicalContentrationUnit,
       });
     } else {
       for (const unit of chemicalAndBiologicalConcentrationUnits) {
@@ -1256,8 +1233,7 @@ function validateWasteTypeEntry(
         ) {
           errors.push({
             field: 'Chemical and biological concentration units of measure',
-            message:
-              errorMessage.charTooManyChemicalAndBiologicalConcentrationUnit,
+            code: errorCode.charTooManyChemicalAndBiologicalConcentrationUnit,
           });
           break;
         }
@@ -1277,7 +1253,7 @@ function validateWasteTypeEntry(
   } else {
     errors.push({
       field: 'Waste Has Hazardous Properties',
-      message: errorMessage.invalidHasHazardousProperties,
+      code: errorCode.invalidHasHazardousProperties,
     });
   }
 
@@ -1301,7 +1277,7 @@ function validateWasteTypeEntry(
   if (hasHazardousProperties && !hazardousCodesInput.length) {
     errors.push({
       field: 'Hazardous Waste Codes',
-      message: errorMessage.emptyHazardousWasteCodes,
+      code: errorCode.emptyHazardousWasteCodes,
     });
   } else if (
     hazardousCodesInput.length &&
@@ -1318,7 +1294,8 @@ function validateWasteTypeEntry(
     if (invalidHazardousCodes.length > 0) {
       errors.push({
         field: 'Hazardous Waste Codes',
-        message: errorMessage.invalidHazardousWasteCodes(invalidHazardousCodes),
+        code: errorCode.invalidHazardousWasteCodes,
+        args: invalidHazardousCodes,
       });
     }
   }
@@ -1335,7 +1312,7 @@ function validateWasteTypeEntry(
   } else {
     errors.push({
       field: 'Waste Contains POPs',
-      message: errorMessage.invalidContainsPops,
+      code: errorCode.invalidContainsPops,
     });
   }
 
@@ -1346,7 +1323,7 @@ function validateWasteTypeEntry(
   if (containsPops && !wasteType.wasteTypePopsString) {
     errors.push({
       field: 'Persistant organic pollutants (POPs)',
-      message: errorMessage.emptyHazardousWasteCodes,
+      code: errorCode.emptyPops,
     });
   } else if (wasteType.wasteTypePopsString) {
     pops = [
@@ -1365,7 +1342,8 @@ function validateWasteTypeEntry(
     if (invalidPops.length > 0) {
       errors.push({
         field: 'Persistant organic pollutants (POPs)',
-        message: errorMessage.invalidPops(invalidPops),
+        code: errorCode.invalidPops,
+        args: invalidPops,
       });
     }
   }
@@ -1379,23 +1357,23 @@ function validateWasteTypeEntry(
 
   const popConcentrations: number[] = [];
 
-  if (!popConcentrationStrings?.length && pops.length > 0) {
+  if (!popConcentrationStrings?.length && containsPops) {
     errors.push({
-      field: 'Persistant organic pollutants (POPs) Concentrations',
-      message: errorMessage.emptyPopConcentration,
+      field: 'Persistant organic pollutants (POPs) Concentration Values',
+      code: errorCode.emptyPopConcentration,
     });
   } else if (popConcentrationStrings?.length) {
     if (popConcentrationStrings.length !== pops.length) {
       errors.push({
-        field: 'Persistant organic pollutants (POPs) Concentrations',
-        message: errorMessage.wrongAmountPopContentration,
+        field: 'Persistant organic pollutants (POPs) Concentration Values',
+        code: errorCode.wrongAmountPopContentration,
       });
     } else {
       for (const concentration of popConcentrationStrings) {
         if (!validation.deicmalNumberRegex.test(concentration)) {
           errors.push({
-            field: 'Persistant organic pollutants (POPs) Concentrations',
-            message: errorMessage.invalidPopConcentration,
+            field: 'Persistant organic pollutants (POPs) Concentration Values',
+            code: errorCode.invalidPopConcentration,
           });
           break;
         }
@@ -1412,23 +1390,23 @@ function validateWasteTypeEntry(
     ?.map((str) => str.trim())
     ?.filter((str) => str);
 
-  if (!popConcentrationUnits?.length && pops.length > 0) {
+  if (!popConcentrationUnits?.length && containsPops) {
     errors.push({
       field: 'Persistant organic pollutants (POPs) Concentration Units',
-      message: errorMessage.emptyPopConcentrationUnit,
+      code: errorCode.emptyPopConcentrationUnit,
     });
   } else if (popConcentrationUnits?.length) {
     if (popConcentrationUnits.length !== pops.length) {
       errors.push({
         field: 'Persistant organic pollutants (POPs) Concentration Units',
-        message: errorMessage.wrongAmountPopContentrationUnit,
+        code: errorCode.wrongAmountPopContentrationUnit,
       });
     } else {
       for (const unit of popConcentrationUnits) {
         if (unit.length > validation.PopConcentrationUnitChar.max) {
           errors.push({
-            field: 'Persistant organic pollutants (POPs) Concentrations',
-            message: errorMessage.charTooManyPopConcentrationUnit,
+            field: 'Persistant organic pollutants (POPs) Concentration Units',
+            code: errorCode.charTooManyPopConcentrationUnit,
           });
           break;
         }
