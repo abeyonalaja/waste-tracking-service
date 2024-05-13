@@ -1,17 +1,26 @@
 export async function getSubmissionStatus(
+  hostname: string,
   submissionId: string,
   token: string
 ): Promise<Response> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches/${submissionId}`,
-    {
-      method: 'GET',
-      cache: 'no-store',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  let protocol = 'https';
+
+  if (hostname.indexOf('localhost') === 0) {
+    hostname = 'localhost:3000';
+    protocol = 'http';
+  }
+
+  const apiUrl = `${protocol}://${hostname}/api`;
+
+  console.log(apiUrl);
+
+  const response = await fetch(`${apiUrl}/ukwm-batches/${submissionId}`, {
+    method: 'GET',
+    cache: 'no-store',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response;
 }

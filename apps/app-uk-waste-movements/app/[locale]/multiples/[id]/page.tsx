@@ -6,6 +6,7 @@ import { redirect } from '@wts/ui/navigation';
 import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page, BackLink } from '@wts/ui/shared-ui/server';
+import { headers } from 'next/headers';
 import {
   Instructions,
   ErrorInstructions,
@@ -40,6 +41,8 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
   const t = await getTranslations('multiples');
   const session = await getServerSession(options);
   const token = session?.token;
+  const headerList = headers();
+  const hostname = headerList.get('host') || '';
 
   const uploadFormStrings = {
     heading: t('uploadForm.heading'),
@@ -49,7 +52,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
     summaryLabel: t('uploadForm.summaryLabel'),
   };
 
-  const response = await getSubmissionStatus(params.id, token!);
+  const response = await getSubmissionStatus(hostname, params.id, token!);
 
   if (response.status === 401) {
     redirect('/404');
