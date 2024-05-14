@@ -465,9 +465,9 @@ while (execute) {
             submissions: response.value.map((s) => {
               return {
                 id: s.id,
-                producer: s.producer,
-                wasteCollection: s.wasteCollection,
-                wasteTypes: s.wasteTypes,
+                transactionId: s.transactionId,
+                producerAndCollection: s.producerAndCollection,
+                wasteInformation: s.wasteInformation,
                 submissionState: s.submissionState,
                 submissionDeclaration: s.submissionDeclaration,
                 hasEstimates:

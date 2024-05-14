@@ -428,6 +428,31 @@ export default class SubmissionController {
           '_' +
           id.substring(0, 8).toUpperCase();
 
+        const wasteInformation: api.WasteInformation = {
+          status: 'Complete',
+          wasteTypes: s.wasteTypes,
+          wasteTransportation: s.wasteTransportation,
+        };
+
+        const producerAndCollection: api.ProducerAndWasteCollectionDetail = {
+          status: 'Complete',
+          producer: s.producer,
+          wasteCollection: s.wasteCollection,
+        };
+
+        const draftReceiver: api.DraftReceiverDetail = {
+          status: 'Completed',
+          ...s.receiver,
+        };
+
+        const draftSubmissionDeclaration: api.DraftSubmissionDeclaration = {
+          status: 'Complete',
+          values: {
+            declarationTimestamp: new Date(),
+            transactionId: transactionId,
+          },
+        };
+
         const submissionState: api.Submission['submissionState'] = {
           status: s.wasteTypes.some((wt) => {
             wt.wasteQuantityType == 'EstimateData';
@@ -438,14 +463,13 @@ export default class SubmissionController {
         };
 
         return {
-          id,
-          ...s,
-          submissionDeclaration: {
-            declarationTimestamp: new Date(),
-            transactionId: transactionId,
-          },
+          id: id,
+          transactionId: transactionId,
+          producerAndCollection: producerAndCollection,
+          receiver: draftReceiver,
+          wasteInformation: wasteInformation,
+          submissionDeclaration: draftSubmissionDeclaration,
           submissionState,
-          transactionId,
         };
       });
       await this.repository.createBulkRecords(

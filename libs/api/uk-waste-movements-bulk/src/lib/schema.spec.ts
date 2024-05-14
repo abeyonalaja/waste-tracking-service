@@ -371,76 +371,90 @@ describe('getBatchResponse', () => {
           submissions: [
             {
               id: '1234',
-              producer: {
-                reference: '1234',
-                sicCode: '123456',
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
+              transactionId: '2307_5678ABCD',
+              producerAndCollection: {
+                status: 'Complete',
+                producer: {
+                  reference: '1234',
+                  sicCode: '123456',
+                  address: {
+                    addressLine1: 'address1',
+                    addressLine2: 'address2',
+                    country: 'England',
+                    townCity: 'London',
+                    postcode: 'SW1A 1AA',
+                  },
+                  contact: {
+                    name: 'test',
+                    organisationName: 'test',
+                    phone: '1234',
+                    email: 'test@organisation.com',
+                  },
                 },
-                contact: {
-                  name: 'test',
-                  organisationName: 'test',
-                  phone: '1234',
-                  email: 'test@organisation.com',
+                wasteCollection: {
+                  address: {
+                    addressLine1: 'address1',
+                    addressLine2: 'address2',
+                    country: 'England',
+                    townCity: 'London',
+                    postcode: 'SW1A 1AA',
+                  },
+                  brokerRegistrationNumber: 'CBDU1234',
+                  carrierRegistrationNumber: 'CBDU1234',
+                  wasteSource: 'Household',
+                  modeOfWasteTransport: 'Road',
+                  expectedWasteCollectionDate: {
+                    day: '01',
+                    month: '01',
+                    year: '2028',
+                  },
                 },
               },
-              wasteCollection: {
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
-                },
-                brokerRegistrationNumber: 'CBDU1234',
-                carrierRegistrationNumber: 'CBDU1234',
-                wasteSource: 'Household',
-                modeOfWasteTransport: 'Road',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
+              wasteInformation: {
+                status: 'Complete',
+                wasteTypes: [
+                  {
+                    ewcCode: '1234',
+                    wasteDescription: 'test',
+                    physicalForm: 'Solid',
+                    wasteQuantity: 1,
+                    quantityUnit: 'Kilogram',
+                    wasteQuantityType: 'EstimateData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        concentration: 1,
+                        concentrationUnit: 'Kilogram',
+                        name: 'test',
+                      },
+                    ],
+                    hasHazardousProperties: false,
+                    containsPops: false,
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP1',
+                        name: 'test',
+                      },
+                    ],
+                    pops: [
+                      {
+                        concentration: 1,
+                        name: 'test',
+                        concentrationUnit: 'Kilogram',
+                      },
+                    ],
+                  },
+                ],
+                wasteTransportation: {
+                  numberAndTypeOfContainers: 'test',
+                  specialHandlingRequirements: 'n/a',
                 },
               },
-              wasteTypes: [
-                {
-                  ewcCode: '1234',
-                  wasteDescription: 'test',
-                  physicalForm: 'Solid',
-                  wasteQuantity: 1,
-                  quantityUnit: 'Kilogram',
-                  wasteQuantityType: 'EstimateData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Kilogram',
-                      name: 'test',
-                    },
-                  ],
-                  hasHazardousProperties: false,
-                  containsPops: false,
-                  hazardousWasteCodes: [
-                    {
-                      code: 'HP1',
-                      name: 'test',
-                    },
-                  ],
-                  pops: [
-                    {
-                      concentration: 1,
-                      name: 'test',
-                      concentrationUnit: 'Kilogram',
-                    },
-                  ],
-                },
-              ],
               submissionDeclaration: {
-                transactionId: '2307_5678ABCD',
-                declarationTimestamp: new Date(),
+                status: 'Complete',
+                values: {
+                  declarationTimestamp: new Date(),
+                  transactionId: '2307_5678ABCD',
+                },
               },
               submissionState: {
                 status: 'SubmittedWithEstimates',

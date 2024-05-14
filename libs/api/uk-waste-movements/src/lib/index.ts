@@ -23,6 +23,14 @@ export type {
   DbContainerNameKey,
 } from './submission.dto';
 
+export type {
+  DraftReceiverDetail,
+  DraftSubmissionDeclaration,
+  DraftSubmission,
+  WasteInformation,
+  ProducerAndWasteCollectionDetail,
+} from './draft.dto';
+
 export type { Field, ErrorCodeData } from './validation';
 
 export { validateSubmissions, createSubmissions } from './submission.dto';

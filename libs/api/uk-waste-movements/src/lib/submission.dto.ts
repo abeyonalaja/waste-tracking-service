@@ -1,6 +1,7 @@
 import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { ValidationResult } from './validation';
+import { DraftSubmission } from './draft.dto';
 
 export type WasteSource =
   | 'Household'
@@ -373,7 +374,7 @@ export type CreateSubmissionsRequest = IdRequest &
   AccountIdRequest & {
     values: PartialSubmission[];
   };
-export type CreateSubmissionsResponse = Response<Submission[]>;
+export type CreateSubmissionsResponse = Response<DraftSubmission[]>;
 
 export const createSubmissions: Method = {
   name: 'createSubmissions',

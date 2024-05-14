@@ -1,6 +1,6 @@
 import { AccountIdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
-import { Submission } from '@wts/api/uk-waste-movements';
+import { DraftSubmission, Submission } from '@wts/api/uk-waste-movements';
 
 export type AddContentToBatchRequest = AccountIdRequest & {
   batchId?: string;
@@ -64,9 +64,7 @@ export type BulkSubmissionValidationColumnError = {
   errorDetails: BulkSubmissionValidationColumnErrorDetail[];
 };
 
-export type BulkSubmissionSummary = Readonly<
-  Omit<Submission, 'receiver' | 'wasteTransportation'>
->;
+export type BulkSubmissionSummary = Readonly<Omit<DraftSubmission, 'receiver'>>;
 
 type FailedValidationCodeState = {
   status: 'FailedValidation';

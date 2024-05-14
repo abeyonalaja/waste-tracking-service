@@ -1,11 +1,11 @@
 import { CosmosClient, Database } from '@azure/cosmos';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
-import { Submission, DbContainerNameKey } from '../model';
+import { DraftSubmission, DbContainerNameKey } from '../model';
 
 import { IRepository } from './repository';
 
-export default class CosmosRepository implements IRepository<Submission> {
+export default class CosmosRepository implements IRepository<DraftSubmission> {
   private cosmosDb: Database;
 
   constructor(
@@ -20,7 +20,7 @@ export default class CosmosRepository implements IRepository<Submission> {
   async createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: Submission[]
+    values: DraftSubmission[]
   ): Promise<void> {
     const records = values.map((s) => {
       return {

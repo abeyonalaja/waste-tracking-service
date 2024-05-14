@@ -110,13 +110,23 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
           transactionId: response.value.state.transactionId,
           submissions: response.value.state.submissions.map((v) => ({
             id: v.id,
-            wasteMovementId: v.submissionDeclaration.transactionId,
-            producerName: v.producer.contact.organisationName,
-            ewcCodes: v.wasteTypes.map((wt) => wt.ewcCode),
-            collectionDate: {
-              day: v.wasteCollection.expectedWasteCollectionDate.day,
-              month: v.wasteCollection.expectedWasteCollectionDate.month,
-              year: v.wasteCollection.expectedWasteCollectionDate.year,
+            wasteMovementId:
+              v.submissionDeclaration.status === 'Complete' &&
+              v.submissionDeclaration.values.transactionId,
+            producerName:
+              v.producerAndCollection.status === 'Complete' &&
+              v.producerAndCollection.producer.contact?.organisationName,
+            ewcCodes:
+              v.wasteInformation.status === 'Complete' &&
+              v.wasteInformation.wasteTypes.map((wt) => wt?.ewcCode),
+            collectionDate: v.producerAndCollection.status === 'Complete' && {
+              day: v.producerAndCollection.wasteCollection
+                .expectedWasteCollectionDate?.day,
+              month:
+                v.producerAndCollection.wasteCollection
+                  .expectedWasteCollectionDate?.month,
+              year: v.producerAndCollection.wasteCollection
+                .expectedWasteCollectionDate?.year,
             },
           })),
         },

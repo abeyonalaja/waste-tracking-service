@@ -85,12 +85,42 @@ export const wasteCollection: SchemaObject = {
   },
 };
 
+export const producerAndCollection: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        producer: producer,
+        wasteCollection: wasteCollection,
+      },
+    },
+  },
+};
+
 export const receiver: SchemaObject = {
   properties: {
     authorizationType: { type: 'string' },
     environmentalPermitNumber: { type: 'string' },
     contact: contact,
     address: address,
+  },
+};
+
+export const draftReceiver: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    InProgress: {
+      properties: {
+        receiver,
+      },
+    },
+    Completed: {
+      properties: {
+        receiver,
+      },
+    },
   },
 };
 
@@ -148,10 +178,38 @@ export const wasteTransportation: JTDSchemaType<WasteTransportationDetail> = {
   },
 };
 
-const submissionDeclaration: SchemaObject = {
-  properties: {
-    transactionId: { type: 'string' },
-    declarationTimestamp: { type: 'timestamp' },
+export const wasteInformation: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        wasteTypes: {
+          elements: {
+            ...wasteType,
+          },
+        },
+        wasteTransportation: wasteTransportation,
+      },
+    },
+  },
+};
+
+export const draftSubmissionDeclaration: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    CannotStart: { properties: {} },
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        values: {
+          properties: {
+            transactionId: { type: 'string' },
+            declarationTimestamp: { type: 'timestamp' },
+          },
+        },
+      },
+    },
   },
 };
 
@@ -258,15 +316,11 @@ const bulkSubmissionStateBase: SchemaObject = {
           elements: {
             properties: {
               id: { type: 'string' },
-              producer,
-              wasteCollection,
-              wasteTypes: {
-                elements: {
-                  ...wasteType,
-                },
-              },
-              submissionDeclaration,
-              submissionState,
+              transactionId: { type: 'string' },
+              producerAndCollection: producerAndCollection,
+              wasteInformation: wasteInformation,
+              submissionDeclaration: draftSubmissionDeclaration,
+              submissionState: submissionState,
             },
           },
         },

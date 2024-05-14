@@ -4,6 +4,7 @@ import * as bulkApi from '@wts/api/uk-waste-movements-bulk';
 export { validation } from '@wts/api/uk-waste-movements';
 
 export type Submission = api.Submission;
+export type DraftSubmission = api.DraftSubmission;
 export type ProducerDetail = api.ProducerDetail;
 export type ReceiverDetail = api.ReceiverDetail;
 export type WasteTransportationDetail = api.WasteTransportationDetail;
