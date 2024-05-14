@@ -1,0 +1,1 @@
+export { SubmittedTable } from './SubmittedTable';

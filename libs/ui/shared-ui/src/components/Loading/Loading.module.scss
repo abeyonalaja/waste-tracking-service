@@ -1,4 +1,9 @@
 @import 'node_modules/govuk-frontend/dist/govuk/base';
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .loading {
   width: 80px;

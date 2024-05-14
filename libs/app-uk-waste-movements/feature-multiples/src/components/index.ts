@@ -1,4 +1,5 @@
 // Client Components
+export { SubmittedTable } from './SubmittedTable';
 export { ErrorTab } from './ErrorTab';
 export { InterruptionButton } from './InterruptionButton';
 export { StatusChecker } from './StatusChecker';

@@ -1,6 +1,19 @@
 import styles from './Loading.module.scss';
 
-export function Loading() {
+interface LoadingProps {
+  centered?: boolean;
+}
+
+export function Loading({ centered }: LoadingProps) {
+  if (centered) {
+    return (
+      <div className={styles.centered}>
+        <span className={styles.loading}>
+          <span className="govuk-visually-hidden">The page is loading</span>{' '}
+        </span>
+      </div>
+    );
+  }
   return (
     <span className={styles.loading}>
       <span className="govuk-visually-hidden">The page is loading</span>{' '}

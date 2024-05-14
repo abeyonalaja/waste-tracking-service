@@ -232,6 +232,22 @@
       "link": "How to create multiple new waste movements using the CSV template (opens in new tab)",
       "button": "Continue"
     },
+    "manage": {
+      "breadCrumbs": {
+        "home": "Home",
+        "moveWaste": "Move waste in the UK",
+        "current": "Manage waste movements"
+      },
+      "headingOne": "Waste movement records for {company}",
+      "table": {
+        "headerOne": "Waste movement ID",
+        "headerTwo": "Collection date",
+        "headerThree": "EWC code",
+        "headerFour": "Producer name",
+        "headerFive": "Action",
+        "action": "Action"
+      }
+    },
     "guidancePage": {
       "heading": "Waste movements in the UK: how to create multiple waste movements using a CSV file",
       "hint": "Use this guidance to help you complete a CSV template to upload multiple waste movements for the ‘Move waste in the UK’ service.",

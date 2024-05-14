@@ -10,7 +10,9 @@ type Props = {
     | 'one-quarter'
     | 'three-quarters'
     | 'two-thirds-from-desktop'
-    | 'one-third-from-desktop';
+    | 'one-third-from-desktop'
+    | 'one-quarter-from-desktop'
+    | 'three-quarters-from-desktop';
   testId?: string;
 };
 

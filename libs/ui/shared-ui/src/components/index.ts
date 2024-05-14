@@ -3,6 +3,7 @@ export { LanguageSwitcher } from './LanguageSwitcher';
 export { BackLink } from './BackLink';
 export { Breadcrumbs } from './Breadcrumbs';
 export { CharacterCount } from './CharacterCount';
+export { Pagination } from './Pagination';
 
 // Server components
 export { AuthNavigation } from './AuthNavigation';

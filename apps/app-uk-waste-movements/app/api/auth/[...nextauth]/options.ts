@@ -23,6 +23,7 @@ export const options: NextAuthOptions = {
           id: profile.sub,
           name: `${profile.firstName} ${profile.lastName}`,
           email: profile.email,
+          relationships: profile.relationships,
         };
       },
     }),
@@ -36,6 +37,7 @@ export const options: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       session.token = token.id_token;
+      session.companyName = token.relationships as string;
       return session;
     },
     async jwt({ token, account, profile }) {
@@ -45,6 +47,7 @@ export const options: NextAuthOptions = {
         return {
           name: `${profile.firstName} ${profile.lastName}`,
           email: profile.email,
+          relationships: profile.relationships[0].split(':')[2],
           id_token: account.id_token,
           idTokenExpires: Date.now() + account.id_token_expires_in * 1000, // 20 minutes
           refreshToken: account.refresh_token,

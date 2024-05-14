@@ -2,6 +2,7 @@
 export default {
   displayName: 'lib-app-uk-waste-movements-feature-multiples',
   preset: '../../../jest.preset.js',
+  setupFilesAfterEnv: ['./src/jest.setup.ts'],
   transform: {
     '^.+\\.[tj]sx?$': [
       '@swc/jest',

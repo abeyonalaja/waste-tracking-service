@@ -98,10 +98,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
   }
 
   if (state.status === 'FailedValidation') {
-    const totalErrorCount = calculateTotalErrors(
-      state.rowErrors,
-      state.columnErrors
-    );
+    const totalErrorCount = calculateTotalErrors(state.columnErrors);
 
     const failedValidationFormStrings = {
       heading: t('errors.uploadForm.heading'),
