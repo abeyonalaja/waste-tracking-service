@@ -15,9 +15,11 @@ export default async function CancelPage({
 }: {
   params: { id: string };
 }) {
-  const pageUrl: string = `${process.env.UKWM_URL}/multiples/${params.id}`;
+  const pageUrl: string = `${process.env.NEXT_PUBLIC_UKWM_URL}/multiples/${params.id}`;
   const session: Session | null = await getServerSession(options);
   const token = session?.token;
+
+  console.log(process.env.UKWM_URL);
 
   return (
     <Page beforeChildren={<BackLink href="./" />}>
