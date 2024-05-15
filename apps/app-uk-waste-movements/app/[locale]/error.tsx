@@ -7,14 +7,17 @@ interface ErrorPageProps {
 }
 
 export default function Error({ error }: ErrorPageProps) {
-  // TODO: Add error page content and translation
-  // Put in error recovery button
-
   console.error(error);
-
   return (
     <Page>
-      <div>An error has occured</div>
+      <div className="govuk-grid-row">
+        <div className="govuk-grid-column-two-thirds">
+          <h1 className="govuk-heading-l">
+            Sorry, there is a problem with the service
+          </h1>
+          <p>Try again later.</p>
+        </div>
+      </div>
     </Page>
   );
 }

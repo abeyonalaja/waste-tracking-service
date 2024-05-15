@@ -13,3 +13,4 @@ export { Interruption } from './components';
 export { SubmissionConfirmation } from './components';
 export { TotalErrorSummary } from './components';
 export { ValidationSuccess } from './components';
+export { ValidationCancel } from './components';

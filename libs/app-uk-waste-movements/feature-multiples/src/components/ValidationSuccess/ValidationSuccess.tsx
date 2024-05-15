@@ -6,19 +6,25 @@ import {
   Paragraph,
   WarningText,
 } from '@wts/ui/govuk-react-ui';
-import { Link } from '@wts/ui/navigation';
 import { useTranslations } from 'next-intl';
+import { SubmitButton } from './SubmitButton';
 
 type ValidationSuccessProps = {
   recordCount: number;
   hasCorrectedErrors: boolean;
   hasEstimates: boolean;
+  submissionId: string;
+  token: string;
+  pageUrl: string;
 };
 
 export function ValidationSuccess({
   recordCount,
   hasCorrectedErrors,
   hasEstimates = false,
+  submissionId,
+  token,
+  pageUrl,
 }: ValidationSuccessProps) {
   const t = useTranslations('multiples.success');
   return (
@@ -37,15 +43,15 @@ export function ValidationSuccess({
       {hasEstimates && <WarningText>{t('warning')}</WarningText>}
       <Paragraph mb={8}>{t('body')}</Paragraph>
       <ButtonGroup>
-        <>
-          <Button>{t('button')}</Button>
-          <Link
-            href={'#'}
-            className={'govuk-link govuk-link--no-visited-state'}
-          >
-            {t('cancelLink')}
-          </Link>
-        </>
+        <SubmitButton
+          buttonText={t('button')}
+          submissionId={submissionId}
+          token={token}
+          pageUrl={pageUrl}
+        />
+        <Button href={`${submissionId}/cancel`} secondary={true}>
+          Cancel
+        </Button>
       </ButtonGroup>
     </div>
   );

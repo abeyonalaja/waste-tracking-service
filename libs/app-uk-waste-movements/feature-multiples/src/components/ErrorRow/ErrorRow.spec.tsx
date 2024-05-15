@@ -52,11 +52,23 @@ const mockRowError = {
 
 describe('ErrorRow component', () => {
   it('renders without error', () => {
-    render(<ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
   });
 
   it('Displays the name of the column with errors when the error is of column type', () => {
-    render(<ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const columnName = screen.getByText('Producer address line 1');
 
@@ -64,7 +76,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Displays the row number with errors when error is of row type', () => {
-    render(<ErrorRow error={mockRowError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const rowNumber = screen.getByText('4');
 
@@ -72,7 +90,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Displays the number of errors in the column', () => {
-    render(<ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const errorCount = screen.getByText('2 errors');
 
@@ -80,7 +104,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Displays the error details when the show button is clicked on an error of column type', () => {
-    render(<ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
 
@@ -94,7 +124,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Hides the error details when the hide button is clicked on error of column type', () => {
-    render(<ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
 
@@ -116,7 +152,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Shows the error details when the show button is clicked on an error of row type', () => {
-    render(<ErrorRow error={mockRowError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
 
@@ -132,7 +174,13 @@ describe('ErrorRow component', () => {
   });
 
   it('Hides the error details when the hide button is clicked on error of row type', () => {
-    render(<ErrorRow error={mockRowError} strings={strings} rowIndex={1} />);
+    render(
+      <table>
+        <tbody>
+          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
+        </tbody>
+      </table>
+    );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
 

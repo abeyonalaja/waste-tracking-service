@@ -248,6 +248,12 @@
         "action": "Action"
       }
     },
+    "cancel": {
+      "heading": "You have not created your new waste movement records yet",
+      "paragraph": "If you cancel creating these records now, you will have to upload the CSV file again.",
+      "button": "Confirm and cancel",
+      "buttonSecondary": "Continue to create records"
+    },
     "guidancePage": {
       "heading": "Waste movements in the UK: how to create multiple waste movements using a CSV file",
       "hint": "Use this guidance to help you complete a CSV template to upload multiple waste movements for the ‘Move waste in the UK’ service.",

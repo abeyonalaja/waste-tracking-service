@@ -22,6 +22,10 @@ const messages = {
   },
 };
 
+jest.mock('./SubmitButton', () => {
+  const SubmitButton = () => <div />;
+  return { SubmitButton };
+});
 describe('Validation success component', () => {
   test('renders correctly when 1 submission which has estimates and previous wrong answers', async () => {
     render(
@@ -30,6 +34,9 @@ describe('Validation success component', () => {
           recordCount={1}
           hasEstimates={true}
           hasCorrectedErrors={true}
+          pageUrl="any"
+          submissionId="any"
+          token="any"
         />
       </NextIntlClientProvider>
     );
@@ -53,6 +60,9 @@ describe('Validation success component', () => {
           recordCount={3}
           hasEstimates={false}
           hasCorrectedErrors={false}
+          pageUrl="any"
+          submissionId="any"
+          token="any"
         />
       </NextIntlClientProvider>
     );

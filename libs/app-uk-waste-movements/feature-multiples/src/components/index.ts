@@ -20,3 +20,4 @@ export { SubmissionConfirmation } from './SubmissionConfirmation';
 export { TotalErrorSummary } from './TotalErrorSummary';
 export { UniqueReference } from './Guidance/CSVGuidance/UniqueReference';
 export { ValidationSuccess } from './ValidationSuccess';
+export { ValidationCancel } from './ValidationSuccess';
