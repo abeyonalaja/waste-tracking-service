@@ -5,13 +5,11 @@ import { SubmitButton } from './SubmitButton';
 type ValidationCancelProps = {
   submissionId: string;
   token: string | null | undefined;
-  pageUrl: string;
 };
 
 export function ValidationCancel({
   submissionId,
   token,
-  pageUrl,
 }: ValidationCancelProps) {
   const t = useTranslations('multiples.cancel');
   return (
@@ -25,7 +23,6 @@ export function ValidationCancel({
           secondary={true}
           submissionId={submissionId}
           token={token}
-          pageUrl={pageUrl}
         />
       </GovUK.ButtonGroup>
     </>

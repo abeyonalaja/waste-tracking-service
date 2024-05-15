@@ -199,7 +199,6 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
               recordCount={state.submissions.length}
               submissionId={params.id}
               token={token!}
-              pageUrl={pageUrl}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>

@@ -15,7 +15,6 @@ type ValidationSuccessProps = {
   hasEstimates: boolean;
   submissionId: string;
   token: string;
-  pageUrl: string;
 };
 
 export function ValidationSuccess({
@@ -24,7 +23,6 @@ export function ValidationSuccess({
   hasEstimates = false,
   submissionId,
   token,
-  pageUrl,
 }: ValidationSuccessProps) {
   const t = useTranslations('multiples.success');
   return (
@@ -47,7 +45,6 @@ export function ValidationSuccess({
           buttonText={t('button')}
           submissionId={submissionId}
           token={token}
-          pageUrl={pageUrl}
         />
         <Button href={`${submissionId}/cancel`} secondary={true}>
           Cancel

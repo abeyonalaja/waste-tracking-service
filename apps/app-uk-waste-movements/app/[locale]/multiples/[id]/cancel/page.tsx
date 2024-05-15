@@ -15,7 +15,6 @@ export default async function CancelPage({
 }: {
   params: { id: string };
 }) {
-  const pageUrl: string = `${process.env.NEXT_PUBLIC_UKWM_URL}/multiples/${params.id}`;
   const session: Session | null = await getServerSession(options);
   const token = session?.token;
 
@@ -25,11 +24,7 @@ export default async function CancelPage({
     <Page beforeChildren={<BackLink href="./" />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <ValidationCancel
-            submissionId={params.id}
-            pageUrl={pageUrl}
-            token={token}
-          />
+          <ValidationCancel submissionId={params.id} token={token} />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>

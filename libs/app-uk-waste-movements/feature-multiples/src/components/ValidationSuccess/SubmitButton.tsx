@@ -7,7 +7,6 @@ type SubmitButtonsProps = {
   buttonText: string;
   submissionId: string;
   token: string | null | undefined;
-  pageUrl: string;
   secondary?: boolean;
 };
 
@@ -15,7 +14,6 @@ export function SubmitButton({
   buttonText,
   submissionId,
   token,
-  pageUrl,
   secondary = false,
 }: SubmitButtonsProps) {
   const router = useRouter();
@@ -41,7 +39,7 @@ export function SubmitButton({
     }
 
     if (response!.status === 201) {
-      router.push(pageUrl);
+      router.push(`/multiples/${submissionId}`);
     } else {
       router.push(`/404`);
     }
