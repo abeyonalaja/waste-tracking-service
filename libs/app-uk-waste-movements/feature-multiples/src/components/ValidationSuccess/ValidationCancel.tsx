@@ -17,7 +17,7 @@ export function ValidationCancel({
       <GovUK.Heading size={'l'}>{t('heading')}</GovUK.Heading>
       <GovUK.Paragraph mb={8}>{t('paragraph')}</GovUK.Paragraph>
       <GovUK.ButtonGroup>
-        <GovUK.Button href={'/'}>{t('button')}</GovUK.Button>
+        <GovUK.Button href={'/multiples'}>{t('button')}</GovUK.Button>
         <SubmitButton
           buttonText={t('buttonSecondary')}
           secondary={true}
