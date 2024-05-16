@@ -5,7 +5,6 @@ import { ClickAnalyticsPlugin } from '@microsoft/applicationinsights-clickanalyt
 import { useEffect } from 'react';
 
 interface AppInsightsProviderProps {
-  connectionString: string;
   children: React.ReactNode;
 }
 
@@ -45,7 +44,6 @@ export default function AppInsightsProvider({
         });
 
         if (connectionString) {
-          console.log('Starting AppInsights');
           appInsights.loadAppInsights();
         }
       } catch (err) {

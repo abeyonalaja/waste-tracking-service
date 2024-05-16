@@ -16,7 +16,6 @@ export default function App({
   pageProps: { session, ...pageProps },
 }) {
   noStore();
-  const connectionString = process.env['APPINSIGHTS_CONNECTION_STRING'];
   const [queryClient] = useState(() => {
     return new QueryClient({
       defaultOptions: {
@@ -28,7 +27,7 @@ export default function App({
   });
 
   return (
-    <AppInsightsProvider connectionString={connectionString}>
+    <AppInsightsProvider>
       <Layout>
         <SessionProvider
           session={session}
