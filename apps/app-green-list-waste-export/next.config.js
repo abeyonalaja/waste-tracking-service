@@ -18,6 +18,9 @@ const nextConfig = {
   },
   basePath:
     process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '',
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 module.exports = withNx(nextConfig);

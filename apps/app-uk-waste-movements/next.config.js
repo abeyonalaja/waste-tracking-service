@@ -18,6 +18,9 @@ const nextConfig = {
   sassOptions: {
     prependData: `$assetPath: '${assetPath}';`,
   },
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 const plugins = [
