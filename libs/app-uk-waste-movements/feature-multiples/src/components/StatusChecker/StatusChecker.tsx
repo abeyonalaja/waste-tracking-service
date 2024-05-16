@@ -7,7 +7,7 @@ import styles from './StatusChecker.module.scss';
 
 interface StatusCheckerProps {
   label: string;
-  filename: string;
+  filename?: string;
 }
 
 export function StatusChecker({ label, filename }: StatusCheckerProps) {
