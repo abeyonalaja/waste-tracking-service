@@ -130,4 +130,6 @@ ingress:
           pathType: Prefix
         - path: /api/ukwm-batches
           pathType: Prefix
+        - path: /api/ukwm
+          pathType: Prefix
   labels: {}
