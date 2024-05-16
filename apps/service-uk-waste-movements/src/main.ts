@@ -139,4 +139,20 @@ await server.invoker.listen(
   { method: HttpMethod.POST }
 );
 
+await server.invoker.listen(
+  api.getDraft.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+    const request = JSON.parse(body) as api.GetDraftRequest;
+    if (request == undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+    console.log(submissionController.getDraft(request));
+    return await submissionController.getDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();

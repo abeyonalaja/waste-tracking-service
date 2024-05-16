@@ -5,5 +5,6 @@ export * from './lib/feedback';
 export * from './lib/template';
 export * from './lib/reference-data';
 export * from './lib/batch';
+export * from './lib/ukwm';
 export * from './lib/ukwm-batch';
 export * from './lib/ukwm';

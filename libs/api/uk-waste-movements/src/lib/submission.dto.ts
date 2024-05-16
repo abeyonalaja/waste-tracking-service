@@ -381,4 +381,9 @@ export const createSubmissions: Method = {
   httpVerb: 'POST',
 };
 
+export const getDraft: Method = {
+  name: 'getDraft',
+  httpVerb: 'POST',
+};
+
 export type DbContainerNameKey = 'drafts';

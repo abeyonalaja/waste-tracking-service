@@ -51,6 +51,12 @@ import {
   ukWasteMovementsBulkSubmissionPlugin,
 } from './modules/uk-waste-movements-bulk-submission';
 import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
+import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
+import {
+  ServiceUkWasteMovementsSubmissionBackend,
+  UkWasteMovementsSubmissionBackend,
+  ukWasteMovementsSubmissionPlugin,
+} from './modules/uk-waste-movements-submission';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -76,6 +82,7 @@ let backend: {
   bulkSubmission: BulkSubmissionBackend;
   privateBeta: PrivateBetaBackend;
   ukWasteMovementsBulkSubmission: UkWasteMovementsBulkSubmissionBackend;
+  ukWasteMovements: UkWasteMovementsSubmissionBackend;
 };
 
 if (process.env['NODE_ENV'] === 'development') {
@@ -149,6 +156,13 @@ if (process.env['NODE_ENV'] === 'development') {
         ),
         logger
       ),
+    ukWasteMovements: new ServiceUkWasteMovementsSubmissionBackend(
+      new DaprUkWasteMovementsClient(
+        client,
+        process.env['UKWM_APP_ID'] || 'service-uk-waste-movements'
+      ),
+      logger
+    ),
   };
 }
 
@@ -285,6 +299,17 @@ if (process.env['IS_UKWM_BATCHES_ENABLED'] === 'true') {
     },
     routes: {
       prefix: '/api/ukwm-batches',
+    },
+  });
+
+  await app.register({
+    plugin: ukWasteMovementsSubmissionPlugin,
+    options: {
+      backend: backend.ukWasteMovements,
+      logger,
+    },
+    routes: {
+      prefix: '/api/ukwm',
     },
   });
 }

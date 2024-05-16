@@ -29,9 +29,15 @@ export type {
   DraftSubmission,
   WasteInformation,
   ProducerAndWasteCollectionDetail,
+  GetDraftRequest,
+  GetDraftResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
 
-export { validateSubmissions, createSubmissions } from './submission.dto';
+export {
+  validateSubmissions,
+  createSubmissions,
+  getDraft,
+} from './submission.dto';
 export * as validation from './validation';

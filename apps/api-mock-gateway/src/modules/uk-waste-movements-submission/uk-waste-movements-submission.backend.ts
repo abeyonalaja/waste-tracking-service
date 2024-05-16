@@ -1,8 +1,15 @@
 import {
   UkwmSubmission,
   UkwmDraftsResult,
+  UkwmDraftSubmission,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
+import { db } from '../../db';
+import { NotFoundError } from '../../lib/errors';
+
+export type UkwmSubmissionRef = {
+  id: string;
+};
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
   id: uuidv4(),
@@ -96,7 +103,7 @@ const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
     },
   ],
   submissionState: {
-    status: 'Submitted',
+    status: 'SubmittedWithActuals',
     timestamp: new Date(),
   },
 }));
@@ -158,4 +165,26 @@ export function getDrafts(
       collectionDate: s.wasteCollection.expectedWasteCollectionDate,
     })),
   };
+}
+
+export function getUkwmSubmission({
+  id,
+}: UkwmSubmissionRef): Promise<UkwmDraftSubmission> {
+  const value = db.ukwmDrafts.find((d) => d.id == id);
+  if (value === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  const v = value as UkwmDraftSubmission;
+  const submission: UkwmDraftSubmission = {
+    id: v.id,
+    transactionId: v.transactionId,
+    wasteInformation: v.wasteInformation,
+    receiver: v.receiver,
+    producerAndCollection: v.producerAndCollection,
+    submissionDeclaration: v.submissionDeclaration,
+    submissionState: v.submissionState,
+  } as UkwmDraftSubmission;
+
+  return Promise.resolve(submission);
 }

@@ -88,10 +88,6 @@ export type UkwmWasteTransportationDetail = {
   numberAndTypeOfContainers: string;
   specialHandlingRequirements?: string;
 };
-export type UkwmSubmissionState = {
-  status: 'InProgress' | 'Submitted';
-  timestamp: Date;
-};
 
 export type UkwmSubmission = {
   id: string;
@@ -123,4 +119,61 @@ export type UkwmDraftsResult = {
   values: UkwmDraft[];
 };
 
+export type UkwmWasteInformation =
+  | { status: 'NotStarted' }
+  | {
+      status: 'InProgress';
+      wasteTypes: UkwmWasteTypeDetail[];
+      wasteTransportation: UkwmWasteTransportationDetail;
+    };
+
+type DraftStatus<T> =
+  | { status: 'NotStarted' }
+  | ({ status: 'InProgress' } & T)
+  | ({ status: 'Completed' } & T);
+
+export type UkwmDraftReceiverDetail = DraftStatus<UkwmReceiverDetail>;
+
 export type GetUwkwmDraftsResponse = UkwmDraftsResult;
+
+export type UkwmProducerAndWasteCollectionDetail =
+  | { status: 'NotStarted' }
+  | {
+      status: 'InProgress';
+      producer: UkwmProducerDetail;
+      wasteCollection: UkwmWasteCollectionDetail;
+    };
+
+export type UkwmSubmissionDeclaration = {
+  declarationTimestamp: Date;
+  transactionId: string;
+};
+
+export type DraftSubmissionDeclaration =
+  | { status: 'CannotStart' | 'NotStarted' }
+  | {
+      status: 'Complete';
+      values: UkwmSubmissionDeclaration;
+    };
+
+export type UkwmSubmissionStateStatus =
+  | 'SubmittedWithEstimates'
+  | 'SubmittedWithActuals'
+  | 'UpdatedWithActuals';
+
+export type UkwmSubmissionState = {
+  status: UkwmSubmissionStateStatus;
+  timestamp: Date;
+};
+
+export type UkwmDraftSubmission = {
+  id: string;
+  transactionId: string;
+  wasteInformation: UkwmWasteInformation;
+  receiver: UkwmDraftReceiverDetail;
+  producerAndCollection: UkwmProducerAndWasteCollectionDetail;
+  submissionDeclaration: DraftSubmissionDeclaration;
+  submissionState: UkwmSubmissionState;
+};
+
+export type GetUkwmSubmissionResponse = UkwmDraftSubmission;

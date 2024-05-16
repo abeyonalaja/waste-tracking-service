@@ -1,3 +1,4 @@
+import { IdRequest } from '@wts/api/common';
 import {
   ProducerDetail,
   ReceiverDetail,
@@ -7,6 +8,7 @@ import {
   SubmissionDeclaration,
   SubmissionState,
 } from './submission.dto';
+import { Response } from '@wts/util/invocation';
 
 type DraftStatus<T> =
   | { status: 'NotStarted' }
@@ -46,3 +48,6 @@ export type DraftSubmission = {
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: SubmissionState;
 };
+
+export type GetDraftRequest = IdRequest;
+export type GetDraftResponse = Response<DraftSubmission>;

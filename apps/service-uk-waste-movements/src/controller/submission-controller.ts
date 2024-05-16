@@ -490,4 +490,22 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+  getDraft: Handler<api.GetDraftRequest, api.GetDraftResponse> = async ({
+    id,
+  }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        submissionsContainerName,
+        id
+      )) as api.DraftSubmission;
+      return success(draft);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

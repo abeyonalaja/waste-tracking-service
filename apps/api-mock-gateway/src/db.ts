@@ -13,6 +13,7 @@ import {
   UkwmBulkSubmission,
   Submission,
   ListlocalAuthoritiesResponse,
+  UkwmDraftSubmission,
 } from '@wts/api/waste-tracking-gateway';
 
 export type DraftSubmissionWithAccount = DraftSubmission & {
@@ -38,6 +39,7 @@ export interface DB {
   localAuthorities: ListlocalAuthoritiesResponse;
   batches: BulkWithAccount[];
   ukwmBatches: UkwmBulkWithAccount[];
+  ukwmDrafts: UkwmDraftSubmission[];
 }
 
 export const db: DB = {
@@ -77,6 +79,106 @@ export const db: DB = {
   templates: [],
   batches: [],
   ukwmBatches: [],
+  ukwmDrafts: [
+    {
+      id: '123',
+      transactionId: '456',
+      wasteInformation: {
+        status: 'InProgress',
+        wasteTypes: [
+          {
+            ewcCode: '20 01 30',
+            wasteDescription: 'Discarded electrical appliances',
+            physicalForm: 'Solid',
+            wasteQuantity: 500,
+            quantityUnit: 'Kilogram',
+            wasteQuantityType: 'EstimateData',
+            chemicalAndBiologicalComponents: [
+              {
+                name: 'Iron',
+                concentration: 70,
+                concentrationUnit: '%',
+              },
+              {
+                name: 'Plastic',
+                concentration: 30,
+                concentrationUnit: '%',
+              },
+            ],
+            hasHazardousProperties: false,
+            containsPops: false,
+          },
+        ],
+        wasteTransportation: {
+          numberAndTypeOfContainers: '5 large bins',
+        },
+      },
+      receiver: {
+        status: 'InProgress',
+        authorizationType: 'Waste Management License',
+        environmentalPermitNumber: 'EP1234567',
+        contact: {
+          organisationName: 'Waste Management Inc.',
+          name: 'John Doe',
+          email: 'johndoe@example.com',
+          phone: '+1234567890',
+        },
+        address: {
+          addressLine1: '123 Street',
+          townCity: 'Sofia',
+          postcode: '1700',
+          country: 'Bulgaria',
+        },
+      },
+      producerAndCollection: {
+        status: 'InProgress',
+        producer: {
+          reference: 'REF123',
+          sicCode: 'SIC5678',
+          contact: {
+            organisationName: 'Waste Producer Inc.',
+            name: 'Jane Doe',
+            email: 'janedoe@example.com',
+            phone: '+1234567890',
+          },
+          address: {
+            addressLine1: '456 Avenue',
+            townCity: 'Pleven',
+            postcode: '5800',
+            country: 'Bulgaria',
+          },
+        },
+        wasteCollection: {
+          wasteSource: 'Industrial',
+          brokerRegistrationNumber: 'BRN123',
+          carrierRegistrationNumber: 'CRN456',
+          modeOfWasteTransport: 'Truck',
+          expectedWasteCollectionDate: {
+            day: '15',
+            month: '05',
+            year: '2024',
+          },
+          address: {
+            addressLine1: '789 Street',
+            townCity: 'Pleven',
+            postcode: '5800',
+            country: 'Bulgaria',
+          },
+        },
+      },
+      submissionDeclaration: {
+        status: 'Complete',
+        values: {
+          declarationTimestamp: new Date(),
+          transactionId: 'TX123456',
+        },
+      },
+      submissionState: {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      },
+    },
+  ],
   wasteCodes: [
     {
       type: 'BaselAnnexIX',

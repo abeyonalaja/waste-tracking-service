@@ -1,8 +1,12 @@
 import { Application } from 'express';
 import * as dto from '@wts/api/waste-tracking-gateway';
-import { getDrafts } from './uk-waste-movements-submission.backend';
+import {
+  getDrafts,
+  getUkwmSubmission,
+} from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
+  CustomError,
   InternalServerError,
   NotFoundError,
 } from '../../lib/errors';
@@ -54,6 +58,24 @@ export default class UkwmSubmissionPlugin {
       } catch (err) {
         if (err instanceof NotFoundError) {
           return err;
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.get(`${this.prefix}/drafts/:id`, async (req, res) => {
+      try {
+        const value = await getUkwmSubmission({
+          id: req.params.id,
+        });
+
+        return res.json(value as dto.GetUkwmSubmissionResponse);
+      } catch (err) {
+        if (err instanceof CustomError) {
+          return res.status(err.statusCode).json({ message: err.message });
         }
         console.log('Unknown error', { error: err });
         return res

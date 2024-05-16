@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './submission-controller';
-import { validation } from '../model';
+import { DraftSubmission, validation } from '../model';
 import { CosmosRepository } from '../data';
 
 jest.mock('winston', () => ({
@@ -13,6 +13,7 @@ jest.mock('winston', () => ({
 
 const mockRepository = {
   createBulkRecords: jest.fn<CosmosRepository['createBulkRecords']>(),
+  getDraft: jest.fn<CosmosRepository['getDraft']>(),
 };
 
 const ewcCodes = [
@@ -625,6 +626,39 @@ describe(SubmissionController, () => {
       }
       expect(mockRepository.createBulkRecords).toBeCalled();
       expect(response.error.statusCode).toBe(201);
+    });
+  });
+
+  describe('getDraft', () => {
+    it('successfully returns value from the repository', async () => {
+      const id = faker.datatype.uuid();
+      const value: DraftSubmission = {
+        id: id,
+        transactionId: '',
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'NotStarted',
+        },
+        submissionDeclaration: {
+          status: 'NotStarted',
+        },
+        submissionState: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(value);
+      const response = await subject.getDraft({ id });
+      expect(response.success).toBe(true);
+      if (response.success) {
+        expect(response.value.id).toEqual(id);
+        return;
+      }
     });
   });
 });

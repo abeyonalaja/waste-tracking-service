@@ -2,8 +2,12 @@ import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
   CreateSubmissionsRequest,
   CreateSubmissionsResponse,
+  GetDraftRequest,
+  GetDraftResponse,
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
+  createSubmissions,
+  getDraft,
   validateSubmissions,
 } from '@wts/api/uk-waste-movements';
 
@@ -29,9 +33,18 @@ export class DaprUkWasteMovementsClient {
   ): Promise<CreateSubmissionsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
-      this.createSubmissions.name,
+      createSubmissions.name,
       HttpMethod.POST,
       req
     )) as CreateSubmissionsResponse;
+  }
+
+  async getDraft(req: GetDraftRequest): Promise<GetDraftResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraft.name,
+      HttpMethod.POST,
+      req
+    )) as GetDraftResponse;
   }
 }
