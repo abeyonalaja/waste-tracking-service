@@ -1,5 +1,4 @@
 import {
-  Button,
   Heading,
   List,
   ListItem,
@@ -41,9 +40,9 @@ export function SubmissionConfirmation({
         {t('subHeading2')}
       </Heading>
       <Paragraph>{t('bodyP3')}</Paragraph>
-      <Button secondary={true} href={process.env.UKWM_URL}>
+      <Link href="/" className="govuk-button govuk-button--secondary">
         {t('button')}
-      </Button>
+      </Link>
     </>
   );
 }
