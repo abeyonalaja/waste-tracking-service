@@ -30,7 +30,7 @@ export function SubmissionConfirmation({
       <List type={'unordered'}>
         <ListItem>
           <Link
-            href={`${process.env.UKWM_URL}multiples/${submissionId}/view?page=1`}
+            href={`/multiples/${submissionId}/view?page=1`}
             target={'_blank'}
           >
             {t('bullet1')}

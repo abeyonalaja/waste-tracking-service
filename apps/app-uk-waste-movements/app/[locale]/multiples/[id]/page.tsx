@@ -44,8 +44,6 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
   const headerList = headers();
   const hostname = headerList.get('host') || '';
 
-  const pageUrl: string = `${process.env.NEXT_PUBLIC_UKWM_URL}/multiples/${params.id}`;
-
   const uploadFormStrings = {
     heading: t('uploadForm.heading'),
     hint: t('uploadForm.hint'),
@@ -190,7 +188,9 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
 
   if (state.status === 'PassedValidation') {
     return (
-      <Page beforeChildren={<BackLink href={`${pageUrl}/cancel`} />}>
+      <Page
+        beforeChildren={<BackLink href={`/multiples/${params.id}/cancel`} />}
+      >
         <GovUK.GridRow>
           <GovUK.GridCol size="two-thirds">
             <ValidationSuccess
