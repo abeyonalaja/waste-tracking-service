@@ -61,7 +61,7 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
   const submission: UkwmBulkSubmission = await response.json();
   const { state } = submission;
 
-  if (state.status === 'Processing') {
+  if (state.status === 'Processing' || state.status === 'Submitting') {
     return (
       <Page>
         <GovUK.GridRow>
@@ -200,18 +200,6 @@ export default async function StatusPage({ params, searchParams }: PageProps) {
               submissionId={params.id}
               token={token!}
             />
-          </GovUK.GridCol>
-        </GovUK.GridRow>
-      </Page>
-    );
-  }
-
-  if (state.status === 'Submitting') {
-    return (
-      <Page>
-        <GovUK.GridRow>
-          <GovUK.GridCol size="full">
-            <StatusChecker label={t('submitting.heading')} />
           </GovUK.GridCol>
         </GovUK.GridRow>
       </Page>
