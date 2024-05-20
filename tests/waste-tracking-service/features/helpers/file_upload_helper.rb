@@ -6,7 +6,8 @@ module FileUploadHelper
   @file_type = {
     PDF: 'testpdf.pdf',
     VALID: '9_data.csv',
-    INVALID: 'test-csv-failed.csv'
+    INVALID: 'test-csv-failed.csv',
+    VALID_UKWM_CSV: 'UKWM_correct_all_waste_types_with_estimate.csv'
   }
 
   def self.get_file_name(file_type)

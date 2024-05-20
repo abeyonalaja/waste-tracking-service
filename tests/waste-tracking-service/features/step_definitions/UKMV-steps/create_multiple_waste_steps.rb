@@ -15,13 +15,48 @@ And(/^I verify guidance page is translated correctly$/) do
   UkwmUserGuidancePage.new.check_page_translation
 end
 
-Given(/^I login into ukwm FE mock gateway app$/) do
-  Log.info("Start url: #{Env.start_page_url}")
-  TestStatus.set_test_status('Test ENV', Env.test_env)
-  TestStatus.set_test_status('Start url', Env.start_page_url)
-  visit(Env.start_page_url)
-  HelperMethods.wait_for_a_sec
-  user = "USER#{@current_process}"
-  OverviewPage.new.login_to_dcid(user)
-  set_feature_cookies
+And(/^I upload valid ukwm csv$/) do
+  CreateMultipleRecordsPage.new.upload_file 'VALID_UKWM_CSV'
+end
+
+Then(/^Bulk upload success page is displayed for "([^"]*)" records$/) do |records|
+  sleep 10
+  UkwmUploadSuccessPage.new.check_page_displayed records
+end
+
+And(/^I verify Bulk upload success page is correctly translated for "([^"]*)" records$/) do |records|
+  UkwmUploadSuccessPage.new.check_page_translation records
+end
+
+Then(/^Bulk confirmation page is displayed for "([^"]*)" movements$/) do |movements|
+  sleep 10
+  UkwmBulkConfirmationPage.new.check_page_displayed movements
+end
+
+And(/^I verify Bulk confirmation page is correctly translated$/) do
+  UkwmBulkConfirmationPage.new.check_page_translation
+end
+
+And(/^I click Continue and create button$/) do
+  UkwmUploadSuccessPage.new.continue_and_create
+end
+
+And(/^I click Cancel submission button$/) do
+  UkwmUploadSuccessPage.new.cancel_button
+end
+
+And(/^I verify cancel page is translated correctly$/) do
+  UkwmCancelPage.new.check_page_translation
+end
+
+And(/^I click confirm and cancel button$/) do
+  UkwmCancelPage.new.cancel_button
+end
+
+And(/^I click continue to create records$/) do
+  UkwmCancelPage.new.create_button
+end
+
+And(/^I click return Return to move waste in the UK button$/) do
+  UkwmBulkConfirmationPage.new.return_button
 end
