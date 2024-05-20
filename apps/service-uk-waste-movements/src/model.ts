@@ -1,3 +1,4 @@
+import { LocalAuthority, Pop, WasteCode } from '@wts/api/reference-data';
 import * as api from '@wts/api/uk-waste-movements';
 import * as bulkApi from '@wts/api/uk-waste-movements-bulk';
 
@@ -13,6 +14,9 @@ export type WasteQuantityType = api.WasteQuantityType;
 export type QuantityUnit = api.QuantityUnit;
 export type PhysicalForm = api.PhysicalForm;
 export type DbContainerNameKey = api.DbContainerNameKey;
+export type GetDraftsResult = api.GetDraftsResult;
+export type GetDraftsDto = api.GetDraftsDto;
+export type GetDraftsRequest = api.GetDraftsRequest;
 
 export type FieldFormatError = api.validation.FieldFormatError;
 export type InvalidAttributeCombinationError =
@@ -27,7 +31,16 @@ export type ProducerDetailFlattened = bulkApi.ProducerDetailFlattened;
 export type WasteCollectionDetail = api.WasteCollectionDetail;
 export type WasteCollectionDetailFlattened =
   bulkApi.WasteCollectionDetailFlattened;
+export type CarrierDetail = api.CarrierDetail;
+export type CarrierDetailFlattened = bulkApi.CarrierDetailFlattened;
 export type ReceiverDetailFlattened = bulkApi.ReceiverDetailFlattened;
 export type WasteTransportationDetailFlattened =
   bulkApi.WasteTransportationDetailFlattened;
 export type WasteTypeDetailFlattened = bulkApi.WasteTypeDetailFlattened;
+
+export type SubmissionValidationReferenceData = {
+  hazardousCodes: WasteCode[];
+  pops: Pop[];
+  ewcCodes: WasteCode[];
+  localAuthorities: LocalAuthority[];
+};

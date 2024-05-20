@@ -152,7 +152,7 @@ export const db: DB = {
           wasteSource: 'Industrial',
           brokerRegistrationNumber: 'BRN123',
           carrierRegistrationNumber: 'CRN456',
-          modeOfWasteTransport: 'Truck',
+          localAuthority: 'Local authority 1',
           expectedWasteCollectionDate: {
             day: '15',
             month: '05',

@@ -9,6 +9,7 @@ import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import {
   GetEWCCodesResponse,
   GetHazardousCodesResponse,
+  GetLocalAuthoritiesResponse,
   GetPopsResponse,
 } from '@wts/api/reference-data';
 import { CosmosClient } from '@azure/cosmos';
@@ -52,6 +53,7 @@ const referenceDataClient = new DaprReferenceDataClient(
 let hazardousCodesResponse: GetHazardousCodesResponse;
 let popsResponse: GetPopsResponse;
 let ewcCodesResponse: GetEWCCodesResponse;
+let localAuthoritiesResponse: GetLocalAuthoritiesResponse;
 
 try {
   hazardousCodesResponse = await referenceDataClient.getHazardousCodes();
@@ -59,6 +61,7 @@ try {
   ewcCodesResponse = await referenceDataClient.getEWCCodes({
     includeHazardous: true,
   });
+  localAuthoritiesResponse = await referenceDataClient.getLocalAuthorities();
 } catch (error) {
   logger.error(error);
   throw new Error('Failed to get reference datasets');
@@ -67,7 +70,8 @@ try {
 if (
   !hazardousCodesResponse.success ||
   !popsResponse.success ||
-  !ewcCodesResponse.success
+  !ewcCodesResponse.success ||
+  !localAuthoritiesResponse.success
 ) {
   throw new Error('Failed to get reference datasets');
 }
@@ -75,6 +79,7 @@ if (
 const hazardousCodes = hazardousCodesResponse.value;
 const pops = popsResponse.value;
 const ewcCodes = ewcCodesResponse.value;
+const localAuthorities = localAuthoritiesResponse.value;
 
 const aadCredentials = new ChainedTokenCredential(
   new AzureCliCredential(),
@@ -97,13 +102,12 @@ const repository = new CosmosRepository(
   logger
 );
 
-const submissionController = new SubmissionController(
-  repository,
-  logger,
+const submissionController = new SubmissionController(repository, logger, {
   hazardousCodes,
   pops,
-  ewcCodes
-);
+  ewcCodes,
+  localAuthorities,
+});
 
 await server.invoker.listen(
   api.validateSubmissions.name,
@@ -149,8 +153,28 @@ await server.invoker.listen(
     if (request == undefined) {
       return fromBoom(Boom.badRequest());
     }
-    console.log(submissionController.getDraft(request));
+
     return await submissionController.getDraft(request);
+  },
+  { method: HttpMethod.POST }
+);
+
+await server.invoker.listen(
+  api.getDrafts.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+    const request = JSON.parse(body) as api.GetDraftsRequest;
+    if (request == undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    if (!validateSubmission.validateGetDraftsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await submissionController.getDrafts(request);
   },
   { method: HttpMethod.POST }
 );

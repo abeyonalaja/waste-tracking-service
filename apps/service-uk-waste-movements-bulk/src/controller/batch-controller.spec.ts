@@ -174,8 +174,23 @@ describe(BatchController, () => {
                   month: '01',
                   year: '2028',
                 },
-                modeOfWasteTransport: 'Rail',
+                localAuthority: 'Local Authority',
                 wasteSource: 'LocalAuthority',
+              },
+              carrier: {
+                contact: {
+                  email: 'example@email.com',
+                  name: 'John Doe',
+                  organisationName: 'Example Ltd',
+                  phone: '0044140000000',
+                },
+                address: {
+                  addressLine1: '123 Fake Street',
+                  addressLine2: 'Apt 10',
+                  country: 'England',
+                  townCity: 'London',
+                  postcode: 'FA1 2KE',
+                },
               },
               wasteTransportation: {
                 numberAndTypeOfContainers: '10x20ft',

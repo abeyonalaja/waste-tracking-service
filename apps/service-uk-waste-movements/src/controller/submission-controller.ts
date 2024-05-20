@@ -11,9 +11,9 @@ import {
   Error,
   ValidationResult,
   WasteTypeDetailFlattened,
+  SubmissionValidationReferenceData,
 } from '../model';
 import { validationRules } from '../lib';
-import { Pop, WasteCode } from '@wts/api/reference-data';
 import { CosmosRepository } from '../data';
 
 const submissionsContainerName = 'drafts';
@@ -22,9 +22,7 @@ export default class SubmissionController {
   constructor(
     private repository: CosmosRepository,
     private logger: Logger,
-    private hazardousCodes: WasteCode[],
-    private pops: Pop[],
-    private ewcCodes: WasteCode[]
+    private referenceData: SubmissionValidationReferenceData
   ) {}
 
   validateSubmissions: Handler<
@@ -71,25 +69,43 @@ export default class SubmissionController {
         }
 
         const wasteCollection =
-          validationRules.validateWasteCollectionDetailSection({
-            wasteCollectionAddressLine1: s.wasteCollectionAddressLine1,
-            wasteCollectionAddressLine2: s.wasteCollectionAddressLine2,
-            wasteCollectionTownCity: s.wasteCollectionTownCity,
-            wasteCollectionCountry: s.wasteCollectionCountry,
-            wasteCollectionPostcode: s.wasteCollectionPostcode,
-            wasteCollectionWasteSource: s.wasteCollectionWasteSource,
-            wasteCollectionBrokerRegistrationNumber:
-              s.wasteCollectionBrokerRegistrationNumber,
-            wasteCollectionCarrierRegistrationNumber:
-              s.wasteCollectionCarrierRegistrationNumber,
-            wasteCollectionModeOfWasteTransport:
-              s.wasteCollectionModeOfWasteTransport,
-            wasteCollectionExpectedWasteCollectionDate:
-              s.wasteCollectionExpectedWasteCollectionDate,
-          });
+          validationRules.validateWasteCollectionDetailSection(
+            {
+              wasteCollectionAddressLine1: s.wasteCollectionAddressLine1,
+              wasteCollectionAddressLine2: s.wasteCollectionAddressLine2,
+              wasteCollectionTownCity: s.wasteCollectionTownCity,
+              wasteCollectionCountry: s.wasteCollectionCountry,
+              wasteCollectionPostcode: s.wasteCollectionPostcode,
+              wasteCollectionWasteSource: s.wasteCollectionWasteSource,
+              wasteCollectionBrokerRegistrationNumber:
+                s.wasteCollectionBrokerRegistrationNumber,
+              wasteCollectionCarrierRegistrationNumber:
+                s.wasteCollectionCarrierRegistrationNumber,
+              wasteCollectionExpectedWasteCollectionDate:
+                s.wasteCollectionExpectedWasteCollectionDate,
+              wasteCollectionLocalAuthority: s.wasteCollectionLocalAuthority,
+            },
+            this.referenceData.localAuthorities
+          );
 
         if (!wasteCollection.valid) {
           fieldFormatErrors.push(...wasteCollection.value);
+        }
+
+        const carrier = validationRules.validateCarrierDetailSection({
+          carrierAddressLine1: s.carrierAddressLine1,
+          carrierAddressLine2: s.carrierAddressLine2,
+          carrierTownCity: s.carrierTownCity,
+          carrierCountry: s.carrierCountry,
+          carrierPostcode: s.carrierPostcode,
+          carrierContactName: s.carrierContactName,
+          carrierContactEmail: s.carrierContactEmail,
+          carrierContactPhone: s.carrierContactPhone,
+          carrierOrganisationName: s.carrierOrganisationName,
+        });
+
+        if (!carrier.valid) {
+          fieldFormatErrors.push(...carrier.value);
         }
 
         const invalidStructureErrors: InvalidAttributeCombinationError[] = [];
@@ -352,9 +368,9 @@ export default class SubmissionController {
 
         const wasteTypes = validationRules.validateWasteTypeDetailSection(
           wasteTypeDetailFlattened,
-          this.hazardousCodes,
-          this.pops,
-          this.ewcCodes
+          this.referenceData.hazardousCodes,
+          this.referenceData.pops,
+          this.referenceData.ewcCodes
         );
 
         if (!wasteTypes.valid) {
@@ -366,7 +382,8 @@ export default class SubmissionController {
           producer.valid &&
           wasteCollection.valid &&
           wasteTransportation.valid &&
-          wasteTypes.valid
+          wasteTypes.valid &&
+          carrier.valid
         ) {
           if (!wasteCollection.value.address.addressLine1?.trim()) {
             wasteCollection.value.address = producer.value.address;
@@ -378,6 +395,7 @@ export default class SubmissionController {
             wasteTypes: wasteTypes.value,
             wasteCollection: wasteCollection.value,
             wasteTransportation: wasteTransportation.value,
+            carrier: carrier.value,
           });
         } else {
           errors.push({
@@ -445,6 +463,11 @@ export default class SubmissionController {
           ...s.receiver,
         };
 
+        const draftCarrier: api.DraftCarrierDetail = {
+          status: 'Complete',
+          carrier: s.carrier,
+        };
+
         const draftSubmissionDeclaration: api.DraftSubmissionDeclaration = {
           status: 'Complete',
           values: {
@@ -461,13 +484,13 @@ export default class SubmissionController {
             : 'SubmittedWithActuals',
           timestamp: new Date(),
         };
-
         return {
           id: id,
           transactionId: transactionId,
           producerAndCollection: producerAndCollection,
           receiver: draftReceiver,
           wasteInformation: wasteInformation,
+          carrier: draftCarrier,
           submissionDeclaration: draftSubmissionDeclaration,
           submissionState,
         };
@@ -490,6 +513,7 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
   getDraft: Handler<api.GetDraftRequest, api.GetDraftResponse> = async ({
     id,
   }) => {
@@ -499,6 +523,30 @@ export default class SubmissionController {
         id
       )) as api.DraftSubmission;
       return success(draft);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async (
+    request
+  ) => {
+    try {
+      const result = await this.repository.getDrafts(
+        submissionsContainerName,
+        request.page,
+        request.pageSize || 16,
+        request.collectionDate,
+        request.ewcCode,
+        request.producerName,
+        request.wasteMovementId
+      );
+      return success(result);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

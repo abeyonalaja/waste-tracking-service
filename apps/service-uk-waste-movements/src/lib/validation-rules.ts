@@ -1,4 +1,4 @@
-import { Pop, WasteCode } from '@wts/api/reference-data';
+import { LocalAuthority, Pop, WasteCode } from '@wts/api/reference-data';
 import {
   validation,
   FieldFormatError,
@@ -16,6 +16,8 @@ import {
   WasteQuantityType,
   PhysicalForm,
   WasteTypeErrorCode,
+  CarrierDetail,
+  CarrierDetailFlattened,
 } from '../model';
 
 import { parse, isValid } from 'date-fns';
@@ -51,14 +53,7 @@ const fourNationsCountries = [
   'Northern Ireland',
 ];
 
-const wasteSources = [
-  'Household',
-  'LocalAuthority',
-  'Construction',
-  'Demolition',
-  'Commercial',
-  'Industrial',
-];
+const wasteSources = ['Household', 'Commercial'];
 
 const wastePhysicalForms = [
   'Gas',
@@ -79,8 +74,6 @@ const wasteQuantitiesMap: { [key: string]: QuantityUnit } = {
   Litre: 'Litre',
   Litres: 'Litre',
 };
-
-const modeOfWasteTransport = ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'];
 
 export function validateProducerDetailSection(
   value: ProducerDetailFlattened
@@ -268,9 +261,176 @@ export function validateProducerDetailSection(
     },
   };
 }
+export function validateCarrierDetailSection(
+  value: CarrierDetailFlattened
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: CarrierDetail } {
+  const errors: FieldFormatError[] = [];
+
+  if (
+    value.carrierOrganisationName?.trim() ||
+    value.carrierAddressLine1?.trim() ||
+    value.carrierAddressLine2?.trim() ||
+    value.carrierTownCity?.trim() ||
+    value.carrierCountry?.trim() ||
+    value.carrierPostcode?.trim() ||
+    value.carrierContactName?.trim() ||
+    value.carrierContactEmail?.trim() ||
+    value.carrierContactPhone?.trim()
+  ) {
+    if (!value.carrierOrganisationName?.trim()) {
+      errors.push({
+        field: 'Carrier organisation name',
+        code: validation.errorCodes.carrierEmptyOrganisationName,
+      });
+    } else if (
+      value.carrierOrganisationName.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'Carrier organisation name',
+        code: validation.errorCodes.carrierCharTooManyOrganisationName,
+      });
+    }
+
+    if (!value.carrierAddressLine1?.trim()) {
+      errors.push({
+        field: 'Carrier address line 1',
+        code: validation.errorCodes.carrierEmptyAddressLine1,
+      });
+    } else if (value.carrierAddressLine1.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'Carrier address line 1',
+        code: validation.errorCodes.carrierCharTooManyAddressLine1,
+      });
+    }
+
+    if (
+      value.carrierAddressLine2 &&
+      value.carrierAddressLine2.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'Carrier address line 2',
+        code: validation.errorCodes.carrierCharTooManyAddressLine2,
+      });
+    }
+
+    if (!value.carrierTownCity?.trim()) {
+      errors.push({
+        field: 'Carrier town or city',
+        code: validation.errorCodes.carrierEmptyTownOrCity,
+      });
+    } else {
+      if (value.carrierTownCity.length > validation.FreeTextChar.max) {
+        errors.push({
+          field: 'Carrier town or city',
+          code: validation.errorCodes.carrierCharTooManyTownOrCity,
+        });
+      }
+    }
+
+    if (!value.carrierCountry?.trim()) {
+      errors.push({
+        field: 'Carrier country',
+        code: validation.errorCodes.carrierEmptyCountry,
+      });
+    } else {
+      value.carrierCountry = titleCase(value.carrierCountry);
+      if (!fourNationsCountries.includes(value.carrierCountry)) {
+        errors.push({
+          field: 'Carrier country',
+          code: validation.errorCodes.carrierInvalidCountry,
+        });
+      }
+    }
+
+    if (
+      value.carrierPostcode?.trim() &&
+      !validation.postcodeRegex.test(value.carrierPostcode)
+    ) {
+      errors.push({
+        field: 'Carrier postcode',
+        code: validation.errorCodes.carrierInvalidPostcode,
+      });
+    }
+
+    if (!value.carrierContactName?.trim()) {
+      errors.push({
+        field: 'Carrier contact name',
+        code: validation.errorCodes.carrierEmptyContactFullName,
+      });
+    } else if (value.carrierContactName.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'Carrier contact name',
+        code: validation.errorCodes.carrierCharTooManyContactFullName,
+      });
+    }
+
+    const reformattedCarrierContactPhoneNumber = value.carrierContactPhone
+      ?.replace(/'/g, '')
+      ?.trim();
+    if (!reformattedCarrierContactPhoneNumber) {
+      errors.push({
+        field: 'Carrier contact phone number',
+        code: validation.errorCodes.carrierEmptyPhone,
+      });
+    } else if (
+      !validation.phoneRegex.test(reformattedCarrierContactPhoneNumber)
+    ) {
+      errors.push({
+        field: 'Carrier contact phone number',
+        code: validation.errorCodes.carrierInvalidPhone,
+      });
+    }
+
+    if (!value.carrierContactEmail?.trim()) {
+      errors.push({
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierEmptyEmail,
+      });
+    } else if (!validation.emailRegex.test(value.carrierContactEmail)) {
+      errors.push({
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierInvalidEmail,
+      });
+    } else if (value.carrierContactEmail.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierCharTooManyEmail,
+      });
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: {
+      address: {
+        addressLine1: value.carrierAddressLine1 || '',
+        addressLine2: value.carrierAddressLine2,
+        townCity: value.carrierTownCity || '',
+        country: value.carrierCountry || '',
+        postcode: value.carrierPostcode,
+      },
+      contact: {
+        email: value.carrierContactEmail || '',
+        name: value.carrierContactName || '',
+        phone: value.carrierContactPhone || '',
+        organisationName: value.carrierOrganisationName || '',
+      },
+    },
+  };
+}
 
 export function validateWasteCollectionDetailSection(
-  value: WasteCollectionDetailFlattened
+  value: WasteCollectionDetailFlattened,
+  localAuthorities: LocalAuthority[]
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteCollectionDetail } {
@@ -369,6 +529,32 @@ export function validateWasteCollectionDetailSection(
     }
   }
 
+  if (!value.wasteCollectionLocalAuthority?.trim()) {
+    errors.push({
+      field: 'Local authority',
+      code: validation.errorCodes.wasteCollectionEmptyLocalAuthority,
+    });
+  } else if (
+    value.wasteCollectionLocalAuthority.trim().length >
+    validation.FreeTextChar.max
+  ) {
+    errors.push({
+      field: 'Local authority',
+      code: validation.errorCodes.wasteCollectionCharTooManyLocalAuthority,
+    });
+  } else if (
+    !localAuthorities.some(
+      (la) =>
+        la.name.en.toLowerCase() ===
+        value.wasteCollectionLocalAuthority.trim().toLowerCase()
+    )
+  ) {
+    errors.push({
+      field: 'Local authority',
+      code: validation.errorCodes.wasteCollectionInvalidLocalAuthority,
+    });
+  }
+
   if (
     value.wasteCollectionBrokerRegistrationNumber &&
     value.wasteCollectionBrokerRegistrationNumber.length >
@@ -391,25 +577,6 @@ export function validateWasteCollectionDetailSection(
       code: validation.errorCodes
         .wasteCollectionCharTooManyCarrierRegistrationNumber,
     });
-  }
-
-  if (!value.wasteCollectionModeOfWasteTransport?.trim()) {
-    errors.push({
-      field: 'Waste Collection Details Mode of Waste Transport',
-      code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
-    });
-  } else {
-    value.wasteCollectionModeOfWasteTransport = titleCaseSpacesRemoved(
-      value.wasteCollectionModeOfWasteTransport
-    );
-    if (
-      !modeOfWasteTransport.includes(value.wasteCollectionModeOfWasteTransport)
-    ) {
-      errors.push({
-        field: 'Waste Collection Details Mode of Waste Transport',
-        code: validation.errorCodes.wasteCollectionInvalidModeOfWasteTransport,
-      });
-    }
   }
 
   if (!value.wasteCollectionExpectedWasteCollectionDate) {
@@ -450,12 +617,12 @@ export function validateWasteCollectionDetailSection(
         ? undefined
         : value.wasteCollectionBrokerRegistrationNumber,
       carrierRegistrationNumber: value.wasteCollectionCarrierRegistrationNumber,
-      modeOfWasteTransport: value.wasteCollectionModeOfWasteTransport,
       expectedWasteCollectionDate: {
         day: dateParts[0],
         month: dateParts[1],
         year: dateParts[2],
       },
+      localAuthority: value.wasteCollectionLocalAuthority,
       address: {
         addressLine1: value.wasteCollectionAddressLine1,
         addressLine2: value.wasteCollectionAddressLine2,

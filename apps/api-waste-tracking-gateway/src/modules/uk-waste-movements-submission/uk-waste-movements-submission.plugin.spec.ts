@@ -6,9 +6,14 @@ import {
 import { server } from '@hapi/hapi';
 import winston from 'winston';
 import ukWasteMovementsBulkSubmissionPlugin from './uk-waste-movements-submission.plugin';
-import { UkwmSubmission } from '@wts/api/waste-tracking-gateway';
+import {
+  UkwmGetDraftsRequest,
+  UkwmGetDraftsResult,
+  UkwmSubmission,
+} from '@wts/api/waste-tracking-gateway';
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
+
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
@@ -19,6 +24,8 @@ const accountId = '964cc80b-da90-4675-ac05-d4d1d79ac888';
 
 const mockBackend = {
   getUkwmSubmission: jest.fn<(ref: SubmissionRef) => Promise<UkwmSubmission>>(),
+  getDrafts:
+    jest.fn<(request: UkwmGetDraftsRequest) => Promise<UkwmGetDraftsResult>>(),
 };
 
 const app = server({
@@ -60,7 +67,7 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
     mockBackend.getUkwmSubmission.mockClear();
   });
 
-  describe('GET /submissions/{id}', () => {
+  describe('GET /drafts/{id}', () => {
     it("Responds 404 if Ukwmsubmission doesn't exist", async () => {
       const options = {
         method: 'GET',
@@ -70,6 +77,19 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       mockBackend.getUkwmSubmission.mockRejectedValue(Boom.notFound());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(404);
+    });
+  });
+
+  describe('GET /drafts', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts`,
+      };
+
+      mockBackend.getDrafts.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
     });
   });
 });

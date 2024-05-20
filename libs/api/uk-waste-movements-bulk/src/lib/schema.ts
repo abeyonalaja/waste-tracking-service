@@ -10,6 +10,8 @@ import {
   WasteTransportationDetail,
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
+  CarrierDetail,
+  DraftCarrierDetail,
 } from '@wts/api/uk-waste-movements';
 
 const errorResponseValue: SchemaObject = {
@@ -64,18 +66,9 @@ export const producer: SchemaObject = {
 export const wasteCollection: SchemaObject = {
   properties: {
     wasteSource: {
-      enum: [
-        'Household',
-        'LocalAuthority',
-        'Construction',
-        'Demolition',
-        'Commercial',
-        'Industrial',
-      ],
+      enum: ['Household', 'Commercial'],
     },
-    modeOfWasteTransport: {
-      enum: ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'],
-    },
+    localAuthority: { type: 'string' },
     expectedWasteCollectionDate: wasteCollectionDate,
     address: address,
   },
@@ -104,6 +97,25 @@ export const receiver: SchemaObject = {
     environmentalPermitNumber: { type: 'string' },
     contact: contact,
     address: address,
+  },
+};
+
+export const carrier: JTDSchemaType<CarrierDetail> = {
+  properties: {
+    contact: contact,
+    address: address,
+  },
+};
+
+export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        carrier,
+      },
+    },
   },
 };
 
@@ -274,6 +286,7 @@ const bulkSubmissionStateBase: SchemaObject = {
               receiver,
               producer,
               wasteCollection,
+              carrier,
               wasteTransportation,
               wasteTypes: {
                 elements: {
@@ -296,6 +309,7 @@ const bulkSubmissionStateBase: SchemaObject = {
               receiver,
               producer,
               wasteCollection,
+              carrier,
               wasteTransportation,
               wasteTypes: {
                 elements: {
@@ -319,6 +333,7 @@ const bulkSubmissionStateBase: SchemaObject = {
               transactionId: { type: 'string' },
               producerAndCollection: producerAndCollection,
               wasteInformation: wasteInformation,
+              carrier: draftCarrier,
               submissionDeclaration: draftSubmissionDeclaration,
               submissionState: submissionState,
             },

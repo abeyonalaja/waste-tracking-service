@@ -15,11 +15,20 @@ export type BulkSubmissionCsvRow = {
   wasteCollectionTownCity: string;
   wasteCollectionCountry: string;
   wasteCollectionPostcode: string;
+  wasteCollectionLocalAuthority: string;
   wasteCollectionWasteSource: string;
   wasteCollectionBrokerRegistrationNumber: string;
   wasteCollectionCarrierRegistrationNumber: string;
-  wasteCollectionModeOfWasteTransport: string;
   wasteCollectionExpectedWasteCollectionDate: string;
+  carrierOrganisationName: string;
+  carrierAddressLine1: string;
+  carrierAddressLine2: string;
+  carrierTownCity: string;
+  carrierCountry: string;
+  carrierPostcode: string;
+  carrierContactName: string;
+  carrierContactEmail: string;
+  carrierContactPhone: string;
   receiverAuthorizationType: string;
   receiverEnvironmentalPermitNumber: string;
   receiverOrganisationName: string;
@@ -202,11 +211,20 @@ export const headersFormatted = [
   'wasteCollectionTownCity',
   'wasteCollectionCountry',
   'wasteCollectionPostcode',
+  'wasteCollectionLocalAuthority',
   'wasteCollectionWasteSource',
   'wasteCollectionBrokerRegistrationNumber',
   'wasteCollectionCarrierRegistrationNumber',
-  'wasteCollectionModeOfWasteTransport',
   'wasteCollectionExpectedWasteCollectionDate',
+  'carrierOrganisationName',
+  'carrierAddressLine1',
+  'carrierAddressLine2',
+  'carrierTownCity',
+  'carrierCountry',
+  'carrierPostcode',
+  'carrierContactName',
+  'carrierContactEmail',
+  'carrierContactPhone',
   'receiverAuthorizationType',
   'receiverEnvironmentalPermitNumber',
   'receiverOrganisationName',

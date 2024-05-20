@@ -8,6 +8,7 @@ import {
   validateSubmissionsRequest,
   validateSubmissionsResponse,
   wasteCollection,
+  carrier,
 } from './submission.schema';
 import {
   ProducerDetail,
@@ -17,6 +18,7 @@ import {
   ValidateSubmissionsRequest,
   ValidateSubmissionsResponse,
   WasteCollectionDetail,
+  CarrierDetail,
 } from './submission.dto';
 
 const ajv = new Ajv();
@@ -175,11 +177,37 @@ describe('wasteCollection', () => {
       wasteSource: 'Household',
       brokerRegistrationNumber: '1234567',
       carrierRegistrationNumber: 'CBDU1234',
-      modeOfWasteTransport: 'Road',
+      localAuthority: 'local authority',
       expectedWasteCollectionDate: {
         day: '01',
         month: '01',
         year: '2028',
+      },
+    };
+
+    const isValid = validate(value);
+
+    expect(isValid).toBe(true);
+  });
+});
+
+describe('carrier', () => {
+  const validate = ajv.compile<CarrierDetail>(carrier);
+
+  it('is compatible with dto values', () => {
+    const value: CarrierDetail = {
+      contact: {
+        organisationName: 'org',
+        name: 'name',
+        email: 'example@email.co.uk',
+        phone: '02071234567',
+      },
+      address: {
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
       },
     };
 
@@ -249,7 +277,7 @@ describe('validateSubmissionsRequest', () => {
           wasteTransportationSpecialHandlingRequirements:
             'Waste Transportation Special Handling Requirements',
           wasteCollectionExpectedWasteCollectionDate: '2022-01-01',
-          wasteCollectionModeOfWasteTransport: 'Road',
+          wasteCollectionLocalAuthority: 'Waste Collection Local Authority',
           wasteCollectionWasteSource: 'Household',
           wasteCollectionAddressLine1: 'Waste Collection Address Line 1',
           wasteCollectionAddressLine2: 'Waste Collection Address Line 2',
@@ -314,12 +342,27 @@ describe('validateSubmissionsResponse', () => {
                 month: '01',
                 year: '2024',
               },
-              modeOfWasteTransport: 'Road',
+              localAuthority: 'Waste Collection Local Authority',
               wasteSource: 'Household',
               brokerRegistrationNumber:
                 'Waste Collection Broker Registration Number',
               carrierRegistrationNumber:
                 'Waste Collection Carrier Registration Number',
+            },
+            carrier: {
+              contact: {
+                organisationName: 'org',
+                name: 'name',
+                email: 'example@email.co.uk',
+                phone: '02071234567',
+              },
+              address: {
+                addressLine1: '123 Oxford Street',
+                addressLine2: 'Westminster',
+                townCity: 'London',
+                postcode: 'W1A 1AA',
+                country: 'England',
+              },
             },
             wasteTypes: [
               {

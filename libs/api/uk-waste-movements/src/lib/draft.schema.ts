@@ -6,7 +6,14 @@ import {
   ProducerDetail,
   WasteCollectionAddress,
   WasteTypeDetail,
+  CarrierDetail,
 } from './submission.dto';
+
+import {
+  DraftCarrierDetail,
+  GetDraftsRequest,
+  GetDraftsResult,
+} from './draft.dto';
 
 export const wasteType: JTDSchemaType<WasteTypeDetail> = {
   properties: {
@@ -171,18 +178,9 @@ export const wasteCollection: SchemaObject = {
   properties: {
     address: wasteCollectionAddress,
     wasteSource: {
-      enum: [
-        'Household',
-        'Commercial',
-        'Industrial',
-        'LocalAuthority',
-        'Demolition',
-        'Construction',
-      ],
+      enum: ['Household', 'Commercial'],
     },
-    modeOfWasteTransport: {
-      enum: ['Road', 'Rail', 'Air', 'Sea', 'InlandWaterways'],
-    },
+    localAuthority: { type: 'string' },
     expectedWasteCollectionDate: wasteCollectionDate,
   },
   optionalProperties: {
@@ -199,6 +197,25 @@ export const producerAndWasteCollectionDetail: SchemaObject = {
       properties: {
         producer: producer,
         wasteCollection: wasteCollection,
+      },
+    },
+  },
+};
+
+export const carrier: JTDSchemaType<CarrierDetail> = {
+  properties: {
+    contact: contact,
+    address: address,
+  },
+};
+
+export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        carrier,
       },
     },
   },
@@ -254,6 +271,7 @@ export const draftSubmission: SchemaObject = {
     wasteInformation: wasteInformation,
     receiver: draftReceiver,
     producerAndCollection: producerAndWasteCollectionDetail,
+    carrier: draftCarrier,
     submissionDeclaration: submissionDeclarationDetail,
     submissionState: submissionStateDetail,
   },
@@ -264,5 +282,51 @@ export const getDraftResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: draftSubmission,
+  },
+};
+
+export const getDraftsRequest: JTDSchemaType<GetDraftsRequest> = {
+  properties: {
+    page: { type: 'int32' },
+  },
+  optionalProperties: {
+    collectionDate: { type: 'timestamp' },
+    ewcCode: { type: 'string' },
+    producerName: { type: 'string' },
+    wasteMovementId: { type: 'string' },
+    pageSize: { type: 'int32' },
+  },
+};
+
+const getDraftsResult: JTDSchemaType<GetDraftsResult> = {
+  properties: {
+    totalRecords: { type: 'int32' },
+    totalPages: { type: 'int32' },
+    page: { type: 'int32' },
+    values: {
+      elements: {
+        properties: {
+          id: { type: 'string' },
+          wasteMovementId: { type: 'string' },
+          producerName: { type: 'string' },
+          ewcCode: { type: 'string' },
+          collectionDate: {
+            properties: {
+              day: { type: 'string' },
+              month: { type: 'string' },
+              year: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const getDraftsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: getDraftsResult,
   },
 };

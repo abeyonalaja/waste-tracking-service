@@ -1,6 +1,6 @@
 import {
   UkwmSubmission,
-  UkwmDraftsResult,
+  UkwmGetDraftsResult,
   UkwmDraftSubmission,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
@@ -65,7 +65,7 @@ const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
       postcode: `Postcode ${i}`,
       townCity: `Town City ${i}`,
     },
-    modeOfWasteTransport: 'Road',
+    localAuthority: 'Local authority 1',
     wasteSource: 'commercial',
     brokerRegistrationNumber: `BRN ${i}`,
     carrierRegistrationNumber: `CRN ${i}`,
@@ -115,7 +115,7 @@ export function getDrafts(
   ewcCode?: string,
   producerName?: string,
   wasteMovementId?: string
-): UkwmDraftsResult {
+): UkwmGetDraftsResult {
   let filteredSubmissions = submissions;
 
   if (wasteMovementId) {

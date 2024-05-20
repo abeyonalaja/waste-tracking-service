@@ -54,7 +54,8 @@ export default class UkwmSubmissionPlugin {
           req.query.producerName?.toString(),
           req.query.wasteMovementId?.toString()
         );
-        return res.json(value as dto.GetUwkwmDraftsResponse);
+
+        return res.json(value as dto.UkwmGetDraftsResult);
       } catch (err) {
         if (err instanceof NotFoundError) {
           return err;

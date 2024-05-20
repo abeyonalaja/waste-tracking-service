@@ -1,6 +1,14 @@
 import Ajv from 'ajv/dist/jtd';
-import { GetDraftResponse } from './draft.dto';
-import { getDraftResponse } from './draft.schema';
+import {
+  GetDraftResponse,
+  GetDraftsRequest,
+  GetDraftsResponse,
+} from './draft.dto';
+import {
+  getDraftResponse,
+  getDraftsRequest,
+  getDraftsResponse,
+} from './draft.schema';
 
 const ajv = new Ajv();
 
@@ -19,6 +27,9 @@ describe('getDraftResponse', () => {
           status: 'NotStarted',
         },
         producerAndCollection: {
+          status: 'NotStarted',
+        },
+        carrier: {
           status: 'NotStarted',
         },
         submissionDeclaration: {
@@ -97,8 +108,8 @@ describe('getDraftResponse', () => {
             },
           },
           wasteCollection: {
-            wasteSource: 'Industrial',
-            modeOfWasteTransport: 'Road',
+            wasteSource: 'Commercial',
+            localAuthority: 'LA1',
             expectedWasteCollectionDate: {
               day: '01',
               month: '01',
@@ -108,6 +119,22 @@ describe('getDraftResponse', () => {
               addressLine1: 'Address Line 3',
               townCity: 'City3',
               country: 'Country3',
+            },
+          },
+        },
+        carrier: {
+          status: 'Complete',
+          carrier: {
+            contact: {
+              organisationName: 'Organisation2',
+              name: 'Contact2',
+              email: 'contact2@example.com',
+              phone: '0987654321',
+            },
+            address: {
+              addressLine1: 'Address Line 2',
+              townCity: 'City2',
+              country: 'Country2',
             },
           },
         },
@@ -124,6 +151,52 @@ describe('getDraftResponse', () => {
         },
       },
     };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftsRequest', () => {
+  const validate = ajv.compile<GetDraftsRequest>(getDraftsRequest);
+  it('is compatible with dto values', () => {
+    const value: GetDraftsRequest = {
+      page: 1,
+      pageSize: 10,
+      collectionDate: new Date(),
+      ewcCode: '123',
+      producerName: 'name',
+      wasteMovementId: '123',
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftsResponse', () => {
+  const validate = ajv.compile<GetDraftsResponse>(getDraftsResponse);
+  it('is compatible with dto values', () => {
+    const value: GetDraftsResponse = {
+      success: true,
+      value: {
+        page: 1,
+        totalRecords: 1,
+        totalPages: 1,
+        values: [
+          {
+            id: '123',
+            wasteMovementId: '123',
+            producerName: 'name',
+            ewcCode: '123',
+            collectionDate: {
+              day: '1',
+              month: '1',
+              year: '2021',
+            },
+          },
+        ],
+      },
+    };
+
     expect(validate(value)).toBe(true);
   });
 });

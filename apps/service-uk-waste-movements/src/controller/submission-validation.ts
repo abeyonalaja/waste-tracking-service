@@ -1,7 +1,9 @@
 import {
   CreateSubmissionsRequest,
+  GetDraftRequest,
   ValidateSubmissionsRequest,
   submissionSchema,
+  draftSchema,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -16,3 +18,7 @@ export const validateCreateSubmissionsRequest =
   ajv.compile<CreateSubmissionsRequest>(
     submissionSchema.createSubmissionsRequest
   );
+
+export const validateGetDraftsRequest = ajv.compile<GetDraftRequest>(
+  draftSchema.getDraftsRequest
+);

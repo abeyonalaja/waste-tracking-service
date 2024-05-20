@@ -116,6 +116,95 @@ const ProducerValidationErrorData: { [key: number]: ErrorCodeData } = {
   },
 };
 
+const CarrierValidationErrorData: { [key: number]: ErrorCodeData } = {
+  [codes.carrierEmptyOrganisationName]: {
+    type: 'message',
+    message: 'Enter the carrier organisation name',
+    field: 'Carrier organisation name',
+  },
+  [codes.carrierCharTooManyOrganisationName]: {
+    type: 'message',
+    message: `The carrier organisation name must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier organisation name',
+  },
+  [codes.carrierEmptyAddressLine1]: {
+    type: 'message',
+    message: 'Enter the carrier address',
+    field: 'Carrier address line 1',
+  },
+  [codes.carrierCharTooManyAddressLine1]: {
+    type: 'message',
+    message: `The carrier address line 1 must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier address line 1',
+  },
+  [codes.carrierCharTooManyAddressLine2]: {
+    type: 'message',
+    message: `The carrier address line 2 must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier address line 2',
+  },
+  [codes.carrierEmptyTownOrCity]: {
+    type: 'message',
+    message: 'Enter the carrier town or city',
+    field: 'Carrier town or city',
+  },
+  [codes.carrierCharTooManyTownOrCity]: {
+    type: 'message',
+    message: `The carrier town or city must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier town or city',
+  },
+  [codes.carrierEmptyCountry]: {
+    type: 'message',
+    message: 'Enter the carrier country',
+    field: 'Carrier country',
+  },
+  [codes.carrierInvalidCountry]: {
+    type: 'message',
+    message:
+      'The carrier country must only be England, Wales, Scotland, or Northern Ireland',
+    field: 'Carrier country',
+  },
+  [codes.carrierInvalidPostcode]: {
+    type: 'message',
+    message: 'Enter the carrier postcode in the correct format',
+    field: 'Carrier postcode',
+  },
+  [codes.carrierEmptyContactFullName]: {
+    type: 'message',
+    message: 'Enter full name of carrier contact',
+    field: 'Carrier contact name',
+  },
+  [codes.carrierCharTooManyContactFullName]: {
+    type: 'message',
+    message: `The carrier contact name must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier contact name',
+  },
+  [codes.carrierEmptyPhone]: {
+    type: 'message',
+    message: 'Enter carrier contact phone number',
+    field: 'Carrier contact phone number',
+  },
+  [codes.carrierInvalidPhone]: {
+    type: 'message',
+    message: 'Enter carrier contact phone number in correct format',
+    field: 'Carrier contact phone number',
+  },
+  [codes.carrierEmptyEmail]: {
+    type: 'message',
+    message: 'Enter carrier contact email address',
+    field: 'Carrier contact email address',
+  },
+  [codes.carrierInvalidEmail]: {
+    type: 'message',
+    message: 'Enter carrier contact email address in correct format',
+    field: 'Carrier contact email address',
+  },
+  [codes.carrierCharTooManyEmail]: {
+    type: 'message',
+    message: `The carrier email address must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Carrier contact email address',
+  },
+};
+
 const WasteCollectionValidationErrorData: {
   [key: number]: ErrorCodeData;
 } = {
@@ -167,8 +256,7 @@ const WasteCollectionValidationErrorData: {
   },
   [codes.wasteCollectionInvalidWasteSource]: {
     type: 'message',
-    message:
-      'The waste source must only be Household, Local Authority, Construction, Demolition, Commercial or Industrial',
+    message: 'The waste source must only be Household or Commercial',
     field: 'Waste Collection Details Waste Source',
   },
   [codes.wasteCollectionCharTooManyBrokerRegistrationNumber]: {
@@ -181,17 +269,6 @@ const WasteCollectionValidationErrorData: {
     message: `The carrier registration number must be fewer than ${constraints.WasteCollectionChar.max} characters`,
     field: 'Waste Collection Details Carrier Registration Number',
   },
-  [codes.wasteCollectionEmptyModeOfTransport]: {
-    type: 'message',
-    message: 'Enter the mode of transport',
-    field: 'Waste Collection Details Mode of Waste Transport',
-  },
-  [codes.wasteCollectionInvalidModeOfWasteTransport]: {
-    type: 'message',
-    message:
-      'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
-    field: 'Waste Collection Details Mode of Waste Transport',
-  },
   [codes.wasteCollectionMissingWasteCollectionDate]: {
     type: 'message',
     message: 'Enter the expected Waste Collection Date',
@@ -201,6 +278,21 @@ const WasteCollectionValidationErrorData: {
     type: 'message',
     message: 'Enter the expected waste collection date in the correct format',
     field: 'Waste Collection Details Expected Waste Collection Date',
+  },
+  [codes.wasteCollectionEmptyLocalAuthority]: {
+    type: 'message',
+    message: 'Enter the local authority where the waste was collected',
+    field: 'Local authority',
+  },
+  [codes.wasteCollectionInvalidLocalAuthority]: {
+    type: 'message',
+    message: 'Enter the local authority in the correct format',
+    field: 'Local authority',
+  },
+  [codes.wasteCollectionCharTooManyLocalAuthority]: {
+    type: 'message',
+    message: `The local authority must be less than ${constraints.FreeTextChar.max} characters`,
+    field: 'Local authority',
   },
 };
 
@@ -556,6 +648,7 @@ const WasteTypeValidationErrorMessages: (wasteTypeNumber: number) => {
 export const UkwmErrorData = {
   ...ProducerValidationErrorData,
   ...WasteCollectionValidationErrorData,
+  ...CarrierValidationErrorData,
   ...WasteTransportationValidationErrorData,
   ...ReceiverValidationErrorData,
   ...WasteTypeValidationErrorMessages(1),

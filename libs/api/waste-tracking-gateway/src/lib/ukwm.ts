@@ -79,7 +79,7 @@ export type UkwmWasteCollectionDetail = {
   wasteSource: string;
   brokerRegistrationNumber?: string;
   carrierRegistrationNumber?: string;
-  modeOfWasteTransport: string;
+  localAuthority: string;
   expectedWasteCollectionDate: UkwmExpectedWasteCollectionDate;
   address: UkwmAddress;
 };
@@ -112,7 +112,16 @@ export type UkwmDraft = {
   };
 };
 
-export type UkwmDraftsResult = {
+export type UkwmGetDraftsRequest = {
+  page: number;
+  pageSize?: number;
+  collectionDate?: Date;
+  ewcCode?: string;
+  producerName?: string;
+  wasteMovementId?: string;
+};
+
+export type UkwmGetDraftsResult = {
   totalRecords: number;
   totalPages: number;
   page: number;
@@ -133,8 +142,6 @@ type DraftStatus<T> =
   | ({ status: 'Completed' } & T);
 
 export type UkwmDraftReceiverDetail = DraftStatus<UkwmReceiverDetail>;
-
-export type GetUwkwmDraftsResponse = UkwmDraftsResult;
 
 export type UkwmProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }

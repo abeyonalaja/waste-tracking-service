@@ -3,13 +3,7 @@ import { Response } from '@wts/util/invocation';
 import { ValidationResult } from './validation';
 import { DraftSubmission } from './draft.dto';
 
-export type WasteSource =
-  | 'Household'
-  | 'Commercial'
-  | 'Construction'
-  | 'Industrial'
-  | 'LocalAuthority'
-  | 'Demolition';
+export type WasteSource = 'Household' | 'Commercial';
 export type WasteTransport =
   | 'Road'
   | 'Rail'
@@ -94,9 +88,14 @@ export type WasteCollectionDetail = {
   wasteSource: string;
   brokerRegistrationNumber?: string;
   carrierRegistrationNumber?: string;
-  modeOfWasteTransport: string;
+  localAuthority: string;
   expectedWasteCollectionDate: ExpectedWasteCollectionDate;
   address: WasteCollectionAddress;
+};
+
+export type CarrierDetail = {
+  contact: Contact;
+  address: Address;
 };
 
 export type WasteCollectionAddress = {
@@ -142,6 +141,7 @@ export type Submission = {
   id: string;
   producer: ProducerDetail;
   wasteCollection: WasteCollectionDetail;
+  carrier: CarrierDetail;
   receiver: ReceiverDetail;
   wasteTransportation: WasteTransportationDetail;
   wasteTypes: WasteTypeDetail[];
@@ -188,11 +188,23 @@ export type WasteCollectionDetailFlattened = {
   wasteCollectionTownCity?: string;
   wasteCollectionPostcode?: string;
   wasteCollectionCountry?: string;
+  wasteCollectionLocalAuthority: string;
   wasteCollectionWasteSource: string;
   wasteCollectionBrokerRegistrationNumber?: string;
   wasteCollectionCarrierRegistrationNumber?: string;
-  wasteCollectionModeOfWasteTransport: string;
   wasteCollectionExpectedWasteCollectionDate: string;
+};
+
+export type CarrierDetailFlattened = {
+  carrierOrganisationName?: string;
+  carrierAddressLine1?: string;
+  carrierAddressLine2?: string;
+  carrierTownCity?: string;
+  carrierCountry?: string;
+  carrierPostcode?: string;
+  carrierContactName?: string;
+  carrierContactEmail?: string;
+  carrierContactPhone?: string;
 };
 
 export type WasteTypeDetailFlattened = {
@@ -352,7 +364,8 @@ export type SubmissionFlattened = ProducerDetailFlattened &
   WasteCollectionDetailFlattened &
   ReceiverDetailFlattened &
   WasteTransportationDetailFlattened &
-  WasteTypeDetailFlattened;
+  WasteTypeDetailFlattened &
+  CarrierDetailFlattened;
 
 export type ValidateSubmissionsRequest = AccountIdRequest & {
   padIndex: number;
@@ -374,7 +387,11 @@ export type CreateSubmissionsRequest = IdRequest &
   AccountIdRequest & {
     values: PartialSubmission[];
   };
+
 export type CreateSubmissionsResponse = Response<DraftSubmission[]>;
+
+export type GetDraftRequest = IdRequest;
+export type GetDraftResponse = Response<DraftSubmission>;
 
 export const createSubmissions: Method = {
   name: 'createSubmissions',

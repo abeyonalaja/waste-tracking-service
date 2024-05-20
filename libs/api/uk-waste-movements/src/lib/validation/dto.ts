@@ -33,7 +33,6 @@ export type Field =
   | 'Waste Collection Details Waste Source'
   | 'Waste Collection Details Broker Registration Number'
   | 'Waste Collection Details Carrier Registration Number'
-  | 'Waste Collection Details Mode of Waste Transport'
   | 'Waste Collection Details Expected Waste Collection Date'
   | 'EWC Code'
   | 'Waste Description'
@@ -49,7 +48,17 @@ export type Field =
   | 'Persistant organic pollutants (POPs) Concentration Units'
   | 'Chemical and biological components of the waste'
   | 'Chemical and biological concentration values'
-  | 'Chemical and biological concentration units of measure';
+  | 'Chemical and biological concentration units of measure'
+  | 'Local authority'
+  | 'Carrier organisation name'
+  | 'Carrier address line 1'
+  | 'Carrier address line 2'
+  | 'Carrier town or city'
+  | 'Carrier country'
+  | 'Carrier postcode'
+  | 'Carrier contact name'
+  | 'Carrier contact email address'
+  | 'Carrier contact phone number';
 
 export type ErrorCodeData =
   | {

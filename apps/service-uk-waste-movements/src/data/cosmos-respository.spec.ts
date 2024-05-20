@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import { Logger } from 'winston';
 import CosmosRepository from './cosmos-repository';
-import { DbContainerNameKey } from '../model';
+import { DbContainerNameKey, GetDraftsDto } from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -75,7 +75,7 @@ describe(CosmosRepository, () => {
     logger
   );
 
-  describe('getRecord', () => {
+  describe('getDraft', () => {
     it('retrieves a draft with the associated id', async () => {
       const mockId = faker.datatype.uuid();
       const mockContainerName = 'drafts';
@@ -96,6 +96,47 @@ describe(CosmosRepository, () => {
       const result = await subject.getDraft(mockContainerName, mockId);
 
       expect(result).toEqual(mockDraftSubmission);
+      expect(mockFetchAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('getDrafts', () => {
+    it('successfully retrieves drafts', async () => {
+      const mockContainerName = 'drafts';
+      const mockDraftSubmissions: GetDraftsDto[] = [...Array(30).keys()].map(
+        (i) => ({
+          id: faker.datatype.uuid(),
+          ewcCode: i.toString().padStart(6, '0'),
+          producerName: faker.company.name(),
+          wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
+          collectionDate: {
+            day: ((i % 31) + 1).toString(),
+            month: ((i % 12) + 1).toString(),
+            year: (2000 + i).toString(),
+          },
+        })
+      );
+
+      mockFetchAll.mockResolvedValueOnce({
+        resources: mockDraftSubmissions,
+      } as unknown as FeedResponse<object>);
+
+      const result = await subject.getDrafts(
+        mockContainerName,
+        1,
+        10,
+        undefined,
+        undefined,
+        undefined,
+        'WM24_0019ACAD'
+      );
+
+      expect(result).toEqual({
+        page: 1,
+        totalPages: 1,
+        totalRecords: 30,
+        values: mockDraftSubmissions,
+      });
       expect(mockFetchAll).toHaveBeenCalled();
     });
   });

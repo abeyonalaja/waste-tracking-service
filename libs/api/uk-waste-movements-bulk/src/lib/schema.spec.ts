@@ -209,7 +209,7 @@ describe('getBatchResponse', () => {
               },
               wasteCollection: {
                 wasteSource: 'Household',
-                modeOfWasteTransport: 'Road',
+                localAuthority: 'Local authority',
                 expectedWasteCollectionDate: {
                   day: '01',
                   month: '01',
@@ -224,6 +224,21 @@ describe('getBatchResponse', () => {
                 },
                 brokerRegistrationNumber: '1234567',
                 carrierRegistrationNumber: 'CBDL1234',
+              },
+              carrier: {
+                contact: {
+                  organisationName: 'org',
+                  name: 'name',
+                  email: 'example@email.co.uk',
+                  phone: '02071234567',
+                },
+                address: {
+                  addressLine1: '123 Oxford Street',
+                  addressLine2: 'Westminster',
+                  townCity: 'London',
+                  postcode: 'W1A 1AA',
+                  country: 'England',
+                },
               },
               wasteTypes: [
                 {
@@ -312,11 +327,26 @@ describe('getBatchResponse', () => {
                 brokerRegistrationNumber: 'CBDU1234',
                 carrierRegistrationNumber: 'CBDU1234',
                 wasteSource: 'Household',
-                modeOfWasteTransport: 'Road',
+                localAuthority: 'Local authority',
                 expectedWasteCollectionDate: {
                   day: '01',
                   month: '01',
                   year: '2028',
+                },
+              },
+              carrier: {
+                contact: {
+                  organisationName: 'org',
+                  name: 'name',
+                  email: 'example@email.co.uk',
+                  phone: '02071234567',
+                },
+                address: {
+                  addressLine1: '123 Oxford Street',
+                  addressLine2: 'Westminster',
+                  townCity: 'London',
+                  postcode: 'W1A 1AA',
+                  country: 'England',
                 },
               },
               wasteTypes: [
@@ -402,11 +432,29 @@ describe('getBatchResponse', () => {
                   brokerRegistrationNumber: 'CBDU1234',
                   carrierRegistrationNumber: 'CBDU1234',
                   wasteSource: 'Household',
-                  modeOfWasteTransport: 'Road',
+                  localAuthority: 'Local authority',
                   expectedWasteCollectionDate: {
                     day: '01',
                     month: '01',
                     year: '2028',
+                  },
+                },
+              },
+              carrier: {
+                status: 'Complete',
+                carrier: {
+                  contact: {
+                    organisationName: 'org',
+                    name: 'name',
+                    email: 'example@email.co.uk',
+                    phone: '02071234567',
+                  },
+                  address: {
+                    addressLine1: '123 Oxford Street',
+                    addressLine2: 'Westminster',
+                    townCity: 'London',
+                    postcode: 'W1A 1AA',
+                    country: 'England',
                   },
                 },
               },

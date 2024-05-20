@@ -5,6 +5,7 @@ import {
   validateReceiverDetailSection,
   validateWasteTransportationDetailSection,
   validateWasteTypeDetailSection,
+  validateCarrierDetailSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -76,6 +77,39 @@ const pops = [
     name: {
       en: 'POP3',
       cy: 'POP3',
+    },
+  },
+];
+
+const localAuthorities = [
+  {
+    name: {
+      en: 'Local Authority 1',
+      cy: 'Local Authority 1',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
+    },
+  },
+  {
+    name: {
+      en: 'Local Authority 2',
+      cy: 'Local Authority 2',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
+    },
+  },
+  {
+    name: {
+      en: 'Local Authority 3',
+      cy: 'Local Authority 3',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
     },
   },
 ];
@@ -512,25 +546,28 @@ describe(validateWasteTransportationDetailSection, () => {
 
 describe(validateWasteCollectionDetailSection, () => {
   it('passes WasteCollectionDetailsSection section validation', async () => {
-    const response = validateWasteCollectionDetailSection({
-      wasteCollectionAddressLine1: '125, Ashtree Lane',
-      wasteCollectionAddressLine2: 'Ashfield',
-      wasteCollectionTownCity: 'Ashford',
-      wasteCollectionCountry: 'England',
-      wasteCollectionPostcode: 'TN14 8HA',
-      wasteCollectionWasteSource: 'Construction',
-      wasteCollectionBrokerRegistrationNumber: '768453434',
-      wasteCollectionCarrierRegistrationNumber: 'CBDL349812',
-      wasteCollectionModeOfWasteTransport: 'Rail',
-      wasteCollectionExpectedWasteCollectionDate: '01/01/2028',
-    });
+    const response = validateWasteCollectionDetailSection(
+      {
+        wasteCollectionAddressLine1: '125, Ashtree Lane',
+        wasteCollectionAddressLine2: 'Ashfield',
+        wasteCollectionTownCity: 'Ashford',
+        wasteCollectionCountry: 'England',
+        wasteCollectionPostcode: 'TN14 8HA',
+        wasteCollectionWasteSource: 'Commercial',
+        wasteCollectionBrokerRegistrationNumber: '768453434',
+        wasteCollectionCarrierRegistrationNumber: 'CBDL349812',
+        wasteCollectionLocalAuthority: 'Local Authority 1',
+        wasteCollectionExpectedWasteCollectionDate: '01/01/2028',
+      },
+      localAuthorities
+    );
 
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
-      wasteSource: 'Construction',
+      wasteSource: 'Commercial',
       brokerRegistrationNumber: '768453434',
       carrierRegistrationNumber: 'CBDL349812',
-      modeOfWasteTransport: 'Rail',
+      localAuthority: 'Local Authority 1',
       expectedWasteCollectionDate: {
         day: '01',
         month: '01',
@@ -547,18 +584,21 @@ describe(validateWasteCollectionDetailSection, () => {
   });
 
   it('fails WasteCollectionDetailsSection section validation', async () => {
-    let response = validateWasteCollectionDetailSection({
-      wasteCollectionAddressLine1: '',
-      wasteCollectionAddressLine2: '',
-      wasteCollectionTownCity: '',
-      wasteCollectionCountry: '',
-      wasteCollectionPostcode: '',
-      wasteCollectionWasteSource: '',
-      wasteCollectionBrokerRegistrationNumber: '',
-      wasteCollectionCarrierRegistrationNumber: '',
-      wasteCollectionModeOfWasteTransport: '',
-      wasteCollectionExpectedWasteCollectionDate: '',
-    });
+    let response = validateWasteCollectionDetailSection(
+      {
+        wasteCollectionAddressLine1: '',
+        wasteCollectionAddressLine2: '',
+        wasteCollectionTownCity: '',
+        wasteCollectionCountry: '',
+        wasteCollectionPostcode: '',
+        wasteCollectionWasteSource: '',
+        wasteCollectionBrokerRegistrationNumber: '',
+        wasteCollectionCarrierRegistrationNumber: '',
+        wasteCollectionLocalAuthority: '',
+        wasteCollectionExpectedWasteCollectionDate: '',
+      },
+      localAuthorities
+    );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
       {
@@ -566,8 +606,8 @@ describe(validateWasteCollectionDetailSection, () => {
         code: validation.errorCodes.wasteCollectionMissingWasteSource,
       },
       {
-        field: 'Waste Collection Details Mode of Waste Transport',
-        code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
+        field: 'Local authority',
+        code: validation.errorCodes.wasteCollectionEmptyLocalAuthority,
       },
       {
         field: 'Waste Collection Details Expected Waste Collection Date',
@@ -575,18 +615,21 @@ describe(validateWasteCollectionDetailSection, () => {
       },
     ]);
 
-    response = validateWasteCollectionDetailSection({
-      wasteCollectionAddressLine1: faker.datatype.string(251),
-      wasteCollectionAddressLine2: faker.datatype.string(251),
-      wasteCollectionTownCity: faker.datatype.string(251),
-      wasteCollectionCountry: 'France',
-      wasteCollectionPostcode: faker.datatype.string(11),
-      wasteCollectionWasteSource: faker.datatype.string(),
-      wasteCollectionBrokerRegistrationNumber: faker.datatype.string(21),
-      wasteCollectionCarrierRegistrationNumber: faker.datatype.string(21),
-      wasteCollectionModeOfWasteTransport: faker.datatype.string(),
-      wasteCollectionExpectedWasteCollectionDate: faker.datatype.string(),
-    });
+    response = validateWasteCollectionDetailSection(
+      {
+        wasteCollectionAddressLine1: faker.datatype.string(251),
+        wasteCollectionAddressLine2: faker.datatype.string(251),
+        wasteCollectionTownCity: faker.datatype.string(251),
+        wasteCollectionCountry: 'France',
+        wasteCollectionPostcode: faker.datatype.string(11),
+        wasteCollectionWasteSource: faker.datatype.string(),
+        wasteCollectionBrokerRegistrationNumber: faker.datatype.string(21),
+        wasteCollectionCarrierRegistrationNumber: faker.datatype.string(21),
+        wasteCollectionLocalAuthority: faker.datatype.string(251),
+        wasteCollectionExpectedWasteCollectionDate: faker.datatype.string(),
+      },
+      localAuthorities
+    );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
       {
@@ -614,6 +657,10 @@ describe(validateWasteCollectionDetailSection, () => {
         code: validation.errorCodes.wasteCollectionInvalidWasteSource,
       },
       {
+        field: 'Local authority',
+        code: validation.errorCodes.wasteCollectionCharTooManyLocalAuthority,
+      },
+      {
         field: 'Waste Collection Details Broker Registration Number',
         code: validation.errorCodes
           .wasteCollectionCharTooManyBrokerRegistrationNumber,
@@ -622,10 +669,6 @@ describe(validateWasteCollectionDetailSection, () => {
         field: 'Waste Collection Details Carrier Registration Number',
         code: validation.errorCodes
           .wasteCollectionCharTooManyCarrierRegistrationNumber,
-      },
-      {
-        field: 'Waste Collection Details Mode of Waste Transport',
-        code: validation.errorCodes.wasteCollectionInvalidModeOfWasteTransport,
       },
       {
         field: 'Waste Collection Details Expected Waste Collection Date',
@@ -1021,6 +1064,185 @@ describe(validateWasteTypeDetailSection, () => {
       {
         field: 'Waste Contains POPs',
         code: secondWasteTypeErrorMessages.invalidContainsPops,
+      },
+    ]);
+  });
+});
+
+describe(validateCarrierDetailSection, () => {
+  it('passes carrier section validation', () => {
+    let result = validateCarrierDetailSection({
+      carrierAddressLine1: '123 Real Street',
+      carrierAddressLine2: '',
+      carrierContactName: 'John Smith',
+      carrierCountry: 'England',
+      carrierContactEmail: 'john.smith@john.smith',
+      carrierOrganisationName: 'Test organization',
+      carrierContactPhone: '0044140000000',
+      carrierPostcode: 'AB1 1CB',
+      carrierTownCity: 'London',
+    });
+
+    expect(result.valid).toBe(true);
+
+    result = validateCarrierDetailSection({
+      carrierAddressLine1: '',
+      carrierAddressLine2: '',
+      carrierContactName: '',
+      carrierCountry: '',
+      carrierContactEmail: '',
+      carrierOrganisationName: '',
+      carrierContactPhone: '',
+      carrierPostcode: '',
+      carrierTownCity: '',
+    });
+
+    expect(result.valid).toBe(true);
+  });
+
+  it('fails carrier section validation', () => {
+    let result = validateCarrierDetailSection({
+      carrierAddressLine1: '',
+      carrierContactName: '',
+      carrierCountry: '',
+      carrierContactEmail: '',
+      carrierOrganisationName: '',
+      carrierContactPhone: '',
+      carrierPostcode: '',
+      carrierTownCity: '',
+      carrierAddressLine2: 'line 2',
+    });
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Carrier organisation name',
+        code: validation.errorCodes.carrierEmptyOrganisationName,
+      },
+      {
+        field: 'Carrier address line 1',
+        code: validation.errorCodes.carrierEmptyAddressLine1,
+      },
+      {
+        field: 'Carrier town or city',
+        code: validation.errorCodes.carrierEmptyTownOrCity,
+      },
+      {
+        field: 'Carrier country',
+        code: validation.errorCodes.carrierEmptyCountry,
+      },
+      {
+        field: 'Carrier contact name',
+        code: validation.errorCodes.carrierEmptyContactFullName,
+      },
+      {
+        field: 'Carrier contact phone number',
+        code: validation.errorCodes.carrierEmptyPhone,
+      },
+      {
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierEmptyEmail,
+      },
+    ]);
+
+    result = validateCarrierDetailSection({
+      carrierAddressLine1: '     ',
+      carrierContactName: '     ',
+      carrierCountry: '     ',
+      carrierContactEmail: 'not_an_email',
+      carrierOrganisationName: '     ',
+      carrierContactPhone: '+123567578',
+      carrierPostcode: 'AB1',
+      carrierTownCity: '     ',
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Carrier organisation name',
+        code: validation.errorCodes.carrierEmptyOrganisationName,
+      },
+      {
+        field: 'Carrier address line 1',
+        code: validation.errorCodes.carrierEmptyAddressLine1,
+      },
+      {
+        field: 'Carrier town or city',
+        code: validation.errorCodes.carrierEmptyTownOrCity,
+      },
+      {
+        field: 'Carrier country',
+        code: validation.errorCodes.carrierEmptyCountry,
+      },
+      {
+        field: 'Carrier postcode',
+        code: validation.errorCodes.carrierInvalidPostcode,
+      },
+      {
+        field: 'Carrier contact name',
+        code: validation.errorCodes.carrierEmptyContactFullName,
+      },
+      {
+        field: 'Carrier contact phone number',
+        code: validation.errorCodes.carrierInvalidPhone,
+      },
+      {
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierInvalidEmail,
+      },
+    ]);
+
+    result = validateCarrierDetailSection({
+      carrierAddressLine1: faker.datatype.string(251),
+      carrierAddressLine2: faker.datatype.string(251),
+      carrierContactName: faker.datatype.string(251),
+      carrierCountry: faker.datatype.string(251),
+      carrierContactEmail: faker.datatype.string(251),
+      carrierOrganisationName: faker.datatype.string(251),
+      carrierContactPhone: faker.datatype.string(251),
+      carrierPostcode: faker.datatype.string(251),
+      carrierTownCity: faker.datatype.string(251),
+    });
+
+    expect(result.valid).toBe(false);
+
+    expect(result.value).toEqual([
+      {
+        field: 'Carrier organisation name',
+        code: validation.errorCodes.carrierCharTooManyOrganisationName,
+      },
+      {
+        field: 'Carrier address line 1',
+        code: validation.errorCodes.carrierCharTooManyAddressLine1,
+      },
+      {
+        field: 'Carrier address line 2',
+        code: validation.errorCodes.carrierCharTooManyAddressLine2,
+      },
+      {
+        field: 'Carrier town or city',
+        code: validation.errorCodes.carrierCharTooManyTownOrCity,
+      },
+      {
+        field: 'Carrier country',
+        code: validation.errorCodes.carrierInvalidCountry,
+      },
+      {
+        field: 'Carrier postcode',
+        code: validation.errorCodes.carrierInvalidPostcode,
+      },
+      {
+        field: 'Carrier contact name',
+        code: validation.errorCodes.carrierCharTooManyContactFullName,
+      },
+      {
+        field: 'Carrier contact phone number',
+        code: validation.errorCodes.carrierInvalidPhone,
+      },
+      {
+        field: 'Carrier contact email address',
+        code: validation.errorCodes.carrierInvalidEmail,
       },
     ]);
   });

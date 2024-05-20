@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './submission-controller';
-import { DraftSubmission, validation } from '../model';
+import { DraftSubmission, GetDraftsResult, validation } from '../model';
 import { CosmosRepository } from '../data';
 
 jest.mock('winston', () => ({
@@ -14,6 +14,7 @@ jest.mock('winston', () => ({
 const mockRepository = {
   createBulkRecords: jest.fn<CosmosRepository['createBulkRecords']>(),
   getDraft: jest.fn<CosmosRepository['getDraft']>(),
+  getDrafts: jest.fn<CosmosRepository['getDrafts']>(),
 };
 
 const ewcCodes = [
@@ -88,14 +89,56 @@ const pops = [
   },
 ];
 
+const localAuthorities = [
+  {
+    name: {
+      en: 'Local Authority 1',
+      cy: 'Local Authority 1',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
+    },
+  },
+  {
+    name: {
+      en: 'Local Authority 2',
+      cy: 'Local Authority 2',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
+    },
+  },
+  {
+    name: {
+      en: 'Local Authority 3',
+      cy: 'Local Authority 3',
+    },
+    country: {
+      en: 'England',
+      cy: 'England',
+    },
+  },
+];
+
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
     mockRepository as unknown as CosmosRepository,
     new winston.Logger(),
-    hazardousCodes,
-    pops,
-    ewcCodes
+    {
+      ewcCodes,
+      hazardousCodes,
+      pops,
+      localAuthorities,
+    }
   );
+
+  beforeEach(() => {
+    mockRepository.createBulkRecords.mockClear();
+    mockRepository.getDraft.mockClear();
+    mockRepository.getDrafts.mockClear();
+  });
 
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
@@ -113,9 +156,18 @@ describe(SubmissionController, () => {
             wasteCollectionCountry: 'England',
             wasteCollectionBrokerRegistrationNumber: 'CBDL349812',
             wasteCollectionCarrierRegistrationNumber: 'CBDL349812',
-            wasteCollectionWasteSource: 'Local Authority',
-            wasteCollectionModeOfWasteTransport: 'Rail',
+            wasteCollectionWasteSource: 'Commercial',
+            wasteCollectionLocalAuthority: 'Local Authority 1',
             wasteCollectionExpectedWasteCollectionDate: '01/01/2028',
+            carrierAddressLine1: '123 Real Street',
+            carrierAddressLine2: '',
+            carrierContactName: 'John Smith',
+            carrierCountry: 'England',
+            carrierContactEmail: 'john.smith@john.smith',
+            carrierOrganisationName: 'Test organization',
+            carrierContactPhone: '0044140000000',
+            carrierPostcode: 'AB1 1AB',
+            carrierTownCity: 'London',
             producerAddressLine1: '123 Real Street',
             producerAddressLine2: '',
             producerContactName: 'John Smith',
@@ -284,8 +336,23 @@ describe(SubmissionController, () => {
                 month: '01',
                 year: '2028',
               },
-              modeOfWasteTransport: 'Rail',
-              wasteSource: 'LocalAuthority',
+              localAuthority: 'Local Authority 1',
+              wasteSource: 'Commercial',
+            },
+            carrier: {
+              address: {
+                addressLine1: '123 Real Street',
+                addressLine2: '',
+                country: 'England',
+                postcode: 'AB1 1AB',
+                townCity: 'London',
+              },
+              contact: {
+                email: 'john.smith@john.smith',
+                name: 'John Smith',
+                organisationName: 'Test organization',
+                phone: '0044140000000',
+              },
             },
           },
         ],
@@ -315,7 +382,15 @@ describe(SubmissionController, () => {
             wasteCollectionPostcode: 'AAAAAAAAAA',
             wasteCollectionCountry: '     ',
             wasteCollectionWasteSource: '     ',
-            wasteCollectionModeOfWasteTransport: '     ',
+            wasteCollectionLocalAuthority: '     ',
+            carrierAddressLine1: '     ',
+            carrierContactName: '     ',
+            carrierCountry: '     ',
+            carrierContactEmail: 'not_an_email',
+            carrierOrganisationName: '     ',
+            carrierContactPhone: '+123567578',
+            carrierPostcode: 'AB1',
+            carrierTownCity: '     ',
             wasteCollectionExpectedWasteCollectionDate: '31/31/2099',
             receiverAuthorizationType: '     ',
             receiverEnvironmentalPermitNumber: '     ',
@@ -422,14 +497,46 @@ describe(SubmissionController, () => {
                 code: validation.errorCodes.wasteCollectionMissingWasteSource,
               },
               {
-                field: 'Waste Collection Details Mode of Waste Transport',
-                code: validation.errorCodes.wasteCollectionEmptyModeOfTransport,
+                field: 'Local authority',
+                code: validation.errorCodes.wasteCollectionEmptyLocalAuthority,
               },
               {
                 field:
                   'Waste Collection Details Expected Waste Collection Date',
                 code: validation.errorCodes
                   .wasteCollectionInvalidFormatWasteCollectionDate,
+              },
+              {
+                field: 'Carrier organisation name',
+                code: validation.errorCodes.carrierEmptyOrganisationName,
+              },
+              {
+                field: 'Carrier address line 1',
+                code: validation.errorCodes.carrierEmptyAddressLine1,
+              },
+              {
+                field: 'Carrier town or city',
+                code: validation.errorCodes.carrierEmptyTownOrCity,
+              },
+              {
+                field: 'Carrier country',
+                code: validation.errorCodes.carrierEmptyCountry,
+              },
+              {
+                field: 'Carrier postcode',
+                code: validation.errorCodes.carrierInvalidPostcode,
+              },
+              {
+                field: 'Carrier contact name',
+                code: validation.errorCodes.carrierEmptyContactFullName,
+              },
+              {
+                field: 'Carrier contact phone number',
+                code: validation.errorCodes.carrierInvalidPhone,
+              },
+              {
+                field: 'Carrier contact email address',
+                code: validation.errorCodes.carrierInvalidEmail,
               },
               {
                 field: 'Receiver authorization type',
@@ -544,12 +651,27 @@ describe(SubmissionController, () => {
                 month: '01',
                 year: '2024',
               },
-              modeOfWasteTransport: 'Road',
-              wasteSource: 'Household',
+              wasteSource: 'Commercial',
+              localAuthority: 'Local Authority 1',
               brokerRegistrationNumber:
                 'Waste Collection Broker Registration Number',
               carrierRegistrationNumber:
                 'Waste Collection Carrier Registration Number',
+            },
+            carrier: {
+              address: {
+                addressLine1: 'Carrier Address Line 1',
+                addressLine2: 'Carrier Address Line 2',
+                country: 'Carrier Country',
+                postcode: 'Carrier Postcode',
+                townCity: 'Carrier Town/City',
+              },
+              contact: {
+                email: 'Carrier Email',
+                name: 'Carrier Contact Name',
+                organisationName: 'Carrier Organisation Name',
+                phone: 'Carrier Phone',
+              },
             },
             wasteTypes: [
               {
@@ -622,10 +744,9 @@ describe(SubmissionController, () => {
       });
       expect(response.success).toBe(true);
       if (response.success) {
+        expect(mockRepository.createBulkRecords).toBeCalled();
         return;
       }
-      expect(mockRepository.createBulkRecords).toBeCalled();
-      expect(response.error.statusCode).toBe(201);
     });
   });
 
@@ -644,6 +765,9 @@ describe(SubmissionController, () => {
         producerAndCollection: {
           status: 'NotStarted',
         },
+        carrier: {
+          status: 'NotStarted',
+        },
         submissionDeclaration: {
           status: 'NotStarted',
         },
@@ -657,6 +781,38 @@ describe(SubmissionController, () => {
       expect(response.success).toBe(true);
       if (response.success) {
         expect(response.value.id).toEqual(id);
+      }
+    });
+  });
+
+  describe('getDrafts', () => {
+    it('successfully returns data from the repository', async () => {
+      const mockData: GetDraftsResult = {
+        page: 1,
+        totalPages: 1,
+        totalRecords: 1,
+        values: [
+          {
+            id: faker.datatype.uuid(),
+            producerName: faker.company.name(),
+            wasteMovementId: 'WM24_0019ACAD',
+            ewcCode: '01 01 01',
+            collectionDate: {
+              day: '01',
+              month: '01',
+              year: '2024',
+            },
+          },
+        ],
+      };
+
+      mockRepository.getDrafts.mockResolvedValue(mockData);
+
+      const response = await subject.getDrafts({ page: 1, pageSize: 10 });
+
+      expect(response.success).toBe(true);
+      if (response.success) {
+        expect(response.value).toEqual(mockData);
         return;
       }
     });

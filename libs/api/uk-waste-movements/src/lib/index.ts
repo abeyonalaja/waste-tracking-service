@@ -1,4 +1,5 @@
 export * as submissionSchema from './submission.schema';
+export * as draftSchema from './draft.schema';
 export type {
   Submission,
   ReceiverDetail,
@@ -21,6 +22,7 @@ export type {
   CreateSubmissionsRequest,
   CreateSubmissionsResponse,
   DbContainerNameKey,
+  CarrierDetail,
 } from './submission.dto';
 
 export type {
@@ -31,6 +33,11 @@ export type {
   ProducerAndWasteCollectionDetail,
   GetDraftRequest,
   GetDraftResponse,
+  DraftCarrierDetail,
+  GetDraftsRequest,
+  GetDraftsResponse,
+  GetDraftsResult,
+  GetDraftsDto,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -40,4 +47,7 @@ export {
   createSubmissions,
   getDraft,
 } from './submission.dto';
+
+export { getDrafts } from './draft.dto';
+
 export * as validation from './validation';

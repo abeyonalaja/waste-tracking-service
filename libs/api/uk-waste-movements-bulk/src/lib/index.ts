@@ -20,6 +20,7 @@ export type {
   WasteTypeDetailFlattened,
   BulkSubmissionValidationRowCodeError,
   BulkSubmissionDetail,
+  CarrierDetailFlattened,
 } from './dto';
 
 export * as schema from './schema';

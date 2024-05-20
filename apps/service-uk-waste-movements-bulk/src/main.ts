@@ -468,6 +468,7 @@ while (execute) {
                 transactionId: s.transactionId,
                 producerAndCollection: s.producerAndCollection,
                 wasteInformation: s.wasteInformation,
+                carrier: s.carrier,
                 submissionState: s.submissionState,
                 submissionDeclaration: s.submissionDeclaration,
                 hasEstimates:

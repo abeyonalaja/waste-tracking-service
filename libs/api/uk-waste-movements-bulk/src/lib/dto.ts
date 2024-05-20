@@ -144,11 +144,23 @@ export type WasteCollectionDetailFlattened = {
   wasteCollectionTownCity?: string;
   wasteCollectionCountry?: string;
   wasteCollectionPostcode?: string;
+  wasteCollectionLocalAuthority: string;
   wasteCollectionWasteSource: string;
   wasteCollectionBrokerRegistrationNumber?: string;
   wasteCollectionCarrierRegistrationNumber?: string;
-  wasteCollectionModeOfWasteTransport: string;
   wasteCollectionExpectedWasteCollectionDate: string;
+};
+
+export type CarrierDetailFlattened = {
+  carrierOrganisationName?: string;
+  carrierAddressLine1?: string;
+  carrierAddressLine2?: string;
+  carrierTownCity?: string;
+  carrierCountry?: string;
+  carrierPostcode?: string;
+  carrierContactName?: string;
+  carrierContactEmail?: string;
+  carrierContactPhone?: string;
 };
 
 export type ReceiverDetailFlattened = {
@@ -327,4 +339,5 @@ export type SubmissionFlattened = ProducerDetailFlattened &
   ReceiverDetailFlattened &
   WasteTransportationDetailFlattened &
   WasteCollectionDetailFlattened &
-  WasteTypeDetailFlattened;
+  WasteTypeDetailFlattened &
+  CarrierDetailFlattened;

@@ -7,6 +7,7 @@ import {
   ExpectedWasteCollectionDate,
   WasteCollectionAddress,
   ValidateSubmissionsRequest,
+  CarrierDetail,
 } from './submission.dto';
 
 const errorResponseValue: SchemaObject = {
@@ -56,6 +57,13 @@ export const contact: JTDSchemaType<Contact> = {
   },
 };
 
+export const carrier: JTDSchemaType<CarrierDetail> = {
+  properties: {
+    contact: contact,
+    address: address,
+  },
+};
+
 export const producer: SchemaObject = {
   properties: {
     reference: { type: 'string' },
@@ -71,18 +79,9 @@ export const wasteCollection: SchemaObject = {
   properties: {
     address: wasteCollectionAddress,
     wasteSource: {
-      enum: [
-        'Household',
-        'Commercial',
-        'Industrial',
-        'LocalAuthority',
-        'Demolition',
-        'Construction',
-      ],
+      enum: ['Household', 'Commercial'],
     },
-    modeOfWasteTransport: {
-      enum: ['Road', 'Rail', 'Air', 'Sea', 'InlandWaterways'],
-    },
+    localAuthority: { type: 'string' },
     expectedWasteCollectionDate: wasteCollectionDate,
   },
   optionalProperties: {
@@ -182,10 +181,10 @@ export const validateSubmissionsRequest: JTDSchemaType<ValidateSubmissionsReques
             receiverCountry: { type: 'string' },
             wasteTransportationNumberAndTypeOfContainers: { type: 'string' },
             wasteCollectionWasteSource: { type: 'string' },
-            wasteCollectionModeOfWasteTransport: { type: 'string' },
             wasteCollectionExpectedWasteCollectionDate: {
               type: 'string',
             },
+            wasteCollectionLocalAuthority: { type: 'string' },
             firstWasteTypeEwcCode: { type: 'string' },
             firstWasteTypeWasteDescription: { type: 'string' },
             firstWasteTypePhysicalForm: { type: 'string' },
@@ -218,6 +217,15 @@ export const validateSubmissionsRequest: JTDSchemaType<ValidateSubmissionsReques
             wasteCollectionCountry: { type: 'string' },
             wasteCollectionBrokerRegistrationNumber: { type: 'string' },
             wasteCollectionCarrierRegistrationNumber: { type: 'string' },
+            carrierAddressLine1: { type: 'string' },
+            carrierAddressLine2: { type: 'string' },
+            carrierTownCity: { type: 'string' },
+            carrierContactEmail: { type: 'string' },
+            carrierContactName: { type: 'string' },
+            carrierContactPhone: { type: 'string' },
+            carrierCountry: { type: 'string' },
+            carrierOrganisationName: { type: 'string' },
+            carrierPostcode: { type: 'string' },
             firstWasteTypeHazardousWasteCodesString: { type: 'string' },
             firstWasteTypePopsConcentrationsString: { type: 'string' },
             firstWasteTypePopsConcentrationUnitsString: { type: 'string' },
@@ -414,6 +422,7 @@ const validationResult: SchemaObject = {
           producer: producer,
           wasteCollection: wasteCollection,
           receiver: receiver,
+          carrier,
           wasteTransportation,
           wasteTypes: {
             elements: {
@@ -562,6 +571,7 @@ export const createSubmissionsRequest: SchemaObject = {
         properties: {
           producer: producer,
           wasteCollection: wasteCollection,
+          carrier,
           receiver: receiver,
           wasteTransportation: wasteTransportation,
           wasteTypes: {

@@ -445,7 +445,7 @@ export async function createBatch(
                   month: '01',
                   year: '2028',
                 },
-                modeOfWasteTransport: 'Rail',
+                localAuthority: 'Local authority 1',
                 wasteSource: 'LocalAuthority',
               },
               wasteTransportation: {
@@ -522,7 +522,7 @@ export async function createBatch(
                   month: '01',
                   year: '2028',
                 },
-                modeOfWasteTransport: 'Rail',
+                localAuthority: 'Local authority 1',
                 wasteSource: 'LocalAuthority',
               },
               wasteTransportation: {
@@ -612,7 +612,7 @@ export async function createBatch(
                   month: '01',
                   year: '2028',
                 },
-                modeOfWasteTransport: 'Rail',
+                localAuthority: 'Local authority 1',
                 wasteSource: 'LocalAuthority',
               },
               wasteTransportation: {
@@ -689,7 +689,7 @@ export async function createBatch(
                   month: '01',
                   year: '2028',
                 },
-                modeOfWasteTransport: 'Rail',
+                localAuthority: 'Local authority 1',
                 wasteSource: 'LocalAuthority',
               },
               wasteTransportation: {
