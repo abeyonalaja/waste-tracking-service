@@ -2,6 +2,7 @@
 import { useRouter } from '@wts/ui/navigation';
 import { Button } from '@wts/ui/govuk-react-ui';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type SubmitButtonsProps = {
   buttonText: string;
@@ -17,6 +18,7 @@ export function SubmitButton({
   secondary = false,
 }: SubmitButtonsProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -39,7 +41,9 @@ export function SubmitButton({
     }
 
     if (response!.status === 201) {
-      router.push(`/multiples/${submissionId}`);
+      router.push(
+        `/multiples/${submissionId}?filename=${searchParams.get('filename')}`
+      );
     } else {
       router.push(`/404`);
     }
