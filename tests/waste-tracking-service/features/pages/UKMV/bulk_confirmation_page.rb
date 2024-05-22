@@ -3,7 +3,7 @@
 # this page is for ukmw bulk confirmation page details
 class UkwmBulkConfirmationPage < GenericPage
 
-  BANNER = (Translations.ukmv_value 'multiples.confirmation.banner').gsub!('{count, plural, =1 {movement} other {movements}}', 'movements')
+  # BANNER = '{count} waste movements created'
   SUB_HEADING = Translations.ukmv_value 'multiples.confirmation.subHeading1'
   BODY_P1 = Translations.ukmv_value 'multiples.confirmation.bodyP1'
   BODY_P2 = Translations.ukmv_value 'multiples.confirmation.bodyP2'
@@ -13,7 +13,8 @@ class UkwmBulkConfirmationPage < GenericPage
   RETURN_BUTTON = Translations.ukmv_value 'multiples.confirmation.button'
 
   def check_page_displayed(count)
-    expect(self).to have_css 'h1', text: BANNER.gsub!('{count}', count), exact_text: true, wait: 10
+    title = '{count} waste movements created'.gsub('{count}', count)
+    expect(self).to have_css 'h1', text: title, exact_text: true
   end
 
   def check_page_translation

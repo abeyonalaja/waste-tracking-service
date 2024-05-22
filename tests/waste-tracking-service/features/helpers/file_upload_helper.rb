@@ -19,6 +19,11 @@ module FileUploadHelper
     File.expand_path(path)
   end
 
+  def self.ukm_filepath(file_name)
+    path = "#{File.dirname(__FILE__)}/../data/UKM/#{file_name}.csv"
+    File.expand_path(path)
+  end
+
   def self.file_exists?(file_name)
     File.exist?(get_upload_file(file_name))
   end

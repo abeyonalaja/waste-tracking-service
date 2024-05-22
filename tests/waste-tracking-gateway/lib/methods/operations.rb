@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require_relative 'template_operations'
-require_relative 'multiples'
+require_relative 'glw_multiples'
 
 # class will handle all change API operations, need to pass the title and operation payload
 module Operations
   include TemplateOperations
-  include Multiples
+  include GlwMultiples
 
   def call_api(request_type, path, payload, content_type = 'application/json')
     http = create_request_details

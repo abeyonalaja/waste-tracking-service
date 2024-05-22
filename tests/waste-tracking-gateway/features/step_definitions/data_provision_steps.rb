@@ -1,6 +1,6 @@
 Given(/^I request waste code for "([^"]*)"$/) do |lang|
   @wts = WasteTracking.new(@region)
-  path = "/api/wts-info/waste-codes?language=#{lang}"
+  path = "/api/reference-data/waste-codes?language=#{lang}"
   @response = @wts.call_api('get', path, '')
   @body = JSON.parse(@response.body)
   expect(@response.code).to eq('200')
@@ -44,7 +44,7 @@ end
 
 Given(/^I request EWC code for "([^"]*)"$/) do |lang|
   @wts = WasteTracking.new(@region)
-  path = "/api/wts-info/ewc-codes?language=#{lang}"
+  path = "/api/reference-data/ewc-codes?language=#{lang}"
   @response = @wts.call_api('get', path, '')
   @body = JSON.parse(@response.body)
   expect(@response.code).to eq('200')
@@ -56,7 +56,7 @@ end
 
 Given(/^I request countries$/) do
   @wts = WasteTracking.new(@region)
-  path = "api/reference-data/countries"
+  path = '/api/reference-data/countries'
   @response = @wts.call_api('get', path, '')
   @body = JSON.parse(@response.body)
 end

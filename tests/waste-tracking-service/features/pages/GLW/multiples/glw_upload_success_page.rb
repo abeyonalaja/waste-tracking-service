@@ -8,7 +8,7 @@ class GlwUploadSuccessPage < GenericPage
   HINT_TEXT = Translations.value 'multiples.success.intro'
   TITLE = Translations.value 'multiples.success.heading_other'
 
-  def check_page_displayed count
+  def check_page_displayed(count = '9')
     expect(self).to have_css 'h1', text: TITLE.gsub!('{{count}}', count), exact_text: true, wait: 10
   end
 
@@ -24,7 +24,18 @@ class GlwUploadSuccessPage < GenericPage
     max_wait_time = 30
     begin
       Timeout.timeout(max_wait_time) do
-        sleep 0.1 until page.has_css?('.govuk-notification-banner-title', text: 'Success')
+        sleep 0.1 until page.has_css?('#govuk-notification-banner-title', text: 'Success')
+      end
+    rescue Timeout::Error
+      puts 'Upload did not complete successfully within the specified time.'
+    end
+  end
+
+  def wait_to_submission
+    max_wait_time = 30
+    begin
+      Timeout.timeout(max_wait_time) do
+        sleep 0.1 until page.has_css?( 'h2', text: 'About the waste', exact_text: true)
       end
     rescue Timeout::Error
       puts 'Upload did not complete successfully within the specified time.'

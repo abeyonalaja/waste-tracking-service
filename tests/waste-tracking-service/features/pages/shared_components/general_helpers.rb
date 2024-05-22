@@ -38,4 +38,14 @@ module GeneralHelpers
     file_path = FileUploadHelper.get_upload_file(file_type)
     attach_file('csvUpload', file_path)
   end
+
+  def upload_with_filename(file_name)
+    file_path = FileUploadHelper.ukm_filepath(file_name)
+    attach_file('csvUpload', file_path)
+  end
+
+  def upload_file_data_row(data_row)
+    file_path = FileUploadHelper.get_upload data_row
+    attach_file('csvUpload', file_path)
+  end
 end

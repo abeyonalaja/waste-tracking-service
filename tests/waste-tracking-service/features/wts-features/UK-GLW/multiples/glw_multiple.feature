@@ -20,7 +20,7 @@ Feature: GLW multiple
   Scenario: User can navigate to glw declaration page and click back button
     Given I login to waste tracking portal
     And I navigate to upload glw csv
-    When I upload valid glw csv
+    When I upload valid glw csv with 9 rows data
     And I click the upload button
     Then I should see glw csv is successfully uploaded
     And I should see glw csv upload page correctly translated
@@ -34,7 +34,7 @@ Feature: GLW multiple
   Scenario: User can navigate to glw confirmation page when a correct CSV is uploaded
     Given I login to waste tracking portal
     And I navigate to upload glw csv
-    When I upload valid glw csv
+    When I upload valid glw csv with 9 rows data
     And I click the upload button
     Then I should see glw csv is successfully uploaded
     And I should see glw csv upload page correctly translated
@@ -48,13 +48,13 @@ Feature: GLW multiple
   Scenario: User should see error page when upload csv with incorrect data
     Given I login to waste tracking portal
     And I navigate to upload glw csv
-    When I upload invalid glw csv
+    When I upload invalid glw csv with 40 errors
     And I click the upload button
     Then I should see glw csv error page is displayed
-    Then I should see glw csv error page is displayed with 21 errors
+    Then I should see glw csv error page is displayed with 40 errors
     And I should see glw csv error page correctly translated
-    And I should see glw csv error page with 4 errors
-    And I should see glw error details for 4 errors
+    And I should see glw csv error page with 19 errors
+    And I should see glw error details for 19 errors
 
   Scenario: User can upload csv from the error details page
     Given I login to waste tracking portal

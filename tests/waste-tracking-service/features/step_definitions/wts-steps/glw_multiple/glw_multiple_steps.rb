@@ -9,7 +9,7 @@ end
 
 Then(/^I should see glw csv is successfully uploaded$/) do
   GlwUploadSuccessPage.new.wait_to_upload
-  GlwUploadSuccessPage.new.check_page_displayed '9'
+  GlwUploadSuccessPage.new.check_page_displayed TestStatus.test_status(:glw_data_row).to_s
 end
 
 When(/^I upload invalid glw csv$/) do
@@ -67,7 +67,7 @@ And(/^I should see cancel glw csv upload page is correctly translated$/) do
 end
 
 Then(/^I should see glw csv declaration page is displayed$/) do
-  GlwCsvDeclarationPage.new.check_page_displayed 9
+  GlwCsvDeclarationPage.new.check_page_displayed TestStatus.test_status(:glw_data_row)
 end
 
 And(/^I should see glw csv declaration page is correctly translated$/) do
@@ -76,9 +76,19 @@ end
 
 Then(/^I should see glw csv submitted successful page$/) do
   MultipleConfirmationUploadPage.new.upload_successful
-  MultipleConfirmationUploadPage.new.check_page_displayed 9
+  MultipleConfirmationUploadPage.new.check_page_displayed TestStatus.test_status(:glw_data_row)
 end
 
 And(/^I should see glw csv submitted successful page is correctly translated$/) do
   MultipleConfirmationUploadPage.new.check_page_translation
+end
+
+When(/^I upload valid glw csv with (\d+) rows data$/) do |data_rows|
+  TestStatus.set_test_status(:glw_data_row, data_rows)
+  CreateMultipleRecordsPage.new.upload_file_data_row data_rows
+end
+
+When(/^I upload invalid glw csv with (\d+) errors$/) do |data_rows|
+  TestStatus.set_test_status(:glw_data_row, data_rows)
+  CreateMultipleRecordsPage.new.upload_file_data_row data_rows
 end

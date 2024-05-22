@@ -9,14 +9,6 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
-    allure-cucumber (2.18.0)
-      allure-ruby-commons (= 2.18.0)
-      cucumber (>= 4.0.0, < 9)
-    allure-ruby-commons (2.18.0)
-      mime-types (>= 3.3, < 4)
-      oj (>= 3.10, < 4)
-      require_all (>= 2, < 4)
-      uuid (>= 2.3, < 3)
     ast (2.4.2)
     axe-core-api (4.7.0)
       dumb_delegator
@@ -93,8 +85,6 @@ GEM
     logging (2.3.1)
       little-plugger (~> 1.1)
       multi_json (~> 1.14)
-    macaddr (1.7.2)
-      systemu (~> 2.6.5)
     matrix (0.4.2)
     mime-types (3.5.0)
       mime-types-data (~> 3.2015)
@@ -105,7 +95,6 @@ GEM
     multi_test (1.1.0)
     nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
-    oj (3.16.0)
     parallel (1.23.0)
     parallel_tests (3.7.3)
       parallel
@@ -121,7 +110,6 @@ GEM
     regexp_parser (2.8.1)
     report_builder (1.8)
       json (>= 1.8.1)
-    require_all (3.0.0)
     rexml (3.2.6)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -155,13 +143,11 @@ GEM
       rubyzip (>= 1.2.2)
     sys-uname (1.2.3)
       ffi (~> 1.1)
-    systemu (2.6.5)
     thread_safe (0.3.6)
+    to_words (1.1.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
-    uuid (2.3.9)
-      macaddr (~> 1.0)
     virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -179,7 +165,6 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (~> 6.1.4.1)
-  allure-cucumber (~> 2.18.0)
   axe-core-capybara
   axe-core-cucumber
   browserstack-local
@@ -195,6 +180,7 @@ DEPENDENCIES
   rspec (~> 3.10.0)
   rubocop (~> 1.24.1)
   selenium-webdriver (= 4.1.0)
+  to_words
   webdrivers (~> 5.3.0)
 
 RUBY VERSION

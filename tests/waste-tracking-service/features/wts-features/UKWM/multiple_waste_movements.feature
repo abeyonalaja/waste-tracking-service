@@ -62,10 +62,12 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm csv
+    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
+    When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
     And I click Continue and create button
+    When I wait for the submission to finish
     Then Bulk confirmation page is displayed for "40" movements
     And I click return Return to move waste in the UK button
     Then the "Service Home" page is displayed
@@ -75,8 +77,9 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm csv
+    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
+    When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
     And I click Cancel submission button
     Then the "Ukwm Cancel" page is displayed
@@ -89,11 +92,13 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm csv
+    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
+    When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
     And I click Cancel submission button
     Then the "Ukwm Cancel" page is displayed
     And I verify cancel page is translated correctly
     And I click continue to create records
+    When I wait for the submission to finish
     Then Bulk confirmation page is displayed for "40" movements

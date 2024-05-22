@@ -19,8 +19,11 @@ And(/^I upload valid ukwm csv$/) do
   CreateMultipleRecordsPage.new.upload_file 'VALID_UKWM_CSV'
 end
 
+Then(/^I wait for the upload to finish$/) do
+  GlwUploadSuccessPage.new.wait_to_upload
+end
+
 Then(/^Bulk upload success page is displayed for "([^"]*)" records$/) do |records|
-  sleep 10
   UkwmUploadSuccessPage.new.check_page_displayed records
 end
 
@@ -29,7 +32,6 @@ And(/^I verify Bulk upload success page is correctly translated for "([^"]*)" re
 end
 
 Then(/^Bulk confirmation page is displayed for "([^"]*)" movements$/) do |movements|
-  sleep 10
   UkwmBulkConfirmationPage.new.check_page_displayed movements
 end
 
@@ -59,4 +61,12 @@ end
 
 And(/^I click return Return to move waste in the UK button$/) do
   UkwmBulkConfirmationPage.new.return_button
+end
+
+And(/^I upload valid ukwm "([^"]*)" csv$/) do |file_name|
+  CreateMultipleRecordsPage.new.upload_with_filename file_name
+end
+
+When(/^I wait for the submission to finish$/) do
+  GlwUploadSuccessPage.new.wait_to_submission
 end

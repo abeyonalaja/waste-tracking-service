@@ -21,6 +21,7 @@ require_relative '../pages/shared_components/common_components'
 require 'report_builder'
 require 'axe-cucumber-steps'
 require 'axe-capybara'
+require 'to_words'
 
 
 World(Capybara::DSL)

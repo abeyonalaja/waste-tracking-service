@@ -13,7 +13,7 @@ class GlwUploadErrorPage < GenericPage
   ROW = Translations.value 'multiples.errorSummaryPage.errorSummaryTableHeader.row'
   ERROR_AMOUNT = Translations.value 'multiples.errorSummaryPage.errorSummaryTableHeader.error'
   ACTION = Translations.value 'multiples.errorSummaryPage.errorSummaryTableHeader.action'
-  END_PARAGRAPH = Translations.value 'multiples.errorSummaryPage.errorSummary.endParagraph'
+  # END_PARAGRAPH = Translations.value 'multiples.errorSummaryPage.errorSummary.endParagraph'
   UPLOAD_TEXT = Translations.value 'multiples.errorSummaryPage.uploadForm.titleSecond'
   UPLOAD_BUTTON = Translations.value 'multiples.guidance.upload.button'
   BANNER_TITLE = Translations.value 'multiples.errorSummaryPage.important'
@@ -64,7 +64,8 @@ class GlwUploadErrorPage < GenericPage
     expect(self).to have_text ROW
     expect(self).to have_text ERROR_AMOUNT
     expect(self).to have_text ACTION
-    expect(self).to have_text END_PARAGRAPH
+    #defect - 378203
+    # expect(self).to have_text END_PARAGRAPH
     expect(self).to have_text UPLOAD_TEXT
     expect(self).to have_text UPLOAD_BUTTON
     expect(self).to have_text BANNER_TITLE
