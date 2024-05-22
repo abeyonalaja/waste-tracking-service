@@ -13,10 +13,10 @@ import {
 } from '@wts/api/waste-tracking-gateway';
 import { SubmissionWithAccount, TemplateWithAccount } from '../db';
 
-export type SubmissionBasePlusId = {
+export interface SubmissionBasePlusId {
   submissionBase: SubmissionBase;
   id: string;
-};
+}
 
 export function setSubmissionConfirmation(
   submission: DraftSubmission
@@ -55,7 +55,7 @@ export function setSubmissionDeclaration(
 export function setWasteQuantityUnit(
   wasteQuantity: submission.WasteQuantity,
   submission: submission.Submission
-) {
+): void {
   if (submission.wasteDescription.wasteCode.type === 'NotApplicable') {
     if (wasteQuantity.type === 'ActualData') {
       if (wasteQuantity.actualData?.quantityType === 'Volume') {
@@ -90,7 +90,7 @@ export function setWasteQuantityUnit(
 export function setDraftWasteQuantityUnit(
   wasteQuantity: draft.DraftWasteQuantity,
   submission: draft.DraftSubmission
-) {
+): void {
   if (
     submission.wasteDescription.status !== 'NotStarted' &&
     wasteQuantity.status !== 'CannotStart' &&
@@ -134,7 +134,7 @@ export function setDraftWasteQuantityUnit(
 
 export function isCollectionDateValid(
   date: draft.DraftSubmission['collectionDate']
-) {
+): boolean {
   if (date.status !== 'NotStarted') {
     const {
       day: dayStr,

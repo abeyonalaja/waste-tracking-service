@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-export function ProducerAndCollectionDetails() {
+export function ProducerAndCollectionDetails(): React.ReactNode {
   const page = useTranslations(
     'multiples.guidancePageCSV.producerAndCollectionDetails'
   );
@@ -48,7 +48,7 @@ export function ProducerAndCollectionDetails() {
           <a
             href="https://www.gov.uk/get-information-about-a-company"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             {page('tableProducerDetails.sitCodeLink')}
           </a>

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   classes?: string;
   colour?:
@@ -15,9 +15,14 @@ type Props = {
     | 'orange'
     | 'yellow';
   testId?: string;
-};
+}
 
-export const Tag = ({ children, classes, colour, testId }: Props) => {
+export const Tag = ({
+  children,
+  classes,
+  colour,
+  testId,
+}: Props): JSX.Element => {
   return (
     <strong
       className={`govuk-tag ${colour && `govuk-tag--${colour}`} ${classes}`}

@@ -10,7 +10,7 @@ export function FeedbackBackLink({
   text,
   href,
   routerBack,
-}: FeedbackBackLinkProps) {
+}: FeedbackBackLinkProps): JSX.Element | null {
   const isNewWindow = useNewWindow();
   if (isNewWindow) {
     return null;

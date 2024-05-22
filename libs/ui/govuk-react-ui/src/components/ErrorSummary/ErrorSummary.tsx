@@ -1,23 +1,23 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-type Error = {
+interface Error {
   text: string;
   href: string;
-};
-type ErrorSummaryProps = {
+}
+interface ErrorSummaryProps {
   id?: string;
   testId?: string;
   headingErrorText?: string;
   errors: Error[];
-};
+}
 
 export const ErrorSummary = ({
   id = 'error-summary-box',
   testId,
   headingErrorText,
   errors,
-}: ErrorSummaryProps) => {
+}: ErrorSummaryProps): JSX.Element => {
   const router = useRouter();
 
   return (

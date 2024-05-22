@@ -5,24 +5,24 @@ export type UkwmPartialSubmission = Omit<
   'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
 >;
 
-export type UkwmBulkSubmissionValidationRowError = {
+export interface UkwmBulkSubmissionValidationRowError {
   rowNumber: number;
   errorAmount: number;
   errorDetails: string[];
-};
+}
 
-export type UkwmBulkSubmissionValidationRowErrorDetails = {
+export interface UkwmBulkSubmissionValidationRowErrorDetails {
   rowNumber: number;
   errorReason: string;
-};
+}
 
-export type UkwmBulkSubmissionValidationColumnError = {
+export interface UkwmBulkSubmissionValidationColumnError {
   errorAmount: number;
   columnName: string;
   errorDetails: UkwmBulkSubmissionValidationRowErrorDetails[];
-};
+}
 
-export type UkwmSubmissionReference = {
+export interface UkwmSubmissionReference {
   id: string;
   wasteMovementId: string;
   producerName: string;
@@ -32,7 +32,7 @@ export type UkwmSubmissionReference = {
     month: string;
     year: string;
   };
-};
+}
 
 export type UkwmBulkSubmissionState =
   | {
@@ -69,9 +69,9 @@ export type UkwmBulkSubmissionState =
       submissions: UkwmSubmissionReference[];
     };
 
-export type UkwmBulkSubmission = {
+export interface UkwmBulkSubmission {
   id: string;
   state: UkwmBulkSubmissionState;
-};
+}
 
 export type GetUwkwmBulkSubmissionResponse = UkwmBulkSubmission;

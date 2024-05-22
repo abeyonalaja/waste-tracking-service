@@ -7,7 +7,10 @@ import { LRUCache } from 'lru-cache';
 export interface CacheItem<T> {
   value: T;
 }
-type ListData<T> = { type: string; values: T[] };
+interface ListData<T> {
+  type: string;
+  values: T[];
+}
 
 export default class CosmosReferenceDataRepository
   implements ReferenceDataRepository

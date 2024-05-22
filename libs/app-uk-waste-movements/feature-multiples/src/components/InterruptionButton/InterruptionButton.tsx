@@ -7,20 +7,16 @@ interface InterruptionButtonProps {
   label: string;
 }
 
-export function InterruptionButton({ label }: InterruptionButtonProps) {
+export function InterruptionButton({
+  label,
+}: InterruptionButtonProps): JSX.Element {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, setCookie] = useCookies();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [cookie, setCookie] = useCookies();
 
   const expiryDate = new Date();
-  const currentDate = expiryDate.getDate();
-  expiryDate.setMonth(expiryDate.getMonth() + 1);
 
-  if (expiryDate.getDate() < currentDate) {
-    expiryDate.setDate(0);
-  }
-
-  function acknowledgeGuidance() {
+  function acknowledgeGuidance(): void {
     setCookie('UKWMMultipleGuidanceViewed', true, {
       expires: expiryDate,
       path: '/',

@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-export function CSVSummary() {
+export function CSVSummary(): React.ReactNode {
   const page = useTranslations('multiples.guidancePageCSV');
 
   return (

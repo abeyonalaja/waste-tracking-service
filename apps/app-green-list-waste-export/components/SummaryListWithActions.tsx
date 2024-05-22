@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 import { AppLink } from './AppLink';
 
-type SummaryListAction = {
+interface SummaryListAction {
   label: string;
   action: (action) => void;
-};
+}
 
 interface Props {
   content: any;

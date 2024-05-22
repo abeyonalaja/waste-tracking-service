@@ -8,7 +8,7 @@ export const metadata = {
   title: 'UK waste movements',
 };
 
-export default function Index() {
+export default function Index(): JSX.Element {
   const t = useTranslations('moveWastePage');
   const breadcrumbs = [
     { text: t('breadcrumbs.home'), href: '../account' },

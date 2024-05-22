@@ -14,7 +14,7 @@ interface AppInsightsProviderProps {
 export default function AppInsightsProvider({
   connectionString,
   children,
-}: AppInsightsProviderProps) {
+}: AppInsightsProviderProps): JSX.Element {
   const reactPlugin = new ReactPlugin();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function AppInsightsProvider({
         appInsights.unload();
       }
     };
-  }, []);
+  });
 
   return (
     <AppInsightsContext.Provider value={reactPlugin}>

@@ -3,18 +3,20 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Link, useRouter } from '@wts/ui/navigation';
 import { useNewWindow } from '@wts/ui/shared-ui';
-export type successStrings = {
+export interface successStrings {
   bannerTitle: string;
   bannerHeading: string;
   backLink: string;
   backLinkNewWindow: string;
-};
+}
 
 interface FeedbackSuccessBannerProps {
   strings: successStrings;
 }
 
-export function FeedbackSuccessBanner({ strings }: FeedbackSuccessBannerProps) {
+export function FeedbackSuccessBanner({
+  strings,
+}: FeedbackSuccessBannerProps): JSX.Element {
   const isNewWindow = useNewWindow();
   const router = useRouter();
   return (

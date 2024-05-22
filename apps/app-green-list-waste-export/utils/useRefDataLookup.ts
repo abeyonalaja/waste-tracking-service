@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import i18n from 'i18next';
 
-type singleCodeType = {
+interface singleCodeType {
   code: string;
   value: {
     description: {
@@ -9,12 +9,12 @@ type singleCodeType = {
       cy: string;
     };
   };
-};
+}
 
-type codeCollection = {
+interface codeCollection {
   type: string;
   values: Array<singleCodeType>;
-};
+}
 
 const useRefDataLookup = (apiConfig) => {
   const [ewcRefData, setEwcRefData] = useState<Array<singleCodeType>>([]);

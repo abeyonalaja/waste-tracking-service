@@ -16,10 +16,10 @@ import {
   ErrorSummary,
 } from 'govuk-react';
 
-type SendFeedbackRequest = {
+interface SendFeedbackRequest {
   rating?: number;
   feedback?: string;
-};
+}
 
 interface FeedbackFormProps {
   children: React.ReactNode;

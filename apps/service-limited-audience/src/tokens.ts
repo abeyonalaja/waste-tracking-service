@@ -1,9 +1,9 @@
 import { verify } from 'jsonwebtoken';
 
-export type Payload = {
+export interface Payload {
   content: string;
   participantId: string;
-};
+}
 
 export type ValidationResult =
   | {

@@ -1728,7 +1728,7 @@ export function validateImporterDetailAndTransitCountriesCrossSection(
   return { valid: true };
 }
 
-type RecoveryFacilityEntry = {
+interface RecoveryFacilityEntry {
   organisationName: string;
   address: string;
   country: string;
@@ -1737,7 +1737,7 @@ type RecoveryFacilityEntry = {
   faxNumber: string;
   emailAddress: string;
   code: string;
-};
+}
 
 function validateRecoveryFacilityEntry(
   values: RecoveryFacilityEntry[],

@@ -3,7 +3,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import { Page } from '@wts/ui/shared-ui/server';
 
-export default function NotFound() {
+export default function NotFound(): JSX.Element {
   const t = useTranslations('404');
 
   return (

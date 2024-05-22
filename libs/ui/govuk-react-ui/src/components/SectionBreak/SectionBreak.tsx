@@ -8,7 +8,7 @@ export function SectionBreak({
   visible = true,
   size = 's',
   testId,
-}: SectionBreakProps) {
+}: SectionBreakProps): JSX.Element {
   return (
     <hr
       className={`govuk-section-break govuk-section-break--${size} ${

@@ -10,7 +10,7 @@ export const metadata = {
   title: 'Waste tracking service',
 };
 
-export default async function Index() {
+export default async function Index(): Promise<JSX.Element> {
   const session = await getServerSession();
   if (!session || !session.user) {
     redirect('/auth/signin');

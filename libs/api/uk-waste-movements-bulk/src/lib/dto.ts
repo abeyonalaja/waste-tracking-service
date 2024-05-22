@@ -35,7 +35,7 @@ export type PartialSubmission = Omit<
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
-export type BulkSubmissionValidationRowCodeError = {
+export interface BulkSubmissionValidationRowCodeError {
   rowNumber: number;
   errorAmount: number;
   errorCodes: (
@@ -45,39 +45,39 @@ export type BulkSubmissionValidationRowCodeError = {
         args: string[];
       }
   )[];
-};
+}
 
-export type BulkSubmissionValidationRowError = {
+export interface BulkSubmissionValidationRowError {
   rowNumber: number;
   errorAmount: number;
   errorDetails: string[];
-};
+}
 
-export type BulkSubmissionValidationColumnErrorDetail = {
+export interface BulkSubmissionValidationColumnErrorDetail {
   rowNumber: number;
   errorReason: string;
-};
+}
 
-export type BulkSubmissionValidationColumnError = {
+export interface BulkSubmissionValidationColumnError {
   errorAmount: number;
   columnName: string;
   errorDetails: BulkSubmissionValidationColumnErrorDetail[];
-};
+}
 
 export type BulkSubmissionSummary = Readonly<Omit<DraftSubmission, 'receiver'>>;
 
-type FailedValidationCodeState = {
+interface FailedValidationCodeState {
   status: 'FailedValidation';
   timestamp: Date;
   rowErrors: BulkSubmissionValidationRowCodeError[];
-};
+}
 
-type FailedValidationDetailState = {
+interface FailedValidationDetailState {
   status: 'FailedValidation';
   timestamp: Date;
   rowErrors: BulkSubmissionValidationRowError[];
   columnErrors?: BulkSubmissionValidationColumnError[];
-};
+}
 
 type BulkSubmissionStateBase =
   | {
@@ -114,17 +114,17 @@ export type BulkSubmissionState =
   | BulkSubmissionStateBase
   | FailedValidationCodeState;
 
-export type BulkSubmission = {
+export interface BulkSubmission {
   id: string;
   state: BulkSubmissionState;
-};
+}
 
-export type BulkSubmissionDetail = {
+export interface BulkSubmissionDetail {
   id: string;
   state: BulkSubmissionStateBase | FailedValidationDetailState;
-};
+}
 
-export type ProducerDetailFlattened = {
+export interface ProducerDetailFlattened {
   customerReference: string;
   producerOrganisationName: string;
   producerContactName: string;
@@ -136,9 +136,9 @@ export type ProducerDetailFlattened = {
   producerPostcode?: string;
   producerCountry: string;
   producerSicCode?: string;
-};
+}
 
-export type WasteCollectionDetailFlattened = {
+export interface WasteCollectionDetailFlattened {
   wasteCollectionAddressLine1?: string;
   wasteCollectionAddressLine2?: string;
   wasteCollectionTownCity?: string;
@@ -149,9 +149,9 @@ export type WasteCollectionDetailFlattened = {
   wasteCollectionBrokerRegistrationNumber?: string;
   wasteCollectionCarrierRegistrationNumber?: string;
   wasteCollectionExpectedWasteCollectionDate: string;
-};
+}
 
-export type CarrierDetailFlattened = {
+export interface CarrierDetailFlattened {
   carrierOrganisationName?: string;
   carrierAddressLine1?: string;
   carrierAddressLine2?: string;
@@ -161,9 +161,9 @@ export type CarrierDetailFlattened = {
   carrierContactName?: string;
   carrierContactEmail?: string;
   carrierContactPhone?: string;
-};
+}
 
-export type ReceiverDetailFlattened = {
+export interface ReceiverDetailFlattened {
   receiverAuthorizationType: string;
   receiverEnvironmentalPermitNumber?: string;
   receiverOrganisationName: string;
@@ -175,14 +175,14 @@ export type ReceiverDetailFlattened = {
   receiverContactName: string;
   receiverContactEmail: string;
   receiverContactPhone: string;
-};
+}
 
-export type WasteTransportationDetailFlattened = {
+export interface WasteTransportationDetailFlattened {
   wasteTransportationNumberAndTypeOfContainers: string;
   wasteTransportationSpecialHandlingRequirements?: string;
-};
+}
 
-export type WasteTypeDetailFlattened = {
+export interface WasteTypeDetailFlattened {
   firstWasteTypeEwcCode: string;
   firstWasteTypeWasteDescription: string;
   firstWasteTypePhysicalForm: string;
@@ -333,7 +333,7 @@ export type WasteTypeDetailFlattened = {
   tenthWasteTypePopsString?: string;
   tenthWasteTypePopsConcentrationsString?: string;
   tenthWasteTypePopsConcentrationUnitsString?: string;
-};
+}
 
 export type SubmissionFlattened = ProducerDetailFlattened &
   ReceiverDetailFlattened &

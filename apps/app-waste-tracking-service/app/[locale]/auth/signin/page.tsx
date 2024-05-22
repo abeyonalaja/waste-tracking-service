@@ -13,7 +13,7 @@ export default async function Index({
   searchParams,
 }: {
   searchParams: Record<string, string>;
-}) {
+}): Promise<JSX.Element> {
   const session = await getServerSession();
 
   if (session) {

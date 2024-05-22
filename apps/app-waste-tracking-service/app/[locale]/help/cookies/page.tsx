@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Cookies',
 };
 
-export default async function Index() {
+export default async function Index(): Promise<JSX.Element> {
   return (
     <>
       <GovUK.GridRow>

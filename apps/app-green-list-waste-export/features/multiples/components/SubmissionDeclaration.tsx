@@ -8,10 +8,10 @@ import { Paragraph } from 'components';
 import { EstimatesBanner } from './EstimatesBanner';
 import { useState } from 'react';
 
-type SubmissionDeclarationProps = {
+interface SubmissionDeclarationProps {
   recordCount: number;
   hasEstimates: boolean;
-};
+}
 
 export function SubmissionDeclaration({
   recordCount,

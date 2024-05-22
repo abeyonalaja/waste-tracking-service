@@ -1,6 +1,6 @@
 import styles from './CSV.module.scss';
 
-export function CSV() {
+export function CSV(): JSX.Element {
   return (
     <svg
       version="1.1"

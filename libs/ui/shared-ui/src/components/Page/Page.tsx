@@ -7,7 +7,7 @@ interface PageProps {
   children: React.ReactNode;
 }
 
-export function Page({ beforeChildren, children }: PageProps) {
+export function Page({ beforeChildren, children }: PageProps): JSX.Element {
   return (
     <GovUK.WidthContainer>
       <div className={styles.navContainer}>

@@ -2,12 +2,12 @@ import { FormGroup } from '../FormGroup';
 import { Hint } from '../Hint';
 import { ErrorMessage } from '../ErrorMessage';
 
-type Option = {
+interface Option {
   text: string;
   value: string;
-};
+}
 
-type Props = {
+interface Props {
   name: string;
   value?: string;
   legendText?: string;
@@ -19,7 +19,7 @@ type Props = {
   inline?: boolean;
   onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
-};
+}
 
 export const Radios = ({
   name,
@@ -31,9 +31,9 @@ export const Radios = ({
   error,
   small,
   inline,
-  onchange = () => {},
+  onchange = (): void => {},
   testId,
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <FormGroup error={!!error}>
       <fieldset className="govuk-fieldset">

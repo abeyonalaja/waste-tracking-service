@@ -5,16 +5,22 @@ import '@testing-library/jest-dom/extend-expect';
 jest.mock('next/navigation', () => {
   return {
     __esModule: true,
-    usePathname: () => ({
+    usePathname: (): { pathname: string } => ({
       pathname: '',
     }),
-    useRouter: () => ({
+    useRouter: (): {
+      push: jest.Mock;
+      replace: jest.Mock;
+      prefetch: jest.Mock;
+    } => ({
       push: jest.fn(),
       replace: jest.fn(),
       prefetch: jest.fn(),
     }),
-    useSearchParams: () => ({
-      get: () => {},
+    useSearchParams: (): {
+      get: () => void;
+    } => ({
+      get: (): void => {},
     }),
   };
 });

@@ -167,7 +167,7 @@ beforeAll(async () => {
 
   app.auth.scheme('mock', function () {
     return {
-      authenticate: async function (_, h) {
+      authenticate: async function (_, h): Promise<unknown> {
         return h.authenticated({ credentials: { accountId } });
       },
     };

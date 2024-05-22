@@ -2,7 +2,7 @@
 import { signIn } from 'next-auth/react';
 import { Link } from '../index';
 
-export function SignInLink() {
+export function SignInLink(): JSX.Element {
   return (
     <Link
       href="#"

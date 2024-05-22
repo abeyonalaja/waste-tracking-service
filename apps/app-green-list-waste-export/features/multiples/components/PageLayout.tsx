@@ -4,11 +4,11 @@ import { Page, GridRow, GridCol } from 'govuk-react';
 import { Footer, Header } from 'components';
 import { useTranslation } from 'react-i18next';
 
-type PageLayoutProps = {
+interface PageLayoutProps {
   breadCrumbs?: ReactNode;
   setWidth?: string;
   children: ReactNode;
-};
+}
 
 export function PageLayout({
   breadCrumbs = null,

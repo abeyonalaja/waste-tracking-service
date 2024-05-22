@@ -8,14 +8,14 @@ import { useState } from 'react';
 import { formatColumnName } from '../../utils';
 import styles from './ErrorRow.module.scss';
 
-export type ErrorRowStrings = {
+export interface ErrorRowStrings {
   errorCount: string;
   rowNumber: string;
   reason: string;
   details: string;
   show: string;
   hide: string;
-};
+}
 
 interface ErrorRowProps {
   error:
@@ -25,7 +25,11 @@ interface ErrorRowProps {
   rowIndex: number;
 }
 
-export function ErrorRow({ error, strings, rowIndex }: ErrorRowProps) {
+export function ErrorRow({
+  error,
+  strings,
+  rowIndex,
+}: ErrorRowProps): JSX.Element {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   function toggleExpanded() {

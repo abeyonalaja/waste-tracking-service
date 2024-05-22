@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 
-export default async function UserHeading() {
+export default async function UserHeading(): Promise<JSX.Element> {
   const session = await getServerSession();
 
   return (

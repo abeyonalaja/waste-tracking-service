@@ -5,7 +5,9 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default async function RootLayout({ children }: LayoutProps) {
+export default async function RootLayout({
+  children,
+}: LayoutProps): Promise<JSX.Element> {
   const connectionString = process.env['APPINSIGHTS_CONNECTION_STRING'];
 
   return (

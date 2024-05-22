@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   footerLinks?: Array<ReactNode>;
   testId?: string;
-};
+}
 
-export const Footer = ({ footerLinks, testId }: Props) => {
+export const Footer = ({ footerLinks, testId }: Props): JSX.Element => {
   return (
     <footer className="govuk-footer" role="contentinfo" data-testid={testId}>
       <div className="govuk-width-container">

@@ -6,7 +6,7 @@ interface ErrorPageProps {
   reset: () => void;
 }
 
-export default function Error({ error }: ErrorPageProps) {
+export default function Error({ error }: ErrorPageProps): JSX.Element {
   console.error(error);
   return (
     <Page>

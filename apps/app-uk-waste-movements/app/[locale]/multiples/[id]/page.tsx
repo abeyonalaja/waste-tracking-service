@@ -37,7 +37,10 @@ interface PageProps {
   };
 }
 
-export default async function StatusPage({ params, searchParams }: PageProps) {
+export default async function StatusPage({
+  params,
+  searchParams,
+}: PageProps): Promise<JSX.Element> {
   const t = await getTranslations('multiples');
   const session = await getServerSession(options);
   const token = session?.token;

@@ -6,7 +6,11 @@ interface SummaryCardProps {
   testId?: string;
 }
 
-export function SummaryCard({ title, children, testId }: SummaryCardProps) {
+export function SummaryCard({
+  title,
+  children,
+  testId,
+}: SummaryCardProps): JSX.Element {
   return (
     <div className="govuk-summary-card" data-testid={testId}>
       <div className="govuk-summary-card__title-wrapper">

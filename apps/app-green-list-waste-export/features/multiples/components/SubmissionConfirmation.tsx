@@ -58,12 +58,12 @@ const StyledLinkAsButton = styled(Link)`
   }
 `;
 
-type SubmissionConfirmationProps = {
+interface SubmissionConfirmationProps {
   submissionId: string;
   transactionId: string;
   recordCount: number;
   pageCount: number;
-};
+}
 
 export function SubmissionConfirmation({
   submissionId,

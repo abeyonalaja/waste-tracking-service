@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     'Use this guidance to help you complete a CSV template to upload multiple waste movements for the ‘Move waste in the UK’ service.',
 };
 
-export default function GuidancePage() {
+export default function GuidancePage(): JSX.Element {
   const page = useTranslations('multiples.guidancePage');
 
   return (

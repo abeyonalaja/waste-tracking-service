@@ -42,7 +42,7 @@ const VIEWS = {
   CONFIRM: 4,
 };
 
-type State = {
+interface State {
   data: GetTransitCountriesResponse;
   isLoading: boolean;
   isError: boolean;
@@ -55,9 +55,9 @@ type State = {
     changedCountry?: string;
     confirmRemove?: string;
   };
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -67,7 +67,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: { status: 'Started', values: [] },

@@ -24,20 +24,20 @@ import { isNotEmpty, validateWasteDescriptionTemplate } from 'utils/validators';
 import styled from 'styled-components';
 import useApiConfig from 'utils/useApiConfig';
 
-type State = {
+interface State {
   data: object;
   isLoading: boolean;
   isError: boolean;
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'DATA_UPDATE';
   payload?: any;
-};
+}
 
 const initialWasteDescState: State = {
   data: null,

@@ -8,8 +8,9 @@ import {
 } from '@wts/api/address';
 import FuzzySearch from 'fuzzy-search';
 import { Handler } from '@wts/api/common';
+import { Address } from '@wts/api/address';
 
-function titleCase(str: string) {
+function titleCase(str: string): string {
   return str
     .toLowerCase()
     .split(' ')
@@ -25,7 +26,19 @@ export default class AddressController {
   getAddressByPostcode: Handler<
     GetAddressByPostcodeRequest,
     GetAddressByPostcodeResponse
-  > = async ({ postcode, buildingNameOrNumber }) => {
+  > = async ({
+    postcode,
+    buildingNameOrNumber,
+  }): Promise<
+    | {
+        success: false;
+        error: { statusCode: number; name: string; message: string };
+      }
+    | {
+        success: true;
+        value: Address[];
+      }
+  > => {
     try {
       const addressResults = await this.addressClient.getAddressByPostcode(
         postcode

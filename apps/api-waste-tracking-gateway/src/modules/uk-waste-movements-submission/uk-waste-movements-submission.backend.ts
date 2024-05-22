@@ -11,9 +11,9 @@ import {
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 
-export type SubmissionRef = {
+export interface SubmissionRef {
   id: string;
-};
+}
 
 export interface UkWasteMovementsSubmissionBackend {
   getUkwmSubmission(ref: SubmissionRef): Promise<UkwmDraftSubmission>;

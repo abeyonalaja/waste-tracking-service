@@ -1,4 +1,4 @@
-import { ResponseToolkit } from '@hapi/hapi';
+import { ResponseObject, ResponseToolkit } from '@hapi/hapi';
 import Ajv from 'ajv/dist/jtd';
 import { dcidToken as dcidTokenSchema } from './dcid-token.schema';
 import { UserFilter } from './user-filter';
@@ -12,8 +12,18 @@ function isValidGuid(value: string): boolean {
   return uuidRegex.test(value);
 }
 
-export function validateToken(filter: UserFilter) {
-  return async function (decoded: object, _: unknown, h: ResponseToolkit) {
+export type ValidateTokenReturnType = (
+  decoded: object,
+  _: unknown,
+  h: ResponseToolkit
+) => Promise<{
+  isValid: boolean;
+  credentials?: { accountId: string; subjectId: string };
+  response?: ResponseObject;
+}>;
+
+export function validateToken(filter: UserFilter): ValidateTokenReturnType {
+  return async (decoded: object, _: unknown, h: ResponseToolkit) => {
     if (!validateDcidToken(decoded)) {
       return { isValid: false };
     }

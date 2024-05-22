@@ -1,13 +1,18 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   testId?: string;
   href?: string;
   target?: '_blank' | '_self' | '_parent' | '_top';
-};
+}
 
-export const Link = ({ href, target, children, testId }: Props) => {
+export const Link = ({
+  href,
+  target,
+  children,
+  testId,
+}: Props): JSX.Element => {
   return (
     <a
       href={href}

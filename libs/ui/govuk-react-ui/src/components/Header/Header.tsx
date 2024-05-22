@@ -1,18 +1,18 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   serviceName?: string;
   serviceNameLink?: ReactNode;
   navigation?: ReactNode;
   testId?: string;
-};
+}
 
 export const Header = ({
   serviceName,
   serviceNameLink,
   navigation,
   testId,
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <header className="govuk-header" role="banner" data-testid={testId}>
       <div className="govuk-header__container govuk-width-container">

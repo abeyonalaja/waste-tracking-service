@@ -12,7 +12,10 @@ interface TotalErrorSummaryProps {
   href: string;
 }
 
-export function TotalErrorSummary({ strings, href }: TotalErrorSummaryProps) {
+export function TotalErrorSummary({
+  strings,
+  href,
+}: TotalErrorSummaryProps): JSX.Element {
   const router = useRouter();
 
   return (

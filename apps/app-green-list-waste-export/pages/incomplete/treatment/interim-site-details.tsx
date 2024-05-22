@@ -46,16 +46,16 @@ const VIEWS = {
   RECOVERY_CODE: 3,
 };
 
-type State = {
+interface State {
   data: any;
   facilityData: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
   errors: any;
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -65,7 +65,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: null,

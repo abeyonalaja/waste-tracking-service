@@ -7,7 +7,11 @@ interface GridRowProps {
   testId?: string;
 }
 
-export function GridRow({ children, display, testId }: GridRowProps) {
+export function GridRow({
+  children,
+  display,
+  testId,
+}: GridRowProps): JSX.Element {
   let additionalClass;
   if (display === 'flex') additionalClass = styles['grid-row-flex'];
   if (display === 'flex-from-tablet')

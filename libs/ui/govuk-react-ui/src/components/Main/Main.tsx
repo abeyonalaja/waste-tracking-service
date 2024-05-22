@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   testId?: string;
-};
+}
 
-export const Main = ({ children, testId }: Props) => {
+export const Main = ({ children, testId }: Props): JSX.Element => {
   return (
     <main
       className={`govuk-main-wrapper`}

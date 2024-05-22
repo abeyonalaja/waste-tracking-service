@@ -2,7 +2,7 @@ import React from 'react';
 import Autocomplete from 'accessible-autocomplete/react';
 import i18n from 'i18next';
 
-type optionType = {
+interface optionType {
   code: string;
   value: {
     description: {
@@ -10,7 +10,7 @@ type optionType = {
       cy?: string;
     };
   };
-};
+}
 
 interface Props {
   id: string;

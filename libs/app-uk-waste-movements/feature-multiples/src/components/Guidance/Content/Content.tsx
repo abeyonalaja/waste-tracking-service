@@ -1,7 +1,7 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import { Link as LocaleLink } from '@wts/ui/navigation';
-export function Content() {
+export function Content(): React.ReactNode {
   const page = useTranslations('multiples.guidancePage');
 
   return (

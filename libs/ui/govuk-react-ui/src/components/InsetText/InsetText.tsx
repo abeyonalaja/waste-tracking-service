@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   testId?: string;
-};
+}
 
-export const InsetText = ({ children, testId }: Props) => {
+export const InsetText = ({ children, testId }: Props): JSX.Element => {
   return (
     <div className="govuk-inset-text" data-testid={testId}>
       {children}

@@ -19,9 +19,9 @@ describe('SummaryList component', () => {
     const listElement = screen.getByTestId('test-summary');
     expect(listElement).toBeInTheDocument();
     expect(listElement.childElementCount).toBe(items.length);
-    items.forEach((item) => {
+    for (const item of items) {
       expect(screen.getByText(item.key)).toBeInTheDocument();
       expect(screen.getByText(item.value)).toBeInTheDocument();
-    });
+    }
   });
 });

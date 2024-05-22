@@ -4,53 +4,53 @@ export type DbContainerNameKey = 'drafts' | 'submissions' | 'templates';
 
 export type CustomerReference = string;
 
-export type UkAddressDetail = {
+export interface UkAddressDetail {
   addressLine1: string;
   addressLine2?: string;
   townCity: string;
   postcode?: string;
   country: string;
-};
+}
 
-export type UkContactDetail = {
+export interface UkContactDetail {
   organisationName: string;
   fullName: string;
   emailAddress: string;
   phoneNumber: string;
   faxNumber?: string;
-};
+}
 
-export type UkOrganisationDetail = {
+export interface UkOrganisationDetail {
   addressDetail: UkAddressDetail;
   contactDetail: UkContactDetail;
-};
+}
 
-export type AddressDetail = {
+export interface AddressDetail {
   organisationName: string;
   address: string;
   country: string;
-};
+}
 
-export type ContactDetail = {
+export interface ContactDetail {
   fullName: string;
   emailAddress: string;
   phoneNumber: string;
   faxNumber?: string;
-};
+}
 
-export type OrganisationDetail = {
+export interface OrganisationDetail {
   addressDetail: AddressDetail;
   contactDetail: ContactDetail;
-};
+}
 
 export type OptionalStringInput =
   | { provided: 'Yes'; value: string }
   | { provided: 'No' };
 
-export type PageMetadata = {
+export interface PageMetadata {
   pageNumber: number;
   token: string;
-};
+}
 
 export type CancellationType =
   | {
@@ -82,13 +82,13 @@ export type RecordState =
 
 export type RecordStateStatus = RecordState['status'];
 
-export type RecordSummaryPage<T> = {
+export interface RecordSummaryPage<T> {
   totalRecords: number;
   totalPages: number;
   currentPage: number;
   pages: PageMetadata[];
   values: ReadonlyArray<T>;
-};
+}
 
 export type GetRecordsRequest = AccountIdRequest &
   OrderRequest & {

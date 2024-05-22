@@ -1,4 +1,4 @@
-export type DcidToken = {
+export interface DcidToken {
   ver: string;
   iss: string;
   sub: string;
@@ -23,4 +23,4 @@ export type DcidToken = {
   relationships: string[];
   roles: string[];
   nbf: number;
-};
+}

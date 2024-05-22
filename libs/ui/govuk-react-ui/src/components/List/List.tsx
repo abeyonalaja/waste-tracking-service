@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   type?: 'ordered' | 'unordered';
   children?: ReactNode;
   testId?: string;
-};
+}
 
-export const List = ({ type, children, testId }: Props) => {
-  const listClassName = () => {
+export const List = ({ type, children, testId }: Props): JSX.Element => {
+  const listClassName = (): string | null => {
     if (type === 'ordered') return `govuk-list--number`;
     if (type === 'unordered') return `govuk-list--bullet`;
     return null;

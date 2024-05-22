@@ -4,7 +4,7 @@ import { usePathname as useNextPathname } from 'next/navigation';
 import { usePathname, useRouter, Link } from '../../../navigation';
 import styles from './LanguageSwitcher.module.scss';
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher(): JSX.Element {
   const intlPathname = usePathname();
   const router = useRouter();
   const fullPathName = useNextPathname();

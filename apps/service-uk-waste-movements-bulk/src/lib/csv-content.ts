@@ -1,4 +1,4 @@
-export type BulkSubmissionCsvRow = {
+export interface BulkSubmissionCsvRow {
   customerReference: string;
   producerOrganisationName: string;
   producerAddressLine1: string;
@@ -192,7 +192,7 @@ export type BulkSubmissionCsvRow = {
   tenthWasteTypePopsString: string;
   tenthWasteTypePopsConcentrationsString: string;
   tenthWasteTypePopsConcentrationUnitsString: string;
-};
+}
 
 export const headersFormatted = [
   'customerReference',

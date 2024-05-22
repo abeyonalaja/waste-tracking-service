@@ -38,7 +38,7 @@ export default class SubmissionController {
 
         let hasAnyPopulatedProp = false;
         for (const key in s) {
-          if ((s as { [key: string]: string })[key]?.trim()) {
+          if ((s as unknown as { [key: string]: string })[key]?.trim()) {
             hasAnyPopulatedProp = true;
             break;
           }

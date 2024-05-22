@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Link } from '@wts/ui/navigation';
 
-export function ErrorInstructions() {
+export function ErrorInstructions(): JSX.Element {
   const t = useTranslations('multiples.errors.instructions');
 
   return (

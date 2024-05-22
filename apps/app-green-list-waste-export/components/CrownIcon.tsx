@@ -7,10 +7,10 @@ const StyledCrownIcon = styled.svg`
   }
 `;
 
-type CrownIconProps = {
+interface CrownIconProps {
   height?: number;
   width?: number;
-};
+}
 
 export const CrownIcon = ({ height = 30, width = 148 }: CrownIconProps) => {
   return (

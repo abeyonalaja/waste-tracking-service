@@ -9,7 +9,12 @@ interface Props {
   id?: string;
 }
 
-export function LinkCard({ title, href = '#', content, id }: Props) {
+export function LinkCard({
+  title,
+  href = '#',
+  content,
+  id,
+}: Props): JSX.Element {
   return (
     <Link href={href} className={styles['card']} id={id}>
       <>

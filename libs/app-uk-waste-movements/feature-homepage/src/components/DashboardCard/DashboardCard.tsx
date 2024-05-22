@@ -1,7 +1,7 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Link } from '@wts/ui/navigation';
 import { useTranslations } from 'next-intl';
-export function DashboardCard() {
+export function DashboardCard(): JSX.Element {
   const t = useTranslations('moveWastePage');
   return (
     <div className="govuk-summary-card">

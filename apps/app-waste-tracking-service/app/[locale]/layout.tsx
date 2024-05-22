@@ -6,7 +6,9 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps) {
+export default async function Layout({
+  children,
+}: LayoutProps): Promise<JSX.Element> {
   return (
     <>
       <GovUK.Header

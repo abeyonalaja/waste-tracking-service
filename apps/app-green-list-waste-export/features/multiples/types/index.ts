@@ -16,7 +16,7 @@ export type SetShowCancelPrompt = Dispatch<SetStateAction<boolean>>;
 
 export type SetShowDeclaration = Dispatch<SetStateAction<boolean>>;
 
-export type Transaction = {
+export interface Transaction {
   id: string;
   hasEstimates: boolean;
   submissionDeclaration: {
@@ -45,18 +45,18 @@ export type Transaction = {
       type: string;
     };
   };
-};
+}
 
-export type ValidationErrorsType = {
+export interface ValidationErrorsType {
   file?: string;
-};
+}
 
 export type SetValidationErrors = Dispatch<
   SetStateAction<ValidationErrorsType>
 >;
 
-export type UploadErrorResponse = {
+export interface UploadErrorResponse {
   error: string;
   message: string;
   statusCode: number;
-};
+}

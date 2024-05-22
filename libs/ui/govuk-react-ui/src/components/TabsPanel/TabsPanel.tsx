@@ -8,7 +8,7 @@ interface TabsPanelProps {
   children: React.ReactNode;
 }
 
-export function TabsPanel({ id, children }: TabsPanelProps) {
+export function TabsPanel({ id, children }: TabsPanelProps): JSX.Element {
   const activeTab = React.useContext(TabContext);
 
   return (

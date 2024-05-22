@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: 'Creating multiple waste movements',
 };
 
-export default async function UploadPage() {
+export default async function UploadPage(): Promise<JSX.Element> {
   const cookieStore = cookies();
   const guidanceViewedCookie = cookieStore.get('UKWMMultipleGuidanceViewed');
   const page = await getTranslations('multiples.uploadPage');

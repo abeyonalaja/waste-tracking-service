@@ -48,28 +48,28 @@ import {
   doesTemplateAlreadyExist,
 } from '../../lib/util';
 
-export type SubmissionBasePlusId = {
+export interface SubmissionBasePlusId {
   submissionBase: SubmissionBase;
   id: string;
-};
+}
 
-export type SubmissionRef = {
+export interface SubmissionRef {
   id: string;
   accountId: string;
-};
+}
 
 export type SubmissionTypeRef = SubmissionRef & {
   submitted: boolean;
 };
 
-export type TemplateRef = {
+export interface TemplateRef {
   id: string;
   accountId: string;
-};
+}
 
-export type OrderRef = {
+export interface OrderRef {
   order: 'ASC' | 'DESC';
-};
+}
 
 export async function getTemplates(
   accountId: string,

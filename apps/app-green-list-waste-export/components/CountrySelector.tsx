@@ -5,7 +5,7 @@ import Autocomplete from 'accessible-autocomplete/react';
 import styled from 'styled-components';
 import { Loading } from './Loading';
 
-type Props = {
+interface Props {
   id: string;
   name: string;
   label: string;
@@ -16,11 +16,11 @@ type Props = {
   hint?: string;
   apiConfig: HeadersInit;
   includeUk?: boolean;
-};
+}
 
-type RowProps = {
+interface RowProps {
   size: number;
-};
+}
 
 const DropdownWrapper = styled.div<RowProps>`
   @media (min-width: 40.0625em) {

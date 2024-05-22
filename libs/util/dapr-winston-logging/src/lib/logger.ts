@@ -6,23 +6,23 @@ import * as winston from 'winston';
 export default class LoggerService implements DaprLoggerService {
   constructor(private logger: winston.Logger) {}
 
-  error(message: any, ...optionalParams: any[]): void {
+  error(message: string, ...optionalParams: any[]): void {
     this.logger.error(message, ...optionalParams);
   }
 
-  warn(message: any, ...optionalParams: any[]): void {
+  warn(message: string, ...optionalParams: any[]): void {
     this.logger.warn(message, ...optionalParams);
   }
 
-  info(message: any, ...optionalParams: any[]): void {
+  info(message: string, ...optionalParams: any[]): void {
     this.logger.info(message, ...optionalParams);
   }
 
-  verbose(message: any, ...optionalParams: any[]): void {
+  verbose(message: string, ...optionalParams: any[]): void {
     this.logger.verbose(message, ...optionalParams);
   }
 
-  debug(message: any, ...optionalParams: any[]): void {
+  debug(message: string, ...optionalParams: any[]): void {
     this.logger.debug(message, ...optionalParams);
   }
 

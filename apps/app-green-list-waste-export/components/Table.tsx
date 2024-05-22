@@ -36,10 +36,10 @@ const RowStyled = styled.tr`
   }
 `;
 
-type CellHeaderStyledProps = {
+interface CellHeaderStyledProps {
   $setWidth?: string;
   $textAlign?: 'left' | 'right';
-};
+}
 
 const CellHeaderStyled = styled.th<CellHeaderStyledProps>`
   padding: ${(props) =>

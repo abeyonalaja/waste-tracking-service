@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-export function EWC() {
+export function EWC(): React.ReactNode {
   const page = useTranslations(
     'multiples.guidancePageCSV.ewcCodesAndDescription'
   );
@@ -45,7 +45,7 @@ export function EWC() {
         <a
           href="https://www.gov.uk/how-to-classify-different-types-of-waste"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {page('contentLink')}
         </a>
@@ -102,7 +102,7 @@ export function EWC() {
         <a
           href="https://www.gov.uk/dispose-hazardous-waste"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {page('descriptionOfTheWaste.contentLink')}
         </a>
@@ -117,7 +117,7 @@ export function EWC() {
         <a
           href="https://www.gov.uk/guidance/using-persistent-organic-pollutants-pops"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {page('descriptionOfTheWaste.contentLinkTwo')}
         </a>

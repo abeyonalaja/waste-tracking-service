@@ -4,26 +4,28 @@ import {
   SubmissionDeclarationData,
 } from './submission';
 
-export type BulkSubmissionValidationRowError = {
+export interface BulkSubmissionValidationRowError {
   rowNumber: number;
   errorAmount: number;
   errorDetails: string[];
-};
+}
 
-export type BulkSubmissionValidationRowErrorDetails = {
+export interface BulkSubmissionValidationRowErrorDetails {
   rowNumber: number;
   errorReason: string;
-};
+}
 
-export type BulkSubmissionValidationColumnError = {
+export interface BulkSubmissionValidationColumnError {
   errorAmount: number;
   columnName: string;
   errorDetails: BulkSubmissionValidationRowErrorDetails[];
-};
+}
 
-type EwcCode = { code: string };
+interface EwcCode {
+  code: string;
+}
 
-type WasteDescription = {
+interface WasteDescription {
   wasteCode:
     | { type: 'NotApplicable' }
     | {
@@ -33,9 +35,9 @@ type WasteDescription = {
   ewcCodes: EwcCode[];
   nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
-};
+}
 
-type WasteQuantity = {
+interface WasteQuantity {
   type: 'EstimateData' | 'ActualData';
   estimateData: {
     quantityType?: 'Volume' | 'Weight';
@@ -47,9 +49,9 @@ type WasteQuantity = {
     unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
     value?: number;
   };
-};
+}
 
-type ExporterDetail = {
+interface ExporterDetail {
   exporterAddress: {
     addressLine1: string;
     addressLine2?: string;
@@ -64,9 +66,9 @@ type ExporterDetail = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
-type ImporterDetail = {
+interface ImporterDetail {
   importerAddressDetails: {
     organisationName: string;
     address: string;
@@ -78,9 +80,9 @@ type ImporterDetail = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
-type Carrier = {
+interface Carrier {
   addressDetails: {
     organisationName: string;
     address: string;
@@ -96,9 +98,9 @@ type Carrier = {
     type: 'Road' | 'Air' | 'Sea' | 'Rail' | 'InlandWaterways';
     description?: string;
   };
-};
+}
 
-type CollectionDetail = {
+interface CollectionDetail {
   address: {
     addressLine1: string;
     addressLine2?: string;
@@ -113,11 +115,11 @@ type CollectionDetail = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
 type ExitLocation = { provided: 'No' } | { provided: 'Yes'; value: string };
 
-type CollectionDate = {
+interface CollectionDate {
   type: 'EstimateDate' | 'ActualDate';
   estimateDate: {
     day?: string;
@@ -129,11 +131,11 @@ type CollectionDate = {
     month?: string;
     year?: string;
   };
-};
+}
 
 type TransitCountry = string;
 
-type RecoveryFacilityDetail = {
+interface RecoveryFacilityDetail {
   addressDetails: {
     name: string;
     address: string;
@@ -158,9 +160,9 @@ type RecoveryFacilityDetail = {
         type: 'RecoveryFacility';
         recoveryCode: string;
       };
-};
+}
 
-type PartialSubmission = {
+interface PartialSubmission {
   id: string;
   reference: string;
   wasteDescription: WasteDescription;
@@ -173,16 +175,16 @@ type PartialSubmission = {
   exitLocation: ExitLocation;
   transitCountries: TransitCountry[];
   recoveryFacilityDetail: RecoveryFacilityDetail[];
-};
+}
 
-type SubmissionFromBulkSummary = {
+interface SubmissionFromBulkSummary {
   id: string;
   hasEstimates: boolean;
   reference: CustomerReference;
   wasteDescription: WasteDescription;
   collectionDate: CollectionDate;
   submissionDeclaration: SubmissionDeclarationData;
-};
+}
 
 export type BulkSubmissionState =
   | {
@@ -220,10 +222,10 @@ export type BulkSubmissionState =
       submissions: SubmissionFromBulkSummary[];
     };
 
-export type BulkSubmission = {
+export interface BulkSubmission {
   id: string;
   state: BulkSubmissionState;
-};
+}
 
 export type GetBulkSubmissionResponse = BulkSubmission;
 

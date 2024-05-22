@@ -12,7 +12,7 @@ export default function ManageSubmissionsLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}): React.ReactElement {
   const t = useTranslations('multiples.manage');
 
   const breadcrumbs = [

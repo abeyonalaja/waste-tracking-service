@@ -2,7 +2,7 @@ import * as api from '@wts/api/green-list-waste-export-bulk';
 import { BulkSubmissionCsvRow } from './lib/csv-content';
 import { Response } from '@wts/util/invocation';
 
-export type ContentProcessingTask = {
+export interface ContentProcessingTask {
   batchId: string;
   accountId: string;
   content: {
@@ -10,14 +10,14 @@ export type ContentProcessingTask = {
     compression: 'Snappy' | 'None';
     value: string;
   };
-};
+}
 
-export type ContentSubmissionTask = {
+export interface ContentSubmissionTask {
   batchId: string;
   accountId: string;
-};
+}
 
-export type ContentToBeProcessedTask = {
+export interface ContentToBeProcessedTask {
   id: string;
   time: string;
   type: string;
@@ -29,9 +29,9 @@ export type ContentToBeProcessedTask = {
   traceparent: string;
   tracestate: string;
   data: ContentProcessingTask;
-};
+}
 
-export type ContentToBeSubmittedTask = {
+export interface ContentToBeSubmittedTask {
   id: string;
   time: string;
   type: string;
@@ -43,7 +43,7 @@ export type ContentToBeSubmittedTask = {
   traceparent: string;
   tracestate: string;
   data: ContentSubmissionTask;
-};
+}
 
 export type ValidateCsvContentRequest = api.AddContentToBatchRequest;
 export type ValidateCsvContentResponse = Response<{

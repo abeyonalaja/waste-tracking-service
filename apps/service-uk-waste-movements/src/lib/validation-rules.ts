@@ -873,7 +873,7 @@ export function validateWasteTransportationDetailSection(
   };
 }
 
-type WasteTypeEntry = {
+interface WasteTypeEntry {
   wasteTypeEwcCode?: string;
   wasteTypeWasteDescription?: string;
   wasteTypePhysicalForm?: string;
@@ -889,7 +889,7 @@ type WasteTypeEntry = {
   wasteTypeChemicalAndBiologicalComponentsString?: string;
   wasteTypeChemicalAndBiologicalComponentsConcentrationsString?: string;
   wasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString?: string;
-};
+}
 
 export function validateWasteTypeDetailSection(
   value: WasteTypeDetailFlattened,

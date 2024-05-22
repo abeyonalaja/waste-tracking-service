@@ -5,15 +5,15 @@ import { Logger } from 'winston';
 import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 
-export type BatchRef = {
+export interface BatchRef {
   id: string;
   accountId: string;
-};
+}
 
-export type Input = {
+export interface Input {
   type: string;
   data: Buffer;
-};
+}
 
 export interface UkWasteMovementsBulkSubmissionBackend {
   createBatch(accountId: string, inputs: Input[]): Promise<{ id: string }>;

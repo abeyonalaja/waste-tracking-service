@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react';
 import { UploadForm } from './UploadForm';
 
 jest.mock('@wts/ui/navigation', () => ({
-  useRouter: () => null,
+  useRouter: (): null => null,
 }));
 
 // Second mock of useRouter is required for tests involving the ErrorSummary component
 jest.mock('next/navigation', () => ({
-  useRouter: () => null,
+  useRouter: (): null => null,
 }));
 
 const strings = {
@@ -19,7 +19,7 @@ const strings = {
   summaryLabel: 'There is a problem',
 };
 
-function MockChild() {
+function MockChild(): JSX.Element {
   return <div> Mock Child</div>;
 }
 

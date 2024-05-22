@@ -144,7 +144,7 @@ if (process.env['NODE_ENV'] === 'development') {
         ttl: 60 * 1000,
         ttlAutopurge: false,
         maxSize: 1000,
-        sizeCalculation: () => 1,
+        sizeCalculation: (): number => 1,
       }),
       logger
     ),

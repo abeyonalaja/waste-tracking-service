@@ -13,7 +13,13 @@ function isValidGuid(value: string): boolean {
 }
 
 export function validateToken(filter: UserFilter) {
-  return async function (jwtPayload: JwtPayload) {
+  return async function (
+    jwtPayload: JwtPayload
+  ): Promise<
+    | false
+    | { isValid: false }
+    | { isValid: true; credentials: { accountId: string; subjectId: string } }
+  > {
     const decoded = jwtPayload;
     if (!validateDcidToken(decoded)) {
       return false;

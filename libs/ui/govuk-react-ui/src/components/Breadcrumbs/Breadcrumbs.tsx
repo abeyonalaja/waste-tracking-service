@@ -8,7 +8,10 @@ interface BreadcrumbProps {
   testId?: string;
 }
 
-export const Breadcrumbs = ({ items, testId }: BreadcrumbProps) => {
+export const Breadcrumbs = ({
+  items,
+  testId,
+}: BreadcrumbProps): JSX.Element => {
   return (
     <div className="govuk-breadcrumbs" data-testid={testId}>
       <ol className="govuk-breadcrumbs__list">

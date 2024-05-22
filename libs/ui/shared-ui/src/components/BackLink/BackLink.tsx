@@ -1,25 +1,25 @@
 'use client';
 import { Link, useRouter } from '@wts/ui/navigation';
 
-type Props = {
+interface Props {
   text?: string;
   testId?: string;
   href: string;
   routerBack?: boolean;
-};
+}
 
 export const BackLink = ({
   text = 'Back',
   testId,
   href,
   routerBack,
-}: Props) => {
+}: Props): JSX.Element => {
   const router = useRouter();
   return (
     <Link
       onClick={
         routerBack
-          ? (e) => {
+          ? (e): void => {
               e.preventDefault();
               router.back();
             }

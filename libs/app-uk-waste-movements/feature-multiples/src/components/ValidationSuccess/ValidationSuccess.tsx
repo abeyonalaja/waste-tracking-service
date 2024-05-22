@@ -9,13 +9,13 @@ import {
 import { useTranslations } from 'next-intl';
 import { SubmitButton } from './SubmitButton';
 
-type ValidationSuccessProps = {
+interface ValidationSuccessProps {
   recordCount: number;
   hasCorrectedErrors: boolean;
   hasEstimates: boolean;
   submissionId: string;
   token: string;
-};
+}
 
 export function ValidationSuccess({
   recordCount,
@@ -23,7 +23,7 @@ export function ValidationSuccess({
   hasEstimates = false,
   submissionId,
   token,
-}: ValidationSuccessProps) {
+}: ValidationSuccessProps): JSX.Element {
   const t = useTranslations('multiples.success');
   return (
     <div id="upload-page-success">

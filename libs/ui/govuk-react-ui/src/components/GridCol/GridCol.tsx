@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   size?:
     | 'full'
@@ -14,9 +14,13 @@ type Props = {
     | 'one-quarter-from-desktop'
     | 'three-quarters-from-desktop';
   testId?: string;
-};
+}
 
-export const GridCol = ({ children, size = 'two-thirds', testId }: Props) => {
+export const GridCol = ({
+  children,
+  size = 'two-thirds',
+  testId,
+}: Props): JSX.Element => {
   return (
     <div className={`govuk-grid-column-${size}`} data-testid={testId}>
       {children}

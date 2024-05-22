@@ -16,7 +16,7 @@ export function FileUpload({
   errorLabel,
   errorMessage,
   onChange,
-}: FileUploadProps) {
+}: FileUploadProps): React.ReactElement {
   return (
     <div
       className={

@@ -1,7 +1,7 @@
-type Credential = {
+interface Credential {
   uniqueReference: string;
   dcidSubjectId: string;
-};
+}
 
 export type UserFilter = (credential: Credential) => Promise<boolean>;
 

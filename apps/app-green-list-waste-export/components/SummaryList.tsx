@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { BORDER_COLOUR } from 'govuk-colours';
 
-type SummaryListItem = {
+interface SummaryListItem {
   title: string;
   definition: string;
-};
+}
 
 interface Props {
   content: Array<SummaryListItem>;

@@ -4,7 +4,7 @@ import styles from './Instructions.module.scss';
 import { Link } from '@wts/ui/navigation';
 import { HTML, CSV } from '@wts/ui/shared-ui/server';
 
-export function Instructions() {
+export function Instructions(): React.ReactNode {
   const t = useTranslations('multiples.instructions');
 
   return (

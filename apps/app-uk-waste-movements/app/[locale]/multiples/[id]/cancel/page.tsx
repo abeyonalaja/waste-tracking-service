@@ -14,7 +14,7 @@ export default async function CancelPage({
   params,
 }: {
   params: { id: string };
-}) {
+}): Promise<JSX.Element> {
   const session: Session | null = await getServerSession(options);
   const token = session?.token;
 

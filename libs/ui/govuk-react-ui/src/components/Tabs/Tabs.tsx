@@ -6,18 +6,18 @@ import { createContext } from 'react';
 
 export const TabContext = createContext<string>('');
 
-type Label = {
+interface Label {
   panelId: string;
   label: string;
   href?: string;
-};
+}
 
 interface TabsProps {
   labels: Label[];
   children?: React.ReactNode;
 }
 
-export function Tabs({ labels, children }: TabsProps) {
+export function Tabs({ labels, children }: TabsProps): JSX.Element {
   const [activeTab, setActiveTab] = useState(labels[0].panelId);
 
   return (

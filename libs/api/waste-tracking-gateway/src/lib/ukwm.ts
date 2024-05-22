@@ -9,53 +9,53 @@ export type UkwmPhysicalForm =
 export type UkwmQuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
 
-export type UkwmAddress = {
+export interface UkwmAddress {
   addressLine1: string;
   addressLine2?: string;
   townCity: string;
   postcode: string;
   country: string;
-};
+}
 
-export type UkwmContact = {
+export interface UkwmContact {
   organisationName: string;
   name: string;
   email: string;
   phone: string;
-};
+}
 
-export type UkwmProducerDetail = {
+export interface UkwmProducerDetail {
   reference: string;
   sicCode: string;
   contact: UkwmContact;
   address: UkwmAddress;
-};
+}
 
-export type UkwmReceiverDetail = {
+export interface UkwmReceiverDetail {
   authorizationType: string;
   environmentalPermitNumber: string;
   contact: UkwmContact;
   address: UkwmAddress;
-};
+}
 
-export type UkwmHazardousWasteCode = {
+export interface UkwmHazardousWasteCode {
   code: string;
   name: string;
-};
+}
 
-export type UkwmPop = {
+export interface UkwmPop {
   name: string;
   concentration: number;
   concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
-};
+}
 
-export type UkwmChemicalAndBiologicalComponent = {
+export interface UkwmChemicalAndBiologicalComponent {
   name: string;
   concentration: number;
   concentrationUnit: string;
-};
+}
 
-export type UkwmWasteTypeDetail = {
+export interface UkwmWasteTypeDetail {
   ewcCode: string;
   wasteDescription: string;
   physicalForm: UkwmPhysicalForm;
@@ -67,29 +67,29 @@ export type UkwmWasteTypeDetail = {
   containsPops: boolean;
   hazardousWasteCodes?: UkwmHazardousWasteCode[];
   pops?: UkwmPop[];
-};
+}
 
-export type UkwmExpectedWasteCollectionDate = {
+export interface UkwmExpectedWasteCollectionDate {
   day: string;
   month: string;
   year: string;
-};
+}
 
-export type UkwmWasteCollectionDetail = {
+export interface UkwmWasteCollectionDetail {
   wasteSource: string;
   brokerRegistrationNumber?: string;
   carrierRegistrationNumber?: string;
   localAuthority: string;
   expectedWasteCollectionDate: UkwmExpectedWasteCollectionDate;
   address: UkwmAddress;
-};
+}
 
-export type UkwmWasteTransportationDetail = {
+export interface UkwmWasteTransportationDetail {
   numberAndTypeOfContainers: string;
   specialHandlingRequirements?: string;
-};
+}
 
-export type UkwmSubmission = {
+export interface UkwmSubmission {
   id: string;
   transactionId: string;
   producer: UkwmProducerDetail;
@@ -98,9 +98,9 @@ export type UkwmSubmission = {
   wasteTransportation: UkwmWasteTransportationDetail;
   wasteTypes: UkwmWasteTypeDetail[];
   submissionState: UkwmSubmissionState;
-};
+}
 
-export type UkwmDraft = {
+export interface UkwmDraft {
   id: string;
   wasteMovementId: string;
   producerName: string;
@@ -110,23 +110,23 @@ export type UkwmDraft = {
     month: string;
     year: string;
   };
-};
+}
 
-export type UkwmGetDraftsRequest = {
+export interface UkwmGetDraftsRequest {
   page: number;
   pageSize?: number;
   collectionDate?: Date;
   ewcCode?: string;
   producerName?: string;
   wasteMovementId?: string;
-};
+}
 
-export type UkwmGetDraftsResult = {
+export interface UkwmGetDraftsResult {
   totalRecords: number;
   totalPages: number;
   page: number;
   values: UkwmDraft[];
-};
+}
 
 export type UkwmWasteInformation =
   | { status: 'NotStarted' }
@@ -151,10 +151,10 @@ export type UkwmProducerAndWasteCollectionDetail =
       wasteCollection: UkwmWasteCollectionDetail;
     };
 
-export type UkwmSubmissionDeclaration = {
+export interface UkwmSubmissionDeclaration {
   declarationTimestamp: Date;
   transactionId: string;
-};
+}
 
 export type DraftSubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
@@ -168,12 +168,12 @@ export type UkwmSubmissionStateStatus =
   | 'SubmittedWithActuals'
   | 'UpdatedWithActuals';
 
-export type UkwmSubmissionState = {
+export interface UkwmSubmissionState {
   status: UkwmSubmissionStateStatus;
   timestamp: Date;
-};
+}
 
-export type UkwmDraftSubmission = {
+export interface UkwmDraftSubmission {
   id: string;
   transactionId: string;
   wasteInformation: UkwmWasteInformation;
@@ -181,6 +181,6 @@ export type UkwmDraftSubmission = {
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: UkwmSubmissionState;
-};
+}
 
 export type GetUkwmSubmissionResponse = UkwmDraftSubmission;

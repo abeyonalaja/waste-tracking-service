@@ -6,7 +6,7 @@ export const metadata = {
   title: 'Waste tracking service',
 };
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const t = useTranslations('startPage');
 
   return (

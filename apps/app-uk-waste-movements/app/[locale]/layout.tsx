@@ -16,7 +16,7 @@ interface LayoutProps {
 export default async function RootLayout({
   children,
   params: { locale },
-}: LayoutProps) {
+}: LayoutProps): Promise<JSX.Element> {
   const t = await getTranslations('app');
   const messages = await getMessages();
 

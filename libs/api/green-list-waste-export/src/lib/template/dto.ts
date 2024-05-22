@@ -17,14 +17,14 @@ import {
 } from '../draft';
 import { CustomerReference, PageMetadata } from '../common';
 
-export type TemplateDetail = {
+export interface TemplateDetail {
   name: string;
   description: string;
   created: Date;
   lastModified: Date;
-};
+}
 
-export type Template = {
+export interface Template {
   id: string;
   templateDetails: TemplateDetail;
   wasteDescription: DraftWasteDescription;
@@ -35,7 +35,7 @@ export type Template = {
   ukExitLocation: DraftUkExitLocation;
   transitCountries: DraftTransitCountries;
   recoveryFacilityDetail: DraftRecoveryFacilityDetails;
-};
+}
 
 export type TemplateSummary = Readonly<
   Omit<
@@ -51,13 +51,13 @@ export type TemplateSummary = Readonly<
   >
 >;
 
-export type TemplateSummaryPage = {
+export interface TemplateSummaryPage {
   totalRecords: number;
   totalPages: number;
   currentPage: number;
   pages: PageMetadata[];
   values: ReadonlyArray<TemplateSummary>;
-};
+}
 
 export type TemplateDetailRequestValue = Omit<
   TemplateDetail,

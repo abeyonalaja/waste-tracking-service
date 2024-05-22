@@ -20,17 +20,17 @@ import {
 } from 'components';
 import { isNotEmpty, validateWasteCode } from 'utils/validators';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
-type singleCodeType = {
+interface singleCodeType {
   code: string;
   value: {
     description: any;
   };
-};
+}
 
-type codeType = {
+interface codeType {
   type: string;
   values: Array<singleCodeType>;
-};
+}
 const WasteCodeDesc = () => {
   const { t } = useTranslation();
   const router = useRouter();

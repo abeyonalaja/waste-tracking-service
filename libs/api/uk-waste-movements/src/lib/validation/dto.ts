@@ -72,27 +72,27 @@ export type ErrorCodeData =
       field: Field;
     };
 
-export type FieldFormatError = {
+export interface FieldFormatError {
   field: Field;
   code: number;
   args?: string[];
-};
+}
 
-export type InvalidAttributeCombinationError = {
+export interface InvalidAttributeCombinationError {
   fields: Field[];
   code: number;
-};
+}
 
 export type Value = Omit<
   Submission,
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
-export type Error = {
+export interface Error {
   index: number;
   fieldFormatErrors: FieldFormatError[];
   invalidStructureErrors: InvalidAttributeCombinationError[];
-};
+}
 
 export type ValidationResult =
   | {

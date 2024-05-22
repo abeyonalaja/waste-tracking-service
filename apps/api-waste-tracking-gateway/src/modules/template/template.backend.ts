@@ -15,19 +15,19 @@ import {
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { Logger } from 'winston';
 
-export type SubmissionRef = {
+export interface SubmissionRef {
   id: string;
   accountId: string;
-};
+}
 
-export type TemplateRef = {
+export interface TemplateRef {
   id: string;
   accountId: string;
-};
+}
 
-export type OrderRef = {
+export interface OrderRef {
   order: 'ASC' | 'DESC';
-};
+}
 
 export interface TemplateBackend {
   getTemplates(

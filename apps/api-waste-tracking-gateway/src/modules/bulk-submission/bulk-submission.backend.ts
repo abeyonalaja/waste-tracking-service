@@ -9,15 +9,15 @@ import {
   UpdateBatchResponse,
 } from '@wts/api/green-list-waste-export-bulk';
 
-export type BatchRef = {
+export interface BatchRef {
   id: string;
   accountId: string;
-};
+}
 
-export type Input = {
+export interface Input {
   type: string;
   data: Buffer;
-};
+}
 
 export interface BulkSubmissionBackend {
   createBatch(accountId: string, inputs: Input[]): Promise<{ id: string }>;

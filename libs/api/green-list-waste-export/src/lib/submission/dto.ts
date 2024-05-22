@@ -18,30 +18,32 @@ export type WasteCode =
       code: string;
     };
 
-export type EwcCode = { code: string };
+export interface EwcCode {
+  code: string;
+}
 
 export type NationalCode = OptionalStringInput;
 
 export type WasteQuantityType = 'EstimateData' | 'ActualData';
 
-export type WasteQuantityData = {
+export interface WasteQuantityData {
   quantityType: 'Volume' | 'Weight';
   unit: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
   value: number;
-};
+}
 
 export type CollectionDateType = 'EstimateDate' | 'ActualDate';
 
-export type CollectionDateData = {
+export interface CollectionDateData {
   day: string;
   month: string;
   year: string;
-};
+}
 
-export type TransportDetail = {
+export interface TransportDetail {
   type: 'Road' | 'Air' | 'Sea' | 'Rail' | 'InlandWaterways';
   description?: string;
-};
+}
 
 export type RecoveryFacilityType =
   | {
@@ -68,51 +70,51 @@ export type SubmissionStateStatus1 =
   | 'UpdatedWithActuals'
   | 'Cancelled';
 
-export type WasteDescription = {
+export interface WasteDescription {
   wasteCode: WasteCode;
   ewcCodes: EwcCode[];
   nationalCode?: NationalCode;
   description: string;
-};
+}
 
-export type WasteQuantity = {
+export interface WasteQuantity {
   type: WasteQuantityType;
   estimateData: Partial<WasteQuantityData>;
   actualData: Partial<WasteQuantityData>;
-};
+}
 
-export type ExporterDetail = {
+export interface ExporterDetail {
   exporterAddress: UkAddressDetail;
   exporterContactDetails: UkContactDetail;
-};
+}
 
-export type ImporterDetail = {
+export interface ImporterDetail {
   importerAddressDetails: AddressDetail;
   importerContactDetails: ContactDetail;
-};
+}
 
-export type CollectionDate = {
+export interface CollectionDate {
   type: CollectionDateType;
   estimateDate: Partial<CollectionDateData>;
   actualDate: Partial<CollectionDateData>;
-};
+}
 
-export type Carrier = {
+export interface Carrier {
   addressDetails: AddressDetail;
   contactDetails: ContactDetail;
   transportDetails?: TransportDetail;
-};
+}
 
-export type CollectionDetail = {
+export interface CollectionDetail {
   address: UkAddressDetail;
   contactDetails: UkContactDetail;
-};
+}
 
 export type TransitCountry = string;
 
 export type UkExitLocation = OptionalStringInput;
 
-export type RecoveryFacilityDetail = {
+export interface RecoveryFacilityDetail {
   addressDetails: {
     name: AddressDetail['organisationName'];
     address: AddressDetail['address'];
@@ -120,12 +122,12 @@ export type RecoveryFacilityDetail = {
   };
   contactDetails: ContactDetail;
   recoveryFacilityType: RecoveryFacilityType;
-};
+}
 
-export type SubmissionDeclaration = {
+export interface SubmissionDeclaration {
   declarationTimestamp: Date;
   transactionId: string;
-};
+}
 
 export type SubmissionState =
   | {
@@ -138,7 +140,7 @@ export type SubmissionState =
       cancellationType: CancellationType;
     };
 
-export type Submission = {
+export interface Submission {
   id: string;
   reference: CustomerReference;
   wasteDescription: WasteDescription;
@@ -153,7 +155,7 @@ export type Submission = {
   recoveryFacilityDetail: RecoveryFacilityDetail[];
   submissionDeclaration: SubmissionDeclaration;
   submissionState: SubmissionState;
-};
+}
 
 export type PartialSubmission = Omit<
   Submission,
@@ -227,11 +229,11 @@ export const cancelSubmission: Method = {
   httpVerb: 'POST',
 };
 
-export type NumberOfSubmissions = {
+export interface NumberOfSubmissions {
   completedWithActuals: number;
   completedWithEstimates: number;
   incomplete: number;
-};
+}
 export type GetNumberOfSubmissionsRequest = AccountIdRequest;
 export type GetNumberOfSubmissionsResponse = Response<NumberOfSubmissions>;
 export const getNumberOfSubmissions: Method = {

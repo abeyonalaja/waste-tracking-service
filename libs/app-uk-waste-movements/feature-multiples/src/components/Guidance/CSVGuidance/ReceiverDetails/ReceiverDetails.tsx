@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-export function ReceiverDetails() {
+export function ReceiverDetails(): JSX.Element {
   const page = useTranslations('multiples.guidancePageCSV.receiverDetails');
 
   return (
@@ -18,7 +18,7 @@ export function ReceiverDetails() {
         <a
           href="https://environment.data.gov.uk/public-register/view/search-waste-operations"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {page('contentLinkOne')}
         </a>
@@ -33,7 +33,7 @@ export function ReceiverDetails() {
         <a
           href="https://environment.data.gov.uk/public-register/view/search-waste-exemptions"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {page('contentLinkTwo')}
         </a>

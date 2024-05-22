@@ -4,7 +4,7 @@ import { Link } from '../index';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-type WellKnownObj = {
+export interface WellKnownObj {
   issuer: string;
   authorization_endpoint: string;
   token_endpoint: string;
@@ -17,13 +17,13 @@ type WellKnownObj = {
   id_token_signing_alg_values_supported: Array<string>;
   token_endpoint_auth_methods_supported: Array<string>;
   claims_supported: Array<string>;
-};
+}
 
 interface SignOutLinkProps {
   wellKnownObj: WellKnownObj | string;
 }
 
-export function SignOutLink({ wellKnownObj }: SignOutLinkProps) {
+export function SignOutLink({ wellKnownObj }: SignOutLinkProps): JSX.Element {
   const router = useRouter();
   async function handleSignOut(e: React.MouseEvent) {
     e.preventDefault();

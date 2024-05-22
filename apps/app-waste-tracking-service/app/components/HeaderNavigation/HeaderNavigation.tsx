@@ -2,11 +2,11 @@ import styles from './HeaderNavigation.module.scss';
 import { Link } from '../index';
 import { getServerSession } from 'next-auth';
 import { SignInLink } from './SignInLink';
-import { SignOutLink } from './SignOutLink';
+import { SignOutLink, WellKnownObj } from './SignOutLink';
 
-export async function HeaderNavigation() {
+export async function HeaderNavigation(): Promise<JSX.Element> {
   const session = await getServerSession();
-  function getProfileUrl() {
+  function getProfileUrl(): string {
     if (process.env.DCID_WELLKNOWN) {
       const domain = new URL(process.env.DCID_WELLKNOWN);
       return domain.origin;
@@ -14,7 +14,9 @@ export async function HeaderNavigation() {
     return '';
   }
 
-  async function getSignOutUrl() {
+  async function getSignOutUrl(): Promise<
+    string | { wellKnownObj: WellKnownObj }
+  > {
     if (process.env.DCID_WELLKNOWN) {
       const response = await fetch(process.env.DCID_WELLKNOWN, {
         cache: 'force-cache',
@@ -24,7 +26,7 @@ export async function HeaderNavigation() {
     }
     return '';
   }
-
+  const signOutUrl = await getSignOutUrl();
   if (session) {
     return (
       <nav className={styles.navigation}>
@@ -38,7 +40,9 @@ export async function HeaderNavigation() {
             </Link>
           </li>
           <li>
-            <SignOutLink wellKnownObj={await getSignOutUrl()} />
+            {typeof signOutUrl === 'object' && 'wellKnownObj' in signOutUrl ? (
+              <SignOutLink wellKnownObj={signOutUrl.wellKnownObj} />
+            ) : null}
           </li>
         </ul>
       </nav>

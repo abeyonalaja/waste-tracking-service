@@ -2,11 +2,11 @@ import { AccountIdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { ValidationResult } from '../validation';
 
-export type CustomerReferenceFlattened = {
+export interface CustomerReferenceFlattened {
   reference: string;
-};
+}
 
-export type WasteDescriptionFlattened = {
+export interface WasteDescriptionFlattened {
   baselAnnexIXCode: string;
   oecdCode: string;
   annexIIIACode: string;
@@ -15,16 +15,16 @@ export type WasteDescriptionFlattened = {
   ewcCodes: string;
   nationalCode: string;
   wasteDescription: string;
-};
+}
 
-export type WasteQuantityFlattened = {
+export interface WasteQuantityFlattened {
   wasteQuantityTonnes: string;
   wasteQuantityCubicMetres: string;
   wasteQuantityKilograms: string;
   estimatedOrActualWasteQuantity: string;
-};
+}
 
-export type ExporterDetailFlattened = {
+export interface ExporterDetailFlattened {
   exporterOrganisationName: string;
   exporterAddressLine1: string;
   exporterAddressLine2: string;
@@ -35,9 +35,9 @@ export type ExporterDetailFlattened = {
   exporterContactPhoneNumber: string;
   exporterFaxNumber: string;
   exporterEmailAddress: string;
-};
+}
 
-export type ImporterDetailFlattened = {
+export interface ImporterDetailFlattened {
   importerOrganisationName: string;
   importerAddress: string;
   importerCountry: string;
@@ -45,14 +45,14 @@ export type ImporterDetailFlattened = {
   importerContactPhoneNumber: string;
   importerFaxNumber: string;
   importerEmailAddress: string;
-};
+}
 
-export type CollectionDateFlattened = {
+export interface CollectionDateFlattened {
   wasteCollectionDate: string;
   estimatedOrActualCollectionDate: string;
-};
+}
 
-export type CarriersFlattened = {
+export interface CarriersFlattened {
   firstCarrierOrganisationName: string;
   firstCarrierAddress: string;
   firstCarrierCountry: string;
@@ -98,9 +98,9 @@ export type CarriersFlattened = {
   fifthCarrierEmailAddress: string;
   fifthCarrierMeansOfTransport: string;
   fifthCarrierMeansOfTransportDetails: string;
-};
+}
 
-export type CollectionDetailFlattened = {
+export interface CollectionDetailFlattened {
   wasteCollectionOrganisationName: string;
   wasteCollectionAddressLine1: string;
   wasteCollectionAddressLine2: string;
@@ -111,17 +111,17 @@ export type CollectionDetailFlattened = {
   wasteCollectionContactPhoneNumber: string;
   wasteCollectionFaxNumber: string;
   wasteCollectionEmailAddress: string;
-};
+}
 
-export type ExitLocationFlattened = {
+export interface ExitLocationFlattened {
   whereWasteLeavesUk: string;
-};
+}
 
-export type TransitCountriesFlattened = {
+export interface TransitCountriesFlattened {
   transitCountries: string;
-};
+}
 
-export type RecoveryFacilityDetailFlattened = {
+export interface RecoveryFacilityDetailFlattened {
   interimSiteOrganisationName: string;
   interimSiteAddress: string;
   interimSiteCountry: string;
@@ -178,7 +178,7 @@ export type RecoveryFacilityDetailFlattened = {
   fifthRecoveryFacilityFaxNumber: string;
   fifthRecoveryFacilityEmailAddress: string;
   fifthRecoveryFacilityRecoveryCode: string;
-};
+}
 
 export type SubmissionFlattened = CustomerReferenceFlattened &
   WasteDescriptionFlattened &

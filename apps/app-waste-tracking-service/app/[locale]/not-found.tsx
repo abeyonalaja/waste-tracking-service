@@ -2,7 +2,7 @@ import { Link } from '../components/';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 
-export default function NotFound() {
+export default function NotFound(): JSX.Element {
   const t = useTranslations('404');
 
   return (

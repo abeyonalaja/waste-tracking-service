@@ -12,7 +12,7 @@ interface LayoutProps {
 export default async function RootLayout({
   children,
   params: { locale },
-}: LayoutProps) {
+}: LayoutProps): Promise<React.ReactElement> {
   const session = await getServerSession();
   return (
     <SessionProvider session={session}>

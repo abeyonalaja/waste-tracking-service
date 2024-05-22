@@ -8,15 +8,15 @@ import {
 import { Link } from '@wts/ui/navigation';
 import { useTranslations } from 'next-intl';
 
-type SubmissionConfirmationProps = {
+interface SubmissionConfirmationProps {
   submissionId: string;
   recordCount: number;
-};
+}
 
 export function SubmissionConfirmation({
   submissionId,
   recordCount = 0,
-}: SubmissionConfirmationProps) {
+}: SubmissionConfirmationProps): JSX.Element {
   const t = useTranslations('multiples.confirmation');
   return (
     <>

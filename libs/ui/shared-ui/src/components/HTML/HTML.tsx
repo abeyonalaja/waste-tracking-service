@@ -1,6 +1,6 @@
 import styles from './HTML.module.scss';
 
-export function HTML() {
+export function HTML(): JSX.Element {
   return (
     <svg
       version="1.1"

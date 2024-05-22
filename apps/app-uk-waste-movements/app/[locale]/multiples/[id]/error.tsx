@@ -10,7 +10,7 @@ interface ErrorProps {
   error: Error & { digest?: string };
 }
 
-export default function Error({ error }: ErrorProps) {
+export default function Error({ error }: ErrorProps): JSX.Element {
   const t = useTranslations('error.multiplesError');
 
   useEffect(() => {

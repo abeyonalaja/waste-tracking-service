@@ -27,7 +27,7 @@ enum VIEWS {
   DEFAULT = 0,
 }
 
-type State = {
+interface State {
   data: any;
   isLoading: boolean;
   isError: boolean;
@@ -35,9 +35,9 @@ type State = {
   errors: {
     error?: string;
   };
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -46,7 +46,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: { status: 'Started', values: [] },

@@ -1,4 +1,4 @@
-export type WasteTypeErrorCode = {
+export interface WasteTypeErrorCode {
   emptyEwcCode: number;
   invalidEwcCode: number;
   emptyWasteDescription: number;
@@ -31,7 +31,7 @@ export type WasteTypeErrorCode = {
   charTooManyChemicalAndBiologicalConcentrationUnit: number;
   invalidChemicalAndBiologicalConcentration: number;
   emptyPops: number;
-};
+}
 
 export const wasteTypeEmptyEwcCode = 1;
 export const wasteTypeInvalidEwcCode = 2;

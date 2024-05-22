@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNewWindow } from '@wts/ui/shared-ui';
 
-export type formStrings = {
+export interface formStrings {
   headingOne: string;
   headingTwo: string;
   ratingHeading: string;
@@ -25,24 +25,27 @@ export type formStrings = {
   errorTextAreaDescription: string;
   errorTextArea: string;
   submit: string;
-};
+}
 
 interface FeedbackFormProps {
   strings: formStrings;
   token: string | undefined | null;
 }
 
-type SendFeedbackRequest = {
+interface SendFeedbackRequest {
   feedback?: string;
   rating?: number;
-};
+}
 
-type Error = {
+interface Error {
   text: string;
   href: string;
-};
+}
 
-export function FeedbackForm({ strings, token }: FeedbackFormProps) {
+export function FeedbackForm({
+  strings,
+  token,
+}: FeedbackFormProps): JSX.Element {
   const isNewWindow = useNewWindow();
   const router = useRouter();
   const [isExceedingMaxLength, setIsExceedingMaxLength] = useState(false);
@@ -55,7 +58,7 @@ export function FeedbackForm({ strings, token }: FeedbackFormProps) {
     { text: strings.ratingLabelFour, value: '2' },
     { text: strings.ratingLabelFive, value: '1' },
   ];
-  function validateForm(feedbackTextArea: string | undefined) {
+  function validateForm(feedbackTextArea: string | undefined): boolean {
     if (feedbackTextArea !== undefined && feedbackTextArea.length > 1200) {
       setIsExceedingMaxLength(true);
       setErrors([
@@ -65,7 +68,7 @@ export function FeedbackForm({ strings, token }: FeedbackFormProps) {
     }
     return true;
   }
-  async function onSubmit(data: SendFeedbackRequest) {
+  async function onSubmit(data: SendFeedbackRequest): Promise<void> {
     if (data.rating === undefined && data.feedback === '') {
       isNewWindow ? router.push('/') : router.back();
       return;

@@ -4,7 +4,7 @@ interface LoadingProps {
   centered?: boolean;
 }
 
-export function Loading({ centered }: LoadingProps) {
+export function Loading({ centered }: LoadingProps): JSX.Element {
   if (centered) {
     return (
       <div className={styles.centered}>

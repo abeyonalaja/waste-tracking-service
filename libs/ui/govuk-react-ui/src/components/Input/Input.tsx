@@ -4,7 +4,7 @@ import { Label } from '../Label';
 import { Hint } from '../Hint';
 import { ErrorMessage } from '../ErrorMessage';
 
-type Props = {
+interface Props {
   id: string;
   name: string;
   value?: string;
@@ -12,7 +12,7 @@ type Props = {
   hint?: string;
   error?: string;
   testId?: string;
-};
+}
 
 export const Input = ({
   id,
@@ -22,7 +22,7 @@ export const Input = ({
   hint,
   error,
   testId,
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <FormGroup error={!!error} testId={testId}>
       {label && <Label text={label} inputId={id} />}

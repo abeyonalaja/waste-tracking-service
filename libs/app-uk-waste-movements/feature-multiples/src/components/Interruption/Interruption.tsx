@@ -5,7 +5,7 @@ import { InterruptionButton } from '../InterruptionButton';
 import { Link } from '@wts/ui/navigation';
 import { HTML } from '@wts/ui/shared-ui/server';
 
-export function Interruption() {
+export function Interruption(): JSX.Element {
   const strings = useTranslations('multiples.interruption');
 
   return (

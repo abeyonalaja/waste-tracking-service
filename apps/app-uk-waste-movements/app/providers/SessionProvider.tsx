@@ -9,7 +9,7 @@ export default function SessionProvider({
 }: {
   children: React.ReactNode;
   session: Session | null;
-}) {
+}): JSX.Element {
   return (
     <AuthSessionProvider session={session}>{children}</AuthSessionProvider>
   );

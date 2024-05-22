@@ -33,7 +33,7 @@ export function UploadForm({
   totalErrorCount = 0,
   token,
   children,
-}: UploadFormProps) {
+}: UploadFormProps): React.ReactNode {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -41,7 +41,7 @@ export function UploadForm({
     validationError ? [{ text: validationError, href: '#file-upload' }] : null
   );
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>): void {
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
@@ -54,7 +54,9 @@ export function UploadForm({
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
     e.preventDefault();
     setButtonDisabled(true);
     setErrors(null);

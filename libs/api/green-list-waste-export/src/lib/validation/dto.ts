@@ -13,26 +13,26 @@ type Field =
   | 'TransitCountries'
   | 'RecoveryFacilityDetail';
 
-export type FieldFormatError = {
+export interface FieldFormatError {
   field: Field;
   message: string;
-};
+}
 
-export type InvalidAttributeCombinationError = {
+export interface InvalidAttributeCombinationError {
   fields: Field[];
   message: string;
-};
+}
 
 export type Value = Omit<
   Submission,
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
-export type Error = {
+export interface Error {
   index: number;
   fieldFormatErrors: FieldFormatError[];
   invalidStructureErrors: InvalidAttributeCombinationError[];
-};
+}
 
 export type ValidationResult =
   | {

@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 import { Tag } from '../Tag';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   tag: string;
   testId?: string;
-};
+}
 
-export const PhaseBanner = ({ children, tag, testId }: Props) => {
+export const PhaseBanner = ({ children, tag, testId }: Props): JSX.Element => {
   return (
     <div className="govuk-phase-banner" data-testid={testId}>
       <p className="govuk-phase-banner__content">

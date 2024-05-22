@@ -125,7 +125,7 @@ export const CollectionDateValidationErrorMessages = {
   missingType: "Enter if this is an 'estimate' or 'actual' collection date",
 };
 
-type CarrierErrorMessages = {
+interface CarrierErrorMessages {
   emptyOrganisationName: string;
   charTooManyOrganisationName: string;
   emptyAddress: string;
@@ -142,7 +142,7 @@ type CarrierErrorMessages = {
   invalidEmail: string;
   emptyTransport: string;
   charTooManyTransportDescription: string;
-};
+}
 
 export const CarrierValidationErrorMessages: (
   carrierNumber: number
@@ -230,7 +230,7 @@ export const TransitCountriesValidationErrorMessages = {
     'The transit country cannot be the same as the importer country',
 };
 
-type RecoveryFacilityErrorMessages = {
+interface RecoveryFacilityErrorMessages {
   emptyOrganisationName: string;
   charTooManyOrganisationName: string;
   emptyAddress: string;
@@ -247,7 +247,7 @@ type RecoveryFacilityErrorMessages = {
   invalidEmail: string;
   emptyCode: string;
   invalidCode: string;
-};
+}
 
 export const RecoveryFacilityDetailValidationErrorMessages: (
   recoveryFacilityType: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',

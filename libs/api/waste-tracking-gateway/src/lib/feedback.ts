@@ -1,3 +1,3 @@
-export type SendFeedbackResponse = {
+export interface SendFeedbackResponse {
   response: string;
-};
+}

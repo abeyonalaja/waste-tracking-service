@@ -20,16 +20,16 @@ import { format } from 'date-fns';
 import useRefDataLookup from '../../utils/useRefDataLookup';
 import useApiConfig from 'utils/useApiConfig';
 
-type State = {
+interface State {
   data: any | null;
   isLoading: boolean;
   isError: boolean;
-};
+}
 
-type Action = {
+interface Action {
   type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
   payload?: any;
-};
+}
 
 const initialWasteDescState: State = {
   data: null,

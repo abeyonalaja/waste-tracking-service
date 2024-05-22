@@ -22,17 +22,17 @@ const StyledTextArea = styled(TextArea)`
   }
 `;
 
-type SendFeedbackRequest = {
+interface SendFeedbackRequest {
   rating?: number;
   feedback?: string;
-};
-type FeedbackFormProps = {
+}
+interface FeedbackFormProps {
   onSubmit: (
     data: SendFeedbackRequest
   ) => Promise<SubmitHandler<SendFeedbackRequest>>;
   validateFeedback: (feedback: string) => string | undefined;
   isPending: boolean;
-};
+}
 
 export function FeedbackForm({
   onSubmit,

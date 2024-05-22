@@ -2,9 +2,11 @@ import { AccountIdRequest, SectionSummary } from '@wts/api/common';
 
 export type CustomerReference = string;
 
-type EwcCode = { code: string };
+interface EwcCode {
+  code: string;
+}
 
-export type WasteDescriptionData = {
+export interface WasteDescriptionData {
   wasteCode:
     | { type: 'NotApplicable' }
     | {
@@ -14,9 +16,9 @@ export type WasteDescriptionData = {
   ewcCodes: EwcCode[];
   nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };
   description: string;
-};
+}
 
-export type ExporterDetailData = {
+export interface ExporterDetailData {
   exporterAddress: {
     addressLine1: string;
     addressLine2?: string;
@@ -31,9 +33,9 @@ export type ExporterDetailData = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
-export type ImporterDetailData = {
+export interface ImporterDetailData {
   importerAddressDetails: {
     organisationName: string;
     address: string;
@@ -45,7 +47,7 @@ export type ImporterDetailData = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
 export type WasteDescription =
   | { status: 'NotStarted' }
@@ -62,7 +64,7 @@ export type ImporterDetail =
   | ({ status: 'Started' } & Partial<ImporterDetailData>)
   | ({ status: 'Complete' } & ImporterDetailData);
 
-export type CarrierData = {
+export interface CarrierData {
   addressDetails: {
     organisationName: string;
     address: string;
@@ -78,7 +80,7 @@ export type CarrierData = {
     type: 'Road' | 'Air' | 'Sea' | 'Rail' | 'InlandWaterways';
     description?: string;
   };
-};
+}
 
 export type CarrierPartial = { id: string } & Partial<CarrierData>;
 export type Carrier = { id: string } & CarrierData;
@@ -99,7 +101,7 @@ export type Carriers =
       values: Carrier[];
     };
 
-export type CollectionDetailData = {
+export interface CollectionDetailData {
   address: {
     addressLine1: string;
     addressLine2?: string;
@@ -114,7 +116,7 @@ export type CollectionDetailData = {
     phoneNumber: string;
     faxNumber?: string;
   };
-};
+}
 
 export type CollectionDetail =
   | { status: 'NotStarted' }
@@ -141,7 +143,7 @@ export type TransitCountries =
       values: TransitCountry[];
     };
 
-export type RecoveryFacilityData = {
+export interface RecoveryFacilityData {
   addressDetails: {
     name: string;
     address: string;
@@ -166,7 +168,7 @@ export type RecoveryFacilityData = {
         type: 'RecoveryFacility';
         recoveryCode: string;
       };
-};
+}
 
 export type RecoveryFacilityPartial = {
   id: string;
@@ -196,7 +198,7 @@ export type WTSSummary = Readonly<{
   recoveryFacilityDetail: SectionSummary;
 }>;
 
-export type CollectionDateData = {
+export interface CollectionDateData {
   type: 'EstimateDate' | 'ActualDate';
   estimateDate: {
     day?: string;
@@ -208,7 +210,7 @@ export type CollectionDateData = {
     month?: string;
     year?: string;
   };
-};
+}
 
 export type CollectionDate =
   | { status: 'NotStarted' }
@@ -217,7 +219,7 @@ export type CollectionDate =
       value: CollectionDateData;
     };
 
-export type WasteQuantityData = {
+export interface WasteQuantityData {
   type: 'EstimateData' | 'ActualData';
   estimateData: {
     quantityType?: 'Volume' | 'Weight';
@@ -229,7 +231,7 @@ export type WasteQuantityData = {
     unit?: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
     value?: number;
   };
-};
+}
 
 export type WasteQuantity =
   | { status: 'CannotStart' }
@@ -266,10 +268,10 @@ export type SubmissionConfirmation =
       confirmation: boolean;
     };
 
-export type SubmissionDeclarationData = {
+export interface SubmissionDeclarationData {
   declarationTimestamp: Date;
   transactionId: string;
-};
+}
 
 export type SubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
@@ -320,7 +322,7 @@ export type SubmissionState =
       cancellationType: CancellationType;
     };
 
-export type SubmissionBase = {
+export interface SubmissionBase {
   id: string;
   wasteDescription: WasteDescription;
   exporterDetail: ExporterDetail;
@@ -330,7 +332,7 @@ export type SubmissionBase = {
   ukExitLocation: ExitLocation;
   transitCountries: TransitCountries;
   recoveryFacilityDetail: RecoveryFacilityDetail;
-};
+}
 
 export interface DraftSubmission extends SubmissionBase {
   reference: CustomerReference;
@@ -341,7 +343,7 @@ export interface DraftSubmission extends SubmissionBase {
   submissionState: DraftSubmissionState;
 }
 
-export type Submission = {
+export interface Submission {
   id: string;
   reference: CustomerReference;
   wasteDescription: WasteDescriptionData;
@@ -356,7 +358,7 @@ export type Submission = {
   recoveryFacilityDetail: RecoveryFacilityData[];
   submissionDeclaration: SubmissionDeclarationData;
   submissionState: SubmissionState;
-};
+}
 
 export type SubmissionSummary = Readonly<{
   id: string;
@@ -367,24 +369,24 @@ export type SubmissionSummary = Readonly<{
   submissionState: DraftSubmissionState;
 }>;
 
-export type PageMetadata = {
+export interface PageMetadata {
   pageNumber: number;
   token: string;
-};
+}
 
-export type SubmissionSummaryPage = {
+export interface SubmissionSummaryPage {
   totalRecords: number;
   totalPages: number;
   currentPage: number;
   pages: PageMetadata[];
   values: ReadonlyArray<SubmissionSummary>;
-};
+}
 
-export type NumberOfSubmissions = {
+export interface NumberOfSubmissions {
   completedWithActuals: number;
   completedWithEstimates: number;
   incomplete: number;
-};
+}
 
 export type PutWasteDescriptionRequest = WasteDescription;
 export type PutWasteDescriptionResponse = WasteDescription;

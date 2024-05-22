@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   headingLevel?: number;
   title?: string;
   id?: string;
   testId?: string;
   success?: boolean;
-};
+}
 
 export const NotificationBanner = ({
   children,
@@ -16,7 +16,7 @@ export const NotificationBanner = ({
   id,
   testId,
   success,
-}: Props) => {
+}: Props): JSX.Element => {
   const HeadingLevel = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return (
     <div

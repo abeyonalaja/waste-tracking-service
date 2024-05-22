@@ -22,7 +22,22 @@
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "cache": true,
       "options": {
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "collectCoverage": true,
+        "coverageReporters": ["lcov", "text"],
+        "coverageThreshold": {
+          "global": {
+            "branches": 30,
+            "functions": 30,
+            "lines": 30,
+            "statements": 30
+          }
+        },
+        "collectCoverageFrom": [
+          "**/*.{ts,tsx}",
+          "!**/*.spec.{ts,tsx}",
+          "!**/node_modules/**"
+        ]
       },
       "configurations": {
         "ci": {

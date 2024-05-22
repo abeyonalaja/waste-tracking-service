@@ -1,47 +1,50 @@
 import { Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 
-export type LanguageDescription = {
+export interface LanguageDescription {
   en: string;
   cy: string;
-};
+}
 
-export type WasteCode = {
+export interface WasteCode {
   code: string;
   value: {
     description: LanguageDescription;
   };
-};
+}
 
-export type WasteCodeType = { type: string; values: WasteCode[] };
+export interface WasteCodeType {
+  type: string;
+  values: WasteCode[];
+}
 
-export type Country = {
+export interface Country {
   name: string;
-};
+}
 
-export type RecoveryCode = {
+export interface RecoveryCode {
   code: string;
   value: {
     description: LanguageDescription;
     interim: boolean;
   };
-};
+}
 
-export type Pop = {
+export interface Pop {
   name: LanguageDescription;
-};
-export type LocalAuthority = {
+}
+export interface LocalAuthority {
   name: LanguageDescription;
   country: LanguageDescription;
-};
+}
 
-export type GetCountriesRequest = {
+export interface GetCountriesRequest {
   includeUk?: boolean;
-};
+}
 
-export type GetEWCCodesRequest = {
+export interface GetEWCCodesRequest {
   includeHazardous?: boolean;
-};
+}
 
 export type GetWasteCodesResponse = Response<WasteCodeType[]>;
 export type GetEWCCodesResponse = Response<WasteCode[]>;

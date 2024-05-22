@@ -52,7 +52,7 @@ const VIEWS = {
   EDIT_ADDRESS: 6,
 };
 
-type State = {
+interface State {
   data: GetCollectionDetailResponse;
   addressData: Array<object>;
   isLoading: boolean;
@@ -63,9 +63,9 @@ type State = {
     postcode?: string;
     selectedAddress?: string;
   };
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -76,7 +76,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: null,

@@ -1,13 +1,18 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   size?: 's' | 'm' | 'l';
   mb?: number;
   children?: ReactNode;
   testId?: string;
-};
+}
 
-export const Paragraph = ({ size = 'm', mb, children, testId }: Props) => {
+export const Paragraph = ({
+  size = 'm',
+  mb,
+  children,
+  testId,
+}: Props): JSX.Element => {
   return (
     <p
       className={

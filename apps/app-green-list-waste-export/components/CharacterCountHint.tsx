@@ -1,11 +1,11 @@
 import { HintText, ErrorText } from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 
-type CharacterCountHintProps = {
+interface CharacterCountHintProps {
   currentCount: number;
   maxCount: number;
   id: string;
-};
+}
 
 export function CharacterCountHint({
   currentCount,

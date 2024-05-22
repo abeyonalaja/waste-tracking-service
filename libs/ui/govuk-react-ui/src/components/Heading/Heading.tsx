@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   size?: 's' | 'm' | 'l' | 'xl';
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   children?: ReactNode;
   testId?: string;
   id?: string;
-};
+}
 
 export const Heading = ({
   size = 'l',
@@ -14,7 +14,7 @@ export const Heading = ({
   children,
   testId,
   id,
-}: Props) => {
+}: Props): JSX.Element => {
   const HeadingLevel = `h${level}` as keyof JSX.IntrinsicElements;
   return (
     <HeadingLevel

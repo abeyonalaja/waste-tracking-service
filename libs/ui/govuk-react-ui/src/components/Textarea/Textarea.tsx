@@ -3,7 +3,7 @@ import { Label } from '../Label';
 import { Hint } from '../Hint';
 import { ErrorMessage } from '../ErrorMessage';
 
-type Props = {
+interface Props {
   id: string;
   name: string;
   value?: string;
@@ -12,7 +12,7 @@ type Props = {
   hint?: string;
   error?: string;
   testId?: string;
-};
+}
 
 export const Textarea = ({
   id,
@@ -23,7 +23,7 @@ export const Textarea = ({
   hint,
   error,
   testId,
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <FormGroup error={!!error}>
       {label && <Label text={label} inputId={id} />}
@@ -35,6 +35,8 @@ export const Textarea = ({
         name={name}
         rows={rows}
         data-testid={testId}
+        title={label}
+        placeholder={hint}
       >
         {value}
       </textarea>

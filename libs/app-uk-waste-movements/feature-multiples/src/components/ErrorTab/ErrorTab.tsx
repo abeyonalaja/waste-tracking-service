@@ -8,14 +8,14 @@ import { ErrorRow } from '../ErrorRow';
 import type { ErrorRowStrings } from '../ErrorRow/ErrorRow';
 import styles from './ErrorTab.module.scss';
 
-type ErrorTabStrings = {
+interface ErrorTabStrings {
   columnType: string;
   rowType: string;
   errorType: string;
   errorAmount: string;
   action: string;
   rowStrings: ErrorRowStrings;
-};
+}
 
 interface ErrorTabProps {
   type: 'column' | 'row';
@@ -25,7 +25,11 @@ interface ErrorTabProps {
   strings: ErrorTabStrings;
 }
 
-export function ErrorTab({ type, errors, strings }: ErrorTabProps) {
+export function ErrorTab({
+  type,
+  errors,
+  strings,
+}: ErrorTabProps): JSX.Element {
   return (
     <table
       className={`govuk-table ${

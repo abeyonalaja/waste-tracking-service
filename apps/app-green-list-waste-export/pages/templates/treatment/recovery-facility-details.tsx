@@ -46,16 +46,16 @@ const VIEWS = {
   CONFIRM_DELETE: 5,
 };
 
-type State = {
+interface State {
   data: GetRecoveryFacilityDetailResponse;
   facilityData: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
   errors: any;
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -67,7 +67,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: null,
@@ -149,7 +149,7 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-type optionType = {
+interface optionType {
   code: string;
   value: {
     description: {
@@ -157,7 +157,7 @@ type optionType = {
       cy?: string;
     };
   };
-};
+}
 
 const RecoveryFacilityDetails = () => {
   const { t } = useTranslation();

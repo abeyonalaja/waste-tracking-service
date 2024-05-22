@@ -15,8 +15,12 @@ import {
 } from '../submission';
 import { CustomerReference, RecordState, RecordSummaryPage } from '../common';
 
-type CarrierIdRequest = { carrierId: string };
-type RfdIdRequest = { rfdId: string };
+interface CarrierIdRequest {
+  carrierId: string;
+}
+interface RfdIdRequest {
+  rfdId: string;
+}
 
 export type DraftWasteQuantityType =
   | 'NotApplicable'
@@ -135,7 +139,7 @@ export type DraftSubmissionDeclaration =
       values: SubmissionDeclaration;
     };
 
-export type DraftSubmission = {
+export interface DraftSubmission {
   id: string;
   reference: CustomerReference;
   wasteDescription: DraftWasteDescription;
@@ -151,7 +155,7 @@ export type DraftSubmission = {
   submissionConfirmation: DraftSubmissionConfirmation;
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: RecordState;
-};
+}
 
 export type DraftSubmissionSummary = Readonly<
   Omit<

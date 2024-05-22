@@ -11,7 +11,7 @@ jest.mock('next-auth/next', () => ({
 
 jest.mock('@wts/ui/navigation', () => ({
   ...jest.requireActual('@wts/ui/navigation'),
-  useRouter: () => jest.fn(),
+  useRouter: (): jest.Mock => jest.fn(),
 }));
 
 const messages = {

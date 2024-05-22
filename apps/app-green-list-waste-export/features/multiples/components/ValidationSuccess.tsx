@@ -8,10 +8,10 @@ import {
   ButtonGroup,
 } from 'components';
 
-type ValidationSuccessProps = {
+interface ValidationSuccessProps {
   recordCount: number;
   hasCorrectedErrors: boolean;
-};
+}
 
 export function ValidationSuccess({
   recordCount,

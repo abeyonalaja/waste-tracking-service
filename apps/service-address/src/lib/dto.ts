@@ -1,4 +1,4 @@
-type Header = {
+interface Header {
   query: string;
   offset: string;
   totalresults: string;
@@ -7,9 +7,9 @@ type Header = {
   lr: string;
   maxresults: string;
   matching_totalresults: string;
-};
+}
 
-type Address = {
+interface Address {
   AddressLine: string;
   SubBuildingName?: string;
   BuildingNumber?: string;
@@ -26,13 +26,13 @@ type Address = {
   Match: string;
   MatchDescription: string;
   Language: string;
-};
+}
 
-type Result = {
+interface Result {
   Address: Address;
-};
+}
 
-type Info = {
+interface Info {
   id: string;
   dateTime: string;
   method: string;
@@ -40,7 +40,7 @@ type Info = {
   url: string;
   nodeID: string;
   atomID: string;
-};
+}
 
 export type GetAddressesResponse =
   | {
@@ -50,12 +50,12 @@ export type GetAddressesResponse =
     }
   | undefined;
 
-type Error = {
+interface Error {
   statuscode: string;
   message: string;
-};
+}
 
-export type GetAddressesErrorResponse = {
+export interface GetAddressesErrorResponse {
   error: Error;
   _info: Info;
-};
+}

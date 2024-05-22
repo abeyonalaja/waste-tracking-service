@@ -4,19 +4,19 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Link, useRouter } from '@wts/ui/navigation';
 import { useNewWindow } from '@wts/ui/shared-ui';
 
-export type errorStrings = {
+export interface errorStrings {
   heading: string;
   paragraphOne: string;
   paragraphTwo: string;
   backLink: string;
   backLinkNewWindow: string;
-};
+}
 
-type FeedbackErrorProps = {
+interface FeedbackErrorProps {
   strings: errorStrings;
-};
+}
 
-export function FeedbackError({ strings }: FeedbackErrorProps) {
+export function FeedbackError({ strings }: FeedbackErrorProps): JSX.Element {
   const router = useRouter();
   const isNewWindow = useNewWindow();
 

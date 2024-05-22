@@ -38,9 +38,9 @@ export type WasteTransportationDetailFlattened =
   bulkApi.WasteTransportationDetailFlattened;
 export type WasteTypeDetailFlattened = bulkApi.WasteTypeDetailFlattened;
 
-export type SubmissionValidationReferenceData = {
+export interface SubmissionValidationReferenceData {
   hazardousCodes: WasteCode[];
   pops: Pop[];
   ewcCodes: WasteCode[];
   localAuthorities: LocalAuthority[];
-};
+}

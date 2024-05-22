@@ -26,7 +26,7 @@ const VIEWS = {
   DEFAULT: 1,
 };
 
-type State = {
+interface State {
   data: any;
   isLoading: boolean;
   isError: boolean;
@@ -34,9 +34,9 @@ type State = {
   errors: {
     reference?: string;
   };
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -45,7 +45,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: { status: 'Started', values: [] },

@@ -24,9 +24,9 @@ describe('Small Radio List component', () => {
 
     expect(getByText('Choose an option')).toBeTruthy();
 
-    options.forEach((option) => {
+    for (const option of options) {
       expect(getByText(option)).toBeTruthy();
-    });
+    }
   });
 
   test('calls onChange callback when a radio button is selected', () => {

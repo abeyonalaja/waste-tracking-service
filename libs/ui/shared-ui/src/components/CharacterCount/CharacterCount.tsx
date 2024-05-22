@@ -1,7 +1,7 @@
 'use client';
 import { useFormContext } from 'react-hook-form';
 
-type CharacterCountProps = {
+interface CharacterCountProps {
   id: string;
   formName: string;
   maxCount: number;
@@ -16,7 +16,7 @@ type CharacterCountProps = {
   headingSize?: 'l' | 'm' | 's';
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   testId?: string;
-};
+}
 
 export const CharacterCount = ({
   id,
@@ -33,7 +33,7 @@ export const CharacterCount = ({
   headingSize = 'm',
   headingLevel = 2,
   testId,
-}: CharacterCountProps) => {
+}: CharacterCountProps): JSX.Element => {
   const { register, watch } = useFormContext();
 
   let countText = `${charsLeftPartOne} ${maxCount} ${charsLeftPartTwo}`;

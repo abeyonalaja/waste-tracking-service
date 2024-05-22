@@ -38,7 +38,7 @@ const ActionLink = styled.div`
   margin-bottom: 7px;
 `;
 
-type State = {
+interface State {
   data: any;
   showView: number;
   isLoading: boolean;
@@ -46,9 +46,9 @@ type State = {
   errors: {
     confirmRemove: string;
   };
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -56,7 +56,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const manageTemplatesState: State = {
   data: null,

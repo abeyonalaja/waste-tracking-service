@@ -1,94 +1,94 @@
-export type GenerateAccessTokenResponse = {
+export interface GenerateAccessTokenResponse {
   access_token: string;
   token_type: string;
   expires_in: string;
   scope: string;
-};
+}
 
-export type GenerateAccessTokenErrorResponse = {
+export interface GenerateAccessTokenErrorResponse {
   error: string;
   error_description: string;
-};
+}
 
-export type GenerateSurveySessionResponse = {
+export interface GenerateSurveySessionResponse {
   result: Result;
   meta: Meta;
-};
+}
 
-type Result = {
+interface Result {
   sessionId: string;
   questions: Question[];
   embeddedData: EmbeddedData;
   responses: Response[];
   done: boolean;
-};
+}
 
-type Question = {
+interface Question {
   questionID: string;
   type: string;
   display: string;
   options?: Option[];
   choices?: Choice[];
-};
+}
 
-type Option = {
+interface Option {
   columnLabels?: ColumnLabel[];
   multiSelect: boolean;
-};
+}
 
-type ColumnLabel = {
+interface ColumnLabel {
   test: string;
-};
+}
 
-export type Choice = {
+export interface Choice {
   choiceId: string;
   selected?: boolean;
   text?: string;
-};
+}
 
-type Meta = {
+interface Meta {
   requestId: string;
   httpStatus: string;
   error?: Error;
   notice?: string;
-};
+}
 
-export type SurveySessionErrorResponse = {
+export interface SurveySessionErrorResponse {
   meta: Meta;
-};
+}
 
-type Error = {
+interface Error {
   errorMessage: string;
   errorCode: string;
-};
+}
 
-export type SurveyResponse = {
+export interface SurveyResponse {
   result: string;
   meta: Meta;
-};
+}
 
-export type FeedbackResponse = {
+export interface FeedbackResponse {
   response: string;
-};
+}
 
-export type EmbeddedData = {
+export interface EmbeddedData {
   edKey: string;
   clientID: string;
-};
+}
 
-export type SurveyErrorResponse = {
+export interface SurveyErrorResponse {
   meta: Meta;
-};
+}
 
-export type SurveyData = {
+export interface SurveyData {
   advance: boolean;
   responses: {
     QID5?: QID5;
     QID6?: string;
   };
-};
+}
 
-export type QID5 = {
+export interface QID5 {
   1: {
     selected: boolean;
   };
@@ -104,4 +104,4 @@ export type QID5 = {
   5: {
     selected: boolean;
   };
-};
+}

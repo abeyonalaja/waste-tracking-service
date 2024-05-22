@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
-import { server } from '@hapi/hapi';
+import { Lifecycle, ReqRefDefaults, server } from '@hapi/hapi';
 import { jest } from '@jest/globals';
 import winston from 'winston';
 import {
@@ -45,7 +45,10 @@ beforeAll(async () => {
 
   app.auth.scheme('mock', function () {
     return {
-      authenticate: async function (_, h) {
+      authenticate: async function (
+        _,
+        h
+      ): Promise<Lifecycle.ReturnValueTypes<ReqRefDefaults>> {
         return h.authenticated({ credentials: { accountId } });
       },
     };

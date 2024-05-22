@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children: ReactNode;
   testId?: string;
-};
+}
 
-export const WarningText = ({ children, testId }: Props) => {
+export const WarningText = ({ children, testId }: Props): JSX.Element => {
   return (
     <div className="govuk-warning-text" data-testid={testId}>
       <span className="govuk-warning-text__icon" aria-hidden="true">

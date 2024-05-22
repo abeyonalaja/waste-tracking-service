@@ -20,15 +20,15 @@ import {
   WasteQuantity,
 } from '../model';
 
-export type SubmissionBasePlusId = {
+export interface SubmissionBasePlusId {
   submissionBase: SubmissionBase;
   id: string;
-};
+}
 
 export function setWasteQuantityUnit(
   wasteQuantity: WasteQuantity,
   submission: Submission
-) {
+): void {
   if (submission.wasteDescription.wasteCode.type === 'NotApplicable') {
     if (wasteQuantity.type === 'ActualData') {
       if (wasteQuantity.actualData?.quantityType === 'Volume') {
@@ -63,7 +63,7 @@ export function setWasteQuantityUnit(
 export function setDraftWasteQuantityUnit(
   wasteQuantity: DraftWasteQuantity,
   submission: DraftSubmission
-) {
+): void {
   if (
     submission.wasteDescription.status !== 'NotStarted' &&
     wasteQuantity.status !== 'CannotStart' &&
@@ -105,7 +105,9 @@ export function setDraftWasteQuantityUnit(
   }
 }
 
-export function isCollectionDateValid(date: DraftSubmission['collectionDate']) {
+export function isCollectionDateValid(
+  date: DraftSubmission['collectionDate']
+): boolean {
   if (date.status !== 'NotStarted') {
     const {
       day: dayStr,

@@ -4,19 +4,19 @@ import { Button } from '@wts/ui/govuk-react-ui';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-type SubmitButtonsProps = {
+interface SubmitButtonsProps {
   buttonText: string;
   submissionId: string;
   token: string | null | undefined;
   secondary?: boolean;
-};
+}
 
 export function SubmitButton({
   buttonText,
   submissionId,
   token,
   secondary = false,
-}: SubmitButtonsProps) {
+}: SubmitButtonsProps): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [pending, setPending] = useState(false);

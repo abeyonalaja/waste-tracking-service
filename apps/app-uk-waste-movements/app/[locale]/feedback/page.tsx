@@ -20,7 +20,7 @@ export default async function Index({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}): Promise<JSX.Element> {
   const t = await getTranslations('feedbackPage');
   const session = await getServerSession(options);
   const token = session?.token;

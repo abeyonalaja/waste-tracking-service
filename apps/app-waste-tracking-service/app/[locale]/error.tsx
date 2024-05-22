@@ -8,7 +8,7 @@ interface ErrorPageProps {
   reset: () => void;
 }
 
-export default function Error({ error }: ErrorPageProps) {
+export default function Error({ error }: ErrorPageProps): JSX.Element {
   // TODO: Add error page content and translation
   // Put in error recovery button
 

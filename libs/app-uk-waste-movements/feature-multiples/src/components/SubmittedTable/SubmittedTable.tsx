@@ -15,23 +15,23 @@ import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from './SubmittedTable.module.scss';
 
-type TableStrings = {
+interface TableStrings {
   headerOne: string;
   headerTwo: string;
   headerThree: string;
   headerFour: string;
   headerFive: string;
   action: string;
-};
+}
 
-export type SubmittedPageFormData = {
+export interface SubmittedPageFormData {
   wasteMovementId: string;
   day: number;
   month: number;
   year: number;
   ewcCode: string;
   producerName: string;
-};
+}
 
 interface SubmittedTableProps {
   submissions: UkwmSubmissionReference[];

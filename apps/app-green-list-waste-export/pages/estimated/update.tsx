@@ -20,16 +20,16 @@ import {
 import { Submission } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
-type State = {
+interface State {
   data: Submission;
   isLoading: boolean;
   isError: boolean;
-};
+}
 
-type Action = {
+interface Action {
   type: 'DATA_FETCH_INIT' | 'DATA_FETCH_SUCCESS' | 'DATA_FETCH_FAILURE';
   payload?: Submission;
-};
+}
 
 const initialState: State = {
   data: null,

@@ -1,4 +1,4 @@
-export type BulkSubmissionCsvRow = {
+export interface BulkSubmissionCsvRow {
   reference: string;
   baselAnnexIXCode: string;
   oecdCode: string;
@@ -144,7 +144,7 @@ export type BulkSubmissionCsvRow = {
   fifthRecoveryFacilityFaxNumber: string;
   fifthRecoveryFacilityEmailAddress: string;
   fifthRecoveryFacilityRecoveryCode: string;
-};
+}
 
 export const headersFormatted = [
   'reference',

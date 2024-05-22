@@ -31,15 +31,15 @@ import { formatDate } from 'utils/formatDate';
 import useRefDataLookup from '../../utils/useRefDataLookup';
 import useApiConfig from 'utils/useApiConfig';
 
-type State = {
+interface State {
   data: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
   errors: null;
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
@@ -51,7 +51,7 @@ type Action = {
     | 'ERRORS_UPDATE'
     | 'REMOVE_WASTE_CARRIER';
   payload?: any;
-};
+}
 
 const VIEWS = {
   LIST: 1,

@@ -7,9 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
 import { NotFoundError } from '../../lib/errors';
 
-export type UkwmSubmissionRef = {
+export interface UkwmSubmissionRef {
   id: string;
-};
+}
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
   id: uuidv4(),

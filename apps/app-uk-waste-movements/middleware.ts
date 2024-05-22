@@ -19,8 +19,8 @@ const authMiddleware = withAuth((req) => intlMiddleware(req), {
     signIn: '/auth/signin',
   },
 });
-
-export default function middleware(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function middleware(req: NextRequest): any {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages.join('|')})/?$`,
     'i'

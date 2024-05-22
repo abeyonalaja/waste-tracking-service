@@ -1,14 +1,14 @@
 import { sign } from 'jsonwebtoken';
 
-export type PrivateKey = {
+export interface PrivateKey {
   id: string;
   content: Buffer;
-};
+}
 
-export type Participant = {
+export interface Participant {
   id: string;
   cohort: 'GLW' | 'UKWM';
-};
+}
 
 export function createToken(
   participant: Participant,

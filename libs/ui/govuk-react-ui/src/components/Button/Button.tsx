@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   secondary?: boolean;
   inverse?: boolean;
@@ -11,7 +11,7 @@ type Props = {
   onClick?: () => void;
   disabled?: boolean;
   testId?: string;
-};
+}
 
 export const Button = ({
   children,
@@ -23,7 +23,7 @@ export const Button = ({
   onClick,
   disabled,
   testId,
-}: Props) => {
+}: Props): JSX.Element => {
   if (href === undefined) {
     return (
       <button

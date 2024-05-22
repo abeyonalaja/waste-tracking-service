@@ -5,7 +5,7 @@ interface SummaryListProps {
   items: Array<{ key: string; value: ReactNode }>;
 }
 
-export function SummaryList({ testId, items }: SummaryListProps) {
+export function SummaryList({ testId, items }: SummaryListProps): JSX.Element {
   return (
     <dl className="govuk-summary-list" data-testid={testId}>
       {items.map((item, index) => (

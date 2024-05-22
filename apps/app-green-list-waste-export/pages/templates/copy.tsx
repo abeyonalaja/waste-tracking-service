@@ -32,21 +32,21 @@ const VIEWS = {
   DEFAULT: 1,
 };
 
-type State = {
+interface State {
   data: any;
   isLoading: boolean;
   isError: boolean;
   showView: number;
-};
+}
 
-type Action = {
+interface Action {
   type:
     | 'DATA_FETCH_INIT'
     | 'DATA_FETCH_SUCCESS'
     | 'DATA_FETCH_FAILURE'
     | 'SHOW_VIEW';
   payload?: any;
-};
+}
 
 const initialState: State = {
   data: { status: 'Started', values: [] },

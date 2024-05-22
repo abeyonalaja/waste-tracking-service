@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 
-type Props = {
+interface Props {
   children?: ReactNode;
   error?: boolean;
   testId?: string;
-};
+}
 
-export const FormGroup = ({ children, error, testId }: Props) => {
+export const FormGroup = ({ children, error, testId }: Props): JSX.Element => {
   return (
     <div
       className={`govuk-form-group ${error ? 'govuk-form-group--error' : ''}`}

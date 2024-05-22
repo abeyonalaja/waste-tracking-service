@@ -38,7 +38,7 @@ server.use(middlewares);
 server.use(jsonServer.bodyParser);
 const backend = new PrivateBetaMock();
 
-const configurePassport = async () => {
+const configurePassport = async (): Promise<void> => {
   const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
 
   const opts = {
@@ -80,7 +80,7 @@ const configurePassport = async () => {
   server.use(passport.authenticate('jwt', { session: false }));
 };
 
-const registerPlugins = () => {
+const registerPlugins = (): void => {
   new AddressPlugin(server, '/api/addresses', db).register();
   new FeedbackPlugin(server, '/api/feedback').register();
   new ReferenceDataPlugin(server, '/api/reference-data', db).register();
@@ -92,7 +92,7 @@ const registerPlugins = () => {
   new UkwmSubmissionPlugin(server, '/api/ukwm').register();
 };
 
-(async () => {
+(async (): Promise<void> => {
   await configurePassport();
   registerPlugins();
 

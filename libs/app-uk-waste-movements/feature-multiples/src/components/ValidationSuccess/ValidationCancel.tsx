@@ -2,15 +2,15 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import { SubmitButton } from './SubmitButton';
 
-type ValidationCancelProps = {
+interface ValidationCancelProps {
   submissionId: string;
   token: string | null | undefined;
-};
+}
 
 export function ValidationCancel({
   submissionId,
   token,
-}: ValidationCancelProps) {
+}: ValidationCancelProps): JSX.Element {
   const t = useTranslations('multiples.cancel');
   return (
     <>

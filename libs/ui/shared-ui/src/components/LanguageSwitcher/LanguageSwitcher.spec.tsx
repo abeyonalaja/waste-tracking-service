@@ -7,8 +7,15 @@ import userEvent from '@testing-library/user-event';
 const mockPush = jest.fn();
 
 jest.mock('next/navigation', () => ({
-  usePathname: () => '/',
-  useRouter: () => ({
+  usePathname: (): string => '/',
+  useRouter: (): {
+    back: jest.Mock;
+    forward: jest.Mock;
+    refresh: jest.Mock;
+    push: jest.Mock;
+    prefetch: jest.Mock;
+    replace: jest.Mock;
+  } => ({
     back: jest.fn(),
     forward: jest.fn(),
     refresh: jest.fn(),
@@ -16,8 +23,8 @@ jest.mock('next/navigation', () => ({
     prefetch: jest.fn(),
     replace: jest.fn(),
   }),
-  useParams: () => ({ locale: 'en' }),
-  useSelectedLayoutSegment: () => ({ locale: 'en' }),
+  useParams: (): { locale: string } => ({ locale: 'en' }), // Add return type annotation
+  useSelectedLayoutSegment: (): { locale: string } => ({ locale: 'en' }), // Add return type annotation
 }));
 
 describe('Language Switcher component', () => {

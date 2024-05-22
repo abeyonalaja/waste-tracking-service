@@ -144,9 +144,9 @@ const StyledContinueButton = styled.button`
   }
 `;
 
-type GuidanceTypeProps = {
+interface GuidanceTypeProps {
   acknowledgeGuidance: () => void;
-};
+}
 
 export const GuidanceInteruption = ({
   acknowledgeGuidance,

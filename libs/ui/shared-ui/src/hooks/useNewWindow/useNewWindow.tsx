@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-export function useNewWindow() {
+export function useNewWindow(): boolean {
   const [newWindow, setNewWindow] = useState<boolean>(false);
 
   useEffect(() => {

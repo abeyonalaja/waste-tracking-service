@@ -2,11 +2,11 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { GREY_3 } from 'govuk-colours';
 
-type SummaryCardAction = {
+interface SummaryCardAction {
   label: string | ReactNode;
   action: (action) => void;
   hidden?: boolean;
-};
+}
 
 interface Props {
   title: string;

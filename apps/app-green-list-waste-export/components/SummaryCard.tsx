@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { BORDER_COLOUR, GREY_3 } from 'govuk-colours';
 import { AppLink } from './index';
 
-type SummaryCardAction = {
+interface SummaryCardAction {
   label: string | ReactNode;
   action: (action) => void;
   hidden?: boolean;
-};
+}
 
 interface Props {
   title: string;

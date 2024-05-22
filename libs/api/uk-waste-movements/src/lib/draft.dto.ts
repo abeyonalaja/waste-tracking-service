@@ -47,7 +47,7 @@ export type DraftCarrierDetail =
       carrier: CarrierDetail;
     };
 
-export type DraftSubmission = {
+export interface DraftSubmission {
   id: string;
   transactionId: string;
   wasteInformation: WasteInformation;
@@ -56,12 +56,12 @@ export type DraftSubmission = {
   carrier: DraftCarrierDetail;
   submissionDeclaration: DraftSubmissionDeclaration;
   submissionState: SubmissionState;
-};
+}
 
 export type GetDraftRequest = IdRequest;
 export type GetDraftResponse = Response<DraftSubmission>;
 
-export type GetDraftsDto = {
+export interface GetDraftsDto {
   id: string;
   wasteMovementId: string;
   producerName: string;
@@ -71,23 +71,23 @@ export type GetDraftsDto = {
     month: string;
     year: string;
   };
-};
+}
 
-export type GetDraftsResult = {
+export interface GetDraftsResult {
   totalRecords: number;
   totalPages: number;
   page: number;
   values: GetDraftsDto[];
-};
+}
 
-export type GetDraftsRequest = {
+export interface GetDraftsRequest {
   page: number;
   pageSize?: number;
   collectionDate?: Date;
   ewcCode?: string;
   producerName?: string;
   wasteMovementId?: string;
-};
+}
 
 export type GetDraftsResponse = Response<GetDraftsResult>;
 

@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-export function UniqueReference() {
+export function UniqueReference(): JSX.Element {
   const page = useTranslations('multiples.guidancePageCSV.uniqueReference');
 
   return (

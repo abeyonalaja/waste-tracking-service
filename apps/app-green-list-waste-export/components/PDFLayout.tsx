@@ -4,12 +4,12 @@ import React from 'react';
 import { format } from 'date-fns';
 import { EwcCodeType } from '../types/wts';
 
-export type PDFProps = {
+export interface PDFProps {
   title: string;
   author: string;
   description: string;
   data: Submission | Submission[];
-};
+}
 
 const styles = StyleSheet.create({
   page: {

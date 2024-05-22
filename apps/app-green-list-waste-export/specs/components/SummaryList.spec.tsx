@@ -16,10 +16,10 @@ describe('SummaryList', () => {
       <SummaryListWithActions content={content} />
     );
 
-    content.forEach((title) => {
+    for (const title of content) {
       const titleElement = getAllByText(title);
       expect(titleElement).toBeTruthy();
-    });
+    }
   });
 
   it('prefixes numbers to titles when prefixNumbers prop is true', () => {
@@ -28,10 +28,10 @@ describe('SummaryList', () => {
       <SummaryListWithActions content={content} prefixNumbers />
     );
 
-    content.forEach((title, index) => {
+    for (const [index, title] of content.entries()) {
       const prefixedTitle = `${index + 1}. ${title}`;
       const titleElement = getByText(prefixedTitle);
       expect(titleElement).toBeTruthy();
-    });
+    }
   });
 });

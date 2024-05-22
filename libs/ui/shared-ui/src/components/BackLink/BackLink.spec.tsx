@@ -7,10 +7,10 @@ import {
   AppRouterInstance,
 } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-export type AppRouterContextProviderMockProps = {
+export interface AppRouterContextProviderMockProps {
   router: Partial<AppRouterInstance>;
   children: React.ReactNode;
-};
+}
 
 export const AppRouterContextProviderMock = ({
   router,

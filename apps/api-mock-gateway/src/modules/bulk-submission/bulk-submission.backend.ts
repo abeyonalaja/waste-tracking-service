@@ -10,19 +10,19 @@ import {
   NotFoundError,
 } from '../../lib/errors';
 
-export type BatchRef = {
+export interface BatchRef {
   id: string;
   accountId: string;
-};
+}
 
-export type Input = {
+export interface Input {
   type: string;
   data: Buffer;
-};
+}
 
-type TestCsvRow = {
+interface TestCsvRow {
   state: string;
-};
+}
 
 export async function createBatch(
   accountId: string,

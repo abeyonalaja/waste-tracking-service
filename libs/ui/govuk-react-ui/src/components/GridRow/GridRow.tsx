@@ -5,7 +5,7 @@ interface GridRowProps {
   testId?: string;
 }
 
-export function GridRow({ children, testId }: GridRowProps) {
+export function GridRow({ children, testId }: GridRowProps): JSX.Element {
   return (
     <div className={`govuk-grid-row`} data-testid={testId}>
       {children}

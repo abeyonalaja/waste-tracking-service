@@ -4,17 +4,17 @@ import { getServerSession } from 'next-auth';
 import { SignInLink } from './SignInLink';
 import { SignOutLink } from './SignOutLink';
 
-export async function AuthNavigation() {
+export async function AuthNavigation(): Promise<JSX.Element> {
   const session = await getServerSession();
 
-  function getProfileUrl() {
+  function getProfileUrl(): string {
     if (process.env.DCID_WELLKNOWN && process.env.DCID_WELLKNOWN.length > 10) {
       const domain = new URL(process.env.DCID_WELLKNOWN);
       return domain.origin;
     }
     return '';
   }
-  async function getSignOutUrl() {
+  async function getSignOutUrl(): Promise<string> {
     if (process.env.DCID_WELLKNOWN) {
       const response = await fetch(process.env.DCID_WELLKNOWN, {
         cache: 'force-cache',

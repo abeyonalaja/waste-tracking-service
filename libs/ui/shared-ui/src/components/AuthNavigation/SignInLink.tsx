@@ -2,7 +2,7 @@
 import { signIn } from 'next-auth/react';
 import { Link } from '@wts/ui/navigation';
 
-export function SignInLink() {
+export function SignInLink(): JSX.Element {
   return (
     <Link
       href="#"

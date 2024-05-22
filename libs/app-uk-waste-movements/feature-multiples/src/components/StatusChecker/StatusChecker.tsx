@@ -10,7 +10,10 @@ interface StatusCheckerProps {
   filename?: string;
 }
 
-export function StatusChecker({ label, filename }: StatusCheckerProps) {
+export function StatusChecker({
+  label,
+  filename,
+}: StatusCheckerProps): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
