@@ -2,6 +2,7 @@
 import { useCookies } from 'react-cookie';
 import { useRouter } from '@wts/ui/navigation';
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { add } from 'date-fns';
 
 interface InterruptionButtonProps {
   label: string;
@@ -14,7 +15,9 @@ export function InterruptionButton({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [cookie, setCookie] = useCookies();
 
-  const expiryDate = new Date();
+  const expiryDate = add(new Date(), {
+    months: 1,
+  });
 
   function acknowledgeGuidance(): void {
     setCookie('UKWMMultipleGuidanceViewed', true, {
