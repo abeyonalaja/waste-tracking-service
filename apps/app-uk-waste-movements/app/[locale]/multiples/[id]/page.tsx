@@ -199,6 +199,7 @@ export default async function StatusPage({
             <ValidationSuccess
               hasEstimates={state.hasEstimates}
               hasCorrectedErrors={searchParams.hasCorrectedErrors === 'true'}
+              filename={searchParams.filename}
               recordCount={state.submissions.length}
               submissionId={params.id}
               token={token!}

@@ -12,6 +12,7 @@ import { SubmitButton } from './SubmitButton';
 interface ValidationSuccessProps {
   recordCount: number;
   hasCorrectedErrors: boolean;
+  filename: string;
   hasEstimates: boolean;
   submissionId: string;
   token: string;
@@ -20,6 +21,7 @@ interface ValidationSuccessProps {
 export function ValidationSuccess({
   recordCount,
   hasCorrectedErrors,
+  filename,
   hasEstimates = false,
   submissionId,
   token,
@@ -46,7 +48,10 @@ export function ValidationSuccess({
           submissionId={submissionId}
           token={token}
         />
-        <Button href={`${submissionId}/cancel`} secondary={true}>
+        <Button
+          href={`${submissionId}/cancel?filename=${filename}`}
+          secondary={true}
+        >
           Cancel
         </Button>
       </ButtonGroup>
