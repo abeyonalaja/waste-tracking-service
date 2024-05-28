@@ -11,7 +11,7 @@ import { getValidationResult } from 'features/multiples';
 import { useQueryClient } from '@tanstack/react-query';
 import { BulkSubmissionValidationRowError } from '@wts/api/waste-tracking-gateway';
 
-export default function Index() {
+export default function Index(): JSX.Element {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const router = useRouter();
@@ -86,6 +86,9 @@ export default function Index() {
           {t('multiples.errorSummaryPage.linkParagraphEnd')}
         </Paragraph>
         <ErrorSummary errors={data.data.state.rowErrors} />
+        <Paragraph>
+          {t('multiples.errorSummaryPage.errorSummary.endParagraph')}
+        </Paragraph>
       </UploadForm>
     </PageLayout>
   );
