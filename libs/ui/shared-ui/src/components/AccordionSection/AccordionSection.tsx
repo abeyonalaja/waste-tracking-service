@@ -32,7 +32,7 @@ export function AccordionSection({
       }`}
     >
       <div className="govuk-accordion__section-header">
-        <h2 className="govuk-accordion__section-heading">
+        <h2 className="govuk-accordion__section-heading" id={`${id}-label`}>
           <button
             type="button"
             aria-controls={`${id}-content`}

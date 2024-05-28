@@ -1,5 +1,6 @@
-import { SubmittedPageFormData } from '../components/SubmittedTable/SubmittedTable';
+import { SubmittedPageFormData } from '../components/SubmittedFilters/SubmittedFilters';
 import { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
+import FuzzySearch from 'fuzzy-search';
 
 export function filterSubmissions(
   submissions: UkwmSubmissionReference[],
@@ -21,13 +22,13 @@ export function filterSubmissions(
 
   if (formData.month) {
     filteredSubmissions = filteredSubmissions.filter((submission) => {
-      return Number(submission.collectionDate.day) === Number(formData.day);
+      return Number(submission.collectionDate.month) === Number(formData.month);
     });
   }
 
   if (formData.year) {
     filteredSubmissions = filteredSubmissions.filter((submission) => {
-      return Number(submission.collectionDate.day) === Number(formData.day);
+      return Number(submission.collectionDate.year) === Number(formData.year);
     });
   }
 
@@ -38,9 +39,13 @@ export function filterSubmissions(
   }
 
   if (formData.producerName) {
-    filteredSubmissions = filteredSubmissions.filter((submission) => {
-      return submission.producerName === formData.producerName.trim();
+    const searcher = new FuzzySearch(submissions, ['producerName'], {
+      caseSensitive: false,
     });
+
+    const result = searcher.search(formData.producerName.trim());
+
+    return result;
   }
 
   return filteredSubmissions;

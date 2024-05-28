@@ -18,15 +18,7 @@ interface TableStrings {
   headerFour: string;
   headerFive: string;
   action: string;
-}
-
-export interface SubmittedPageFormData {
-  wasteMovementId: string;
-  day: number;
-  month: number;
-  year: number;
-  ewcCode: string;
-  producerName: string;
+  notFound: string;
 }
 
 interface SubmittedTableProps {
@@ -38,15 +30,15 @@ export function SubmittedTable({
   submissions,
   tableStrings,
 }: SubmittedTableProps): React.ReactElement {
+  const searchParams = useSearchParams();
+
   const sortedSubmissions = useMemo(
     () => sortSubmissions(submissions, 'ascending'),
     [submissions]
   );
 
-  const searchParams = useSearchParams();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filteredSubmissions] = useState(sortedSubmissions);
+  const [filteredSubmissions, setFilteredSubmissions] =
+    useState(sortedSubmissions);
 
   const totalPages = Math.ceil(filteredSubmissions.length / 15);
 
@@ -57,10 +49,13 @@ export function SubmittedTable({
 
   return (
     <GovUK.GridRow>
-      <GovUK.GridCol size="one-quarter-from-desktop">
-        <SubmittedFilters />
+      <GovUK.GridCol size="one-third-from-desktop">
+        <SubmittedFilters
+          sortedSubmissions={sortedSubmissions}
+          setFilteredSubmissions={setFilteredSubmissions}
+        />
       </GovUK.GridCol>
-      <GovUK.GridCol size="three-quarters-from-desktop">
+      <GovUK.GridCol size="two-thirds-from-desktop">
         <table className={`govuk-table ${styles.submittedTable}`}>
           <thead className="govuk-table__head">
             <tr className="govuk-table__row">
@@ -82,6 +77,13 @@ export function SubmittedTable({
             </tr>
           </thead>
           <tbody className="govuk-table__body">
+            {displayedSubmissions.length === 0 && (
+              <tr className="govuk-table__row">
+                <td colSpan={5} className={styles.notFound}>
+                  {tableStrings.notFound}
+                </td>
+              </tr>
+            )}
             {displayedSubmissions.map((submission) => {
               return (
                 <tr

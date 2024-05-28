@@ -9,6 +9,15 @@
     "paragraph2": "If you pasted the web address, check you copied the entire address.",
     "link": "Go to your account"
   },
+  "error": {
+    "multiplesError": {
+      "title": "Sorry, there is a problem with the service",
+      "paragraphOne": "Try again later.",
+      "paragraphTwo": "If you have uploaded your CSV file, you will need to upload it again.",
+      "paragraphThreeOne": "Email",
+      "paragraphThreeTwo": "if you need to speak with someone about your account."
+    }
+  },
   "startPage": {
     "title": "Sign into your Defra waste tracking service account",
     "description": "If you move waste in the UK, or export Annex VII waste outside the UK, sign into your waste tracking account to create your digital waste records and manage all your records from one place.",
@@ -78,7 +87,7 @@
       "home": "Home",
       "current": "Move waste in the UK"
     },
-    "title": "Symud gwastraff yn y DU",
+    "title": "Move waste in the UK",
     "name": "{name}",
     "titleTwo": "Move, export or import waste",
     "cardTitle": "Create new waste movements",
@@ -128,6 +137,10 @@
     "backText": "Back"
   },
   "multiples": {
+    "breadcrumbs": {
+      "accountHome": "Home",
+      "ukwmHome": "Move waste in the UK"
+    },
     "uploadPage": {
       "title": "Creating multiple waste movements"
     },
@@ -151,6 +164,23 @@
       },
       "uploadForm": {
         "heading": "Upload your corrected CSV file"
+      },
+      "errorTab": {
+        "byColumn": "Errors by column",
+        "byRow": "Errors by row",
+        "columnType": "Column name",
+        "rowType": "Row number",
+        "errorType": "Error type",
+        "errorAmount": "Error amount",
+        "action": "Action"
+      },
+      "errorRow": {
+        "errorCount": "errors",
+        "rowNumber": "Row number",
+        "reason": "Error reason",
+        "details": "Error details",
+        "show": "Show errors",
+        "hide": "Hide errors"
       }
     },
     "instructions": {
@@ -184,6 +214,29 @@
     "processingPage": {
       "label": "Uploading"
     },
+    "success": {
+      "notificationTitle": "Success",
+      "heading": "You have no errors in your {count} waste movement {count, plural, =1 {record} other {records}} and can now create them all.",
+      "headingAfterCorrection": "You have corrected all your errors and can now create {count} new waste movement {count, plural, =1 {record} other {records}}.",
+      "pageHeading": "Create {count} new waste movement {count, plural, =1 {record} other {records}}",
+      "warning": "You'll need to update all estimated details in your records with actual details as soon as possible after submitting.",
+      "body": "If you cancel creating these now, you will have to upload the CSV file again.",
+      "button": "Continue and create records",
+      "cancelLink": "Cancel"
+    },
+    "confirmation": {
+      "banner": "{count} waste {count, plural, =1 {movement} other {movements}} created",
+      "subHeading1": "What you must do next",
+      "bodyP1": "Now you have created these waste movements, you need to notify other involved parties of any relevant movements.",
+      "bodyP2": "You can also:",
+      "bullet1": "view all these created waste movement records (opens in new tab)",
+      "subHeading2": "What happens next",
+      "bodyP3": "The receivers of the waste will need to confirm collection and receipt of the waste using the waste tracking service.",
+      "button": "Return to move waste in the UK"
+    },
+    "submitting": {
+      "heading": "Loading submission confirmation"
+    },
     "interruption": {
       "heading": "Use the guidance to create multiple new waste movements using a CSV template",
       "paragraphOne": "When you enter your waste movement information into the template, you need to save it as a CSV file. This is where data is separated by commas rather than columns. If you change the structure of the template, your upload may fail.",
@@ -204,8 +257,48 @@
         "headerThree": "EWC code",
         "headerFour": "Producer name",
         "headerFive": "Action",
-        "action": "Action"
+        "action": "Action",
+        "notFound": "No record found"
+      },
+      "submittedTable": {
+        "filters": {
+          "heading": "Filter",
+          "show": "Show",
+          "hide": "Hide",
+          "showAll": "Show all sections",
+          "hideAll": "Hide all sections",
+          "collectionDate": {
+            "title": "Collection Date",
+            "hint": "The date the waste was collected from the producer",
+            "error": "Enter the full date",
+            "labelOne": "Day",
+            "labelTwo": "Month",
+            "labelThree": "Year"
+          },
+          "ewcCode": {
+            "title": "EWC Code",
+            "hint": "Search for any EWC code in your waste movements"
+          },
+          "producerName": {
+            "title": "Producer name",
+            "hint": "Search for a producer name"
+          },
+          "wasteMovementId": {
+            "title": "Waste Movement ID",
+            "hint": "Search for a waste movement ID"
+          },
+          "buttons": {
+            "apply": "Apply filters",
+            "reset": "Reset filters"
+          }
+        }
       }
+    },
+    "cancel": {
+      "heading": "You have not created your new waste movement records yet",
+      "paragraph": "If you cancel creating these records now, you will have to upload the CSV file again.",
+      "button": "Confirm and cancel",
+      "buttonSecondary": "Continue to create records"
     },
     "guidancePage": {
       "heading": "Waste movements in the UK: how to create multiple waste movements using a CSV file",

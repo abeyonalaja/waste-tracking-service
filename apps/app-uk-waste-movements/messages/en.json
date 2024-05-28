@@ -257,7 +257,8 @@
         "headerThree": "EWC code",
         "headerFour": "Producer name",
         "headerFive": "Action",
-        "action": "Action"
+        "action": "Action",
+        "notFound": "No record found"
       },
       "submittedTable": {
         "filters": {
@@ -269,18 +270,26 @@
           "collectionDate": {
             "title": "Collection Date",
             "hint": "The date the waste was collected from the producer",
+            "error": "Enter the full date",
             "labelOne": "Day",
             "labelTwo": "Month",
             "labelThree": "Year"
           },
           "ewcCode": {
-            "title": "EWC Code"
+            "title": "EWC Code",
+            "hint": "Search for any EWC code in your waste movements"
           },
           "producerName": {
-            "title": "Producer Name"
+            "title": "Producer name",
+            "hint": "Search for a producer name"
           },
           "wasteMovementId": {
-            "title": "Waste Movement ID"
+            "title": "Waste Movement ID",
+            "hint": "Search for a waste movement ID"
+          },
+          "buttons": {
+            "apply": "Apply filters",
+            "reset": "Reset filters"
           }
         }
       }

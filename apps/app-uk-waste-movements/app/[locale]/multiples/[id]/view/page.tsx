@@ -53,6 +53,7 @@ export default async function ManagePage({
     headerFour: t('table.headerFour'),
     headerFive: t('table.headerFive'),
     action: t('table.action'),
+    notFound: t('table.notFound'),
   };
 
   if (state.status !== 'Submitted' || !('submissions' in state)) {
