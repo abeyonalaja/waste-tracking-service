@@ -3,12 +3,23 @@ import {
   SubmittedTable,
   getSubmissionStatus,
 } from '@wts/app-uk-waste-movements/feature-multiples';
-import { getServerSession } from 'next-auth';
+import { getServerSession, Session } from 'next-auth';
 import { options } from '../../../../api/auth/[...nextauth]/options';
 import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import { redirect } from '@wts/ui/navigation';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { headers } from 'next/headers';
+import { NextIntlClientProvider } from 'next-intl';
+import { pick } from '../../../../../utils';
+import { getMessages } from 'next-intl/server';
+import { Breadcrumbs } from '@wts/ui/shared-ui';
+import { Page } from '@wts/ui/shared-ui/server';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Creating multiple waste movements',
+  description: 'Creating multiple waste movements',
+};
 
 interface PageProps {
   params: {
@@ -26,7 +37,8 @@ export default async function ManagePage({
   searchParams,
 }: PageProps): Promise<React.ReactElement | undefined> {
   const t = await getTranslations('multiples.manage');
-  const session = await getServerSession(options);
+  const session: Session | null = await getServerSession(options);
+  const messages = await getMessages();
   const token = session?.token;
   const headerList = headers();
   const hostname = headerList.get('host') || '';
@@ -44,7 +56,7 @@ export default async function ManagePage({
   };
 
   if (state.status !== 'Submitted' || !('submissions' in state)) {
-    redirect('/multiples/[id]');
+    redirect(`/multiples/${params.id}`);
     return;
   }
 
@@ -55,8 +67,14 @@ export default async function ManagePage({
     redirect(`/multiples/${params.id}/view?page=1`);
   }
 
+  const breadcrumbs = [
+    { text: t('breadCrumbs.home'), href: '../../account' },
+    { text: t('breadCrumbs.moveWaste'), href: '/' },
+    { text: t('breadCrumbs.current') },
+  ];
+
   return (
-    <>
+    <Page beforeChildren={<Breadcrumbs items={breadcrumbs} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
           <GovUK.Heading>
@@ -66,10 +84,12 @@ export default async function ManagePage({
           </GovUK.Heading>
         </GovUK.GridCol>
       </GovUK.GridRow>
-      <SubmittedTable
-        submissions={state.submissions}
-        tableStrings={tableStrings}
-      />
-    </>
+      <NextIntlClientProvider messages={pick(messages, ['multiples'])}>
+        <SubmittedTable
+          submissions={state.submissions}
+          tableStrings={tableStrings}
+        />
+      </NextIntlClientProvider>
+    </Page>
   );
 }

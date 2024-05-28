@@ -258,6 +258,31 @@
         "headerFour": "Producer name",
         "headerFive": "Action",
         "action": "Action"
+      },
+      "submittedTable": {
+        "filters": {
+          "heading": "Filter",
+          "show": "Show",
+          "hide": "Hide",
+          "showAll": "Show all sections",
+          "hideAll": "Hide all sections",
+          "collectionDate": {
+            "title": "Collection Date",
+            "hint": "The date the waste was collected from the producer",
+            "labelOne": "Day",
+            "labelTwo": "Month",
+            "labelThree": "Year"
+          },
+          "ewcCode": {
+            "title": "EWC Code"
+          },
+          "producerName": {
+            "title": "Producer Name"
+          },
+          "wasteMovementId": {
+            "title": "Waste Movement ID"
+          }
+        }
       }
     },
     "cancel": {

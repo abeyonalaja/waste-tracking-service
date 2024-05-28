@@ -10,4 +10,5 @@ export { UploadForm } from './components/index';
 // Utils
 export { calculateTotalErrors } from './utils';
 export { getSubmissionStatus } from './utils';
+export { getSubmission } from './utils';
 export { sortSubmissions } from './utils';

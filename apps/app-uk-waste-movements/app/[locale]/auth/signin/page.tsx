@@ -1,4 +1,3 @@
-import * as GovUK from '@wts/ui/govuk-react-ui';
 import SignInButton from './_components/SignInButton';
 import { getServerSession } from 'next-auth';
 import { redirect } from '@wts/ui/navigation';
@@ -24,14 +23,10 @@ export default async function Index({
   return (
     <>
       <Page>
-        <GovUK.GridRow>
-          <GovUK.GridCol size={'two-thirds'}>
-            <Loading />
-            <Suspense>
-              <SignInButton />
-            </Suspense>
-          </GovUK.GridCol>
-        </GovUK.GridRow>
+        <Loading centered={true} />
+        <Suspense>
+          <SignInButton />
+        </Suspense>
       </Page>
     </>
   );

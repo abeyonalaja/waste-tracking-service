@@ -24,4 +24,15 @@ describe('SummaryList component', () => {
       expect(screen.getByText(item.value)).toBeInTheDocument();
     }
   });
+
+  test('renders SummaryList component with only 1 item if the second value is empty and hideEmptyRows is true', () => {
+    const items = [
+      { key: 'Key 1', value: 'Value 1' },
+      { key: 'Key 2', value: undefined },
+    ];
+    render(<SummaryList testId="test-summary" items={items} hideEmptyRows />);
+    const listElement = screen.getByTestId('test-summary');
+    expect(listElement).toBeInTheDocument();
+    expect(listElement.childElementCount).toBe(items.length - 1);
+  });
 });

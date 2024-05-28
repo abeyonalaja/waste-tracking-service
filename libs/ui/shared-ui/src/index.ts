@@ -6,6 +6,7 @@ export { BackLink } from './components';
 export { Breadcrumbs } from './components';
 export { CharacterCount } from './components';
 export { Pagination } from './components';
+export { ShowHide } from './components';
 
 // Hooks
 export { useNewWindow } from './hooks';

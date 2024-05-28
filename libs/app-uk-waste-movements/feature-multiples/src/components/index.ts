@@ -16,6 +16,7 @@ export { Instructions } from './Instructions';
 export { Interruption } from './Interruption';
 export { ProducerAndCollectionDetails } from './Guidance/CSVGuidance/ProducerAndCollectionDetails';
 export { ReceiverDetails } from './Guidance/CSVGuidance/ReceiverDetails';
+export { Submission } from './Submisison';
 export { SubmissionConfirmation } from './SubmissionConfirmation';
 export { TotalErrorSummary } from './TotalErrorSummary';
 export { UniqueReference } from './Guidance/CSVGuidance/UniqueReference';

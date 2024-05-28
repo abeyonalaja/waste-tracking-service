@@ -5,13 +5,9 @@ import { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import { sortSubmissions } from '../../utils';
 import { useMemo } from 'react';
 import { Link } from '@wts/ui/navigation';
-
 import { Pagination } from '@wts/ui/shared-ui';
 import { useState } from 'react';
-// TODO: activate when working on filtering ticket
-// import { useForm } from 'react-hook-form';
-// import { filterSubmissions } from '../../utils';
-
+import { SubmittedFilters } from '../SubmittedFilters';
 import { useSearchParams } from 'next/navigation';
 import styles from './SubmittedTable.module.scss';
 
@@ -49,23 +45,8 @@ export function SubmittedTable({
 
   const searchParams = useSearchParams();
 
-  // TODO: Remove this disbaling line when working on filtering ticket
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filteredSubmissions, setFilteredSubmissions] =
-    useState(sortedSubmissions);
-
-  // TODO: activate when working on filtering ticket
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<SubmittedPageFormData>({
-  //   mode: 'onSubmit',
-  // });
-  // const onSubmit = handleSubmit((formData) => {
-  //   setFilteredSubmissions(filterSubmissions(sortedSubmissions, formData));
-  //   router.push(`/multiples/${submissionId}/view?page=1`, { scroll: false });
-  // });
+  const [filteredSubmissions] = useState(sortedSubmissions);
 
   const totalPages = Math.ceil(filteredSubmissions.length / 15);
 
@@ -77,8 +58,7 @@ export function SubmittedTable({
   return (
     <GovUK.GridRow>
       <GovUK.GridCol size="one-quarter-from-desktop">
-        {/* TODO: Add filters here */}
-        <br />
+        <SubmittedFilters />
       </GovUK.GridCol>
       <GovUK.GridCol size="three-quarters-from-desktop">
         <table className={`govuk-table ${styles.submittedTable}`}>
@@ -146,7 +126,7 @@ export function SubmittedTable({
                     data-label={tableStrings.headerFive}
                   >
                     <Link
-                      href="#"
+                      href={`view/${submission.id}`}
                       id={`row-${submission.wasteMovementId}-view-link`}
                     >
                       View

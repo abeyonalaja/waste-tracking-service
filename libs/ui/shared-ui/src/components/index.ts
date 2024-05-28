@@ -4,8 +4,11 @@ export { BackLink } from './BackLink';
 export { Breadcrumbs } from './Breadcrumbs';
 export { CharacterCount } from './CharacterCount';
 export { Pagination } from './Pagination';
+export { ShowHide } from './ShowHide';
 
 // Server components
+export { Accordion } from './Accordion';
+export { AccordionSection } from './AccordionSection';
 export { AuthNavigation } from './AuthNavigation';
 export { CSV } from './CSV';
 export { GridRow } from './GridRow';
