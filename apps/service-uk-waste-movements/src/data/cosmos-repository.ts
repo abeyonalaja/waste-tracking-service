@@ -159,11 +159,11 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
 
     if (producerName) {
       queryFilters.push(
-        `c["value"].producerAndCollection.producer.contact.organisationName like '%@producerOrgName%'`
+        `LOWER(c["value"].producerAndCollection.producer.contact.organisationName) like @producerOrgName`
       );
       queryParameters.push({
         name: '@producerOrgName',
-        value: producerName,
+        value: `%${producerName.toLowerCase()}%`,
       });
     }
 
