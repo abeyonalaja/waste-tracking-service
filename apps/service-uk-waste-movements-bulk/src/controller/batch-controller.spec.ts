@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import winston from 'winston';
 import Boom from '@hapi/boom';
 import { BatchController } from './batch-controller';
-import { BulkSubmission } from '../model';
+import { BulkSubmission, SubmissionFlattenedDownload } from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -16,6 +16,8 @@ const mockRepository = {
     jest.fn<(value: BulkSubmission, accountId: string) => Promise<void>>(),
   getBatch:
     jest.fn<(id: string, accountId: string) => Promise<BulkSubmission>>(),
+  downloadProducerCsv:
+    jest.fn<(id: string) => Promise<SubmissionFlattenedDownload[]>>(),
 };
 
 describe(BatchController, () => {
@@ -64,6 +66,259 @@ describe(BatchController, () => {
 
       expect(mockRepository.getBatch).toHaveBeenCalledWith(id, accountId);
       expect(response.value).toEqual(value);
+    });
+  });
+
+  describe('downloadProducerCsv', () => {
+    it('forwards thrown Boom errors', async () => {
+      const id = faker.datatype.uuid();
+      mockRepository.downloadProducerCsv.mockRejectedValue(Boom.teapot());
+
+      const response = await subject.downloadProducerCsv({ id });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.downloadProducerCsv).toBeCalledWith(id);
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('successfully returns base64 formatted csv data of the record', async () => {
+      const id = faker.datatype.uuid();
+      const value: SubmissionFlattenedDownload[] = [
+        {
+          wasteCollectionAddressLine1: '110 Bishopsgate',
+          wasteCollectionAddressLine2: 'Mulberry street',
+          wasteCollectionTownCity: 'London',
+          wasteCollectionCountry: 'Scotland',
+          wasteCollectionPostcode: '',
+          wasteCollectionLocalAuthority: 'Hartlepool',
+          wasteCollectionWasteSource: 'Household',
+          wasteCollectionBrokerRegistrationNumber: 'CBDL5221',
+          wasteCollectionCarrierRegistrationNumber: 'CBDL5221',
+          wasteCollectionExpectedWasteCollectionDate: '18/02/2066',
+          carrierOrganisationName: 'Producer org name',
+          carrierAddressLine1: '110 Bishopsgate',
+          carrierAddressLine2: 'Mulberry street',
+          carrierTownCity: 'London',
+          carrierCountry: 'Wales',
+          carrierPostcode: 'CV12RD',
+          carrierContactName: 'Pro Name',
+          carrierContactEmail: 'guy@test.com',
+          carrierContactPhone: "'00447811111213''",
+          receiverAuthorizationType: 'Permit DEFRA',
+          receiverEnvironmentalPermitNumber: 'DEFRA 1235',
+          receiverOrganisationName: "Mac Donald 's",
+          receiverAddressLine1: '12 Mulberry Street',
+          receiverAddressLine2: 'West coast, Northwest',
+          receiverTownCity: 'West coast',
+          receiverCountry: 'Wales',
+          receiverPostcode: 'DA112AB',
+          receiverContactName: 'Mr. Smith Jones',
+          receiverContactEmail: 'smithjones@hotmail.com',
+          receiverContactPhone: "'07811111111'",
+          wasteTransportationNumberAndTypeOfContainers: '123456',
+          wasteTransportationSpecialHandlingRequirements: '',
+          firstWasteTypeEwcCode: "'010101'",
+          firstWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          firstWasteTypePhysicalForm: 'Gas',
+          firstWasteTypeWasteQuantity: '1.1',
+          firstWasteTypeWasteQuantityUnit: 'Tonne',
+          firstWasteTypeWasteQuantityType: 'ActualData',
+          firstWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '20.35',
+          firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            'mg/kg',
+          firstWasteTypeHasHazardousProperties: 'true',
+          firstWasteTypeHazardousWasteCodesString: 'HP1',
+          firstWasteTypeContainsPops: 'true',
+          firstWasteTypePopsString: 'Endosulfan',
+          firstWasteTypePopsConcentrationsString: '9823.75',
+          firstWasteTypePopsConcentrationUnitsString: 'mg/k',
+          secondWasteTypeEwcCode: '',
+          secondWasteTypeWasteDescription: '',
+          secondWasteTypePhysicalForm: '',
+          secondWasteTypeWasteQuantity: '',
+          secondWasteTypeWasteQuantityUnit: '',
+          secondWasteTypeWasteQuantityType: '',
+          secondWasteTypeChemicalAndBiologicalComponentsString: '',
+          secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '',
+          secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          secondWasteTypeHasHazardousProperties: '',
+          secondWasteTypeHazardousWasteCodesString: '',
+          secondWasteTypeContainsPops: '',
+          secondWasteTypePopsString: '',
+          secondWasteTypePopsConcentrationsString: '',
+          secondWasteTypePopsConcentrationUnitsString: '',
+          thirdWasteTypeEwcCode: '',
+          thirdWasteTypeWasteDescription: '',
+          thirdWasteTypePhysicalForm: '',
+          thirdWasteTypeWasteQuantity: '',
+          thirdWasteTypeWasteQuantityUnit: '',
+          thirdWasteTypeWasteQuantityType: '',
+          thirdWasteTypeChemicalAndBiologicalComponentsString: '',
+          thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          thirdWasteTypeHasHazardousProperties: '',
+          thirdWasteTypeHazardousWasteCodesString: '',
+          thirdWasteTypeContainsPops: '',
+          thirdWasteTypePopsString: '',
+          thirdWasteTypePopsConcentrationsString: '',
+          thirdWasteTypePopsConcentrationUnitsString: '',
+          fourthWasteTypeEwcCode: '',
+          fourthWasteTypeWasteDescription: '',
+          fourthWasteTypePhysicalForm: '',
+          fourthWasteTypeWasteQuantity: '',
+          fourthWasteTypeWasteQuantityUnit: '',
+          fourthWasteTypeWasteQuantityType: '',
+          fourthWasteTypeChemicalAndBiologicalComponentsString: '',
+          fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '',
+          fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          fourthWasteTypeHasHazardousProperties: '',
+          fourthWasteTypeHazardousWasteCodesString: '',
+          fourthWasteTypeContainsPops: '',
+          fourthWasteTypePopsString: '',
+          fourthWasteTypePopsConcentrationsString: '',
+          fourthWasteTypePopsConcentrationUnitsString: '',
+          fifthWasteTypeEwcCode: '',
+          fifthWasteTypeWasteDescription: '',
+          fifthWasteTypePhysicalForm: '',
+          fifthWasteTypeWasteQuantity: '',
+          fifthWasteTypeWasteQuantityUnit: '',
+          fifthWasteTypeWasteQuantityType: '',
+          fifthWasteTypeChemicalAndBiologicalComponentsString: '',
+          fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          fifthWasteTypeHasHazardousProperties: '',
+          fifthWasteTypeHazardousWasteCodesString: '',
+          fifthWasteTypeContainsPops: '',
+          fifthWasteTypePopsString: '',
+          fifthWasteTypePopsConcentrationsString: '',
+          fifthWasteTypePopsConcentrationUnitsString: '',
+          sixthWasteTypeEwcCode: '',
+          sixthWasteTypeWasteDescription: '',
+          sixthWasteTypePhysicalForm: '',
+          sixthWasteTypeWasteQuantity: '',
+          sixthWasteTypeWasteQuantityUnit: '',
+          sixthWasteTypeWasteQuantityType: '',
+          sixthWasteTypeChemicalAndBiologicalComponentsString: '',
+          sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          sixthWasteTypeHasHazardousProperties: '',
+          sixthWasteTypeHazardousWasteCodesString: '',
+          sixthWasteTypeContainsPops: '',
+          sixthWasteTypePopsString: '',
+          sixthWasteTypePopsConcentrationsString: '',
+          sixthWasteTypePopsConcentrationUnitsString: '',
+          seventhWasteTypeEwcCode: '',
+          seventhWasteTypeWasteDescription: '',
+          seventhWasteTypePhysicalForm: '',
+          seventhWasteTypeWasteQuantity: '',
+          seventhWasteTypeWasteQuantityUnit: '',
+          seventhWasteTypeWasteQuantityType: '',
+          seventhWasteTypeChemicalAndBiologicalComponentsString: '',
+          seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '',
+          seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          seventhWasteTypeHasHazardousProperties: '',
+          seventhWasteTypeHazardousWasteCodesString: '',
+          seventhWasteTypeContainsPops: '',
+          seventhWasteTypePopsString: '',
+          seventhWasteTypePopsConcentrationsString: '',
+          seventhWasteTypePopsConcentrationUnitsString: '',
+          eighthWasteTypeEwcCode: '',
+          eighthWasteTypeWasteDescription: '',
+          eighthWasteTypePhysicalForm: '',
+          eighthWasteTypeWasteQuantity: '',
+          eighthWasteTypeWasteQuantityUnit: '',
+          eighthWasteTypeWasteQuantityType: '',
+          eighthWasteTypeChemicalAndBiologicalComponentsString: '',
+          eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '',
+          eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          eighthWasteTypeHasHazardousProperties: '',
+          eighthWasteTypeHazardousWasteCodesString: '',
+          eighthWasteTypeContainsPops: '',
+          eighthWasteTypePopsString: '',
+          eighthWasteTypePopsConcentrationsString: '',
+          eighthWasteTypePopsConcentrationUnitsString: '',
+          ninthWasteTypeEwcCode: '',
+          ninthWasteTypeWasteDescription: '',
+          ninthWasteTypePhysicalForm: '',
+          ninthWasteTypeWasteQuantity: '',
+          ninthWasteTypeWasteQuantityUnit: '',
+          ninthWasteTypeWasteQuantityType: '',
+          ninthWasteTypeChemicalAndBiologicalComponentsString: '',
+          ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          ninthWasteTypeHasHazardousProperties: '',
+          ninthWasteTypeHazardousWasteCodesString: '',
+          ninthWasteTypeContainsPops: '',
+          ninthWasteTypePopsString: '',
+          ninthWasteTypePopsConcentrationsString: '',
+          ninthWasteTypePopsConcentrationUnitsString: '',
+          tenthWasteTypeEwcCode: '',
+          tenthWasteTypeWasteDescription: '',
+          tenthWasteTypePhysicalForm: '',
+          tenthWasteTypeWasteQuantity: '',
+          tenthWasteTypeWasteQuantityUnit: '',
+          tenthWasteTypeWasteQuantityType: '',
+          tenthWasteTypeChemicalAndBiologicalComponentsString: '',
+          tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+          tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
+            '',
+          tenthWasteTypeHasHazardousProperties: '',
+          tenthWasteTypeHazardousWasteCodesString: '',
+          tenthWasteTypeContainsPops: '',
+          tenthWasteTypePopsString: '',
+          tenthWasteTypePopsConcentrationsString: '',
+          tenthWasteTypePopsConcentrationUnitsString: '',
+          transactionId: 'WM2405_A5B9D42E',
+          carrierConfirmationUniqueReference: '',
+          carrierConfirmationCorrectDetails: '',
+          carrierConfirmationbrokerRegistrationNumber: '',
+          carrierConfirmationRegistrationNumber: '',
+          carrierConfirmationOrganisationName: '',
+          carrierConfirmationAddressLine1: '',
+          carrierConfirmationAddressLine2: '',
+          carrierConfirmationTownCity: '',
+          carrierConfirmationCountry: '',
+          carrierConfirmationPostcode: '',
+          carrierConfirmationContactName: '',
+          carrierConfirmationContactEmail: '',
+          carrierConfirmationContactPhone: '',
+          carrierModeOfTransport: '',
+          carrierVehicleRegistrationNumber: '',
+          carrierDateWasteCollected: '',
+          carrierTimeWasteCollected: '',
+        },
+      ];
+
+      mockRepository.downloadProducerCsv.mockResolvedValue(value);
+
+      const response = await subject.downloadProducerCsv({ id });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.downloadProducerCsv).toHaveBeenCalledWith(id);
+      expect(response.value.data).toBeTruthy();
     });
   });
 

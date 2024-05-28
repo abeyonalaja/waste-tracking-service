@@ -113,7 +113,7 @@ export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
     NotStarted: { properties: {} },
     Complete: {
       properties: {
-        carrier,
+        value: carrier,
       },
     },
   },
@@ -225,13 +225,6 @@ export const draftSubmissionDeclaration: SchemaObject = {
   },
 };
 
-const submissionState: SchemaObject = {
-  properties: {
-    status: { type: 'string' },
-    timestamp: { type: 'timestamp' },
-  },
-};
-
 const bulkSubmissionStateBase: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -330,12 +323,14 @@ const bulkSubmissionStateBase: SchemaObject = {
           elements: {
             properties: {
               id: { type: 'string' },
-              transactionId: { type: 'string' },
-              producerAndCollection: producerAndCollection,
-              wasteInformation: wasteInformation,
-              carrier: draftCarrier,
-              submissionDeclaration: draftSubmissionDeclaration,
-              submissionState: submissionState,
+              wasteMovementId: { type: 'string' },
+              producerName: { type: 'string' },
+              collectionDate: wasteCollectionDate,
+              ewcCodes: {
+                elements: {
+                  type: 'string',
+                },
+              },
             },
           },
         },
@@ -490,5 +485,19 @@ export const finalizeBatchResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: { properties: {} },
+  },
+};
+
+export const downloadCsvRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+  },
+};
+
+export const downloadCsvResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { properties: { data: { type: 'string' } } },
   },
 };

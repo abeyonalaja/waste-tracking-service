@@ -9,6 +9,9 @@ import {
   GetBatchResponse,
   getBatch,
   finalizeBatch,
+  DownloadBatchRequest,
+  DownloadBatchResponse,
+  downloadProducerCsv,
 } from '@wts/api/uk-waste-movements-bulk';
 
 export class DaprUkWasteMovementsBulkClient {
@@ -46,5 +49,16 @@ export class DaprUkWasteMovementsBulkClient {
       HttpMethod.POST,
       req
     )) as FinalizeBatchResponse;
+  }
+
+  async downloadProducerCsv(
+    req: DownloadBatchRequest
+  ): Promise<DownloadBatchResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsBulkAppId,
+      downloadProducerCsv.name,
+      HttpMethod.POST,
+      req
+    )) as DownloadBatchResponse;
   }
 }

@@ -2,26 +2,28 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { Submission } from './Submission';
+import { UkwmDraftSubmission } from '@wts/api/waste-tracking-gateway';
 
-const mockData = {
+const mockData: UkwmDraftSubmission = {
   transactionId: '12345',
+  id: '12345',
   wasteInformation: {
-    status: 'InProgress',
+    status: 'Complete',
     wasteTypes: [
       {
         ewcCode: '01 01 01',
         wasteDescription: 'Waste description 1',
         physicalForm: 'Solid',
         wasteQuantityType: 'EstimateData',
-        wasteQuantity: '1000',
-        quantityUnit: 'kg',
+        wasteQuantity: 1000,
+        quantityUnit: 'Kilogram',
         chemicalAndBiologicalComponents: [
-          { name: 'Component 1', concentration: '50', concentrationUnit: '%' },
+          { name: 'Component 1', concentration: 50, concentrationUnit: '%' },
         ],
         hasHazardousProperties: true,
         hazardousWasteCodes: [{ code: 'H1', name: 'Explosive' }],
         containsPops: true,
-        pops: [{ name: 'POP 1', concentration: '10', concentrationUnit: '%' }],
+        pops: [{ name: 'POP 1', concentration: 10, concentrationUnit: '%' }],
       },
     ],
     wasteTransportation: {
@@ -30,8 +32,9 @@ const mockData = {
     },
   },
   producerAndCollection: {
-    status: 'InProgress',
+    status: 'Complete',
     producer: {
+      reference: 'test ref',
       contact: {
         organisationName: 'Producer Org',
         name: 'Producer Name',
@@ -47,6 +50,11 @@ const mockData = {
       sicCode: 'SIC1234',
     },
     wasteCollection: {
+      expectedWasteCollectionDate: {
+        day: '01',
+        month: '01',
+        year: '2024',
+      },
       address: {
         addressLine1: '456 Avenue',
         townCity: 'Town',
@@ -58,22 +66,52 @@ const mockData = {
       brokerRegistrationNumber: 'BRN12345',
     },
   },
+  carrier: {
+    status: 'Complete',
+    value: {
+      contact: {
+        organisationName: 'Carrier Org',
+        name: 'Carrier Name',
+        email: 'producer@example.com',
+        phone: '1234567890',
+      },
+      address: {
+        addressLine1: '123 Street',
+        townCity: 'City',
+        postcode: 'AB12 3CD',
+        country: 'Country',
+      },
+    },
+  },
   receiver: {
-    status: 'InProgress',
-    authorizationType: 'Permit',
-    environmentalPermitNumber: 'Permit123',
-    contact: {
-      organisationName: 'Receiver Org',
-      name: 'Receiver Name',
-      email: 'receiver@example.com',
-      phone: '0987654321',
+    status: 'Complete',
+    value: {
+      authorizationType: 'Permit',
+      environmentalPermitNumber: 'Permit123',
+      contact: {
+        organisationName: 'Receiver Org',
+        name: 'Receiver Name',
+        email: 'receiver@example.com',
+        phone: '0987654321',
+      },
+      address: {
+        addressLine1: '789 Boulevard',
+        townCity: 'Village',
+        postcode: 'EF56 7GH',
+        country: 'Country',
+      },
     },
-    address: {
-      addressLine1: '789 Boulevard',
-      townCity: 'Village',
-      postcode: 'EF56 7GH',
-      country: 'Country',
+  },
+  submissionDeclaration: {
+    status: 'Complete',
+    values: {
+      declarationTimestamp: new Date(),
+      transactionId: 'WM2405_FDF4428F',
     },
+  },
+  submissionState: {
+    status: 'SubmittedWithEstimates',
+    timestamp: new Date(),
   },
 };
 

@@ -24,11 +24,21 @@ export const finalizeBatch: Method = {
   httpVerb: 'POST',
 };
 
+export const downloadProducerCsv: Method = {
+  name: 'ukwmDownloadBatch',
+  httpVerb: 'POST',
+};
+
 export type GetBatchRequest = { id: string } & AccountIdRequest;
 export type GetBatchResponse = Response<BulkSubmissionDetail>;
 
 export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
+
+export interface DownloadBatchRequest {
+  id: string;
+}
+export type DownloadBatchResponse = Response<{ data: string }>;
 
 export type PartialSubmission = Omit<
   Submission,
@@ -64,7 +74,19 @@ export interface BulkSubmissionValidationColumnError {
   errorDetails: BulkSubmissionValidationColumnErrorDetail[];
 }
 
-export type BulkSubmissionSummary = Readonly<Omit<DraftSubmission, 'receiver'>>;
+export type BulkSubmissionFullSummary = Readonly<DraftSubmission>;
+
+export interface BulkSubmissionPartialSummary {
+  id: string;
+  wasteMovementId: string;
+  producerName: string;
+  ewcCodes: string[];
+  collectionDate: {
+    day: string;
+    month: string;
+    year: string;
+  };
+}
 
 interface FailedValidationCodeState {
   status: 'FailedValidation';
@@ -77,6 +99,22 @@ interface FailedValidationDetailState {
   timestamp: Date;
   rowErrors: BulkSubmissionValidationRowError[];
   columnErrors?: BulkSubmissionValidationColumnError[];
+}
+
+interface FullSubmittedState {
+  status: 'Submitted';
+  timestamp: Date;
+  hasEstimates: boolean;
+  transactionId: string;
+  submissions: BulkSubmissionFullSummary[];
+}
+
+interface PartialSubmittedState {
+  status: 'Submitted';
+  timestamp: Date;
+  hasEstimates: boolean;
+  transactionId: string;
+  submissions: BulkSubmissionPartialSummary[];
 }
 
 type BulkSubmissionStateBase =
@@ -101,18 +139,12 @@ type BulkSubmissionStateBase =
       hasEstimates: boolean;
       transactionId: string;
       submissions: PartialSubmission[];
-    }
-  | {
-      status: 'Submitted';
-      timestamp: Date;
-      hasEstimates: boolean;
-      transactionId: string;
-      submissions: BulkSubmissionSummary[];
     };
 
 export type BulkSubmissionState =
   | BulkSubmissionStateBase
-  | FailedValidationCodeState;
+  | FailedValidationCodeState
+  | FullSubmittedState;
 
 export interface BulkSubmission {
   id: string;
@@ -121,7 +153,10 @@ export interface BulkSubmission {
 
 export interface BulkSubmissionDetail {
   id: string;
-  state: BulkSubmissionStateBase | FailedValidationDetailState;
+  state:
+    | BulkSubmissionStateBase
+    | FailedValidationDetailState
+    | PartialSubmittedState;
 }
 
 export interface ProducerDetailFlattened {
@@ -341,3 +376,34 @@ export type SubmissionFlattened = ProducerDetailFlattened &
   WasteCollectionDetailFlattened &
   WasteTypeDetailFlattened &
   CarrierDetailFlattened;
+
+export type SubmissionFlattenedDownload = {
+  transactionId: string;
+} & WasteTransportationDetailFlattened &
+  WasteCollectionDetailFlattened &
+  CarrierDetailFlattened &
+  WasteTypeDetailFlattened &
+  ReceiverDetailFlattened &
+  CarrierConfirmationFlattened & {
+    [key: string]: string;
+  };
+
+export interface CarrierConfirmationFlattened {
+  carrierConfirmationUniqueReference: string;
+  carrierConfirmationCorrectDetails: string;
+  carrierConfirmationbrokerRegistrationNumber: string;
+  carrierConfirmationRegistrationNumber: string;
+  carrierConfirmationOrganisationName: string;
+  carrierConfirmationAddressLine1: string;
+  carrierConfirmationAddressLine2: string;
+  carrierConfirmationTownCity: string;
+  carrierConfirmationCountry: string;
+  carrierConfirmationPostcode: string;
+  carrierConfirmationContactName: string;
+  carrierConfirmationContactEmail: string;
+  carrierConfirmationContactPhone: string;
+  carrierModeOfTransport: string;
+  carrierVehicleRegistrationNumber: string;
+  carrierDateWasteCollected: string;
+  carrierTimeWasteCollected: string;
+}

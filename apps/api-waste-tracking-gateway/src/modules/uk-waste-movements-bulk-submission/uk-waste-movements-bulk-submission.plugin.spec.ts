@@ -7,6 +7,7 @@ import {
   BatchRef,
   ServiceUkWasteMovementsBulkSubmissionBackend,
   Input,
+  DownloadRef,
 } from './uk-waste-movements-bulk-submission.backend';
 import bulkSubmissionPlugin from './uk-waste-movements-bulk-submission.plugin';
 import { BulkSubmission } from '@wts/api/waste-tracking-gateway';
@@ -24,6 +25,7 @@ const mockBackend = {
     jest.fn<(accountId: string, inputs: Input[]) => Promise<{ id: string }>>(),
   getBatch: jest.fn<(ref: BatchRef) => Promise<BulkSubmission>>(),
   finalizeBatch: jest.fn<(ref: BatchRef) => Promise<void>>(),
+  downloadCsv: jest.fn<(ref: DownloadRef) => Promise<string | Buffer>>(),
 };
 
 const app = server({
@@ -67,6 +69,7 @@ describe('UkWasteMovementsBulkSubmissionPlugin', () => {
     mockBackend.createBatch.mockClear();
     mockBackend.getBatch.mockClear();
     mockBackend.finalizeBatch.mockClear();
+    mockBackend.downloadCsv.mockClear();
   });
 
   describe('POST /batches', () => {
@@ -103,6 +106,19 @@ describe('UkWasteMovementsBulkSubmissionPlugin', () => {
 
       const response = await app.inject(options);
       expect(response.statusCode).toBe(201);
+    });
+  });
+
+  describe('GET /batches/{id}/download', () => {
+    it("Responds 404 if bulk submission doesn't exist", async () => {
+      const options = {
+        method: 'GET',
+        url: `/batches/${faker.datatype.uuid()}/download`,
+      };
+
+      mockBackend.downloadCsv.mockRejectedValue(Boom.notFound());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(404);
     });
   });
 });

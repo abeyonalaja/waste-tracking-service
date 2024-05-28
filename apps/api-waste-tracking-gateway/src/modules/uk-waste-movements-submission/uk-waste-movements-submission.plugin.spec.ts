@@ -30,7 +30,7 @@ const mockBackend = {
 
 const app = server({
   host: 'localhost',
-  port: 3005,
+  port: 3008,
 });
 
 beforeAll(async () => {

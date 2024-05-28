@@ -38,6 +38,11 @@ export interface UkwmReceiverDetail {
   address: UkwmAddress;
 }
 
+export interface UkwmCarrierDetail {
+  contact: UkwmContact;
+  address: UkwmAddress;
+}
+
 export interface UkwmHazardousWasteCode {
   code: string;
   name: string;
@@ -46,7 +51,7 @@ export interface UkwmHazardousWasteCode {
 export interface UkwmPop {
   name: string;
   concentration: number;
-  concentrationUnit: 'Microgram' | 'Milligram' | 'Kilogram';
+  concentrationUnit: string;
 }
 
 export interface UkwmChemicalAndBiologicalComponent {
@@ -131,22 +136,22 @@ export interface UkwmGetDraftsResult {
 export type UkwmWasteInformation =
   | { status: 'NotStarted' }
   | {
-      status: 'InProgress';
+      status: 'Complete';
       wasteTypes: UkwmWasteTypeDetail[];
       wasteTransportation: UkwmWasteTransportationDetail;
     };
 
-type DraftStatus<T> =
+export type UkwmDraftReceiverDetail =
   | { status: 'NotStarted' }
-  | ({ status: 'InProgress' } & T)
-  | ({ status: 'Completed' } & T);
-
-export type UkwmDraftReceiverDetail = DraftStatus<UkwmReceiverDetail>;
+  | {
+      status: 'Complete';
+      value: UkwmReceiverDetail;
+    };
 
 export type UkwmProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }
   | {
-      status: 'InProgress';
+      status: 'Complete';
       producer: UkwmProducerDetail;
       wasteCollection: UkwmWasteCollectionDetail;
     };
@@ -156,7 +161,7 @@ export interface UkwmSubmissionDeclaration {
   transactionId: string;
 }
 
-export type DraftSubmissionDeclaration =
+export type UkwmDraftSubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
@@ -179,8 +184,16 @@ export interface UkwmDraftSubmission {
   wasteInformation: UkwmWasteInformation;
   receiver: UkwmDraftReceiverDetail;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
-  submissionDeclaration: DraftSubmissionDeclaration;
+  carrier: UkwmDraftCarrierDetail;
+  submissionDeclaration: UkwmDraftSubmissionDeclaration;
   submissionState: UkwmSubmissionState;
 }
+
+export type UkwmDraftCarrierDetail =
+  | { status: 'NotStarted' }
+  | {
+      status: 'Complete';
+      value: UkwmCarrierDetail;
+    };
 
 export type GetUkwmSubmissionResponse = UkwmDraftSubmission;

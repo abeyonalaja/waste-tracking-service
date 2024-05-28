@@ -6,6 +6,7 @@ import {
   createBatch,
   getBatch,
   finalizeBatch,
+  downloadCsv,
 } from './uk-waste-movements-bulk-submission.backend';
 import {
   BadRequestError,
@@ -74,6 +75,26 @@ export default class UkwmBulkSubmissionPlugin {
             accountId: user.credentials.accountId,
           })) as undefined
         );
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          return err;
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.get(`${this.prefix}/:id/download`, async (req, res) => {
+      try {
+        const csvData = await downloadCsv();
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=waste-tracking.csv'
+        );
+        return res.send(csvData);
       } catch (err) {
         if (err instanceof NotFoundError) {
           return err;

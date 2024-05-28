@@ -459,13 +459,13 @@ export default class SubmissionController {
         };
 
         const draftReceiver: api.DraftReceiverDetail = {
-          status: 'Completed',
-          ...s.receiver,
+          status: 'Complete',
+          value: s.receiver,
         };
 
         const draftCarrier: api.DraftCarrierDetail = {
           status: 'Complete',
-          carrier: s.carrier,
+          value: s.carrier,
         };
 
         const draftSubmissionDeclaration: api.DraftSubmissionDeclaration = {

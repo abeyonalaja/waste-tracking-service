@@ -254,6 +254,25 @@ await server.invoker.listen(
   },
   { method: HttpMethod.POST }
 );
+
+await server.invoker.listen(
+  api.downloadProducerCsv.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+    const request = JSON.parse(body) as api.DownloadBatchRequest;
+    if (!parse.downloadCsvRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+    if (request == undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+    return await batchController.downloadProducerCsv(request);
+  },
+  { method: HttpMethod.POST }
+);
+
 await server.start();
 
 const execute = true;
@@ -468,6 +487,7 @@ while (execute) {
                 transactionId: s.transactionId,
                 producerAndCollection: s.producerAndCollection,
                 wasteInformation: s.wasteInformation,
+                receiver: s.receiver,
                 carrier: s.carrier,
                 submissionState: s.submissionState,
                 submissionDeclaration: s.submissionDeclaration,

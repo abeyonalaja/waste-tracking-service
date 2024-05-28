@@ -1,4 +1,9 @@
-export { addContentToBatch, getBatch, finalizeBatch } from './dto';
+export {
+  addContentToBatch,
+  getBatch,
+  finalizeBatch,
+  downloadProducerCsv,
+} from './dto';
 export type {
   AddContentToBatchRequest,
   AddContentToBatchResponse,
@@ -21,6 +26,9 @@ export type {
   BulkSubmissionValidationRowCodeError,
   BulkSubmissionDetail,
   CarrierDetailFlattened,
+  SubmissionFlattenedDownload,
+  DownloadBatchRequest,
+  DownloadBatchResponse,
 } from './dto';
 
 export * as schema from './schema';

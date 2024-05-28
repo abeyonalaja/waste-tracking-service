@@ -96,6 +96,33 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'GET',
+      path: '/{id}/download',
+      handler: async function ({ params }, h) {
+        try {
+          const csvData = await backend.downloadCsv({
+            id: params.id,
+          });
+
+          return h
+            .response(csvData)
+            .type('text/csv')
+            .header(
+              'Content-Disposition',
+              'attachment;filename=waste-tracking.csv'
+            ) as unknown;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

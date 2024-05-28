@@ -25,6 +25,13 @@ interface SubmissionProps {
   data: UkwmDraftSubmission;
 }
 
+const wasteQuantitiesMap: { [key: string]: string } = {
+  Tonne: 'tonnes',
+  'Cubic Metre': 'm3',
+  Kilogram: 'kg',
+  Litre: 'lt',
+};
+
 export function Submission({ data }: SubmissionProps): JSX.Element {
   const [sections, setSections] = useState<{
     [key: string]: boolean;
@@ -57,7 +64,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           toggle={toggleSection}
           status={data.wasteInformation.status}
         >
-          {data.wasteInformation.status === 'InProgress' &&
+          {data.wasteInformation.status === 'Complete' &&
             data.wasteInformation.wasteTypes.map(
               (wasteType: UkwmWasteTypeDetail, index: number) => {
                 return (
@@ -93,7 +100,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                                   </strong>
                                 )}
                                 {wasteType.wasteQuantity}
-                                {wasteType.quantityUnit}
+                                {wasteQuantitiesMap[wasteType.quantityUnit]}
                               </>
                             ),
                           },
@@ -148,7 +155,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 );
               }
             )}
-          {data.wasteInformation.status === 'InProgress' && (
+          {data.wasteInformation.status === 'Complete' && (
             <SummaryList
               items={[
                 {
@@ -176,7 +183,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           toggle={toggleSection}
           status={data.producerAndCollection.status}
         >
-          {data.producerAndCollection.status === 'InProgress' && (
+          {data.producerAndCollection.status === 'Complete' && (
             <SummaryList
               items={[
                 {
@@ -236,40 +243,40 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           toggle={toggleSection}
           status={data.receiver.status}
         >
-          {data.receiver.status === 'InProgress' && (
+          {data.receiver.status === 'Complete' && (
             <SummaryList
               items={[
                 {
                   key: 'Receiver authorisation type',
-                  value: data.receiver.authorizationType,
+                  value: data.receiver.value.authorizationType,
                 },
                 {
                   key: 'Receiver permit number or waste exemption number',
-                  value: data.receiver.environmentalPermitNumber,
+                  value: data.receiver.value.environmentalPermitNumber,
                 },
                 {
                   key: 'Receiver organisation name',
-                  value: data.receiver.contact.organisationName,
+                  value: data.receiver.value.contact.organisationName,
                 },
                 {
                   key: 'Receiver address',
-                  value: `${data.receiver.address.addressLine1}, ${data.receiver.address.townCity}, ${data.receiver.address.postcode}, ${data.receiver.address.country}`,
+                  value: `${data.receiver.value.address.addressLine1}, ${data.receiver.value.address.townCity}, ${data.receiver.value.address.postcode}, ${data.receiver.value.address.country}`,
                 },
                 {
                   key: 'Receiver postcode',
-                  value: data.receiver.address.postcode,
+                  value: data.receiver.value.address.postcode,
                 },
                 {
                   key: 'Receiver contact name',
-                  value: data.receiver.contact.name,
+                  value: data.receiver.value.contact.name,
                 },
                 {
                   key: 'Receiver contact email address',
-                  value: data.receiver.contact.email,
+                  value: data.receiver.value.contact.email,
                 },
                 {
                   key: 'Receiver contact phone number',
-                  value: data.receiver.contact.phone,
+                  value: data.receiver.value.contact.phone,
                 },
               ]}
             />

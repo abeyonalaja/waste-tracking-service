@@ -76,19 +76,21 @@ describe('getDraftResponse', () => {
           },
         },
         receiver: {
-          status: 'Completed',
-          authorizationType: 'Type1',
-          environmentalPermitNumber: 'EPN123',
-          contact: {
-            organisationName: 'Organisation1',
-            name: 'Contact1',
-            email: 'contact1@example.com',
-            phone: '1234567890',
-          },
-          address: {
-            addressLine1: 'Address Line 1',
-            townCity: 'City1',
-            country: 'Country1',
+          status: 'Complete',
+          value: {
+            authorizationType: 'Type1',
+            environmentalPermitNumber: 'EPN123',
+            contact: {
+              organisationName: 'Organisation1',
+              name: 'Contact1',
+              email: 'contact1@example.com',
+              phone: '1234567890',
+            },
+            address: {
+              addressLine1: 'Address Line 1',
+              townCity: 'City1',
+              country: 'Country1',
+            },
           },
         },
         producerAndCollection: {
@@ -124,7 +126,7 @@ describe('getDraftResponse', () => {
         },
         carrier: {
           status: 'Complete',
-          carrier: {
+          value: {
             contact: {
               organisationName: 'Organisation2',
               name: 'Contact2',
@@ -151,7 +153,6 @@ describe('getDraftResponse', () => {
         },
       },
     };
-
     expect(validate(value)).toBe(true);
   });
 });

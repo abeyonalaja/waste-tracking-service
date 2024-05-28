@@ -7,6 +7,8 @@ import { Handler } from '@wts/api/common';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 import { BulkSubmission } from '../model';
 import { Field, ErrorCodeData, validation } from '@wts/api/uk-waste-movements';
+import { compress } from 'snappy';
+import { downloadHeaders, downloadSections } from '../lib/csv-content';
 
 export class BatchController {
   constructor(private repository: BatchRepository, private logger: Logger) {}
@@ -185,6 +187,37 @@ export class BatchController {
           );
           response.value.state.rowErrors = rowErrors;
         }
+      } else if (data.state.status === 'Submitted') {
+        const bulkSubmission = {
+          id: data.id,
+          state: {
+            status: data.state.status,
+            timestamp: data.state.timestamp,
+            transactionId: data.state.transactionId,
+            submissions: data.state.submissions.map((v) => ({
+              id: v.id,
+              wasteMovementId:
+                v.submissionDeclaration.status === 'Complete' &&
+                v.submissionDeclaration.values.transactionId,
+              producerName:
+                v.producerAndCollection.status === 'Complete' &&
+                v.producerAndCollection.producer.contact?.organisationName,
+              ewcCodes:
+                v.wasteInformation.status === 'Complete' &&
+                v.wasteInformation.wasteTypes.map((wt) => wt?.ewcCode),
+              collectionDate: v.producerAndCollection.status === 'Complete' && {
+                day: v.producerAndCollection.wasteCollection
+                  .expectedWasteCollectionDate?.day,
+                month:
+                  v.producerAndCollection.wasteCollection
+                    .expectedWasteCollectionDate?.month,
+                year: v.producerAndCollection.wasteCollection
+                  .expectedWasteCollectionDate?.year,
+              },
+            })),
+          },
+        } as api.BulkSubmissionDetail;
+        return success(bulkSubmission);
       }
       return response;
     } catch (err) {
@@ -235,4 +268,43 @@ export class BatchController {
         return fromBoom(Boom.internal());
       }
     };
+
+  downloadProducerCsv: Handler<
+    api.DownloadBatchRequest,
+    api.DownloadBatchResponse
+  > = async ({ id }) => {
+    try {
+      const result = (await this.repository.downloadProducerCsv(
+        id
+      )) as api.SubmissionFlattenedDownload[];
+
+      let csvText = downloadSections + '\n' + downloadHeaders + '\n';
+      console.log(downloadHeaders);
+      for (const submission of result) {
+        const keys = Object.keys(submission);
+        const values = keys.map((key) => {
+          if (submission[key].includes(',')) {
+            return `"${submission[key]}"`;
+          }
+          return submission[key];
+        });
+        csvText += values.join(',') + '\n';
+      }
+
+      const buffer = Buffer.from(csvText, 'utf-8');
+
+      const compressedBuffer = await compress(buffer);
+
+      const base64Data = compressedBuffer.toString('base64');
+
+      return success({ data: base64Data });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

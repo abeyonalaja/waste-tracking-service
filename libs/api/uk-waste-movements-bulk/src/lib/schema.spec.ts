@@ -8,6 +8,8 @@ import {
   FinalizeBatchRequest,
   FinalizeBatchResponse,
   BulkSubmission,
+  DownloadBatchRequest,
+  DownloadBatchResponse,
 } from './dto';
 import {
   addContentToBatchRequest,
@@ -17,6 +19,8 @@ import {
   finalizeBatchRequest,
   finalizeBatchResponse,
   bulkSubmissionCode,
+  downloadCsvRequest,
+  downloadCsvResponse,
 } from './schema';
 
 const ajv = new Ajv();
@@ -400,114 +404,15 @@ describe('getBatchResponse', () => {
           hasEstimates: true,
           submissions: [
             {
-              id: '1234',
-              transactionId: '2307_5678ABCD',
-              producerAndCollection: {
-                status: 'Complete',
-                producer: {
-                  reference: '1234',
-                  sicCode: '123456',
-                  address: {
-                    addressLine1: 'address1',
-                    addressLine2: 'address2',
-                    country: 'England',
-                    townCity: 'London',
-                    postcode: 'SW1A 1AA',
-                  },
-                  contact: {
-                    name: 'test',
-                    organisationName: 'test',
-                    phone: '1234',
-                    email: 'test@organisation.com',
-                  },
-                },
-                wasteCollection: {
-                  address: {
-                    addressLine1: 'address1',
-                    addressLine2: 'address2',
-                    country: 'England',
-                    townCity: 'London',
-                    postcode: 'SW1A 1AA',
-                  },
-                  brokerRegistrationNumber: 'CBDU1234',
-                  carrierRegistrationNumber: 'CBDU1234',
-                  wasteSource: 'Household',
-                  localAuthority: 'Local authority',
-                  expectedWasteCollectionDate: {
-                    day: '01',
-                    month: '01',
-                    year: '2028',
-                  },
-                },
+              id: faker.datatype.uuid(),
+              collectionDate: {
+                day: '1',
+                month: '3',
+                year: '2024',
               },
-              carrier: {
-                status: 'Complete',
-                carrier: {
-                  contact: {
-                    organisationName: 'org',
-                    name: 'name',
-                    email: 'example@email.co.uk',
-                    phone: '02071234567',
-                  },
-                  address: {
-                    addressLine1: '123 Oxford Street',
-                    addressLine2: 'Westminster',
-                    townCity: 'London',
-                    postcode: 'W1A 1AA',
-                    country: 'England',
-                  },
-                },
-              },
-              wasteInformation: {
-                status: 'Complete',
-                wasteTypes: [
-                  {
-                    ewcCode: '1234',
-                    wasteDescription: 'test',
-                    physicalForm: 'Solid',
-                    wasteQuantity: 1,
-                    quantityUnit: 'Kilogram',
-                    wasteQuantityType: 'EstimateData',
-                    chemicalAndBiologicalComponents: [
-                      {
-                        concentration: 1,
-                        concentrationUnit: 'Kilogram',
-                        name: 'test',
-                      },
-                    ],
-                    hasHazardousProperties: false,
-                    containsPops: false,
-                    hazardousWasteCodes: [
-                      {
-                        code: 'HP1',
-                        name: 'test',
-                      },
-                    ],
-                    pops: [
-                      {
-                        concentration: 1,
-                        name: 'test',
-                        concentrationUnit: 'Kilogram',
-                      },
-                    ],
-                  },
-                ],
-                wasteTransportation: {
-                  numberAndTypeOfContainers: 'test',
-                  specialHandlingRequirements: 'n/a',
-                },
-              },
-              submissionDeclaration: {
-                status: 'Complete',
-                values: {
-                  declarationTimestamp: new Date(),
-                  transactionId: '2307_5678ABCD',
-                },
-              },
-              submissionState: {
-                status: 'SubmittedWithEstimates',
-                timestamp: new Date(),
-              },
+              ewcCodes: ['010101'],
+              producerName: 'Test Producer',
+              wasteMovementId: 'WM2405_FDF4428',
             },
           ],
         },
@@ -538,6 +443,46 @@ describe('finalizeBatchRequest', () => {
     const value: FinalizeBatchRequest = {
       id: faker.datatype.uuid(),
       accountId: faker.datatype.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('downloadCsvRequest', () => {
+  const validate = ajv.compile<DownloadBatchRequest>(downloadCsvRequest);
+
+  it('is compatible with dto values', () => {
+    const value: DownloadBatchRequest = {
+      id: faker.datatype.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('downloadCsvResponse', () => {
+  const validate = ajv.compile<DownloadBatchResponse>(downloadCsvResponse);
+
+  it('is compatible with dto values', () => {
+    const value: DownloadBatchResponse = {
+      success: true,
+      value: {
+        data: 'ExampleBase64Data',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error values', () => {
+    const value: DownloadBatchResponse = {
+      success: false,
+      error: {
+        message: '',
+        name: '',
+        statusCode: 0,
+      },
     };
 
     expect(validate(value)).toBe(true);

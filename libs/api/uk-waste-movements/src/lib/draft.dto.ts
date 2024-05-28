@@ -11,12 +11,13 @@ import {
   CarrierDetail,
 } from './submission.dto';
 
-type DraftStatus<T> =
+export type DraftReceiverDetail =
   | { status: 'NotStarted' }
-  | ({ status: 'InProgress' } & T)
-  | ({ status: 'Completed' } & T);
+  | {
+      status: 'Complete';
+      value: ReceiverDetail;
+    };
 
-export type DraftReceiverDetail = DraftStatus<ReceiverDetail>;
 export type ProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }
   | {
@@ -44,7 +45,7 @@ export type DraftCarrierDetail =
   | { status: 'NotStarted' }
   | {
       status: 'Complete';
-      carrier: CarrierDetail;
+      value: CarrierDetail;
     };
 
 export interface DraftSubmission {

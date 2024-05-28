@@ -3,6 +3,7 @@ import {
   GetBatchRequest,
   FinalizeBatchRequest,
   schema,
+  DownloadBatchRequest,
 } from '@wts/api/uk-waste-movements-bulk';
 import Ajv from 'ajv/dist/jtd';
 
@@ -18,4 +19,8 @@ export const getBatchRequest = ajv.compileParser<GetBatchRequest>(
 
 export const finalizeBatchRequest = ajv.compileParser<FinalizeBatchRequest>(
   schema.finalizeBatchRequest
+);
+
+export const downloadCsvRequest = ajv.compile<DownloadBatchRequest>(
+  schema.downloadCsvRequest
 );

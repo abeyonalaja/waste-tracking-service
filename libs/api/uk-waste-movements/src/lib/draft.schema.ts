@@ -122,24 +122,18 @@ const draftReceiver: SchemaObject = {
     NotStarted: {
       properties: {},
     },
-    InProgress: {
+    Complete: {
       properties: {
-        authorizationType: { type: 'string' },
-        contact: contact,
-        address: address,
-      },
-      optionalProperties: {
-        environmentalPermitNumber: { type: 'string' },
-      },
-    },
-    Completed: {
-      properties: {
-        authorizationType: { type: 'string' },
-        contact: contact,
-        address: address,
-      },
-      optionalProperties: {
-        environmentalPermitNumber: { type: 'string' },
+        value: {
+          properties: {
+            authorizationType: { type: 'string' },
+            contact: contact,
+            address: address,
+          },
+          optionalProperties: {
+            environmentalPermitNumber: { type: 'string' },
+          },
+        },
       },
     },
   },
@@ -215,7 +209,7 @@ export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
     NotStarted: { properties: {} },
     Complete: {
       properties: {
-        carrier,
+        value: carrier,
       },
     },
   },

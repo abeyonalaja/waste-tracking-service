@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
-import { compress } from 'snappy';
+import { compress, uncompress } from 'snappy';
 import { Logger } from 'winston';
 import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import * as api from '@wts/api/uk-waste-movements-bulk';
@@ -8,6 +8,10 @@ import * as api from '@wts/api/uk-waste-movements-bulk';
 export interface BatchRef {
   id: string;
   accountId: string;
+}
+
+export interface DownloadRef {
+  id: string;
 }
 
 export interface Input {
@@ -19,6 +23,7 @@ export interface UkWasteMovementsBulkSubmissionBackend {
   createBatch(accountId: string, inputs: Input[]): Promise<{ id: string }>;
   getBatch(ref: BatchRef): Promise<UkwmBulkSubmission>;
   finalizeBatch(ref: BatchRef): Promise<void>;
+  downloadCsv(ref: DownloadRef): Promise<string | Buffer>;
 }
 
 export class ServiceUkWasteMovementsBulkSubmissionBackend
@@ -101,38 +106,6 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
       });
     }
 
-    if (response.value.state.status == 'Submitted') {
-      return {
-        id: response.value.id,
-        state: {
-          status: response.value.state.status,
-          timestamp: response.value.state.timestamp,
-          transactionId: response.value.state.transactionId,
-          submissions: response.value.state.submissions.map((v) => ({
-            id: v.id,
-            wasteMovementId:
-              v.submissionDeclaration.status === 'Complete' &&
-              v.submissionDeclaration.values.transactionId,
-            producerName:
-              v.producerAndCollection.status === 'Complete' &&
-              v.producerAndCollection.producer.contact?.organisationName,
-            ewcCodes:
-              v.wasteInformation.status === 'Complete' &&
-              v.wasteInformation.wasteTypes.map((wt) => wt?.ewcCode),
-            collectionDate: v.producerAndCollection.status === 'Complete' && {
-              day: v.producerAndCollection.wasteCollection
-                .expectedWasteCollectionDate?.day,
-              month:
-                v.producerAndCollection.wasteCollection
-                  .expectedWasteCollectionDate?.month,
-              year: v.producerAndCollection.wasteCollection
-                .expectedWasteCollectionDate?.year,
-            },
-          })),
-        },
-      } as UkwmBulkSubmission;
-    }
-
     return response.value as UkwmBulkSubmission;
   }
 
@@ -153,5 +126,26 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
         statusCode: response.error.statusCode,
       });
     }
+  }
+
+  async downloadCsv({ id }: DownloadRef): Promise<string | Buffer> {
+    let response: api.DownloadBatchResponse;
+    try {
+      response = await this.client.downloadProducerCsv({ id });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+    const compressedData = Buffer.from(response.value.data, 'base64');
+
+    const csvData = await uncompress(compressedData);
+
+    return csvData;
   }
 }

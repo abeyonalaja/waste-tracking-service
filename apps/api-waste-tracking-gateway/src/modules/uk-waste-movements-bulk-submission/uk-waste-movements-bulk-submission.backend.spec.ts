@@ -11,6 +11,8 @@ import {
   GetBatchResponse,
   FinalizeBatchRequest,
   FinalizeBatchResponse,
+  DownloadBatchRequest,
+  DownloadBatchResponse,
 } from '@wts/api/uk-waste-movements-bulk';
 import Boom from '@hapi/boom';
 import { compress } from 'snappy';
@@ -38,12 +40,15 @@ const mockGetBatch =
   jest.fn<(req: GetBatchRequest) => Promise<GetBatchResponse>>();
 const mockFinalizeBatch =
   jest.fn<(req: FinalizeBatchRequest) => Promise<FinalizeBatchResponse>>();
+const mockDownloadProducerCsv =
+  jest.fn<(req: DownloadBatchRequest) => Promise<DownloadBatchResponse>>();
 
 jest.mock('@wts/client/uk-waste-movements-bulk', () => ({
   DaprUkWasteMovementsBulkClient: jest.fn().mockImplementation(() => ({
     addContentToBatch: mockAddContentToBatch,
     getBatch: mockGetBatch,
     finalizeBatch: mockFinalizeBatch,
+    downloadProducerCsv: mockDownloadProducerCsv,
   })),
 }));
 
@@ -60,6 +65,7 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
     mockAddContentToBatch.mockClear();
     mockGetBatch.mockClear();
     mockFinalizeBatch.mockClear();
+    mockDownloadProducerCsv.mockClear();
   });
 
   describe('createBatch', () => {
@@ -238,6 +244,64 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
         },
       });
       expect(mockGetBatch).toBeCalledWith(request);
+    });
+  });
+
+  describe('downloadCsv', () => {
+    it('throws client error if unsuccessful response was returned via Dapr', async () => {
+      const request = {
+        id: faker.datatype.uuid(),
+      };
+      mockDownloadProducerCsv.mockResolvedValueOnce({
+        success: false,
+        error: {
+          statusCode: 404,
+          name: 'Test',
+          message: 'Not Found',
+        },
+      });
+
+      try {
+        await subject.downloadCsv(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.notFound());
+      }
+      expect(mockDownloadProducerCsv).toBeCalledWith(request);
+    });
+
+    it('throws server error if response cannot be returned via Dapr', async () => {
+      const request = {
+        id: faker.datatype.uuid(),
+      };
+      mockDownloadProducerCsv.mockRejectedValueOnce(Boom.teapot());
+
+      try {
+        await subject.downloadCsv(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.internal());
+      }
+      expect(mockDownloadProducerCsv).toBeCalledWith(request);
+    });
+
+    it('returns successful response', async () => {
+      const id = faker.datatype.uuid();
+      const request = { id: id };
+
+      const expectedData = 'This,is,array,of,submissions';
+      const buffer = Buffer.from(expectedData, 'utf-8');
+      const compressedBuffer = await compress(buffer);
+      const base64Data = compressedBuffer.toString('base64');
+
+      mockDownloadProducerCsv.mockResolvedValueOnce({
+        success: true,
+        value: {
+          data: base64Data,
+        },
+      });
+
+      const result = await subject.downloadCsv(request);
+      expect(result.toString()).toEqual(expectedData);
+      expect(mockDownloadProducerCsv).toBeCalledWith(request);
     });
   });
 });
