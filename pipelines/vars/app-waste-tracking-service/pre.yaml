@@ -1,5 +1,5 @@
 image:
-  tag: '3.0.1'
+  tag: '3.1.0'
 resources:
   requests:
     cpu: 50m
@@ -11,6 +11,7 @@ secret:
   env:
     NEXT_PUBLIC_MULTIPLES_ENABLED: 'false'
     NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
+    NEXT_PUBLIC_UKWM_ENABLED: 'true'
 ingress:
   enabled: true
   className: 'nginx'

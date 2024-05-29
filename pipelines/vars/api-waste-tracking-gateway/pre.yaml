@@ -1,5 +1,5 @@
 image:
-  tag: '4.0.1'
+  tag: '4.1.0'
 resources:
   requests:
     cpu: 50m
@@ -17,7 +17,7 @@ secret:
     IS_MULTIPLE_UPLOAD_ENABLED: 'true'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
     FEATURE_PRIVATE_AUDIENCE_CHECKS: 'true'
-    IS_UKWM_BATCHES_ENABLED: 'false'
+    IS_UKWM_BATCHES_ENABLED: 'true'
 ingress:
   enabled: true
   className: 'nginx'
