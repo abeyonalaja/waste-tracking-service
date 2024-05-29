@@ -1,6 +1,7 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { HeaderNavigation, LanguageSwitcher, Link } from '../components';
+import { Link } from '@wts/ui/navigation';
 import React, { Suspense } from 'react';
+import { AuthNavigation } from '@wts/ui/shared-ui/server';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export default async function Layout({
         }
         navigation={
           <Suspense>
-            <HeaderNavigation />
+            <AuthNavigation />
           </Suspense>
         }
       />
@@ -31,12 +32,7 @@ export default async function Layout({
           {'This is a new service'}
         </GovUK.PhaseBanner>
       </GovUK.WidthContainer>
-      <GovUK.WidthContainer>
-        <LanguageSwitcher />
-      </GovUK.WidthContainer>
-      <GovUK.WidthContainer>
-        <GovUK.Main>{children}</GovUK.Main>
-      </GovUK.WidthContainer>
+      {children}
       <GovUK.Footer
         footerLinks={[
           <Link

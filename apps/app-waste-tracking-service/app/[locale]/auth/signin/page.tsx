@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { redirect } from '../../../../navigation';
 import { Loading } from '../../../components/Loading';
 import React, { Suspense } from 'react';
+import { Page } from '@wts/ui/shared-ui/server';
 
 export const metadata = {
   title: 'Waste tracking service',
@@ -22,7 +23,7 @@ export default async function Index({
   }
 
   return (
-    <>
+    <Page>
       <GovUK.GridRow>
         <GovUK.GridCol size={'two-thirds'}>
           <Loading />
@@ -31,6 +32,6 @@ export default async function Index({
           </Suspense>
         </GovUK.GridCol>
       </GovUK.GridRow>
-    </>
+    </Page>
   );
 }
