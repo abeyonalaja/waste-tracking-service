@@ -7,14 +7,17 @@ import {
 } from '@wts/ui/govuk-react-ui';
 import { Link } from '@wts/ui/navigation';
 import { useTranslations } from 'next-intl';
+import { DownloadCSVLink } from './DownloadCSVLink';
 
 interface SubmissionConfirmationProps {
   submissionId: string;
+  token: string | null | undefined;
   recordCount: number;
 }
 
 export function SubmissionConfirmation({
   submissionId,
+  token,
   recordCount = 0,
 }: SubmissionConfirmationProps): JSX.Element {
   const t = useTranslations('multiples.confirmation');
@@ -34,6 +37,15 @@ export function SubmissionConfirmation({
           >
             {t('bullet1')}
           </Link>
+        </ListItem>
+        <ListItem>
+          <DownloadCSVLink
+            multiplesId={submissionId}
+            token={token}
+            filename={`${submissionId}.csv`}
+          >
+            {t('bullet2')}
+          </DownloadCSVLink>
         </ListItem>
       </List>
       <Heading size={'m'} level={2}>

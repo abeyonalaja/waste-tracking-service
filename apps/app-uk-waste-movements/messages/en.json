@@ -230,6 +230,7 @@
       "bodyP1": "Now you have created these waste movements, you need to notify other involved parties of any relevant movements.",
       "bodyP2": "You can also:",
       "bullet1": "view all these created waste movement records (opens in new tab)",
+      "bullet2": "download a CSV file of these created waste movement records",
       "subHeading2": "What happens next",
       "bodyP3": "The receivers of the waste will need to confirm collection and receipt of the waste using the waste tracking service.",
       "button": "Return to move waste in the UK"

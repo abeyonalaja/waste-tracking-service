@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
+import { getServerSession, Session } from 'next-auth';
 import { options } from '../../../api/auth/[...nextauth]/options';
 import { getTranslations } from 'next-intl/server';
 import { redirect } from '@wts/ui/navigation';
@@ -42,7 +42,7 @@ export default async function StatusPage({
   searchParams,
 }: PageProps): Promise<JSX.Element> {
   const t = await getTranslations('multiples');
-  const session = await getServerSession(options);
+  const session: Session | null = await getServerSession(options);
   const token = session?.token;
   const headerList = headers();
   const hostname = headerList.get('host') || '';
@@ -232,6 +232,7 @@ export default async function StatusPage({
           <GovUK.GridCol size="two-thirds">
             <SubmissionConfirmation
               submissionId={params.id}
+              token={token}
               recordCount={state.submissions.length}
             />
           </GovUK.GridCol>
@@ -242,7 +243,8 @@ export default async function StatusPage({
 
   return (
     <Page beforeChildren={<BackLink href="/" />}>
-      <p>Catch all route</p>
+      <GovUK.Heading>Sorry, there is a problem with the service</GovUK.Heading>
+      <GovUK.Paragraph>Try again later.</GovUK.Paragraph>
     </Page>
   );
 }
