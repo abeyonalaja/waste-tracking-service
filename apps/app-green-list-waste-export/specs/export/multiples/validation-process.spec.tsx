@@ -10,7 +10,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next/router', () => {
@@ -110,7 +110,10 @@ describe('Validation Process page', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { level: 1, name: 'Loading test-file.csv' })
+        screen.getByRole('heading', {
+          level: 1,
+          name: 'Loading test-file.csv',
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -144,7 +147,7 @@ describe('Validation Process page', () => {
 
     await waitFor(() => {
       expect(useRouter().push).toHaveBeenCalledWith(
-        '/multiples/1234/errors?errors=true'
+        '/multiples/1234/errors?errors=true',
       );
     });
   });

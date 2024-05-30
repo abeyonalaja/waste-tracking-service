@@ -8,7 +8,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('Save Return Button', () => {
@@ -17,7 +17,7 @@ describe('Save Return Button', () => {
 
   it('renders with default text', () => {
     const { getByTestId } = render(
-      <SaveReturnButton onClick={mockCallBack} testId={testId} />
+      <SaveReturnButton onClick={mockCallBack} testId={testId} />,
     );
     const button = getByTestId(testId);
     expect(button).toHaveTextContent('Save and return');
@@ -25,7 +25,7 @@ describe('Save Return Button', () => {
 
   it('calls the provided callback function on click', () => {
     const { getByTestId } = render(
-      <SaveReturnButton onClick={mockCallBack} testId={testId} />
+      <SaveReturnButton onClick={mockCallBack} testId={testId} />,
     );
     const button = getByTestId(testId);
     fireEvent.click(button);

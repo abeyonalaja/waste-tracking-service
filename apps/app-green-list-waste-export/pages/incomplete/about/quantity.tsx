@@ -75,8 +75,8 @@ const Quantity = () => {
               data.status === 'NotStarted'
                 ? 'Started'
                 : data.status === 'Complete'
-                ? 'Started'
-                : data.status,
+                  ? 'Started'
+                  : data.status,
             value: {
               type: quantityType,
             },
@@ -96,7 +96,7 @@ const Quantity = () => {
                 method: 'PUT',
                 headers: apiConfig,
                 body: JSON.stringify(newData),
-              }
+              },
             )
               .then((response) => {
                 if (response.ok) return response.json();
@@ -132,7 +132,7 @@ const Quantity = () => {
         }
       }
     },
-    [id, weightOrVolume, quantityType, data]
+    [id, weightOrVolume, quantityType, data],
   );
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const Quantity = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -162,13 +162,13 @@ const Quantity = () => {
                 data.wasteQuantity?.status === 'CannotStart' ||
                   data.wasteQuantity?.status === 'NotStarted'
                   ? undefined
-                  : data.wasteQuantity?.value.type
+                  : data.wasteQuantity?.value.type,
               );
               setSavedQuantityType(
                 data.wasteQuantity?.status === 'CannotStart' ||
                   data.wasteQuantity?.status === 'NotStarted'
                   ? undefined
-                  : data.wasteQuantity?.value.type
+                  : data.wasteQuantity?.value.type,
               );
               // for the weightOrVolume variable, we check if the parent object has setted it, i.e. we have to populate
               // the radio buttons with the correct value
@@ -180,10 +180,10 @@ const Quantity = () => {
                     // entered actual data, we populate our variable with volume or weight based on the actual data
                     if (data.wasteQuantity?.value?.actualData !== undefined) {
                       setWeightOrVolume(
-                        data.wasteQuantity?.value?.actualData?.quantityType
+                        data.wasteQuantity?.value?.actualData?.quantityType,
                       );
                       setSavedWeightOrVolume(
-                        data.wasteQuantity?.value?.actualData?.quantityType
+                        data.wasteQuantity?.value?.actualData?.quantityType,
                       );
                     }
                     break;
@@ -192,10 +192,10 @@ const Quantity = () => {
                     // entered estimate data, we populate our variable with volume or weight based on the estimate data
                     if (data.wasteQuantity?.value?.estimateData !== undefined) {
                       setWeightOrVolume(
-                        data.wasteQuantity?.value?.estimateData?.quantityType
+                        data.wasteQuantity?.value?.estimateData?.quantityType,
                       );
                       setSavedWeightOrVolume(
-                        data.wasteQuantity?.value?.estimateData?.quantityType
+                        data.wasteQuantity?.value?.estimateData?.quantityType,
                       );
                     }
                     break;

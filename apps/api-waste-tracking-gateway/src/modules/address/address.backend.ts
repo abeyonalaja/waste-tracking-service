@@ -7,16 +7,19 @@ import { Logger } from 'winston';
 export interface AddressBackend {
   listAddresses(
     postcode: string,
-    buildingNameOrNumber?: string
+    buildingNameOrNumber?: string,
   ): Promise<api.ListAddressesResponse>;
 }
 
 export class AddressServiceBackend implements AddressBackend {
-  constructor(private client: DaprAddressClient, private logger: Logger) {}
+  constructor(
+    private client: DaprAddressClient,
+    private logger: Logger,
+  ) {}
 
   async listAddresses(
     postcode: string,
-    buildingNameOrNumber?: string
+    buildingNameOrNumber?: string,
   ): Promise<api.ListAddressesResponse> {
     let response: GetAddressByPostcodeResponse;
     try {

@@ -105,7 +105,7 @@ const ExportSubmitted = () => {
 
   const [exportSubmittedPage, dispatchExportSubmittedPage] = useReducer(
     exportSubmittedReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
 
   const [id, setId] = useState(null);
@@ -129,7 +129,7 @@ const ExportSubmitted = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();

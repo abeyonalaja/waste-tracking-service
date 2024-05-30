@@ -140,7 +140,7 @@ const InterimSiteDetails = () => {
   const apiConfig = useApiConfig();
   const [interimPage, dispatchInterimPage] = useReducer(
     interimReducer,
-    initialState
+    initialState,
   );
   const [refData, setRefData] = useState<codeType>();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -186,7 +186,7 @@ const InterimSiteDetails = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -194,7 +194,7 @@ const InterimSiteDetails = () => {
         .then((data) => {
           if (data !== undefined) {
             const filterInterimCodes = data.filter(
-              (code) => code.value.interim
+              (code) => code.value.interim,
             );
             setRefData(filterInterimCodes);
           }
@@ -211,7 +211,7 @@ const InterimSiteDetails = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -227,10 +227,10 @@ const InterimSiteDetails = () => {
               });
               if (data.values !== undefined) {
                 const interimSite = data.values.filter(
-                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite',
                 );
                 const emptyRecords = data.values.filter(
-                  (site) => site.addressDetails === undefined
+                  (site) => site.addressDetails === undefined,
                 );
 
                 if (interimSite.length > 0) {
@@ -308,11 +308,11 @@ const InterimSiteDetails = () => {
             emailAddress: validateEmail(contactDetails?.emailAddress, true),
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber,
-              true
+              true,
             ),
             faxNumber: validateInternationalFax(
               contactDetails?.faxNumber,
-              true
+              true,
             ),
           };
           body = {
@@ -358,7 +358,7 @@ const InterimSiteDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -411,7 +411,7 @@ const InterimSiteDetails = () => {
         }
       }
     },
-    [interimPage.data, addressDetails, contactDetails, recoveryFacilityType]
+    [interimPage.data, addressDetails, contactDetails, recoveryFacilityType],
   );
 
   const onAddressDetailsChange = (e) => {
@@ -445,7 +445,7 @@ const InterimSiteDetails = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();

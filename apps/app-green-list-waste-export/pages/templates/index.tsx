@@ -123,7 +123,7 @@ const ManageTemplates = () => {
   const apiConfig = useApiConfig();
   const [templatesPage, dispatchTemplatePage] = useReducer(
     templatesReducer,
-    manageTemplatesState
+    manageTemplatesState,
   );
   const [templateId, setTemplateId] = useState<string>(null);
   const [context, setContext] = useState<string>(null);
@@ -180,7 +180,7 @@ const ManageTemplates = () => {
     if (templateId && templatesPage.data) {
       if (templatesPage.data.values !== undefined) {
         const item = templatesPage.data.values.find(
-          (template) => template.id === templateId
+          (template) => template.id === templateId,
         );
         if (item) {
           setItemToDelete(item);
@@ -226,11 +226,11 @@ const ManageTemplates = () => {
               {
                 method: 'DELETE',
                 headers: apiConfig,
-              }
+              },
             ).then(() => {
               const filteredDate = templatesPage.data;
               filteredDate.values = filteredDate.values.filter(
-                (template) => template.id !== itemToDelete.id
+                (template) => template.id !== itemToDelete.id,
               );
               dispatchTemplatePage({
                 type: 'DATA_FETCH_SUCCESS',
@@ -251,7 +251,7 @@ const ManageTemplates = () => {
         }
       }
     },
-    [confirmRemove, itemToDelete, dispatchTemplatePage]
+    [confirmRemove, itemToDelete, dispatchTemplatePage],
   );
 
   const BreadCrumbs = () => {
@@ -483,7 +483,7 @@ const ManageTemplates = () => {
                           (key) => ({
                             targetName: key,
                             text: templatesPage.errors[key],
-                          })
+                          }),
                         )}
                       />
                     )}

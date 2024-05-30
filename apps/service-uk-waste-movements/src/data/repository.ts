@@ -4,12 +4,12 @@ export interface IRepository<T> {
   createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: Omit<T, 'submissionDeclaration' | 'submissionState'>[]
+    values: Omit<T, 'submissionDeclaration' | 'submissionState'>[],
   ): Promise<void>;
 
   getDraft(
     containerName: DbContainerNameKey,
-    id: string
+    id: string,
   ): Promise<DraftSubmission>;
 
   getDrafts(
@@ -19,6 +19,6 @@ export interface IRepository<T> {
     collectionDate?: Date,
     ewcCode?: string,
     producerName?: string,
-    wasteMovementId?: string
+    wasteMovementId?: string,
   ): Promise<GetDraftsResult>;
 }

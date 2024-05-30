@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { AccordionSection } from './AccordionSection';
 
 describe('AccordionSection component', () => {
@@ -26,7 +26,7 @@ describe('AccordionSection component', () => {
         toggle={toggle}
       >
         <div>Child Content</div>
-      </AccordionSection>
+      </AccordionSection>,
     );
 
     expect(screen.getByText('Section Title')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('AccordionSection component', () => {
         toggle={toggle}
       >
         <div>Child Content</div>
-      </AccordionSection>
+      </AccordionSection>,
     );
 
     const button = screen.getByRole('button');
@@ -66,7 +66,7 @@ describe('AccordionSection component', () => {
         toggle={toggle}
       >
         <div>Child Content</div>
-      </AccordionSection>
+      </AccordionSection>,
     );
 
     const chevron = screen
@@ -90,7 +90,7 @@ describe('AccordionSection component', () => {
         status="Complete"
       >
         <div>Child Content</div>
-      </AccordionSection>
+      </AccordionSection>,
     );
 
     expect(screen.getByText('Complete')).toBeInTheDocument();

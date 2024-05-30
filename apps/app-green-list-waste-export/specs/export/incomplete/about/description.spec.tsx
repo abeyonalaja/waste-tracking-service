@@ -18,7 +18,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ data: {} }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Describe the waste page', () => {
@@ -38,7 +38,7 @@ describe('Describe the waste page', () => {
     fireEvent.change(textareaElement, { target: { value: null } });
 
     const messageElement = screen.getByText(
-      'You have 100 characters remaining'
+      'You have 100 characters remaining',
     );
     expect(messageElement).toBeTruthy();
 
@@ -69,7 +69,7 @@ describe('Describe the waste page', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'Description must be 100 characters or less'
+      'Description must be 100 characters or less',
     )[0];
     expect(errorMessage).toBeTruthy();
   });

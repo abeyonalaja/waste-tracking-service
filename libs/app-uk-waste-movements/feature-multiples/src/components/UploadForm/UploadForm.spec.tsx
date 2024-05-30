@@ -28,7 +28,7 @@ describe('UploadForm component', () => {
     render(
       <UploadForm token="#" strings={strings}>
         <MockChild />
-      </UploadForm>
+      </UploadForm>,
     );
   });
 
@@ -36,7 +36,7 @@ describe('UploadForm component', () => {
     render(
       <UploadForm token="#" strings={strings}>
         <MockChild />
-      </UploadForm>
+      </UploadForm>,
     );
 
     const heading = screen.getByRole('heading', {
@@ -50,7 +50,7 @@ describe('UploadForm component', () => {
     render(
       <UploadForm token="#" strings={strings}>
         <MockChild />
-      </UploadForm>
+      </UploadForm>,
     );
 
     const uploadButton = screen.getByRole('button', { name: 'Upload' });
@@ -66,7 +66,7 @@ describe('UploadForm component', () => {
         validationError="Incorrect columns"
       >
         <MockChild />
-      </UploadForm>
+      </UploadForm>,
     );
 
     const validationError = screen.getAllByText('Incorrect columns');

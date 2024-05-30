@@ -72,7 +72,7 @@ const ExporterAddressEdit = () => {
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
         {
           headers: apiConfig,
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -135,7 +135,7 @@ const ExporterAddressEdit = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -157,7 +157,7 @@ const ExporterAddressEdit = () => {
       }
       e.preventDefault();
     },
-    [townCity, country, address, data, address2, postcode, templateId, router]
+    [townCity, country, address, data, address2, postcode, templateId, router],
   );
 
   const BreadCrumbs = () => {

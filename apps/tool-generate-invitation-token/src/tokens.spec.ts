@@ -15,18 +15,18 @@ bcjuZto9rMcHOUdq78SkYekfeffRy2MCIGINIrukmSMTaOlXnEcvHTpxkDJrx9fz
 JBEOovWtR1sZAiBZm9B+40/uaddc2k+BqMHzf4Th94B1Xz+Bz6geoALXswIhAPd9
 vs+sxctdA0YlHdwaKK4h6XQC5mtkAV+h2V/1yhpM
 -----END RSA PRIVATE KEY-----
-  `
+  `,
 );
 
 const publicKey = Buffer.from(
-  createPublicKey(privateKey).export({ type: 'spki', format: 'pem' })
+  createPublicKey(privateKey).export({ type: 'spki', format: 'pem' }),
 );
 
 describe(createToken, () => {
   it('signs tokens with the provided key', () => {
     const token = createToken(
       { id: faker.datatype.uuid(), cohort: 'GLW' },
-      { id: faker.datatype.uuid(), content: privateKey }
+      { id: faker.datatype.uuid(), content: privateKey },
     );
 
     expect(() => verify(token, publicKey)).not.toThrow();

@@ -62,7 +62,7 @@ const ExporterManual = () => {
       if (templateId !== null) {
         fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exporter-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -131,7 +131,7 @@ const ExporterManual = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -149,7 +149,7 @@ const ExporterManual = () => {
         }
       }
     },
-    [townCity, country, address, data, address2, postcode, templateId, router]
+    [townCity, country, address, data, address2, postcode, templateId, router],
   );
 
   const BreadCrumbs = () => {

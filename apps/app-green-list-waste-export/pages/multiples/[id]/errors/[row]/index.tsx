@@ -43,7 +43,7 @@ export default function RowErrors() {
 
   const row: BulkSubmissionValidationRowError = data.data.state.rowErrors.find(
     (row: BulkSubmissionValidationRowError) =>
-      row.rowNumber === Number(router.query.row)
+      row.rowNumber === Number(router.query.row),
   );
 
   return (

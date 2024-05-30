@@ -18,7 +18,7 @@ describe('DashboardCard', () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
         <DashboardCard />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(screen.getByText('Create new waste movements')).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe('DashboardCard', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <DashboardCard />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     const templateLink = screen.getByRole('link', {
       name: 'Create a new multiple waste movement',

@@ -36,7 +36,7 @@ jest.mock('next-auth/jwt', () => ({
           },
         ],
       }),
-  })
+  }),
 );
 
 describe('Recovery facilities pages', () => {
@@ -58,7 +58,7 @@ describe('Recovery facilities pages', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'Enter the recovery facility name'
+      'Enter the recovery facility name',
     )[0];
     expect(errorMessage).toBeTruthy();
   });
@@ -105,14 +105,14 @@ describe('Recovery facilities pages', () => {
                 },
               ],
             }),
-        })
+        }),
       );
     });
 
     expect(
       await screen.getByText(
-        'What are the recovery facility’s contact details?'
-      )
+        'What are the recovery facility’s contact details?',
+      ),
     ).toBeTruthy();
   });
 });

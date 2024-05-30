@@ -71,7 +71,7 @@ const server = new DaprServer({
 
 const aadCredentials = new ChainedTokenCredential(
   new AzureCliCredential(),
-  new WorkloadIdentityCredential()
+  new WorkloadIdentityCredential(),
 );
 
 const dbClient = new CosmosClient({
@@ -81,14 +81,14 @@ const dbClient = new CosmosClient({
 
 const serviceBusClient = new ServiceBusClient(
   process.env['SERVICE_BUS_HOST_NAME'],
-  aadCredentials
+  aadCredentials,
 );
 
 const repository = new CosmosBatchRepository(
   dbClient,
   process.env['COSMOS_DATABASE_NAME'] || 'uk-waste-movements-bulk',
   process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
-  logger
+  logger,
 );
 
 const batchController = new BatchController(repository, logger);
@@ -163,7 +163,7 @@ await server.invoker.listen(
   },
   {
     method: HttpMethod.POST,
-  }
+  },
 );
 
 await server.invoker.listen(
@@ -181,7 +181,7 @@ await server.invoker.listen(
 
     return await batchController.getBatch(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -242,7 +242,7 @@ await server.invoker.listen(
 
       await sender.sendMessages(batch);
       logger.info(
-        `Sent a batch of messages to the queue: ${submissionsQueueName}`
+        `Sent a batch of messages to the queue: ${submissionsQueueName}`,
       );
       await sender.close();
     } catch (err) {
@@ -252,7 +252,7 @@ await server.invoker.listen(
 
     return response;
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -270,7 +270,7 @@ await server.invoker.listen(
     }
     return await batchController.downloadProducerCsv(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.start();
@@ -282,7 +282,7 @@ while (execute) {
     processMessage: async (brokeredMessage) => {
       if (HTTP.isEvent(brokeredMessage.body)) {
         const body = JSON.parse(
-          brokeredMessage.body.body
+          brokeredMessage.body.body,
         ) as ContentToBeProcessedTask;
 
         if (!taskValidate.receiveContentToBeProcessedTask(body)) {
@@ -326,7 +326,7 @@ while (execute) {
               } catch (err) {
                 logger.error(
                   `Error receiving response from ${ukwmAppId} service`,
-                  { error: err }
+                  { error: err },
                 );
                 throw Boom.internal();
               }
@@ -344,7 +344,9 @@ while (execute) {
                     errorAmount: v.fieldFormatErrors.length,
                     errorCodes: v.fieldFormatErrors
                       .map((f) =>
-                        f.args?.length ? { code: f.code, args: f.args } : f.code
+                        f.args?.length
+                          ? { code: f.code, args: f.args }
+                          : f.code,
                       )
                       .concat(v.invalidStructureErrors.map((i) => i.code)),
                   });
@@ -372,8 +374,8 @@ while (execute) {
                       hasEstimates: submissions.some((s) =>
                         s.wasteTypes.some(
                           (wasteType) =>
-                            wasteType.wasteQuantityType === 'EstimateData'
-                        )
+                            wasteType.wasteQuantityType === 'EstimateData',
+                        ),
                       ),
                       submissions: submissions,
                     },
@@ -402,7 +404,7 @@ while (execute) {
     processError: async (args: ProcessErrorArgs) => {
       logger.error(
         `Error from source ${args.errorSource} occurred: `,
-        args.error
+        args.error,
       );
       if (isServiceBusError(args.error)) {
         switch (args.error.code) {
@@ -411,7 +413,7 @@ while (execute) {
           case 'UnauthorizedAccess':
             logger.error(
               `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error
+              args.error,
             );
             await subscription.close();
             break;
@@ -435,7 +437,7 @@ while (execute) {
     processMessage: async (brokeredMessage) => {
       if (HTTP.isEvent(brokeredMessage.body)) {
         const body = JSON.parse(
-          brokeredMessage.body.body
+          brokeredMessage.body.body,
         ) as ContentToBeSubmittedTask;
 
         if (!taskValidate.receiveContentToBeSubmittedTask(body)) {
@@ -446,7 +448,7 @@ while (execute) {
 
         const batch = await repository.getBatch(
           body.data.batchId,
-          body.data.accountId
+          body.data.accountId,
         );
 
         if (batch.state.status !== 'Submitting') {
@@ -465,7 +467,7 @@ while (execute) {
         } catch (err) {
           logger.error(
             `Error receiving response from ${daprUkwmClient} service`,
-            { error: err }
+            { error: err },
           );
           throw Boom.internal();
         }
@@ -505,7 +507,7 @@ while (execute) {
     processError: async (args: ProcessErrorArgs) => {
       logger.error(
         `Error from source ${args.errorSource} occurred: `,
-        args.error
+        args.error,
       );
       if (isServiceBusError(args.error)) {
         switch (args.error.code) {
@@ -514,7 +516,7 @@ while (execute) {
           case 'UnauthorizedAccess':
             logger.error(
               `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error
+              args.error,
             );
             await submissionsSubscription.close();
             break;

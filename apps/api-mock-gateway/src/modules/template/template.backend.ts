@@ -75,10 +75,10 @@ export async function getTemplates(
   accountId: string,
   { order }: OrderRef,
   pageLimit = 15,
-  token?: string
+  token?: string,
 ): Promise<TemplateSummaryPage> {
   const rawValues: Template[] = db.templates.filter(
-    (t) => t.accountId === accountId
+    (t) => t.accountId === accountId,
   );
   let templates: ReadonlyArray<TemplateSummary> = rawValues
     .map((s) => {
@@ -152,7 +152,7 @@ export async function getTemplates(
     const nextPaginatedValues = paginateArray(
       templates,
       pageLimit,
-      pageNumber + 1
+      pageNumber + 1,
     );
 
     hasMoreResults = nextPaginatedValues.length === 0 ? false : true;
@@ -184,7 +184,7 @@ export async function getTemplate({
   accountId,
 }: TemplateRef): Promise<Template> {
   const value = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   ) as Template;
   if (value === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -206,11 +206,11 @@ export async function getTemplate({
 
 export async function createTemplate(
   accountId: string,
-  templateDetails: { name: string; description: string }
+  templateDetails: { name: string; description: string },
 ): Promise<Template> {
   if (!isTemplateNameValid(templateDetails.name)) {
     throw new BadRequestError(
-      `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`
+      `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
     );
   }
   if (
@@ -218,7 +218,7 @@ export async function createTemplate(
     templateDetails.description.length > validation.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -257,11 +257,11 @@ export async function createTemplate(
 export async function createTemplateFromSubmission(
   id: string,
   accountId: string,
-  templateDetails: { name: string; description: string }
+  templateDetails: { name: string; description: string },
 ): Promise<Template> {
   if (!isTemplateNameValid(templateDetails.name)) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
@@ -269,7 +269,7 @@ export async function createTemplateFromSubmission(
     templateDetails.description.length > validation.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -278,7 +278,7 @@ export async function createTemplateFromSubmission(
   }
 
   const submission = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   ) as Submission;
 
   id = uuidv4();
@@ -320,7 +320,7 @@ export async function createTemplateFromSubmission(
       isSmallWaste({
         status: 'Complete',
         ...submission.wasteDescription,
-      })
+      }),
     ),
     collectionDetail: {
       status: 'Complete',
@@ -353,11 +353,11 @@ export async function createTemplateFromSubmission(
 export async function createTemplateFromTemplate(
   id: string,
   accountId: string,
-  templateDetails: { name: string; description: string }
+  templateDetails: { name: string; description: string },
 ): Promise<Template> {
   if (!isTemplateNameValid(templateDetails.name)) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
@@ -365,7 +365,7 @@ export async function createTemplateFromTemplate(
     templateDetails.description.length > validation.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -374,7 +374,7 @@ export async function createTemplateFromTemplate(
   }
 
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   ) as Template;
 
   id = uuidv4();
@@ -392,13 +392,13 @@ export async function createTemplateFromTemplate(
     importerDetail: template.importerDetail,
     carriers: copyCarriersNoTransport(
       template.carriers,
-      isSmallWaste(template.wasteDescription)
+      isSmallWaste(template.wasteDescription),
     ),
     collectionDetail: template.collectionDetail,
     ukExitLocation: template.ukExitLocation,
     transitCountries: template.transitCountries,
     recoveryFacilityDetail: copyRecoveryFacilities(
-      template.recoveryFacilityDetail
+      template.recoveryFacilityDetail,
     ),
     accountId: accountId,
   };
@@ -410,11 +410,11 @@ export async function createTemplateFromTemplate(
 export async function updateTemplate(
   id: string,
   accountId: string,
-  templateDetails: { name: string; description: string }
+  templateDetails: { name: string; description: string },
 ): Promise<Template> {
   if (!isTemplateNameValid(templateDetails.name)) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
@@ -422,11 +422,11 @@ export async function updateTemplate(
     templateDetails.description.length > validation.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
+      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
   }
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
 
   if (template === undefined) {
@@ -462,14 +462,14 @@ export async function deleteTemplate({
   accountId,
 }: TemplateRef): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
   db.templates = db.templates.filter(
-    (t) => t.id !== id || t.accountId !== accountId
+    (t) => t.id !== id || t.accountId !== accountId,
   );
   return Promise.resolve();
 }
@@ -479,7 +479,7 @@ export async function getWasteDescription({
   accountId,
 }: SubmissionRef): Promise<WasteDescription> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -490,10 +490,10 @@ export async function getWasteDescription({
 
 export async function setWasteDescription(
   { id, accountId }: SubmissionRef,
-  value: WasteDescription
+  value: WasteDescription,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -501,7 +501,7 @@ export async function setWasteDescription(
 
   const submissionBase = setBaseWasteDescription(
     template as SubmissionBase,
-    value
+    value,
   );
   template.wasteDescription =
     submissionBase.wasteDescription as WasteDescription;
@@ -518,7 +518,7 @@ export async function getExporterDetail({
   accountId,
 }: SubmissionRef): Promise<ExporterDetail> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
 
   if (template === undefined) {
@@ -529,10 +529,10 @@ export async function getExporterDetail({
 
 export async function setExporterDetail(
   { id, accountId }: SubmissionRef,
-  value: ExporterDetail
+  value: ExporterDetail,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -540,7 +540,7 @@ export async function setExporterDetail(
 
   template.exporterDetail = setBaseExporterDetail(
     template as SubmissionBase,
-    value
+    value,
   ).exporterDetail;
 
   template.templateDetails.lastModified = new Date();
@@ -553,7 +553,7 @@ export async function getImporterDetail({
   accountId,
 }: SubmissionRef): Promise<ImporterDetail> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -564,10 +564,10 @@ export async function getImporterDetail({
 
 export async function setImporterDetail(
   { id, accountId }: SubmissionRef,
-  value: ImporterDetail
+  value: ImporterDetail,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -575,7 +575,7 @@ export async function setImporterDetail(
 
   template.importerDetail = setBaseImporterDetail(
     template as SubmissionBase,
-    value
+    value,
   ).importerDetail;
 
   template.templateDetails.lastModified = new Date();
@@ -588,7 +588,7 @@ export async function listCarriers({
   accountId,
 }: SubmissionRef): Promise<Carriers> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -599,18 +599,18 @@ export async function listCarriers({
 
 export async function createCarriers(
   { id, accountId }: SubmissionRef,
-  value: Omit<Carriers, 'transport' | 'values'>
+  value: Omit<Carriers, 'transport' | 'values'>,
 ): Promise<Carriers> {
   if (value.status !== 'Started') {
     return Promise.reject(
       new BadRequestError(
-        `"Status cannot be ${value.status} on carrier detail creation"`
-      )
+        `"Status cannot be ${value.status} on carrier detail creation"`,
+      ),
     );
   }
 
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -620,15 +620,15 @@ export async function createCarriers(
     if (template.carriers.values.length === validation.CarrierLength.max) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${validation.CarrierLength.max} carriers`
-        )
+          `Cannot add more than ${validation.CarrierLength.max} carriers`,
+        ),
       );
     }
   }
 
   const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
     template as SubmissionBase,
-    value
+    value,
   );
 
   template.carriers = submissionBasePlusId.submissionBase.carriers;
@@ -644,10 +644,10 @@ export async function createCarriers(
 
 export async function getCarriers(
   { id, accountId }: SubmissionRef,
-  carrierId: string
+  carrierId: string,
 ): Promise<Carriers> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -684,10 +684,10 @@ export async function getCarriers(
 export async function setCarriers(
   { id, accountId }: SubmissionRef,
   carrierId: string,
-  value: Carriers
+  value: Carriers,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject();
@@ -701,7 +701,7 @@ export async function setCarriers(
     template.carriers = setBaseNoCarriers(
       template as SubmissionBase,
       carrierId,
-      value
+      value,
     ).carriers;
   } else {
     const carrier = value.values.find((c) => {
@@ -722,7 +722,7 @@ export async function setCarriers(
       carrierId,
       value,
       carrier,
-      index
+      index,
     ).carriers;
   }
 
@@ -733,10 +733,10 @@ export async function setCarriers(
 
 export async function deleteCarriers(
   { id, accountId }: SubmissionRef,
-  carrierId: string
+  carrierId: string,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -756,7 +756,7 @@ export async function deleteCarriers(
 
   template.carriers = deleteBaseCarriers(
     template as SubmissionBase,
-    carrierId
+    carrierId,
   ).carriers;
 
   template.templateDetails.lastModified = new Date();
@@ -769,7 +769,7 @@ export async function getCollectionDetail({
   accountId,
 }: SubmissionRef): Promise<CollectionDetail> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -780,10 +780,10 @@ export async function getCollectionDetail({
 
 export async function setCollectionDetail(
   { id, accountId }: SubmissionRef,
-  value: CollectionDetail
+  value: CollectionDetail,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -791,7 +791,7 @@ export async function setCollectionDetail(
 
   template.collectionDetail = setBaseCollectionDetail(
     template as SubmissionBase,
-    value
+    value,
   ).collectionDetail;
 
   template.templateDetails.lastModified = new Date();
@@ -804,7 +804,7 @@ export async function getExitLocation({
   accountId,
 }: SubmissionRef): Promise<ExitLocation> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -815,10 +815,10 @@ export async function getExitLocation({
 
 export async function setExitLocation(
   { id, accountId }: SubmissionRef,
-  value: ExitLocation
+  value: ExitLocation,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -826,7 +826,7 @@ export async function setExitLocation(
 
   template.ukExitLocation = setBaseExitLocation(
     template as SubmissionBase,
-    value
+    value,
   ).ukExitLocation;
 
   template.templateDetails.lastModified = new Date();
@@ -839,7 +839,7 @@ export async function getTransitCountries({
   accountId,
 }: SubmissionRef): Promise<TransitCountries> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -850,10 +850,10 @@ export async function getTransitCountries({
 
 export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
-  value: TransitCountries
+  value: TransitCountries,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -861,7 +861,7 @@ export async function setTransitCountries(
 
   template.transitCountries = setBaseTransitCountries(
     template as SubmissionBase,
-    value
+    value,
   ).transitCountries;
 
   template.templateDetails.lastModified = new Date();
@@ -874,7 +874,7 @@ export async function listRecoveryFacilityDetail({
   accountId,
 }: SubmissionRef): Promise<RecoveryFacilityDetail> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -885,18 +885,18 @@ export async function listRecoveryFacilityDetail({
 
 export async function createRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  value: Omit<RecoveryFacilityDetail, 'values'>
+  value: Omit<RecoveryFacilityDetail, 'values'>,
 ): Promise<RecoveryFacilityDetail> {
   if (value.status !== 'Started') {
     return Promise.reject(
       new BadRequestError(
-        `"Status cannot be ${value.status} on recovery facility detail creation"`
-      )
+        `"Status cannot be ${value.status} on recovery facility detail creation"`,
+      ),
     );
   }
 
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -911,8 +911,8 @@ export async function createRecoveryFacilityDetail(
     if (template.recoveryFacilityDetail.values.length === maxFacilities) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`
-        )
+          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+        ),
       );
     }
   }
@@ -933,10 +933,10 @@ export async function createRecoveryFacilityDetail(
 
 export async function getRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  rfdId: string
+  rfdId: string,
 ): Promise<RecoveryFacilityDetail> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -973,10 +973,10 @@ export async function getRecoveryFacilityDetail(
 export async function setRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
   rfdId: string,
-  value: RecoveryFacilityDetail
+  value: RecoveryFacilityDetail,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -1008,7 +1008,7 @@ export async function setRecoveryFacilityDetail(
   template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
     template as SubmissionBase,
     rfdId,
-    value
+    value,
   ).recoveryFacilityDetail;
 
   if (
@@ -1025,10 +1025,10 @@ export async function setRecoveryFacilityDetail(
 
 export async function deleteRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  rfdId: string
+  rfdId: string,
 ): Promise<void> {
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
@@ -1050,7 +1050,7 @@ export async function deleteRecoveryFacilityDetail(
 
   template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
     template as SubmissionBase,
-    rfdId
+    rfdId,
   ).recoveryFacilityDetail;
 
   template.templateDetails.lastModified = new Date();
@@ -1060,6 +1060,6 @@ export async function deleteRecoveryFacilityDetail(
 
 export async function getNumberOfTemplates(accountId: string): Promise<number> {
   return Promise.resolve(
-    db.templates.filter((template) => template.accountId === accountId).length
+    db.templates.filter((template) => template.accountId === accountId).length,
   );
 }

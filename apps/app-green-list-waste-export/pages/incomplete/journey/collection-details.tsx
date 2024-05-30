@@ -228,7 +228,7 @@ const CollectionDetails = () => {
   const apiConfig = useApiConfig();
   const [addressPage, dispatchAddressPage] = useReducer(
     addressReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
   const [page, setPage] = useState(null);
@@ -322,7 +322,7 @@ const CollectionDetails = () => {
             {
               method: 'GET',
               headers: apiConfig,
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -357,7 +357,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [postcode]
+    [postcode],
   );
 
   const handleLinkSubmit = (e, formSubmit) => {
@@ -390,7 +390,7 @@ const CollectionDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -421,7 +421,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [selectedAddress]
+    [selectedAddress],
   );
 
   const handleSingleAddressFormSubmit = useCallback((e: FormEvent) => {
@@ -437,7 +437,7 @@ const CollectionDetails = () => {
       e.preventDefault();
       const newErrors = {
         organisationName: validateOrganisationName(
-          contactDetails?.organisationName
+          contactDetails?.organisationName,
         ),
         fullName: validateFullName(contactDetails?.fullName),
         emailAddress: validateEmail(contactDetails?.emailAddress),
@@ -461,7 +461,7 @@ const CollectionDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -481,7 +481,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [contactDetails]
+    [contactDetails],
   );
 
   const handleManualAddressSubmit = useCallback(
@@ -513,7 +513,7 @@ const CollectionDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -543,7 +543,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [addressDetails]
+    [addressDetails],
   );
 
   const onContactDetailsChange = (e) => {
@@ -912,7 +912,7 @@ const CollectionDetails = () => {
                         name="country"
                         label={t('address.country')}
                         hint={t(
-                          'exportJourney.wasteCollectionDetails.countryHint'
+                          'exportJourney.wasteCollectionDetails.countryHint',
                         )}
                         errorMessage={addressPage.errors?.country}
                         options={countriesData.UK}
@@ -936,7 +936,7 @@ const CollectionDetails = () => {
                   <div id="page-waste-collection-manual-address">
                     <GovUK.Heading size="L">
                       {t(
-                        'exportJourney.wasteCollectionDetails.editCollectionAddress'
+                        'exportJourney.wasteCollectionDetails.editCollectionAddress',
                       )}{' '}
                     </GovUK.Heading>
                     <form onSubmit={handleManualAddressSubmit}>
@@ -1023,7 +1023,7 @@ const CollectionDetails = () => {
                         name="country"
                         label={t('address.country')}
                         hint={t(
-                          'exportJourney.wasteCollectionDetails.countryHint'
+                          'exportJourney.wasteCollectionDetails.countryHint',
                         )}
                         errorMessage={addressPage.errors?.country}
                         options={countriesData.UK}
@@ -1047,7 +1047,7 @@ const CollectionDetails = () => {
                   <div id="page-waste-collection-contact-details">
                     <GovUK.Heading size="L">
                       {t(
-                        'exportJourney.wasteCollectionDetails.singleAddressTitle'
+                        'exportJourney.wasteCollectionDetails.singleAddressTitle',
                       )}
                     </GovUK.Heading>
                     {addressDetails.country && (

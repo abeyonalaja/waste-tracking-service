@@ -5,7 +5,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('ConditionalRadioWrap', () => {
@@ -13,7 +13,7 @@ describe('ConditionalRadioWrap', () => {
     render(
       <ConditionalRadioWrap testId="testConditionalRadioWrap">
         <></>
-      </ConditionalRadioWrap>
+      </ConditionalRadioWrap>,
     );
     expect(screen.getByTestId('testConditionalRadioWrap')).toBeTruthy();
   });
@@ -21,13 +21,13 @@ describe('ConditionalRadioWrap', () => {
     render(
       <ConditionalRadioWrap testId="testConditionalRadioWrap">
         <div data-testid="testRadioChild" />
-      </ConditionalRadioWrap>
+      </ConditionalRadioWrap>,
     );
 
     expect(
       within(screen.getByTestId('testConditionalRadioWrap')).getByTestId(
-        'testRadioChild'
-      )
+        'testRadioChild',
+      ),
     ).toBeTruthy();
   });
 });

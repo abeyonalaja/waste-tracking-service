@@ -112,7 +112,7 @@ const ExporterAddress = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -148,7 +148,7 @@ const ExporterAddress = () => {
       });
       e.preventDefault();
     },
-    [id, router]
+    [id, router],
   );
 
   const BreadCrumbs = () => {

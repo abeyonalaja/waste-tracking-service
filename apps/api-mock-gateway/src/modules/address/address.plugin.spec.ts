@@ -29,7 +29,7 @@ describe('AddressPlugin', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(400);
       expect(mockJson).toHaveBeenCalledWith(
-        new BadRequestError("Missing query parameter 'postcode'")
+        new BadRequestError("Missing query parameter 'postcode'"),
       );
     });
   });

@@ -54,7 +54,7 @@ const WasteCodeDesc = () => {
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/waste-codes`,
-            { headers: apiConfig }
+            { headers: apiConfig },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -87,7 +87,7 @@ const WasteCodeDesc = () => {
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
-            { headers: apiConfig }
+            { headers: apiConfig },
           )
             .then((response) => {
               setIsLoading(false);
@@ -102,7 +102,7 @@ const WasteCodeDesc = () => {
                 setCode(data.wasteCode?.code);
                 setWasteCodeCategory(data.wasteCode?.type);
                 setWasteCodeCategoryWithSpaces(
-                  getCodeCategoryName(data.wasteCode?.type)
+                  getCodeCategoryName(data.wasteCode?.type),
                 );
                 setHasValidId(true);
               }
@@ -149,7 +149,7 @@ const WasteCodeDesc = () => {
         code: validateWasteCode(
           wasteCodeCategory,
           code,
-          getCodeCategoryName(wasteCodeCategory)
+          getCodeCategoryName(wasteCodeCategory),
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -190,7 +190,7 @@ const WasteCodeDesc = () => {
         }
       }
     },
-    [wasteCodeCategory, code, templateId, router, url, data]
+    [wasteCodeCategory, code, templateId, router, url, data],
   );
   const BreadCrumbs = () => {
     return (

@@ -34,7 +34,9 @@ const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: ${BLACK};
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px #0b0c0c;
     text-decoration: none;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -44,7 +46,10 @@ const StyledLink = styled(Link)<{ $isBold?: boolean; disabled?: boolean }>`
 const LanguageNav = styled.nav`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: GDS Transport, arial, sans-serif;
+  font-family:
+    GDS Transport,
+    arial,
+    sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.1428571429;

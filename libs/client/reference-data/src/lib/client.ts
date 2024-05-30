@@ -44,14 +44,14 @@ import {
 export class DaprReferenceDataClient {
   constructor(
     private daprClient: DaprClient,
-    private referenceDataAppId: string
+    private referenceDataAppId: string,
   ) {}
 
   async getWasteCodes(): Promise<GetWasteCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getWasteCodes.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetWasteCodesResponse;
   }
 
@@ -60,7 +60,7 @@ export class DaprReferenceDataClient {
       this.referenceDataAppId,
       getEWCCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetEWCCodesResponse;
   }
 
@@ -69,7 +69,7 @@ export class DaprReferenceDataClient {
       this.referenceDataAppId,
       getCountries.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetCountriesResponse;
   }
 
@@ -77,7 +77,7 @@ export class DaprReferenceDataClient {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getRecoveryCodes.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetRecoveryCodesResponse;
   }
 
@@ -85,7 +85,7 @@ export class DaprReferenceDataClient {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getDisposalCodes.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetDisposalCodesResponse;
   }
 
@@ -93,7 +93,7 @@ export class DaprReferenceDataClient {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getHazardousCodes.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetDisposalCodesResponse;
   }
 
@@ -101,7 +101,7 @@ export class DaprReferenceDataClient {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getPops.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetPopsResponse;
   }
 
@@ -109,73 +109,73 @@ export class DaprReferenceDataClient {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       getLocalAuthorities.name,
-      HttpMethod.POST
+      HttpMethod.POST,
     )) as GetLocalAuthoritiesResponse;
   }
 
   async createWasteCodes(
-    req: CreateWasteCodesRequest
+    req: CreateWasteCodesRequest,
   ): Promise<CreateWasteCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createWasteCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateWasteCodesResponse;
   }
 
   async createEWCCodes(
-    req: CreateEWCCodesRequest
+    req: CreateEWCCodesRequest,
   ): Promise<CreateEWCCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createEWCCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateEWCCodesResponse;
   }
 
   async createCountries(
-    req: CreateCountriesRequest
+    req: CreateCountriesRequest,
   ): Promise<CreateCountriesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createCountries.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateCountriesResponse;
   }
 
   async createRecoveryCodes(
-    req: CreateRecoveryCodesRequest
+    req: CreateRecoveryCodesRequest,
   ): Promise<CreateRecoveryCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createRecoveryCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateRecoveryCodesResponse;
   }
 
   async createDisposalCodes(
-    req: CreateDisposalCodesRequest
+    req: CreateDisposalCodesRequest,
   ): Promise<CreateDisposalCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createDisposalCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateDisposalCodesResponse;
   }
 
   async createHazardouslCodes(
-    req: CreateHazardousCodesRequest
+    req: CreateHazardousCodesRequest,
   ): Promise<CreateHazardousCodesResponse> {
     return (await this.daprClient.invoker.invoke(
       this.referenceDataAppId,
       createHazardousCodes.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateHazardousCodesResponse;
   }
 
@@ -184,7 +184,7 @@ export class DaprReferenceDataClient {
       this.referenceDataAppId,
       createPops.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreatePopsResponse;
   }
 }

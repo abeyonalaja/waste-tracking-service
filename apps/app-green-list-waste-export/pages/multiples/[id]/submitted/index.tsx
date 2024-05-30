@@ -88,7 +88,7 @@ export default function Submitted() {
 
     displayedTransactions = allTransactions.slice(
       (pageNumber - 1) * 10,
-      pageNumber * 10
+      pageNumber * 10,
     );
   }
 

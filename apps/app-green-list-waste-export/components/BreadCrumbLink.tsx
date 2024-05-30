@@ -30,7 +30,9 @@ const StyledLink = styled(Link)`
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px ${BLACK};
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px ${BLACK};
   }
   &:visited {
     color: BLACK;

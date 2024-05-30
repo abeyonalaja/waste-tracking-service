@@ -11,14 +11,14 @@ import {
 export const getStatusImporter = (data) => {
   const newErrors = {
     organisationName: validateOrganisationName(
-      data?.importerAddressDetails?.organisationName
+      data?.importerAddressDetails?.organisationName,
     ),
     address: validateAddress(data?.importerAddressDetails?.address),
     country: validateCountry(data?.importerAddressDetails?.country),
     fullName: validateFullName(data?.importerContactDetails?.fullName),
     email: validateEmail(data?.importerContactDetails?.emailAddress),
     phone: validateInternationalPhone(
-      data?.importerContactDetails?.phoneNumber
+      data?.importerContactDetails?.phoneNumber,
     ),
   };
   if (isNotEmpty(newErrors)) {

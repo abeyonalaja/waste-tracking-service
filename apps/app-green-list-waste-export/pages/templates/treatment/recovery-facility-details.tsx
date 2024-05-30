@@ -165,7 +165,7 @@ const RecoveryFacilityDetails = () => {
   const apiConfig = useApiConfig();
   const [recoveryPage, dispatchRecoveryPage] = useReducer(
     recoveryReducer,
-    initialState
+    initialState,
   );
   const [refData, setRefData] = useState<Array<optionType>>();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -217,7 +217,7 @@ const RecoveryFacilityDetails = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -234,7 +234,7 @@ const RecoveryFacilityDetails = () => {
   useEffect(() => {
     if (recoveryPage.data?.values !== undefined) {
       const countRecoveryFacilities = recoveryPage.data?.values?.filter(
-        (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
+        (site) => site.recoveryFacilityType?.type === 'RecoveryFacility',
       );
       setFacilityCount(countRecoveryFacilities.length);
     }
@@ -245,7 +245,7 @@ const RecoveryFacilityDetails = () => {
     if (templateId !== null) {
       fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -262,7 +262,7 @@ const RecoveryFacilityDetails = () => {
             if (data.status === 'Complete') {
               if (siteId !== undefined) {
                 const getRecord = data.values.filter(
-                  (record) => record.id === siteId
+                  (record) => record.id === siteId,
                 );
                 dispatchRecoveryPage({
                   type: 'FACILITY_DATA_UPDATE',
@@ -271,7 +271,7 @@ const RecoveryFacilityDetails = () => {
                 const index = data.values
                   .filter(
                     (site) =>
-                      site.recoveryFacilityType?.type === 'RecoveryFacility'
+                      site.recoveryFacilityType?.type === 'RecoveryFacility',
                   )
                   .findIndex((record) => record.id === siteId);
                 setFacCount(index + 1);
@@ -298,12 +298,13 @@ const RecoveryFacilityDetails = () => {
               }
             } else {
               const filteredValues = data.values?.filter(
-                (site) => site.recoveryFacilityType?.type === 'RecoveryFacility'
+                (site) =>
+                  site.recoveryFacilityType?.type === 'RecoveryFacility',
               );
               const emptyRecords = data.values?.filter(
                 (site) =>
                   site.addressDetails === undefined &&
-                  site.recoveryFacilityType === undefined
+                  site.recoveryFacilityType === undefined,
               );
               if (
                 (filteredValues === undefined && emptyRecords === undefined) ||
@@ -356,7 +357,7 @@ const RecoveryFacilityDetails = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -421,11 +422,11 @@ const RecoveryFacilityDetails = () => {
             emailAddress: validateEmail(contactDetails?.emailAddress, true),
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber,
-              true
+              true,
             ),
             faxNumber: validateInternationalFax(
               contactDetails?.faxNumber,
-              true
+              true,
             ),
           };
           body = {
@@ -466,7 +467,7 @@ const RecoveryFacilityDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -523,7 +524,7 @@ const RecoveryFacilityDetails = () => {
       contactDetails,
       recoveryFacilityType,
       recoveryPage.facilityData,
-    ]
+    ],
   );
 
   const onAddressDetailsChange = (e) => {
@@ -559,7 +560,7 @@ const RecoveryFacilityDetails = () => {
       const emptyRecords = recoveryPage.data.values.filter(
         (site) =>
           site.addressDetails === undefined &&
-          site.recoveryFacilityType === undefined
+          site.recoveryFacilityType === undefined,
       );
       dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: null });
       if (additionalFacility === 'No') {
@@ -605,7 +606,7 @@ const RecoveryFacilityDetails = () => {
   const handleChangeLink = (facilityId, e) => {
     e.preventDefault();
     const getRecord = recoveryPage.data.values.filter(
-      (record) => record.id === facilityId
+      (record) => record.id === facilityId,
     );
     dispatchRecoveryPage({
       type: 'FACILITY_DATA_UPDATE',
@@ -613,7 +614,7 @@ const RecoveryFacilityDetails = () => {
     });
     const index = recoveryPage.data.values
       .filter(
-        (record) => record.recoveryFacilityType?.type === 'RecoveryFacility'
+        (record) => record.recoveryFacilityType?.type === 'RecoveryFacility',
       )
       .findIndex((record) => record.id === facilityId);
     setFacCount(index + 1);
@@ -629,7 +630,7 @@ const RecoveryFacilityDetails = () => {
   const handleRemoveLink = (facilityId, e) => {
     e.preventDefault();
     const getRecord = recoveryPage.data.values.filter(
-      (record) => record.id === facilityId
+      (record) => record.id === facilityId,
     );
     dispatchRecoveryPage({
       type: 'FACILITY_DATA_UPDATE',
@@ -647,7 +648,7 @@ const RecoveryFacilityDetails = () => {
       const newErrors = {
         confirmRemove: validateConfirmRemove(
           confirmRemove,
-          'recovery facility'
+          'recovery facility',
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -675,10 +676,10 @@ const RecoveryFacilityDetails = () => {
               {
                 method: 'DELETE',
                 headers: apiConfig,
-              }
+              },
             ).then(() => {
               const updatedValues = recoveryPage.data.values.filter(
-                (facility) => facility.id !== recoveryPage.facilityData.id
+                (facility) => facility.id !== recoveryPage.facilityData.id,
               );
               dispatchRecoveryPage({
                 type: 'DATA_UPDATE',
@@ -700,7 +701,7 @@ const RecoveryFacilityDetails = () => {
       }
       e.preventDefault();
     },
-    [confirmRemove]
+    [confirmRemove],
   );
 
   const getCodeDescription = (recCode) => {
@@ -714,7 +715,7 @@ const RecoveryFacilityDetails = () => {
     return facilities.filter(
       (facility) =>
         facility.recoveryFacilityType?.type === 'RecoveryFacility' &&
-        facility.addressDetails !== undefined
+        facility.addressDetails !== undefined,
     );
   };
 
@@ -1014,7 +1015,7 @@ const RecoveryFacilityDetails = () => {
                     <GovUK.Heading size={'LARGE'}>
                       {facilityCount > 1
                         ? t(
-                            'exportJourney.recoveryFacilities.listTitleMultiple'
+                            'exportJourney.recoveryFacilities.listTitleMultiple',
                           )
                         : t('exportJourney.recoveryFacilities.listTitleSingle')}
                     </GovUK.Heading>
@@ -1028,11 +1029,11 @@ const RecoveryFacilityDetails = () => {
                             title={
                               facilityCount === 1
                                 ? t(
-                                    'exportJourney.recoveryFacilities.cardTitle'
+                                    'exportJourney.recoveryFacilities.cardTitle',
                                   )
                                 : t(
                                     'exportJourney.recoveryFacilities.multipleCardTitle',
-                                    { n: t(`numberAdjective.${index + 1}`) }
+                                    { n: t(`numberAdjective.${index + 1}`) },
                                   )
                             }
                             actions={[
@@ -1067,7 +1068,7 @@ const RecoveryFacilityDetails = () => {
                               content={[
                                 {
                                   title: t(
-                                    'exportJourney.recoveryFacilities.name'
+                                    'exportJourney.recoveryFacilities.name',
                                   ),
                                   definition: facility.addressDetails.name,
                                 },
@@ -1077,19 +1078,19 @@ const RecoveryFacilityDetails = () => {
                                 },
                                 {
                                   title: t(
-                                    'exportJourney.recoveryFacilities.recoveryCode'
+                                    'exportJourney.recoveryFacilities.recoveryCode',
                                   ),
                                   definition: `${
                                     facility.recoveryFacilityType?.recoveryCode
                                   }: ${getCodeDescription(
-                                    facility.recoveryFacilityType?.recoveryCode
+                                    facility.recoveryFacilityType?.recoveryCode,
                                   )}`,
                                 },
                               ]}
                             />
                           </SummaryCard>
                         );
-                      }
+                      },
                     )}
                     {facilityCount < 5 && (
                       <form onSubmit={handleSubmitAdditionalFacility}>
@@ -1101,7 +1102,7 @@ const RecoveryFacilityDetails = () => {
                             mb={6}
                             hint={t(
                               'exportJourney.recoveryFacilities.addHint',
-                              { n: 5 - facilityCount }
+                              { n: 5 - facilityCount },
                             )}
                             label=""
                             meta={{
@@ -1176,7 +1177,7 @@ const RecoveryFacilityDetails = () => {
                             {
                               name: recoveryPage.facilityData.addressDetails
                                 .name,
-                            }
+                            },
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.MultiChoice

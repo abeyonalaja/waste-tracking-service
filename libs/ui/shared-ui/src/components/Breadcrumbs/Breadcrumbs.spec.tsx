@@ -14,7 +14,7 @@ describe('Breadcrumbs', () => {
     const { getByText } = render(
       <NextIntlClientProvider locale="en">
         <Breadcrumbs items={items} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(getByText('Home')).toBeTruthy();
@@ -26,7 +26,7 @@ describe('Breadcrumbs', () => {
     const { getByText } = render(
       <NextIntlClientProvider locale="en">
         <Breadcrumbs items={items} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const lastBreadcrumb = getByText('Page 2');
@@ -37,7 +37,7 @@ describe('Breadcrumbs', () => {
     const { getByText } = render(
       <NextIntlClientProvider locale="en">
         <Breadcrumbs items={items} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const homeLink = getByText('Home');
@@ -54,7 +54,7 @@ describe('Breadcrumbs', () => {
     const { getByTestId } = render(
       <NextIntlClientProvider locale="en">
         <Breadcrumbs items={items} testId={testId} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const breadcrumbs = getByTestId(testId);

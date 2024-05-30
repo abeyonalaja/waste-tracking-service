@@ -6,11 +6,14 @@ import { FeedbackClient } from '../clients';
 import { SendFeedbackRequest, SendFeedbackResponse } from '../model';
 
 export type Handler<Request, Response> = (
-  request: Request
+  request: Request,
 ) => Promise<Response>;
 
 export default class FeedbackController {
-  constructor(private feedbackClient: FeedbackClient, private logger: Logger) {}
+  constructor(
+    private feedbackClient: FeedbackClient,
+    private logger: Logger,
+  ) {}
 
   sendFeedback: Handler<SendFeedbackRequest, SendFeedbackResponse> = async ({
     serviceName,

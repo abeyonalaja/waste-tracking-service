@@ -74,7 +74,7 @@ const TemplateCreate = () => {
         }
       }
     },
-    [router, templateName, templateDesc]
+    [router, templateName, templateDesc],
   );
 
   const BreadCrumbs = () => {

@@ -17,7 +17,7 @@ export default class BoomiAddressClient implements AddressClient {
     private logger: Logger,
     private addressLookupUrl: string,
     private cert: Buffer,
-    private key: Buffer
+    private key: Buffer,
   ) {}
 
   async getAddressByPostcode(postcode: string): Promise<Address[]> {

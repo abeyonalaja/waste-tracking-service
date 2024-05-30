@@ -43,7 +43,7 @@ const plugin: Plugin<PluginOptions> = {
         const pageLimitStr = query['pageLimit'] as string | undefined;
         if (pageLimitStr && Number.isNaN(parseInt(pageLimitStr))) {
           return Boom.badRequest(
-            "Query parameter 'pageLimit' should be a number"
+            "Query parameter 'pageLimit' should be a number",
           );
         }
         const pageLimit = pageLimitStr ? parseInt(pageLimitStr) : undefined;
@@ -54,7 +54,7 @@ const plugin: Plugin<PluginOptions> = {
             h.request.auth.credentials.accountId as string,
             { order },
             pageLimit,
-            token
+            token,
           );
           return value as dto.GetTemplatesResponse;
         } catch (err) {
@@ -74,7 +74,7 @@ const plugin: Plugin<PluginOptions> = {
       handler: async function (h) {
         try {
           const value = await backend.getNumberOfTemplates(
-            h.auth.credentials.accountId as string
+            h.auth.credentials.accountId as string,
           );
           return value as dto.GetNumberOfTemplatesResponse;
         } catch (err) {
@@ -123,8 +123,8 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               (await backend.createTemplate(
                 h.request.auth.credentials.accountId as string,
-                templateDetails
-              )) as dto.CreateTemplateResponse
+                templateDetails,
+              )) as dto.CreateTemplateResponse,
             )
             .code(201);
         } catch (err) {
@@ -154,8 +154,8 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.createTemplateFromSubmission(
                 params.id,
                 h.request.auth.credentials.accountId as string,
-                templateDetails
-              )) as dto.CreateTemplateResponse
+                templateDetails,
+              )) as dto.CreateTemplateResponse,
             )
             .code(201);
         } catch (err) {
@@ -185,8 +185,8 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.createTemplateFromTemplate(
                 params.id,
                 h.request.auth.credentials.accountId as string,
-                templateDetails
-              )) as dto.CreateTemplateResponse
+                templateDetails,
+              )) as dto.CreateTemplateResponse,
             )
             .code(201);
         } catch (err) {
@@ -216,8 +216,8 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.updateTemplate(
                 params.id,
                 h.request.auth.credentials.accountId as string,
-                templateDetails
-              )) as dto.CreateTemplateResponse
+                templateDetails,
+              )) as dto.CreateTemplateResponse,
             )
             .code(201);
         } catch (err) {
@@ -241,7 +241,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.deleteTemplate({
                 id: params.id,
                 accountId: h.request.auth.credentials.accountId as string,
-              })) as undefined
+              })) as undefined,
             )
             .code(204);
         } catch (err) {
@@ -291,7 +291,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.PutWasteDescriptionResponse;
         } catch (err) {
@@ -341,7 +341,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.PutExporterDetailResponse;
         } catch (err) {
@@ -391,7 +391,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.PutImporterDetailResponse;
         } catch (err) {
@@ -443,8 +443,8 @@ const plugin: Plugin<PluginOptions> = {
                   id: params.id,
                   accountId: h.request.auth.credentials.accountId as string,
                 },
-                request
-              )) as dto.CreateCarriersResponse
+                request,
+              )) as dto.CreateCarriersResponse,
             )
             .code(201);
         } catch (err) {
@@ -468,7 +468,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            params.carrierId
+            params.carrierId,
           );
           return value as dto.GetCarriersResponse;
         } catch (err) {
@@ -505,7 +505,7 @@ const plugin: Plugin<PluginOptions> = {
               accountId: h.request.auth.credentials.accountId as string,
             },
             params.carrierId,
-            request
+            request,
           );
           return request as dto.SetCarriersRequest;
         } catch (err) {
@@ -531,8 +531,8 @@ const plugin: Plugin<PluginOptions> = {
                   id: params.id,
                   accountId: h.request.auth.credentials.accountId as string,
                 },
-                params.carrierId
-              )) as undefined
+                params.carrierId,
+              )) as undefined,
             )
             .code(204);
         } catch (err) {
@@ -582,7 +582,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.SetCollectionDetailResponse;
         } catch (err) {
@@ -632,7 +632,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.PutExitLocationResponse;
         } catch (err) {
@@ -682,7 +682,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            request
+            request,
           );
           return request as dto.PutTransitCountriesResponse;
         } catch (err) {
@@ -734,8 +734,8 @@ const plugin: Plugin<PluginOptions> = {
                   id: params.id,
                   accountId: h.request.auth.credentials.accountId as string,
                 },
-                request
-              )) as dto.CreateRecoveryFacilityDetailRequest
+                request,
+              )) as dto.CreateRecoveryFacilityDetailRequest,
             )
             .code(201);
         } catch (err) {
@@ -759,7 +759,7 @@ const plugin: Plugin<PluginOptions> = {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,
             },
-            params.rfdId
+            params.rfdId,
           );
           return value as dto.GetRecoveryFacilityDetailResponse;
         } catch (err) {
@@ -796,7 +796,7 @@ const plugin: Plugin<PluginOptions> = {
               accountId: h.request.auth.credentials.accountId as string,
             },
             params.rfdId,
-            request
+            request,
           );
           return request as dto.SetRecoveryFacilityDetailRequest;
         } catch (err) {
@@ -822,8 +822,8 @@ const plugin: Plugin<PluginOptions> = {
                   id: params.id,
                   accountId: h.request.auth.credentials.accountId as string,
                 },
-                params.rfdId
-              )) as undefined
+                params.rfdId,
+              )) as undefined,
             )
             .code(204);
         } catch (err) {

@@ -5,5 +5,5 @@ module.exports = composePlugins(withNx(), (config, { configuration }) =>
   merge(config, {
     mode: configuration,
     experiments: { futureDefaults: true },
-  })
+  }),
 );

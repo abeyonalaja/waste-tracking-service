@@ -87,7 +87,7 @@ let backend: {
 
 if (process.env['NODE_ENV'] === 'development') {
   throw new Error(
-    'Use "nx serve api-mock-gateway" to start the development server instead'
+    'Use "nx serve api-mock-gateway" to start the development server instead',
   );
 } else {
   const client = new DaprClient();
@@ -95,50 +95,50 @@ if (process.env['NODE_ENV'] === 'development') {
     address: new AddressServiceBackend(
       new DaprAddressClient(
         client,
-        process.env['ADDRESS_APP_ID'] || 'service-address'
+        process.env['ADDRESS_APP_ID'] || 'service-address',
       ),
-      logger
+      logger,
     ),
     feedback: new FeedbackServiceBackend(
       new DaprFeedbackClient(
         client,
-        process.env['FEEDBACK_APP_ID'] || 'service-feedback'
+        process.env['FEEDBACK_APP_ID'] || 'service-feedback',
       ),
-      logger
+      logger,
     ),
     submission: new AnnexViiServiceSubmissionBackend(
       new DaprAnnexViiClient(
         client,
-        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export'
+        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export',
       ),
-      logger
+      logger,
     ),
     template: new AnnexViiServiceTemplateBackend(
       new DaprAnnexViiClient(
         client,
-        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export'
+        process.env['GLW_EXPORT_APP_ID'] || 'service-green-list-waste-export',
       ),
-      logger
+      logger,
     ),
     referenceData: new ReferenceDataServiceBackend(
       new DaprReferenceDataClient(
         client,
-        process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
+        process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data',
       ),
-      logger
+      logger,
     ),
     bulkSubmission: new AnnexViiBulkServiceBackend(
       new DaprAnnexViiBulkClient(
         client,
         process.env['GLW_EXPORT_BULK_APP_ID'] ||
-          'service-green-list-waste-export-bulk'
+          'service-green-list-waste-export-bulk',
       ),
-      logger
+      logger,
     ),
     privateBeta: new PrivateAudienceServiceBackend(
       new DaprLimitedAudienceClient(
         client,
-        process.env['LIMITED_AUDIENCE_APP_ID'] || 'service-limited-audience'
+        process.env['LIMITED_AUDIENCE_APP_ID'] || 'service-limited-audience',
       ),
       new LRUCache({
         ttl: 60 * 1000,
@@ -146,22 +146,22 @@ if (process.env['NODE_ENV'] === 'development') {
         maxSize: 1000,
         sizeCalculation: (): number => 1,
       }),
-      logger
+      logger,
     ),
     ukWasteMovementsBulkSubmission:
       new ServiceUkWasteMovementsBulkSubmissionBackend(
         new DaprUkWasteMovementsBulkClient(
           client,
-          process.env['UKWM_BULK_APP_ID'] || 'service-uk-waste-movements-bulk'
+          process.env['UKWM_BULK_APP_ID'] || 'service-uk-waste-movements-bulk',
         ),
-        logger
+        logger,
       ),
     ukWasteMovements: new ServiceUkWasteMovementsSubmissionBackend(
       new DaprUkWasteMovementsClient(
         client,
-        process.env['UKWM_APP_ID'] || 'service-uk-waste-movements'
+        process.env['UKWM_APP_ID'] || 'service-uk-waste-movements',
       ),
-      logger
+      logger,
     ),
   };
 }
@@ -185,8 +185,8 @@ let filter =
   users === '*'
     ? userFilter.any
     : users === 'none'
-    ? userFilter.none
-    : userFilter.uniqueReferenceString(users);
+      ? userFilter.none
+      : userFilter.uniqueReferenceString(users);
 
 if (
   process.env['FEATURE_PRIVATE_AUDIENCE_CHECKS'] &&
@@ -200,13 +200,13 @@ const { issuer, jwksUri } = await getWellKnownParams(wellKnownUri);
 app.auth.strategy(
   'private-beta',
   'jwt',
-  configureStrategy(filter, { audience, issuer, jwksUri })
+  configureStrategy(filter, { audience, issuer, jwksUri }),
 );
 
 app.auth.strategy(
   'authenticated',
   'jwt',
-  configureStrategy(userFilter.any, { audience, issuer, jwksUri })
+  configureStrategy(userFilter.any, { audience, issuer, jwksUri }),
 );
 
 app.auth.default('private-beta');

@@ -78,7 +78,9 @@ const GovukHeaderLogoLink = styled(TopNav.Anchor)`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px ${BLACK};
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px ${BLACK};
     text-decoration: none;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -115,7 +117,9 @@ const GovukHeaderLink = styled(Link)`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: ${BLACK};
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px #0b0c0c;
     text-decoration: none;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;

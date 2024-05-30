@@ -47,7 +47,10 @@ const submissionContainerName = 'submissions';
 const templateContainerName = 'templates';
 
 export default class TemplateController {
-  constructor(private repository: CosmosRepository, private logger: Logger) {}
+  constructor(
+    private repository: CosmosRepository,
+    private logger: Logger,
+  ) {}
 
   getTemplate: Handler<api.GetTemplateRequest, api.GetTemplateResponse> =
     async ({ id, accountId }) => {
@@ -56,8 +59,8 @@ export default class TemplateController {
           (await this.repository.getRecord(
             templateContainerName,
             id,
-            accountId
-          )) as Template
+            accountId,
+          )) as Template,
         );
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -78,8 +81,8 @@ export default class TemplateController {
             accountId,
             order,
             pageLimit,
-            token
-          )
+            token,
+          ),
         ) as api.GetTemplatesResponse;
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -97,7 +100,7 @@ export default class TemplateController {
   > = async ({ accountId }) => {
     try {
       return success(
-        await this.repository.getTotalNumber(templateContainerName, accountId)
+        await this.repository.getTotalNumber(templateContainerName, accountId),
       ) as api.GetNumberOfTemplatesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -116,8 +119,8 @@ export default class TemplateController {
     if (!isTemplateNameValid(templateDetails.name)) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`
-        )
+          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+        ),
       );
     }
     if (
@@ -127,8 +130,8 @@ export default class TemplateController {
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
-        )
+          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+        ),
       );
     }
 
@@ -157,7 +160,7 @@ export default class TemplateController {
       await this.repository.saveRecord(
         templateContainerName,
         template,
-        accountId
+        accountId,
       );
       return success(template);
     } catch (err) {
@@ -177,8 +180,8 @@ export default class TemplateController {
     if (!isTemplateNameValid(templateDetails.name)) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`
-        )
+          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+        ),
       );
     }
     if (
@@ -188,8 +191,8 @@ export default class TemplateController {
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
-        )
+          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+        ),
       );
     }
 
@@ -197,7 +200,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
 
       if (
@@ -210,7 +213,7 @@ export default class TemplateController {
         await this.repository.saveRecord(
           templateContainerName,
           template,
-          accountId
+          accountId,
         );
       }
 
@@ -250,7 +253,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.wasteDescription);
     } catch (err) {
@@ -271,12 +274,12 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
 
       const submissionBase = setBaseWasteDescription(
         template as SubmissionBase,
-        value
+        value,
       );
 
       template.wasteDescription = submissionBase.wasteDescription;
@@ -289,7 +292,7 @@ export default class TemplateController {
         {
           ...template,
         },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -310,7 +313,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.exporterDetail);
     } catch (err) {
@@ -331,19 +334,19 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
 
       template.exporterDetail = setBaseExporterDetail(
         template as SubmissionBase,
-        value
+        value,
       ).exporterDetail;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -364,7 +367,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.importerDetail);
     } catch (err) {
@@ -385,18 +388,18 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       template.importerDetail = setBaseImporterDetail(
         template as SubmissionBase,
-        value
+        value,
       ).importerDetail;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -417,7 +420,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.carriers);
     } catch (err) {
@@ -438,7 +441,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template.carriers.status === 'NotStarted') {
         return fromBoom(Boom.notFound());
@@ -484,15 +487,15 @@ export default class TemplateController {
       if (value.status !== 'Started') {
         return fromBoom(
           Boom.badRequest(
-            `"Status cannot be ${value.status} on carrier detail creation"`
-          )
+            `"Status cannot be ${value.status} on carrier detail creation"`,
+          ),
         );
       }
 
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template === undefined) {
         return fromBoom(Boom.notFound());
@@ -502,15 +505,15 @@ export default class TemplateController {
         if (template.carriers.values.length === validation.CarrierLength.max) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${validation.CarrierLength.max} carriers`
-            )
+              `Cannot add more than ${validation.CarrierLength.max} carriers`,
+            ),
           );
         }
       }
 
       const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
         template as SubmissionBase,
-        value
+        value,
       );
 
       template.carriers = submissionBasePlusId.submissionBase.carriers;
@@ -519,7 +522,7 @@ export default class TemplateController {
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success({
         status: value.status,
@@ -544,7 +547,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template === undefined) {
         return fromBoom(Boom.notFound());
@@ -558,7 +561,7 @@ export default class TemplateController {
         template.carriers = setBaseNoCarriers(
           template as SubmissionBase,
           carrierId,
-          value
+          value,
         ).carriers;
       } else {
         const carrier = value.values.find((c) => {
@@ -579,7 +582,7 @@ export default class TemplateController {
           carrierId,
           value,
           carrier,
-          index
+          index,
         ).carriers;
       }
 
@@ -587,7 +590,7 @@ export default class TemplateController {
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -608,7 +611,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template === undefined) {
         return fromBoom(Boom.notFound());
@@ -628,14 +631,14 @@ export default class TemplateController {
 
       template.carriers = deleteBaseCarriers(
         template as SubmissionBase,
-        carrierId
+        carrierId,
       ).carriers;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -656,7 +659,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.collectionDetail);
     } catch (err) {
@@ -677,18 +680,18 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       template.collectionDetail = setBaseCollectionDetail(
         template as SubmissionBase,
-        value
+        value,
       ).collectionDetail;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -709,7 +712,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.ukExitLocation);
     } catch (err) {
@@ -730,18 +733,18 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       template.ukExitLocation = setBaseExitLocation(
         template as SubmissionBase,
-        value
+        value,
       ).ukExitLocation;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -762,7 +765,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.transitCountries);
     } catch (err) {
@@ -783,18 +786,18 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       template.transitCountries = setBaseTransitCountries(
         template as SubmissionBase,
-        value
+        value,
       ).transitCountries;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -815,7 +818,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       return success(template.recoveryFacilityDetail);
     } catch (err) {
@@ -836,7 +839,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (
         template.recoveryFacilityDetail.status !== 'Started' &&
@@ -884,15 +887,15 @@ export default class TemplateController {
       if (value.status !== 'Started') {
         return fromBoom(
           Boom.badRequest(
-            `"Status cannot be ${value.status} on recovery facility detail creation"`
-          )
+            `"Status cannot be ${value.status} on recovery facility detail creation"`,
+          ),
         );
       }
 
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
 
       if (template === undefined) {
@@ -909,8 +912,8 @@ export default class TemplateController {
         if (template.recoveryFacilityDetail.values.length === maxFacilities) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`
-            )
+              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+            ),
           );
         }
       }
@@ -925,7 +928,7 @@ export default class TemplateController {
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success({
         status: value.status,
@@ -949,7 +952,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template === undefined) {
         return fromBoom(Boom.notFound());
@@ -981,14 +984,14 @@ export default class TemplateController {
       template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
         template as SubmissionBase,
         rfdId,
-        value
+        value,
       ).recoveryFacilityDetail;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1009,7 +1012,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       if (template === undefined) {
         return fromBoom(Boom.notFound());
@@ -1031,14 +1034,14 @@ export default class TemplateController {
 
       template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
         template as SubmissionBase,
-        rfdId
+        rfdId,
       ).recoveryFacilityDetail;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1059,15 +1062,15 @@ export default class TemplateController {
       if (reference.length > validation.ReferenceChar.max) {
         return fromBoom(
           Boom.badRequest(
-            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-          )
+            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+          ),
         );
       }
 
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
 
       const draft: DraftSubmission = {
@@ -1083,13 +1086,13 @@ export default class TemplateController {
         collectionDate: { status: 'NotStarted' },
         carriers: copyCarriersNoTransport(
           template.carriers,
-          isSmallWaste(template.wasteDescription)
+          isSmallWaste(template.wasteDescription),
         ),
         collectionDetail: template.collectionDetail,
         ukExitLocation: template.ukExitLocation,
         transitCountries: template.transitCountries,
         recoveryFacilityDetail: copyRecoveryFacilities(
-          template.recoveryFacilityDetail
+          template.recoveryFacilityDetail,
         ),
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
@@ -1119,8 +1122,8 @@ export default class TemplateController {
     if (!isTemplateNameValid(templateDetails.name)) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`
-        )
+          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+        ),
       );
     }
     if (
@@ -1130,8 +1133,8 @@ export default class TemplateController {
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
-        )
+          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+        ),
       );
     }
 
@@ -1139,7 +1142,7 @@ export default class TemplateController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
 
       const template: Template = {
@@ -1179,7 +1182,7 @@ export default class TemplateController {
           isSmallWaste({
             status: 'Complete',
             ...submission.wasteDescription,
-          })
+          }),
         ),
         collectionDetail: {
           status: 'Complete',
@@ -1207,7 +1210,7 @@ export default class TemplateController {
       await this.repository.saveRecord(
         templateContainerName,
         template,
-        accountId
+        accountId,
       );
 
       return success(template);
@@ -1228,8 +1231,8 @@ export default class TemplateController {
     if (!isTemplateNameValid(templateDetails.name)) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`
-        )
+          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+        ),
       );
     }
     if (
@@ -1239,8 +1242,8 @@ export default class TemplateController {
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`
-        )
+          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+        ),
       );
     }
 
@@ -1248,7 +1251,7 @@ export default class TemplateController {
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
-        accountId
+        accountId,
       )) as Template;
       const newTemplate: Template = {
         id: uuidv4(),
@@ -1263,20 +1266,20 @@ export default class TemplateController {
         importerDetail: template.importerDetail,
         carriers: copyCarriersNoTransport(
           template.carriers,
-          isSmallWaste(template.wasteDescription)
+          isSmallWaste(template.wasteDescription),
         ),
         collectionDetail: template.collectionDetail,
         ukExitLocation: template.ukExitLocation,
         transitCountries: template.transitCountries,
         recoveryFacilityDetail: copyRecoveryFacilities(
-          template.recoveryFacilityDetail
+          template.recoveryFacilityDetail,
         ),
       };
 
       await this.repository.saveRecord(
         templateContainerName,
         newTemplate,
-        accountId
+        accountId,
       );
       return success(newTemplate);
     } catch (err) {

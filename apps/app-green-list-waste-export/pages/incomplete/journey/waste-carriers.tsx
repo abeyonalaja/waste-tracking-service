@@ -162,7 +162,7 @@ const WasteCarriers = () => {
   const apiConfig = useApiConfig();
   const [carrierPage, dispatchCarrierPage] = useReducer(
     carrierReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
   const [page, setPage] = useState(null);
@@ -171,7 +171,7 @@ const WasteCarriers = () => {
   const [carrierIndex, setCarrierIndex] = useState(1);
   const [carrierCount, setCarrierCount] = useState<number>(0);
   const [additionalCarrier, setAdditionalCarrier] = useState<'Yes' | 'No'>(
-    null
+    null,
   );
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [addressDetails, setAddressDetails] = useState<{
@@ -213,7 +213,7 @@ const WasteCarriers = () => {
 
   useEffect(() => {
     const index = carrierPage.data?.values.findIndex(
-      (record) => record.id === carrierPage.carrierData?.id
+      (record) => record.id === carrierPage.carrierData?.id,
     );
     if (index !== -1) {
       setAddressDetails(carrierPage.carrierData?.addressDetails);
@@ -229,7 +229,7 @@ const WasteCarriers = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/carriers`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -271,7 +271,7 @@ const WasteCarriers = () => {
                   (site) =>
                     site.addressDetails === undefined ||
                     site.contactDetails === undefined ||
-                    site.transportDetails === undefined
+                    site.transportDetails === undefined,
                 );
                 if (emptyRecords === undefined || emptyRecords.length === 0) {
                   createCarrierRecord();
@@ -305,7 +305,7 @@ const WasteCarriers = () => {
           nextView = VIEWS.CONTACT_DETAILS;
           newErrors = {
             organisationName: validateOrganisationName(
-              addressDetails?.organisationName
+              addressDetails?.organisationName,
             ),
             address: validateAddress(addressDetails?.address),
             country: validateCountry(addressDetails?.country),
@@ -326,7 +326,7 @@ const WasteCarriers = () => {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
             phoneNumber: validateInternationalPhone(
-              contactDetails?.phoneNumber
+              contactDetails?.phoneNumber,
             ),
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
@@ -334,8 +334,8 @@ const WasteCarriers = () => {
             status: carrierId
               ? 'Complete'
               : showTransport
-              ? 'Started'
-              : 'Complete',
+                ? 'Started'
+                : 'Complete',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -352,14 +352,14 @@ const WasteCarriers = () => {
           newErrors = {
             transportTypeError: validateTransport(
               t(`numberAdjective.${carrierIndex}`).toLowerCase(),
-              transportDetails?.type
+              transportDetails?.type,
             ),
             transportDescriptionError: validateTransportDescription(
               t(
-                `exportJourney.wasteCarrierTransport.${transportDetails?.type}`
+                `exportJourney.wasteCarrierTransport.${transportDetails?.type}`,
               ).toLowerCase(),
               t(`numberAdjective.${carrierIndex}`).toLowerCase(),
-              transportDetails?.description
+              transportDetails?.description,
             ),
           };
           body = {
@@ -388,7 +388,7 @@ const WasteCarriers = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -444,13 +444,13 @@ const WasteCarriers = () => {
       transportDetails,
       carrierPage.data,
       carrierId,
-    ]
+    ],
   );
 
   const handleChangeLink = (carrierId, e) => {
     e.preventDefault();
     const getRecord = carrierPage.data.values.filter(
-      (record) => record.id === carrierId
+      (record) => record.id === carrierId,
     );
     dispatchCarrierPage({
       type: 'CARRIER_DATA_UPDATE',
@@ -466,7 +466,7 @@ const WasteCarriers = () => {
   const handleRemoveLink = (carrierId, e) => {
     e.preventDefault();
     const getRecord = carrierPage.data.values.filter(
-      (record) => record.id === carrierId
+      (record) => record.id === carrierId,
     );
     dispatchCarrierPage({
       type: 'CARRIER_DATA_UPDATE',
@@ -489,7 +489,7 @@ const WasteCarriers = () => {
       const newErrors = {
         confirmRemove: validateConfirmRemove(
           confirmRemove,
-          t('exportJourney.wasteCarrierDetails.single')
+          t('exportJourney.wasteCarrierDetails.single'),
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -517,10 +517,10 @@ const WasteCarriers = () => {
               {
                 method: 'DELETE',
                 headers: apiConfig,
-              }
+              },
             ).then(() => {
               const updatedValues = carrierPage.data.values.filter(
-                (carrier) => carrier.id !== carrierPage.carrierData.id
+                (carrier) => carrier.id !== carrierPage.carrierData.id,
               );
               dispatchCarrierPage({
                 type: 'DATA_UPDATE',
@@ -541,7 +541,7 @@ const WasteCarriers = () => {
         setConfirmRemove(null);
       }
     },
-    [confirmRemove, carrierPage.carrierData]
+    [confirmRemove, carrierPage.carrierData],
   );
 
   const handleSubmitAdditionalCarrier = (e: FormEvent) => {
@@ -549,7 +549,7 @@ const WasteCarriers = () => {
     const newErrors = {
       additionalCarrier: validateSelection(
         additionalCarrier,
-        'if you want to add another waste carrier'
+        'if you want to add another waste carrier',
       ),
     };
     if (isNotEmpty(newErrors)) {
@@ -568,7 +568,7 @@ const WasteCarriers = () => {
         setTransportDetails(null);
 
         const emptyCarriers = carrierPage.data.values.filter(
-          (site) => site.addressDetails === undefined
+          (site) => site.addressDetails === undefined,
         );
         if (emptyCarriers.length === 0) {
           createCarrierRecord();
@@ -594,7 +594,7 @@ const WasteCarriers = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -663,7 +663,7 @@ const WasteCarriers = () => {
 
   const printBullets = () => {
     const bullets = t(
-      `exportJourney.wasteCarrierTransport.${transportDetails?.type}Bullets`
+      `exportJourney.wasteCarrierTransport.${transportDetails?.type}Bullets`,
     ).split('*');
     return bullets.map((bullet, index) => {
       return <GovUK.ListItem key={`bullet${index}`}>{bullet}</GovUK.ListItem>;
@@ -922,9 +922,9 @@ const WasteCarriers = () => {
                             'exportJourney.wasteCarrierTransport.pageQuestion',
                             {
                               carrierIndex: t(
-                                `numberAdjective.${carrierIndex}`
+                                `numberAdjective.${carrierIndex}`,
                               ).toLowerCase(),
-                            }
+                            },
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.MultiChoice
@@ -981,7 +981,7 @@ const WasteCarriers = () => {
                             value="InlandWaterways"
                           >
                             {t(
-                              'exportJourney.wasteCarrierTransport.InlandWaterways'
+                              'exportJourney.wasteCarrierTransport.InlandWaterways',
                             )}
                           </GovUK.Radio>
                         </GovUK.MultiChoice>
@@ -1007,17 +1007,17 @@ const WasteCarriers = () => {
                         'exportJourney.wasteCarrierTransport.descriptionTitle',
                         {
                           type: t(
-                            `exportJourney.wasteCarrierTransport.${transportDetails?.type}`
+                            `exportJourney.wasteCarrierTransport.${transportDetails?.type}`,
                           ).toLowerCase(),
                           carrierIndex: t(
-                            `numberAdjective.${carrierIndex}`
+                            `numberAdjective.${carrierIndex}`,
                           ).toLowerCase(),
-                        }
+                        },
                       )}
                     </GovUK.Heading>
                     <Paragraph>
                       {t(
-                        'exportJourney.wasteCarrierTransport.descriptionHintIntro'
+                        'exportJourney.wasteCarrierTransport.descriptionHintIntro',
                       )}
                     </Paragraph>
                     <GovUK.UnorderedList>{printBullets()}</GovUK.UnorderedList>
@@ -1038,7 +1038,7 @@ const WasteCarriers = () => {
                       >
                         <GovUK.LabelText>
                           {t(
-                            'exportJourney.wasteCarrierTransport.enterDetails'
+                            'exportJourney.wasteCarrierTransport.enterDetails',
                           )}
                         </GovUK.LabelText>
                       </TextareaCharCount>
@@ -1069,7 +1069,7 @@ const WasteCarriers = () => {
                             id={`carrier-list-item-${index + 1}`}
                             title={t(
                               'exportJourney.wasteCarrier.carriersPage.cardTitle',
-                              { n: t(`numberAdjective.${index + 1}`) }
+                              { n: t(`numberAdjective.${index + 1}`) },
                             )}
                             actions={[
                               {
@@ -1115,21 +1115,21 @@ const WasteCarriers = () => {
                             />
                           </SummaryCard>
                         );
-                      }
+                      },
                     )}
                     {carrierCount < 5 && (
                       <form onSubmit={handleSubmitAdditionalCarrier}>
                         <GovUK.Fieldset>
                           <GovUK.Fieldset.Legend size="M">
                             {t(
-                              'exportJourney.wasteCarrier.carriersPage.question'
+                              'exportJourney.wasteCarrier.carriersPage.question',
                             )}
                           </GovUK.Fieldset.Legend>
                           <GovUK.MultiChoice
                             mb={6}
                             hint={t(
                               'exportJourney.wasteCarrier.carriersPage.hint',
-                              { n: 5 - carrierCount }
+                              { n: 5 - carrierCount },
                             )}
                             label=""
                             meta={{
@@ -1177,7 +1177,7 @@ const WasteCarriers = () => {
                       <>
                         <GovUK.Heading as="p" size={'MEDIUM'}>
                           {t(
-                            'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'
+                            'exportJourney.wasteCarrier.carriersPage.noMoreCarriers',
                           )}
                         </GovUK.Heading>
                         <ButtonGroup>
@@ -1211,7 +1211,7 @@ const WasteCarriers = () => {
                       <GovUK.Fieldset>
                         <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                           {t(
-                            'exportJourney.wasteCarrier.carriersPage.removeQuestion'
+                            'exportJourney.wasteCarrier.carriersPage.removeQuestion',
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.Paragraph>

@@ -21,7 +21,7 @@ global.fetch = jest.fn(
         Promise.resolve({
           status: 'NotStarted',
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Exporter details manual address page', () => {

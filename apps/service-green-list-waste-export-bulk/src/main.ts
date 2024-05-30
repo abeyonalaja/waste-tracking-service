@@ -68,7 +68,7 @@ const server = new DaprServer({
 
 const aadCredentials = new ChainedTokenCredential(
   new AzureCliCredential(),
-  new WorkloadIdentityCredential()
+  new WorkloadIdentityCredential(),
 );
 const repository = new CosmosBatchRepository(
   new CosmosClient({
@@ -77,18 +77,18 @@ const repository = new CosmosBatchRepository(
   }),
   process.env['COSMOS_DATABASE_NAME'] || 'annex-vii-bulk',
   process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
-  logger
+  logger,
 );
 const serviceBusClient = new ServiceBusClient(
   process.env['SERVICE_BUS_HOST_NAME'],
-  aadCredentials
+  aadCredentials,
 );
 
 const daprAnnexViiClient = new DaprAnnexViiClient(server.client, annexViiAppId);
 const batchController = new BatchController(
   repository,
   daprAnnexViiClient,
-  logger
+  logger,
 );
 const csvValidator = new CsvValidator(logger);
 
@@ -159,7 +159,7 @@ await server.invoker.listen(
   },
   {
     method: HttpMethod.POST,
-  }
+  },
 );
 
 await server.invoker.listen(
@@ -176,7 +176,7 @@ await server.invoker.listen(
 
     return await batchController.getBatch(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -235,7 +235,7 @@ await server.invoker.listen(
 
       await sender.sendMessages(batch);
       logger.info(
-        `Sent a batch of messages to the queue: ${submissionsQueueName}`
+        `Sent a batch of messages to the queue: ${submissionsQueueName}`,
       );
       await sender.close();
     } catch (err) {
@@ -245,7 +245,7 @@ await server.invoker.listen(
 
     return response;
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -262,7 +262,7 @@ await server.invoker.listen(
 
     return await batchController.getBatchContent(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.start();
@@ -274,7 +274,7 @@ while (execute) {
     processMessage: async (brokeredMessage) => {
       if (HTTP.isEvent(brokeredMessage.body)) {
         const body = JSON.parse(
-          brokeredMessage.body.body
+          brokeredMessage.body.body,
         ) as ContentToBeProcessedTask;
 
         if (!taskValidate.receiveContentToBeProcessedTask(body)) {
@@ -285,7 +285,7 @@ while (execute) {
 
         try {
           const records = await csvValidator.validateBatch(
-            body.data as ContentProcessingTask
+            body.data as ContentProcessingTask,
           );
           if (!records.success) {
             if (records.error.statusCode !== 400) {
@@ -316,7 +316,7 @@ while (execute) {
             } catch (err) {
               logger.error(
                 `Error receiving response from ${annexViiAppId} service`,
-                { error: err }
+                { error: err },
               );
               throw Boom.internal();
             }
@@ -337,7 +337,7 @@ while (execute) {
                   errorDetails: v.fieldFormatErrors
                     .map((f) => f.message)
                     .concat(v.invalidStructureErrors.map((i) => i.message)),
-                })
+                }),
               );
             } else {
               submissions.push(...response.value.values);
@@ -362,7 +362,7 @@ while (execute) {
                       hasEstimates: submissions.some(
                         (s) =>
                           s.wasteQuantity.type === 'EstimateData' ||
-                          s.collectionDate.type === 'EstimateDate'
+                          s.collectionDate.type === 'EstimateDate',
                       ),
                       submissions: submissions,
                     },
@@ -391,7 +391,7 @@ while (execute) {
     processError: async (args: ProcessErrorArgs) => {
       logger.error(
         `Error from source ${args.errorSource} occurred: `,
-        args.error
+        args.error,
       );
       if (isServiceBusError(args.error)) {
         switch (args.error.code) {
@@ -400,7 +400,7 @@ while (execute) {
           case 'UnauthorizedAccess':
             logger.error(
               `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error
+              args.error,
             );
             await subscription.close();
             break;
@@ -424,13 +424,13 @@ while (execute) {
     processMessage: async (brokeredMessage) => {
       if (HTTP.isEvent(brokeredMessage.body)) {
         const body = JSON.parse(
-          brokeredMessage.body.body
+          brokeredMessage.body.body,
         ) as ContentToBeSubmittedTask;
 
         try {
           const batchData = await repository.getBatch(
             body.data.batchId,
-            body.data.accountId
+            body.data.accountId,
           );
           if (batchData.state.status !== 'Submitting') {
             const message = `The fetched batch ${batchData.id} does not have the correct status. Status expected: 'Submitting'. Status received: '${batchData.state.status}'.`;
@@ -448,7 +448,7 @@ while (execute) {
           } catch (err) {
             logger.error(
               `Error receiving response from ${annexViiAppId} service`,
-              { error: err }
+              { error: err },
             );
             throw Boom.internal();
           }
@@ -503,7 +503,7 @@ while (execute) {
     processError: async (args: ProcessErrorArgs) => {
       logger.error(
         `Error from source ${args.errorSource} occurred: `,
-        args.error
+        args.error,
       );
       if (isServiceBusError(args.error)) {
         switch (args.error.code) {
@@ -512,7 +512,7 @@ while (execute) {
           case 'UnauthorizedAccess':
             logger.error(
               `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error
+              args.error,
             );
             await submissionsSubscription.close();
             break;

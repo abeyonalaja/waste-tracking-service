@@ -5,5 +5,5 @@ const ajv = new Ajv();
 
 export const getAddressByPostcodeRequest =
   ajv.compileParser<GetAddressByPostcodeRequest>(
-    schema.getAddressByPostcodeRequest
+    schema.getAddressByPostcodeRequest,
   );

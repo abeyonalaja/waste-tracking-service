@@ -27,7 +27,7 @@ global.fetch = jest.fn(
             lastModified: '2023-09-18T13:08:13.224Z',
           },
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Copy template page', () => {

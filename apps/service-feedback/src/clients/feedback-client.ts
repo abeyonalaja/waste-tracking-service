@@ -12,7 +12,7 @@ import {
 
 export interface FeedbackClient {
   sendFeedback(
-    sendFeedbackRequest: SendFeedbackRequest
+    sendFeedbackRequest: SendFeedbackRequest,
   ): Promise<SendFeedbackResponse>;
 }
 
@@ -22,14 +22,14 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
     private clientId: string,
     private clientSecret: string,
     private surveyIdMap: Map<string, string>,
-    private surveyAPIEndpoint: string
+    private surveyAPIEndpoint: string,
   ) {}
 
   private async generateAccessToken(
     clientId: string,
     clientSecret: string,
     grantType: string,
-    scope: string
+    scope: string,
   ): Promise<GenerateAccessTokenResponse> {
     const tokenResponse = await axios.post(
       this.surveyAPIEndpoint + 'oauth2/token',
@@ -43,7 +43,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
+      },
     );
 
     if (!tokenResponse.data) {
@@ -56,7 +56,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
 
   private async generateSurveySession(
     token: string,
-    surveyId: string
+    surveyId: string,
   ): Promise<GenerateSurveySessionResponse> {
     const surveySessionResponse = await axios.post(
       this.surveyAPIEndpoint + 'API/v3/surveys/' + surveyId + '/sessions',
@@ -68,7 +68,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,
         },
-      }
+      },
     );
 
     if (!surveySessionResponse.data) {
@@ -80,13 +80,13 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
   }
 
   async sendFeedback(
-    feedbackRequest: SendFeedbackRequest
+    feedbackRequest: SendFeedbackRequest,
   ): Promise<SendFeedbackResponse> {
     const bearertoken = await this.generateAccessToken(
       this.clientId,
       this.clientSecret,
       'client_credentials',
-      'write:survey_sessions'
+      'write:survey_sessions',
     );
 
     if (!bearertoken.access_token) {
@@ -101,7 +101,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
 
     const surveySession = await this.generateSurveySession(
       bearertoken.access_token,
-      surveyId
+      surveyId,
     );
 
     if (!surveySession.result.sessionId) {
@@ -182,7 +182,7 @@ export default class QualtricsFeedbackClient implements FeedbackClient {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + bearertoken.access_token,
           },
-        }
+        },
       );
 
       if (!sendSurveyDataResponse.data) {

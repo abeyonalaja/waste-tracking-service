@@ -59,7 +59,7 @@ const ImporterContactDetails = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -131,7 +131,7 @@ const ImporterContactDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(updatedStatus),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -150,7 +150,7 @@ const ImporterContactDetails = () => {
         }
       }
     },
-    [fullName, email, phone, fax, data]
+    [fullName, email, phone, fax, data],
   );
   const BreadCrumbs = () => {
     return (

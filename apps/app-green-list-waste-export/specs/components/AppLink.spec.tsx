@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('App Link', () => {
@@ -20,7 +20,7 @@ describe('App Link', () => {
     render(
       <AppLink href={href} testId={testId}>
         {children}
-      </AppLink>
+      </AppLink>,
     );
     const link = screen.getByTestId(testId);
     expect(link).toBeTruthy();
@@ -32,7 +32,7 @@ describe('App Link', () => {
     render(
       <AppLink href={href} testId={testId} onClick={onClick}>
         {children}
-      </AppLink>
+      </AppLink>,
     );
     const link = screen.getByTestId(testId);
     fireEvent.click(link);

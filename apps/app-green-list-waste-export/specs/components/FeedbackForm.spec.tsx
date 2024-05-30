@@ -8,7 +8,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next/router', () => {
@@ -65,7 +65,7 @@ describe('FeedbackForm component', () => {
     });
 
     const legend = screen.getByText(
-      'Overall, how did you feel about the service you received today?'
+      'Overall, how did you feel about the service you received today?',
     );
     expect(legend).toBeInTheDocument();
   });
@@ -129,7 +129,7 @@ describe('FeedbackForm component', () => {
     });
 
     const hint = screen.getByText(
-      'Do not include any business or personal information here, for example reference numbers or names.'
+      'Do not include any business or personal information here, for example reference numbers or names.',
     );
     expect(hint).toBeInTheDocument();
   });

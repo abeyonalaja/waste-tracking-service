@@ -27,7 +27,7 @@ describe(PrivateAudienceServiceBackend, () => {
   const subject = new PrivateAudienceServiceBackend(
     mockClient as unknown as DaprLimitedAudienceClient,
     mockCache as unknown as LRUCache<string, boolean>,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {
@@ -83,7 +83,7 @@ describe(PrivateAudienceServiceBackend, () => {
       const dcidSubjectId = faker.datatype.uuid();
       mockCache.get.mockReturnValue(true);
       expect(
-        await subject.userFilter({ uniqueReference: 'X', dcidSubjectId })
+        await subject.userFilter({ uniqueReference: 'X', dcidSubjectId }),
       ).toBe(true);
       expect(mockClient.checkParticipation).not.toHaveBeenCalled();
     });

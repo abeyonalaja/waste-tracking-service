@@ -76,7 +76,7 @@ const ViewRecord = () => {
   const apiConfig = useApiConfig();
   const [viewRecordPage, dispatchViewRecordPage] = useReducer(
     viewRecordReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
 
@@ -94,7 +94,7 @@ const ViewRecord = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();

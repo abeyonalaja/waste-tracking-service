@@ -19,7 +19,7 @@ export interface SubmissionBasePlusId {
 }
 
 export function setSubmissionConfirmation(
-  submission: DraftSubmission
+  submission: DraftSubmission,
 ): SubmissionConfirmation {
   const {
     id,
@@ -33,7 +33,7 @@ export function setSubmissionConfirmation(
   if (
     Object.entries(filteredValues).every(
       ([key, value]) =>
-        key === 'accountId' || (value.status && value.status === 'Complete')
+        key === 'accountId' || (value.status && value.status === 'Complete'),
     )
   ) {
     return { status: 'NotStarted' };
@@ -43,7 +43,7 @@ export function setSubmissionConfirmation(
 }
 
 export function setSubmissionDeclaration(
-  submission: DraftSubmission
+  submission: DraftSubmission,
 ): SubmissionDeclaration {
   if (submission.submissionConfirmation.status === 'Complete') {
     return { status: 'NotStarted' };
@@ -54,7 +54,7 @@ export function setSubmissionDeclaration(
 
 export function setWasteQuantityUnit(
   wasteQuantity: submission.WasteQuantity,
-  submission: submission.Submission
+  submission: submission.Submission,
 ): void {
   if (submission.wasteDescription.wasteCode.type === 'NotApplicable') {
     if (wasteQuantity.type === 'ActualData') {
@@ -89,7 +89,7 @@ export function setWasteQuantityUnit(
 
 export function setDraftWasteQuantityUnit(
   wasteQuantity: draft.DraftWasteQuantity,
-  submission: draft.DraftSubmission
+  submission: draft.DraftSubmission,
 ): void {
   if (
     submission.wasteDescription.status !== 'NotStarted' &&
@@ -133,7 +133,7 @@ export function setDraftWasteQuantityUnit(
 }
 
 export function isCollectionDateValid(
-  date: draft.DraftSubmission['collectionDate']
+  date: draft.DraftSubmission['collectionDate'],
 ): boolean {
   if (date.status !== 'NotStarted') {
     const {
@@ -157,7 +157,7 @@ export function isCollectionDateValid(
 }
 
 export function setSubmissionConfirmationStatus(
-  draft: draft.DraftSubmission
+  draft: draft.DraftSubmission,
 ): draft.DraftSubmission['submissionConfirmation'] {
   const {
     id,
@@ -178,7 +178,7 @@ export function setSubmissionConfirmationStatus(
 }
 
 export function setSubmissionDeclarationStatus(
-  draft: draft.DraftSubmission
+  draft: draft.DraftSubmission,
 ): draft.DraftSubmission['submissionDeclaration'] {
   if (draft.submissionConfirmation.status === 'Complete') {
     return { status: 'NotStarted' };
@@ -188,7 +188,7 @@ export function setSubmissionDeclarationStatus(
 }
 
 export function isSmallWaste(
-  wasteDescription: draft.DraftWasteDescription
+  wasteDescription: draft.DraftWasteDescription,
 ): boolean {
   return (
     wasteDescription.status === 'Complete' &&
@@ -198,7 +198,7 @@ export function isSmallWaste(
 
 export function copyCarriersNoTransport(
   sourceCarriers: draft.DraftCarriers,
-  isSmallWaste: boolean
+  isSmallWaste: boolean,
 ): draft.DraftCarriers {
   let targetCarriers: draft.DraftCarriers = {
     status: 'NotStarted',
@@ -234,7 +234,7 @@ export function copyCarriersNoTransport(
 }
 
 export function copyRecoveryFacilities(
-  sourceFacilities: draft.DraftRecoveryFacilityDetails
+  sourceFacilities: draft.DraftRecoveryFacilityDetails,
 ): draft.DraftRecoveryFacilityDetails {
   let targetFacilities: draft.DraftRecoveryFacilityDetails = {
     status: 'NotStarted',
@@ -275,7 +275,7 @@ export function copyRecoveryFacilities(
 
 export function setBaseWasteDescription(
   submissionBase: SubmissionBase,
-  value: draft.DraftWasteDescription
+  value: draft.DraftWasteDescription,
 ): SubmissionBase {
   let recoveryFacilityDetail: SubmissionBase['recoveryFacilityDetail'] =
     submissionBase.recoveryFacilityDetail.status === 'CannotStart' &&
@@ -321,7 +321,7 @@ export function setBaseWasteDescription(
   if (
     isWasteCodeChangingBulkToBulkDifferentType(
       submissionBase.wasteDescription,
-      value
+      value,
     )
   ) {
     if (value.status === 'Started') {
@@ -338,7 +338,7 @@ export function setBaseWasteDescription(
   if (
     isWasteCodeChangingBulkToBulkSameType(
       submissionBase.wasteDescription,
-      value
+      value,
     )
   ) {
     if (value.status === 'Started') {
@@ -375,7 +375,7 @@ export function setBaseWasteDescription(
 
 export function setBaseExporterDetail(
   submissionBase: SubmissionBase,
-  value: draft.DraftExporterDetail
+  value: draft.DraftExporterDetail,
 ): SubmissionBase {
   submissionBase.exporterDetail = value;
 
@@ -384,7 +384,7 @@ export function setBaseExporterDetail(
 
 export function setBaseImporterDetail(
   submissionBase: SubmissionBase,
-  value: draft.DraftImporterDetail
+  value: draft.DraftImporterDetail,
 ): SubmissionBase {
   submissionBase.importerDetail = value;
 
@@ -393,7 +393,7 @@ export function setBaseImporterDetail(
 
 export function createBaseCarriers(
   submissionBase: SubmissionBase,
-  value: Omit<draft.DraftCarriers, 'transport' | 'values'>
+  value: Omit<draft.DraftCarriers, 'transport' | 'values'>,
 ): SubmissionBasePlusId {
   const submissionBasePlusId = {
     submissionBase: submissionBase,
@@ -432,7 +432,7 @@ export function createBaseCarriers(
 export function setBaseNoCarriers(
   submissionBase: SubmissionBase,
   carrierId: string,
-  value: draft.DraftCarriers
+  value: draft.DraftCarriers,
 ): SubmissionBase {
   if (value.status === 'NotStarted') {
     submissionBase.carriers = value;
@@ -448,7 +448,7 @@ export function setBaseCarriers(
   carrierId: string,
   value: draft.DraftCarriers,
   carrier: draft.DraftCarrier | draft.DraftCarrierPartial,
-  index: number
+  index: number,
 ): SubmissionBase {
   if (
     submissionBase !== undefined &&
@@ -463,7 +463,7 @@ export function setBaseCarriers(
 
 export function deleteBaseCarriers(
   submissionBase: SubmissionBase,
-  carrierId: string
+  carrierId: string,
 ): SubmissionBase {
   if (submissionBase.carriers.status !== 'NotStarted') {
     const index = submissionBase.carriers.values.findIndex((c) => {
@@ -490,7 +490,7 @@ export function deleteBaseCarriers(
 
 export function setBaseCollectionDetail(
   submissionBase: SubmissionBase,
-  value: draft.DraftCollectionDetail
+  value: draft.DraftCollectionDetail,
 ): SubmissionBase {
   submissionBase.collectionDetail = value;
 
@@ -499,7 +499,7 @@ export function setBaseCollectionDetail(
 
 export function setBaseExitLocation(
   submissionBase: SubmissionBase,
-  value: draft.DraftUkExitLocation
+  value: draft.DraftUkExitLocation,
 ): SubmissionBase {
   submissionBase.ukExitLocation = value;
 
@@ -508,7 +508,7 @@ export function setBaseExitLocation(
 
 export function setBaseTransitCountries(
   submissionBase: SubmissionBase,
-  value: draft.DraftTransitCountries
+  value: draft.DraftTransitCountries,
 ): SubmissionBase {
   submissionBase.transitCountries = value;
 
@@ -517,7 +517,7 @@ export function setBaseTransitCountries(
 
 export function createBaseRecoveryFacilityDetail(
   submissionBase: SubmissionBase,
-  value: Omit<draft.DraftRecoveryFacilityDetails, 'values'>
+  value: Omit<draft.DraftRecoveryFacilityDetails, 'values'>,
 ): SubmissionBasePlusId {
   const submissionBasePlusId = {
     submissionBase: submissionBase,
@@ -551,7 +551,7 @@ export function createBaseRecoveryFacilityDetail(
 export function setBaseRecoveryFacilityDetail(
   submissionBase: SubmissionBase,
   rfdId: string,
-  value: draft.DraftRecoveryFacilityDetails
+  value: draft.DraftRecoveryFacilityDetails,
 ): SubmissionBase {
   if (submissionBase !== undefined) {
     if (
@@ -570,7 +570,7 @@ export function setBaseRecoveryFacilityDetail(
       const index = submissionBase.recoveryFacilityDetail.values.findIndex(
         (rf) => {
           return rf.id === rfdId;
-        }
+        },
       );
       submissionBase.recoveryFacilityDetail.status = value.status;
       submissionBase.recoveryFacilityDetail.values[index] =
@@ -583,7 +583,7 @@ export function setBaseRecoveryFacilityDetail(
 
 export function deleteBaseRecoveryFacilityDetail(
   submissionBase: SubmissionBase,
-  rfdId: string
+  rfdId: string,
 ): SubmissionBase {
   if (
     submissionBase.recoveryFacilityDetail.status === 'Started' ||
@@ -592,7 +592,7 @@ export function deleteBaseRecoveryFacilityDetail(
     const index = submissionBase.recoveryFacilityDetail.values.findIndex(
       (rf) => {
         return rf.id === rfdId;
-      }
+      },
     );
 
     if (index !== -1) {
@@ -608,7 +608,7 @@ export function deleteBaseRecoveryFacilityDetail(
 
 export function isWasteCodeChangingBulkToSmall(
   currentWasteDescription: draft.DraftWasteDescription,
-  newWasteDescription: draft.DraftWasteDescription
+  newWasteDescription: draft.DraftWasteDescription,
 ): boolean {
   return (
     currentWasteDescription.status !== 'NotStarted' &&
@@ -620,7 +620,7 @@ export function isWasteCodeChangingBulkToSmall(
 
 export function isWasteCodeChangingSmallToBulk(
   currentWasteDescription: draft.DraftWasteDescription,
-  newWasteDescription: draft.DraftWasteDescription
+  newWasteDescription: draft.DraftWasteDescription,
 ): boolean {
   return (
     currentWasteDescription.status !== 'NotStarted' &&
@@ -632,7 +632,7 @@ export function isWasteCodeChangingSmallToBulk(
 
 export function isWasteCodeChangingBulkToBulkDifferentType(
   currentWasteDescription: draft.DraftWasteDescription,
-  newWasteDescription: draft.DraftWasteDescription
+  newWasteDescription: draft.DraftWasteDescription,
 ): boolean {
   return (
     currentWasteDescription.status !== 'NotStarted' &&
@@ -646,7 +646,7 @@ export function isWasteCodeChangingBulkToBulkDifferentType(
 
 export function isWasteCodeChangingBulkToBulkSameType(
   currentWasteDescription: draft.DraftWasteDescription,
-  newWasteDescription: draft.DraftWasteDescription
+  newWasteDescription: draft.DraftWasteDescription,
 ): boolean {
   return (
     currentWasteDescription.status !== 'NotStarted' &&
@@ -675,7 +675,7 @@ export function isTemplateNameValid(name: string): boolean {
 
 export function getSubmissionData(
   accountId: string,
-  data: draft.DraftSubmission
+  data: draft.DraftSubmission,
 ): SubmissionWithAccount {
   if (
     data.wasteDescription.status === 'Complete' &&
@@ -749,7 +749,7 @@ export function getSubmissionData(
 export function paginateArray<T>(
   array: T[],
   pageSize: number,
-  pageNumber: number
+  pageNumber: number,
 ): T[] {
   return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 }
@@ -757,11 +757,11 @@ export function paginateArray<T>(
 export function doesTemplateAlreadyExist(
   values: TemplateWithAccount[],
   accountId: string,
-  templateName: string
+  templateName: string,
 ): boolean {
   let exists = false;
   const templates: Template[] = values.filter(
-    (template) => template.accountId === accountId
+    (template) => template.accountId === accountId,
   );
 
   templates.map((template) => {

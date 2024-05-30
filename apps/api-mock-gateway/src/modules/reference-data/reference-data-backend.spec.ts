@@ -34,14 +34,16 @@ describe('Reference Data Backend', () => {
   it('returns ewc codes', async () => {
     const result = await listEWCCodes(db, false);
     expect(result).toEqual(
-      db.ewcCodes.filter((ewcCode) => !ewcCode.code.includes('*'))
+      db.ewcCodes.filter((ewcCode) => !ewcCode.code.includes('*')),
     );
   });
 
   it('returns countries', async () => {
     const result = await listCountries(db, false);
     expect(result).toEqual(
-      db.countries.filter((country) => !country.name.includes('United Kingdom'))
+      db.countries.filter(
+        (country) => !country.name.includes('United Kingdom'),
+      ),
     );
   });
 

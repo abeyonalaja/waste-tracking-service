@@ -24,7 +24,7 @@ describe('Grid Row component', () => {
     expect(element).toHaveClass('grid-row-flex');
 
     render(
-      <GridRow display="flex-from-tablet">Test Grid Row Flex Tablet</GridRow>
+      <GridRow display="flex-from-tablet">Test Grid Row Flex Tablet</GridRow>,
     );
     const element2 = screen.getByText('Test Grid Row Flex Tablet');
     expect(element2).toHaveClass('grid-row-flex--from-tablet');

@@ -42,7 +42,7 @@ export const CharacterCount = ({
     isCountExceeding = watch(formName)?.length > maxCount;
     countText = isCountExceeding
       ? `${charsLeftPartOne} ${Math.abs(
-          maxCount - watch(formName).length
+          maxCount - watch(formName).length,
         )} ${charsLeftExceeds}`
       : `${charsLeftPartOne} ${
           maxCount - watch(formName)?.length

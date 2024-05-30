@@ -26,7 +26,7 @@ interface TestCsvRow {
 
 export async function createBatch(
   accountId: string,
-  inputs: Input[]
+  inputs: Input[],
 ): Promise<{ id: string }> {
   const id = uuidv4();
 
@@ -44,7 +44,7 @@ export async function createBatch(
           escape: '\\',
           ltrim: true,
           rtrim: true,
-        })
+        }),
       );
 
       parser.on('readable', function () {
@@ -719,7 +719,7 @@ export async function createBatch(
             wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
             producerName: `Producer Org ${i}`,
             ewcCodes: [...Array((i % 5) + 1).keys()].map(
-              (ewc) => `${ewc.toString().padStart(3, '0')}012`
+              (ewc) => `${ewc.toString().padStart(3, '0')}012`,
             ),
             collectionDate: {
               day: ((i % 31) + 1).toString(),
@@ -741,7 +741,7 @@ export function getBatch({
   accountId,
 }: BatchRef): Promise<UkwmBulkSubmission> {
   const value = db.ukwmBatches.find(
-    (b) => b.id == id && b.accountId == accountId
+    (b) => b.id == id && b.accountId == accountId,
   );
   if (value === undefined) {
     return Promise.reject(Boom.notFound());
@@ -752,7 +752,7 @@ export function getBatch({
 
 export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
   const value = db.ukwmBatches.find(
-    (b) => b.id == id && b.accountId == accountId
+    (b) => b.id == id && b.accountId == accountId,
   );
   if (value === undefined) {
     return Promise.reject(Boom.notFound());

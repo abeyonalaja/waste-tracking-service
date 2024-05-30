@@ -43,11 +43,11 @@ const addressClient = new BoomiAddressClient(
   logger,
   process.env['ADDRESS_LOOKUP_URL'],
   fs.readFileSync(
-    `${process.env['CERT_FOLDER']}${process.env['CERT_NAME']}.crt`
+    `${process.env['CERT_FOLDER']}${process.env['CERT_NAME']}.crt`,
   ),
   fs.readFileSync(
-    `${process.env['CERT_FOLDER']}${process.env['CERT_NAME']}.key`
-  )
+    `${process.env['CERT_FOLDER']}${process.env['CERT_NAME']}.key`,
+  ),
 );
 
 const addressController = new AddressController(addressClient, logger);
@@ -68,7 +68,7 @@ await server.invoker.listen(
   },
   {
     method: HttpMethod.POST,
-  }
+  },
 );
 
 await server.start();

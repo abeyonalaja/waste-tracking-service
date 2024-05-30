@@ -19,7 +19,7 @@ global.fetch = jest.fn(
       ok: true,
       json: () =>
         Promise.resolve({ transitCountries: { status: 'NotStarted' } }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Waste Transit Countries page', () => {
@@ -35,7 +35,7 @@ describe('Waste Transit Countries page', () => {
     });
 
     const pageTitle = screen.getByText(
-      'Are there any other countries the waste will travel through?'
+      'Are there any other countries the waste will travel through?',
     );
     expect(pageTitle).toBeTruthy();
 
@@ -79,7 +79,7 @@ describe('Waste Transit Countries page', () => {
                 values: ['Afghanistan (AF)'],
               },
             }),
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     await act(async () => {
@@ -123,7 +123,7 @@ describe('Waste Transit Countries page', () => {
     });
 
     const pageTitle = screen.getByText(
-      'What would you like to change Afghanistan (AF) to?'
+      'What would you like to change Afghanistan (AF) to?',
     );
     expect(pageTitle).toBeTruthy();
   });
@@ -139,7 +139,7 @@ describe('Waste Transit Countries page', () => {
     });
 
     const pageTitle = screen.getByText(
-      'Are you sure you want to remove Afghanistan (AF)?'
+      'Are you sure you want to remove Afghanistan (AF)?',
     );
     expect(pageTitle).toBeTruthy();
   });

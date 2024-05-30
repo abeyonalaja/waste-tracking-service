@@ -180,7 +180,7 @@ const TemplateTasklist = () => {
   const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
-    initialState
+    initialState,
   );
   const [templateId, setTemplateId] = useState<string>(null);
   const [context, setContext] = useState<string>('updated');
@@ -203,7 +203,7 @@ const TemplateTasklist = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -221,8 +221,8 @@ const TemplateTasklist = () => {
             setShowBanner(
               differenceInSeconds(
                 new Date(),
-                parseISO(data?.templateDetails.lastModified)
-              ) < 5
+                parseISO(data?.templateDetails.lastModified),
+              ) < 5,
             );
           });
       }
@@ -361,7 +361,7 @@ const TemplateTasklist = () => {
                                 }}
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription'
+                                  'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -390,15 +390,15 @@ const TemplateTasklist = () => {
                                     'Complete'
                                       ? `/templates/exporter-importer/exporter-address`
                                       : templatePage.data?.exporterDetail
-                                          .status === 'Started'
-                                      ? `/templates/exporter-importer/exporter-details-manual`
-                                      : `/templates/exporter-importer/exporter-postcode`,
+                                            .status === 'Started'
+                                        ? `/templates/exporter-importer/exporter-details-manual`
+                                        : `/templates/exporter-importer/exporter-postcode`,
                                   query: { templateId, templates: true },
                                 }}
                                 id="exporter-details"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionTwo.exporterDetails'
+                                  'exportJourney.submitAnExport.SectionTwo.exporterDetails',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -421,7 +421,7 @@ const TemplateTasklist = () => {
                                 id="importer-details"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionTwo.importerDetails'
+                                  'exportJourney.submitAnExport.SectionTwo.importerDetails',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -439,7 +439,7 @@ const TemplateTasklist = () => {
                       <li>
                         <TaskListSectionHeading size="M">
                           {t(
-                            'exportJourney.submitAnExport.SectionThree.heading'
+                            'exportJourney.submitAnExport.SectionThree.heading',
                           )}
                         </TaskListSectionHeading>
                         <TaskListItems>
@@ -453,7 +453,7 @@ const TemplateTasklist = () => {
                                 id="waste-carriers"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionThree.wasteCarriers'
+                                  'exportJourney.submitAnExport.SectionThree.wasteCarriers',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -474,7 +474,7 @@ const TemplateTasklist = () => {
                                 id="collection-details"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
+                                  'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -497,7 +497,7 @@ const TemplateTasklist = () => {
                                 id="location-waste-leaves-the-uk"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK'
+                                  'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -520,7 +520,7 @@ const TemplateTasklist = () => {
                                 id="countries-waste-will-travel-through"
                               >
                                 {t(
-                                  'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel'
+                                  'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel',
                                 )}
                               </AppLink>
                             </TaskName>
@@ -538,7 +538,7 @@ const TemplateTasklist = () => {
                       <li>
                         <TaskListSectionHeading size="M">
                           {t(
-                            'exportJourney.submitAnExport.SectionFour.heading'
+                            'exportJourney.submitAnExport.SectionFour.heading',
                           )}
                         </TaskListSectionHeading>
                         <TaskListItems>
@@ -547,7 +547,7 @@ const TemplateTasklist = () => {
                               {templatePage.data?.recoveryFacilityDetail
                                 .status === 'CannotStart' &&
                                 t(
-                                  'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
+                                  'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory',
                                 )}
                               {(templatePage.data?.wasteDescription.status ===
                                 'Started' ||
@@ -563,7 +563,7 @@ const TemplateTasklist = () => {
                                     }}
                                   >
                                     {t(
-                                      'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
+                                      'exportJourney.submitAnExport.SectionFour.laboratoryDetails',
                                     )}
                                   </AppLink>
                                 )}
@@ -583,7 +583,7 @@ const TemplateTasklist = () => {
                                     }}
                                   >
                                     {t(
-                                      'exportJourney.submitAnExport.SectionFour.recoveryDetails'
+                                      'exportJourney.submitAnExport.SectionFour.recoveryDetails',
                                     )}
                                   </AppLink>
                                 )}

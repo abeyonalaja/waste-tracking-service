@@ -11,7 +11,10 @@ import { compress } from 'snappy';
 import { downloadHeaders, downloadSections } from '../lib/csv-content';
 
 export class BatchController {
-  constructor(private repository: BatchRepository, private logger: Logger) {}
+  constructor(
+    private repository: BatchRepository,
+    private logger: Logger,
+  ) {}
 
   addContentToBatch: Handler<
     api.AddContentToBatchRequest,
@@ -45,10 +48,10 @@ export class BatchController {
     try {
       const data: BulkSubmission = await this.repository.getBatch(
         id,
-        accountId
+        accountId,
       );
       const response: api.GetBatchResponse = success(
-        data as unknown as api.BulkSubmissionDetail
+        data as unknown as api.BulkSubmissionDetail,
       );
 
       if (data.state.status === 'FailedValidation') {
@@ -183,7 +186,7 @@ export class BatchController {
           response.value.state.status === 'FailedValidation'
         ) {
           response.value.state.columnErrors = columnErrors.filter(
-            (ce) => ce.errorAmount > 0
+            (ce) => ce.errorAmount > 0,
           );
           response.value.state.rowErrors = rowErrors;
         }
@@ -257,7 +260,7 @@ export class BatchController {
           },
         };
         return success(
-          await this.repository.saveBatch(bulkSubmission, accountId)
+          await this.repository.saveBatch(bulkSubmission, accountId),
         );
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -275,7 +278,7 @@ export class BatchController {
   > = async ({ id }) => {
     try {
       const result = (await this.repository.downloadProducerCsv(
-        id
+        id,
       )) as api.SubmissionFlattenedDownload[];
 
       let csvText = downloadSections + '\n' + downloadHeaders + '\n';

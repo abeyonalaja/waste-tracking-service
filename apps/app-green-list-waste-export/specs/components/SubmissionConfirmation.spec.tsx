@@ -6,7 +6,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 jest.mock('next/router', () => ({
@@ -25,7 +25,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
   });
 
@@ -36,7 +36,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const heading = screen.getByRole('heading', { level: 1 });
@@ -50,7 +50,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={100}
-      />
+      />,
     );
 
     const heading = screen.getByRole('heading', { level: 1 });
@@ -65,7 +65,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const heading = screen.getByRole('heading', { level: 1 });
@@ -80,7 +80,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const link = screen.getByRole('link', {
@@ -96,7 +96,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={100}
-      />
+      />,
     );
     const heading = screen.getByRole('heading', {
       level: 2,
@@ -112,11 +112,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const promptText = screen.getByText(
-      'Now you have completed the forms, you need to:'
+      'Now you have completed the forms, you need to:',
     );
     expect(promptText).toBeInTheDocument();
   });
@@ -128,11 +128,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const firstStep = screen.getByText(
-      'make a note of all transaction numbers'
+      'make a note of all transaction numbers',
     );
     expect(firstStep).toBeInTheDocument();
   });
@@ -144,11 +144,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const secondStep = screen.getByText(
-      'send these details to any relevant UK regulatory authorities (if this applies to the nation you are exporting the waste from)'
+      'send these details to any relevant UK regulatory authorities (if this applies to the nation you are exporting the waste from)',
     );
     expect(secondStep).toBeInTheDocument();
   });
@@ -160,11 +160,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const secondStep = screen.getByText(
-      'send relevant completed Annex VII records with the waste'
+      'send relevant completed Annex VII records with the waste',
     );
     expect(secondStep).toBeInTheDocument();
   });
@@ -176,7 +176,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
     const heading = screen.getByRole('heading', {
       level: 2,
@@ -192,11 +192,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const promptText = screen.getByText(
-      "If you've provided any estimates, you'll need to provide actual details as soon as possible. This includes the:"
+      "If you've provided any estimates, you'll need to provide actual details as soon as possible. This includes the:",
     );
     expect(promptText).toBeInTheDocument();
   });
@@ -208,7 +208,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const firstEstimate = screen.getByText('weight or volume');
@@ -222,7 +222,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const secondEstimate = screen.getByText('collection date');
@@ -236,11 +236,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const partOne = screen.getByText(
-      'It is a legal requirement that completed Annex VII records travel with the waste. You can use your own or'
+      'It is a legal requirement that completed Annex VII records travel with the waste. You can use your own or',
     );
     expect(partOne).toBeInTheDocument();
   });
@@ -252,11 +252,11 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const partTwo = screen.getByText(
-      'Any estimated details you have entered will not appear on the downloaded records.'
+      'Any estimated details you have entered will not appear on the downloaded records.',
     );
     expect(partTwo).toBeInTheDocument();
   });
@@ -268,7 +268,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const link = screen.getByRole('link', {
@@ -285,7 +285,7 @@ describe('SubmissionConfirmation component', () => {
         transactionId={'B456'}
         pageCount={100}
         recordCount={1}
-      />
+      />,
     );
 
     const link = screen.getByRole('link', {

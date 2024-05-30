@@ -27,7 +27,7 @@ const mockRepository = {
 describe(DraftController, () => {
   const subject = new DraftController(
     mockRepository as unknown as CosmosRepository,
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {
@@ -61,7 +61,7 @@ describe(DraftController, () => {
         order,
         undefined,
         undefined,
-        undefined
+        undefined,
       );
       expect(response.error.statusCode).toBe(418);
     });
@@ -93,7 +93,7 @@ describe(DraftController, () => {
         order,
         undefined,
         undefined,
-        undefined
+        undefined,
       );
       expect(response.value).toEqual({
         totalRecords: 0,
@@ -121,7 +121,7 @@ describe(DraftController, () => {
       expect(mockRepository.getRecord).toBeCalledWith(
         draftContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.error.statusCode).toBe(418);
     });
@@ -164,7 +164,7 @@ describe(DraftController, () => {
       expect(mockRepository.getRecord).toHaveBeenCalledWith(
         draftContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.value).toEqual(value);
     });
@@ -275,7 +275,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -344,7 +344,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -432,7 +432,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -564,7 +564,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -698,7 +698,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -835,7 +835,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
 
@@ -1097,7 +1097,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
     });
   });
@@ -1195,7 +1195,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
 
@@ -1261,7 +1261,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
 
@@ -1318,7 +1318,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
 
@@ -1383,7 +1383,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
 
@@ -1449,7 +1449,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
     });
@@ -1550,7 +1550,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -1650,7 +1650,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
 
@@ -1717,7 +1717,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
       expect(response.success).toBe(true);
     });
@@ -1914,7 +1914,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -2046,7 +2046,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -2116,7 +2116,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -2189,7 +2189,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -2401,7 +2401,7 @@ describe(DraftController, () => {
             timestamp: timestamp,
           },
         },
-        accountId
+        accountId,
       );
 
       expect(response.success).toBe(true);
@@ -2926,10 +2926,10 @@ describe(DraftController, () => {
       mockRepository.getRecord.mockResolvedValue(mockSubmission);
 
       expect(
-        subject.getDraftSubmissionConfirmation({ id, accountId })
+        subject.getDraftSubmissionConfirmation({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
       expect(
-        subject.getDraftSubmissionDeclaration({ id, accountId })
+        subject.getDraftSubmissionDeclaration({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
 
       const response = await subject.setDraftSubmissionDeclaration({
@@ -2993,10 +2993,10 @@ describe(DraftController, () => {
       });
 
       expect(
-        subject.getDraftSubmissionConfirmation({ id, accountId })
+        subject.getDraftSubmissionConfirmation({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
       expect(
-        subject.getDraftSubmissionConfirmation({ id, accountId })
+        subject.getDraftSubmissionConfirmation({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
     });
   });

@@ -15,7 +15,7 @@ export class CsvValidator {
   constructor(private logger: Logger) {}
 
   async validateBatch(
-    request: ValidateCsvContentRequest
+    request: ValidateCsvContentRequest,
   ): Promise<ValidateCsvContentResponse> {
     try {
       const content = request.content;
@@ -35,7 +35,7 @@ export class CsvValidator {
           escape: '\\',
           ltrim: true,
           rtrim: true,
-        })
+        }),
       );
 
       parser.on('readable', function () {

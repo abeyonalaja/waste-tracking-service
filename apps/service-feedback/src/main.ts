@@ -30,7 +30,7 @@ surveyIDMap.set('ukwm', process.env['UKWM_SURVEY_ID']);
 
 if (!process.env['SURVEY_API_ENDPOINT']) {
   throw new Error(
-    'Missing SURVEY_API_ENDPOINT from environment configuration.'
+    'Missing SURVEY_API_ENDPOINT from environment configuration.',
   );
 }
 
@@ -58,7 +58,7 @@ const feedbackClient = new FeedbackClient(
   process.env['CLIENT_ID'],
   process.env['CLIENT_SECRET'],
   surveyIDMap,
-  process.env['SURVEY_API_ENDPOINT']
+  process.env['SURVEY_API_ENDPOINT'],
 );
 
 const feedbackController = new FeedbackController(feedbackClient, logger);
@@ -78,7 +78,7 @@ await server.invoker.listen(
   },
   {
     method: HttpMethod.POST,
-  }
+  },
 );
 
 await server.start();

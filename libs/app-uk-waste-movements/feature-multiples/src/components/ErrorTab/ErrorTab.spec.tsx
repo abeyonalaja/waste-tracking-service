@@ -74,13 +74,13 @@ const mockColumnErrors = [
 describe('ErrorTab component', () => {
   it('renders without error', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />
+      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
     );
   });
 
   it('Displays table headers when of column error type', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />
+      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
     );
 
     expect(screen.getByText('Column name')).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('ErrorTab component', () => {
 
   it('Displays error count and type when of column error type', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />
+      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
     );
 
     expect(screen.getByText('Producer address line 1')).toBeInTheDocument();

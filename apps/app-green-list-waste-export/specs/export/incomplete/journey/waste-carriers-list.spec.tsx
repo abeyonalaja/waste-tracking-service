@@ -75,7 +75,7 @@ global.fetch = jest.fn(
             },
           ],
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Waste carriers page', () => {
@@ -108,7 +108,7 @@ describe('Waste carriers page', () => {
     });
 
     const secondAddressPageTitle = screen.getByText(
-      'Who is the second waste carrier?'
+      'Who is the second waste carrier?',
     );
     expect(secondAddressPageTitle).toBeTruthy();
   });

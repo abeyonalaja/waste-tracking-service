@@ -6,14 +6,14 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('SummaryList', () => {
   it('renders a list of titles', () => {
     const content = ['Title 1', 'Title 2', 'Title 3'];
     const { getAllByText } = render(
-      <SummaryListWithActions content={content} />
+      <SummaryListWithActions content={content} />,
     );
 
     for (const title of content) {
@@ -25,7 +25,7 @@ describe('SummaryList', () => {
   it('prefixes numbers to titles when prefixNumbers prop is true', () => {
     const content = ['Title 1', 'Title 2', 'Title 3'];
     const { getByText } = render(
-      <SummaryListWithActions content={content} prefixNumbers />
+      <SummaryListWithActions content={content} prefixNumbers />,
     );
 
     for (const [index, title] of content.entries()) {

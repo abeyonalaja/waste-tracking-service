@@ -34,7 +34,7 @@ export function SubmittedTable({
 
   const sortedSubmissions = useMemo(
     () => sortSubmissions(submissions, 'ascending'),
-    [submissions]
+    [submissions],
   );
 
   const [filteredSubmissions, setFilteredSubmissions] =
@@ -44,7 +44,7 @@ export function SubmittedTable({
 
   const displayedSubmissions = filteredSubmissions.slice(
     (Number(searchParams.get('page')) - 1) * 15,
-    Number(searchParams.get('page')) * 15
+    Number(searchParams.get('page')) * 15,
   );
 
   return (

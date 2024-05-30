@@ -153,7 +153,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                     </ShowHide>
                   </SummaryCard>
                 );
-              }
+              },
             )}
           {data.wasteInformation.status === 'Complete' && (
             <SummaryList

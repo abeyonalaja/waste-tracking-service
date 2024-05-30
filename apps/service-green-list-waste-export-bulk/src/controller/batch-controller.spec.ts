@@ -27,7 +27,7 @@ describe(BatchController, () => {
   const subject = new BatchController(
     mockRepository,
     mockClient as unknown as DaprAnnexViiClient,
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {

@@ -22,7 +22,7 @@ export const CharacterCount = ({
           maxCount - watch(formName)?.length
         } characters remaining`)
       : (countText = `You have ${Math.abs(
-          maxCount - watch(formName).length
+          maxCount - watch(formName).length,
         )} characters too many`);
   }
 

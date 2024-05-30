@@ -9,7 +9,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next-auth/jwt', () => ({

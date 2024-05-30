@@ -11,7 +11,7 @@ describe('TabsPanel component', () => {
         <TabsPanel id="test">
           <div>Mock child</div>
         </TabsPanel>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
   });
 
@@ -26,7 +26,7 @@ describe('TabsPanel component', () => {
         <TabsPanel id="test">
           <div>Mock child</div>
         </TabsPanel>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const panel = screen.getByText('Mock child').parentElement;
@@ -47,7 +47,7 @@ describe('TabsPanel component', () => {
         <TabsPanel id="test">
           <div>Mock child</div>
         </TabsPanel>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const panel = screen.getByText('Mock child').parentElement;

@@ -14,7 +14,7 @@ function isValidGuid(value: string): boolean {
 
 export function validateToken(filter: UserFilter) {
   return async function (
-    jwtPayload: JwtPayload
+    jwtPayload: JwtPayload,
   ): Promise<
     | false
     | { isValid: false }

@@ -73,7 +73,7 @@ const configurePassport = async (): Promise<void> => {
       } else {
         return done(null, false);
       }
-    })
+    }),
   );
 
   server.use(passport.initialize());

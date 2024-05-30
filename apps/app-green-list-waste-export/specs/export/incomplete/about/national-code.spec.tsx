@@ -18,7 +18,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ wasteCode: { type: 'NotApplicable' } }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('National code page', () => {
@@ -58,7 +58,7 @@ describe('National code page', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'The code must only include letters a to z, numbers, spaces, hyphens and back slashes'
+      'The code must only include letters a to z, numbers, spaces, hyphens and back slashes',
     )[0];
     expect(errorMessage).toBeTruthy();
   });

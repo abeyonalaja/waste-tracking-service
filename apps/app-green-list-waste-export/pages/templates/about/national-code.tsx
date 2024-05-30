@@ -62,7 +62,7 @@ const NationalCode = () => {
 
   const [nationalCodePage, dispatchNationalCodePage] = useReducer(
     nationalCodeReducer,
-    { data: {}, isLoading: true, isError: false }
+    { data: {}, isLoading: true, isError: false },
   );
 
   const [templateId, setTemplateId] = useState(null);
@@ -83,7 +83,7 @@ const NationalCode = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -155,7 +155,7 @@ const NationalCode = () => {
                 method: 'PUT',
                 headers: apiConfig,
                 body: body,
-              }
+              },
             )
               .then((response) => {
                 if (response.ok) return response.json();
@@ -179,7 +179,7 @@ const NationalCode = () => {
         });
       }
     },
-    [templateId, nationalCodePage.data, router]
+    [templateId, nationalCodePage.data, router],
   );
 
   const BreadCrumbs = () => {

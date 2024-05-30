@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('Character count textarea component', () => {
@@ -30,7 +30,7 @@ describe('Character count textarea component', () => {
 
   it('should display the hint text', () => {
     const { getByText } = render(
-      <TextareaCharCount {...defaultProps} hint="Test Hint" />
+      <TextareaCharCount {...defaultProps} hint="Test Hint" />,
     );
     const hintElement = getByText('Test Hint');
     expect(hintElement).toBeTruthy();
@@ -44,7 +44,7 @@ describe('Character count textarea component', () => {
 
   it('should update the character count when typing', () => {
     const { getByLabelText, getByText } = render(
-      <TextareaCharCount {...defaultProps} />
+      <TextareaCharCount {...defaultProps} />,
     );
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });
@@ -54,7 +54,7 @@ describe('Character count textarea component', () => {
 
   it('should display an error message when the character count exceeds the limit', () => {
     const { getByLabelText, getByText } = render(
-      <TextareaCharCount {...defaultProps} />
+      <TextareaCharCount {...defaultProps} />,
     );
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'a'.repeat(101) } });
@@ -65,7 +65,7 @@ describe('Character count textarea component', () => {
   it('should call the onChange callback when typing', () => {
     const onChange = jest.fn();
     const { getByLabelText } = render(
-      <TextareaCharCount {...defaultProps} onChange={onChange} />
+      <TextareaCharCount {...defaultProps} onChange={onChange} />,
     );
     const textareaElement = getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { Submission } from './Submission';
 import { UkwmDraftSubmission } from '@wts/api/waste-tracking-gateway';
 
@@ -123,7 +123,7 @@ describe('Submission component', () => {
     expect(screen.getByText('Waste movement record')).toBeInTheDocument();
     expect(screen.getByText('About the waste')).toBeInTheDocument();
     expect(
-      screen.getByText('Producer and collection details')
+      screen.getByText('Producer and collection details'),
     ).toBeInTheDocument();
     expect(screen.getByText('Receiver details')).toBeInTheDocument();
   });
@@ -133,7 +133,7 @@ describe('Submission component', () => {
 
     const aboutWasteButton = screen.getByLabelText('About the waste');
     const producerCollectorButton = screen.getByLabelText(
-      'Producer and collection details'
+      'Producer and collection details',
     );
     const receiverDetailsButton = screen.getByLabelText('Receiver details');
 
@@ -166,7 +166,7 @@ describe('Submission component', () => {
     expect(screen.getByText('Estimated')).toBeInTheDocument();
     expect(screen.getByText('1000kg')).toBeInTheDocument();
     expect(
-      screen.getByText('Chemical and biological components of waste')
+      screen.getByText('Chemical and biological components of waste'),
     ).toBeInTheDocument();
     expect(screen.getByText('50% Component 1')).toBeInTheDocument();
   });
@@ -178,16 +178,16 @@ describe('Submission component', () => {
     expect(screen.getByText('Producer Org')).toBeInTheDocument();
     expect(screen.getByText('Producer address')).toBeInTheDocument();
     expect(
-      screen.getByText('123 Street, City, AB12 3CD, Country')
+      screen.getByText('123 Street, City, AB12 3CD, Country'),
     ).toBeInTheDocument();
     expect(screen.getByText('Producer contact name')).toBeInTheDocument();
     expect(screen.getByText('Producer Name')).toBeInTheDocument();
     expect(
-      screen.getByText('Producer contact email address')
+      screen.getByText('Producer contact email address'),
     ).toBeInTheDocument();
     expect(screen.getByText('producer@example.com')).toBeInTheDocument();
     expect(
-      screen.getByText('Producer contact phone number')
+      screen.getByText('Producer contact phone number'),
     ).toBeInTheDocument();
     expect(screen.getByText('1234567890')).toBeInTheDocument();
   });
@@ -199,16 +199,16 @@ describe('Submission component', () => {
     expect(screen.getByText('Receiver Org')).toBeInTheDocument();
     expect(screen.getByText('Receiver address')).toBeInTheDocument();
     expect(
-      screen.getByText('789 Boulevard, Village, EF56 7GH, Country')
+      screen.getByText('789 Boulevard, Village, EF56 7GH, Country'),
     ).toBeInTheDocument();
     expect(screen.getByText('Receiver contact name')).toBeInTheDocument();
     expect(screen.getByText('Receiver Name')).toBeInTheDocument();
     expect(
-      screen.getByText('Receiver contact email address')
+      screen.getByText('Receiver contact email address'),
     ).toBeInTheDocument();
     expect(screen.getByText('receiver@example.com')).toBeInTheDocument();
     expect(
-      screen.getByText('Receiver contact phone number')
+      screen.getByText('Receiver contact phone number'),
     ).toBeInTheDocument();
     expect(screen.getByText('0987654321')).toBeInTheDocument();
   });

@@ -19,7 +19,7 @@ const plugin: Plugin<PluginOptions> = {
       handler: async function (req, h) {
         const inputs = multipart.parse(
           req.payload as Buffer,
-          multipart.getBoundary(req.headers['content-type'])
+          multipart.getBoundary(req.headers['content-type']),
         );
 
         try {
@@ -27,8 +27,8 @@ const plugin: Plugin<PluginOptions> = {
             .response(
               await backend.createBatch(
                 h.request.auth.credentials.accountId as string,
-                inputs
-              )
+                inputs,
+              ),
             )
             .code(201);
         } catch (error) {
@@ -82,7 +82,7 @@ const plugin: Plugin<PluginOptions> = {
               (await backend.finalizeBatch({
                 id: params.id,
                 accountId: h.request.auth.credentials.accountId as string,
-              })) as undefined
+              })) as undefined,
             )
             .code(201);
         } catch (err) {

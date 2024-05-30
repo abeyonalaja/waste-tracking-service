@@ -213,7 +213,7 @@ const EwcCodes = () => {
   const apiConfig = useApiConfig();
   const [ewcCodePage, dispatchEwcCodePage] = useReducer(
     ewcCodeReducer,
-    initialState
+    initialState,
   );
 
   const [templateId, setTemplateId] = useState(null);
@@ -235,7 +235,7 @@ const EwcCodes = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/ewc-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -255,7 +255,7 @@ const EwcCodes = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -302,7 +302,7 @@ const EwcCodes = () => {
             ewcCodePage.data?.wasteCode,
             [result],
             ewcCodePage.data?.nationalCode,
-            ewcCodePage.data?.description
+            ewcCodePage.data?.description,
           );
 
           const body = { ...ewcCodePage.data, ewcCodes: [result] };
@@ -314,7 +314,7 @@ const EwcCodes = () => {
                 method: 'PUT',
                 headers: apiConfig,
                 body: JSON.stringify(body),
-              }
+              },
             )
               .then((response) => {
                 if (response.ok) return response.json();
@@ -342,12 +342,12 @@ const EwcCodes = () => {
         }
       }
     },
-    [templateId, ewcCode, ewcCodePage, router]
+    [templateId, ewcCode, ewcCodePage, router],
   );
 
   const checkDuplicate = (ewcCode) => {
     const result = ewcCodePage.data.ewcCodes.find(
-      ({ code }) => code.slice(0, 6) === ewcCode
+      ({ code }) => code.slice(0, 6) === ewcCode,
     );
     if (result !== undefined) {
       return t('validation.ewcCode.duplicate');
@@ -409,7 +409,7 @@ const EwcCodes = () => {
         }
       }
     },
-    [ewcCode, ewcCodePage]
+    [ewcCode, ewcCodePage],
   );
 
   const handleConfirmRemove = useCallback(
@@ -437,7 +437,7 @@ const EwcCodes = () => {
           });
         } else {
           const ewcCodes = ewcCodePage.data.ewcCodes.filter(
-            (ewcCode) => ewcCode.code !== ewcCodeToRemove
+            (ewcCode) => ewcCode.code !== ewcCodeToRemove,
           );
           if (ewcCodes.length === 0) {
             delete ewcCodePage.data.ewcCodes;
@@ -447,7 +447,7 @@ const EwcCodes = () => {
         setConfirmRemove(null);
       }
     },
-    [confirmRemove, ewcCodeToRemove, ewcCodePage]
+    [confirmRemove, ewcCodeToRemove, ewcCodePage],
   );
 
   const updateEwcData = async (ewcCodes, returnToDraft, callBack?) => {
@@ -455,7 +455,7 @@ const EwcCodes = () => {
       ewcCodePage.data?.wasteCode,
       ewcCodes,
       ewcCodePage.data?.nationalCode,
-      ewcCodePage.data?.description
+      ewcCodePage.data?.description,
     );
     let body = ewcCodePage.data;
     if (ewcCodes.length > 0) {
@@ -470,7 +470,7 @@ const EwcCodes = () => {
           method: 'PUT',
           headers: apiConfig,
           body: JSON.stringify(body),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();

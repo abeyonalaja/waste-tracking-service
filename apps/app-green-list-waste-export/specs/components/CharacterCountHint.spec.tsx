@@ -6,7 +6,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('CharacterCountHint component', () => {
@@ -17,7 +17,7 @@ describe('CharacterCountHint component', () => {
   it('Renders with correct HTML Id from props', () => {
     const getById = queryByAttribute.bind(null, 'id');
     const { container } = render(
-      <CharacterCountHint currentCount={0} maxCount={100} id="test-id" />
+      <CharacterCountHint currentCount={0} maxCount={100} id="test-id" />,
     );
     const element = getById(container, 'test-id');
     expect(element).toBeTruthy();
@@ -32,7 +32,7 @@ describe('CharacterCountHint component', () => {
 
   it('Displays the correct text and count when the maximum characters have been exceeded', () => {
     render(
-      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />
+      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />,
     );
     const hint = screen.getByText('You have 1 characters too many');
 
@@ -41,7 +41,7 @@ describe('CharacterCountHint component', () => {
 
   it('Displays red text when maximum characters have been exceeded', () => {
     render(
-      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />
+      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />,
     );
     const hint = screen.getByText('You have 1 characters too many');
 
@@ -50,7 +50,7 @@ describe('CharacterCountHint component', () => {
 
   it('Displays text in bold when maximum characters have been exceeded', () => {
     render(
-      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />
+      <CharacterCountHint currentCount={101} maxCount={100} id="test-id" />,
     );
     const hint = screen.getByText('You have 1 characters too many');
 

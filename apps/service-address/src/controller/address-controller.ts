@@ -21,7 +21,10 @@ function titleCase(str: string): string {
 }
 
 export default class AddressController {
-  constructor(private addressClient: AddressClient, private logger: Logger) {}
+  constructor(
+    private addressClient: AddressClient,
+    private logger: Logger,
+  ) {}
 
   getAddressByPostcode: Handler<
     GetAddressByPostcodeRequest,
@@ -40,9 +43,8 @@ export default class AddressController {
       }
   > => {
     try {
-      const addressResults = await this.addressClient.getAddressByPostcode(
-        postcode
-      );
+      const addressResults =
+        await this.addressClient.getAddressByPostcode(postcode);
 
       const reformattedAddressResults = addressResults.map((a) => {
         return {
@@ -63,7 +65,7 @@ export default class AddressController {
         ['addressLine1'],
         {
           caseSensitive: false,
-        }
+        },
       );
       const filteredAddressResults = searcher.search(buildingNameOrNumber);
 

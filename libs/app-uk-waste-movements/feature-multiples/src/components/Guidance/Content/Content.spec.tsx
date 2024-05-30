@@ -28,7 +28,7 @@ test('renders Content component', () => {
   render(
     <NextIntlClientProvider locale="en" messages={messages}>
       <Content />
-    </NextIntlClientProvider>
+    </NextIntlClientProvider>,
   );
   expect(screen.getByText('Details')).toBeInTheDocument();
 });

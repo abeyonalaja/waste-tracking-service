@@ -37,7 +37,7 @@ describe('Pagination component', () => {
     render(<Pagination totalPages={10} />);
 
     expect(
-      screen.queryByRole('link', { name: /Next/ })
+      screen.queryByRole('link', { name: /Next/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -47,7 +47,7 @@ describe('Pagination component', () => {
     render(<Pagination totalPages={10} />);
 
     expect(
-      screen.queryByRole('link', { name: /Previous/ })
+      screen.queryByRole('link', { name: /Previous/ }),
     ).not.toBeInTheDocument();
   });
 

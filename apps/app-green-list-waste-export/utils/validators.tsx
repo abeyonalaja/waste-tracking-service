@@ -8,7 +8,7 @@ export function isNotEmpty(obj) {
 }
 
 export const validateReference: (reference?: string) => string | null = (
-  reference
+  reference,
 ) => {
   if (reference !== null) {
     reference = reference.trim();
@@ -22,18 +22,18 @@ export const validateReference: (reference?: string) => string | null = (
 };
 
 export const validateWasteCodeCategory: (
-  wasteCodeCategory?: string
+  wasteCodeCategory?: string,
 ) => string | undefined = (wasteCodeCategory) =>
   wasteCodeCategory ? undefined : t('validation.wasteCode.category');
 
 export const validateWasteCode: (
   wasteCodeCategory?: string,
   wasteCode?: string,
-  wasteCodeCategoryLabel?: string
+  wasteCodeCategoryLabel?: string,
 ) => string | undefined = (
   wasteCodeCategory,
   wasteCode,
-  wasteCodeCategoryLabel
+  wasteCodeCategoryLabel,
 ) => {
   if (wasteCodeCategory === 'NotApplicable') return;
 
@@ -50,7 +50,7 @@ export const validateWasteCode: (
 
 export const validateEwcCode: (
   hasEWCCode?: string,
-  ewcCode?: string
+  ewcCode?: string,
 ) => string | undefined = (hasEWCCode, ewcCode) => {
   const regex = new RegExp('^[0-9]+$');
   if (hasEWCCode !== 'Yes') return;
@@ -63,7 +63,7 @@ export const validateEwcCode: (
 
 export const validateNationalCode: (
   hasNationalCode?: string,
-  nationalCode?: string
+  nationalCode?: string,
 ) => string | undefined = (hasNationalCode, nationalCode) => {
   if (hasNationalCode !== 'Yes') return;
 
@@ -78,7 +78,7 @@ export const validateNationalCode: (
 };
 
 export const validateWasteDescription: (
-  description?: string
+  description?: string,
 ) => string | undefined = (description) => {
   if (description) {
     description = description.trim();
@@ -89,21 +89,21 @@ export const validateWasteDescription: (
 };
 
 export const validateWasteDescriptionTemplate: (
-  description?: string
+  description?: string,
 ) => string | undefined = (description) => {
   if (description?.length > 100) return t('validation.description.tooLong');
 };
 
 export const validatePostcode: (
   postcode?: string,
-  allowNull?: boolean
+  allowNull?: boolean,
 ) => string = (postcode, allowNull = false) => {
   if (allowNull && (postcode === undefined || postcode === '')) {
     return;
   }
   if (postcode?.length === 0) return t('validation.postcode.empty');
   const regex = new RegExp(
-    '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$'
+    '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$',
   );
   if (!regex.test(postcode)) {
     return t('validation.postcode.invalid');
@@ -112,7 +112,7 @@ export const validatePostcode: (
 
 export const validateEmail: (email?: string, allowNull?: boolean) => string = (
   email,
-  allowNull = false
+  allowNull = false,
 ) => {
   if (allowNull && (email === undefined || email === '')) {
     return;
@@ -126,14 +126,14 @@ export const validateEmail: (email?: string, allowNull?: boolean) => string = (
 
 export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
   phone,
-  allowNull = false
+  allowNull = false,
 ) => {
   if (allowNull && (phone === undefined || phone === '')) {
     return;
   }
   if (phone?.length === 0) return t('validation.phone.empty');
   const regex = new RegExp(
-    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
+    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$',
   );
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
@@ -142,13 +142,13 @@ export const validatePhone: (phone?: string, allowNull?: boolean) => string = (
 
 export const validateFax: (fax?: string, allowNull?: boolean) => string = (
   fax,
-  allowNull = true
+  allowNull = true,
 ) => {
   if (allowNull && (fax === undefined || fax === '')) {
     return;
   }
   const regex = new RegExp(
-    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$'
+    '^((\\+ 44|\\+ \\(44|\\+\\(44|\\+44|0044|00 44|00-44|00\\(44|00 \\(44)[1-9 \\-()][( -\\d)]{6,18}[\\d]|[0][(1-9][( -\\d)]{8,18}[\\d])$',
   );
   if (!regex.test(fax)) {
     return t('validation.fax.invalid');
@@ -157,7 +157,7 @@ export const validateFax: (fax?: string, allowNull?: boolean) => string = (
 
 export const validateInternationalPhone: (
   phone?: string,
-  allowNull?: boolean
+  allowNull?: boolean,
 ) => string = (phone, allowNull = false) => {
   if (allowNull && (phone === undefined || phone === '')) {
     return;
@@ -165,7 +165,7 @@ export const validateInternationalPhone: (
   if (phone?.length === 0) return t('validation.phone.empty');
 
   const regex = new RegExp(
-    '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$'
+    '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$',
   );
   if (!regex.test(phone)) {
     return t('validation.phone.invalid');
@@ -174,13 +174,13 @@ export const validateInternationalPhone: (
 
 export const validateInternationalFax: (
   fax?: string,
-  allowNull?: boolean
+  allowNull?: boolean,
 ) => string = (fax, allowNull = true) => {
   if (allowNull && (fax === undefined || fax === '')) {
     return;
   }
   const regexInternational = new RegExp(
-    '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$'
+    '^((\\+[ (1-9]|00[ -(1-9])[ -\\d()]{6,18}[\\d]|[0][ -\\d()]{8,18}[\\d])$',
   );
   if (!regexInternational.test(fax)) {
     return t('validation.fax.invalid');
@@ -188,7 +188,7 @@ export const validateInternationalFax: (
 };
 
 export const validateSelectAddress: (address?: string) => string = (
-  address
+  address,
 ) => {
   if (address === '' || address === undefined)
     return t('validation.address.select');
@@ -200,7 +200,7 @@ export const validateTownCity: (townCity?: string) => string = (townCity) => {
     return t('validation.address.townCity.empty');
 };
 export const validateCountrySelect: (country?: string) => string = (
-  country
+  country,
 ) => {
   if (country?.length === 0 || country === undefined)
     return t('validation.address.county.select');
@@ -213,7 +213,7 @@ export const validateCountry: (country?: string) => string = (country) => {
 
 export const validateSameAsImporter: (
   transitCountry?: string,
-  importerCountry?: string
+  importerCountry?: string,
 ) => string = (transitCountry, importerCountry) => {
   if (importerCountry === undefined) return;
   if (transitCountry === importerCountry)
@@ -222,7 +222,7 @@ export const validateSameAsImporter: (
 
 export const validateSameAsTransit: (
   importerCountry?: string,
-  transitCountries?: string[]
+  transitCountries?: string[],
 ) => string = (importerCountry, transitCountries) => {
   if (
     transitCountries === undefined ||
@@ -240,7 +240,7 @@ export const validateAddress: (address?: string) => string = (address) => {
 };
 
 export const validateOrganisationName: (organisationName?: string) => string = (
-  organisationName
+  organisationName,
 ) => {
   if (organisationName?.length === 0 || organisationName === undefined)
     return t('validation.orgName.empty');
@@ -251,7 +251,7 @@ export const validateFullName: (fullName?: string) => string = (fullName) => {
 };
 
 export const validateQuantityType: (quantityType?: string) => string = (
-  quantityType
+  quantityType,
 ) => {
   if (quantityType === undefined) {
     return t('validation.quantity.type.smallAndBulk');
@@ -260,7 +260,7 @@ export const validateQuantityType: (quantityType?: string) => string = (
 
 export const validateWeightOrVolume: (
   quantityType?: string,
-  estimate?: boolean
+  estimate?: boolean,
 ) => string = (quantityType, estimate) => {
   if (quantityType === null && estimate)
     return t('validation.quantity.amount.estimate');
@@ -273,7 +273,7 @@ export const validateQuantityValue: (
   quantityValue: string,
   label: string,
   bulk: boolean,
-  unit: string
+  unit: string,
 ) => string = (quantityType, quantityValue, label, bulk, unit) => {
   if (!quantityType) return;
   if (quantityType) {
@@ -301,7 +301,7 @@ export const validateQuantityValue: (
 };
 
 export const validateDateType: (value?: string) => string | undefined = (
-  value
+  value,
 ) => (value ? undefined : t('validation.date.collection.select'));
 
 interface Date {
@@ -316,7 +316,7 @@ const isValidDate = (date) => {
   return d && d.getMonth() + 1 == dateParts[1];
 };
 export const validateDate: (date: Date) => string | undefined = (
-  date: Date
+  date: Date,
 ) => {
   const day = Number(date?.day);
   const month = Number(date?.month);
@@ -332,7 +332,7 @@ export const validateDate: (date: Date) => string | undefined = (
 };
 
 export const validateActualDate: (date: Date) => string | undefined = (
-  date: Date
+  date: Date,
 ) => {
   const day = Number(date?.day);
   const month = Number(date?.month);
@@ -346,14 +346,14 @@ export const validateActualDate: (date: Date) => string | undefined = (
 };
 
 export const validateKnowsPointOfExit: (
-  knowsPointOfExit?: string
+  knowsPointOfExit?: string,
 ) => string | undefined = (knowsPointOfExit) => {
   if (knowsPointOfExit === undefined) return t('validation.exit.select');
 };
 
 export const validatePointOfExit: (
   knowsPointOfExit?: string,
-  pointOfExit?: string
+  pointOfExit?: string,
 ) => string | undefined = (knowsPointOfExit, pointOfExit) => {
   if (knowsPointOfExit === undefined || knowsPointOfExit === 'No') return;
 
@@ -368,7 +368,7 @@ export const validatePointOfExit: (
 
 export const validateTransport: (
   carrierNumber: string,
-  value?: string
+  value?: string,
 ) => string | undefined = (carrierNumber, value) => {
   if (value === undefined)
     return t('validation.transport.select', { carrierNumber });
@@ -377,7 +377,7 @@ export const validateTransport: (
 export const validateTransportDescription: (
   type: string,
   carrierNumber: string,
-  description?: string
+  description?: string,
 ) => string | undefined = (type, carrierNumber, description) => {
   if (description) {
     description = description.trim();
@@ -387,14 +387,14 @@ export const validateTransportDescription: (
 };
 
 export const validateTransitCountries: (
-  value?: string
+  value?: string,
 ) => string | undefined = (value) => {
   if (value === null) return t('validation.transit.countries.select');
 };
 
 export const validateTransitCountry: (
   hasCountry?: string,
-  country?: []
+  country?: [],
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
   if (country === undefined || country.length === 0)
@@ -403,7 +403,7 @@ export const validateTransitCountry: (
 
 export const validateSingleTransitCountry: (
   hasCountry?: string,
-  country?: []
+  country?: [],
 ) => string | undefined = (hasCountry, country) => {
   if (hasCountry !== 'Yes') return;
   if (country === null) return t('validation.transit.country.select');
@@ -411,7 +411,7 @@ export const validateSingleTransitCountry: (
 
 export const validateUniqueCountries: (
   additionaCountry?: string,
-  countries?: [string]
+  countries?: [string],
 ) => string | undefined = (additionaCountry, countries) => {
   if (countries.includes(additionaCountry))
     return t('validation.transit.country.hasDuplicates');
@@ -419,39 +419,39 @@ export const validateUniqueCountries: (
 
 export const validateConfirmRemove: (
   value?: string,
-  label?: string
+  label?: string,
 ) => string | undefined = (value, label) => {
   if (value === null) return t('validation.confirmation', { label });
 };
 
 export const validateSelection: (
   value?: string,
-  label?: string
+  label?: string,
 ) => string | undefined = (value, label) => {
   if (value === null) return t('validation.selection', { label });
 };
 
 export const validateConfirmRemoveCarrier: (
-  value?: string
+  value?: string,
 ) => string | undefined = (value) => {
   if (value === null) return t('validation.remove.carrier');
 };
 
 export const validateConfirmRemoveDocument: (
-  value?: string
+  value?: string,
 ) => string | undefined = (value) => {
   if (value === null) return t('validation.remove.document');
 };
 
 export const validateConfirmCancelDocument: (
-  value?: string
+  value?: string,
 ) => string | undefined = (value) => {
   if (value === null) return t('validation.remove.document.reason');
 };
 
 export const validateConfirmCancelReason: (
   type?: string,
-  reason?: string
+  reason?: string,
 ) => string | undefined = (type, reason) => {
   if (type !== 'Other') return;
   if (reason === null || reason === undefined)
@@ -462,7 +462,7 @@ export const validateConfirmCancelReason: (
 };
 
 export const validateRecoveryFacilityName: (facility?: string) => string = (
-  facility
+  facility,
 ) => {
   if (facility?.length === 0 || facility === undefined)
     return t('validation.recovery.facility.name');
@@ -474,21 +474,21 @@ export const validateRecoveryCode: (code?: string) => string = (code) => {
 };
 
 export const validateAddAnotherFacility: (
-  value?: string
+  value?: string,
 ) => string | undefined = (value) => {
   if (value === null) return t('validation.recovery.facility.another');
 };
 
 export const validateFieldNotEmpty: (
   value?: string,
-  label?: string
+  label?: string,
 ) => string | undefined = (value, label) => {
   if (value?.length === 0 || value === undefined)
     return t('validation.empty', { label });
 };
 
 export const validateTemplateName: (value?: string) => string | undefined = (
-  value
+  value,
 ) => {
   if (value?.length === 0 || value === undefined)
     return `Enter a name for the template`;
@@ -497,7 +497,7 @@ export const validateTemplateName: (value?: string) => string | undefined = (
 };
 
 export const validateTemplateDesc: (
-  description?: string
+  description?: string,
 ) => string | undefined = (description) => {
   if (description?.length > 100) return t('validation.template.description');
 };

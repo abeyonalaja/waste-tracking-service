@@ -95,7 +95,7 @@ const TemplateCreateFromRecord = () => {
   const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
   const [returnUrl, setReturnUrl] = useState(null);
@@ -129,7 +129,7 @@ const TemplateCreateFromRecord = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -193,7 +193,7 @@ const TemplateCreateFromRecord = () => {
         }
       }
     },
-    [router, templateName, templateDesc]
+    [router, templateName, templateDesc],
   );
 
   const BreadCrumbs = () => {

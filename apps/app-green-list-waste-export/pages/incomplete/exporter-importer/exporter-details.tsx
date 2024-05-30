@@ -77,7 +77,7 @@ const ExporterDetails = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -90,7 +90,7 @@ const ExporterDetails = () => {
             if (data !== undefined) {
               setData(data);
               setOrganisationName(
-                data.exporterContactDetails?.organisationName
+                data.exporterContactDetails?.organisationName,
               );
               setFullName(data.exporterContactDetails?.fullName);
               setEmail(data.exporterContactDetails?.emailAddress);
@@ -141,7 +141,7 @@ const ExporterDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -162,7 +162,7 @@ const ExporterDetails = () => {
         }
       }
     },
-    [organisationName, fullName, email, phone, fax]
+    [organisationName, fullName, email, phone, fax],
   );
 
   const BreadCrumbs = () => {

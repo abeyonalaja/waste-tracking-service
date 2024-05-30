@@ -7,7 +7,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Submission error page', () => {
@@ -19,7 +19,7 @@ describe('Submission error page', () => {
     const heading = screen.getByRole('heading', { level: 1 });
 
     expect(heading).toHaveTextContent(
-      'Sorry, there is a problem with this service'
+      'Sorry, there is a problem with this service',
     );
   });
 
@@ -33,7 +33,7 @@ describe('Submission error page', () => {
     });
     expect(link).toHaveAttribute(
       'href',
-      'mailto:wasteuserresearch@defra.gov.uk'
+      'mailto:wasteuserresearch@defra.gov.uk',
     );
   });
 });

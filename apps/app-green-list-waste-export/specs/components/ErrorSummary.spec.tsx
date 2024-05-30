@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('ErrorSummary', () => {
@@ -15,7 +15,7 @@ describe('ErrorSummary', () => {
     render(<ErrorSummary />);
 
     expect(
-      screen.getByRole('heading', { name: 'There is a problem' })
+      screen.getByRole('heading', { name: 'There is a problem' }),
     ).toBeInTheDocument();
     expect(screen.queryByText('Description')).toBeNull();
     expect(screen.queryByRole('list')).toBeNull();
@@ -32,11 +32,11 @@ describe('ErrorSummary', () => {
         heading="Custom Heading"
         description="Custom Description"
         errors={errors}
-      />
+      />,
     );
 
     expect(
-      screen.getByRole('heading', { name: 'Custom Heading' })
+      screen.getByRole('heading', { name: 'Custom Heading' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Custom Description')).toBeInTheDocument();
     expect(screen.getByRole('list')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('ErrorSummary', () => {
         <ErrorSummary
           onHandleErrorClick={onHandleErrorClickMock}
           errors={errors}
-        />
+        />,
       );
     });
     const link = screen.getByText('Error 1');

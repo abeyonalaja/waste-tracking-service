@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'jest-utils';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import '@testing-library/jest-dom';
 import { DocumentStatus } from 'components';
 import 'i18n/config';
@@ -9,7 +9,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('DocumentStatus', () => {

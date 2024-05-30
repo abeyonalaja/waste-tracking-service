@@ -53,7 +53,10 @@ import {
 import { User } from '../../lib/user';
 
 export default class TemplatePlugin {
-  constructor(private server: Application, private prefix: string) {}
+  constructor(
+    private server: Application,
+    private prefix: string,
+  ) {}
 
   async register(): Promise<void> {
     this.server.get(this.prefix, async (req, res) => {
@@ -67,7 +70,7 @@ export default class TemplatePlugin {
         return res
           .status(400)
           .jsonp(
-            new BadRequestError("Incorrect value for query parameter 'order'")
+            new BadRequestError("Incorrect value for query parameter 'order'"),
           );
       }
 
@@ -77,8 +80,8 @@ export default class TemplatePlugin {
           .status(400)
           .jsonp(
             new BadRequestError(
-              "Query parameter 'pageLimit' should be a number"
-            )
+              "Query parameter 'pageLimit' should be a number",
+            ),
           );
       }
       const pageLimit = pageLimitStr ? parseInt(pageLimitStr) : undefined;
@@ -90,7 +93,7 @@ export default class TemplatePlugin {
           user.credentials.accountId,
           { order },
           pageLimit,
-          token
+          token,
         );
         return res.json(value as dto.GetTemplatesResponse);
       } catch (err) {
@@ -151,8 +154,8 @@ export default class TemplatePlugin {
           .json(
             (await createTemplate(
               user.credentials.accountId,
-              templateDetails
-            )) as dto.CreateTemplateResponse
+              templateDetails,
+            )) as dto.CreateTemplateResponse,
           );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -178,8 +181,8 @@ export default class TemplatePlugin {
             (await createTemplateFromSubmission(
               req.params.id,
               user.credentials.accountId,
-              templateDetails
-            )) as dto.CreateTemplateResponse
+              templateDetails,
+            )) as dto.CreateTemplateResponse,
           );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -205,8 +208,8 @@ export default class TemplatePlugin {
             (await createTemplateFromTemplate(
               req.params.id,
               user.credentials.accountId,
-              templateDetails
-            )) as dto.CreateTemplateResponse
+              templateDetails,
+            )) as dto.CreateTemplateResponse,
           );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -232,8 +235,8 @@ export default class TemplatePlugin {
             (await updateTemplate(
               req.params.id,
               user.credentials.accountId,
-              templateDetails
-            )) as dto.CreateTemplateResponse
+              templateDetails,
+            )) as dto.CreateTemplateResponse,
           );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -252,7 +255,7 @@ export default class TemplatePlugin {
           (await deleteTemplate({
             id: req.params.id,
             accountId: user.credentials.accountId,
-          })) as undefined
+          })) as undefined,
         );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -282,10 +285,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
     this.server.put(
       `${this.prefix}/:id/waste-description`,
@@ -302,7 +305,7 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            request
+            request,
           );
           return res.json(request as dto.PutWasteDescriptionResponse);
         } catch (err) {
@@ -313,10 +316,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.get(`${this.prefix}/:id/exporter-detail`, async (req, res) => {
@@ -351,7 +354,7 @@ export default class TemplatePlugin {
             id: req.params.id,
             accountId: user.credentials.accountId,
           },
-          request
+          request,
         );
         return res.json(request as dto.PutExporterDetailResponse);
       } catch (err) {
@@ -397,7 +400,7 @@ export default class TemplatePlugin {
             id: req.params.id,
             accountId: user.credentials.accountId,
           },
-          request
+          request,
         );
         return res.json(request as dto.PutImporterDetailResponse);
       } catch (err) {
@@ -444,8 +447,8 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            request
-          )) as dto.CreateCarriersResponse
+            request,
+          )) as dto.CreateCarriersResponse,
         );
       } catch (err) {
         if (err instanceof CustomError) {
@@ -468,7 +471,7 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            req.params.carrierId
+            req.params.carrierId,
           );
           return res.json(value as unknown as dto.GetCarriersResponse);
         } catch (err) {
@@ -479,10 +482,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.put(
@@ -508,7 +511,7 @@ export default class TemplatePlugin {
               accountId: user.credentials.accountId,
             },
             req.params.carrierId,
-            request
+            request,
           );
           return res.json(request as dto.SetCarriersRequest);
         } catch (err) {
@@ -519,10 +522,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.delete(
@@ -536,8 +539,8 @@ export default class TemplatePlugin {
                 id: req.params.id,
                 accountId: user.credentials.accountId,
               },
-              req.params.carrierId
-            )) as undefined
+              req.params.carrierId,
+            )) as undefined,
           );
         } catch (err) {
           if (err instanceof CustomError) {
@@ -547,10 +550,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
     this.server.get(
       `${this.prefix}/:id/collection-detail`,
@@ -570,10 +573,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
     this.server.put(
       `${this.prefix}/:id/collection-detail`,
@@ -590,7 +593,7 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            request
+            request,
           );
           return res.json(request as dto.SetCollectionDetailResponse);
         } catch (err) {
@@ -601,10 +604,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.get(`${this.prefix}/:id/exit-location`, async (req, res) => {
@@ -639,7 +642,7 @@ export default class TemplatePlugin {
             id: req.params.id,
             accountId: user.credentials.accountId,
           },
-          request
+          request,
         );
         return res.json(request as dto.PutExitLocationResponse);
       } catch (err) {
@@ -671,10 +674,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.put(
@@ -692,7 +695,7 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            request
+            request,
           );
           return res.json(request as dto.PutTransitCountriesResponse);
         } catch (err) {
@@ -703,10 +706,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.get(
@@ -727,10 +730,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.post(
@@ -749,8 +752,8 @@ export default class TemplatePlugin {
                 id: req.params.id,
                 accountId: user.credentials.accountId,
               },
-              request
-            )) as dto.CreateRecoveryFacilityDetailRequest
+              request,
+            )) as dto.CreateRecoveryFacilityDetailRequest,
           );
         } catch (err) {
           if (err instanceof CustomError) {
@@ -760,10 +763,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.get(
@@ -776,7 +779,7 @@ export default class TemplatePlugin {
               id: req.params.id,
               accountId: user.credentials.accountId,
             },
-            req.params.rfdId
+            req.params.rfdId,
           );
           return res.json(value as dto.GetRecoveryFacilityDetailResponse);
         } catch (err) {
@@ -787,10 +790,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.put(
@@ -816,7 +819,7 @@ export default class TemplatePlugin {
               accountId: user.credentials.accountId,
             },
             req.params.rfdId,
-            request
+            request,
           );
           return res.json(request as dto.SetRecoveryFacilityDetailRequest);
         } catch (err) {
@@ -827,10 +830,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
 
     this.server.delete(
@@ -844,8 +847,8 @@ export default class TemplatePlugin {
                 id: req.params.id,
                 accountId: user.credentials.accountId,
               },
-              req.params.rfdId
-            )) as undefined
+              req.params.rfdId,
+            )) as undefined,
           );
         } catch (err) {
           if (err instanceof CustomError) {
@@ -855,10 +858,10 @@ export default class TemplatePlugin {
           return res
             .status(500)
             .jsonp(
-              new InternalServerError('An internal server error occurred')
+              new InternalServerError('An internal server error occurred'),
             );
         }
-      }
+      },
     );
   }
 }

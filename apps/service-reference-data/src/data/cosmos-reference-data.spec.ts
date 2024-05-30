@@ -72,7 +72,7 @@ describe(ReferenceDataDraftRepository, () => {
     mockCosmosDbName,
     mockCosmosContainerName,
     mockCache as unknown as LRUCache<string, CacheItem<unknown>>,
-    logger
+    logger,
   );
 
   describe('getList', () => {

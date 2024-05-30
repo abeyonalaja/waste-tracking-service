@@ -16,7 +16,7 @@ const mockRepository = {
     jest.fn<
       (
         content: string,
-        dcidSubjectId: string
+        dcidSubjectId: string,
       ) => Promise<Assignment | undefined>
     >(),
   setAssignment: jest.fn<(value: Assignment) => Promise<void>>(),
@@ -30,7 +30,7 @@ describe(AssignmentController, () => {
   const subject = new AssignmentController(
     mockRepository,
     mockTokenValidator,
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe(AssignmentController, () => {
 
       expect(mockRepository.getAssignment).toHaveBeenCalledWith(
         assignment.content,
-        assignment.dcidSubjectId
+        assignment.dcidSubjectId,
       );
 
       expect(result.success).toBe(true);

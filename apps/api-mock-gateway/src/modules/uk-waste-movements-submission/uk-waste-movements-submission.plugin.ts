@@ -13,7 +13,10 @@ import {
 import { isValid } from 'date-fns';
 
 export default class UkwmSubmissionPlugin {
-  constructor(private server: Application, private prefix: string) {}
+  constructor(
+    private server: Application,
+    private prefix: string,
+  ) {}
 
   async register(): Promise<void> {
     this.server.get(`${this.prefix}/drafts`, async (req, res) => {
@@ -32,7 +35,7 @@ export default class UkwmSubmissionPlugin {
           collectionDate = new Date(
             Number(dateArr[2]),
             Number(dateArr[1]) - 1,
-            Number(dateArr[0])
+            Number(dateArr[0]),
           );
           if (
             !isValid(collectionDate) ||
@@ -52,7 +55,7 @@ export default class UkwmSubmissionPlugin {
           collectionDate,
           req.query.ewcCode?.toString(),
           req.query.producerName?.toString(),
-          req.query.wasteMovementId?.toString()
+          req.query.wasteMovementId?.toString(),
         );
 
         return res.json(value as dto.UkwmGetDraftsResult);

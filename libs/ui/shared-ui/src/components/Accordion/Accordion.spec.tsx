@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { Accordion } from './Accordion';
 
 describe('Accordion component', () => {
@@ -22,7 +22,7 @@ describe('Accordion component', () => {
     render(
       <Accordion id="test-id" sections={sections} setSections={setSections}>
         <div>Child Content</div>
-      </Accordion>
+      </Accordion>,
     );
 
     const button = screen.getByRole('button');
@@ -34,7 +34,7 @@ describe('Accordion component', () => {
     render(
       <Accordion id="test-id" sections={sections} setSections={setSections}>
         <div>Child Content</div>
-      </Accordion>
+      </Accordion>,
     );
 
     const button = screen.getByRole('button');
@@ -59,7 +59,7 @@ describe('Accordion component', () => {
     render(
       <Accordion id="test-id" sections={sections} setSections={setSections}>
         <div>Child Content</div>
-      </Accordion>
+      </Accordion>,
     );
     const hideText = 'Hide all sections';
     const button = screen.getByRole('button');
@@ -79,7 +79,7 @@ describe('Accordion component', () => {
     render(
       <Accordion id="test-id" sections={sections} setSections={setSections}>
         <div>Child Content</div>
-      </Accordion>
+      </Accordion>,
     );
 
     const chevron = screen

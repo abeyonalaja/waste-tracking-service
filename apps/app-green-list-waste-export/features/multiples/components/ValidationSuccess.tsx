@@ -32,7 +32,7 @@ export function ValidationSuccess({
             : 'multiples.success.heading',
           {
             count: recordCount,
-          }
+          },
         )}
       />
       <Paragraph>{t('multiples.success.intro')}</Paragraph>

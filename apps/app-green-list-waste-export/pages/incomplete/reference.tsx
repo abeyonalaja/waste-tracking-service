@@ -22,7 +22,7 @@ export function Reference() {
   const { submission, setSubmission } = useSubmissionContext();
   const [id, setId] = useState<string>(submission?.id || null);
   const [reference, setReference] = useState<string>(
-    submission?.reference || null
+    submission?.reference || null,
   );
   const [errors, setErrors] = useState<{
     ownReference?: string;
@@ -39,7 +39,7 @@ export function Reference() {
               `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
               {
                 headers: apiConfig,
-              }
+              },
             )
               .then((response) => response.json())
               .then((data) => {
@@ -125,7 +125,7 @@ export function Reference() {
       }
       e.preventDefault();
     },
-    [reference, id, router, setSubmission]
+    [reference, id, router, setSubmission],
   );
 
   const BreadCrumbs = () => {

@@ -38,7 +38,7 @@ export interface JwtOptions {
 
 export function configureStrategy(
   filter: UserFilter,
-  options: JwtOptions
+  options: JwtOptions,
 ): StrategyOptions {
   const { audience, issuer, jwksUri } = options;
 

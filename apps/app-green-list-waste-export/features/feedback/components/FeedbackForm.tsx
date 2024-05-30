@@ -39,7 +39,7 @@ export default function FeedbackForm({ children }: FeedbackFormProps) {
   }
 
   async function onSubmit(
-    data: SendFeedbackRequest
+    data: SendFeedbackRequest,
   ): Promise<SubmitHandler<SendFeedbackRequest>> {
     // Bypasses API from being called when user has not entered any feedback to prevent blank db rows
     if (!data.rating && !data.feedback) {

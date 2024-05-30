@@ -27,11 +27,14 @@ export interface BulkSubmissionBackend {
 }
 
 export class AnnexViiBulkServiceBackend implements BulkSubmissionBackend {
-  constructor(private client: DaprAnnexViiBulkClient, private logger: Logger) {}
+  constructor(
+    private client: DaprAnnexViiBulkClient,
+    private logger: Logger,
+  ) {}
 
   async createBatch(
     accountId: string,
-    inputs: Input[]
+    inputs: Input[],
   ): Promise<{ id: string }> {
     try {
       if (inputs.length === 0) {

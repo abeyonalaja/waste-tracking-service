@@ -240,7 +240,7 @@ describe('wasteTransportationDetails', () => {
 
 describe('validateSubmissionsRequest', () => {
   const validate = ajv.compile<ValidateSubmissionsRequest>(
-    validateSubmissionsRequest
+    validateSubmissionsRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -314,7 +314,7 @@ describe('validateSubmissionsRequest', () => {
 
 describe('validateSubmissionsResponse', () => {
   const validate = ajv.compile<ValidateSubmissionsResponse>(
-    validateSubmissionsResponse
+    validateSubmissionsResponse,
   );
 
   it('is compatible with dto values when valid', () => {

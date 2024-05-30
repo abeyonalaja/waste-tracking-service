@@ -34,7 +34,7 @@ describe('Interruption component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Interruption />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
   });
 
@@ -42,7 +42,7 @@ describe('Interruption component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Interruption />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const heading = screen.getByRole('heading', { level: 1 });
@@ -54,7 +54,7 @@ describe('Interruption component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Interruption />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const link = screen.getByRole('link', {
@@ -68,7 +68,7 @@ describe('Interruption component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Interruption />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const continueButton = screen.getByRole('button', { name: 'Continue' });

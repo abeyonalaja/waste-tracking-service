@@ -163,7 +163,7 @@ describe('Reference-Data tests', () => {
 
   describe('GetRecoveryCodesResponse', () => {
     const validate = ajv.compile<GetRecoveryCodesResponse>(
-      getRecoveryCodesResponse
+      getRecoveryCodesResponse,
     );
 
     it('getRecoveryCodes is compatible with success value', () => {
@@ -200,7 +200,7 @@ describe('Reference-Data tests', () => {
 
   describe('GetDisposalCodesResponse', () => {
     const validate = ajv.compile<GetDisposalCodesResponse>(
-      getDisposalCodesResponse
+      getDisposalCodesResponse,
     );
 
     it('getDisposalCodes is compatible with success value', () => {
@@ -236,7 +236,7 @@ describe('Reference-Data tests', () => {
 
   describe('GetHazardousCodesResponse', () => {
     const validate = ajv.compile<GetHazardousCodesResponse>(
-      getHazardousCodesResponse
+      getHazardousCodesResponse,
     );
 
     it('getHazardousCodes is compatible with success value', () => {
@@ -303,7 +303,7 @@ describe('Reference-Data tests', () => {
 
   describe('GetLocalAuthoritiesResponse', () => {
     const validate = ajv.compile<GetLocalAuthoritiesResponse>(
-      getLocalAuthoritiesResponse
+      getLocalAuthoritiesResponse,
     );
 
     it('getLocalAuthorities is compatible with success value', () => {

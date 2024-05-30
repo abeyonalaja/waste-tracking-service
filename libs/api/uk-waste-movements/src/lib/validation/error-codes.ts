@@ -67,7 +67,7 @@ export const wasteTypeInvalidChemicalAndBiologicalConcentration = 31;
 export const emptyPops = 32;
 
 export const WasteTypeValidationErrorCode: (
-  wasteTypeNumber: number
+  wasteTypeNumber: number,
 ) => WasteTypeErrorCode = (wasteTypeNumber) => {
   return {
     emptyEwcCode: wasteTypeNumber * 1000 + wasteTypeEmptyEwcCode,

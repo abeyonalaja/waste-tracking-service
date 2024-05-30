@@ -10,7 +10,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next/router', () => {
@@ -131,7 +131,7 @@ describe('Submitted page', () => {
       const submissionConfirmation = screen.getByRole('heading', { level: 1 });
 
       expect(submissionConfirmation).toHaveTextContent(
-        '1 Annex VII record submitted'
+        '1 Annex VII record submitted',
       );
     });
   });
@@ -151,7 +151,7 @@ describe('Submitted page', () => {
       const submissionConfirmation = screen.getByRole('heading', { level: 1 });
 
       expect(submissionConfirmation).toHaveTextContent(
-        '100 Annex VII records submitted'
+        '100 Annex VII records submitted',
       );
     });
   });

@@ -25,7 +25,7 @@ export class ServiceUkWasteMovementsSubmissionBackend
 {
   constructor(
     protected client: DaprUkWasteMovementsClient,
-    protected logger: Logger
+    protected logger: Logger,
   ) {}
   async getUkwmSubmission({ id }: SubmissionRef): Promise<UkwmDraftSubmission> {
     let response: GetDraftResponse;

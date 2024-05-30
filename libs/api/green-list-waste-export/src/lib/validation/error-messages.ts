@@ -145,7 +145,7 @@ interface CarrierErrorMessages {
 }
 
 export const CarrierValidationErrorMessages: (
-  carrierNumber: number
+  carrierNumber: number,
 ) => CarrierErrorMessages = (carrierNumber) => {
   let carrierStr = '';
   switch (carrierNumber) {
@@ -251,10 +251,10 @@ interface RecoveryFacilityErrorMessages {
 
 export const RecoveryFacilityDetailValidationErrorMessages: (
   recoveryFacilityType: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
-  recoveryFacilityNumber?: number
+  recoveryFacilityNumber?: number,
 ) => RecoveryFacilityErrorMessages = (
   recoveryFacilityType,
-  recoveryFacilityNumber
+  recoveryFacilityNumber,
 ) => {
   let typeStr = '';
   let codeStr = '';

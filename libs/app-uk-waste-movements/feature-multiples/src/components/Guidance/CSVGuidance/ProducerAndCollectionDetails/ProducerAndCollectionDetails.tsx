@@ -2,7 +2,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 export function ProducerAndCollectionDetails(): React.ReactNode {
   const page = useTranslations(
-    'multiples.guidancePageCSV.producerAndCollectionDetails'
+    'multiples.guidancePageCSV.producerAndCollectionDetails',
   );
   const producerDetails = [
     {
@@ -85,7 +85,7 @@ export function ProducerAndCollectionDetails(): React.ReactNode {
     {
       key: page('tableCollectionDetails.carrierRegistrationNumber'),
       value: page(
-        'tableCollectionDetails.carrierRegistrationNumberDescription'
+        'tableCollectionDetails.carrierRegistrationNumberDescription',
       ),
     },
     {

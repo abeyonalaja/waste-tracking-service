@@ -38,12 +38,12 @@ const controller = new AssignmentController(
     cosmosClient
       .database(process.env['COSMOS_DATABASE_NAME'] || 'limited-audience')
       .container(
-        process.env['COSMOS_ASSIGNMENTS_CONTAINER_NAME'] || 'assignments'
+        process.env['COSMOS_ASSIGNMENTS_CONTAINER_NAME'] || 'assignments',
       ),
-    logger
+    logger,
   ),
   new JwtTokenValidator(invitationTokenPublicKey),
-  logger
+  logger,
 );
 
 const server = new DaprServer({
@@ -68,7 +68,7 @@ await server.invoker.listen(
 
     return await controller.checkParticipation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -85,7 +85,7 @@ await server.invoker.listen(
 
     return await controller.redeemInvitation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -102,7 +102,7 @@ await server.invoker.listen(
 
     return await controller.addParticipant(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.start();

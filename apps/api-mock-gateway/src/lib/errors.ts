@@ -6,7 +6,7 @@ export abstract class CustomError<Data = unknown> extends Error {
     super(
       typeof messageOrError === 'string'
         ? messageOrError
-        : messageOrError?.message
+        : messageOrError?.message,
     );
     this.data = data;
 

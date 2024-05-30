@@ -35,7 +35,7 @@ export default class SubmissionController {
     private countryIncludingUkList: Country[],
     private recoveryCodeList: RecoveryCode[],
     private disposalCodeList: WasteCode[],
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   getSubmission: Handler<api.GetSubmissionRequest, api.GetSubmissionResponse> =
@@ -44,7 +44,7 @@ export default class SubmissionController {
         const submission = (await this.repository.getRecord(
           submissionContainerName,
           id,
-          accountId
+          accountId,
         )) as api.Submission;
         if (submission.submissionState.status === 'Cancelled') {
           return fromBoom(Boom.notFound());
@@ -72,8 +72,8 @@ export default class SubmissionController {
           order,
           pageLimit,
           token,
-          state
-        )
+          state,
+        ),
       ) as api.GetSubmissionsResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -93,7 +93,7 @@ export default class SubmissionController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
       return success(submission.wasteQuantity);
     } catch (err) {
@@ -114,7 +114,7 @@ export default class SubmissionController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
 
       if (submission.submissionState.status !== 'SubmittedWithEstimates') {
@@ -134,8 +134,8 @@ export default class SubmissionController {
         await this.repository.saveRecord(
           submissionContainerName,
           { ...submission },
-          accountId
-        )
+          accountId,
+        ),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -155,7 +155,7 @@ export default class SubmissionController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
       return success(submission.collectionDate);
     } catch (err) {
@@ -176,7 +176,7 @@ export default class SubmissionController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
 
       if (submission.submissionState.status !== 'SubmittedWithEstimates') {
@@ -218,8 +218,8 @@ export default class SubmissionController {
         await this.repository.saveRecord(
           submissionContainerName,
           { ...submission },
-          accountId
-        )
+          accountId,
+        ),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -239,7 +239,7 @@ export default class SubmissionController {
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
-        accountId
+        accountId,
       )) as Submission;
       if (submission.submissionState.status === 'SubmittedWithEstimates') {
         const timestamp = new Date();
@@ -251,7 +251,7 @@ export default class SubmissionController {
         await this.repository.saveRecord(
           submissionContainerName,
           { ...submission },
-          accountId
+          accountId,
         );
       }
       return success(undefined);
@@ -273,16 +273,16 @@ export default class SubmissionController {
       const completedWithActuals = await this.repository.getTotalNumber(
         submissionContainerName,
         accountId,
-        false
+        false,
       );
       const completedWithEstimates = await this.repository.getTotalNumber(
         submissionContainerName,
         accountId,
-        true
+        true,
       );
       const incomplete = await this.repository.getTotalNumber(
         draftContainerName,
-        accountId
+        accountId,
       );
       return success({
         completedWithActuals,
@@ -325,7 +325,7 @@ export default class SubmissionController {
             annexIIIBCode: s.annexIIIBCode,
             laboratory: s.laboratory,
           },
-          this.wasteCodeList
+          this.wasteCodeList,
         );
         if (!wasteCodeSubSection.valid) {
           fieldFormatErrors.push(wasteCodeSubSection.value);
@@ -338,7 +338,7 @@ export default class SubmissionController {
               nationalCode: s.nationalCode,
               wasteDescription: s.wasteDescription,
             },
-            this.ewcCodeList
+            this.ewcCodeList,
           );
         if (!wasteDescriptionSubSection.valid) {
           fieldFormatErrors.push(...wasteDescriptionSubSection.value);
@@ -359,7 +359,7 @@ export default class SubmissionController {
           const crossSection =
             validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
               wasteCodeSubSection.value,
-              wasteQuantity.value
+              wasteQuantity.value,
             );
           if (!crossSection.valid) {
             invalidStructureErrors.push(crossSection.value);
@@ -392,7 +392,7 @@ export default class SubmissionController {
             importerFaxNumber: s.importerFaxNumber,
             importerEmailAddress: s.importerEmailAddress,
           },
-          this.countryList
+          this.countryList,
         );
         if (!importerDetail.valid) {
           fieldFormatErrors.push(...importerDetail.value);
@@ -465,7 +465,7 @@ export default class SubmissionController {
         const carriers = validationRules.validateCarriersSection(
           carriersFlattened,
           transport,
-          this.countryIncludingUkList
+          this.countryIncludingUkList,
         );
         if (!carriers.valid) {
           fieldFormatErrors.push(...carriers.value);
@@ -475,7 +475,7 @@ export default class SubmissionController {
           const crossSection =
             validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
               wasteCodeSubSection.value,
-              carriersFlattened
+              carriersFlattened,
             );
           if (!crossSection.valid) {
             invalidStructureErrors.push(...crossSection.value);
@@ -512,7 +512,7 @@ export default class SubmissionController {
             {
               transitCountries: s.transitCountries,
             },
-            this.countryList
+            this.countryList,
           );
         if (!transitCountries.valid) {
           fieldFormatErrors.push(transitCountries.value);
@@ -522,7 +522,7 @@ export default class SubmissionController {
           const crossSection =
             validationRules.validateImporterDetailAndTransitCountriesCrossSection(
               importerDetail.value,
-              transitCountries.value
+              transitCountries.value,
             );
           if (!crossSection.valid) {
             invalidStructureErrors.push(...crossSection.value);
@@ -625,7 +625,7 @@ export default class SubmissionController {
               wasteCodeSubSection.value.type === 'NotApplicable',
               this.countryList,
               this.recoveryCodeList,
-              this.disposalCodeList
+              this.disposalCodeList,
             );
 
           if (!recoveryFacilityDetail.valid) {
@@ -635,7 +635,7 @@ export default class SubmissionController {
           const crossSection =
             validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
               wasteCodeSubSection.value,
-              recoveryFacilityDetailFlattened
+              recoveryFacilityDetailFlattened,
             );
           if (!crossSection.valid) {
             invalidStructureErrors.push(...crossSection.value);
@@ -742,7 +742,7 @@ export default class SubmissionController {
       await this.repository.createBulkRecords(
         submissionContainerName,
         accountId,
-        submissions
+        submissions,
       );
 
       return {
@@ -776,7 +776,7 @@ export default class SubmissionController {
           'UpdatedWithActuals',
         ],
         submissionIds,
-        true
+        true,
       );
       return success(submissions.values as Submission[]);
     } catch (err) {

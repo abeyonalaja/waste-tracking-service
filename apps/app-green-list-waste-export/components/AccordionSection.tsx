@@ -79,7 +79,9 @@ const Toggle = styled.span`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
     background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px #fd0,
+      0 4px #0b0c0c;
     padding-bottom: 3px;
   }
   @media (min-width: 40.0625em) {
@@ -92,7 +94,9 @@ const ToggleTextFocus = styled.span`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
     background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px #fd0,
+      0 4px #0b0c0c;
     padding-bottom: 3px;
   }
 `;

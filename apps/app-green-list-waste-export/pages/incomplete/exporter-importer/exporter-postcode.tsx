@@ -62,7 +62,7 @@ const ExporterPostcode = () => {
             {
               method: 'GET',
               headers: apiConfig,
-            }
+            },
           )
             .then((response) => {
               if (response.ok) {
@@ -76,7 +76,7 @@ const ExporterPostcode = () => {
                 if (data.length === 1) {
                   putAddress(
                     JSON.stringify(data[0]),
-                    '/incomplete/exporter-importer/exporter-address-edit'
+                    '/incomplete/exporter-importer/exporter-address-edit',
                   );
                 } else {
                   setAddresses(data);
@@ -88,7 +88,7 @@ const ExporterPostcode = () => {
         }
       }
     },
-    [buildingNameOrNumber, postcode]
+    [buildingNameOrNumber, postcode],
   );
 
   const handleLinkSubmit = async (e) => {
@@ -110,12 +110,12 @@ const ExporterPostcode = () => {
           selectedAddress,
           returnToDraft
             ? `/incomplete/tasklist`
-            : `/incomplete/exporter-importer/exporter-address`
+            : `/incomplete/exporter-importer/exporter-address`,
         );
       }
       e.preventDefault();
     },
-    [id, router, selectedAddress]
+    [id, router, selectedAddress],
   );
 
   const putAddress = useCallback(
@@ -132,7 +132,7 @@ const ExporterPostcode = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -150,7 +150,7 @@ const ExporterPostcode = () => {
         }
       }
     },
-    [id, router]
+    [id, router],
   );
 
   const BreadCrumbs = () => {

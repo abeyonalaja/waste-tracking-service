@@ -23,7 +23,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
     private cosmosClient: CosmosClient,
     private cosmosDbName: string,
     private cosmosContainerMap: Map<DbContainerNameKey, string>,
-    private logger: Logger
+    private logger: Logger,
   ) {
     this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }
@@ -31,7 +31,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
   async createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: DraftSubmission[]
+    values: DraftSubmission[],
   ): Promise<void> {
     const records = values.map((s) => {
       return {
@@ -58,7 +58,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
 
   async getDraft(
     containerName: DbContainerNameKey,
-    id: string
+    id: string,
   ): Promise<DraftSubmission> {
     const querySpec = {
       query: 'SELECT * FROM c WHERE c.id = @id',
@@ -100,7 +100,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
     collectionDate?: Date,
     ewcCode?: string,
     producerName?: string,
-    wasteMovementId?: string
+    wasteMovementId?: string,
   ): Promise<GetDraftsResult> {
     if (page <= 0) {
       page = 1;
@@ -159,7 +159,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
 
     if (producerName) {
       queryFilters.push(
-        `LOWER(c["value"].producerAndCollection.producer.contact.organisationName) like @producerOrgName`
+        `LOWER(c["value"].producerAndCollection.producer.contact.organisationName) like @producerOrgName`,
       );
       queryParameters.push({
         name: '@producerOrgName',
@@ -171,7 +171,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
       queryFilters.push(
         `c["value"].producerAndCollection.wasteCollection.expectedWasteCollectionDate.day = @day AND 
          c["value"].producerAndCollection.wasteCollection.expectedWasteCollectionDate.month = @month AND 
-         c["value"].producerAndCollection.wasteCollection.expectedWasteCollectionDate.year = @year`
+         c["value"].producerAndCollection.wasteCollection.expectedWasteCollectionDate.year = @year`,
       );
       queryParameters.push({
         name: '@day',

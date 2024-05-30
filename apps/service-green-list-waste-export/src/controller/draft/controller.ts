@@ -51,7 +51,10 @@ const draftContainerName = 'drafts';
 const submissionContainerName = 'submissions';
 
 export default class DraftController {
-  constructor(private repository: CosmosRepository, private logger: Logger) {}
+  constructor(
+    private repository: CosmosRepository,
+    private logger: Logger,
+  ) {}
 
   getDraft: Handler<api.GetDraftRequest, api.GetDraftResponse> = async ({
     id,
@@ -61,7 +64,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as api.DraftSubmission;
       if (
         draft.submissionState.status === 'Cancelled' ||
@@ -95,8 +98,8 @@ export default class DraftController {
           order,
           pageLimit,
           token,
-          state
-        )
+          state,
+        ),
       ) as api.GetDraftsResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -114,8 +117,8 @@ export default class DraftController {
         if (reference.length > validation.ReferenceChar.max) {
           return fromBoom(
             Boom.badRequest(
-              `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-            )
+              `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+            ),
           );
         }
 
@@ -161,14 +164,14 @@ export default class DraftController {
         const draft = (await this.repository.getRecord(
           draftContainerName,
           id,
-          accountId
+          accountId,
         )) as DraftSubmission;
         if (draft.submissionState.status === 'InProgress') {
           draft.submissionState = { status: 'Deleted', timestamp: new Date() };
           await this.repository.saveRecord(
             draftContainerName,
             { ...draft },
-            accountId
+            accountId,
           );
         }
         return success(undefined);
@@ -190,7 +193,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.reference);
     } catch (err) {
@@ -211,13 +214,13 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (reference.length > validation.ReferenceChar.max) {
         return fromBoom(
           Boom.badRequest(
-            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-          )
+            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+          ),
         );
       }
 
@@ -229,7 +232,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -250,7 +253,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.wasteDescription);
     } catch (err) {
@@ -271,7 +274,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       let wasteQuantity: DraftSubmission['wasteQuantity'] = draft.wasteQuantity;
@@ -294,7 +297,7 @@ export default class DraftController {
       if (
         isWasteCodeChangingBulkToBulkDifferentType(
           draft.wasteDescription,
-          value
+          value,
         )
       ) {
         wasteQuantity = { status: 'NotStarted' };
@@ -316,7 +319,7 @@ export default class DraftController {
 
       const submissionBase = setBaseWasteDescription(
         draft as SubmissionBase,
-        value
+        value,
       );
 
       draft.wasteDescription = submissionBase.wasteDescription;
@@ -332,7 +335,7 @@ export default class DraftController {
         {
           ...draft,
         },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -353,7 +356,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.wasteQuantity);
     } catch (err) {
@@ -374,7 +377,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       setDraftWasteQuantityUnit(value, draft);
@@ -429,8 +432,8 @@ export default class DraftController {
         await this.repository.saveRecord(
           draftContainerName,
           { ...draft },
-          accountId
-        )
+          accountId,
+        ),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -450,7 +453,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.exporterDetail);
     } catch (err) {
@@ -471,12 +474,12 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       draft.exporterDetail = setBaseExporterDetail(
         draft as SubmissionBase,
-        value
+        value,
       ).exporterDetail;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -485,7 +488,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -506,7 +509,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.importerDetail);
     } catch (err) {
@@ -527,11 +530,11 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       draft.importerDetail = setBaseImporterDetail(
         draft as SubmissionBase,
-        value
+        value,
       ).importerDetail;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -540,7 +543,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -561,7 +564,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.collectionDate);
     } catch (err) {
@@ -582,7 +585,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       let collectionDate = value;
@@ -628,8 +631,8 @@ export default class DraftController {
         await this.repository.saveRecord(
           draftContainerName,
           { ...draft },
-          accountId
-        )
+          accountId,
+        ),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -649,7 +652,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.carriers);
     } catch (err) {
@@ -670,7 +673,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft.carriers.status === 'NotStarted') {
         return fromBoom(Boom.notFound());
@@ -716,15 +719,15 @@ export default class DraftController {
       if (value.status !== 'Started') {
         return fromBoom(
           Boom.badRequest(
-            `"Status cannot be ${value.status} on carrier detail creation"`
-          )
+            `"Status cannot be ${value.status} on carrier detail creation"`,
+          ),
         );
       }
 
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -734,15 +737,15 @@ export default class DraftController {
         if (draft.carriers.values.length === validation.CarrierLength.max) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${validation.CarrierLength.max} carriers`
-            )
+              `Cannot add more than ${validation.CarrierLength.max} carriers`,
+            ),
           );
         }
       }
 
       const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
         draft as SubmissionBase,
-        value
+        value,
       );
 
       draft.carriers = submissionBasePlusId.submissionBase.carriers;
@@ -753,7 +756,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success({
         status: value.status,
@@ -778,7 +781,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -792,7 +795,7 @@ export default class DraftController {
         draft.carriers = setBaseNoCarriers(
           draft as SubmissionBase,
           carrierId,
-          value
+          value,
         ).carriers;
       } else {
         const carrier = value.values.find((c) => {
@@ -813,7 +816,7 @@ export default class DraftController {
           carrierId,
           value,
           carrier,
-          index
+          index,
         ).carriers;
       }
 
@@ -823,7 +826,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -844,7 +847,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -864,7 +867,7 @@ export default class DraftController {
 
       draft.carriers = deleteBaseCarriers(
         draft as SubmissionBase,
-        carrierId
+        carrierId,
       ).carriers;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -873,7 +876,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -894,7 +897,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.collectionDetail);
     } catch (err) {
@@ -915,11 +918,11 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       draft.collectionDetail = setBaseCollectionDetail(
         draft as SubmissionBase,
-        value
+        value,
       ).collectionDetail;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -928,7 +931,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -949,7 +952,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.ukExitLocation);
     } catch (err) {
@@ -970,11 +973,11 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       draft.ukExitLocation = setBaseExitLocation(
         draft as SubmissionBase,
-        value
+        value,
       ).ukExitLocation;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -983,7 +986,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1004,7 +1007,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.transitCountries);
     } catch (err) {
@@ -1025,11 +1028,11 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       draft.transitCountries = setBaseTransitCountries(
         draft as SubmissionBase,
-        value
+        value,
       ).transitCountries;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -1038,7 +1041,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1059,7 +1062,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.recoveryFacilityDetail);
     } catch (err) {
@@ -1080,7 +1083,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (
         draft.recoveryFacilityDetail.status !== 'Started' &&
@@ -1092,7 +1095,7 @@ export default class DraftController {
       const recoveryFacilityDetail = draft.recoveryFacilityDetail.values.find(
         (c) => {
           return c.id === rfdId;
-        }
+        },
       );
 
       if (recoveryFacilityDetail === undefined) {
@@ -1129,15 +1132,15 @@ export default class DraftController {
       if (value.status !== 'Started') {
         return fromBoom(
           Boom.badRequest(
-            `"Status cannot be ${value.status} on recovery facility detail creation"`
-          )
+            `"Status cannot be ${value.status} on recovery facility detail creation"`,
+          ),
         );
       }
 
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       if (draft === undefined) {
@@ -1154,8 +1157,8 @@ export default class DraftController {
         if (draft.recoveryFacilityDetail.values.length === maxFacilities) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`
-            )
+              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+            ),
           );
         }
       }
@@ -1172,7 +1175,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success({
         status: value.status,
@@ -1196,7 +1199,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1228,7 +1231,7 @@ export default class DraftController {
       draft.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
         draft as SubmissionBase,
         rfdId,
-        value
+        value,
       ).recoveryFacilityDetail;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -1237,7 +1240,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1258,7 +1261,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1280,7 +1283,7 @@ export default class DraftController {
 
       draft.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
         draft as SubmissionBase,
-        rfdId
+        rfdId,
       ).recoveryFacilityDetail;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -1289,7 +1292,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1310,7 +1313,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       if (draft.submissionConfirmation.status === 'CannotStart') {
@@ -1323,7 +1326,7 @@ export default class DraftController {
         await this.repository.saveRecord(
           draftContainerName,
           { ...draft },
-          accountId
+          accountId,
         );
         return fromBoom(Boom.badRequest());
       }
@@ -1332,7 +1335,7 @@ export default class DraftController {
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
-        accountId
+        accountId,
       );
       return success(undefined);
     } catch (err) {
@@ -1353,7 +1356,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.submissionConfirmation);
     } catch (err) {
@@ -1374,7 +1377,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
 
       if (draft.submissionDeclaration.status === 'CannotStart') {
@@ -1390,7 +1393,7 @@ export default class DraftController {
         await this.repository.saveRecord(
           draftContainerName,
           { ...draft },
-          accountId
+          accountId,
         );
         return fromBoom(Boom.badRequest());
       }
@@ -1433,13 +1436,13 @@ export default class DraftController {
           submissionDeclaration: submissionDeclaration,
           submissionState: submissionState,
         }) as Submission,
-        accountId
+        accountId,
       );
 
       await this.repository.deleteRecord(
         draftContainerName,
         draft.id,
-        accountId
+        accountId,
       );
 
       return success(undefined);
@@ -1461,7 +1464,7 @@ export default class DraftController {
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
-        accountId
+        accountId,
       )) as DraftSubmission;
       return success(draft.submissionDeclaration);
     } catch (err) {

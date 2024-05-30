@@ -30,7 +30,7 @@ describe('Total Error Summary component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <TotalErrorSummary strings={strings} href={'file-upload'} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const heading = screen.getByRole('heading', {
@@ -44,7 +44,7 @@ describe('Total Error Summary component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <TotalErrorSummary strings={strings} href={'file-upload'} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const correctionText = screen.getByText(strings.prompt);
@@ -55,7 +55,7 @@ describe('Total Error Summary component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <TotalErrorSummary strings={strings} href={'error-tabs'} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const link = screen.getByRole('link', { name: 'Error summary' });

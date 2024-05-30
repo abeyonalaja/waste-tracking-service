@@ -66,7 +66,7 @@ const ExitLocation = () => {
 
   const [pointOfExitPage, dispatchPointOfExitPage] = useReducer(
     pointOfExitReducer,
-    { data: null, isLoading: true, isError: false }
+    { data: null, isLoading: true, isError: false },
   );
 
   const [templateId, setTemplateId] = useState(null);
@@ -88,7 +88,7 @@ const ExitLocation = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/exit-location`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -156,7 +156,7 @@ const ExitLocation = () => {
                 status: 'Complete',
                 exitLocation: pointOfExitPage.data,
               }),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -177,7 +177,7 @@ const ExitLocation = () => {
         }
       }
     },
-    [templateId, pointOfExitPage.data, router]
+    [templateId, pointOfExitPage.data, router],
   );
 
   const handleCancelReturn = (e) => {

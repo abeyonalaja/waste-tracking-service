@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen } from 'jest-utils';
 import { Pagination } from 'components';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import 'i18n/config';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('Pagination Component', () => {
@@ -29,7 +29,7 @@ describe('Pagination Component', () => {
     ];
 
     render(
-      <Pagination url="test" currentPage={2} totalPages={3} pages={pages} />
+      <Pagination url="test" currentPage={2} totalPages={3} pages={pages} />,
     );
 
     const paginationNav = screen.findByText('results');

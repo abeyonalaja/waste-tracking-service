@@ -208,7 +208,7 @@ export const SubmittedSummary = ({
                           {getRefData(
                             'WasteCode',
                             data.wasteDescription?.wasteCode?.code,
-                            data.wasteDescription?.wasteCode.type
+                            data.wasteDescription?.wasteCode.type,
                           )}
                         </CodeDesc>
                       </>
@@ -244,7 +244,7 @@ export const SubmittedSummary = ({
                             <strong>{formatEwcCode(item.code)}: </strong>
                             <CodeDesc>{getRefData('EWC', item.code)}</CodeDesc>
                           </GovUK.ListItem>
-                        )
+                        ),
                       )}
                       {data.wasteDescription?.ewcCodes.length === 0 && (
                         <span id="ewc-not-provided">
@@ -636,7 +636,7 @@ export const SubmittedSummary = ({
                 <Row>
                   <Key id="collection-date-header">
                     {t(
-                      'exportJourney.submitAnExport.SectionThree.collectionDate'
+                      'exportJourney.submitAnExport.SectionThree.collectionDate',
                     )}
                   </Key>
 
@@ -651,9 +651,9 @@ export const SubmittedSummary = ({
                         new Date(
                           Number(data.collectionDate.estimateDate.year),
                           Number(data.collectionDate.estimateDate.month) - 1,
-                          Number(data.collectionDate.estimateDate.day)
+                          Number(data.collectionDate.estimateDate.day),
                         ),
-                        'd MMMM y'
+                        'd MMMM y',
                       )}
                     </Value>
                   )}
@@ -664,9 +664,9 @@ export const SubmittedSummary = ({
                         new Date(
                           Number(data.collectionDate.actualDate.year),
                           Number(data.collectionDate.actualDate.month) - 1,
-                          Number(data.collectionDate.actualDate.day)
+                          Number(data.collectionDate.actualDate.day),
                         ),
-                        'd MMMM y'
+                        'd MMMM y',
                       )}
                     </Value>
                   )}
@@ -798,7 +798,7 @@ export const SubmittedSummary = ({
                           </Key>
                           <Value id={'carrier-type' + index}>
                             {t(
-                              `exportJourney.wasteCarrierTransport.${item.transportDetails?.type}`
+                              `exportJourney.wasteCarrierTransport.${item.transportDetails?.type}`,
                             )}
                           </Value>
                           {isTemplate && (
@@ -1040,7 +1040,7 @@ export const SubmittedSummary = ({
             <>
               {data.recoveryFacilityDetail
                 .filter(
-                  (site) => site.recoveryFacilityType?.type === 'Laboratory'
+                  (site) => site.recoveryFacilityType?.type === 'Laboratory',
                 )
                 .map((filteredSite, index) => (
                   <SiteDetails
@@ -1055,7 +1055,7 @@ export const SubmittedSummary = ({
 
               {data.recoveryFacilityDetail
                 .filter(
-                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite',
                 )
                 .map((filteredSite, index) => (
                   <>
@@ -1073,7 +1073,7 @@ export const SubmittedSummary = ({
               {data.recoveryFacilityDetail
                 .filter(
                   (site) =>
-                    site.recoveryFacilityType?.type === 'RecoveryFacility'
+                    site.recoveryFacilityType?.type === 'RecoveryFacility',
                 )
                 .map((filteredSite, index) => (
                   <SiteDetails
@@ -1084,7 +1084,8 @@ export const SubmittedSummary = ({
                     multiple={
                       data.recoveryFacilityDetail.filter(
                         (site) =>
-                          site.recoveryFacilityType?.type === 'RecoveryFacility'
+                          site.recoveryFacilityType?.type ===
+                          'RecoveryFacility',
                       ).length > 1
                     }
                     showChangeLinks={showChangeLinks}

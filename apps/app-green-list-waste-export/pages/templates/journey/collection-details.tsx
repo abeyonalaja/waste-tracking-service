@@ -228,7 +228,7 @@ const CollectionDetails = () => {
   const apiConfig = useApiConfig();
   const [addressPage, dispatchAddressPage] = useReducer(
     addressReducer,
-    initialState
+    initialState,
   );
   const [templateId, setTemplateId] = useState(null);
   const [page, setPage] = useState(null);
@@ -268,7 +268,7 @@ const CollectionDetails = () => {
   const getStatus = () => {
     const newErrors = {
       organisationName: validateOrganisationName(
-        contactDetails?.organisationName
+        contactDetails?.organisationName,
       ),
       fullName: validateFullName(contactDetails?.fullName),
       emailAddress: validateEmail(contactDetails?.emailAddress),
@@ -298,7 +298,7 @@ const CollectionDetails = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -356,7 +356,7 @@ const CollectionDetails = () => {
             {
               method: 'GET',
               headers: apiConfig,
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -391,7 +391,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [postcode]
+    [postcode],
   );
 
   const handleSubmitAddress = useCallback(
@@ -420,7 +420,7 @@ const CollectionDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -444,7 +444,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [selectedAddress]
+    [selectedAddress],
   );
 
   const handleSingleAddressFormSubmit = useCallback((e: FormEvent) => {
@@ -483,7 +483,7 @@ const CollectionDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(updatedStatus),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -501,7 +501,7 @@ const CollectionDetails = () => {
         }
       }
     },
-    [contactDetails, addressPage]
+    [contactDetails, addressPage],
   );
 
   const handleManualAddressSubmit = useCallback(
@@ -523,7 +523,7 @@ const CollectionDetails = () => {
             method: 'PUT',
             headers: apiConfig,
             body: JSON.stringify(updatedStatus),
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -546,7 +546,7 @@ const CollectionDetails = () => {
         console.error(e);
       }
     },
-    [addressDetails, addressPage]
+    [addressDetails, addressPage],
   );
 
   const onContactDetailsChange = (e) => {
@@ -913,7 +913,7 @@ const CollectionDetails = () => {
                         name="country"
                         label={t('address.country')}
                         hint={t(
-                          'exportJourney.wasteCollectionDetails.countryHint'
+                          'exportJourney.wasteCollectionDetails.countryHint',
                         )}
                         errorMessage={addressPage.errors?.country}
                         options={countriesData.UK}
@@ -934,7 +934,7 @@ const CollectionDetails = () => {
                   <div id="page-waste-collection-manual-address">
                     <GovUK.Heading size="L">
                       {t(
-                        'exportJourney.wasteCollectionDetails.editCollectionAddress'
+                        'exportJourney.wasteCollectionDetails.editCollectionAddress',
                       )}{' '}
                     </GovUK.Heading>
                     <form onSubmit={handleManualAddressSubmit}>
@@ -1021,7 +1021,7 @@ const CollectionDetails = () => {
                         name="country"
                         label={t('address.country')}
                         hint={t(
-                          'exportJourney.wasteCollectionDetails.countryHint'
+                          'exportJourney.wasteCollectionDetails.countryHint',
                         )}
                         errorMessage={addressPage.errors?.country}
                         options={countriesData.UK}
@@ -1043,7 +1043,7 @@ const CollectionDetails = () => {
                   <div id="page-waste-collection-contact-details">
                     <GovUK.Heading size="L">
                       {t(
-                        'exportJourney.wasteCollectionDetails.singleAddressTitle'
+                        'exportJourney.wasteCollectionDetails.singleAddressTitle',
                       )}
                     </GovUK.Heading>
                     {addressDetails.country && (

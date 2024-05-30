@@ -38,7 +38,7 @@ export function UploadForm({
   const [file, setFile] = useState<File | null>(null);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [errors, setErrors] = useState(() =>
-    validationError ? [{ text: validationError, href: '#file-upload' }] : null
+    validationError ? [{ text: validationError, href: '#file-upload' }] : null,
   );
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -55,7 +55,7 @@ export function UploadForm({
   }
 
   async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
+    e: React.FormEvent<HTMLFormElement>,
   ): Promise<void> {
     e.preventDefault();
     setButtonDisabled(true);
@@ -84,7 +84,7 @@ export function UploadForm({
           method: 'POST',
           body: formData,
           headers,
-        }
+        },
       );
     } catch (error) {
       console.error(error);
@@ -96,7 +96,7 @@ export function UploadForm({
       const hasCorrectedErrors =
         totalErrorCount > 0 ? '&hasCorrectedErrors=true' : '';
       router.push(
-        `/multiples/${data.id}?filename=${file!.name}${hasCorrectedErrors}`
+        `/multiples/${data.id}?filename=${file!.name}${hasCorrectedErrors}`,
       );
     } else {
       router.push(`/404`);

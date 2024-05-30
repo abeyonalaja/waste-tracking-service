@@ -28,7 +28,7 @@ interface SendFeedbackRequest {
 }
 interface FeedbackFormProps {
   onSubmit: (
-    data: SendFeedbackRequest
+    data: SendFeedbackRequest,
   ) => Promise<SubmitHandler<SendFeedbackRequest>>;
   validateFeedback: (feedback: string) => string | undefined;
   isPending: boolean;

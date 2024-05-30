@@ -17,7 +17,7 @@ export default class AssignmentController {
   constructor(
     private repository: AssignmentRepository,
     private tokenValidator: TokenValidator,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   checkParticipation: Handler<
@@ -47,9 +47,8 @@ export default class AssignmentController {
     api.RedeemInvitationResponse
   > = async ({ dcidSubjectId, invitationToken }) => {
     try {
-      const tokenValidation = await this.tokenValidator.validate(
-        invitationToken
-      );
+      const tokenValidation =
+        await this.tokenValidator.validate(invitationToken);
       if (!tokenValidation.valid) {
         return fromBoom(Boom.badRequest(tokenValidation.error));
       }
@@ -59,7 +58,7 @@ export default class AssignmentController {
       } = tokenValidation;
       if (!isValidContent(content)) {
         return fromBoom(
-          Boom.badRequest(`assignment to unexpected content: ${content}`)
+          Boom.badRequest(`assignment to unexpected content: ${content}`),
         );
       }
 

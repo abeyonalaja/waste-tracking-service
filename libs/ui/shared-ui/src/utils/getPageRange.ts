@@ -1,6 +1,6 @@
 export function getPageRange(
   currentPage: number,
-  totalPages: number
+  totalPages: number,
 ): (string | number)[] {
   const range: Array<string | number> = [];
   const maxPagesToShow = 5;

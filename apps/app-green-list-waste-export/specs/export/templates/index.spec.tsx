@@ -23,7 +23,7 @@ global.fetch = jest.fn(
           error: 'Not Found',
           message: 'Not Found',
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Manage templates page', () => {
@@ -32,7 +32,7 @@ describe('Manage templates page', () => {
       render(<ManageTemplates />);
     });
     expect(
-      screen.findByText('Manage your Annex VII record templates')
+      screen.findByText('Manage your Annex VII record templates'),
     ).toBeTruthy();
     expect(screen.findByText('You have no saved templates.')).toBeTruthy();
   });
@@ -125,7 +125,7 @@ describe('Manage templates page', () => {
                 },
               ],
             }),
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     await act(async () => {
@@ -150,7 +150,7 @@ describe('Manage templates page', () => {
     });
 
     const pageTitle = screen.getByText(
-      'Are you sure you want to delete this record template?'
+      'Are you sure you want to delete this record template?',
     );
     expect(pageTitle).toBeTruthy();
 
@@ -160,7 +160,7 @@ describe('Manage templates page', () => {
     });
 
     const validationMessage = screen.getAllByText(
-      'Select yes if you want to remove this record template'
+      'Select yes if you want to remove this record template',
     )[0];
     expect(validationMessage).toBeTruthy();
   });

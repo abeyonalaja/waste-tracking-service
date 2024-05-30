@@ -51,7 +51,7 @@ export function SubmittedFilters({
     window.history.pushState(
       {},
       '',
-      `${pathname}?${updateSearchParamsPage(1)}`
+      `${pathname}?${updateSearchParamsPage(1)}`,
     );
   });
 
@@ -62,7 +62,7 @@ export function SubmittedFilters({
     window.history.pushState(
       {},
       '',
-      `${pathname}?${updateSearchParamsPage(1)}`
+      `${pathname}?${updateSearchParamsPage(1)}`,
     );
   }
 

@@ -20,7 +20,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/waste-codes',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -30,7 +30,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/ewc-codes',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -40,7 +40,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/countries',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -50,7 +50,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/recovery-codes',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -60,7 +60,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/disposal-codes',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -70,7 +70,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/hazardous-codes',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -80,7 +80,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/pops',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
@@ -90,7 +90,7 @@ describe('ReferenceDataPlugin', () => {
     await plugin.register();
     expect(mockPost).not.toHaveBeenCalledWith(
       '/reference-data/local-authorities',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });

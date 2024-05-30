@@ -248,7 +248,7 @@ describe('transitCountries', () => {
 
 describe('recoveryFacilityDetails', () => {
   const validate = ajv.compile<RecoveryFacilityDetail[]>(
-    recoveryFacilityDetails
+    recoveryFacilityDetails,
   );
 
   it('is compatible with dto values', () => {
@@ -459,7 +459,7 @@ describe('full submission', () => {
 
 describe('cancelSubmissionRequest', () => {
   const validate = ajv.compile<CancelSubmissionRequest>(
-    cancelSubmissionRequest
+    cancelSubmissionRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -723,7 +723,7 @@ describe('getSubmissionResponse', () => {
 
 describe('setWasteQuantityRequest', () => {
   const validate = ajv.compile<SetWasteQuantityRequest>(
-    setWasteQuantityRequest
+    setWasteQuantityRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -780,7 +780,7 @@ describe('setWasteQuantityRequest', () => {
 
 describe('setCollectionDateRequest', () => {
   const validate = ajv.compile<SetCollectionDateRequest>(
-    setCollectionDateRequest
+    setCollectionDateRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -824,7 +824,7 @@ describe('setCollectionDateRequest', () => {
 
 describe('createSubmissionsRequest', () => {
   const validate = ajv.compile<CreateSubmissionsRequest>(
-    createSubmissionsRequest
+    createSubmissionsRequest,
   );
   it('is compatible with dto values', () => {
     const value: CreateSubmissionsRequest = {
@@ -977,7 +977,7 @@ describe('createSubmissionsRequest', () => {
 
 describe('getBulkSubmissionsRequest', () => {
   const validate = ajv.compile<GetBulkSubmissionsRequest>(
-    getBulkSubmissionsRequest
+    getBulkSubmissionsRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -1002,7 +1002,7 @@ describe('getBulkSubmissionsRequest', () => {
 
 describe('getBulkSubmissionsResponse', () => {
   const validate = ajv.compile<GetBulkSubmissionsResponse>(
-    getBulkSubmissionsResponse
+    getBulkSubmissionsResponse,
   );
 
   it('is compatible with dto values', () => {

@@ -44,7 +44,7 @@ export function ErrorSummary({ errors }: ErrorRowTableProps) {
               {row.errorAmount}{' '}
               {t(
                 'multiples.errorSummaryPage.errorSummaryTableHeader.errorCount',
-                { count: row.errorAmount }
+                { count: row.errorAmount },
               )}
             </GovUK.Table.Cell>
             <GovUK.Table.Cell>

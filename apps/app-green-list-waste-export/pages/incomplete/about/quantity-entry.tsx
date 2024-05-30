@@ -115,7 +115,7 @@ const QuantityEntry = () => {
                   : 'actualData';
 
               setQuantityType(
-                data.wasteQuantity.value[type]?.quantityType || null
+                data.wasteQuantity.value[type]?.quantityType || null,
               );
 
               if (data.wasteQuantity.value[type]?.quantityType === 'Weight')
@@ -152,14 +152,14 @@ const QuantityEntry = () => {
           weight,
           quantityType,
           bulkWaste,
-          bulkWaste ? 'tonnes' : 'kilograms'
+          bulkWaste ? 'tonnes' : 'kilograms',
         ),
         quantityVolumeError: validateQuantityValue(
           quantityType === 'Volume',
           volume,
           quantityType,
           bulkWaste,
-          'cubic metres'
+          'cubic metres',
         ),
       };
       const onlyRealErrors = filterUndefinedErrors(newErrors);
@@ -178,7 +178,7 @@ const QuantityEntry = () => {
 
         const type = estimate ? 'estimateData' : 'actualData';
         const valueRounded = Number(
-          parseFloat(quantityType === 'Weight' ? weight : volume).toFixed(2)
+          parseFloat(quantityType === 'Weight' ? weight : volume).toFixed(2),
         );
         updatedData.value[type] = {
           quantityType: quantityType,
@@ -191,7 +191,7 @@ const QuantityEntry = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(updatedData),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -209,7 +209,7 @@ const QuantityEntry = () => {
         }
       }
     },
-    [id, quantityType, weight, volume, estimate, bulkWaste]
+    [id, quantityType, weight, volume, estimate, bulkWaste],
   );
 
   function changetoActual(event) {
@@ -259,16 +259,16 @@ const QuantityEntry = () => {
                     <GovUK.Heading size="LARGE">
                       {estimate
                         ? t(
-                            'exportJourney.quantity.entry.bulk.estimateWeight.title'
+                            'exportJourney.quantity.entry.bulk.estimateWeight.title',
                           )
                         : t(
-                            'exportJourney.quantity.entry.bulk.actualWeight.title'
+                            'exportJourney.quantity.entry.bulk.actualWeight.title',
                           )}
                     </GovUK.Heading>
                     {!estimate ? (
                       <Paragraph>
                         {t(
-                          'exportJourney.quantity.entry.bulk.actualWeight.intro'
+                          'exportJourney.quantity.entry.bulk.actualWeight.intro',
                         )}
                         <AppLink href="#" onClick={changetoEstimate}>
                           {t('exportJourney.quantity.entry.switchToEstimate')}
@@ -278,7 +278,7 @@ const QuantityEntry = () => {
                     ) : (
                       <GovUK.Paragraph>
                         {t(
-                          'exportJourney.quantity.entry.bulk.estimateWeight.intro'
+                          'exportJourney.quantity.entry.bulk.estimateWeight.intro',
                         )}
                       </GovUK.Paragraph>
                     )}
@@ -296,10 +296,10 @@ const QuantityEntry = () => {
                         label={
                           estimate
                             ? t(
-                                'exportJourney.quantity.entry.bulk.estimateWeightInputLabel'
+                                'exportJourney.quantity.entry.bulk.estimateWeightInputLabel',
                               )
                             : t(
-                                'exportJourney.quantity.entry.bulk.actualWeightInputLabel'
+                                'exportJourney.quantity.entry.bulk.actualWeightInputLabel',
                               )
                         }
                         onChange={(e) => setWeight(e.target.value)}
@@ -313,7 +313,7 @@ const QuantityEntry = () => {
                         <ButtonGroup>
                           <StyledLink href="#" onClick={changetoActual}>
                             {t(
-                              'exportJourney.quantity.entry.weight.switchToActual'
+                              'exportJourney.quantity.entry.weight.switchToActual',
                             )}
                           </StyledLink>
                         </ButtonGroup>
@@ -332,16 +332,16 @@ const QuantityEntry = () => {
                     <GovUK.Heading size="LARGE">
                       {estimate
                         ? t(
-                            'exportJourney.quantity.entry.bulk.estimateVolume.title'
+                            'exportJourney.quantity.entry.bulk.estimateVolume.title',
                           )
                         : t(
-                            'exportJourney.quantity.entry.bulk.actualVolume.title'
+                            'exportJourney.quantity.entry.bulk.actualVolume.title',
                           )}
                     </GovUK.Heading>
                     {!estimate ? (
                       <Paragraph>
                         {t(
-                          'exportJourney.quantity.entry.bulk.actualVolume.intro'
+                          'exportJourney.quantity.entry.bulk.actualVolume.intro',
                         )}
                         <AppLink href="#" onClick={changetoEstimate}>
                           {t('exportJourney.quantity.entry.switchToEstimate')}
@@ -351,7 +351,7 @@ const QuantityEntry = () => {
                     ) : (
                       <GovUK.Paragraph>
                         {t(
-                          'exportJourney.quantity.entry.bulk.estimateVolume.intro'
+                          'exportJourney.quantity.entry.bulk.estimateVolume.intro',
                         )}
                       </GovUK.Paragraph>
                     )}
@@ -369,10 +369,10 @@ const QuantityEntry = () => {
                         label={
                           estimate
                             ? t(
-                                'exportJourney.quantity.entry.bulk.estimateVolumeInputLabel'
+                                'exportJourney.quantity.entry.bulk.estimateVolumeInputLabel',
                               )
                             : t(
-                                'exportJourney.quantity.entry.bulk.actualVolumeInputLabel'
+                                'exportJourney.quantity.entry.bulk.actualVolumeInputLabel',
                               )
                         }
                         onChange={(e) => setVolume(e.target.value)}
@@ -386,7 +386,7 @@ const QuantityEntry = () => {
                         <ButtonGroup>
                           <StyledLink href="#" onClick={changetoActual}>
                             {t(
-                              'exportJourney.quantity.entry.volume.switchToActual'
+                              'exportJourney.quantity.entry.volume.switchToActual',
                             )}
                           </StyledLink>
                         </ButtonGroup>
@@ -434,10 +434,10 @@ const QuantityEntry = () => {
                         label={
                           estimate
                             ? t(
-                                'exportJourney.quantityValueSmall.weightLabelEstimate'
+                                'exportJourney.quantityValueSmall.weightLabelEstimate',
                               )
                             : t(
-                                'exportJourney.quantityValueSmall.weightLabelActual'
+                                'exportJourney.quantityValueSmall.weightLabelActual',
                               )
                         }
                         onChange={(e) => setWeight(e.target.value)}
@@ -451,7 +451,7 @@ const QuantityEntry = () => {
                         <ButtonGroup>
                           <StyledLink href="#" onClick={changetoActual}>
                             {t(
-                              'exportJourney.quantity.entry.weight.switchToActual'
+                              'exportJourney.quantity.entry.weight.switchToActual',
                             )}
                           </StyledLink>
                         </ButtonGroup>

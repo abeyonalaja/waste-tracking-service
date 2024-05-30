@@ -15,7 +15,7 @@ function isValidGuid(value: string): boolean {
 export type ValidateTokenReturnType = (
   decoded: object,
   _: unknown,
-  h: ResponseToolkit
+  h: ResponseToolkit,
 ) => Promise<{
   isValid: boolean;
   credentials?: { accountId: string; subjectId: string };

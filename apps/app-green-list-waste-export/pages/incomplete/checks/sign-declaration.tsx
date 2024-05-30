@@ -81,7 +81,7 @@ const SignDeclaration = () => {
 
   const [signDeclarationPage, dispatchSignDeclarationPage] = useReducer(
     SignDeclarationReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
 
   const [id, setId] = useState(null);
@@ -101,7 +101,7 @@ const SignDeclaration = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -133,7 +133,7 @@ const SignDeclaration = () => {
           body: JSON.stringify({
             status: 'Complete',
           }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -147,7 +147,7 @@ const SignDeclaration = () => {
           }
         });
     },
-    [id, router, signDeclarationPage.data]
+    [id, router, signDeclarationPage.data],
   );
 
   if (signDeclarationPage.data?.submissionDeclaration.status === 'Complete') {
@@ -199,27 +199,27 @@ const SignDeclaration = () => {
                   <GovUK.UnorderedList>
                     <GovUK.ListItem>
                       {t(
-                        'exportJourney.checkAnswers.signDeclaration.listItemOne'
+                        'exportJourney.checkAnswers.signDeclaration.listItemOne',
                       )}
                     </GovUK.ListItem>
                     {signDeclarationPage.data?.wasteDescription?.wasteCode
                       .type !== 'NotApplicable' && (
                       <GovUK.ListItem id="conditional-item">
                         {t(
-                          'exportJourney.checkAnswers.signDeclaration.listItemTwo'
+                          'exportJourney.checkAnswers.signDeclaration.listItemTwo',
                         )}
                       </GovUK.ListItem>
                     )}
 
                     <GovUK.ListItem>
                       {t(
-                        'exportJourney.checkAnswers.signDeclaration.listItemThree'
+                        'exportJourney.checkAnswers.signDeclaration.listItemThree',
                       )}
                     </GovUK.ListItem>
 
                     <GovUK.ListItem>
                       {t(
-                        'exportJourney.checkAnswers.signDeclaration.listItemFour'
+                        'exportJourney.checkAnswers.signDeclaration.listItemFour',
                       )}
                     </GovUK.ListItem>
                   </GovUK.UnorderedList>
@@ -227,7 +227,7 @@ const SignDeclaration = () => {
                 <ButtonGroup>
                   <GovUK.Button id="saveButton" onClick={handleConfirmClick}>
                     {t(
-                      'exportJourney.checkAnswers.signDeclaration.confirmButton'
+                      'exportJourney.checkAnswers.signDeclaration.confirmButton',
                     )}
                   </GovUK.Button>
                   <SaveReturnButton

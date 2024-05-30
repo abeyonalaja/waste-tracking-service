@@ -52,7 +52,7 @@ global.fetch = jest.fn(
             status: 'CannotStart',
           },
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Template tasklist page', () => {

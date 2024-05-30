@@ -18,7 +18,7 @@ const mockClientAddresses = {
 describe('AddressServiceBackend', () => {
   const subject = new AddressServiceBackend(
     mockClientAddresses as unknown as DaprAddressClient,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {

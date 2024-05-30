@@ -219,7 +219,7 @@ describe('Interim site pages', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'Enter the interim site details'
+      'Enter the interim site details',
     )[0];
     expect(errorMessage).toBeTruthy();
   });
@@ -262,12 +262,12 @@ describe('Interim site pages', () => {
                 },
               ],
             }),
-        })
+        }),
       );
     });
 
     expect(
-      await screen.getByText('What are the interim site’s contact details?')
+      await screen.getByText('What are the interim site’s contact details?'),
     ).toBeTruthy();
   });
 });

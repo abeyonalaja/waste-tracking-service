@@ -64,7 +64,7 @@ describe(AnnexViiServiceTemplateBackend, () => {
   const accountId = faker.datatype.uuid();
   const subject = new AnnexViiServiceTemplateBackend(
     mockClient as unknown as DaprAnnexViiClient,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {
@@ -355,7 +355,7 @@ describe(AnnexViiServiceTemplateBackend, () => {
         },
       };
     mockClient.createTemplateFromSubmission.mockResolvedValueOnce(
-      mockCreateTemplateFromSubmissionResponse
+      mockCreateTemplateFromSubmissionResponse,
     );
     const { id } = await subject.createTemplateFromSubmission(
       mockSubmission.id,
@@ -363,7 +363,7 @@ describe(AnnexViiServiceTemplateBackend, () => {
       {
         name: 'My Template From Submission',
         description: 'My template from submission description',
-      }
+      },
     );
     const mockGetTemplateByIdResponse: template.GetTemplateResponse = {
       success: true,

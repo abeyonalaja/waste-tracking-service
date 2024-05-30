@@ -6,7 +6,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('Small Radio List component', () => {
@@ -19,7 +19,7 @@ describe('Small Radio List component', () => {
         label="Choose an option"
         options={options}
         onChange={jest.fn()}
-      />
+      />,
     );
 
     expect(getByText('Choose an option')).toBeTruthy();
@@ -38,7 +38,7 @@ describe('Small Radio List component', () => {
         label="Choose an option"
         options={options}
         onChange={handleChange}
-      />
+      />,
     );
 
     fireEvent.click(getByLabelText(options[1]));
@@ -56,7 +56,7 @@ describe('Small Radio List component', () => {
         options={options}
         errorMessage={errorMessage}
         onChange={jest.fn()}
-      />
+      />,
     );
     expect(getByText(errorMessage)).toBeTruthy();
   });

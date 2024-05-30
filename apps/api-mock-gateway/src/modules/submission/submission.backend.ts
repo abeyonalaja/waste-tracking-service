@@ -90,7 +90,7 @@ export async function getSubmissions(
   { order }: OrderRef,
   pageLimit = 15,
   state?: DraftSubmissionState['status'][],
-  token?: string
+  token?: string,
 ): Promise<SubmissionSummaryPage> {
   let rawValues: DraftSubmission[] | Submission[];
   if (
@@ -100,11 +100,11 @@ export async function getSubmissions(
     state?.includes('Cancelled')
   ) {
     rawValues = db.submissions.filter(
-      (s) => s.accountId === accountId
+      (s) => s.accountId === accountId,
     ) as Submission[];
   } else {
     rawValues = db.drafts.filter(
-      (s) => s.accountId === accountId
+      (s) => s.accountId === accountId,
     ) as DraftSubmission[];
   }
 
@@ -145,7 +145,7 @@ export async function getSubmissions(
 
   if (state) {
     values = values.filter((i) =>
-      state.some((val) => i.submissionState.status.includes(val))
+      state.some((val) => i.submissionState.status.includes(val)),
     );
   }
 
@@ -176,7 +176,7 @@ export async function getSubmissions(
     const nextPaginatedValues = paginateArray(
       values,
       pageLimit,
-      pageNumber + 1
+      pageNumber + 1,
     );
 
     hasMoreResults = nextPaginatedValues.length === 0 ? false : true;
@@ -210,10 +210,10 @@ export async function getSubmission({
 }: SubmissionTypeRef): Promise<DraftSubmission | Submission> {
   const value = !submitted
     ? (db.drafts.find(
-        (s) => s.id == id && s.accountId == accountId
+        (s) => s.id == id && s.accountId == accountId,
       ) as DraftSubmission)
     : (db.submissions.find(
-        (s) => s.id == id && s.accountId == accountId
+        (s) => s.id == id && s.accountId == accountId,
       ) as Submission);
 
   if (
@@ -269,13 +269,13 @@ export async function getSubmission({
 
 export async function createSubmission(
   accountId: string,
-  reference: CustomerReference
+  reference: CustomerReference,
 ): Promise<DraftSubmission> {
   if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
       new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-      )
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+      ),
     );
   }
 
@@ -313,18 +313,18 @@ export async function createSubmission(
 export async function createSubmissionFromTemplate(
   id: string,
   accountId: string,
-  reference: CustomerReference
+  reference: CustomerReference,
 ): Promise<DraftSubmission> {
   if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
       new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-      )
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+      ),
     );
   }
 
   const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId
+    (t) => t.id == id && t.accountId == accountId,
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found'));
@@ -345,13 +345,13 @@ export async function createSubmissionFromTemplate(
     collectionDate: { status: 'NotStarted' },
     carriers: copyCarriersNoTransport(
       template.carriers,
-      isSmallWaste(template.wasteDescription)
+      isSmallWaste(template.wasteDescription),
     ),
     collectionDetail: template.collectionDetail,
     ukExitLocation: template.ukExitLocation,
     transitCountries: template.transitCountries,
     recoveryFacilityDetail: copyRecoveryFacilities(
-      template.recoveryFacilityDetail
+      template.recoveryFacilityDetail,
     ),
     submissionConfirmation: { status: 'CannotStart' },
     submissionDeclaration: { status: 'CannotStart' },
@@ -382,10 +382,10 @@ export async function deleteSubmission({
 
 export async function cancelSubmission(
   { id, accountId }: SubmissionRef,
-  cancellationType: CancellationType
+  cancellationType: CancellationType,
 ): Promise<void> {
   const value = db.submissions.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (value === undefined) {
     return Promise.reject(new NotFoundError('Submission not found'));
@@ -405,7 +405,7 @@ export async function getWasteDescription({
   accountId,
 }: SubmissionRef): Promise<WasteDescription> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -416,10 +416,10 @@ export async function getWasteDescription({
 
 export async function setWasteDescription(
   { id, accountId }: SubmissionRef,
-  value: WasteDescription
+  value: WasteDescription,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -446,7 +446,7 @@ export async function setWasteDescription(
   if (
     isWasteCodeChangingBulkToBulkDifferentType(
       submission.wasteDescription,
-      value
+      value,
     )
   ) {
     wasteQuantity = { status: 'NotStarted' };
@@ -468,7 +468,7 @@ export async function setWasteDescription(
 
   const submissionBase = setBaseWasteDescription(
     submission as SubmissionBase,
-    value
+    value,
   );
   submission.wasteDescription = submissionBase.wasteDescription;
   submission.carriers = submissionBase.carriers;
@@ -497,11 +497,11 @@ export async function getWasteQuantity({
 
 export async function setWasteQuantity(
   { id, accountId, submitted }: SubmissionTypeRef,
-  value: WasteQuantity | WasteQuantityData
+  value: WasteQuantity | WasteQuantityData,
 ): Promise<void> {
   if (!submitted) {
     const submission = db.drafts.find(
-      (s) => s.id == id && s.accountId == accountId
+      (s) => s.id == id && s.accountId == accountId,
     ) as DraftSubmission;
     if (submission === undefined) {
       return Promise.reject(new NotFoundError('Submission not found.'));
@@ -557,7 +557,7 @@ export async function setWasteQuantity(
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
   } else {
     const submission = db.submissions.find(
-      (s) => s.id == id && s.accountId == accountId
+      (s) => s.id == id && s.accountId == accountId,
     ) as Submission;
     if (submission === undefined) {
       return Promise.reject(new NotFoundError('Submission not found.'));
@@ -583,7 +583,7 @@ export async function getCustomerReference({
   accountId,
 }: SubmissionRef): Promise<CustomerReference> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -594,10 +594,10 @@ export async function getCustomerReference({
 
 export async function setCustomerReference(
   { id, accountId }: SubmissionRef,
-  reference: CustomerReference
+  reference: CustomerReference,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -606,8 +606,8 @@ export async function setCustomerReference(
   if (reference.length > validation.ReferenceChar.max) {
     return Promise.reject(
       new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`
-      )
+        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
+      ),
     );
   }
 
@@ -624,7 +624,7 @@ export async function getExporterDetail({
   accountId,
 }: SubmissionRef): Promise<ExporterDetail> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -634,10 +634,10 @@ export async function getExporterDetail({
 
 export async function setExporterDetail(
   { id, accountId }: SubmissionRef,
-  value: ExporterDetail
+  value: ExporterDetail,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -645,7 +645,7 @@ export async function setExporterDetail(
 
   submission.exporterDetail = setBaseExporterDetail(
     submission as SubmissionBase,
-    value
+    value,
   ).exporterDetail;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -659,7 +659,7 @@ export async function getImporterDetail({
   accountId,
 }: SubmissionRef): Promise<ImporterDetail> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
 
   if (submission === undefined) {
@@ -671,10 +671,10 @@ export async function getImporterDetail({
 
 export async function setImporterDetail(
   { id, accountId }: SubmissionRef,
-  value: ImporterDetail
+  value: ImporterDetail,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -682,7 +682,7 @@ export async function setImporterDetail(
 
   submission.importerDetail = setBaseImporterDetail(
     submission as SubmissionBase,
-    value
+    value,
   ).importerDetail;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -708,11 +708,11 @@ export async function getCollectionDate({
 
 export async function setCollectionDate(
   { id, accountId, submitted }: SubmissionTypeRef,
-  value: CollectionDate | CollectionDateData
+  value: CollectionDate | CollectionDateData,
 ): Promise<void> {
   if (!submitted) {
     const submission = db.drafts.find(
-      (s) => s.id == id && s.accountId == accountId
+      (s) => s.id == id && s.accountId == accountId,
     ) as DraftSubmission;
     if (submission === undefined) {
       return Promise.reject(new NotFoundError('Submission not found.'));
@@ -751,7 +751,7 @@ export async function setCollectionDate(
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
   } else {
     const submission = db.submissions.find(
-      (s) => s.id == id && s.accountId == accountId
+      (s) => s.id == id && s.accountId == accountId,
     ) as Submission;
     if (submission === undefined) {
       return Promise.reject(new NotFoundError('Submission not found.'));
@@ -799,7 +799,7 @@ export async function listCarriers({
   accountId,
 }: SubmissionRef): Promise<Carriers> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -810,18 +810,18 @@ export async function listCarriers({
 
 export async function createCarriers(
   { id, accountId }: SubmissionRef,
-  value: Omit<Carriers, 'transport' | 'values'>
+  value: Omit<Carriers, 'transport' | 'values'>,
 ): Promise<Carriers> {
   if (value.status !== 'Started') {
     return Promise.reject(
       new BadRequestError(
-        `"Status cannot be ${value.status} on carrier detail creation"`
-      )
+        `"Status cannot be ${value.status} on carrier detail creation"`,
+      ),
     );
   }
 
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new Error('Submission not found.'));
@@ -831,15 +831,15 @@ export async function createCarriers(
     if (submission.carriers.values.length === validation.CarrierLength.max) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${validation.CarrierLength.max} carriers`
-        )
+          `Cannot add more than ${validation.CarrierLength.max} carriers`,
+        ),
       );
     }
   }
 
   const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
     submission as SubmissionBase,
-    value
+    value,
   );
 
   submission.carriers = submissionBasePlusId.submissionBase.carriers;
@@ -856,10 +856,10 @@ export async function createCarriers(
 
 export async function getCarriers(
   { id, accountId }: SubmissionRef,
-  carrierId: string
+  carrierId: string,
 ): Promise<Carriers> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -896,10 +896,10 @@ export async function getCarriers(
 export async function setCarriers(
   { id, accountId }: SubmissionRef,
   carrierId: string,
-  value: Carriers
+  value: Carriers,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -913,7 +913,7 @@ export async function setCarriers(
     submission.carriers = setBaseNoCarriers(
       submission as SubmissionBase,
       carrierId,
-      value
+      value,
     ).carriers;
   } else {
     const carrier = value.values.find((c) => {
@@ -934,7 +934,7 @@ export async function setCarriers(
       carrierId,
       value,
       carrier,
-      index
+      index,
     ).carriers;
   }
 
@@ -946,10 +946,10 @@ export async function setCarriers(
 
 export async function deleteCarriers(
   { id, accountId }: SubmissionRef,
-  carrierId: string
+  carrierId: string,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -969,7 +969,7 @@ export async function deleteCarriers(
 
   submission.carriers = deleteBaseCarriers(
     submission as SubmissionBase,
-    carrierId
+    carrierId,
   ).carriers;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -983,7 +983,7 @@ export async function getCollectionDetail({
   accountId,
 }: SubmissionRef): Promise<CollectionDetail> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
 
   if (submission === undefined) {
@@ -995,10 +995,10 @@ export async function getCollectionDetail({
 
 export async function setCollectionDetail(
   { id, accountId }: SubmissionRef,
-  value: CollectionDetail
+  value: CollectionDetail,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1006,7 +1006,7 @@ export async function setCollectionDetail(
 
   submission.collectionDetail = setBaseCollectionDetail(
     submission as SubmissionBase,
-    value
+    value,
   ).collectionDetail;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1020,7 +1020,7 @@ export async function getExitLocation({
   accountId,
 }: SubmissionRef): Promise<ExitLocation> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1031,10 +1031,10 @@ export async function getExitLocation({
 
 export async function setExitLocation(
   { id, accountId }: SubmissionRef,
-  value: ExitLocation
+  value: ExitLocation,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1042,7 +1042,7 @@ export async function setExitLocation(
 
   submission.ukExitLocation = setBaseExitLocation(
     submission as SubmissionBase,
-    value
+    value,
   ).ukExitLocation;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1056,7 +1056,7 @@ export async function getTransitCountries({
   accountId,
 }: SubmissionRef): Promise<TransitCountries> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1067,10 +1067,10 @@ export async function getTransitCountries({
 
 export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
-  value: TransitCountries
+  value: TransitCountries,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1078,7 +1078,7 @@ export async function setTransitCountries(
 
   submission.transitCountries = setBaseTransitCountries(
     submission as SubmissionBase,
-    value
+    value,
   ).transitCountries;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1092,7 +1092,7 @@ export async function listRecoveryFacilityDetail({
   accountId,
 }: SubmissionRef): Promise<RecoveryFacilityDetail> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1103,18 +1103,18 @@ export async function listRecoveryFacilityDetail({
 
 export async function createRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  value: Omit<RecoveryFacilityDetail, 'values'>
+  value: Omit<RecoveryFacilityDetail, 'values'>,
 ): Promise<RecoveryFacilityDetail> {
   if (value.status !== 'Started') {
     return Promise.reject(
       new BadRequestError(
-        `"Status cannot be ${value.status} on recovery facility detail creation"`
-      )
+        `"Status cannot be ${value.status} on recovery facility detail creation"`,
+      ),
     );
   }
 
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1129,8 +1129,8 @@ export async function createRecoveryFacilityDetail(
     if (submission.recoveryFacilityDetail.values.length === maxFacilities) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`
-        )
+          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+        ),
       );
     }
   }
@@ -1152,10 +1152,10 @@ export async function createRecoveryFacilityDetail(
 
 export async function getRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  rfdId: string
+  rfdId: string,
 ): Promise<RecoveryFacilityDetail> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1171,7 +1171,7 @@ export async function getRecoveryFacilityDetail(
   const recoveryFacility = submission.recoveryFacilityDetail.values.find(
     (rf) => {
       return rf.id === rfdId;
-    }
+    },
   );
 
   if (recoveryFacility === undefined) {
@@ -1194,10 +1194,10 @@ export async function getRecoveryFacilityDetail(
 export async function setRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
   rfdId: string,
-  value: RecoveryFacilityDetail
+  value: RecoveryFacilityDetail,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1229,7 +1229,7 @@ export async function setRecoveryFacilityDetail(
   submission.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
     submission as SubmissionBase,
     rfdId,
-    value
+    value,
   ).recoveryFacilityDetail;
 
   if (
@@ -1247,10 +1247,10 @@ export async function setRecoveryFacilityDetail(
 
 export async function deleteRecoveryFacilityDetail(
   { id, accountId }: SubmissionRef,
-  rfdId: string
+  rfdId: string,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1272,7 +1272,7 @@ export async function deleteRecoveryFacilityDetail(
 
   submission.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
     submission as SubmissionBase,
-    rfdId
+    rfdId,
   ).recoveryFacilityDetail;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -1286,7 +1286,7 @@ export async function getSubmissionConfirmation({
   accountId,
 }: SubmissionRef): Promise<SubmissionConfirmation> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1297,10 +1297,10 @@ export async function getSubmissionConfirmation({
 
 export async function updateSubmissionConfirmation(
   { id, accountId }: SubmissionRef,
-  value: SubmissionConfirmation
+  value: SubmissionConfirmation,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1308,7 +1308,7 @@ export async function updateSubmissionConfirmation(
 
   if (submission.submissionConfirmation.status === 'CannotStart') {
     return Promise.reject(
-      new BadRequestError('SubmissionConfirmation CannotStart.')
+      new BadRequestError('SubmissionConfirmation CannotStart.'),
     );
   }
 
@@ -1331,7 +1331,7 @@ export async function getSubmissionDeclaration({
   accountId,
 }: SubmissionRef): Promise<SubmissionDeclaration> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1342,10 +1342,10 @@ export async function getSubmissionDeclaration({
 
 export async function updateSubmissionDeclaration(
   { id, accountId }: SubmissionRef,
-  value: Omit<SubmissionDeclaration, 'values'>
+  value: Omit<SubmissionDeclaration, 'values'>,
 ): Promise<void> {
   const submission = db.drafts.find(
-    (s) => s.id == id && s.accountId == accountId
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
@@ -1353,7 +1353,7 @@ export async function updateSubmissionDeclaration(
 
   if (submission.submissionDeclaration.status === 'CannotStart') {
     return Promise.reject(
-      new BadRequestError('SubmissionDeclaration CannotStart')
+      new BadRequestError('SubmissionDeclaration CannotStart'),
     );
   }
 
@@ -1407,7 +1407,7 @@ export async function updateSubmissionDeclaration(
 }
 
 export async function getNumberOfSubmissions(
-  accountId: string
+  accountId: string,
 ): Promise<NumberOfSubmissions> {
   const numberOfSubmissions: NumberOfSubmissions = {
     completedWithActuals: 0,
@@ -1417,19 +1417,19 @@ export async function getNumberOfSubmissions(
   numberOfSubmissions.incomplete = db.drafts.filter(
     (submission) =>
       submission.accountId === accountId &&
-      submission.submissionState.status === 'InProgress'
+      submission.submissionState.status === 'InProgress',
   ).length;
 
   numberOfSubmissions.completedWithEstimates = db.submissions.filter(
     (submission) =>
       submission.accountId === accountId &&
-      submission.submissionState.status === 'SubmittedWithEstimates'
+      submission.submissionState.status === 'SubmittedWithEstimates',
   ).length;
 
   numberOfSubmissions.completedWithActuals = db.submissions.filter(
     (submission) =>
       submission.accountId === accountId &&
-      submission.submissionState.status !== 'SubmittedWithEstimates'
+      submission.submissionState.status !== 'SubmittedWithEstimates',
   ).length;
   return Promise.resolve(numberOfSubmissions);
 }

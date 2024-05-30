@@ -151,14 +151,14 @@ const WasteCarriers = () => {
   const apiConfig = useApiConfig();
   const [carrierPage, dispatchCarrierPage] = useReducer(
     carrierReducer,
-    initialState
+    initialState,
   );
   const [templateId, setTemplateId] = useState(null);
   const [showTransport, setShowTransport] = useState(false);
   const [carrierIndex, setCarrierIndex] = useState(1);
   const [carrierCount, setCarrierCount] = useState<number>(0);
   const [additionalCarrier, setAdditionalCarrier] = useState<'Yes' | 'No'>(
-    null
+    null,
   );
   const [confirmRemove, setConfirmRemove] = useState(null);
 
@@ -188,7 +188,7 @@ const WasteCarriers = () => {
 
   useEffect(() => {
     const index = carrierPage.data?.values.findIndex(
-      (record) => record.id === carrierPage.carrierData?.id
+      (record) => record.id === carrierPage.carrierData?.id,
     );
     if (index !== -1) {
       setAddressDetails(carrierPage.carrierData?.addressDetails);
@@ -203,7 +203,7 @@ const WasteCarriers = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/carriers`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -228,7 +228,7 @@ const WasteCarriers = () => {
                 const emptyRecords = data.values?.filter(
                   (site) =>
                     site.addressDetails === undefined ||
-                    site.contactDetails === undefined
+                    site.contactDetails === undefined,
                 );
                 if (emptyRecords === undefined || emptyRecords.length === 0) {
                   createCarrierRecord();
@@ -284,11 +284,11 @@ const WasteCarriers = () => {
             emailAddress: validateEmail(contactDetails?.emailAddress, true),
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber,
-              true
+              true,
             ),
             faxNumber: validateInternationalFax(
               contactDetails?.faxNumber,
-              true
+              true,
             ),
           };
           body = {
@@ -322,7 +322,7 @@ const WasteCarriers = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -372,13 +372,13 @@ const WasteCarriers = () => {
         }
       }
     },
-    [addressDetails, contactDetails, carrierPage.data]
+    [addressDetails, contactDetails, carrierPage.data],
   );
 
   const handleChangeLink = (carrierId, e) => {
     e.preventDefault();
     const getRecord = carrierPage.data.values.filter(
-      (record) => record.id === carrierId
+      (record) => record.id === carrierId,
     );
     dispatchCarrierPage({
       type: 'CARRIER_DATA_UPDATE',
@@ -394,7 +394,7 @@ const WasteCarriers = () => {
   const handleRemoveLink = (carrierId, e) => {
     e.preventDefault();
     const getRecord = carrierPage.data.values.filter(
-      (record) => record.id === carrierId
+      (record) => record.id === carrierId,
     );
     dispatchCarrierPage({
       type: 'CARRIER_DATA_UPDATE',
@@ -412,7 +412,7 @@ const WasteCarriers = () => {
       const newErrors = {
         confirmRemove: validateConfirmRemove(
           confirmRemove,
-          t('exportJourney.wasteCarrierDetails.single')
+          t('exportJourney.wasteCarrierDetails.single'),
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -440,10 +440,10 @@ const WasteCarriers = () => {
               {
                 method: 'DELETE',
                 headers: apiConfig,
-              }
+              },
             ).then(() => {
               const updatedValues = carrierPage.data.values.filter(
-                (carrier) => carrier.id !== carrierPage.carrierData.id
+                (carrier) => carrier.id !== carrierPage.carrierData.id,
               );
               dispatchCarrierPage({
                 type: 'DATA_UPDATE',
@@ -465,7 +465,7 @@ const WasteCarriers = () => {
       }
       e.preventDefault();
     },
-    [confirmRemove, carrierPage.carrierData]
+    [confirmRemove, carrierPage.carrierData],
   );
 
   const handleSubmitAdditionalCarrier = (e: FormEvent) => {
@@ -473,7 +473,7 @@ const WasteCarriers = () => {
     const newErrors = {
       additionalCarrier: validateSelection(
         additionalCarrier,
-        'if you want to add another waste carrier'
+        'if you want to add another waste carrier',
       ),
     };
     if (isNotEmpty(newErrors)) {
@@ -491,7 +491,7 @@ const WasteCarriers = () => {
         setContactDetails(null);
 
         const emptyCarriers = carrierPage.data.values.filter(
-          (site) => site.addressDetails === undefined
+          (site) => site.addressDetails === undefined,
         );
         if (emptyCarriers.length === 0) {
           createCarrierRecord();
@@ -517,7 +517,7 @@ const WasteCarriers = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -817,7 +817,7 @@ const WasteCarriers = () => {
                           id={`carrier-list-item-${index + 1}`}
                           title={t(
                             'exportJourney.wasteCarrier.carriersPage.cardTitle',
-                            { n: t(`numberAdjective.${index + 1}`) }
+                            { n: t(`numberAdjective.${index + 1}`) },
                           )}
                           actions={[
                             {
@@ -868,14 +868,14 @@ const WasteCarriers = () => {
                         <GovUK.Fieldset>
                           <GovUK.Fieldset.Legend size="M">
                             {t(
-                              'exportJourney.wasteCarrier.carriersPage.question'
+                              'exportJourney.wasteCarrier.carriersPage.question',
                             )}
                           </GovUK.Fieldset.Legend>
                           <GovUK.MultiChoice
                             mb={6}
                             hint={t(
                               'exportJourney.wasteCarrier.carriersPage.hint',
-                              { n: 5 - carrierCount }
+                              { n: 5 - carrierCount },
                             )}
                             label=""
                             meta={{
@@ -918,7 +918,7 @@ const WasteCarriers = () => {
                       <>
                         <GovUK.Heading as="p" size={'MEDIUM'}>
                           {t(
-                            'exportJourney.wasteCarrier.carriersPage.noMoreCarriers'
+                            'exportJourney.wasteCarrier.carriersPage.noMoreCarriers',
                           )}
                         </GovUK.Heading>
                         <ButtonGroup>
@@ -947,7 +947,7 @@ const WasteCarriers = () => {
                       <GovUK.Fieldset>
                         <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                           {t(
-                            'exportJourney.wasteCarrier.carriersPage.removeQuestion'
+                            'exportJourney.wasteCarrier.carriersPage.removeQuestion',
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.Paragraph>

@@ -146,7 +146,7 @@ const InterimSiteDetails = () => {
   const apiConfig = useApiConfig();
   const [interimPage, dispatchInterimPage] = useReducer(
     interimReducer,
-    initialState
+    initialState,
   );
   const [refData, setRefData] = useState<codeType>();
   const [id, setId] = useState(null);
@@ -192,7 +192,7 @@ const InterimSiteDetails = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -200,7 +200,7 @@ const InterimSiteDetails = () => {
         .then((data) => {
           if (data !== undefined) {
             const filterInterimCodes = data.filter(
-              (code) => code.value.interim
+              (code) => code.value.interim,
             );
             setRefData(filterInterimCodes);
           }
@@ -217,7 +217,7 @@ const InterimSiteDetails = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -233,10 +233,10 @@ const InterimSiteDetails = () => {
               });
               if (data.values !== undefined) {
                 const interimSite = data.values.filter(
-                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite',
                 );
                 const emptyRecords = data.values.filter(
-                  (site) => site.addressDetails === undefined
+                  (site) => site.addressDetails === undefined,
                 );
 
                 if (interimSite.length > 0) {
@@ -290,7 +290,7 @@ const InterimSiteDetails = () => {
           newErrors = {
             name: validateFieldNotEmpty(
               addressDetails?.name,
-              'the interim site details'
+              'the interim site details',
             ),
             address: validateAddress(addressDetails?.address),
             country: validateCountry(addressDetails?.country),
@@ -319,7 +319,7 @@ const InterimSiteDetails = () => {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
             phoneNumber: validateInternationalPhone(
-              contactDetails?.phoneNumber
+              contactDetails?.phoneNumber,
             ),
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
@@ -339,7 +339,7 @@ const InterimSiteDetails = () => {
         case 'code':
           newErrors = {
             recoveryCode: validateRecoveryCode(
-              recoveryFacilityType?.recoveryCode
+              recoveryFacilityType?.recoveryCode,
             ),
           };
 
@@ -370,7 +370,7 @@ const InterimSiteDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -424,7 +424,7 @@ const InterimSiteDetails = () => {
       }
       e.preventDefault();
     },
-    [interimPage.data, addressDetails, contactDetails, recoveryFacilityType]
+    [interimPage.data, addressDetails, contactDetails, recoveryFacilityType],
   );
 
   const onAddressDetailsChange = (e) => {
@@ -458,7 +458,7 @@ const InterimSiteDetails = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();

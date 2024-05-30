@@ -55,7 +55,7 @@ export interface SubmissionBackend {
   getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
   setWasteDescription(
     { id }: SubmissionRef,
-    value: WasteDescription
+    value: WasteDescription,
   ): Promise<void>;
   getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
   setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
@@ -65,100 +65,103 @@ export interface SubmissionBackend {
   getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
   createCarriers(
     ref: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>,
   ): Promise<Carriers>;
   setCarriers(
     ref: SubmissionRef,
     carrerId: string,
-    value: Carriers
+    value: Carriers,
   ): Promise<void>;
   deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
   getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
   setCollectionDetail(
     ref: SubmissionRef,
-    value: CollectionDetail
+    value: CollectionDetail,
   ): Promise<void>;
   getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
   setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
   getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
   setTransitCountries(
     ref: SubmissionRef,
-    value: TransitCountries
+    value: TransitCountries,
   ): Promise<void>;
   listRecoveryFacilityDetail(
-    ref: SubmissionRef
+    ref: SubmissionRef,
   ): Promise<RecoveryFacilityDetail>;
   createRecoveryFacilityDetail(
     ref: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
+    value: Omit<RecoveryFacilityDetail, 'values'>,
   ): Promise<RecoveryFacilityDetail>;
   getRecoveryFacilityDetail(
     ref: SubmissionRef,
-    id: string
+    id: string,
   ): Promise<RecoveryFacilityDetail>;
   setRecoveryFacilityDetail(
     ref: SubmissionRef,
     id: string,
-    value: RecoveryFacilityDetail
+    value: RecoveryFacilityDetail,
   ): Promise<void>;
   deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
   createSubmission(
     accountId: string,
-    reference: CustomerReference
+    reference: CustomerReference,
   ): Promise<DraftSubmission>;
   createSubmissionFromTemplate(
     id: string,
     accountId: string,
-    reference: CustomerReference
+    reference: CustomerReference,
   ): Promise<DraftSubmission>;
   deleteSubmission(ref: SubmissionRef): Promise<void>;
   cancelSubmission(
     ref: SubmissionRef,
-    cancellationType: CancellationType
+    cancellationType: CancellationType,
   ): Promise<void>;
   getSubmissions(
     accountId: string,
     order: OrderRef,
     pageLimit?: number,
     state?: DraftSubmissionState['status'][],
-    token?: string
+    token?: string,
   ): Promise<SubmissionSummaryPage>;
   getCustomerReference(ref: SubmissionRef): Promise<CustomerReference>;
   setCustomerReference(
     ref: SubmissionRef,
-    value: CustomerReference
+    value: CustomerReference,
   ): Promise<void>;
   getWasteQuantity(
-    ref: SubmissionTypeRef
+    ref: SubmissionTypeRef,
   ): Promise<WasteQuantity | WasteQuantityData>;
   setWasteQuantity(
     ref: SubmissionTypeRef,
-    value: WasteQuantity | WasteQuantityData
+    value: WasteQuantity | WasteQuantityData,
   ): Promise<void>;
   getCollectionDate(
-    ref: SubmissionTypeRef
+    ref: SubmissionTypeRef,
   ): Promise<CollectionDate | CollectionDateData>;
   setCollectionDate(
     ref: SubmissionTypeRef,
-    value: CollectionDate | CollectionDateData
+    value: CollectionDate | CollectionDateData,
   ): Promise<void>;
   getSubmissionConfirmation(
-    ref: SubmissionRef
+    ref: SubmissionRef,
   ): Promise<SubmissionConfirmation>;
   setSubmissionConfirmation(
     ref: SubmissionRef,
-    value: SubmissionConfirmation
+    value: SubmissionConfirmation,
   ): Promise<void>;
   getSubmissionDeclaration(ref: SubmissionRef): Promise<SubmissionDeclaration>;
   setSubmissionDeclaration(
     ref: SubmissionRef,
-    value: Omit<SubmissionDeclaration, 'values'>
+    value: Omit<SubmissionDeclaration, 'values'>,
   ): Promise<void>;
   getNumberOfSubmissions(accountId: string): Promise<NumberOfSubmissions>;
 }
 
 export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
-  constructor(protected client: DaprAnnexViiClient, protected logger: Logger) {}
+  constructor(
+    protected client: DaprAnnexViiClient,
+    protected logger: Logger,
+  ) {}
 
   async getSubmission({
     id,
@@ -196,7 +199,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async createSubmission(
     accountId: string,
-    reference: CustomerReference
+    reference: CustomerReference,
   ): Promise<DraftSubmission> {
     let response: draft.CreateDraftResponse;
     try {
@@ -218,7 +221,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
   async createSubmissionFromTemplate(
     id: string,
     accountId: string,
-    reference: CustomerReference
+    reference: CustomerReference,
   ): Promise<draft.DraftSubmission> {
     let response: draft.CreateDraftResponse;
     try {
@@ -262,7 +265,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async cancelSubmission(
     { id, accountId }: SubmissionRef,
-    cancellationType: CancellationType
+    cancellationType: CancellationType,
   ): Promise<void> {
     let response: submission.CancelSubmissionResponse;
     try {
@@ -288,7 +291,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
     { order }: OrderRef,
     pageLimit?: number,
     state?: DraftSubmissionState['status'][],
-    token?: string
+    token?: string,
   ): Promise<SubmissionSummaryPage> {
     let response: draft.GetDraftsResponse | submission.GetSubmissionsResponse;
     try {
@@ -354,7 +357,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setCustomerReference(
     { id, accountId }: SubmissionRef,
-    reference: CustomerReference
+    reference: CustomerReference,
   ): Promise<void> {
     let response: draft.SetDraftCustomerReferenceResponse;
     try {
@@ -401,7 +404,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
-    value: WasteDescription
+    value: WasteDescription,
   ): Promise<void> {
     let response: draft.SetDraftWasteDescriptionResponse;
     try {
@@ -460,7 +463,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setWasteQuantity(
     { id, accountId, submitted }: SubmissionTypeRef,
-    value: WasteQuantity | WasteQuantityData
+    value: WasteQuantity | WasteQuantityData,
   ): Promise<void> {
     let response:
       | draft.SetDraftWasteQuantityResponse
@@ -517,7 +520,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setExporterDetail(
     { id, accountId }: SubmissionRef,
-    value: ExporterDetail
+    value: ExporterDetail,
   ): Promise<void> {
     let response: draft.SetDraftExporterDetailResponse;
     try {
@@ -564,7 +567,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setImporterDetail(
     { id, accountId }: SubmissionRef,
-    value: ImporterDetail
+    value: ImporterDetail,
   ): Promise<void> {
     let response: draft.SetDraftImporterDetailResponse;
     try {
@@ -623,7 +626,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setCollectionDate(
     { id, accountId, submitted }: SubmissionTypeRef,
-    value: CollectionDate | CollectionDateData
+    value: CollectionDate | CollectionDateData,
   ): Promise<void> {
     let response:
       | draft.SetDraftCollectionDateResponse
@@ -674,7 +677,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async createCarriers(
     { id, accountId }: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>,
   ): Promise<Carriers> {
     let response: draft.CreateDraftCarriersResponse;
     try {
@@ -699,7 +702,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async getCarriers(
     { id, accountId }: SubmissionRef,
-    carrierId: string
+    carrierId: string,
   ): Promise<Carriers> {
     let response: draft.GetDraftCarriersResponse;
     try {
@@ -725,7 +728,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
   async setCarriers(
     { id, accountId }: SubmissionRef,
     carrierId: string,
-    value: Carriers
+    value: Carriers,
   ): Promise<void> {
     if (value.status !== 'NotStarted') {
       for (const c of value.values) {
@@ -755,7 +758,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async deleteCarriers(
     { id, accountId }: SubmissionRef,
-    carrierId: string
+    carrierId: string,
   ): Promise<void> {
     let response: draft.DeleteDraftCarriersResponse;
     try {
@@ -802,7 +805,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setCollectionDetail(
     { id, accountId }: SubmissionRef,
-    value: CollectionDetail
+    value: CollectionDetail,
   ): Promise<void> {
     let response: draft.SetDraftCollectionDetailResponse;
     try {
@@ -849,7 +852,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: ExitLocation
+    value: ExitLocation,
   ): Promise<void> {
     let response: draft.SetDraftUkExitLocationResponse;
     try {
@@ -896,7 +899,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: TransitCountries
+    value: TransitCountries,
   ): Promise<void> {
     let response: draft.SetDraftTransitCountriesResponse;
     try {
@@ -943,7 +946,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async createRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
+    value: Omit<RecoveryFacilityDetail, 'values'>,
   ): Promise<RecoveryFacilityDetail> {
     let response: draft.CreateDraftRecoveryFacilityDetailsResponse;
     try {
@@ -968,7 +971,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async getRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    rfdId: string
+    rfdId: string,
   ): Promise<RecoveryFacilityDetail> {
     let response: draft.GetDraftRecoveryFacilityDetailsResponse;
     try {
@@ -994,7 +997,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
   async setRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
     rfdId: string,
-    value: RecoveryFacilityDetail
+    value: RecoveryFacilityDetail,
   ): Promise<void> {
     if (value.status === 'Started' || value.status === 'Complete') {
       for (const c of value.values) {
@@ -1024,7 +1027,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async deleteRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    rfdId: string
+    rfdId: string,
   ): Promise<void> {
     let response: draft.DeleteDraftRecoveryFacilityDetailsResponse;
     try {
@@ -1071,7 +1074,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setSubmissionConfirmation(
     { id, accountId }: SubmissionRef,
-    value: SubmissionConfirmation
+    value: SubmissionConfirmation,
   ): Promise<void> {
     let response: draft.SetDraftSubmissionConfirmationResponse;
     try {
@@ -1118,7 +1121,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
 
   async setSubmissionDeclaration(
     { id, accountId }: SubmissionRef,
-    value: Omit<SubmissionDeclaration, 'values'>
+    value: Omit<SubmissionDeclaration, 'values'>,
   ): Promise<void> {
     let response: draft.SetDraftSubmissionDeclarationResponse;
     try {
@@ -1140,7 +1143,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
   }
 
   async getNumberOfSubmissions(
-    accountId: string
+    accountId: string,
   ): Promise<NumberOfSubmissions> {
     let response: submission.GetNumberOfSubmissionsResponse;
     try {

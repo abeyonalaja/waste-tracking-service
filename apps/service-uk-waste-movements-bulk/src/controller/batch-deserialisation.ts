@@ -10,17 +10,17 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const addContentToBatchRequest = ajv.compile<AddContentToBatchRequest>(
-  schema.addContentToBatchRequest
+  schema.addContentToBatchRequest,
 );
 
 export const getBatchRequest = ajv.compileParser<GetBatchRequest>(
-  schema.getBatchRequest
+  schema.getBatchRequest,
 );
 
 export const finalizeBatchRequest = ajv.compileParser<FinalizeBatchRequest>(
-  schema.finalizeBatchRequest
+  schema.finalizeBatchRequest,
 );
 
 export const downloadCsvRequest = ajv.compile<DownloadBatchRequest>(
-  schema.downloadCsvRequest
+  schema.downloadCsvRequest,
 );

@@ -37,7 +37,7 @@ describe(JwtTokenValidator, () => {
 
     expect(result.payload.content).toBe('UKWM');
     expect(result.payload.participantId).toBe(
-      '3f0f5461-234d-49a8-b17f-4de57b380d91'
+      '3f0f5461-234d-49a8-b17f-4de57b380d91',
     );
   });
 
@@ -62,7 +62,7 @@ describe(JwtTokenValidator, () => {
 
     expect(result.payload.content).toBe('UKWM');
     expect(result.payload.participantId).toBe(
-      '3f0f5461-234d-49a8-b17f-4de57b380d91'
+      '3f0f5461-234d-49a8-b17f-4de57b380d91',
     );
   });
 });

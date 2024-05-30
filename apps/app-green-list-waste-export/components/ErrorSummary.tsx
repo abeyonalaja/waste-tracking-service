@@ -47,7 +47,7 @@ export interface ErrorSummaryProps {
 const handleJumpToError = (targetName?: string, e?) => {
   e.preventDefault();
   const targetElement = document.querySelector(
-    `[name="${targetName}"]`
+    `[name="${targetName}"]`,
   ) as HTMLInputElement;
   if (targetElement) {
     targetElement.focus();
@@ -81,7 +81,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
                     {error.text}
                   </AppLink>
                 </ListItem>
-              )
+              ),
           )}
         </UnorderedList>
       )}

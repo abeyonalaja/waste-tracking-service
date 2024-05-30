@@ -24,7 +24,7 @@ export function DownloadCSVLink({
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
       .then((res) => res.blob())
       .then((blob) => {

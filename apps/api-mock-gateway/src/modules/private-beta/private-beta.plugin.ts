@@ -30,7 +30,7 @@ export default class PrivateBetaPlugin {
   constructor(
     private server: Application,
     private prefix: string,
-    private backend: Backend
+    private backend: Backend,
   ) {}
 
   async register(): Promise<void> {
@@ -43,14 +43,14 @@ export default class PrivateBetaPlugin {
         return res
           .status(400)
           .json(
-            new BadRequestError("Missing query parameter: 'invitationToken'")
+            new BadRequestError("Missing query parameter: 'invitationToken'"),
           );
       }
       const user = req.user as User;
       try {
         await this.backend.addUser(
           user.credentials.subjectId as string,
-          invitationToken
+          invitationToken,
         );
         return res.status(201);
       } catch (err) {

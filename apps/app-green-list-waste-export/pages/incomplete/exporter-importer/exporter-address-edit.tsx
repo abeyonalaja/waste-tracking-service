@@ -70,7 +70,7 @@ const ExporterAddressEdit = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exporter-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -136,7 +136,7 @@ const ExporterAddressEdit = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -157,7 +157,7 @@ const ExporterAddressEdit = () => {
         }
       }
     },
-    [townCity, country, address, data, address2, postcode, id, router]
+    [townCity, country, address, data, address2, postcode, id, router],
   );
 
   const BreadCrumbs = () => {

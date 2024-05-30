@@ -17,7 +17,7 @@ const mockRepository = {
 describe(ReferenceDataController, () => {
   const subject = new ReferenceDataController(
     mockRepository as unknown as ReferenceDataRepository,
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {
@@ -146,7 +146,7 @@ describe(ReferenceDataController, () => {
 
       expect(response.value[0].name).toEqual('Afghanistan [AF]');
       expect(response.value[1].name).toEqual(
-        'United Kingdom (England) [GB-ENG]'
+        'United Kingdom (England) [GB-ENG]',
       );
 
       mockRepository.getList.mockResolvedValueOnce(valueWithoutUK);

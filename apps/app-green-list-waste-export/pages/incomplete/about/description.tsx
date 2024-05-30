@@ -91,7 +91,7 @@ const Description = () => {
 
   const [describeWastePage, dispatchDescribeWastePage] = useReducer(
     describeWasteReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
 
   const [id, setId] = useState(null);
@@ -112,7 +112,7 @@ const Description = () => {
       if (id !== null) {
         fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/waste-description`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -166,7 +166,7 @@ const Description = () => {
                 ...describeWastePage.data,
                 status: 'Complete',
               }),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -187,7 +187,7 @@ const Description = () => {
         }
       }
     },
-    [id, describeWastePage.data, router]
+    [id, describeWastePage.data, router],
   );
 
   const BreadCrumbs = () => {

@@ -128,7 +128,7 @@ const IncompleteAnnex7 = () => {
   const router = useRouter();
   const [incompleteAnnex7Page, dispatchIncompleteAnnex7Page] = useReducer(
     incompleteAnnex7Reducer,
-    initialPageState
+    initialPageState,
   );
 
   const [item, setItem] = useState(null);
@@ -233,7 +233,7 @@ const IncompleteAnnex7 = () => {
             {
               method: 'DELETE',
               headers: apiConfig,
-            }
+            },
           ).then(() => {
             const newData = incompleteAnnex7Page.data;
             newData.values = newData.values.filter((wc) => wc.id !== item.id);
@@ -318,10 +318,10 @@ const IncompleteAnnex7 = () => {
                           headingText={
                             item.reference === null
                               ? t(
-                                  'exportJourney.incompleteAnnexSeven.delete.notification'
+                                  'exportJourney.incompleteAnnexSeven.delete.notification',
                                 )
                               : `${item.reference} ${t(
-                                  'exportJourney.incompleteAnnexSeven.delete.notificationRef'
+                                  'exportJourney.incompleteAnnexSeven.delete.notificationRef',
                                 )}`
                           }
                         />
@@ -341,7 +341,7 @@ const IncompleteAnnex7 = () => {
                   <>
                     <GovUK.Heading size="SMALL">
                       {t(
-                        'exportJourney.incompleteAnnexSeven.notResultsMessage'
+                        'exportJourney.incompleteAnnexSeven.notResultsMessage',
                       )}
                     </GovUK.Heading>
                   </>
@@ -354,7 +354,7 @@ const IncompleteAnnex7 = () => {
                           id="table-header-your-own-ref"
                         >
                           {t(
-                            'exportJourney.updateAnnexSeven.table.yourOwnReference'
+                            'exportJourney.updateAnnexSeven.table.yourOwnReference',
                           )}
                         </TableHeader>
 
@@ -406,7 +406,7 @@ const IncompleteAnnex7 = () => {
                                       {getRefData(
                                         'WasteCode',
                                         item.wasteDescription?.wasteCode.code,
-                                        item.wasteDescription?.wasteCode.type
+                                        item.wasteDescription?.wasteCode.type,
                                       )}
                                     </>
                                   )}
@@ -414,7 +414,7 @@ const IncompleteAnnex7 = () => {
                                   'NotApplicable' && (
                                   <span id="waste-code-not-provided">
                                     {t(
-                                      'exportJourney.updateAnnexSeven.notApplicable'
+                                      'exportJourney.updateAnnexSeven.notApplicable',
                                     )}
                                   </span>
                                 )}
@@ -469,7 +469,7 @@ const IncompleteAnnex7 = () => {
                             (key) => ({
                               targetName: key,
                               text: incompleteAnnex7Page.errors[key],
-                            })
+                            }),
                           )}
                         />
                       )}

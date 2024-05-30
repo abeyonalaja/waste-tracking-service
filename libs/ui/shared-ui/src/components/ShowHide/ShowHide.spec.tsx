@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { ShowHide } from './ShowHide';
 
 describe('Show/Hide component', () => {
@@ -8,7 +8,7 @@ describe('Show/Hide component', () => {
     render(
       <ShowHide id="test-id">
         <div>Child content</div>
-      </ShowHide>
+      </ShowHide>,
     );
     const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe('Show/Hide component', () => {
     render(
       <ShowHide id="test-id">
         <div>Child content</div>
-      </ShowHide>
+      </ShowHide>,
     );
 
     const button = screen.getByRole('button');
@@ -39,7 +39,7 @@ describe('Show/Hide component', () => {
     render(
       <ShowHide id="test-id">
         <div>Child content</div>
-      </ShowHide>
+      </ShowHide>,
     );
 
     const button = screen.getByRole('button');
@@ -59,7 +59,7 @@ describe('Show/Hide component', () => {
     render(
       <ShowHide id="test-id">
         <div>Child content</div>
-      </ShowHide>
+      </ShowHide>,
     );
 
     const chevron = screen

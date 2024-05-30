@@ -23,7 +23,7 @@ const authMiddleware = withAuth((req) => intlMiddleware(req), {
 export default function middleware(req: NextRequest): any {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages.join('|')})/?$`,
-    'i'
+    'i',
   );
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
   if (isPublicPage) {

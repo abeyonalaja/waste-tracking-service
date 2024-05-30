@@ -15,7 +15,7 @@ global.fetch = jest.fn(() =>
         { name: 'Andorra(AD)' },
         { name: 'Angola(AO)' },
       ]),
-  })
+  }),
 );
 
 const defaultProps = {

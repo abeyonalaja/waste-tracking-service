@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('Input field with suffix', () => {
@@ -26,7 +26,7 @@ describe('Input field with suffix', () => {
 
   it('renders the label and suffix correctly', () => {
     const { getByText, getByTestId } = render(
-      <InputWithSuffix {...defaultProps} />
+      <InputWithSuffix {...defaultProps} />,
     );
     expect(getByText('Input label')).toBeInTheDocument();
     expect(getByTestId('testId')).toHaveTextContent('suffix');
@@ -34,7 +34,7 @@ describe('Input field with suffix', () => {
 
   it('renders the hint text correctly', () => {
     const { getByText } = render(
-      <InputWithSuffix {...defaultProps} hint="Hint text" />
+      <InputWithSuffix {...defaultProps} hint="Hint text" />,
     );
     expect(getByText('Hint text')).toBeInTheDocument();
   });
@@ -42,7 +42,7 @@ describe('Input field with suffix', () => {
   it('calls the onChange function when the input value changes', () => {
     const handleChange = jest.fn();
     const { getByLabelText } = render(
-      <InputWithSuffix {...defaultProps} onChange={handleChange} />
+      <InputWithSuffix {...defaultProps} onChange={handleChange} />,
     );
     const input = getByLabelText('Input label');
     fireEvent.change(input, { target: { value: 'new value' } });

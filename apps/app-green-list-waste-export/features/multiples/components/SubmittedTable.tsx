@@ -98,7 +98,7 @@ export function SubmittedTable({
                       {getRefData(
                         'WasteCode',
                         transaction.wasteDescription.wasteCode.code,
-                        transaction.wasteDescription.wasteCode.type
+                        transaction.wasteDescription.wasteCode.type,
                       )}
                     </>
                   )}

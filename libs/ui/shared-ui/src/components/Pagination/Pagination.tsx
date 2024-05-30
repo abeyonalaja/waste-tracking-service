@@ -38,7 +38,7 @@ export function Pagination({
                 window.history.pushState(
                   {},
                   '',
-                  `${pathname}?${updateSearchParamsPage(currentPage - 1)}`
+                  `${pathname}?${updateSearchParamsPage(currentPage - 1)}`,
                 );
               }}
             >
@@ -91,7 +91,7 @@ export function Pagination({
                       window.history.pushState(
                         {},
                         '',
-                        `${pathname}?${updateSearchParamsPage(Number(page))}`
+                        `${pathname}?${updateSearchParamsPage(Number(page))}`,
                       );
                     }}
                   >
@@ -113,7 +113,7 @@ export function Pagination({
                 window.history.pushState(
                   {},
                   '',
-                  `${pathname}?${updateSearchParamsPage(currentPage + 1)}`
+                  `${pathname}?${updateSearchParamsPage(currentPage + 1)}`,
                 );
               }}
             >

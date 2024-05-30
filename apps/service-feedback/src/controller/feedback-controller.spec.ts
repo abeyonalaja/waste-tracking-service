@@ -15,7 +15,7 @@ const mockFeedbackClient = {
   sendFeedback:
     jest.fn<
       (
-        sendFeedbackRequest: SendFeedbackRequest
+        sendFeedbackRequest: SendFeedbackRequest,
       ) => Promise<SendFeedbackResponse>
     >(),
 };

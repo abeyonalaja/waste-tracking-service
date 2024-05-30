@@ -15,7 +15,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ data: {} }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 global.fetch = jest.fn(
@@ -23,7 +23,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('SubmissionDeclaration component', () => {
@@ -49,7 +49,7 @@ describe('SubmissionDeclaration component', () => {
     });
 
     const banner = screen.getByText(
-      "You'll need to update any estimated details in your records with actual details as soon possible after submitting."
+      "You'll need to update any estimated details in your records with actual details as soon possible after submitting.",
     );
 
     expect(banner).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe('SubmissionDeclaration component', () => {
     });
 
     const banner = screen.queryByText(
-      "You'll need to update any estimated details in your records with actual details as soon possible after submitting."
+      "You'll need to update any estimated details in your records with actual details as soon possible after submitting.",
     );
 
     expect(banner).not.toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('SubmissionDeclaration component', () => {
     });
 
     const effectiveText = screen.getByText(
-      'there are effective written contractual obligations with the consignees'
+      'there are effective written contractual obligations with the consignees',
     );
 
     expect(effectiveText).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('SubmissionDeclaration component', () => {
     });
 
     const effectiveText = screen.queryByText(
-      'there are effective written contractual obligations with the consignees'
+      'there are effective written contractual obligations with the consignees',
     );
 
     expect(effectiveText).not.toBeInTheDocument();

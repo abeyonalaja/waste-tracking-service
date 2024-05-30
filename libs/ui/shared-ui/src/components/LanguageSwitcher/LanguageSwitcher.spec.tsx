@@ -32,7 +32,7 @@ describe('Language Switcher component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
   });
 
@@ -40,7 +40,7 @@ describe('Language Switcher component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('Language Switcher component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const welshLink = screen.getByRole('link', { name: /Cymraeg/i });
@@ -61,7 +61,7 @@ describe('Language Switcher component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const englishLink = screen.getByRole('link', { name: /English/i });
@@ -72,7 +72,7 @@ describe('Language Switcher component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const englishLink = screen.getByRole('link', { name: /english/i });

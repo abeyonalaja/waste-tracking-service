@@ -4,13 +4,13 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const checkParticipationRequest = ajv.compileParser(
-  schema.checkParticipationRequest
+  schema.checkParticipationRequest,
 );
 
 export const redeemInvitationRequest = ajv.compileParser(
-  schema.redeemInvitationRequest
+  schema.redeemInvitationRequest,
 );
 
 export const addParticipantRequest = ajv.compileParser(
-  schema.addParticipantRequest
+  schema.addParticipantRequest,
 );

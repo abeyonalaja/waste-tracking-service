@@ -39,7 +39,7 @@ global.fetch = jest.fn(
             },
           ],
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Waste carrier transport means page', () => {
@@ -69,7 +69,7 @@ describe('Waste carrier transport means page', () => {
     });
 
     const errorMessage = screen.getAllByText(
-      'Select how the first waste carrier will transport the waste'
+      'Select how the first waste carrier will transport the waste',
     )[0];
     expect(errorMessage).toBeTruthy();
   });

@@ -25,7 +25,7 @@ const ajv = new Ajv();
 
 describe('addContentToBatchRequest', () => {
   const validate = ajv.compile<AddContentToBatchRequest>(
-    addContentToBatchRequest
+    addContentToBatchRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -56,7 +56,7 @@ describe('addContentToBatchRequest', () => {
 
 describe('addContentToBatchResponse', () => {
   const validate = ajv.compile<AddContentToBatchResponse>(
-    addContentToBatchResponse
+    addContentToBatchResponse,
   );
 
   it('is compatible with dto values', () => {
@@ -613,7 +613,7 @@ describe('getBatchContentRequest', () => {
 
 describe('getBatchContentResponse', () => {
   const validate = ajv.compile<GetBatchContentResponse>(
-    getBatchContentResponse
+    getBatchContentResponse,
   );
 
   it('is compatible with dto value', () => {

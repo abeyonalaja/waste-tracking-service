@@ -142,7 +142,7 @@ const UpdateAnnex7 = () => {
   const router = useRouter();
   const [updateAnnex7Page, dispatchUpdateAnnex7Page] = useReducer(
     updateAnnex7Reducer,
-    initialPageState
+    initialPageState,
   );
   const [item, setItem] = useState(null);
   const [type, setType] = useState(null);
@@ -242,7 +242,7 @@ const UpdateAnnex7 = () => {
             method: 'PUT',
             headers: apiConfig,
             body: JSON.stringify(body),
-          }
+          },
         ).then(() => {
           const newData = updateAnnex7Page.data;
           newData.values = newData.values.filter((wc) => wc.id !== item.id);
@@ -319,10 +319,10 @@ const UpdateAnnex7 = () => {
                           headingText={
                             item.reference === null
                               ? t(
-                                  'exportJourney.updateAnnexSeven.delete.notification'
+                                  'exportJourney.updateAnnexSeven.delete.notification',
                                 )
                               : `${item.reference} ${t(
-                                  'exportJourney.updateAnnexSeven.delete.notificationRef'
+                                  'exportJourney.updateAnnexSeven.delete.notificationRef',
                                 )}`
                           }
                         />
@@ -345,7 +345,7 @@ const UpdateAnnex7 = () => {
                       <>
                         <GovUK.Heading size="SMALL">
                           {t(
-                            'exportJourney.updateAnnexSeven.notResultsMessage'
+                            'exportJourney.updateAnnexSeven.notResultsMessage',
                           )}
                         </GovUK.Heading>
                       </>
@@ -358,7 +358,7 @@ const UpdateAnnex7 = () => {
                               scope="col"
                             >
                               {t(
-                                'exportJourney.updateAnnexSeven.table.transactionNumber'
+                                'exportJourney.updateAnnexSeven.table.transactionNumber',
                               )}
                             </TableHeader>
 
@@ -368,7 +368,7 @@ const UpdateAnnex7 = () => {
                               scope="col"
                             >
                               {t(
-                                'exportJourney.updateAnnexSeven.table.submitted'
+                                'exportJourney.updateAnnexSeven.table.submitted',
                               )}
                             </TableHeader>
 
@@ -378,7 +378,7 @@ const UpdateAnnex7 = () => {
                               scope="col"
                             >
                               {t(
-                                'exportJourney.updateAnnexSeven.table.wasteCode'
+                                'exportJourney.updateAnnexSeven.table.wasteCode',
                               )}
                             </TableHeader>
 
@@ -388,13 +388,13 @@ const UpdateAnnex7 = () => {
                               scope="col"
                             >
                               {t(
-                                'exportJourney.updateAnnexSeven.table.yourOwnReference'
+                                'exportJourney.updateAnnexSeven.table.yourOwnReference',
                               )}
                             </TableHeader>
 
                             <TableHeader id="table-header-actions" scope="col">
                               {t(
-                                'exportJourney.updateAnnexSeven.table.actions'
+                                'exportJourney.updateAnnexSeven.table.actions',
                               )}
                             </TableHeader>
                           </GovUK.Table.Row>
@@ -429,7 +429,7 @@ const UpdateAnnex7 = () => {
                                         {getRefData(
                                           'WasteCode',
                                           item.wasteDescription?.wasteCode.code,
-                                          item.wasteDescription?.wasteCode.type
+                                          item.wasteDescription?.wasteCode.type,
                                         )}
                                       </>
                                     )}
@@ -437,7 +437,7 @@ const UpdateAnnex7 = () => {
                                       'NotApplicable' && (
                                       <span id="waste-code-not-provided">
                                         {t(
-                                          'exportJourney.updateAnnexSeven.notApplicable'
+                                          'exportJourney.updateAnnexSeven.notApplicable',
                                         )}
                                       </span>
                                     )}
@@ -452,7 +452,7 @@ const UpdateAnnex7 = () => {
                                 {!item.reference && (
                                   <span id="your-reference-not-provided">
                                     {t(
-                                      'exportJourney.checkAnswers.notProvided'
+                                      'exportJourney.checkAnswers.notProvided',
                                     )}
                                   </span>
                                 )}
@@ -506,7 +506,7 @@ const UpdateAnnex7 = () => {
                             (key) => ({
                               targetName: key,
                               text: updateAnnex7Page.errors[key],
-                            })
+                            }),
                           )}
                         />
                       )}
@@ -575,7 +575,7 @@ const UpdateAnnex7 = () => {
                             >
                               <GovUK.LabelText>
                                 {t(
-                                  'exportJourney.updateAnnexSeven.delete.q3.additionalText'
+                                  'exportJourney.updateAnnexSeven.delete.q3.additionalText',
                                 )}
                               </GovUK.LabelText>
                             </TextareaCharCount>

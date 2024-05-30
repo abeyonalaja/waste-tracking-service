@@ -46,7 +46,7 @@ const WasteCode = () => {
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
-            { headers: apiConfig }
+            { headers: apiConfig },
           )
             .then((response) => {
               setIsLoading(false);
@@ -129,7 +129,7 @@ const WasteCode = () => {
         }
       }
     },
-    [wasteCodeCategory, templateId, router, url, data]
+    [wasteCodeCategory, templateId, router, url, data],
   );
 
   const BreadCrumbs = () => {

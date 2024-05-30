@@ -12,7 +12,7 @@ export interface Participant {
 
 export function createToken(
   participant: Participant,
-  privateKey: PrivateKey
+  privateKey: PrivateKey,
 ): string {
   return sign({ cohort: participant.cohort }, privateKey.content, {
     algorithm: 'RS256',

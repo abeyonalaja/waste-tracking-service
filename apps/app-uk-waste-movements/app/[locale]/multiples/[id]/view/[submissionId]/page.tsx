@@ -32,7 +32,7 @@ export default async function SingleRecord({
     hostname,
     params.id,
     process.env['NODE_ENV'] === 'production' ? params.submissionId : '123',
-    token!
+    token!,
   );
   const submission: UkwmDraftSubmission = await response.json();
   return (

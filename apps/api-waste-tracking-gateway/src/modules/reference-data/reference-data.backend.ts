@@ -27,7 +27,7 @@ export interface ReferenceDataBackend {
 export class ReferenceDataServiceBackend implements ReferenceDataBackend {
   constructor(
     private client: DaprReferenceDataClient,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   async listWasteCodes(): Promise<api.ListWasteCodesResponse> {
@@ -48,7 +48,7 @@ export class ReferenceDataServiceBackend implements ReferenceDataBackend {
   }
 
   async listEWCCodes(
-    includeHazardous?: boolean
+    includeHazardous?: boolean,
   ): Promise<api.ListEWCCodesResponse> {
     let response: GetEWCCodesResponse;
     try {

@@ -283,7 +283,7 @@ describe('deleteDraftRequest', () => {
 
 describe('setDraftCustomerReferenceResponse', () => {
   const validate = ajv.compile<SetDraftCustomerReferenceResponse>(
-    setDraftCustomerReferenceResponse
+    setDraftCustomerReferenceResponse,
   );
 
   it('is compatible with dto value', () => {
@@ -298,7 +298,7 @@ describe('setDraftCustomerReferenceResponse', () => {
 
 describe('setDraftWasteQuantityRequest', () => {
   const validate = ajv.compile<SetDraftWasteQuantityRequest>(
-    setDraftWasteQuantityRequest
+    setDraftWasteQuantityRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -343,7 +343,7 @@ describe('setDraftWasteQuantityRequest', () => {
 
 describe('setDraftCollectionDateRequest', () => {
   const validate = ajv.compile<SetDraftCollectionDateRequest>(
-    setDraftCollectionDateRequest
+    setDraftCollectionDateRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -378,7 +378,7 @@ describe('setDraftCollectionDateRequest', () => {
 
 describe('listDraftCarriersResponse', () => {
   const validate = ajv.compile<ListDraftCarriersResponse>(
-    listDraftCarriersResponse
+    listDraftCarriersResponse,
   );
 
   it('is compatible with success value', () => {
@@ -426,7 +426,7 @@ describe('listDraftCarriersResponse', () => {
 
 describe('createDraftCarriersRequest', () => {
   const validate = ajv.compile<CreateDraftCarriersRequest>(
-    createDraftCarriersRequest
+    createDraftCarriersRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -444,7 +444,7 @@ describe('createDraftCarriersRequest', () => {
 
 describe('setDraftCarrierRequest', () => {
   const validate = ajv.compile<SetDraftCarriersRequest>(
-    setDraftCarriersRequest
+    setDraftCarriersRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -523,7 +523,7 @@ describe('setDraftCarrierRequest', () => {
 
 describe('deleteDraftCarrierRequest', () => {
   const validate = ajv.compile<DeleteDraftCarriersRequest>(
-    deleteDraftCarriersRequest
+    deleteDraftCarriersRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -539,7 +539,7 @@ describe('deleteDraftCarrierRequest', () => {
 
 describe('setDraftExitLocationRequest', () => {
   const validate = ajv.compile<SetDraftUkExitLocationRequest>(
-    setDraftUkExitLocationRequest
+    setDraftUkExitLocationRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -574,7 +574,7 @@ describe('setDraftExitLocationRequest', () => {
 
 describe('setDraftTransitCountriesRequest', () => {
   const validate = ajv.compile<SetDraftTransitCountriesRequest>(
-    setDraftTransitCountriesRequest
+    setDraftTransitCountriesRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -613,7 +613,7 @@ describe('setDraftTransitCountriesRequest', () => {
 
 describe('listDraftRecoveryFacilityDetailsResponse', () => {
   const validate = ajv.compile<ListDraftRecoveryFacilityDetailsResponse>(
-    listDraftRecoveryFacilityDetailsResponse
+    listDraftRecoveryFacilityDetailsResponse,
   );
 
   it('is compatible with success value', () => {
@@ -660,7 +660,7 @@ describe('listDraftRecoveryFacilityDetailsResponse', () => {
 
 describe('createDraftRecoveryFacilityDetailsRequest', () => {
   const validate = ajv.compile<CreateDraftRecoveryFacilityDetailsRequest>(
-    createDraftRecoveryFacilityDetailsRequest
+    createDraftRecoveryFacilityDetailsRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -678,7 +678,7 @@ describe('createDraftRecoveryFacilityDetailsRequest', () => {
 
 describe('setDraftRecoveryFacilityDetailsRequest', () => {
   const validate = ajv.compile<SetDraftRecoveryFacilityDetailsRequest>(
-    setDraftRecoveryFacilityDetailsRequest
+    setDraftRecoveryFacilityDetailsRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -757,7 +757,7 @@ describe('setDraftRecoveryFacilityDetailsRequest', () => {
 
 describe('deleteDraftRecoveryFacilityDetailsRequest', () => {
   const validate = ajv.compile<DeleteDraftRecoveryFacilityDetailsRequest>(
-    deleteDraftRecoveryFacilityDetailsRequest
+    deleteDraftRecoveryFacilityDetailsRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -773,7 +773,7 @@ describe('deleteDraftRecoveryFacilityDetailsRequest', () => {
 
 describe('setDraftSubmissionConfirmationRequest', () => {
   const validate = ajv.compile<SetDraftSubmissionConfirmationRequest>(
-    setDraftSubmissionConfirmationRequest
+    setDraftSubmissionConfirmationRequest,
   );
 
   it('is compatible with dto values', () => {
@@ -812,7 +812,7 @@ describe('setDraftSubmissionConfirmationRequest', () => {
 
 describe('setDraftSubmissionDeclarationRequest', () => {
   const validate = ajv.compile<SetDraftSubmissionDeclarationRequest>(
-    setDraftSubmissionDeclarationRequest
+    setDraftSubmissionDeclarationRequest,
   );
 
   it('is compatible with dto values', () => {

@@ -38,7 +38,7 @@ const server = new DaprServer({
 
 const aadCredentials = new ChainedTokenCredential(
   new AzureCliCredential(),
-  new WorkloadIdentityCredential()
+  new WorkloadIdentityCredential(),
 );
 
 const referenceDataController = new ReferenceDataController(
@@ -50,9 +50,9 @@ const referenceDataController = new ReferenceDataController(
     process.env['COSMOS_DATABASE_NAME'] || 'waste-information',
     process.env['COSMOS_CONTAINER_NAME'] || 'reference-data',
     new LRUCache({ ttl: 1000 * 60 * 60, max: 7 }),
-    logger
+    logger,
   ),
-  logger
+  logger,
 );
 
 await server.invoker.listen(
@@ -60,7 +60,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getWasteCodes(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -75,7 +75,7 @@ await server.invoker.listen(
     }
     return await referenceDataController.getEWCCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -92,7 +92,7 @@ await server.invoker.listen(
 
     return await referenceDataController.getCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -100,7 +100,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getRecoveryCodes(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -108,7 +108,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getDisposalCodes(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -116,7 +116,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getHazardousCodes(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -124,7 +124,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getPops(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -132,7 +132,7 @@ await server.invoker.listen(
   async () => {
     return await referenceDataController.getLocalAuthorities(null);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -149,7 +149,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createWasteCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -166,7 +166,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createEWCCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -183,7 +183,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -200,7 +200,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createRecoveryCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -217,7 +217,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createDisposalCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -234,7 +234,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createHazardousCodes(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -251,7 +251,7 @@ await server.invoker.listen(
 
     return await referenceDataController.createPops(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.start();

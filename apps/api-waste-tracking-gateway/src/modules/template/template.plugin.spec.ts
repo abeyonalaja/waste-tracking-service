@@ -23,7 +23,7 @@ const mockBackend = {
       templateDetails: {
         name: string;
         description: string;
-      }
+      },
     ) => Promise<Template>
   >(),
   createTemplateFromSubmission: jest.fn<
@@ -33,7 +33,7 @@ const mockBackend = {
       templateDetails: {
         name: string;
         description: string;
-      }
+      },
     ) => Promise<Template>
   >(),
   createTemplateFromTemplate: jest.fn<
@@ -43,7 +43,7 @@ const mockBackend = {
       templateDetails: {
         name: string;
         description: string;
-      }
+      },
     ) => Promise<Template>
   >(),
   getTemplate: jest.fn<(ref: TemplateRef) => Promise<Template>>(),
@@ -54,7 +54,7 @@ const mockBackend = {
         accountId: string,
         order: OrderRef,
         pageLimit?: number,
-        token?: string
+        token?: string,
       ) => Promise<TemplateSummaryPage>
     >(),
   getNumberOfTemplates: jest.fn<(accountId: string) => Promise<number>>(),

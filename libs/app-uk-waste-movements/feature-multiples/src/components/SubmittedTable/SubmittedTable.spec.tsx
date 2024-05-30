@@ -72,7 +72,7 @@ describe('SubmittedTable component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const idOne = screen.getByText(/WM2405_01/);
@@ -90,7 +90,7 @@ describe('SubmittedTable component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const collectionDate = screen.getByText(/01\s*\/\s*01\s*\/\s*2024/s);
@@ -104,7 +104,7 @@ describe('SubmittedTable component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const ewcCodeOne = screen.getByText('150101');
@@ -118,7 +118,7 @@ describe('SubmittedTable component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const producerName = screen.getByText('Test Producer 1');
@@ -132,7 +132,7 @@ describe('SubmittedTable component', () => {
     render(
       <NextIntlClientProvider locale="en">
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const viewLinks = screen.getAllByRole('link', { name: 'View' });

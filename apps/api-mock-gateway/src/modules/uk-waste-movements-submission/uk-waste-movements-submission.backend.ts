@@ -114,13 +114,13 @@ export function getDrafts(
   collectionDate?: Date,
   ewcCode?: string,
   producerName?: string,
-  wasteMovementId?: string
+  wasteMovementId?: string,
 ): UkwmGetDraftsResult {
   let filteredSubmissions = submissions;
 
   if (wasteMovementId) {
     filteredSubmissions = filteredSubmissions.filter(
-      (s) => s.transactionId === wasteMovementId
+      (s) => s.transactionId === wasteMovementId,
     );
   }
 
@@ -132,25 +132,25 @@ export function getDrafts(
         s.wasteCollection.expectedWasteCollectionDate.month ===
           (collectionDate.getMonth() + 1).toString() &&
         s.wasteCollection.expectedWasteCollectionDate.year ===
-          collectionDate.getFullYear().toString()
+          collectionDate.getFullYear().toString(),
     );
   }
 
   if (ewcCode) {
     filteredSubmissions = filteredSubmissions.filter((s) =>
-      s.wasteTypes.some((wt) => wt.ewcCode === ewcCode)
+      s.wasteTypes.some((wt) => wt.ewcCode === ewcCode),
     );
   }
 
   if (producerName) {
     filteredSubmissions = filteredSubmissions.filter((s) =>
-      s.producer.contact.organisationName.includes(producerName)
+      s.producer.contact.organisationName.includes(producerName),
     );
   }
 
   const pagedSubmissions = filteredSubmissions.slice(
     (page - 1) * pageSize,
-    page * pageSize
+    page * pageSize,
   );
 
   return {

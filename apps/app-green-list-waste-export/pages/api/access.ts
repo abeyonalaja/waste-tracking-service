@@ -3,7 +3,7 @@ import { getToken } from 'next-auth/jwt';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === 'GET') {
     const token = await getToken({ req });
@@ -31,7 +31,7 @@ export default async function handler(
               headers: {
                 Authorization: `Bearer ${token.id_token}`,
               },
-            }
+            },
           ).then((response) => {
             if (response.ok) {
               res.redirect(307, `${baseUrl}/?context=granted`);

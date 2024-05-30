@@ -148,7 +148,7 @@ const Laboratory = () => {
   const apiConfig = useApiConfig();
   const [laboratoryPage, dispatchLaboratoryPage] = useReducer(
     laboratoryReducer,
-    initialState
+    initialState,
   );
   const [refData, setRefData] = useState<Array<optionType>>();
   const [id, setId] = useState(null);
@@ -194,7 +194,7 @@ const Laboratory = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/disposal-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -216,7 +216,7 @@ const Laboratory = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -232,10 +232,10 @@ const Laboratory = () => {
               });
               if (data.values !== undefined) {
                 const labSite = data.values.filter(
-                  (site) => site.recoveryFacilityType?.type === 'Laboratory'
+                  (site) => site.recoveryFacilityType?.type === 'Laboratory',
                 );
                 const emptyRecords = data.values.filter(
-                  (site) => site.addressDetails === undefined
+                  (site) => site.addressDetails === undefined,
                 );
 
                 if (labSite.length > 0) {
@@ -289,7 +289,7 @@ const Laboratory = () => {
           newErrors = {
             name: validateFieldNotEmpty(
               addressDetails?.name,
-              'the laboratory name'
+              'the laboratory name',
             ),
             address: validateAddress(addressDetails?.address),
             country: validateCountry(addressDetails?.country),
@@ -318,7 +318,7 @@ const Laboratory = () => {
             fullName: validateFullName(contactDetails?.fullName),
             emailAddress: validateEmail(contactDetails?.emailAddress),
             phoneNumber: validateInternationalPhone(
-              contactDetails?.phoneNumber
+              contactDetails?.phoneNumber,
             ),
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
@@ -339,7 +339,7 @@ const Laboratory = () => {
           newErrors = {
             disposalCode: validateFieldNotEmpty(
               recoveryFacilityType?.disposalCode,
-              'a disposal code'
+              'a disposal code',
             ),
           };
 
@@ -367,7 +367,7 @@ const Laboratory = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -420,7 +420,7 @@ const Laboratory = () => {
         }
       }
     },
-    [laboratoryPage.data, addressDetails, contactDetails, recoveryFacilityType]
+    [laboratoryPage.data, addressDetails, contactDetails, recoveryFacilityType],
   );
 
   const onAddressDetailsChange = (e) => {
@@ -454,7 +454,7 @@ const Laboratory = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();

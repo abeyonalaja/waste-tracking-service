@@ -133,7 +133,7 @@ const TransitCountries = () => {
   const apiConfig = useApiConfig();
   const [wasteTransitPage, dispatchWasteTransitPage] = useReducer(
     wasteTransitReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
   const [countryToChangeRemove, setCountryToChangeRemove] =
@@ -167,7 +167,7 @@ const TransitCountries = () => {
             if (data !== undefined) {
               setImporterCountry(
                 data.importerDetail?.importerAddressDetails?.country ||
-                  undefined
+                  undefined,
               );
               dispatchWasteTransitPage({
                 type: 'DATA_FETCH_SUCCESS',
@@ -223,7 +223,7 @@ const TransitCountries = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(wasteTransitPage.data),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -248,7 +248,7 @@ const TransitCountries = () => {
         }
       }
     },
-    [id, wasteTransitPage, router]
+    [id, wasteTransitPage, router],
   );
 
   const handleReturnSubmitAdditionalCountry = (e) => {
@@ -261,15 +261,15 @@ const TransitCountries = () => {
         hasCountries: validateTransitCountries(additionalProvided),
         country: validateSingleTransitCountry(
           additionalProvided,
-          additionalCountry
+          additionalCountry,
         ),
         duplicateCountry: validateUniqueCountries(
           additionalCountry,
-          wasteTransitPage?.data?.values
+          wasteTransitPage?.data?.values,
         ),
         countrySameAsImport: validateSameAsImporter(
           additionalCountry,
-          importerCountry
+          importerCountry,
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -289,7 +289,7 @@ const TransitCountries = () => {
       }
       e.preventDefault();
     },
-    [additionalProvided, additionalCountry]
+    [additionalProvided, additionalCountry],
   );
 
   const handleReturnConfirmRemove = (e) => {
@@ -327,7 +327,7 @@ const TransitCountries = () => {
       }
       e.preventDefault();
     },
-    [confirmRemove, countryToChangeRemove]
+    [confirmRemove, countryToChangeRemove],
   );
 
   const handleReturnSubmitEditCountry = (e) => {
@@ -355,7 +355,7 @@ const TransitCountries = () => {
       }
       e.preventDefault();
     },
-    [changeCountry, countryToChangeRemove]
+    [changeCountry, countryToChangeRemove],
   );
 
   const updateCountryData = async (countries, returnToDraft, callBack?) => {
@@ -370,7 +370,7 @@ const TransitCountries = () => {
           method: 'PUT',
           headers: apiConfig,
           body: JSON.stringify(wasteTransitPage.data),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -499,7 +499,7 @@ const TransitCountries = () => {
                         (key) => ({
                           targetName: key,
                           text: wasteTransitPage.errors[key],
-                        })
+                        }),
                       )}
                     />
                   )}
@@ -524,13 +524,13 @@ const TransitCountries = () => {
                       <GovUK.Fieldset>
                         <GovUK.Fieldset.Legend size="M">
                           {t(
-                            'exportJourney.wasteTransitCountries.additionalCountryLegend'
+                            'exportJourney.wasteTransitCountries.additionalCountryLegend',
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.MultiChoice
                           mb={6}
                           hint={t(
-                            'exportJourney.wasteTransitCountries.additionalCountryHint'
+                            'exportJourney.wasteTransitCountries.additionalCountryHint',
                           )}
                           label=""
                           meta={{
@@ -561,7 +561,7 @@ const TransitCountries = () => {
                                   name={'country'}
                                   label={t('autocompleteHint')}
                                   hint={t(
-                                    'exportJourney.wasteTransitCountries.additionalCountryAutocompleteHint'
+                                    'exportJourney.wasteTransitCountries.additionalCountryAutocompleteHint',
                                   )}
                                   value={''}
                                   onChange={setAdditionalCountry}
@@ -634,7 +634,7 @@ const TransitCountries = () => {
                                   name={'country'}
                                   label={t('autocompleteHint')}
                                   hint={t(
-                                    'exportJourney.wasteTransitCountries.hint'
+                                    'exportJourney.wasteTransitCountries.hint',
                                   )}
                                   value={''}
                                   onChange={handleCountrySelect}
@@ -683,7 +683,7 @@ const TransitCountries = () => {
                                 wasteTransitPage.data.values[
                                   countryToChangeRemove
                                 ],
-                            }
+                            },
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.FormGroup
@@ -694,7 +694,7 @@ const TransitCountries = () => {
                             name={'country'}
                             label={t('autocompleteHint')}
                             hint={t(
-                              'exportJourney.wasteTransitCountries.additionalCountryHint'
+                              'exportJourney.wasteTransitCountries.additionalCountryHint',
                             )}
                             value={''}
                             onChange={setChangeCountry}
@@ -726,7 +726,7 @@ const TransitCountries = () => {
                                 wasteTransitPage.data.values[
                                   countryToChangeRemove
                                 ],
-                            }
+                            },
                           )}
                         </GovUK.Fieldset.Legend>
                         <GovUK.MultiChoice

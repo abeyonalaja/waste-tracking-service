@@ -22,7 +22,7 @@ describe('Tabs component', () => {
           <div>Panel 1</div>
           <div>Panel 2</div>
         </Tabs>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(screen.getByText('Errors by column')).toBeInTheDocument();
     expect(screen.getByText('Errors by row')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('Tabs component', () => {
           <div>Panel 1</div>
           <div>Panel 2</div>
         </Tabs>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(screen.getByText('Panel 1')).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe('Tabs component', () => {
           <div>Panel 1</div>
           <div>Panel 2</div>
         </Tabs>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const byColumnTab = screen.getByRole('tab', { name: 'Errors by column' });
@@ -64,7 +64,7 @@ describe('Tabs component', () => {
           <div>Panel 1</div>
           <div>Panel 2</div>
         </Tabs>
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const byColumnTab = screen.getByRole('tab', { name: 'Errors by column' });

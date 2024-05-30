@@ -13,18 +13,18 @@ const create = program
   .requiredOption(
     '--key-path',
     'Path to RSA private key (PEM) file',
-    process.env['INVITATION_PRIVATE_KEY']
+    process.env['INVITATION_PRIVATE_KEY'],
   )
   .option('--key-id', 'Key identifier as a hint for verification')
   .addOption(
     new Option('--group', 'Cohort that the invitation is for')
       .default('GLW')
-      .choices(['GLW', 'UKWM'])
+      .choices(['GLW', 'UKWM']),
   )
   .action(async function (options) {
     const token = createToken(
       { id: uuidv4(), cohort: 'GLW' },
-      await getPrivateKey(options)
+      await getPrivateKey(options),
     );
 
     console.log(token);
@@ -36,18 +36,18 @@ create
   .requiredOption(
     '--key-path',
     'Path to RSA private key (PEM) file',
-    process.env['INVITATION_PRIVATE_KEY']
+    process.env['INVITATION_PRIVATE_KEY'],
   )
   .requiredOption(
     '--output-path',
     'Path to write output file',
-    process.env['INVITATION_OUTPUT_FILE']
+    process.env['INVITATION_OUTPUT_FILE'],
   )
   .option('--key-id', 'Key identifier as a hint for verification')
   .addOption(
     new Option('--group', 'Cohort that the invitation is for')
       .default('GLW')
-      .choices(['GLW', 'UKWM'])
+      .choices(['GLW', 'UKWM']),
   )
   .requiredOption('--size', 'Number of tokens to generate', '100')
   .action(async function (options) {

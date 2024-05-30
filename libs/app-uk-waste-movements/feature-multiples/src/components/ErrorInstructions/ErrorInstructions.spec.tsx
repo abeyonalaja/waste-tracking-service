@@ -23,7 +23,7 @@ describe('ErrorInstructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <ErrorInstructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const guidanceLink = screen.getByRole('link');
@@ -35,7 +35,7 @@ describe('ErrorInstructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <ErrorInstructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const guidanceLink = screen.getByRole('link');

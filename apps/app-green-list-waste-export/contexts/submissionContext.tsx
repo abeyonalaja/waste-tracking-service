@@ -7,7 +7,7 @@ interface ISubmissionContextProps {
 }
 
 export const SubmissionContext = React.createContext<ISubmissionContextProps>(
-  {} as ISubmissionContextProps
+  {} as ISubmissionContextProps,
 );
 
 export const SubmissionContextProvider = (props) => {

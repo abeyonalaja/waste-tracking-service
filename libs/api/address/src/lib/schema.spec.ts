@@ -6,7 +6,7 @@ const ajv = new Ajv();
 
 describe('getAddressByPostcodeResponse', () => {
   const validate = ajv.compile<GetAddressByPostcodeResponse>(
-    getAddressByPostcodeResponse
+    getAddressByPostcodeResponse,
   );
 
   it('is compatible with success value', () => {

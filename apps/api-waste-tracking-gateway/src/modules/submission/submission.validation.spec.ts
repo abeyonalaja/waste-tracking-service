@@ -63,21 +63,21 @@ describe('validatePutWasteDescriptionRequest', () => {
       validate({
         status: 'Started',
         wasteCode: { type: 'NotApplicable', code: faker.datatype.string(10) },
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
         nationalCode: { provided: 'No', code: faker.datatype.string(10) },
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Complete',
         wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -85,21 +85,21 @@ describe('validatePutWasteDescriptionRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
         wasteCode: { type: 'NotApplicable' },
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
         wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -113,7 +113,7 @@ describe('validatePutWasteDescriptionRequest', () => {
         ],
         nationalCode: { provided: 'No' },
         description: 'Waste',
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -131,7 +131,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'NotApplicable',
           value: faker.datatype.string(10),
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -142,7 +142,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           quantityType: 'Volume',
           value: faker.datatype.number(),
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -152,7 +152,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'EstimateData',
           value: faker.datatype.number(),
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -163,7 +163,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           quantityType: 'Weight',
           value: faker.datatype.string(10),
         },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -171,20 +171,20 @@ describe('validatePutDraftWasteQuantityRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
         value: { type: 'NotApplicable' },
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -198,7 +198,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           },
           estimateData: {},
         },
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -212,7 +212,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           },
           estimateData: {},
         },
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -227,7 +227,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
       validate({
         type: 'NotApplicable',
         value: faker.datatype.string(10),
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -235,14 +235,14 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'ActualData',
         quantityType: 'Volume',
         value: faker.datatype.number(),
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         type: 'EstimateData',
         value: faker.datatype.number(),
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -250,7 +250,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'ActualData',
         quantityType: 'Weight',
         value: faker.datatype.string(10),
-      })
+      }),
     ).toBe(false);
   });
 
@@ -263,7 +263,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
           value: faker.datatype.float({ precision: 0.01 }),
         },
         estimateData: {},
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -277,7 +277,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
           quantityType: 'Weight',
           value: faker.datatype.float({ precision: 0.01 }),
         },
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -285,7 +285,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
 describe('validatePutExporterDetailRequest', () => {
   test('should return true for object with status: NotStarted', () => {
     expect(validatePutExporterDetailRequest({ status: 'NotStarted' })).toBe(
-      true
+      true,
     );
   });
 
@@ -380,7 +380,7 @@ describe('validatePutExporterDetailRequest', () => {
 describe('validatePutImporterDetailRequest', () => {
   test('should return true for object with status: NotStarted', () => {
     expect(validatePutImporterDetailRequest({ status: 'NotStarted' })).toBe(
-      true
+      true,
     );
   });
 
@@ -458,13 +458,13 @@ describe('validatePutDraftCollectionDateRequest', () => {
         value: {
           type: 'ActualDate',
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -473,7 +473,7 @@ describe('validatePutDraftCollectionDateRequest', () => {
         value: {
           type: 'EstimateData',
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -488,7 +488,7 @@ describe('validatePutDraftCollectionDateRequest', () => {
           },
           estimateDate: {},
         },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -496,7 +496,7 @@ describe('validatePutDraftCollectionDateRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -511,7 +511,7 @@ describe('validatePutDraftCollectionDateRequest', () => {
           },
           estimateDate: {},
         },
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -525,7 +525,7 @@ describe('validatePutSubmissionCollectionDateRequest', () => {
     expect(
       validate({
         type: 'ActualDate',
-      })
+      }),
     ).toBe(false);
 
     expect(validate({})).toBe(false);
@@ -533,7 +533,7 @@ describe('validatePutSubmissionCollectionDateRequest', () => {
     expect(
       validate({
         type: 'EstimateData',
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -545,7 +545,7 @@ describe('validatePutSubmissionCollectionDateRequest', () => {
           year: 2020,
         },
         estimateDate: {},
-      })
+      }),
     ).toBe(false);
   });
 
@@ -559,7 +559,7 @@ describe('validatePutSubmissionCollectionDateRequest', () => {
           year: '2020',
         },
         estimateDate: {},
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -575,7 +575,7 @@ describe('validatePutSubmissionCollectionDateRequest', () => {
           month: '07',
           year: '2020',
         },
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -758,7 +758,7 @@ describe('validateSetCarriersRequest', () => {
 describe('validateSetCollectionDetailRequest', () => {
   it('should return true for object with status: NotStarted', () => {
     expect(validateSetCollectionDetailRequest({ status: 'NotStarted' })).toBe(
-      true
+      true,
     );
   });
 
@@ -864,7 +864,7 @@ describe('validatePutExitLocationRequest', () => {
           provided: 'No',
           value: faker.datatype.string(),
         },
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -873,7 +873,7 @@ describe('validatePutExitLocationRequest', () => {
         exitLocation: {
           provided: 'Yes',
         },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -887,7 +887,7 @@ describe('validatePutExitLocationRequest', () => {
           provided: 'Yes',
           value: faker.datatype.string(),
         },
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -896,7 +896,7 @@ describe('validatePutExitLocationRequest', () => {
         exitLocation: {
           provided: 'No',
         },
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -911,21 +911,21 @@ describe('validatePutTransitCountriesRequest', () => {
       validate({
         status: 'Complete',
         values: {},
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
         values: [1, 2, 3],
-      })
+      }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'NotStarted',
         values: ['N.Ireland', 'Wales'],
-      })
+      }),
     ).toBe(false);
   });
 
@@ -933,21 +933,21 @@ describe('validatePutTransitCountriesRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Started',
         values: [],
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Complete',
         values: ['N.Ireland', 'Wales'],
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -1097,7 +1097,7 @@ describe('validatePutSubmissionConfirmationRequest', () => {
     expect(
       validate({
         status: 'Complete',
-      })
+      }),
     ).toBe(false);
   });
 
@@ -1107,14 +1107,14 @@ describe('validatePutSubmissionConfirmationRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Complete',
         confirmation: true,
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -1128,7 +1128,7 @@ describe('validatePutSubmissionDeclarationRequest', () => {
     expect(
       validate({
         status: 'Test',
-      })
+      }),
     ).toBe(false);
   });
 
@@ -1138,13 +1138,13 @@ describe('validatePutSubmissionDeclarationRequest', () => {
     expect(
       validate({
         status: 'NotStarted',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Complete',
-      })
+      }),
     ).toBe(true);
   });
 });
@@ -1158,7 +1158,7 @@ describe('validatePutSubmissionCancellationRequest', () => {
     expect(
       validate({
         type: 'Test',
-      })
+      }),
     ).toBe(false);
   });
 
@@ -1168,14 +1168,14 @@ describe('validatePutSubmissionCancellationRequest', () => {
     expect(
       validate({
         type: 'ChangeOfRecoveryFacilityOrLaboratory',
-      })
+      }),
     ).toBe(true);
 
     expect(
       validate({
         type: 'Other',
         reason: 'Reason',
-      })
+      }),
     ).toBe(true);
   });
 });

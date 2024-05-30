@@ -14,6 +14,7 @@ jest.mock('@react-pdf/renderer', () => ({
   Page: () => <div>Page</div>,
   PDFViewer: jest.fn(() => null),
   PDFDownloadLink: jest.fn(() => null),
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   StyleSheet: { create: () => {} },
   Text: () => <div>Text</div>,
   View: () => <div>View</div>,
@@ -31,7 +32,7 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
 
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 export * from '@testing-library/react';

@@ -4,24 +4,24 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const createTemplateRequest = ajv.compile<api.CreateTemplateRequest>(
-  api.schema.createTemplateRequest
+  api.schema.createTemplateRequest,
 );
 
 export const createTemplateFromTemplateRequest =
   ajv.compile<api.CreateTemplateFromTemplateRequest>(
-    api.schema.createTemplateFromTemplateRequest
+    api.schema.createTemplateFromTemplateRequest,
   );
 
 export const updateTemplateRequest = ajv.compile<api.UpdateTemplateRequest>(
-  api.schema.updateTemplateRequest
+  api.schema.updateTemplateRequest,
 );
 
 export const createDraftFromTemplateRequest =
   ajv.compile<api.CreateDraftFromTemplateRequest>(
-    api.schema.createDraftFromTemplateRequest
+    api.schema.createDraftFromTemplateRequest,
   );
 
 export const createTemplateFromSubmissionRequest =
   ajv.compile<api.CreateTemplateFromSubmissionRequest>(
-    api.schema.createTemplateFromSubmissionRequest
+    api.schema.createTemplateFromSubmissionRequest,
   );

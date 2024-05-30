@@ -21,7 +21,7 @@ global.fetch = jest.fn(
         Promise.resolve({
           data: {},
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Importer details page', () => {

@@ -2,7 +2,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 export function EWC(): React.ReactNode {
   const page = useTranslations(
-    'multiples.guidancePageCSV.ewcCodesAndDescription'
+    'multiples.guidancePageCSV.ewcCodesAndDescription',
   );
   const producerDetails = [
     {
@@ -14,23 +14,23 @@ export function EWC(): React.ReactNode {
     {
       key: page('descriptionOfTheWaste.wasteQuantityDetails.wasteQuantity'),
       value: page(
-        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityDescription'
+        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityDescription',
       ),
     },
     {
       key: page(
-        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityUnits'
+        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityUnits',
       ),
       value: page(
-        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityUnitsDescription'
+        'descriptionOfTheWaste.wasteQuantityDetails.wasteQuantityUnitsDescription',
       ),
     },
     {
       key: page(
-        'descriptionOfTheWaste.wasteQuantityDetails.estimatedOrActualQuantity'
+        'descriptionOfTheWaste.wasteQuantityDetails.estimatedOrActualQuantity',
       ),
       value: page(
-        'descriptionOfTheWaste.wasteQuantityDetails.estimatedOrActualQuantityDescription'
+        'descriptionOfTheWaste.wasteQuantityDetails.estimatedOrActualQuantityDescription',
       ),
     },
   ];

@@ -17,28 +17,28 @@ import {
 export class DaprUkWasteMovementsClient {
   constructor(
     private daprClient: DaprClient,
-    private ukWasteMovementsAppId: string
+    private ukWasteMovementsAppId: string,
   ) {}
 
   async validateSubmissions(
-    req: ValidateSubmissionsRequest
+    req: ValidateSubmissionsRequest,
   ): Promise<ValidateSubmissionsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
       validateSubmissions.name,
       HttpMethod.POST,
-      req
+      req,
     )) as ValidateSubmissionsResponse;
   }
 
   async createSubmissions(
-    req: CreateSubmissionsRequest
+    req: CreateSubmissionsRequest,
   ): Promise<CreateSubmissionsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
       createSubmissions.name,
       HttpMethod.POST,
-      req
+      req,
     )) as CreateSubmissionsResponse;
   }
 
@@ -47,7 +47,7 @@ export class DaprUkWasteMovementsClient {
       this.ukWasteMovementsAppId,
       getDraft.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetDraftResponse;
   }
 
@@ -56,7 +56,7 @@ export class DaprUkWasteMovementsClient {
       this.ukWasteMovementsAppId,
       getDrafts.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetDraftsResponse;
   }
 }

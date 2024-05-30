@@ -38,18 +38,18 @@ describe('Validation success component', () => {
           submissionId="any"
           token="any"
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(
       screen.getByText(
-        'You have corrected all your errors and can now create 1 new waste movement record.'
-      )
+        'You have corrected all your errors and can now create 1 new waste movement record.',
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "You'll need to update all estimated details in your records with actual details as soon as possible after submitting"
-      )
+        "You'll need to update all estimated details in your records with actual details as soon as possible after submitting",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -64,16 +64,16 @@ describe('Validation success component', () => {
           submissionId="any"
           token="any"
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(
       screen.getByText(
-        'You have no errors in your 3 waste movement records and can now create them all.'
-      )
+        'You have no errors in your 3 waste movement records and can now create them all.',
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Create 3 new waste movement records')
+      screen.getByText('Create 3 new waste movement records'),
     ).toBeInTheDocument();
   });
 });

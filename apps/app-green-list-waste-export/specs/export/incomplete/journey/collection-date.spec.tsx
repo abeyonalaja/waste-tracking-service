@@ -18,7 +18,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Collection date page', () => {
@@ -36,7 +36,7 @@ describe('Collection date page', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'Select yes if you know when the waste will be collected'
+      'Select yes if you know when the waste will be collected',
     )[0];
     expect(errorMessage).toBeTruthy();
   });

@@ -26,7 +26,7 @@ describe(BoomiAddressClient, () => {
     new Logger(),
     addressLookupUrl,
     cert,
-    key
+    key,
   );
 
   describe('getAddressByPostcode', () => {

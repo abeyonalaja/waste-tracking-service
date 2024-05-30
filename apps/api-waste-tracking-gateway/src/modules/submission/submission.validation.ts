@@ -380,7 +380,7 @@ export const validatePutSubmissionCollectionDateRequest =
 export const validateCreateCarriersRequest = ajv.compile<CreateCarriersRequest>(
   {
     properties: { status: { type: 'string' } },
-  }
+  },
 );
 
 export const validateSetCarriersRequest = ajv.compile<SetCarriersRequest>({

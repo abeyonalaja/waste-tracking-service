@@ -17,7 +17,7 @@ const mockBackend = {
       (
         serviceName: string,
         feedback: string,
-        rating: number
+        rating: number,
       ) => Promise<api.SendFeedbackResponse>
     >(),
 };

@@ -16,7 +16,7 @@ export function Accordion({
   children,
 }: AccordionProps): React.ReactNode {
   const allSectionsExpanded = Object.values(sections).every(
-    (section) => section
+    (section) => section,
   );
 
   function toggleAllSections() {

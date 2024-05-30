@@ -48,7 +48,7 @@ const server = new DaprServer({
 
 const aadCredentials = new ChainedTokenCredential(
   new AzureCliCredential(),
-  new WorkloadIdentityCredential()
+  new WorkloadIdentityCredential(),
 );
 
 const dbClient = new CosmosClient({
@@ -69,14 +69,14 @@ const repository = new CosmosRepository(
   dbClient,
   process.env['COSMOS_DATABASE_NAME'] || 'annex-vii',
   cosmosContainerMap,
-  logger
+  logger,
 );
 
 const draftController = new draft.DraftController(repository, logger);
 
 const referenceDataClient = new DaprReferenceDataClient(
   server.client,
-  process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
+  process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data',
 );
 
 let wasteCodesResponse: GetWasteCodesResponse;
@@ -126,7 +126,7 @@ const submissionController = new submission.SubmissionController(
   countryIncludingUkList,
   recoveryCodeList,
   disposalCodeList,
-  logger
+  logger,
 );
 
 const templateController = new template.TemplateController(repository, logger);
@@ -145,7 +145,7 @@ await server.invoker.listen(
 
     return await draftController.getDraft(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -162,7 +162,7 @@ await server.invoker.listen(
 
     return await draftController.getDrafts(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -179,7 +179,7 @@ await server.invoker.listen(
 
     return await draftController.createDraft(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -190,7 +190,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.template.CreateDraftFromTemplateRequest;
     if (!template.validate.createDraftFromTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -198,7 +198,7 @@ await server.invoker.listen(
 
     return await templateController.createDraftFromTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -215,7 +215,7 @@ await server.invoker.listen(
 
     return await draftController.deleteDraft(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -232,7 +232,7 @@ await server.invoker.listen(
 
     return await submissionController.cancelSubmission(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -249,7 +249,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftCustomerReference(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -260,7 +260,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftCustomerReferenceRequest;
     if (!draft.validate.setDraftCustomerReferenceRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -268,7 +268,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftCustomerReference(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -285,7 +285,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftWasteDescription(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -296,7 +296,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftWasteDescriptionRequest;
     if (!draft.validate.setDraftWasteDescriptionRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -304,7 +304,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftWasteDescription(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -321,7 +321,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftWasteQuantity(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -338,7 +338,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftWasteQuantity(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -355,7 +355,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftExporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -372,7 +372,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftExporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -389,7 +389,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftImporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -406,7 +406,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftImporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -423,7 +423,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftCollectionDate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -440,7 +440,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftCollectionDate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -457,7 +457,7 @@ await server.invoker.listen(
 
     return await draftController.listDraftCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -474,7 +474,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -491,7 +491,7 @@ await server.invoker.listen(
 
     return await draftController.createDraftCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -508,7 +508,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -525,7 +525,7 @@ await server.invoker.listen(
 
     return await draftController.deleteDraftCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -542,7 +542,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftCollectionDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -553,7 +553,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftCollectionDetailRequest;
     if (!draft.validate.setDraftCollectionDetailRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -561,7 +561,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftCollectionDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -578,7 +578,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftUkExitLocation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -595,7 +595,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftUkExitLocation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -612,7 +612,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftTransitCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -623,7 +623,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftTransitCountriesRequest;
     if (!draft.validate.setDraftTransitCountriesRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -631,7 +631,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftTransitCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -648,7 +648,7 @@ await server.invoker.listen(
 
     return await draftController.listDraftRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -665,7 +665,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -676,7 +676,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.CreateDraftRecoveryFacilityDetailsRequest;
     if (!draft.validate.createDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -684,7 +684,7 @@ await server.invoker.listen(
 
     return await draftController.createDraftRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -695,7 +695,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftRecoveryFacilityDetailsRequest;
     if (!draft.validate.setDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -703,7 +703,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -720,7 +720,7 @@ await server.invoker.listen(
 
     return await draftController.deleteDraftRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -737,7 +737,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftSubmissionConfirmation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -748,7 +748,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftSubmissionConfirmationRequest;
     if (!draft.validate.setDraftSubmissionConfirmationRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -756,7 +756,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftSubmissionConfirmation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -773,7 +773,7 @@ await server.invoker.listen(
 
     return await draftController.getDraftSubmissionDeclaration(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -784,7 +784,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftSubmissionDeclarationRequest;
     if (!draft.validate.setDraftSubmissionDeclarationRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -792,7 +792,7 @@ await server.invoker.listen(
 
     return await draftController.setDraftSubmissionDeclaration(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -809,7 +809,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -826,7 +826,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplates(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -843,7 +843,7 @@ await server.invoker.listen(
 
     return await templateController.getNumberOfTemplates(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -860,7 +860,7 @@ await server.invoker.listen(
 
     return await templateController.createTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -871,7 +871,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.template.CreateTemplateFromSubmissionRequest;
     if (!template.validate.createTemplateFromSubmissionRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -879,7 +879,7 @@ await server.invoker.listen(
 
     return await templateController.createTemplateFromSubmission(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -890,7 +890,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.template.CreateTemplateFromTemplateRequest;
     if (!template.validate.createTemplateFromTemplateRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -898,7 +898,7 @@ await server.invoker.listen(
 
     return await templateController.createTemplateFromTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -915,7 +915,7 @@ await server.invoker.listen(
 
     return await templateController.updateTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -932,7 +932,7 @@ await server.invoker.listen(
 
     return await templateController.deleteTemplate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -949,7 +949,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateWasteDescription(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -960,7 +960,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftWasteDescriptionRequest;
     if (!draft.validate.setDraftWasteDescriptionRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -968,7 +968,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateWasteDescription(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -985,7 +985,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateExporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1002,7 +1002,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateExporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1019,7 +1019,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateImporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1036,7 +1036,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateImporterDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1053,7 +1053,7 @@ await server.invoker.listen(
 
     return await templateController.listTemplateCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1070,7 +1070,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1087,7 +1087,7 @@ await server.invoker.listen(
 
     return await templateController.createTemplateCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1104,7 +1104,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1121,7 +1121,7 @@ await server.invoker.listen(
 
     return await templateController.deleteTemplateCarriers(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1138,7 +1138,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateCollectionDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1149,7 +1149,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftCollectionDetailRequest;
     if (!draft.validate.setDraftCollectionDetailRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -1157,7 +1157,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateCollectionDetail(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1174,7 +1174,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateUkExitLocation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1191,7 +1191,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateUkExitLocation(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1208,7 +1208,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateTransitCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1219,7 +1219,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftTransitCountriesRequest;
     if (!draft.validate.setDraftTransitCountriesRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -1227,7 +1227,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateTransitCountries(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1243,10 +1243,10 @@ await server.invoker.listen(
     }
 
     return await templateController.listTemplateRecoveryFacilityDetails(
-      request
+      request,
     );
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1263,7 +1263,7 @@ await server.invoker.listen(
 
     return await templateController.getTemplateRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1274,17 +1274,17 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.CreateDraftRecoveryFacilityDetailsRequest;
     if (!draft.validate.createDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
     }
 
     return await templateController.createTemplateRecoveryFacilityDetails(
-      request
+      request,
     );
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1295,7 +1295,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.draft.SetDraftRecoveryFacilityDetailsRequest;
     if (!draft.validate.setDraftRecoveryFacilityDetailsRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -1303,7 +1303,7 @@ await server.invoker.listen(
 
     return await templateController.setTemplateRecoveryFacilityDetails(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1319,10 +1319,10 @@ await server.invoker.listen(
     }
 
     return await templateController.deleteTemplateRecoveryFacilityDetails(
-      request
+      request,
     );
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1339,7 +1339,7 @@ await server.invoker.listen(
 
     return await submissionController.getNumberOfSubmissions(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1356,7 +1356,7 @@ await server.invoker.listen(
 
     return await submissionController.getSubmission(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1373,7 +1373,7 @@ await server.invoker.listen(
 
     return await submissionController.getSubmissions(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1390,7 +1390,7 @@ await server.invoker.listen(
 
     return await submissionController.getWasteQuantity(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1407,7 +1407,7 @@ await server.invoker.listen(
 
     return await submissionController.setWasteQuantity(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1424,7 +1424,7 @@ await server.invoker.listen(
 
     return await submissionController.getCollectionDate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1441,7 +1441,7 @@ await server.invoker.listen(
 
     return await submissionController.setCollectionDate(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1452,7 +1452,7 @@ await server.invoker.listen(
     }
 
     const request = JSON.parse(
-      body
+      body,
     ) as api.submission.ValidateSubmissionsRequest;
     if (!submission.validate.validateSubmissionsRequest(request)) {
       return fromBoom(Boom.badRequest());
@@ -1460,7 +1460,7 @@ await server.invoker.listen(
 
     return await submissionController.validateSubmissions(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1477,7 +1477,7 @@ await server.invoker.listen(
 
     return await submissionController.createSubmissions(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.invoker.listen(
@@ -1496,7 +1496,7 @@ await server.invoker.listen(
 
     return await submissionController.getBulkSubmissions(request);
   },
-  { method: HttpMethod.POST }
+  { method: HttpMethod.POST },
 );
 
 await server.start();

@@ -31,6 +31,7 @@ export const Radios = ({
   error,
   small,
   inline,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onchange = (): void => {},
   testId,
 }: Props): JSX.Element => {

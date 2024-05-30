@@ -14,7 +14,7 @@ describe('Phase Banner component', () => {
     const testChildren = <span>Child element</span>;
     const testId = 'testId';
     render(
-      <PhaseBanner tag={'Beta'} children={testChildren} testId={testId} />
+      <PhaseBanner tag={'Beta'} children={testChildren} testId={testId} />,
     );
     const textElement = screen.getByText('Child element');
     expect(textElement).toBeTruthy();

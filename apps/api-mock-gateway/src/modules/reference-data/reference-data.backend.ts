@@ -17,7 +17,7 @@ export async function listWasteCodes(db: DB): Promise<ListWasteCodesResponse> {
 
 export async function listEWCCodes(
   db: DB,
-  includeHazardous: boolean
+  includeHazardous: boolean,
 ): Promise<ListEWCCodesResponse> {
   try {
     let ewcCodes: ListEWCCodesResponse = db.ewcCodes;
@@ -33,13 +33,13 @@ export async function listEWCCodes(
 
 export async function listCountries(
   db: DB,
-  includeUk: boolean
+  includeUk: boolean,
 ): Promise<ListCountriesResponse> {
   try {
     let countries: ListCountriesResponse = db.countries;
     if (!includeUk) {
       countries = countries.filter(
-        (country) => !country.name.includes('United Kingdom')
+        (country) => !country.name.includes('United Kingdom'),
       );
     }
     return countries;
@@ -49,21 +49,21 @@ export async function listCountries(
   }
 }
 export async function listRecoveryCodes(
-  db: DB
+  db: DB,
 ): Promise<ListRecoveryCodesResponse> {
   const recoveryCodes: ListRecoveryCodesResponse = db.recoveryCodes;
   return recoveryCodes;
 }
 
 export async function listDisposalCodes(
-  db: DB
+  db: DB,
 ): Promise<ListDisposalCodesResponse> {
   const disposalCodes: ListDisposalCodesResponse = db.disposalCodes;
   return disposalCodes;
 }
 
 export async function listHazardousCodes(
-  db: DB
+  db: DB,
 ): Promise<ListHazardousCodesResponse> {
   const hazardousCodes: ListHazardousCodesResponse = db.hazardousCodes;
   return hazardousCodes;
@@ -75,7 +75,7 @@ export async function listPops(db: DB): Promise<ListPopsResponse> {
 }
 
 export async function listLocalAuthorities(
-  db: DB
+  db: DB,
 ): Promise<ListlocalAuthoritiesResponse> {
   const localAuthorities: ListlocalAuthoritiesResponse = db.localAuthorities;
   return localAuthorities;

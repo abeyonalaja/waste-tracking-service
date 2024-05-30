@@ -35,7 +35,7 @@ const useRefDataLookup = (apiConfig) => {
       try {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/ewc-codes`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -52,7 +52,7 @@ const useRefDataLookup = (apiConfig) => {
       try {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/waste-codes`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -69,7 +69,7 @@ const useRefDataLookup = (apiConfig) => {
       try {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/recovery-codes`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -86,7 +86,7 @@ const useRefDataLookup = (apiConfig) => {
       try {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/disposal-codes`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -126,7 +126,7 @@ const useRefDataLookup = (apiConfig) => {
 
   const getEWCDesc = (savedCode) => {
     const result = ewcRefData.find(
-      ({ code }) => code.slice(0, 6) === savedCode
+      ({ code }) => code.slice(0, 6) === savedCode,
     );
     if (result) {
       return result.value.description[currentLanguage];

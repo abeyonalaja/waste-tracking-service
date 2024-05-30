@@ -72,7 +72,7 @@ describe(CosmosRepository, () => {
     }),
     mockCosmosDbName,
     cosmosContainerMap,
-    logger
+    logger,
   );
 
   describe('getDraft', () => {
@@ -114,7 +114,7 @@ describe(CosmosRepository, () => {
             month: ((i % 12) + 1).toString(),
             year: (2000 + i).toString(),
           },
-        })
+        }),
       );
 
       mockFetchAll.mockResolvedValueOnce({
@@ -128,7 +128,7 @@ describe(CosmosRepository, () => {
         undefined,
         undefined,
         undefined,
-        'WM24_0019ACAD'
+        'WM24_0019ACAD',
       );
 
       expect(result).toEqual({

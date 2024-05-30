@@ -17,7 +17,10 @@ import {
 const upload = multer();
 
 export default class UkwmBulkSubmissionPlugin {
-  constructor(private server: Application, private prefix: string) {}
+  constructor(
+    private server: Application,
+    private prefix: string,
+  ) {}
 
   async register(): Promise<void> {
     this.server.post(this.prefix, upload.any(), async (req, res) => {
@@ -29,7 +32,7 @@ export default class UkwmBulkSubmissionPlugin {
         (file: Express.Multer.File) => ({
           type: file.mimetype,
           data: file.buffer,
-        })
+        }),
       );
 
       const user = req.user as User;
@@ -73,7 +76,7 @@ export default class UkwmBulkSubmissionPlugin {
           (await finalizeBatch({
             id: req.params.id,
             accountId: user.credentials.accountId,
-          })) as undefined
+          })) as undefined,
         );
       } catch (err) {
         if (err instanceof NotFoundError) {
@@ -92,7 +95,7 @@ export default class UkwmBulkSubmissionPlugin {
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader(
           'Content-Disposition',
-          'attachment; filename=waste-tracking.csv'
+          'attachment; filename=waste-tracking.csv',
         );
         return res.send(csvData);
       } catch (err) {

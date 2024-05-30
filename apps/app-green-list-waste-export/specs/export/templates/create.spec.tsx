@@ -18,7 +18,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({}),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Create template page', () => {
@@ -61,7 +61,7 @@ describe('Create template page', () => {
     expect(errorHeading).toBeTruthy();
 
     const nameError = screen.getAllByText(
-      'The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes'
+      'The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes',
     )[0];
     expect(nameError).toBeTruthy();
   });

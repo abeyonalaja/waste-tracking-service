@@ -49,7 +49,7 @@ export const CountrySelector = ({
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/countries?includeUk=${includeUk}`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -72,7 +72,7 @@ export const CountrySelector = ({
 
   const suggest = (query, populateResults) => {
     const filteredResults = countryList.filter(
-      (c) => c.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (c) => c.toLowerCase().indexOf(query.toLowerCase()) !== -1,
     );
     populateResults(filteredResults);
   };

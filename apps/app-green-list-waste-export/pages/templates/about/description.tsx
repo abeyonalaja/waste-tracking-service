@@ -88,7 +88,7 @@ const Description = () => {
 
   const [describeWastePage, dispatchDescribeWastePage] = useReducer(
     describeWasteReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
 
   const [templateId, setTemplateId] = useState(null);
@@ -109,7 +109,7 @@ const Description = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/waste-description`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -177,7 +177,7 @@ const Description = () => {
                 ...describeWastePage.data,
                 status: whatStatusShouldWeGoTo(description),
               }),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -195,7 +195,7 @@ const Description = () => {
         }
       }
     },
-    [templateId, describeWastePage.data, router]
+    [templateId, describeWastePage.data, router],
   );
 
   const handleCancelReturn = (e) => {

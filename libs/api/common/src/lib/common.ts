@@ -18,5 +18,5 @@ export interface SectionSummary {
 }
 
 export type Handler<Request, Response> = (
-  request: Request
+  request: Request,
 ) => Promise<Response>;

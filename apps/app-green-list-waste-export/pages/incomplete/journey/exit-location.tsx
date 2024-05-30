@@ -65,7 +65,7 @@ const ExitLocation = () => {
 
   const [pointOfExitPage, dispatchPointOfExitPage] = useReducer(
     pointOfExitReducer,
-    { data: null, isLoading: true, isError: false }
+    { data: null, isLoading: true, isError: false },
   );
 
   const [id, setId] = useState(null);
@@ -88,7 +88,7 @@ const ExitLocation = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/exit-location`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -160,7 +160,7 @@ const ExitLocation = () => {
                 status: 'Complete',
                 exitLocation: pointOfExitPage.data,
               }),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -181,7 +181,7 @@ const ExitLocation = () => {
         }
       }
     },
-    [id, pointOfExitPage.data, router]
+    [id, pointOfExitPage.data, router],
   );
 
   const BreadCrumbs = () => {

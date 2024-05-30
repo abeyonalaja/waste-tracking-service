@@ -39,7 +39,7 @@ describe('Breadcrumbs', () => {
   it('sets custom testId prop', () => {
     const testId = 'breadcrumbs-test';
     const { getByTestId } = render(
-      <Breadcrumbs items={items} testId={testId} />
+      <Breadcrumbs items={items} testId={testId} />,
     );
 
     const breadcrumbs = getByTestId(testId);

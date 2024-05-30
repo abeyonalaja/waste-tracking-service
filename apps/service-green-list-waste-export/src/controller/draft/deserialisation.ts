@@ -4,98 +4,98 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const getDraftsRequest = ajv.compileParser<common.GetRecordsRequest>(
-  common.schema.getRecordsRequest
+  common.schema.getRecordsRequest,
 );
 
 export const getDraftRequest = ajv.compileParser<api.GetDraftRequest>(
-  api.schema.getDraftRequest
+  api.schema.getDraftRequest,
 );
 
 export const deleteDraftRequest = ajv.compileParser<api.DeleteDraftRequest>(
-  api.schema.deleteDraftRequest
+  api.schema.deleteDraftRequest,
 );
 
 export const getDraftCustomerReferenceRequest =
   ajv.compileParser<api.GetDraftCustomerReferenceRequest>(
-    api.schema.getDraftCustomerReferenceRequest
+    api.schema.getDraftCustomerReferenceRequest,
   );
 
 export const getDraftWasteDescriptionRequest =
   ajv.compileParser<api.GetDraftWasteDescriptionRequest>(
-    api.schema.getDraftWasteDescriptionRequest
+    api.schema.getDraftWasteDescriptionRequest,
   );
 
 export const getDraftWasteQuantityRequest =
   ajv.compileParser<api.GetDraftWasteQuantityRequest>(
-    api.schema.getDraftWasteQuantityRequest
+    api.schema.getDraftWasteQuantityRequest,
   );
 
 export const getDraftExporterDetailRequest =
   ajv.compileParser<api.GetDraftExporterDetailRequest>(
-    api.schema.getDraftExporterDetailRequest
+    api.schema.getDraftExporterDetailRequest,
   );
 
 export const getDraftImporterDetailRequest =
   ajv.compileParser<api.GetDraftImporterDetailRequest>(
-    api.schema.getDraftImporterDetailRequest
+    api.schema.getDraftImporterDetailRequest,
   );
 
 export const getDraftCollectionDateRequest =
   ajv.compileParser<api.GetDraftCollectionDateRequest>(
-    api.schema.getDraftCollectionDateRequest
+    api.schema.getDraftCollectionDateRequest,
   );
 
 export const getDraftCarriersRequest =
   ajv.compileParser<api.GetDraftCarriersRequest>(
-    api.schema.getDraftCarriersRequest
+    api.schema.getDraftCarriersRequest,
   );
 
 export const listDraftCarriersRequest =
   ajv.compileParser<api.ListDraftCarriersRequest>(
-    api.schema.listDraftCarriersRequest
+    api.schema.listDraftCarriersRequest,
   );
 
 export const deleteDraftCarriersRequest =
   ajv.compileParser<api.DeleteDraftCarriersRequest>(
-    api.schema.deleteDraftCarriersRequest
+    api.schema.deleteDraftCarriersRequest,
   );
 
 export const getDraftCollectionDetailRequest =
   ajv.compileParser<api.GetDraftCollectionDetailRequest>(
-    api.schema.getDraftCollectionDetailRequest
+    api.schema.getDraftCollectionDetailRequest,
   );
 
 export const getDraftExitLocationRequest =
   ajv.compileParser<api.GetDraftUkExitLocationRequest>(
-    api.schema.getDraftUkExitLocationRequest
+    api.schema.getDraftUkExitLocationRequest,
   );
 
 export const getDraftTransitCountriesRequest =
   ajv.compileParser<api.GetDraftTransitCountriesRequest>(
-    api.schema.getDraftTransitCountriesRequest
+    api.schema.getDraftTransitCountriesRequest,
   );
 
 export const getDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<api.GetDraftRecoveryFacilityDetailsRequest>(
-    api.schema.getDraftRecoveryFacilityDetailsRequest
+    api.schema.getDraftRecoveryFacilityDetailsRequest,
   );
 
 export const listDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<api.ListDraftRecoveryFacilityDetailsRequest>(
-    api.schema.listDraftRecoveryFacilityDetailsRequest
+    api.schema.listDraftRecoveryFacilityDetailsRequest,
   );
 
 export const deleteDraftRecoveryFacilityDetailsRequest =
   ajv.compileParser<api.DeleteDraftRecoveryFacilityDetailsRequest>(
-    api.schema.deleteDraftRecoveryFacilityDetailsRequest
+    api.schema.deleteDraftRecoveryFacilityDetailsRequest,
   );
 
 export const getDraftSubmissionConfirmationRequest =
   ajv.compileParser<api.GetDraftSubmissionConfirmationRequest>(
-    api.schema.getDraftSubmissionConfirmationRequest
+    api.schema.getDraftSubmissionConfirmationRequest,
   );
 
 export const getDraftSubmissionDeclarationRequest =
   ajv.compileParser<api.GetDraftSubmissionDeclarationRequest>(
-    api.schema.getDraftSubmissionDeclarationRequest
+    api.schema.getDraftSubmissionDeclarationRequest,
   );

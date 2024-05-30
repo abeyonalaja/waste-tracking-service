@@ -47,7 +47,7 @@ beforeAll(async () => {
     return {
       authenticate: async function (
         _,
-        h
+        h,
       ): Promise<Lifecycle.ReturnValueTypes<ReqRefDefaults>> {
         return h.authenticated({ credentials: { accountId } });
       },

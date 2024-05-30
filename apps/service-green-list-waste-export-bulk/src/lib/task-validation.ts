@@ -9,11 +9,11 @@ import * as schema from './task-schema';
 const ajv = new Ajv();
 
 export const receiveContentProcessingTask = ajv.compile<ContentProcessingTask>(
-  schema.contentProcessingTask
+  schema.contentProcessingTask,
 );
 
 export const receiveContentSubmissionTask = ajv.compile<ContentSubmissionTask>(
-  schema.contentSubmissionTask
+  schema.contentSubmissionTask,
 );
 
 export const receiveContentToBeProcessedTask =

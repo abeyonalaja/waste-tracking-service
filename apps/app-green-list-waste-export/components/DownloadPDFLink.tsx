@@ -37,7 +37,9 @@ const StyledPDFDownloadLink = styled(PDFDownloadLink)`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: ${BLACK};
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px #0b0c0c;
     text-decoration: none;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -63,8 +65,8 @@ export const DownloadPDFLink = ({ transactionId, children, data }: Props) => {
           loading
             ? 'Loading document...'
             : children
-            ? children
-            : t('exportJourney.downloadPDFLinkText')
+              ? children
+              : t('exportJourney.downloadPDFLinkText')
         }
       </StyledPDFDownloadLink>
     </>

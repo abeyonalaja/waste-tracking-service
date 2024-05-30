@@ -48,7 +48,7 @@ try {
 
   const referenceDataClient = new DaprReferenceDataClient(
     server.client,
-    process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data'
+    process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data',
   );
 
   let hazardousCodesResponse: GetHazardousCodesResponse;
@@ -84,7 +84,7 @@ try {
 
   const aadCredentials = new ChainedTokenCredential(
     new AzureCliCredential(),
-    new WorkloadIdentityCredential()
+    new WorkloadIdentityCredential(),
   );
 
   const dbClient = new CosmosClient({
@@ -100,7 +100,7 @@ try {
     dbClient,
     process.env['COSMOS_DATABASE_NAME'] || 'uk-waste-movements',
     cosmosContainerMap,
-    logger
+    logger,
   );
 
   const submissionController = new SubmissionController(repository, logger, {
@@ -124,7 +124,7 @@ try {
 
       return await submissionController.validateSubmissions(request);
     },
-    { method: HttpMethod.POST }
+    { method: HttpMethod.POST },
   );
 
   await server.invoker.listen(
@@ -141,7 +141,7 @@ try {
 
       return await submissionController.createSubmissions(request);
     },
-    { method: HttpMethod.POST }
+    { method: HttpMethod.POST },
   );
 
   await server.invoker.listen(
@@ -157,7 +157,7 @@ try {
 
       return await submissionController.getDraft(request);
     },
-    { method: HttpMethod.POST }
+    { method: HttpMethod.POST },
   );
 
   await server.invoker.listen(
@@ -177,7 +177,7 @@ try {
 
       return await submissionController.getDrafts(request);
     },
-    { method: HttpMethod.POST }
+    { method: HttpMethod.POST },
   );
 
   await server.start();

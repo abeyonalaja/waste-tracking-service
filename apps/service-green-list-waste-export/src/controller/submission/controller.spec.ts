@@ -186,7 +186,7 @@ describe(SubmissionController, () => {
     countriesIncludingUk,
     recoveryCodes,
     disposalCodes,
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {
@@ -215,16 +215,16 @@ describe(SubmissionController, () => {
       expect(mockRepository.getTotalNumber).toHaveBeenCalledWith(
         submissionContainerName,
         accountId,
-        false
+        false,
       );
       expect(mockRepository.getTotalNumber).toHaveBeenCalledWith(
         submissionContainerName,
         accountId,
-        true
+        true,
       );
       expect(mockRepository.getTotalNumber).toHaveBeenCalledWith(
         draftContainerName,
-        accountId
+        accountId,
       );
       expect(mockRepository.getTotalNumber).toHaveBeenCalledTimes(3);
       expect(response.value).toEqual({
@@ -269,9 +269,9 @@ describe(SubmissionController, () => {
           (await mockRepository.getRecord(
             submissionContainerName,
             id,
-            accountId
+            accountId,
           )) as Submission
-        ).submissionState.status
+        ).submissionState.status,
       ).toBe('InProgress');
 
       subject.cancelSubmission({
@@ -285,9 +285,9 @@ describe(SubmissionController, () => {
           (await mockRepository.getRecord(
             submissionContainerName,
             id,
-            accountId
+            accountId,
           )) as Submission
-        ).submissionState.status
+        ).submissionState.status,
       ).toBe('InProgress');
 
       mockRepository.getRecord.mockResolvedValue({
@@ -325,9 +325,9 @@ describe(SubmissionController, () => {
           (await mockRepository.getRecord(
             submissionContainerName,
             id,
-            accountId
+            accountId,
           )) as Submission
-        ).submissionState.status
+        ).submissionState.status,
       ).toBe('Cancelled');
     });
   });

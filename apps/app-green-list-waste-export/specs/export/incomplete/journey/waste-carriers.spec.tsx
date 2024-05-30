@@ -39,7 +39,7 @@ global.fetch = jest.fn(
             },
           ],
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Waste carriers page', () => {
@@ -68,7 +68,7 @@ describe('Waste carriers page', () => {
     });
 
     const pageHeading = screen.getByText(
-      "What are the first waste carrier's contact details?"
+      "What are the first waste carrier's contact details?",
     );
     expect(pageHeading).toBeTruthy();
   });

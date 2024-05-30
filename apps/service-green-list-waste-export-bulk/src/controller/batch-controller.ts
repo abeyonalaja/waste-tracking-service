@@ -13,7 +13,7 @@ export default class BatchController {
   constructor(
     private repository: BatchRepository,
     private daprAnnexViiClient: DaprAnnexViiClient,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   addContentToBatch: Handler<
@@ -85,7 +85,7 @@ export default class BatchController {
         };
 
         return success(
-          await this.repository.saveBatch(bulkSubmission, accountId)
+          await this.repository.saveBatch(bulkSubmission, accountId),
         );
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -125,7 +125,7 @@ export default class BatchController {
 
       if (!submissions.success) {
         this.logger.error(
-          `Failed to get submissions for bulk record with accountId: ${accountId} and id: ${id}`
+          `Failed to get submissions for bulk record with accountId: ${accountId} and id: ${id}`,
         );
         throw Boom.internal();
       }

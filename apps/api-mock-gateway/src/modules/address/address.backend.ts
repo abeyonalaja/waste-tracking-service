@@ -8,14 +8,14 @@ import {
 export async function listAddresses(
   db: DB,
   postcode: string,
-  buildingNameOrNumber: string | undefined
+  buildingNameOrNumber: string | undefined,
 ): Promise<ListAddressesResponse> {
   if (postcode === 'aa11aa') {
     return [];
   }
   if (postcode === 'AA11AA') {
     const address = db.addresses.find(
-      (a: Address) => a.postcode === 'AA1 1AA'
+      (a: Address) => a.postcode === 'AA1 1AA',
     ) as Address;
     return [address];
   }

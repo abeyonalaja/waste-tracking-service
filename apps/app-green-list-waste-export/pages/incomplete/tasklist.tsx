@@ -135,7 +135,7 @@ const Tasklist = () => {
   const apiConfig = useApiConfig();
   const [tasklistPage, dispatchTasklistPage] = useReducer(
     tasklistReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
   const [id, setId] = useState<string>(null);
   const [showBanner, setShowBanner] = useState<boolean>(false);
@@ -180,8 +180,8 @@ const Tasklist = () => {
                 setShowBanner(
                   differenceInSeconds(
                     new Date(),
-                    parseISO(data?.submissionState.timestamp)
-                  ) < 5
+                    parseISO(data?.submissionState.timestamp),
+                  ) < 5,
                 );
               }
             }
@@ -323,7 +323,7 @@ const Tasklist = () => {
                         }}
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription'
+                          'exportJourney.submitAnExport.SectionOne.wasteCodesAndDescription',
                         )}
                       </AppLink>
                     </TaskName>
@@ -339,7 +339,7 @@ const Tasklist = () => {
                       {tasklistPage.data?.wasteQuantity.status ===
                       'CannotStart' ? (
                         t(
-                          'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
+                          'exportJourney.submitAnExport.SectionOne.quantityOfWaste',
                         )
                       ) : (
                         <AppLink
@@ -349,7 +349,7 @@ const Tasklist = () => {
                           }}
                         >
                           {t(
-                            'exportJourney.submitAnExport.SectionOne.quantityOfWaste'
+                            'exportJourney.submitAnExport.SectionOne.quantityOfWaste',
                           )}
                         </AppLink>
                       )}
@@ -377,15 +377,15 @@ const Tasklist = () => {
                             'Complete'
                               ? `/incomplete/exporter-importer/exporter-address`
                               : tasklistPage.data?.exporterDetail.status ===
-                                'Started'
-                              ? `/incomplete/exporter-importer/exporter-details-manual`
-                              : `/incomplete/exporter-importer/exporter-postcode`,
+                                  'Started'
+                                ? `/incomplete/exporter-importer/exporter-details-manual`
+                                : `/incomplete/exporter-importer/exporter-postcode`,
                           query: { id, dashboard: true },
                         }}
                         id="exporter-details"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionTwo.exporterDetails'
+                          'exportJourney.submitAnExport.SectionTwo.exporterDetails',
                         )}
                       </AppLink>
                     </TaskName>
@@ -406,7 +406,7 @@ const Tasklist = () => {
                         id="importer-details"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionTwo.importerDetails'
+                          'exportJourney.submitAnExport.SectionTwo.importerDetails',
                         )}
                       </AppLink>
                     </TaskName>
@@ -434,7 +434,7 @@ const Tasklist = () => {
                         id="collection-date"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionThree.collectionDate'
+                          'exportJourney.submitAnExport.SectionThree.collectionDate',
                         )}
                       </AppLink>
                     </TaskName>
@@ -455,7 +455,7 @@ const Tasklist = () => {
                         id="waste-carriers"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionThree.wasteCarriers'
+                          'exportJourney.submitAnExport.SectionThree.wasteCarriers',
                         )}
                       </AppLink>
                     </TaskName>
@@ -476,7 +476,7 @@ const Tasklist = () => {
                         id="collection-details"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails'
+                          'exportJourney.submitAnExport.SectionThree.wasteCollectionDetails',
                         )}
                       </AppLink>
                     </TaskName>
@@ -497,7 +497,7 @@ const Tasklist = () => {
                         id="location-waste-leaves-the-uk"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK'
+                          'exportJourney.submitAnExport.SectionThree.locationWasteLeavesUK',
                         )}
                       </AppLink>
                     </TaskName>
@@ -518,7 +518,7 @@ const Tasklist = () => {
                         id="countries-waste-will-travel-through"
                       >
                         {t(
-                          'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel'
+                          'exportJourney.submitAnExport.SectionThree.countriesWasteWillTravel',
                         )}
                       </AppLink>
                     </TaskName>
@@ -541,7 +541,7 @@ const Tasklist = () => {
                       {tasklistPage.data?.recoveryFacilityDetail.status ===
                         'CannotStart' &&
                         t(
-                          'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory'
+                          'exportJourney.submitAnExport.SectionFour.recoveryFacilityLaboratory',
                         )}
                       {(tasklistPage.data?.wasteDescription.status ===
                         'Started' ||
@@ -557,7 +557,7 @@ const Tasklist = () => {
                             }}
                           >
                             {t(
-                              'exportJourney.submitAnExport.SectionFour.laboratoryDetails'
+                              'exportJourney.submitAnExport.SectionFour.laboratoryDetails',
                             )}
                           </AppLink>
                         )}
@@ -577,7 +577,7 @@ const Tasklist = () => {
                             }}
                           >
                             {t(
-                              'exportJourney.submitAnExport.SectionFour.recoveryDetails'
+                              'exportJourney.submitAnExport.SectionFour.recoveryDetails',
                             )}
                           </AppLink>
                         )}
@@ -610,12 +610,12 @@ const Tasklist = () => {
                           }}
                         >
                           {t(
-                            'exportJourney.submitAnExport.SectionFive.checkYourReport'
+                            'exportJourney.submitAnExport.SectionFive.checkYourReport',
                           )}
                         </AppLink>
                       ) : (
                         t(
-                          'exportJourney.submitAnExport.SectionFive.checkYourReport'
+                          'exportJourney.submitAnExport.SectionFive.checkYourReport',
                         )
                       )}
                     </TaskName>
@@ -640,12 +640,12 @@ const Tasklist = () => {
                           }}
                         >
                           {t(
-                            'exportJourney.submitAnExport.SectionFive.signDeclaration'
+                            'exportJourney.submitAnExport.SectionFive.signDeclaration',
                           )}
                         </AppLink>
                       ) : (
                         t(
-                          'exportJourney.submitAnExport.SectionFive.signDeclaration'
+                          'exportJourney.submitAnExport.SectionFive.signDeclaration',
                         )
                       )}
                     </TaskName>

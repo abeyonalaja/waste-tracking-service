@@ -2,7 +2,7 @@ export async function getSubmission(
   hostname: string,
   multiplesId: string,
   submissionId: string,
-  token: string
+  token: string,
 ): Promise<Response> {
   let protocol = 'https';
 

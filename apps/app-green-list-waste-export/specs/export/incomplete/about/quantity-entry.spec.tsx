@@ -68,7 +68,7 @@ global.fetch = jest.fn(
             timestamp: '2023-08-31T15:40:09.165Z',
           },
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Quantity entry page', () => {

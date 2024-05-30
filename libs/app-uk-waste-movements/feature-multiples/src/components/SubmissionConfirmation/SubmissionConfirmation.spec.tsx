@@ -34,7 +34,7 @@ describe('Submission Confirmation component', () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
         <SubmissionConfirmation submissionId="123" recordCount={5} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(screen.getByText('5 waste movements created')).toBeInTheDocument();
   });
@@ -43,7 +43,7 @@ describe('Submission Confirmation component', () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
         <SubmissionConfirmation submissionId="123" recordCount={1} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(screen.getByText('1 waste movement created')).toBeInTheDocument();
   });
@@ -55,13 +55,13 @@ describe('Submission Confirmation component', () => {
           submissionId="fa9fb092-1b60-4391-bf08-5cc8d60606b5"
           recordCount={548}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(
-      screen.getByText(messages.multiples.confirmation.bullet1.toString())
+      screen.getByText(messages.multiples.confirmation.bullet1.toString()),
     ).toHaveAttribute(
       'href',
-      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view?page=1'
+      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view?page=1',
     );
   });
 });

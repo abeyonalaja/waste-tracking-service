@@ -5,7 +5,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('BreadcrumbWrap', () => {
@@ -13,7 +13,7 @@ describe('BreadcrumbWrap', () => {
     render(
       <BreadcrumbWrap testId="testBreadcrumbWrap">
         <></>
-      </BreadcrumbWrap>
+      </BreadcrumbWrap>,
     );
     expect(screen.getByTestId('testBreadcrumbWrap')).toBeTruthy();
   });
@@ -21,13 +21,13 @@ describe('BreadcrumbWrap', () => {
     render(
       <BreadcrumbWrap testId="testBreadcrumbWrap">
         <div data-testid="testBreadcrumb" />
-      </BreadcrumbWrap>
+      </BreadcrumbWrap>,
     );
 
     expect(
       within(screen.getByTestId('testBreadcrumbWrap')).getByTestId(
-        'testBreadcrumb'
-      )
+        'testBreadcrumb',
+      ),
     ).toBeTruthy();
   });
 });

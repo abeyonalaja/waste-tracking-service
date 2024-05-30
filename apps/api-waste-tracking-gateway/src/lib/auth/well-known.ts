@@ -1,5 +1,5 @@
 export async function getWellKnownParams(
-  uri: string
+  uri: string,
 ): Promise<{ issuer: string; jwksUri: string }> {
   const response = await fetch(uri);
   const body = await response.json();

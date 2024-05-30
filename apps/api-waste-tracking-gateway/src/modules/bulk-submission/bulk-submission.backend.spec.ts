@@ -50,7 +50,7 @@ jest.mock('@wts/client/green-list-waste-export-bulk', () => ({
 describe(AnnexViiBulkServiceBackend, () => {
   const subject = new AnnexViiBulkServiceBackend(
     new DaprAnnexViiBulkClient(new DaprClient(), faker.datatype.string()),
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {

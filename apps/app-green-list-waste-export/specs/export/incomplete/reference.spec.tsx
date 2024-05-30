@@ -14,7 +14,7 @@ global.fetch = jest.fn(() =>
       Promise.resolve({
         data: {},
       }),
-  })
+  }),
 );
 
 jest.mock('next/router', () => require('next-router-mock'));
@@ -34,8 +34,8 @@ describe('Add reference to submission', () => {
     });
     expect(
       screen.getByText(
-        'What is your unique reference for this Annex VII record?'
-      )
+        'What is your unique reference for this Annex VII record?',
+      ),
     ).toBeTruthy();
 
     const submitButton = screen.getByText('Save and continue');
@@ -53,8 +53,8 @@ describe('Add reference to submission', () => {
     });
     expect(
       screen.getByText(
-        'What is your unique reference for this Annex VII record?'
-      )
+        'What is your unique reference for this Annex VII record?',
+      ),
     ).toBeTruthy();
 
     const reference = screen.getByLabelText('Enter a reference');
@@ -73,8 +73,8 @@ describe('Add reference to submission', () => {
     });
     expect(
       screen.getByText(
-        'What is your unique reference for this Annex VII record?'
-      )
+        'What is your unique reference for this Annex VII record?',
+      ),
     ).toBeTruthy();
 
     const reference = screen.getByLabelText('Enter a reference');
@@ -93,8 +93,8 @@ describe('Add reference to submission', () => {
     });
     expect(
       screen.getByText(
-        'What is your unique reference for this Annex VII record?'
-      )
+        'What is your unique reference for this Annex VII record?',
+      ),
     ).toBeTruthy();
 
     const reference = screen.getByLabelText('Enter a reference');
@@ -107,7 +107,7 @@ describe('Add reference to submission', () => {
 
     expect(screen.getByText('There is a problem')).toBeTruthy();
     expect(
-      screen.getAllByText('Enter a reference using 20 character or less')[0]
+      screen.getAllByText('Enter a reference using 20 character or less')[0],
     ).toBeTruthy();
   });
 
@@ -117,8 +117,8 @@ describe('Add reference to submission', () => {
     });
     expect(
       screen.getByText(
-        'What is your unique reference for this Annex VII record?'
-      )
+        'What is your unique reference for this Annex VII record?',
+      ),
     ).toBeTruthy();
 
     const reference = screen.getByLabelText('Enter a reference');
@@ -131,7 +131,9 @@ describe('Add reference to submission', () => {
 
     expect(screen.getByText('There is a problem')).toBeTruthy();
     expect(
-      screen.getAllByText('Enter a reference using only numbers and letters')[0]
+      screen.getAllByText(
+        'Enter a reference using only numbers and letters',
+      )[0],
     ).toBeTruthy();
   });
 });

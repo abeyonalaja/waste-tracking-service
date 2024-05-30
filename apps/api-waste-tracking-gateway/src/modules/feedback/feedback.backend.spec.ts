@@ -17,7 +17,7 @@ const mockClientFeedback = {
 describe('FeedbackServiceBackend', () => {
   const subject = new FeedbackServiceBackend(
     mockClientFeedback as unknown as DaprFeedbackClient,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {
@@ -65,7 +65,7 @@ describe('FeedbackServiceBackend', () => {
     const feedback = 'Great service';
     const rating = 5;
     await expect(
-      subject.sendFeedback(serviceName, feedback, rating)
+      subject.sendFeedback(serviceName, feedback, rating),
     ).rejects.toThrow();
     expect(mockClientFeedback.sendFeedback).toHaveBeenCalledWith({
       serviceName,

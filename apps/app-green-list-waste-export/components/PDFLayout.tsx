@@ -237,9 +237,9 @@ const Pages = ({ data }) => {
                     new Date(
                       Number(data.collectionDate.actualDate.year),
                       Number(data.collectionDate.actualDate.month) - 1,
-                      Number(data.collectionDate.actualDate.day)
+                      Number(data.collectionDate.actualDate.day),
                     ),
-                    'd MMMM y'
+                    'd MMMM y',
                   )}
               </Text>
             </Text>

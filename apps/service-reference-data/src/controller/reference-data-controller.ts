@@ -25,13 +25,13 @@ const localAuthoritiesId = 'local-authorities';
 export default class ReferenceDataController {
   constructor(
     private repository: ReferenceDataRepository,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   getWasteCodes: Handler<null, api.GetWasteCodesResponse> = async () => {
     try {
       return success(
-        await this.repository.getList<WasteCodeType>(wasteCodesId)
+        await this.repository.getList<WasteCodeType>(wasteCodesId),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -67,7 +67,7 @@ export default class ReferenceDataController {
         let countries = await this.repository.getList<Country>(countriesId);
         if (!includeUk) {
           countries = countries.filter(
-            (country) => !country.name.includes('United Kingdom')
+            (country) => !country.name.includes('United Kingdom'),
           );
         }
         return success(countries);
@@ -83,7 +83,7 @@ export default class ReferenceDataController {
   getRecoveryCodes: Handler<null, api.GetRecoveryCodesResponse> = async () => {
     try {
       return success(
-        await this.repository.getList<RecoveryCode>(recoveryCodesId)
+        await this.repository.getList<RecoveryCode>(recoveryCodesId),
       );
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -112,7 +112,7 @@ export default class ReferenceDataController {
     async () => {
       try {
         return success(
-          await this.repository.getList<WasteCode>(hazardousCodesId)
+          await this.repository.getList<WasteCode>(hazardousCodesId),
         );
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -141,7 +141,7 @@ export default class ReferenceDataController {
     async () => {
       try {
         return success(
-          await this.repository.getList<LocalAuthority>(localAuthoritiesId)
+          await this.repository.getList<LocalAuthority>(localAuthoritiesId),
         );
       } catch (err) {
         if (err instanceof Boom.Boom) {
@@ -159,7 +159,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<WasteCodeType>(wasteCodesId, values)
+        await this.repository.saveList<WasteCodeType>(wasteCodesId, values),
       ) as api.CreateWasteCodesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -177,7 +177,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<WasteCode>(ewcCodesId, values)
+        await this.repository.saveList<WasteCode>(ewcCodesId, values),
       ) as api.CreateEWCCodesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -195,7 +195,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<Country>(countriesId, values)
+        await this.repository.saveList<Country>(countriesId, values),
       ) as api.CreateCountriesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -213,7 +213,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<RecoveryCode>(recoveryCodesId, values)
+        await this.repository.saveList<RecoveryCode>(recoveryCodesId, values),
       ) as api.CreateRecoveryCodesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -231,7 +231,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<WasteCode>(disposalCodesId, values)
+        await this.repository.saveList<WasteCode>(disposalCodesId, values),
       ) as api.CreateDisposalCodesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -249,7 +249,7 @@ export default class ReferenceDataController {
   > = async (values) => {
     try {
       return success(
-        await this.repository.saveList<WasteCode>(hazardousCodesId, values)
+        await this.repository.saveList<WasteCode>(hazardousCodesId, values),
       ) as api.CreateHazardousCodesResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -262,11 +262,11 @@ export default class ReferenceDataController {
   };
 
   createPops: Handler<api.CreatePopsRequest, api.CreatePopsResponse> = async (
-    values
+    values,
   ) => {
     try {
       return success(
-        await this.repository.saveList<Pop>(popCodesId, values)
+        await this.repository.saveList<Pop>(popCodesId, values),
       ) as api.CreatePopsResponse;
     } catch (err) {
       if (err instanceof Boom.Boom) {

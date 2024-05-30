@@ -14,7 +14,7 @@ describe('Width Container component', () => {
     const testChildren = <span>Child element</span>;
     const testId = 'testId';
     render(
-      <Panel title={`Test title`} children={testChildren} testId={testId} />
+      <Panel title={`Test title`} children={testChildren} testId={testId} />,
     );
     const textElement = screen.getByText('Child element');
     expect(textElement).toBeTruthy();

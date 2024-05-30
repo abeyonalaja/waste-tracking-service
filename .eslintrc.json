@@ -1,7 +1,7 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nrwl/nx", "@nx"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "overrides": [
     {
@@ -34,7 +34,24 @@
         "@typescript-eslint/explicit-module-boundary-types": "error",
         "@typescript-eslint/consistent-type-definitions": "error",
         "semi": [2, "always"],
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "@nx/dependency-checks": [
+          "error",
+          {
+            "buildTargets": ["build", "custom-build"],
+            "checkMissingDependencies": true,
+            "checkObsoleteDependencies": true,
+            "checkVersionMismatches": true,
+            "ignoredDependencies": [
+              "^eslint.*",
+              "^typescript-eslint.*",
+              "^esbuild$"
+            ],
+            "ignoredFiles": ["webpack.config.js", "eslint.config.js"],
+            "includeTransitiveDependencies": true,
+            "useLocalPathsForWorkspaceDependencies": true
+          }
+        ]
       }
     },
     {

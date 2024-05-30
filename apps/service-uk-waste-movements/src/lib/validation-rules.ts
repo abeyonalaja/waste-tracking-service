@@ -21,7 +21,7 @@ import {
 } from '../model';
 
 import { parse, isValid } from 'date-fns';
-import enGB from 'date-fns/locale/en-GB';
+import { enGB } from 'date-fns/locale/en-GB';
 
 function titleCase(str: string) {
   return str
@@ -76,7 +76,7 @@ const wasteQuantitiesMap: { [key: string]: QuantityUnit } = {
 };
 
 export function validateProducerDetailSection(
-  value: ProducerDetailFlattened
+  value: ProducerDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ProducerDetail } {
@@ -262,7 +262,7 @@ export function validateProducerDetailSection(
   };
 }
 export function validateCarrierDetailSection(
-  value: CarrierDetailFlattened
+  value: CarrierDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CarrierDetail } {
@@ -430,7 +430,7 @@ export function validateCarrierDetailSection(
 
 export function validateWasteCollectionDetailSection(
   value: WasteCollectionDetailFlattened,
-  localAuthorities: LocalAuthority[]
+  localAuthorities: LocalAuthority[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteCollectionDetail } {
@@ -519,7 +519,7 @@ export function validateWasteCollectionDetailSection(
     });
   } else {
     value.wasteCollectionWasteSource = titleCaseSpacesRemoved(
-      value.wasteCollectionWasteSource
+      value.wasteCollectionWasteSource,
     );
     if (!wasteSources.includes(value.wasteCollectionWasteSource)) {
       errors.push({
@@ -546,7 +546,7 @@ export function validateWasteCollectionDetailSection(
     !localAuthorities.some(
       (la) =>
         la.name.en.toLowerCase() ===
-        value.wasteCollectionLocalAuthority.trim().toLowerCase()
+        value.wasteCollectionLocalAuthority.trim().toLowerCase(),
     )
   ) {
     errors.push({
@@ -589,7 +589,7 @@ export function validateWasteCollectionDetailSection(
       value.wasteCollectionExpectedWasteCollectionDate,
       'P',
       new Date(),
-      { locale: enGB }
+      { locale: enGB },
     );
     const isValidDate = isValid(parsedDate);
     if (value.wasteCollectionExpectedWasteCollectionDate && !isValidDate) {
@@ -635,7 +635,7 @@ export function validateWasteCollectionDetailSection(
 }
 
 export function validateReceiverDetailSection(
-  value: ReceiverDetailFlattened
+  value: ReceiverDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ReceiverDetail } {
@@ -819,7 +819,7 @@ export function validateReceiverDetailSection(
 }
 
 export function validateWasteTransportationDetailSection(
-  value: WasteTransportationDetailFlattened
+  value: WasteTransportationDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteTransportationDetail } {
@@ -895,7 +895,7 @@ export function validateWasteTypeDetailSection(
   value: WasteTypeDetailFlattened,
   hazardousCodesRefData: WasteCode[],
   popsRefData: Pop[],
-  ewcCodes: WasteCode[]
+  ewcCodes: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteTypeDetail[] } {
@@ -1151,14 +1151,14 @@ export function validateWasteTypeDetailSection(
     }
 
     const errorCodes = validation.errorCodes.WasteTypeValidationErrorCode(
-      index + 1
+      index + 1,
     );
     const entryValidationResult = validateWasteTypeEntry(
       wasteType,
       errorCodes,
       hazardousCodesRefData,
       popsRefData,
-      ewcCodes
+      ewcCodes,
     );
 
     if (!entryValidationResult.valid) {
@@ -1186,7 +1186,7 @@ function validateWasteTypeEntry(
   errorCode: WasteTypeErrorCode,
   hazardousCodesRefData: WasteCode[],
   popsRefData: Pop[],
-  ewcCodes: WasteCode[]
+  ewcCodes: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteTypeDetail } {
@@ -1206,7 +1206,7 @@ function validateWasteTypeEntry(
     !ewcCodes.some(
       (ewc) =>
         ewc.code === wasteType.wasteTypeEwcCode ||
-        ewc.code === wasteType.wasteTypeEwcCode + '*'
+        ewc.code === wasteType.wasteTypeEwcCode + '*',
     )
   ) {
     errors.push({
@@ -1238,7 +1238,7 @@ function validateWasteTypeEntry(
     });
   } else {
     wasteType.wasteTypePhysicalForm = titleCase(
-      wasteType.wasteTypePhysicalForm
+      wasteType.wasteTypePhysicalForm,
     );
     if (!wastePhysicalForms.includes(wasteType.wasteTypePhysicalForm)) {
       errors.push({
@@ -1263,7 +1263,7 @@ function validateWasteTypeEntry(
       });
     } else {
       wasteQuantity = Number(
-        parseFloat(wasteType.wasteTypeWasteQuantity).toFixed(2)
+        parseFloat(wasteType.wasteTypeWasteQuantity).toFixed(2),
       );
 
       if (!(wasteQuantity > validation.WasteQuantityValue.greaterThan)) {
@@ -1364,7 +1364,7 @@ function validateWasteTypeEntry(
         }
 
         chemicalAndBiologicalConcentrations.push(
-          Number(parseFloat(concentration).toFixed(2))
+          Number(parseFloat(concentration).toFixed(2)),
         );
       }
     }
@@ -1431,14 +1431,14 @@ function validateWasteTypeEntry(
     ...new Set(
       wasteType.wasteTypeHazardousWasteCodesString
         ?.split(';')
-        ?.filter((str) => str)
+        ?.filter((str) => str),
     ),
   ];
 
   const hazardousCodes = hazardousCodesRefData.filter((hazCode) =>
     hazardousCodesInput.some(
-      (code) => code.toLowerCase() === hazCode.code.toLowerCase()
-    )
+      (code) => code.toLowerCase() === hazCode.code.toLowerCase(),
+    ),
   );
 
   if (hasHazardousProperties && !hazardousCodesInput.length) {
@@ -1454,8 +1454,8 @@ function validateWasteTypeEntry(
       (code) =>
         !hazardousCodesRefData.some(
           (hazardousCode) =>
-            hazardousCode.code.toLowerCase() === code.toLowerCase()
-        )
+            hazardousCode.code.toLowerCase() === code.toLowerCase(),
+        ),
     );
 
     if (invalidHazardousCodes.length > 0) {
@@ -1498,12 +1498,12 @@ function validateWasteTypeEntry(
         wasteType.wasteTypePopsString
           .split(';')
           .map((str) => str.trim())
-          .filter((str) => str)
+          .filter((str) => str),
       ),
     ];
     const invalidPops = pops.filter(
       (pop) =>
-        !popsRefData.some((p) => p.name.en.toLowerCase() === pop.toLowerCase())
+        !popsRefData.some((p) => p.name.en.toLowerCase() === pop.toLowerCase()),
     );
 
     if (invalidPops.length > 0) {
@@ -1604,7 +1604,7 @@ function validateWasteTypeEntry(
           name: chemicalAndBiologicalComponent,
           concentration: chemicalAndBiologicalConcentrations[index],
           concentrationUnit: chemicalAndBiologicalConcentrationUnits![index],
-        })
+        }),
       ),
       hazardousWasteCodes: hazardousCodes.map((hazCode) => ({
         code: hazCode.code,

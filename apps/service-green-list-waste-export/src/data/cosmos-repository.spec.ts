@@ -74,7 +74,7 @@ describe(CosmosRepository, () => {
     }),
     mockCosmosDbName,
     cosmosContainerMap,
-    logger
+    logger,
   );
 
   describe('getRecords', () => {
@@ -86,7 +86,7 @@ describe(CosmosRepository, () => {
       } as unknown as FeedResponse<object>);
 
       expect(
-        await subject.getRecords('drafts', faker.datatype.uuid(), 'ASC')
+        await subject.getRecords('drafts', faker.datatype.uuid(), 'ASC'),
       ).toEqual({
         totalRecords: 0,
         totalPages: 0,
@@ -165,7 +165,7 @@ describe(CosmosRepository, () => {
       } as unknown as ItemResponse<object>);
 
       expect(subject.getRecord('drafts', id, accountId)).rejects.toThrow(
-        Boom.notFound()
+        Boom.notFound(),
       );
       expect(mockRead).toBeCalledTimes(1);
     });
@@ -178,7 +178,7 @@ describe(CosmosRepository, () => {
       } as unknown as FeedResponse<object>);
 
       expect(
-        await subject.getTotalNumber('drafts', faker.datatype.uuid())
+        await subject.getTotalNumber('drafts', faker.datatype.uuid()),
       ).toEqual(2);
     });
   });

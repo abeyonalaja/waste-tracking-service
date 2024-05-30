@@ -34,7 +34,7 @@ export function SubmitButton({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
     } catch (error) {
       console.error(error);
@@ -42,7 +42,7 @@ export function SubmitButton({
 
     if (response!.status === 201) {
       router.push(
-        `/multiples/${submissionId}?filename=${searchParams.get('filename')}`
+        `/multiples/${submissionId}?filename=${searchParams.get('filename')}`,
       );
     } else {
       router.push(`/404`);

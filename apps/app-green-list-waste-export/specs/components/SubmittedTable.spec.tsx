@@ -65,7 +65,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ data: {} }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next/router', () => ({
@@ -87,7 +87,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
   });
@@ -100,7 +100,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
     const table = screen.getByRole('table');
@@ -115,7 +115,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -131,7 +131,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -159,7 +159,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -175,7 +175,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -194,7 +194,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -210,7 +210,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -226,7 +226,7 @@ describe('SubmittedTable component', () => {
           apiConfig={mockApiConfig}
           sortOrder={'asc'}
           pageNumber={1}
-        />
+        />,
       );
     });
 
@@ -235,7 +235,7 @@ describe('SubmittedTable component', () => {
 
     expect(link).toHaveAttribute(
       'href',
-      '/multiples/123/view/39d8e6a1-3f0a-4d98-a875-b2d71566f662?sort=asc&page=1'
+      '/multiples/123/view/39d8e6a1-3f0a-4d98-a875-b2d71566f662?sort=asc&page=1',
     );
   });
 });

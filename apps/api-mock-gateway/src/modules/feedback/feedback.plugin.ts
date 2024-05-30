@@ -4,7 +4,10 @@ import { sendFeedback } from './feedback.backend';
 import { BadRequestError, InternalServerError } from '../../lib/errors';
 
 export default class FeedbackPlugin {
-  constructor(private server: Application, private prefix: string) {}
+  constructor(
+    private server: Application,
+    private prefix: string,
+  ) {}
 
   async register(): Promise<void> {
     this.server.post(this.prefix, async (req, res) => {

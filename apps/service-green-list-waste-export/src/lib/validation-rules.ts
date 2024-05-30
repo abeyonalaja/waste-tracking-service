@@ -63,7 +63,7 @@ const carrierMeansOfTransport = [
 ];
 
 export function validateCustomerReferenceSection(
-  value: CustomerReferenceFlattened
+  value: CustomerReferenceFlattened,
 ):
   | { valid: false; value: FieldFormatError }
   | { valid: true; value: CustomerReference } {
@@ -112,7 +112,7 @@ export function validateCustomerReferenceSection(
 
 export function validateWasteCodeSubSection(
   value: WasteCodeSubSectionFlattened,
-  wasteCodeList: WasteCodeType[]
+  wasteCodeList: WasteCodeType[],
 ):
   | { valid: false; value: FieldFormatError }
   | { valid: true; value: WasteDescription['wasteCode'] } {
@@ -171,7 +171,7 @@ export function validateWasteCodeSubSection(
       .filter((c) => c.type === 'BaselAnnexIX')[0]
       .values.filter(
         (v) =>
-          v.code === value.baselAnnexIXCode.replace(/\s/g, '').toUpperCase()
+          v.code === value.baselAnnexIXCode.replace(/\s/g, '').toUpperCase(),
       );
     if (filteredWasteCodeList.length !== 1) {
       return {
@@ -193,7 +193,7 @@ export function validateWasteCodeSubSection(
     const filteredWasteCodeList = wasteCodeList
       .filter((c) => c.type === 'OECD')[0]
       .values.filter(
-        (v) => v.code === value.oecdCode.replace(/\s/g, '').toUpperCase()
+        (v) => v.code === value.oecdCode.replace(/\s/g, '').toUpperCase(),
       );
     if (filteredWasteCodeList.length !== 1) {
       return {
@@ -239,7 +239,7 @@ export function validateWasteCodeSubSection(
     const filteredWasteCodeList = wasteCodeList
       .filter((c) => c.type === 'AnnexIIIB')[0]
       .values.filter(
-        (v) => v.code === value.annexIIIBCode.replace(/\s/g, '').toUpperCase()
+        (v) => v.code === value.annexIIIBCode.replace(/\s/g, '').toUpperCase(),
       );
     if (filteredWasteCodeList.length !== 1) {
       return {
@@ -282,7 +282,7 @@ export function validateWasteCodeSubSection(
 
 export function validateWasteDescriptionSubSection(
   value: WasteDescriptionSubSectionFlattened,
-  ewcCodeList: WasteCode[]
+  ewcCodeList: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: Omit<WasteDescription, 'wasteCode'> } {
@@ -369,7 +369,7 @@ export function validateWasteDescriptionSubSection(
 export function validateWasteDescriptionSection(
   value: WasteDescriptionFlattened,
   wasteCodeList: WasteCodeType[],
-  ewcCodeList: WasteCode[]
+  ewcCodeList: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteDescription } {
@@ -383,7 +383,7 @@ export function validateWasteDescriptionSection(
       annexIIIBCode: value.annexIIIBCode,
       laboratory: value.laboratory,
     },
-    wasteCodeList
+    wasteCodeList,
   );
 
   if (!wasteCodeSubSection.valid) {
@@ -396,7 +396,7 @@ export function validateWasteDescriptionSection(
       nationalCode: value.nationalCode,
       wasteDescription: value.wasteDescription,
     },
-    ewcCodeList
+    ewcCodeList,
   );
 
   if (!wasteDescriptionSubSection.valid) {
@@ -422,7 +422,7 @@ export function validateWasteDescriptionSection(
 }
 
 export function validateWasteQuantitySection(
-  value: WasteQuantityFlattened
+  value: WasteQuantityFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteQuantity } {
@@ -455,7 +455,7 @@ export function validateWasteQuantitySection(
         });
       } else {
         const wasteQuantityTonnes = Number(
-          parseFloat(value.wasteQuantityTonnes).toFixed(2)
+          parseFloat(value.wasteQuantityTonnes).toFixed(2),
         );
         if (
           !(
@@ -487,7 +487,7 @@ export function validateWasteQuantitySection(
         });
       } else {
         const wasteQuantityCubicMetres = Number(
-          parseFloat(value.wasteQuantityCubicMetres).toFixed(2)
+          parseFloat(value.wasteQuantityCubicMetres).toFixed(2),
         );
         if (
           !(
@@ -520,7 +520,7 @@ export function validateWasteQuantitySection(
         });
       } else {
         const wasteQuantityKilograms = Number(
-          parseFloat(value.wasteQuantityKilograms).toFixed(2)
+          parseFloat(value.wasteQuantityKilograms).toFixed(2),
         );
         if (
           !(
@@ -578,7 +578,7 @@ export function validateWasteQuantitySection(
 
 export function validateWasteCodeSubSectionAndQuantityCrossSection(
   wasteCodeSubSection: WasteDescription['wasteCode'],
-  wasteQuantity: WasteQuantity
+  wasteQuantity: WasteQuantity,
 ): { valid: false; value: InvalidAttributeCombinationError } | { valid: true } {
   if (
     wasteCodeSubSection.type !== 'NotApplicable' &&
@@ -627,7 +627,7 @@ export function validateWasteCodeSubSectionAndQuantityCrossSection(
 }
 
 export function validateExporterDetailSection(
-  value: ExporterDetailFlattened
+  value: ExporterDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ExporterDetail } {
@@ -755,7 +755,7 @@ export function validateExporterDetailSection(
 
   const reformattedExporterFaxNumber = value.exporterFaxNumber.replace(
     /'/g,
-    ''
+    '',
   );
   if (
     reformattedExporterFaxNumber &&
@@ -824,7 +824,7 @@ export function validateExporterDetailSection(
 
 export function validateImporterDetailSection(
   value: ImporterDetailFlattened,
-  countryList: Country[]
+  countryList: Country[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ImporterDetail } {
@@ -871,7 +871,7 @@ export function validateImporterDetailSection(
     });
   } else {
     const filteredCountryList = countryList.filter((c) =>
-      c.name.toUpperCase().includes(value.importerCountry.toUpperCase())
+      c.name.toUpperCase().includes(value.importerCountry.toUpperCase()),
     );
     if (filteredCountryList.length !== 1) {
       errors.push({
@@ -911,7 +911,7 @@ export function validateImporterDetailSection(
   } else {
     if (
       !validation.phoneInternationalRegex.test(
-        reformattedImporterContactPhoneNumber
+        reformattedImporterContactPhoneNumber,
       )
     ) {
       errors.push({
@@ -923,7 +923,7 @@ export function validateImporterDetailSection(
 
   const reformattedImporterFaxNumber = value.importerFaxNumber.replace(
     /'/g,
-    ''
+    '',
   );
   if (
     reformattedImporterFaxNumber &&
@@ -986,7 +986,7 @@ export function validateImporterDetailSection(
 }
 
 export function validateCollectionDateSection(
-  value: CollectionDateFlattened
+  value: CollectionDateFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CollectionDate } {
@@ -1003,7 +1003,7 @@ export function validateCollectionDateSection(
     const collectionDate = new Date(
       Number(dateArr[2]),
       Number(dateArr[1]) - 1,
-      Number(dateArr[0])
+      Number(dateArr[0]),
     );
     if (
       !isValid(collectionDate) ||
@@ -1063,7 +1063,7 @@ export function validateCollectionDateSection(
 export function validateCarriersSection(
   value: CarriersFlattened,
   transport: boolean,
-  countryIncludingUkList: Country[]
+  countryIncludingUkList: Country[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: Carrier[] } {
@@ -1191,7 +1191,7 @@ export function validateCarriersSection(
       });
     } else {
       const filteredCountryList = countryIncludingUkList.filter((country) =>
-        country.name.toUpperCase().includes(c.carrierCountry.toUpperCase())
+        country.name.toUpperCase().includes(c.carrierCountry.toUpperCase()),
       );
       if (filteredCountryList.length !== 1) {
         errorCount += 1;
@@ -1231,7 +1231,7 @@ export function validateCarriersSection(
     } else {
       if (
         !validation.phoneInternationalRegex.test(
-          reformattedCarrierContactPhoneNumber
+          reformattedCarrierContactPhoneNumber,
         )
       ) {
         errorCount += 1;
@@ -1287,7 +1287,7 @@ export function validateCarriersSection(
         });
       } else {
         c.carrierMeansOfTransport = titleCase(
-          c.carrierMeansOfTransport
+          c.carrierMeansOfTransport,
         ).replace(/\s/g, '');
         if (!carrierMeansOfTransport.includes(c.carrierMeansOfTransport)) {
           errorCount += 1;
@@ -1358,7 +1358,7 @@ export function validateCarriersSection(
 
 export function validateWasteCodeSubSectionAndCarriersCrossSection(
   wasteCodeSubSection: WasteDescription['wasteCode'],
-  carriers: CarriersFlattened
+  carriers: CarriersFlattened,
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
@@ -1408,7 +1408,7 @@ export function validateWasteCodeSubSectionAndCarriersCrossSection(
 }
 
 export function validateCollectionDetailSection(
-  value: CollectionDetailFlattened
+  value: CollectionDetailFlattened,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CollectionDetail } {
@@ -1627,7 +1627,7 @@ export function validateCollectionDetailSection(
 }
 
 export function validateUkExitLocationSection(
-  value: ExitLocationFlattened
+  value: ExitLocationFlattened,
 ):
   | { valid: false; value: FieldFormatError }
   | { valid: true; value: UkExitLocation } {
@@ -1666,7 +1666,7 @@ export function validateUkExitLocationSection(
 
 export function validateTransitCountriesSection(
   value: TransitCountriesFlattened,
-  countryList: Country[]
+  countryList: Country[],
 ):
   | { valid: false; value: FieldFormatError }
   | { valid: true; value: TransitCountries } {
@@ -1678,7 +1678,7 @@ export function validateTransitCountriesSection(
 
     for (let i = 0; i < countryArr.length; i++) {
       const filteredCountryList = countryList.filter((v) =>
-        v.name.toUpperCase().includes(countryArr[i].trim())
+        v.name.toUpperCase().includes(countryArr[i].trim()),
       );
       if (filteredCountryList.length !== 1) {
         return {
@@ -1698,13 +1698,13 @@ export function validateTransitCountriesSection(
 
 export function validateImporterDetailAndTransitCountriesCrossSection(
   importerDetail: ImporterDetail,
-  transitCountries: TransitCountries
+  transitCountries: TransitCountries,
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
   if (
     transitCountries.some(
-      (c) => c === importerDetail.importerAddressDetails.country
+      (c) => c === importerDetail.importerAddressDetails.country,
     )
   ) {
     return {
@@ -1744,7 +1744,7 @@ function validateRecoveryFacilityEntry(
   type: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
   countryList: Country[],
   recoveryCodeList: RecoveryCode[],
-  disposalCodeList: WasteCode[]
+  disposalCodeList: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: RecoveryFacilityDetail[] } {
@@ -1812,7 +1812,7 @@ function validateRecoveryFacilityEntry(
       });
     } else {
       const filteredCountryList = countryList.filter((country) =>
-        country.name.toUpperCase().includes(v.country.toUpperCase())
+        country.name.toUpperCase().includes(v.country.toUpperCase()),
       );
       if (filteredCountryList.length !== 1) {
         errorCount += 1;
@@ -1901,16 +1901,17 @@ function validateRecoveryFacilityEntry(
       const filteredCodeList =
         type === 'Laboratory'
           ? disposalCodeList.filter(
-              (c) => c.code.toUpperCase() === v.code.toUpperCase()
+              (c) => c.code.toUpperCase() === v.code.toUpperCase(),
             )
           : type === 'InterimSite'
-          ? recoveryCodeList.filter(
-              (c) =>
-                c.value.interim && c.code.toUpperCase() === v.code.toUpperCase()
-            )
-          : recoveryCodeList.filter(
-              (c) => c.code.toUpperCase() === v.code.toUpperCase()
-            );
+            ? recoveryCodeList.filter(
+                (c) =>
+                  c.value.interim &&
+                  c.code.toUpperCase() === v.code.toUpperCase(),
+              )
+            : recoveryCodeList.filter(
+                (c) => c.code.toUpperCase() === v.code.toUpperCase(),
+              );
       if (filteredCodeList.length !== 1) {
         errorCount += 1;
         errors.push({
@@ -1967,7 +1968,7 @@ export function validateRecoveryFacilityDetailSection(
   smallWaste: boolean,
   countryList: Country[],
   recoveryCodeList: RecoveryCode[],
-  disposalCodeList: WasteCode[]
+  disposalCodeList: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: RecoveryFacilityDetail[] } {
@@ -1991,14 +1992,14 @@ export function validateRecoveryFacilityDetailSection(
       'Laboratory',
       countryList,
       recoveryCodeList,
-      disposalCodeList
+      disposalCodeList,
     );
 
     if (!laboratory.valid) {
       errors = errors.concat(laboratory.value);
     } else {
       recoveryFacilityEntries = recoveryFacilityEntries.concat(
-        laboratory.value
+        laboratory.value,
       );
     }
 
@@ -2041,14 +2042,14 @@ export function validateRecoveryFacilityDetailSection(
       'InterimSite',
       countryList,
       recoveryCodeList,
-      disposalCodeList
+      disposalCodeList,
     );
 
     if (!interimSite.valid) {
       errors = errors.concat(interimSite.value);
     } else {
       recoveryFacilityEntries = recoveryFacilityEntries.concat(
-        interimSite.value
+        interimSite.value,
       );
     }
   }
@@ -2110,14 +2111,14 @@ export function validateRecoveryFacilityDetailSection(
     'RecoveryFacility',
     countryList,
     recoveryCodeList,
-    disposalCodeList
+    disposalCodeList,
   );
 
   if (!recoveryFacilities.valid) {
     errors = errors.concat(recoveryFacilities.value);
   } else {
     recoveryFacilityEntries = recoveryFacilityEntries.concat(
-      recoveryFacilities.value
+      recoveryFacilities.value,
     );
   }
 
@@ -2136,7 +2137,7 @@ export function validateRecoveryFacilityDetailSection(
 
 export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
   wasteCodeSubSection: WasteDescription['wasteCode'],
-  recoveryFacilityDetail: RecoveryFacilityDetailFlattened
+  recoveryFacilityDetail: RecoveryFacilityDetailFlattened,
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {

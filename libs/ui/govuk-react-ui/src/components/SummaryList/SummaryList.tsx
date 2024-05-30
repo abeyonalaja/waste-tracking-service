@@ -8,7 +8,7 @@ interface SummaryListProps {
 }
 
 function slugify(
-  value: string | ReactNode | number | null | undefined
+  value: string | ReactNode | number | null | undefined,
 ): string {
   if (!value) return '';
   return value

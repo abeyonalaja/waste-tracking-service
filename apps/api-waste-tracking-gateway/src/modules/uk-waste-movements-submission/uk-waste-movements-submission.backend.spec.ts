@@ -22,7 +22,7 @@ const mockClient = {
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
   const subject = new ServiceUkWasteMovementsSubmissionBackend(
     mockClient as unknown as DaprUkWasteMovementsClient,
-    new Logger()
+    new Logger(),
   );
   beforeEach(() => {
     mockClient.getDraft.mockClear();

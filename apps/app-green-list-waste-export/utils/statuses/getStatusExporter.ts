@@ -15,7 +15,7 @@ export const getStatusExporter = (data) => {
     country: validateCountrySelect(data?.exporterAddress?.country),
     address: validateAddress(data?.exporterAddress?.addressLine1),
     organisationName: validateOrganisationName(
-      data?.exporterContactDetails?.organisationName
+      data?.exporterContactDetails?.organisationName,
     ),
     fullName: validateFullName(data?.exporterContactDetails?.fullName),
     email: validateEmail(data?.exporterContactDetails?.emailAddress),

@@ -16,7 +16,7 @@ const provider = new NodeTracerProvider({
       [SemanticResourceAttributes.SERVICE_NAME]: `${
         process.env['APP_ID'] || 'service-green-list-waste-export-bulk'
       }-impl`,
-    })
+    }),
   ),
 });
 
@@ -27,7 +27,7 @@ if (process.env['NODE_ENV'] === 'development') {
 const connectionString = process.env['APPINSIGHTS_CONNECTION_STRING'];
 if (connectionString !== undefined) {
   provider.addSpanProcessor(
-    new BatchSpanProcessor(new AzureMonitorTraceExporter({ connectionString }))
+    new BatchSpanProcessor(new AzureMonitorTraceExporter({ connectionString })),
   );
 }
 

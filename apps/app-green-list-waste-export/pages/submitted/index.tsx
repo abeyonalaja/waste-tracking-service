@@ -86,7 +86,7 @@ const Index = () => {
   const router = useRouter();
   const [submittedAnnex7Page, dispatchSubmittedAnnex7Page] = useReducer(
     submittedAnnex7Reducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
   const [paginationToken, setPaginationToken] = useState(null);
 
@@ -186,7 +186,7 @@ const Index = () => {
                       <GovUK.Table.Row>
                         <TableHeader id="table-header-transaction-number">
                           {t(
-                            'exportJourney.updateAnnexSeven.table.transactionNumber'
+                            'exportJourney.updateAnnexSeven.table.transactionNumber',
                           )}
                         </TableHeader>
 
@@ -195,7 +195,7 @@ const Index = () => {
                           id="table-header-collection-date"
                         >
                           {t(
-                            'exportJourney.submittedAnnexSeven.collectionDate'
+                            'exportJourney.submittedAnnexSeven.collectionDate',
                           )}
                         </TableHeader>
 
@@ -211,7 +211,7 @@ const Index = () => {
                           id="table-header-your-own-ref"
                         >
                           {t(
-                            'exportJourney.updateAnnexSeven.table.yourOwnReference'
+                            'exportJourney.updateAnnexSeven.table.yourOwnReference',
                           )}
                         </TableHeader>
 
@@ -232,9 +232,9 @@ const Index = () => {
                                   Number(item.collectionDate.actualDate.year),
                                   Number(item.collectionDate.actualDate.month) -
                                     1,
-                                  Number(item.collectionDate.actualDate.day)
+                                  Number(item.collectionDate.actualDate.day),
                                 ),
-                                'd MMM y'
+                                'd MMM y',
                               )}
                             </>
                           </TableCell>
@@ -250,7 +250,7 @@ const Index = () => {
                                   {getRefData(
                                     'WasteCode',
                                     item.wasteDescription?.wasteCode.code,
-                                    item.wasteDescription?.wasteCode.type
+                                    item.wasteDescription?.wasteCode.type,
                                   )}
                                 </>
                               )}
@@ -258,7 +258,7 @@ const Index = () => {
                                 'NotApplicable' && (
                                 <span id="waste-code-not-provided">
                                   {t(
-                                    'exportJourney.updateAnnexSeven.notApplicable'
+                                    'exportJourney.updateAnnexSeven.notApplicable',
                                   )}
                                 </span>
                               )}

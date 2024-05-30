@@ -31,12 +31,12 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
 {
   constructor(
     private client: DaprUkWasteMovementsBulkClient,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   async createBatch(
     accountId: string,
-    inputs: Input[]
+    inputs: Input[],
   ): Promise<{ id: string }> {
     try {
       if (inputs.length === 0) {

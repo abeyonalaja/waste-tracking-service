@@ -66,7 +66,7 @@ describe(CosmosBatchRepository, () => {
     }),
     mockCosmosDbName,
     mockCosmosContainerName,
-    logger
+    logger,
   );
 
   describe('getBatch', () => {

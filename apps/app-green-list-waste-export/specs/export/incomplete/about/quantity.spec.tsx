@@ -23,7 +23,7 @@ global.fetch = jest.fn(
             status: 'NotStarted',
           },
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Quantity page', () => {

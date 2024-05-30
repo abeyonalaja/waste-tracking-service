@@ -41,7 +41,7 @@ describe('Back Link component', () => {
         <NextIntlClientProvider messages={{}} locale="en">
           <BackLink text={testText} testId={testId} href="test" />
         </NextIntlClientProvider>
-      </AppRouterContextProviderMock>
+      </AppRouterContextProviderMock>,
     );
     const buttonElement = screen.getByText(testText);
     expect(buttonElement).toBeTruthy();

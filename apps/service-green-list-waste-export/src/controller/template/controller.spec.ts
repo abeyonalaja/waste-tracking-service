@@ -32,7 +32,7 @@ const mockRepository = {
 describe(TemplateController, () => {
   const subject = new TemplateController(
     mockRepository as unknown as CosmosRepository,
-    new winston.Logger()
+    new winston.Logger(),
   );
   const timestamp = new Date();
 
@@ -85,7 +85,7 @@ describe(TemplateController, () => {
       expect(mockRepository.getRecord).toHaveBeenCalledWith(
         templateContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.value.templateDetails.name).toEqual('Copied Template');
     });
@@ -112,7 +112,7 @@ describe(TemplateController, () => {
         accountId,
         order,
         undefined,
-        undefined
+        undefined,
       );
       expect(response.error.statusCode).toBe(418);
     });
@@ -145,7 +145,7 @@ describe(TemplateController, () => {
         accountId,
         order,
         1,
-        ''
+        '',
       );
       expect(response.value).toEqual({
         currentPage: 0,
@@ -169,7 +169,7 @@ describe(TemplateController, () => {
 
       expect(mockRepository.getTotalNumber).toHaveBeenCalledWith(
         templateContainerName,
-        accountId
+        accountId,
       );
       expect(response.value).toEqual(2);
     });
@@ -209,7 +209,7 @@ describe(TemplateController, () => {
       expect(mockRepository.getRecord).toBeCalledWith(
         templateContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.error.statusCode).toBe(418);
     });
@@ -249,7 +249,7 @@ describe(TemplateController, () => {
       expect(mockRepository.getRecord).toHaveBeenCalledWith(
         templateContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.value).toEqual(value);
     });
@@ -290,7 +290,7 @@ describe(TemplateController, () => {
       expect(mockRepository.getRecord).toHaveBeenCalledWith(
         templateContainerName,
         id,
-        accountId
+        accountId,
       );
       expect(response.value).toEqual(value);
 
@@ -344,7 +344,7 @@ describe(TemplateController, () => {
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .wasteDescription as DraftWasteDescription
-        ).status
+        ).status,
       ).toBe('Started');
     });
 
@@ -438,19 +438,19 @@ describe(TemplateController, () => {
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .wasteDescription as DraftWasteDescription
-        ).status
+        ).status,
       ).toBe('Started');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .carriers as DraftCarriers
-        ).status
+        ).status,
       ).toBe('NotStarted');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .recoveryFacilityDetail as DraftRecoveryFacilityDetails
-        ).status
+        ).status,
       ).toBe('NotStarted');
     });
 
@@ -545,19 +545,19 @@ describe(TemplateController, () => {
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .wasteDescription as DraftWasteDescription
-        ).status
+        ).status,
       ).toBe('Started');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .carriers as DraftCarriers
-        ).status
+        ).status,
       ).toBe('NotStarted');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .recoveryFacilityDetail as DraftRecoveryFacilityDetails
-        ).status
+        ).status,
       ).toBe('NotStarted');
     });
 
@@ -655,19 +655,19 @@ describe(TemplateController, () => {
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .wasteDescription as DraftWasteDescription
-        ).status
+        ).status,
       ).toBe('Started');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .carriers as DraftCarriers
-        ).status
+        ).status,
       ).toBe('NotStarted');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .recoveryFacilityDetail as DraftRecoveryFacilityDetails
-        ).status
+        ).status,
       ).toBe('NotStarted');
     });
 
@@ -803,19 +803,19 @@ describe(TemplateController, () => {
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .wasteDescription as DraftWasteDescription as DraftWasteDescription
-        ).status
+        ).status,
       ).toBe('Started');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .carriers as DraftCarriers
-        ).status
+        ).status,
       ).toBe('Started');
       expect(
         (
           (await mockRepository.getRecord(templateContainerName, id, accountId))
             .recoveryFacilityDetail as DraftRecoveryFacilityDetails
-        ).status
+        ).status,
       ).toBe('Started');
     });
   });

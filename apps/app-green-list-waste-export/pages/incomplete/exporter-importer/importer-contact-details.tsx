@@ -67,7 +67,7 @@ const ImporterContactDetails = () => {
         try {
           await fetch(
             `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/importer-detail`,
-            { headers: apiConfig }
+            { headers: apiConfig },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -129,7 +129,7 @@ const ImporterContactDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -150,7 +150,7 @@ const ImporterContactDetails = () => {
         }
       }
     },
-    [fullName, email, phone, fax]
+    [fullName, email, phone, fax],
   );
   const BreadCrumbs = () => {
     return (

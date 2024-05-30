@@ -6,18 +6,21 @@ import { Assignment } from './model';
 export interface AssignmentRepository {
   getAssignment(
     content: Assignment['content'],
-    dcidSubjectId: string
+    dcidSubjectId: string,
   ): Promise<Assignment | undefined>;
 
   setAssignment(value: Assignment): Promise<void>;
 }
 
 export class CosmosAssignmentRepository implements AssignmentRepository {
-  constructor(private container: Container, private logger: Logger) {}
+  constructor(
+    private container: Container,
+    private logger: Logger,
+  ) {}
 
   async getAssignment(
     content: string,
-    dcidSubjectId: string
+    dcidSubjectId: string,
   ): Promise<Assignment | undefined> {
     try {
       const { resource } = await this.container

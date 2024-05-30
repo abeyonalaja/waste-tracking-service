@@ -42,7 +42,7 @@ export default function Index(): JSX.Element {
     (total: number, current: BulkSubmissionValidationRowError) => {
       return total + current.errorAmount;
     },
-    0
+    0,
   );
 
   return (

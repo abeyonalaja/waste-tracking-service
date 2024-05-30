@@ -6,13 +6,13 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('UnitDisplay', () => {
   it('displays "kg" when type is "NotApplicable" and quantityType is "Weight"', () => {
     const { container } = render(
-      <UnitDisplay type="NotApplicable" quantityType="Weight" />
+      <UnitDisplay type="NotApplicable" quantityType="Weight" />,
     );
     const unitSpan = container.querySelector('span');
     expect(unitSpan.textContent).toBe(' kg ');
@@ -20,7 +20,7 @@ describe('UnitDisplay', () => {
 
   it('displays "tonnes" when type is not "NotApplicable" and quantityType is "Weight"', () => {
     const { container } = render(
-      <UnitDisplay type="SomeType" quantityType="Weight" />
+      <UnitDisplay type="SomeType" quantityType="Weight" />,
     );
     const unitSpan = container.querySelector('span');
     expect(unitSpan.textContent).toBe(' tonnes ');
@@ -28,7 +28,7 @@ describe('UnitDisplay', () => {
 
   it('displays "m3" when type is not "NotApplicable" and quantityType is "Volume"', () => {
     const { container } = render(
-      <UnitDisplay type="SomeType" quantityType="Volume" />
+      <UnitDisplay type="SomeType" quantityType="Volume" />,
     );
     const unitSpan = container.querySelector('span');
     expect(unitSpan.textContent).toBe(' m3 ');

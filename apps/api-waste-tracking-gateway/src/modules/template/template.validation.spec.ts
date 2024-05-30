@@ -18,7 +18,7 @@ describe('validateCreateTemplateRequest', () => {
           name: faker.datatype.string(),
           description: faker.datatype.string(),
         },
-      })
+      }),
     ).toBe(true);
   });
 });

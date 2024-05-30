@@ -54,7 +54,7 @@ const CollectionDate = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -113,7 +113,7 @@ const CollectionDate = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -131,7 +131,7 @@ const CollectionDate = () => {
         }
       }
     },
-    [collectionDate]
+    [collectionDate],
   );
 
   const BreadCrumbs = () => {

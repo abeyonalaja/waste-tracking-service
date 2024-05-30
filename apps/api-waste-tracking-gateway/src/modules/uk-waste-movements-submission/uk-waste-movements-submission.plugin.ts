@@ -48,7 +48,7 @@ const plugin: Plugin<PluginOptions> = {
             collectionDate = new Date(
               Number(dateArr[2]),
               Number(dateArr[1]) - 1,
-              Number(dateArr[0])
+              Number(dateArr[0]),
             );
             if (
               !isValid(collectionDate) ||

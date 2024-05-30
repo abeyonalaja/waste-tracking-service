@@ -13,5 +13,5 @@ export const validateCreateTemplateRequest = ajv.compile<CreateTemplateRequest>(
         },
       },
     },
-  }
+  },
 );

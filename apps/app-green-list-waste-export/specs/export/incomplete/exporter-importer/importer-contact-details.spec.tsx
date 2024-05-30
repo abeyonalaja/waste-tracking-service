@@ -21,7 +21,7 @@ global.fetch = jest.fn(
         Promise.resolve({
           data: {},
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Importer contact details page', () => {
@@ -64,7 +64,7 @@ describe('Importer contact details page', () => {
     });
 
     const reference = screen.getByLabelText(
-      'Phone numberFor international numbers include the country code'
+      'Phone numberFor international numbers include the country code',
     );
     fireEvent.change(reference, { target: { value: '+01' } });
 

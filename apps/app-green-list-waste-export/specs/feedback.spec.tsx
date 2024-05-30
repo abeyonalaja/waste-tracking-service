@@ -11,7 +11,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ status: 'NotStarted' }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 jest.mock('next-auth/jwt', () => ({
@@ -66,7 +66,7 @@ describe('Feedback page', () => {
 
     waitFor(() => {
       const successMessage = screen.getByText(
-        'You have submitted your feedback'
+        'You have submitted your feedback',
       );
       expect(successMessage).toBeInTheDocument();
     });
@@ -86,7 +86,7 @@ describe('Feedback page', () => {
 
     waitFor(() => {
       const successMessage = screen.getByText(
-        'You have submitted your feedback'
+        'You have submitted your feedback',
       );
       expect(successMessage).toBeInTheDocument();
     });

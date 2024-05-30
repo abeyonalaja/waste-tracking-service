@@ -22,7 +22,7 @@ export default class SubmissionController {
   constructor(
     private repository: CosmosRepository,
     private logger: Logger,
-    private referenceData: SubmissionValidationReferenceData
+    private referenceData: SubmissionValidationReferenceData,
   ) {}
 
   validateSubmissions: Handler<
@@ -85,7 +85,7 @@ export default class SubmissionController {
                 s.wasteCollectionExpectedWasteCollectionDate,
               wasteCollectionLocalAuthority: s.wasteCollectionLocalAuthority,
             },
-            this.referenceData.localAuthorities
+            this.referenceData.localAuthorities,
           );
 
         if (!wasteCollection.valid) {
@@ -370,7 +370,7 @@ export default class SubmissionController {
           wasteTypeDetailFlattened,
           this.referenceData.hazardousCodes,
           this.referenceData.pops,
-          this.referenceData.ewcCodes
+          this.referenceData.ewcCodes,
         );
 
         if (!wasteTypes.valid) {
@@ -498,7 +498,7 @@ export default class SubmissionController {
       await this.repository.createBulkRecords(
         submissionsContainerName,
         accountId,
-        submissions
+        submissions,
       );
       return {
         success: true,
@@ -520,7 +520,7 @@ export default class SubmissionController {
     try {
       const draft = (await this.repository.getDraft(
         submissionsContainerName,
-        id
+        id,
       )) as api.DraftSubmission;
       return success(draft);
     } catch (err) {
@@ -534,7 +534,7 @@ export default class SubmissionController {
   };
 
   getDrafts: Handler<api.GetDraftsRequest, api.GetDraftsResponse> = async (
-    request
+    request,
   ) => {
     try {
       const result = await this.repository.getDrafts(
@@ -544,7 +544,7 @@ export default class SubmissionController {
         request.collectionDate,
         request.ewcCode,
         request.producerName,
-        request.wasteMovementId
+        request.wasteMovementId,
       );
       return success(result);
     } catch (err) {

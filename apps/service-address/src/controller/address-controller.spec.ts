@@ -69,7 +69,7 @@ describe(AddressController, () => {
       }
 
       expect(mockAddressClient.getAddressByPostcode).toHaveBeenCalledWith(
-        postcode
+        postcode,
       );
       expect(response.value).toEqual([]);
 
@@ -84,7 +84,7 @@ describe(AddressController, () => {
       }
 
       expect(mockAddressClient.getAddressByPostcode).toHaveBeenCalledWith(
-        postcode
+        postcode,
       );
       expect(response.value).toEqual([]);
     });

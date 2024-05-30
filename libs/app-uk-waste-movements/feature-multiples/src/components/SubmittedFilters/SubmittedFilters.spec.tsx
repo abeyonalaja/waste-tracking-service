@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -69,7 +70,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const heading = screen.getByRole('heading', { level: 2, name: 'Filter' });
@@ -90,7 +91,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const showAllButton = screen.getByRole('button', {
@@ -113,7 +114,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const collectionDateButton = screen.getByRole('button', {
@@ -148,7 +149,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const applyButton = screen.getByRole('button', { name: 'Apply filters' });
@@ -170,7 +171,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const applyButton = screen.getByRole('button', { name: 'Apply filters' });
@@ -193,7 +194,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const resetButton = screen.getByRole('button', { name: 'Reset filters' });
@@ -216,7 +217,7 @@ describe('SubmittedFilters component', () => {
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
         />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const resetButton = screen.getByRole('button', { name: 'Reset filters' });

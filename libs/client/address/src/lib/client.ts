@@ -6,16 +6,19 @@ import {
 } from '@wts/api/address';
 
 export class DaprAddressClient {
-  constructor(private daprClient: DaprClient, private addressAppId: string) {}
+  constructor(
+    private daprClient: DaprClient,
+    private addressAppId: string,
+  ) {}
 
   async getAddressByPostcode(
-    req: GetAddressByPostcodeRequest
+    req: GetAddressByPostcodeRequest,
   ): Promise<GetAddressByPostcodeResponse> {
     return (await this.daprClient.invoker.invoke(
       this.addressAppId,
       getAddressByPostcode.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetAddressByPostcodeResponse;
   }
 }

@@ -67,7 +67,7 @@ function Index() {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/numberOfSubmissions`,
           {
             headers: apiConfig,
-          }
+          },
         );
 
         if (response.ok) {
@@ -97,7 +97,7 @@ function Index() {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/numberOfTemplates`,
           {
             headers: apiConfig,
-          }
+          },
         );
 
         if (response.ok) {

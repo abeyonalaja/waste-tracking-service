@@ -25,7 +25,7 @@ describe('contentProcessingTask', () => {
 
 describe('contentToBeProcessedTask', () => {
   const validate = ajv.compile<ContentToBeProcessedTask>(
-    contentToBeProcessedTask
+    contentToBeProcessedTask,
   );
 
   it('is compatible with dto values', () => {

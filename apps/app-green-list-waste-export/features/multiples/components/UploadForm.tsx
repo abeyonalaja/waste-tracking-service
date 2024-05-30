@@ -40,7 +40,7 @@ export function UploadForm({
     useState<ValidationErrorsType>(
       router.query.error
         ? { file: router.query.error.toString().replace(/_/g, ' ') }
-        : {}
+        : {},
     );
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

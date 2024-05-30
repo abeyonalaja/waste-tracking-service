@@ -7,7 +7,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ data: {} }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('ActionBox component', () => {
@@ -25,7 +25,7 @@ describe('ActionBox component', () => {
     render(<ActionBox pageCount={20} />);
     const link = screen.getByRole('link');
     expect(link).toHaveTextContent(
-      'Download all the Annex VII records for this transaction (PDF, 20 pages)'
+      'Download all the Annex VII records for this transaction (PDF, 20 pages)',
     );
   });
 });

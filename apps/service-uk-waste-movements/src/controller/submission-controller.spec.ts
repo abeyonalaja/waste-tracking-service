@@ -131,7 +131,7 @@ describe(SubmissionController, () => {
       hazardousCodes,
       pops,
       localAuthorities,
-    }
+    },
   );
 
   beforeEach(() => {

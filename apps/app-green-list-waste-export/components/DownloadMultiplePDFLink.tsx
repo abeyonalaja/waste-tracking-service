@@ -56,7 +56,9 @@ const StyledPDFDownloadLink = styled(PDFDownloadLink)`
     outline: 3px solid rgba(0, 0, 0, 0);
     color: ${BLACK};
     background-color: ${YELLOW};
-    box-shadow: 0 -2px ${YELLOW}, 0 4px #0b0c0c;
+    box-shadow:
+      0 -2px ${YELLOW},
+      0 4px #0b0c0c;
     text-decoration: none;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -78,7 +80,7 @@ export const DownloadMultiplePDFLink = ({
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/batches/${submissionId}/submissions?submitted=true`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => response.json())
         .then((data) => {
@@ -136,7 +138,7 @@ export const DownloadMultiplePDFLink = ({
 
 const PDFDownloadLinkContainer = forwardRef(function PDFDownloadLinkContainer(
   { loading, onLoadingFinished, linkText }: PDFContainerProps,
-  ref
+  ref,
 ) {
   useEffect(() => {
     if (!loading) {

@@ -28,7 +28,7 @@ global.fetch = jest.fn(
             country: 'England',
           },
         }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Exporter details page', () => {

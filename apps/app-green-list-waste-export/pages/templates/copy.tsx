@@ -95,7 +95,7 @@ const TemplateCopy = () => {
   const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
-    initialState
+    initialState,
   );
   const [templateId, setTemplateId] = useState(null);
   const [templateName, setTemplateName] = useState<string>('');
@@ -119,7 +119,7 @@ const TemplateCopy = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -183,7 +183,7 @@ const TemplateCopy = () => {
         }
       }
     },
-    [router, templateName, templateDesc]
+    [router, templateName, templateDesc],
   );
 
   const BreadCrumbs = () => {

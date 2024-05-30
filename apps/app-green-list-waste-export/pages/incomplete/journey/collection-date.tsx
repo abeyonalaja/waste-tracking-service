@@ -53,7 +53,7 @@ const CollectionDate = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/collection-date`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -130,7 +130,7 @@ const CollectionDate = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -151,7 +151,7 @@ const CollectionDate = () => {
         }
       }
     },
-    [dateType, collectionDate]
+    [dateType, collectionDate],
   );
 
   const BreadCrumbs = () => {
@@ -232,7 +232,7 @@ const CollectionDate = () => {
                         <ConditionalRadioWrap>
                           <GovUK.HintText>
                             {t(
-                              'exportJourney.wasteCollectionDate.radioYesHint'
+                              'exportJourney.wasteCollectionDate.radioYesHint',
                             )}
                           </GovUK.HintText>
                           <GovUK.DateField

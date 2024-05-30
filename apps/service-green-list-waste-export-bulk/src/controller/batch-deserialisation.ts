@@ -9,13 +9,13 @@ import Ajv from 'ajv/dist/jtd';
 const ajv = new Ajv();
 
 export const getBatchRequest = ajv.compileParser<GetBatchRequest>(
-  schema.getBatchRequest
+  schema.getBatchRequest,
 );
 
 export const updateBatchRequest = ajv.compileParser<UpdateBatchRequest>(
-  schema.updateBatchRequest
+  schema.updateBatchRequest,
 );
 
 export const getBatchContentRequest = ajv.compileParser<GetBatchContentRequest>(
-  schema.getBatchContentRequest
+  schema.getBatchContentRequest,
 );

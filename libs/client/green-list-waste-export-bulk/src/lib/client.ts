@@ -17,17 +17,17 @@ import {
 export class DaprAnnexViiBulkClient {
   constructor(
     private daprClient: DaprClient,
-    private annexViiBulkAppId: string
+    private annexViiBulkAppId: string,
   ) {}
 
   async addContentToBatch(
-    req: AddContentToBatchRequest
+    req: AddContentToBatchRequest,
   ): Promise<AddContentToBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiBulkAppId,
       addContentToBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as AddContentToBatchResponse;
   }
 
@@ -36,7 +36,7 @@ export class DaprAnnexViiBulkClient {
       this.annexViiBulkAppId,
       getBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetBatchResponse;
   }
 
@@ -45,18 +45,18 @@ export class DaprAnnexViiBulkClient {
       this.annexViiBulkAppId,
       updateBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as UpdateBatchResponse;
   }
 
   async getBatchContent(
-    req: GetBatchContentRequest
+    req: GetBatchContentRequest,
   ): Promise<GetBatchContentResponse> {
     return (await this.daprClient.invoker.invoke(
       this.annexViiBulkAppId,
       getBatchContent.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetBatchContentResponse;
   }
 }

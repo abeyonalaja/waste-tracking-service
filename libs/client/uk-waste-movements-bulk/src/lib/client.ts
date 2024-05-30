@@ -17,17 +17,17 @@ import {
 export class DaprUkWasteMovementsBulkClient {
   constructor(
     private daprClient: DaprClient,
-    private ukWasteMovementsBulkAppId: string
+    private ukWasteMovementsBulkAppId: string,
   ) {}
 
   async addContentToBatch(
-    req: AddContentToBatchRequest
+    req: AddContentToBatchRequest,
   ): Promise<AddContentToBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsBulkAppId,
       addContentToBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as AddContentToBatchResponse;
   }
 
@@ -36,29 +36,29 @@ export class DaprUkWasteMovementsBulkClient {
       this.ukWasteMovementsBulkAppId,
       getBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as GetBatchResponse;
   }
 
   async finalizeBatch(
-    req: FinalizeBatchRequest
+    req: FinalizeBatchRequest,
   ): Promise<FinalizeBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsBulkAppId,
       finalizeBatch.name,
       HttpMethod.POST,
-      req
+      req,
     )) as FinalizeBatchResponse;
   }
 
   async downloadProducerCsv(
-    req: DownloadBatchRequest
+    req: DownloadBatchRequest,
   ): Promise<DownloadBatchResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsBulkAppId,
       downloadProducerCsv.name,
       HttpMethod.POST,
-      req
+      req,
     )) as DownloadBatchResponse;
   }
 }

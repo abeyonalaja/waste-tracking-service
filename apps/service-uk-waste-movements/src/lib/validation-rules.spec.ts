@@ -559,7 +559,7 @@ describe(validateWasteCollectionDetailSection, () => {
         wasteCollectionLocalAuthority: 'Local Authority 1',
         wasteCollectionExpectedWasteCollectionDate: '01/01/2028',
       },
-      localAuthorities
+      localAuthorities,
     );
 
     expect(response.valid).toEqual(true);
@@ -597,7 +597,7 @@ describe(validateWasteCollectionDetailSection, () => {
         wasteCollectionLocalAuthority: '',
         wasteCollectionExpectedWasteCollectionDate: '',
       },
-      localAuthorities
+      localAuthorities,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -628,7 +628,7 @@ describe(validateWasteCollectionDetailSection, () => {
         wasteCollectionLocalAuthority: faker.datatype.string(251),
         wasteCollectionExpectedWasteCollectionDate: faker.datatype.string(),
       },
-      localAuthorities
+      localAuthorities,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -704,7 +704,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     expect(result.valid).toBe(true);
@@ -732,7 +732,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     const firstWasteTypeErrorMessages =
@@ -801,7 +801,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     expect(result.valid).toBe(false);
@@ -871,7 +871,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
     expect(result.valid).toBe(false);
 
@@ -904,7 +904,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
     expect(result.valid).toBe(false);
 
@@ -937,7 +937,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     expect(result.valid).toBe(false);
@@ -980,7 +980,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     expect(result.valid).toBe(false);
@@ -1016,7 +1016,7 @@ describe(validateWasteTypeDetailSection, () => {
       },
       hazardousCodes,
       pops,
-      ewcCodes
+      ewcCodes,
     );
 
     const secondWasteTypeErrorMessages =

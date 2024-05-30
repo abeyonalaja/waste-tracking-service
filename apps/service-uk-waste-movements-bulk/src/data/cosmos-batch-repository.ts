@@ -15,7 +15,7 @@ export class CosmosBatchRepository implements BatchRepository {
     private cosmosClient: CosmosClient,
     private cosmosDbName: string,
     private draftContainerName: string,
-    private logger: Logger
+    private logger: Logger,
   ) {
     this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }
@@ -76,7 +76,7 @@ export class CosmosBatchRepository implements BatchRepository {
   }
 
   async downloadProducerCsv(
-    id: string
+    id: string,
   ): Promise<SubmissionFlattenedDownload[]> {
     const querySpec = {
       query: 'SELECT * FROM c WHERE c.id = @id',

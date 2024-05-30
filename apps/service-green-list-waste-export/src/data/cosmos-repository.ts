@@ -33,7 +33,7 @@ function getListQuery(
   accountId: string,
   order: 'ASC' | 'DESC',
   state?: RecordStateStatus[],
-  ids?: string[]
+  ids?: string[],
 ): SqlQuerySpec {
   let querySpec: SqlQuerySpec;
   if (containerName === 'templates') {
@@ -143,7 +143,7 @@ function getListQuery(
 function getTotalNumberQuery(
   containerName: DbContainerNameKey,
   accountId: string,
-  estimate?: boolean
+  estimate?: boolean,
 ): SqlQuerySpec {
   let querySpec: SqlQuerySpec;
   if (containerName === 'templates') {
@@ -163,12 +163,12 @@ function getTotalNumberQuery(
       containerName === 'drafts'
         ? (RecordStateStatusQueryMap.get('incomplete') as RecordStateStatus[])
         : !estimate
-        ? (RecordStateStatusQueryMap.get(
-            'completeWithActuals'
-          ) as RecordStateStatus[])
-        : (RecordStateStatusQueryMap.get(
-            'completeWithEstimates'
-          ) as RecordStateStatus[]);
+          ? (RecordStateStatusQueryMap.get(
+              'completeWithActuals',
+            ) as RecordStateStatus[])
+          : (RecordStateStatusQueryMap.get(
+              'completeWithEstimates',
+            ) as RecordStateStatus[]);
 
     querySpec = {
       query: `SELECT VALUE COUNT(1) FROM c
@@ -200,7 +200,7 @@ export default class CosmosRepository
     private cosmosClient: CosmosClient,
     private cosmosDbName: string,
     private cosmosContainerMap: Map<DbContainerNameKey, string>,
-    private logger: Logger
+    private logger: Logger,
   ) {
     this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }
@@ -213,7 +213,7 @@ export default class CosmosRepository
     token?: string,
     state?: RecordStateStatus[],
     ids?: string[],
-    includeAllData?: boolean
+    includeAllData?: boolean,
   ): Promise<
     RecordSummaryPage<
       | DraftSubmissionSummary
@@ -253,7 +253,7 @@ export default class CosmosRepository
         .container(this.cosmosContainerMap.get(containerName) as string)
         .items.query(
           getListQuery(containerName, accountId, order, state, ids),
-          options
+          options,
         )
         .fetchNext();
 
@@ -382,7 +382,7 @@ export default class CosmosRepository
   async getRecord(
     containerName: DbContainerNameKey,
     id: string,
-    accountId: string
+    accountId: string,
   ): Promise<DraftSubmission | Submission | Template> {
     const { resource: item } = await this.cosmosDb
       .container(this.cosmosContainerMap.get(containerName) as string)
@@ -449,7 +449,7 @@ export default class CosmosRepository
   async saveRecord(
     containerName: DbContainerNameKey,
     value: DraftSubmission | Submission | Template,
-    accountId: string
+    accountId: string,
   ): Promise<void> {
     const data: RecordData<DraftSubmission | Submission | Template> = {
       ...value,
@@ -493,8 +493,8 @@ export default class CosmosRepository
         throw Boom.conflict(
           `A ${containerName.substring(
             0,
-            containerName.length - 1
-          )} with this name already exists`
+            containerName.length - 1,
+          )} with this name already exists`,
         );
       }
       this.logger.error('Unknown error thrown from Cosmos client', {
@@ -507,7 +507,7 @@ export default class CosmosRepository
   async createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: Submission[]
+    values: Submission[],
   ): Promise<void> {
     const submissions = values.map((s) => {
       return {
@@ -539,7 +539,7 @@ export default class CosmosRepository
   async deleteRecord(
     containerName: DbContainerNameKey,
     id: string,
-    accountId: string
+    accountId: string,
   ): Promise<void> {
     try {
       await this.cosmosDb
@@ -565,7 +565,7 @@ export default class CosmosRepository
   async getTotalNumber(
     containerName: DbContainerNameKey,
     accountId: string,
-    estimate?: boolean
+    estimate?: boolean,
   ): Promise<number> {
     const options = {
       maxItemCount: -1,
@@ -576,7 +576,7 @@ export default class CosmosRepository
       .container(this.cosmosContainerMap.get(containerName) as string)
       .items.query(
         getTotalNumberQuery(containerName, accountId, estimate),
-        options
+        options,
       )
       .fetchNext();
 

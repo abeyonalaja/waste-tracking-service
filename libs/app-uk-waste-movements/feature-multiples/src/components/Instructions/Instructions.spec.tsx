@@ -53,7 +53,7 @@ describe('Instructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Instructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
   });
 
@@ -61,7 +61,7 @@ describe('Instructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Instructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const guidanceLink = screen.getByRole('link', {
@@ -75,7 +75,7 @@ describe('Instructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Instructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const guidanceLink = screen.getByRole('link', {
@@ -89,7 +89,7 @@ describe('Instructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Instructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const templateLink = screen.getByRole('link', {
@@ -98,7 +98,7 @@ describe('Instructions component', () => {
 
     expect(templateLink).toHaveAttribute(
       'href',
-      '/downloads/multiple-movements-template.csv'
+      '/downloads/multiple-movements-template.csv',
     );
   });
 
@@ -106,7 +106,7 @@ describe('Instructions component', () => {
     render(
       <NextIntlClientProvider messages={messages} locale="en">
         <Instructions />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     const templateLink = screen.getByRole('link', {
@@ -115,7 +115,7 @@ describe('Instructions component', () => {
 
     expect(templateLink).toHaveAttribute(
       'href',
-      '/downloads/multiple-movements-template.csv'
+      '/downloads/multiple-movements-template.csv',
     );
   });
 });

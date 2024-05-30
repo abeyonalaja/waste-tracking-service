@@ -238,7 +238,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -254,7 +254,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -270,7 +270,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -286,7 +286,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU04',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -302,7 +302,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -317,7 +317,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -334,7 +334,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -350,7 +350,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -366,7 +366,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -382,7 +382,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU99',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -398,7 +398,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yessss',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -414,7 +414,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -430,7 +430,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -446,7 +446,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -462,7 +462,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU04',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -478,7 +478,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU04',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -494,7 +494,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU04',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -510,7 +510,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: '',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -526,7 +526,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -542,7 +542,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -558,7 +558,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: '',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -574,7 +574,7 @@ describe('validateWasteCodeSubSection', () => {
         annexIIIBCode: 'BEU04',
         laboratory: 'Yes',
       },
-      wasteCodes
+      wasteCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -592,7 +592,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '123456',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -617,7 +617,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -641,7 +641,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -665,7 +665,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -689,7 +689,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: 'A-123',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -714,7 +714,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -740,7 +740,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -756,7 +756,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -772,7 +772,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -788,7 +788,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -806,7 +806,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: 'test',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -824,7 +824,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: faker.datatype.string(120),
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -840,7 +840,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '',
         wasteDescription: ' ',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -858,7 +858,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: '',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -882,7 +882,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: ' ',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -907,7 +907,7 @@ describe('validateWasteDescriptionSubSection', () => {
         wasteDescription:
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -931,7 +931,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: '',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -955,7 +955,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: ' ',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -980,7 +980,7 @@ describe('validateWasteDescriptionSubSection', () => {
         wasteDescription:
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1004,7 +1004,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: '',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1028,7 +1028,7 @@ describe('validateWasteDescriptionSubSection', () => {
         nationalCode: '*****',
         wasteDescription: ' ',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1053,7 +1053,7 @@ describe('validateWasteDescriptionSubSection', () => {
         wasteDescription:
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1087,7 +1087,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1122,7 +1122,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1156,7 +1156,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1190,7 +1190,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1224,7 +1224,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1258,7 +1258,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -1293,7 +1293,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1315,7 +1315,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1337,7 +1337,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1359,7 +1359,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1381,7 +1381,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1403,7 +1403,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1425,7 +1425,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1447,7 +1447,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1469,7 +1469,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1491,7 +1491,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1513,7 +1513,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1535,7 +1535,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1557,7 +1557,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1579,7 +1579,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1601,7 +1601,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1623,7 +1623,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1647,7 +1647,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1669,7 +1669,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1691,7 +1691,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1713,7 +1713,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1737,7 +1737,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: 'test',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1761,7 +1761,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: faker.datatype.string(120),
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1783,7 +1783,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1807,7 +1807,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1841,7 +1841,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1876,7 +1876,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1910,7 +1910,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1944,7 +1944,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -1979,7 +1979,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2013,7 +2013,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2047,7 +2047,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2082,7 +2082,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2116,7 +2116,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2150,7 +2150,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2185,7 +2185,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2219,7 +2219,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2253,7 +2253,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2288,7 +2288,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2322,7 +2322,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2356,7 +2356,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2391,7 +2391,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2424,7 +2424,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2458,7 +2458,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2493,7 +2493,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2527,7 +2527,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2561,7 +2561,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2596,7 +2596,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2630,7 +2630,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: '',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2664,7 +2664,7 @@ describe('validateWasteDescriptionSection', () => {
         wasteDescription: ' ',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -2699,7 +2699,7 @@ describe('validateWasteDescriptionSection', () => {
           'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
       },
       wasteCodes,
-      ewcCodes
+      ewcCodes,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -3160,28 +3160,28 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
     };
     let response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     expect(response.valid).toEqual(true);
 
     wasteCodeSubSection.type = 'OECD';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     expect(response.valid).toEqual(true);
 
     wasteCodeSubSection.type = 'AnnexIIIA';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     expect(response.valid).toEqual(true);
 
     wasteCodeSubSection.type = 'AnnexIIIB';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     expect(response.valid).toEqual(true);
 
@@ -3189,7 +3189,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
     wasteQuantity.actualData.unit = 'Kilogram';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     expect(response.valid).toEqual(true);
   });
@@ -3211,7 +3211,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
 
     let response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3225,7 +3225,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
     wasteCodeSubSection.type = 'OECD';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3239,7 +3239,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
     wasteCodeSubSection.type = 'AnnexIIIA';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3253,7 +3253,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
     wasteCodeSubSection.type = 'AnnexIIIB';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3280,7 +3280,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
 
     const response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3307,7 +3307,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
 
     const response = validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
-      wasteQuantity
+      wasteQuantity,
     );
     if (response.valid) {
       return;
@@ -3571,7 +3571,7 @@ describe('validateImporterDetailSection', () => {
         importerFaxNumber: '',
         importerEmailAddress: 'test2@test.com',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -3597,7 +3597,7 @@ describe('validateImporterDetailSection', () => {
         importerFaxNumber: "'0033140000000'",
         importerEmailAddress: 'test2@test.com',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual({
@@ -3626,7 +3626,7 @@ describe('validateImporterDetailSection', () => {
         importerFaxNumber: '',
         importerEmailAddress: '',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -3669,7 +3669,7 @@ describe('validateImporterDetailSection', () => {
         importerFaxNumber: '     ',
         importerEmailAddress: '     ',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -3717,7 +3717,7 @@ describe('validateImporterDetailSection', () => {
         importerFaxNumber: faker.datatype.string(30),
         importerEmailAddress: faker.datatype.string(251),
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -3925,7 +3925,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -4012,7 +4012,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       false,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -4101,7 +4101,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     if (response.valid) {
       return;
@@ -4187,7 +4187,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     if (response.valid) {
       return;
@@ -4281,7 +4281,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       true,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     if (response.valid) {
       return;
@@ -4363,7 +4363,7 @@ describe('validateCarriersSection', () => {
         fifthCarrierMeansOfTransportDetails: '',
       },
       false,
-      countriesIncludingUk
+      countriesIncludingUk,
     );
     if (response.valid) {
       return;
@@ -4432,7 +4432,7 @@ describe('validateWasteCodeSubSectionAndCarriersCrossSection', () => {
         fifthCarrierEmailAddress: '',
         fifthCarrierMeansOfTransport: '',
         fifthCarrierMeansOfTransportDetails: '',
-      }
+      },
     );
     expect(response.valid).toEqual(true);
 
@@ -4485,7 +4485,7 @@ describe('validateWasteCodeSubSectionAndCarriersCrossSection', () => {
         fifthCarrierEmailAddress: '',
         fifthCarrierMeansOfTransport: '',
         fifthCarrierMeansOfTransportDetails: '',
-      }
+      },
     );
     expect(response.valid).toEqual(true);
   });
@@ -4542,7 +4542,7 @@ describe('validateWasteCodeSubSectionAndCarriersCrossSection', () => {
         fifthCarrierEmailAddress: '',
         fifthCarrierMeansOfTransport: '',
         fifthCarrierMeansOfTransportDetails: '',
-      }
+      },
     );
     if (response.valid) {
       return;
@@ -4862,7 +4862,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: '',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([]);
@@ -4871,7 +4871,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: 'france',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual(['France [FR]']);
@@ -4880,7 +4880,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: 'France;france',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual(['France [FR]']);
@@ -4889,7 +4889,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: 'France ; Belgium;Burkina Faso',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -4904,7 +4904,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: 'some_value',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -4916,7 +4916,7 @@ describe('validateTransitCountriesSection', () => {
       {
         transitCountries: 'France;some_value',
       },
-      countries
+      countries,
     );
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -4943,14 +4943,14 @@ describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
     let transitCountries: TransitCountries = [];
     let response = validateImporterDetailAndTransitCountriesCrossSection(
       importerDetail,
-      transitCountries
+      transitCountries,
     );
     expect(response.valid).toEqual(true);
 
     transitCountries = ['Belgium [BE]', 'Burkina Faso [BF]'];
     response = validateImporterDetailAndTransitCountriesCrossSection(
       importerDetail,
-      transitCountries
+      transitCountries,
     );
     expect(response.valid).toEqual(true);
   });
@@ -4976,7 +4976,7 @@ describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
     ];
     const response = validateImporterDetailAndTransitCountriesCrossSection(
       importerDetail,
-      transitCountries
+      transitCountries,
     );
     if (response.valid) {
       return;
@@ -5063,7 +5063,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       false,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -5147,7 +5147,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       false,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -5248,7 +5248,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       true,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     expect(response.valid).toEqual(true);
     expect(response.value).toEqual([
@@ -5278,7 +5278,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
   const firstRecoveryFacilityErrorMessages =
     validation.RecoveryFacilityDetailValidationErrorMessages(
       'RecoveryFacility',
-      1
+      1,
     );
 
   it('fails RecoveryFacilityDetail section validation', async () => {
@@ -5344,7 +5344,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       false,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     if (response.valid) {
       return;
@@ -5479,7 +5479,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       false,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     if (response.valid) {
       return;
@@ -5614,7 +5614,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       true,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     if (response.valid) {
       return;
@@ -5717,7 +5717,7 @@ describe('validateRecoveryFacilityDetailSection', () => {
       true,
       countries,
       recoveryCodes,
-      disposalCodes
+      disposalCodes,
     );
     if (response.valid) {
       return;
@@ -5826,7 +5826,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
           fifthRecoveryFacilityFaxNumber: '',
           fifthRecoveryFacilityEmailAddress: '',
           fifthRecoveryFacilityRecoveryCode: '',
-        }
+        },
       );
     expect(response.valid).toEqual(true);
 
@@ -5889,7 +5889,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     expect(response.valid).toEqual(true);
 
@@ -5953,7 +5953,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     expect(response.valid).toEqual(true);
   });
@@ -6023,7 +6023,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
           fifthRecoveryFacilityFaxNumber: '',
           fifthRecoveryFacilityEmailAddress: '',
           fifthRecoveryFacilityRecoveryCode: '',
-        }
+        },
       );
     if (response.valid) {
       return;
@@ -6097,7 +6097,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     if (response.valid) {
       return;
@@ -6172,7 +6172,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     if (response.valid) {
       return;
@@ -6246,7 +6246,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     if (response.valid) {
       return;
@@ -6320,7 +6320,7 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
         fifthRecoveryFacilityFaxNumber: '',
         fifthRecoveryFacilityEmailAddress: '',
         fifthRecoveryFacilityRecoveryCode: '',
-      }
+      },
     );
     if (response.valid) {
       return;

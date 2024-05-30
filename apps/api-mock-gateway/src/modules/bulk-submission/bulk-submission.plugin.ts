@@ -17,7 +17,10 @@ import { User } from '../../lib/user';
 const upload = multer();
 
 export default class BulkSubmissionPlugin {
-  constructor(private server: Application, private prefix: string) {}
+  constructor(
+    private server: Application,
+    private prefix: string,
+  ) {}
 
   async register(): Promise<void> {
     this.server.post(this.prefix, upload.any(), async (req, res) => {
@@ -29,7 +32,7 @@ export default class BulkSubmissionPlugin {
         (file: Express.Multer.File) => ({
           type: file.mimetype,
           data: file.buffer,
-        })
+        }),
       );
       const user = req.user as User;
       try {
@@ -72,7 +75,7 @@ export default class BulkSubmissionPlugin {
           (await finalizeBatch({
             id: req.params.id,
             accountId: user.credentials.accountId,
-          })) as undefined
+          })) as undefined,
         );
       } catch (err) {
         if (err instanceof NotFoundError) {

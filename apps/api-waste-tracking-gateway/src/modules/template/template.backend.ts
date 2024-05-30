@@ -34,7 +34,7 @@ export interface TemplateBackend {
     accountId: string,
     { order }: OrderRef,
     pageLimit?: number,
-    token?: string
+    token?: string,
   ): Promise<TemplateSummaryPage>;
   getNumberOfTemplates(accountId: string): Promise<number>;
   getTemplate({ id }: TemplateRef): Promise<Template>;
@@ -43,7 +43,7 @@ export interface TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template>;
   createTemplateFromSubmission(
     id: string,
@@ -51,7 +51,7 @@ export interface TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template>;
   createTemplateFromTemplate(
     id: string,
@@ -59,7 +59,7 @@ export interface TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template>;
   updateTemplate(
     id: string,
@@ -67,13 +67,13 @@ export interface TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template>;
   deleteTemplate(ref: TemplateRef): Promise<void>;
   getWasteDescription(ref: SubmissionRef): Promise<WasteDescription>;
   setWasteDescription(
     { id }: SubmissionRef,
-    value: WasteDescription
+    value: WasteDescription,
   ): Promise<void>;
   getExporterDetail(ref: SubmissionRef): Promise<ExporterDetail>;
   setExporterDetail(ref: SubmissionRef, value: ExporterDetail): Promise<void>;
@@ -83,47 +83,50 @@ export interface TemplateBackend {
   getCarriers(ref: SubmissionRef, carrierId: string): Promise<Carriers>;
   createCarriers(
     ref: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>,
   ): Promise<Carriers>;
   setCarriers(
     ref: SubmissionRef,
     carrerId: string,
-    value: Carriers
+    value: Carriers,
   ): Promise<void>;
   deleteCarriers(ref: SubmissionRef, carrierId: string): Promise<void>;
   getCollectionDetail(ref: SubmissionRef): Promise<CollectionDetail>;
   setCollectionDetail(
     ref: SubmissionRef,
-    value: CollectionDetail
+    value: CollectionDetail,
   ): Promise<void>;
   getExitLocation(ref: SubmissionRef): Promise<ExitLocation>;
   setExitLocation(ref: SubmissionRef, value: ExitLocation): Promise<void>;
   getTransitCountries(ref: SubmissionRef): Promise<TransitCountries>;
   setTransitCountries(
     ref: SubmissionRef,
-    value: TransitCountries
+    value: TransitCountries,
   ): Promise<void>;
   listRecoveryFacilityDetail(
-    ref: SubmissionRef
+    ref: SubmissionRef,
   ): Promise<RecoveryFacilityDetail>;
   createRecoveryFacilityDetail(
     ref: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
+    value: Omit<RecoveryFacilityDetail, 'values'>,
   ): Promise<RecoveryFacilityDetail>;
   getRecoveryFacilityDetail(
     ref: SubmissionRef,
-    id: string
+    id: string,
   ): Promise<RecoveryFacilityDetail>;
   setRecoveryFacilityDetail(
     ref: SubmissionRef,
     id: string,
-    value: RecoveryFacilityDetail
+    value: RecoveryFacilityDetail,
   ): Promise<void>;
   deleteRecoveryFacilityDetail(ref: SubmissionRef, id: string): Promise<void>;
 }
 
 export class AnnexViiServiceTemplateBackend implements TemplateBackend {
-  constructor(protected client: DaprAnnexViiClient, protected logger: Logger) {}
+  constructor(
+    protected client: DaprAnnexViiClient,
+    protected logger: Logger,
+  ) {}
 
   async getTemplate({ id, accountId }: TemplateRef): Promise<Template> {
     let response: template.GetTemplateResponse;
@@ -148,7 +151,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template> {
     let response: template.CreateTemplateResponse;
     try {
@@ -176,7 +179,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template> {
     let response: template.CreateTemplateResponse;
     try {
@@ -205,7 +208,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template> {
     let response: template.CreateTemplateResponse;
     try {
@@ -234,7 +237,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     templateDetails: {
       name: string;
       description: string;
-    }
+    },
   ): Promise<Template> {
     let response: template.UpdateTemplateResponse;
     try {
@@ -261,7 +264,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     accountId: string,
     { order }: OrderRef,
     pageLimit?: number,
-    token?: string
+    token?: string,
   ): Promise<TemplateSummaryPage> {
     let response: template.GetTemplatesResponse;
     try {
@@ -348,7 +351,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setWasteDescription(
     { id, accountId }: SubmissionRef,
-    value: WasteDescription
+    value: WasteDescription,
   ): Promise<void> {
     let response: draft.SetDraftWasteDescriptionResponse;
     try {
@@ -395,7 +398,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setExporterDetail(
     { id, accountId }: SubmissionRef,
-    value: ExporterDetail
+    value: ExporterDetail,
   ): Promise<void> {
     let response: draft.SetDraftExporterDetailResponse;
     try {
@@ -442,7 +445,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setImporterDetail(
     { id, accountId }: SubmissionRef,
-    value: ImporterDetail
+    value: ImporterDetail,
   ): Promise<void> {
     let response: draft.SetDraftImporterDetailResponse;
     try {
@@ -483,7 +486,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async createCarriers(
     { id, accountId }: SubmissionRef,
-    value: Omit<Carriers, 'transport' | 'values'>
+    value: Omit<Carriers, 'transport' | 'values'>,
   ): Promise<Carriers> {
     let response: draft.CreateDraftCarriersResponse;
     try {
@@ -508,7 +511,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async getCarriers(
     { id, accountId }: SubmissionRef,
-    carrierId: string
+    carrierId: string,
   ): Promise<Carriers> {
     let response: draft.GetDraftCarriersResponse;
     try {
@@ -534,7 +537,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
   async setCarriers(
     { id, accountId }: SubmissionRef,
     carrierId: string,
-    value: Carriers
+    value: Carriers,
   ): Promise<void> {
     if (value.status !== 'NotStarted') {
       for (const c of value.values) {
@@ -564,7 +567,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async deleteCarriers(
     { id, accountId }: SubmissionRef,
-    carrierId: string
+    carrierId: string,
   ): Promise<void> {
     let response: draft.DeleteDraftCarriersResponse;
     try {
@@ -611,7 +614,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setCollectionDetail(
     { id, accountId }: SubmissionRef,
-    value: CollectionDetail
+    value: CollectionDetail,
   ): Promise<void> {
     let response: draft.SetDraftCollectionDetailResponse;
     try {
@@ -658,7 +661,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setExitLocation(
     { id, accountId }: SubmissionRef,
-    value: ExitLocation
+    value: ExitLocation,
   ): Promise<void> {
     let response: draft.SetDraftUkExitLocationResponse;
     try {
@@ -705,7 +708,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async setTransitCountries(
     { id, accountId }: SubmissionRef,
-    value: TransitCountries
+    value: TransitCountries,
   ): Promise<void> {
     let response: draft.SetDraftTransitCountriesResponse;
     try {
@@ -752,7 +755,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async createRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    value: Omit<RecoveryFacilityDetail, 'values'>
+    value: Omit<RecoveryFacilityDetail, 'values'>,
   ): Promise<RecoveryFacilityDetail> {
     let response: draft.CreateDraftRecoveryFacilityDetailsResponse;
     try {
@@ -777,7 +780,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async getRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    rfdId: string
+    rfdId: string,
   ): Promise<RecoveryFacilityDetail> {
     let response: draft.GetDraftRecoveryFacilityDetailsResponse;
     try {
@@ -803,7 +806,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
   async setRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
     rfdId: string,
-    value: RecoveryFacilityDetail
+    value: RecoveryFacilityDetail,
   ): Promise<void> {
     if (value.status === 'Started' || value.status === 'Complete') {
       for (const c of value.values) {
@@ -833,7 +836,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
 
   async deleteRecoveryFacilityDetail(
     { id, accountId }: SubmissionRef,
-    rfdId: string
+    rfdId: string,
   ): Promise<void> {
     let response: draft.DeleteDraftRecoveryFacilityDetailsResponse;
     try {

@@ -1,7 +1,7 @@
 export async function getSubmissionStatus(
   hostname: string,
   submissionId: string,
-  token: string
+  token: string,
 ): Promise<Response> {
   let protocol = 'https';
 

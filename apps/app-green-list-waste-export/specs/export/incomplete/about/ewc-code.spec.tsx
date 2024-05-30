@@ -155,7 +155,7 @@ describe('EWC code page', () => {
     });
 
     const pageTitle = screen.getByText(
-      'What is the first European Waste Catalogue (EWC) code?'
+      'What is the first European Waste Catalogue (EWC) code?',
     );
     expect(pageTitle).toBeTruthy();
 
@@ -207,7 +207,7 @@ describe('EWC code page', () => {
     expect(ewcCode).toBeTruthy();
 
     const pageTitle = screen.getByText(
-      'You have added 1 European Waste Catalogue (EWC) code'
+      'You have added 1 European Waste Catalogue (EWC) code',
     );
     expect(pageTitle).toBeTruthy();
   });
@@ -236,7 +236,7 @@ describe('EWC code page', () => {
     fireEvent.click(removeLink);
 
     const pageTitle = screen.getByText(
-      'Are you sure you want to remove code: 01 01 01?'
+      'Are you sure you want to remove code: 01 01 01?',
     );
     expect(pageTitle).toBeTruthy();
   });

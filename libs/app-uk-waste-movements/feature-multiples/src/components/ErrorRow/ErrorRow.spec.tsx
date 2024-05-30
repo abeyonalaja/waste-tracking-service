@@ -57,7 +57,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
   });
 
@@ -67,7 +67,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const columnName = screen.getByText('Producer address line 1');
@@ -81,7 +81,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const rowNumber = screen.getByText('4');
@@ -95,7 +95,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const errorCount = screen.getByText('2 errors');
@@ -109,7 +109,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
@@ -129,7 +129,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
@@ -157,7 +157,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
@@ -167,7 +167,7 @@ describe('ErrorRow component', () => {
     });
 
     const errorDetails = screen.getByText(
-      'The unique reference must be 20 characters or less'
+      'The unique reference must be 20 characters or less',
     );
 
     expect(errorDetails).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('ErrorRow component', () => {
         <tbody>
           <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
         </tbody>
-      </table>
+      </table>,
     );
 
     const showButton = screen.getByRole('button', { name: 'Show errors' });
@@ -189,7 +189,7 @@ describe('ErrorRow component', () => {
     });
 
     const errorDetails = screen.queryByText(
-      'The unique reference must be 20 characters or less'
+      'The unique reference must be 20 characters or less',
     );
 
     expect(errorDetails).toBeInTheDocument();

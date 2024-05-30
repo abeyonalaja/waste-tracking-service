@@ -73,7 +73,7 @@ const CheckYourReport = () => {
   const apiConfig = useApiConfig();
   const [checkYourReportPage, dispatchCheckYourReportPage] = useReducer(
     checkYourReportReducer,
-    initialWasteDescState
+    initialWasteDescState,
   );
   const [id, setId] = useState(null);
 
@@ -91,7 +91,7 @@ const CheckYourReport = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -167,7 +167,7 @@ const CheckYourReport = () => {
             status: 'Complete',
             confirmation: true,
           }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -184,7 +184,7 @@ const CheckYourReport = () => {
           }
         });
     },
-    [id, router, checkYourReportPage]
+    [id, router, checkYourReportPage],
   );
 
   const BreadCrumbs = () => {

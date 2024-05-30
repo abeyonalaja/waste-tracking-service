@@ -7,5 +7,5 @@ module.exports = composePlugins(
   (config) => {
     config.experiments.futureDefaults = true;
     return config;
-  }
+  },
 );

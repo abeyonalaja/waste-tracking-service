@@ -12,7 +12,7 @@ if (process.env['APPINSIGHTS_CONNECTION_STRING']) {
       [SEMRESATTRS_SERVICE_NAME]: 'app-uk-waste-movements',
     }),
     spanProcessor: new BatchSpanProcessor(
-      new AzureMonitorTraceExporter({ connectionString })
+      new AzureMonitorTraceExporter({ connectionString }),
     ),
   });
 

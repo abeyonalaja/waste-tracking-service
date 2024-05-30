@@ -105,7 +105,7 @@ const TemplateUse = () => {
   const apiConfig = useApiConfig();
   const [templatePage, dispatchTemplatePage] = useReducer(
     templateReducer,
-    initialState
+    initialState,
   );
   const [templateId, setTemplateId] = useState(null);
   const [reference, setReference] = useState<string>(null);
@@ -124,7 +124,7 @@ const TemplateUse = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -176,7 +176,7 @@ const TemplateUse = () => {
         }
       }
     },
-    [templateId, reference]
+    [templateId, reference],
   );
 
   const BreadCrumbs = () => {

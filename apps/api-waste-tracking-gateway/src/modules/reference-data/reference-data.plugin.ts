@@ -41,7 +41,7 @@ const plugin: Plugin<PluginOptions> = {
             includeHazardous = JSON.parse(includeHazardousStr.toLowerCase());
           } catch (err) {
             return Boom.badRequest(
-              "Query parameter 'includeHazardous' must be of type boolean"
+              "Query parameter 'includeHazardous' must be of type boolean",
             );
           }
         }
@@ -69,7 +69,7 @@ const plugin: Plugin<PluginOptions> = {
             includeUk = JSON.parse(includeUkStr.toLowerCase());
           } catch (err) {
             return Boom.badRequest(
-              "Query parameter 'includeUk' must be of type boolean"
+              "Query parameter 'includeUk' must be of type boolean",
             );
           }
         }

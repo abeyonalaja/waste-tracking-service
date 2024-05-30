@@ -4,7 +4,7 @@ import FuzzySearch from 'fuzzy-search';
 
 export function filterSubmissions(
   submissions: UkwmSubmissionReference[],
-  formData: SubmittedPageFormData
+  formData: SubmittedPageFormData,
 ): UkwmSubmissionReference[] {
   let filteredSubmissions = [...submissions];
 

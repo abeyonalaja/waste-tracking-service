@@ -17,7 +17,7 @@ const mockBackend = {
     jest.fn<
       (
         postcode: string,
-        buildingNameOrNumber?: string
+        buildingNameOrNumber?: string,
       ) => Promise<api.ListAddressesResponse>
     >(),
 };

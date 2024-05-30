@@ -1,19 +1,19 @@
 import React from 'react';
 import { render } from 'jest-utils';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { NotificationBanner } from '../../components';
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  })
+  }),
 );
 
 describe('NotificationBanner', () => {
   test('renders important banner with custom heading', () => {
     const { getByText } = render(
-      <NotificationBanner type="important" headingText="Important Heading" />
+      <NotificationBanner type="important" headingText="Important Heading" />,
     );
 
     const importantBanner = getByText('Important');
@@ -25,7 +25,7 @@ describe('NotificationBanner', () => {
 
   test('renders success banner with custom heading', () => {
     const { getByText } = render(
-      <NotificationBanner type="success" headingText="Success Heading" />
+      <NotificationBanner type="success" headingText="Success Heading" />,
     );
 
     const successBanner = getByText('Success');

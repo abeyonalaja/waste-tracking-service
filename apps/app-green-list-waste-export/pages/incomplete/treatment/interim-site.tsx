@@ -93,7 +93,7 @@ const InterimSiteDetails = () => {
   const apiConfig = useApiConfig();
   const [interimPage, dispatchInterimPage] = useReducer(
     interimReducer,
-    initialState
+    initialState,
   );
   const [id, setId] = useState(null);
   const [hasInterimSite, setHasInterimSite] = useState(null);
@@ -111,7 +111,7 @@ const InterimSiteDetails = () => {
       if (id !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}/recovery-facility`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -127,11 +127,11 @@ const InterimSiteDetails = () => {
               });
               if (data.values !== undefined) {
                 const interimSite = data.values.filter(
-                  (site) => site.recoveryFacilityType?.type === 'InterimSite'
+                  (site) => site.recoveryFacilityType?.type === 'InterimSite',
                 );
                 const recoveryFacilities = data.values.filter(
                   (site) =>
-                    site.recoveryFacilityType?.type === 'RecoveryFacility'
+                    site.recoveryFacilityType?.type === 'RecoveryFacility',
                 );
                 if (interimSite.length > 0) {
                   setHasInterimSite('Yes');
@@ -157,7 +157,7 @@ const InterimSiteDetails = () => {
       const newErrors = {
         hasInterimSite: validateSelection(
           hasInterimSite,
-          'if the waste will go to an interim site'
+          'if the waste will go to an interim site',
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -187,7 +187,7 @@ const InterimSiteDetails = () => {
         }
       }
     },
-    [interimPage.data, hasInterimSite]
+    [interimPage.data, hasInterimSite],
   );
 
   const removeExistingInterimSite = async (returnToDraft) => {
@@ -197,7 +197,7 @@ const InterimSiteDetails = () => {
         {
           method: 'DELETE',
           headers: apiConfig,
-        }
+        },
       ).then(() => {
         router.push({
           pathname: returnToDraft

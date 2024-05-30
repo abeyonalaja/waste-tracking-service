@@ -22,7 +22,7 @@ export default class CosmosReferenceDataRepository
     private cosmosDbName: string,
     private containerName: string,
     private cache: LRUCache<string, CacheItem<unknown>>,
-    private logger: Logger
+    private logger: Logger,
   ) {
     this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
   }

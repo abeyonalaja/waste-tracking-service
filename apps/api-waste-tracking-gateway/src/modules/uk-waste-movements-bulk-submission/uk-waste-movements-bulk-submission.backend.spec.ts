@@ -56,9 +56,9 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
   const subject = new ServiceUkWasteMovementsBulkSubmissionBackend(
     new DaprUkWasteMovementsBulkClient(
       new DaprClient(),
-      faker.datatype.string()
+      faker.datatype.string(),
     ),
-    new winston.Logger()
+    new winston.Logger(),
   );
 
   beforeEach(() => {

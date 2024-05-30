@@ -12,7 +12,7 @@ describe('Radios component', () => {
         name={'country'}
         testId={testId}
         options={options}
-      />
+      />,
     );
     const element = screen.getByTestId(testId);
     expect(element).toBeTruthy();

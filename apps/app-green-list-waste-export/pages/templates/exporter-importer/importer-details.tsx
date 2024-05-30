@@ -50,7 +50,7 @@ const ImporterDetails = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/importer-detail`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -63,7 +63,7 @@ const ImporterDetails = () => {
             if (data !== undefined) {
               setData(data);
               setOrganisationName(
-                data.importerAddressDetails?.organisationName
+                data.importerAddressDetails?.organisationName,
               );
 
               setAddress(data.importerAddressDetails?.address);
@@ -89,7 +89,7 @@ const ImporterDetails = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/transit-countries`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -121,7 +121,7 @@ const ImporterDetails = () => {
       const newErrors = {
         countryIncludedInTransit: validateSameAsTransit(
           country,
-          transitCountries
+          transitCountries,
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -147,7 +147,7 @@ const ImporterDetails = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(updatedStatus),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -168,7 +168,7 @@ const ImporterDetails = () => {
         }
       }
     },
-    [organisationName, address, country, data]
+    [organisationName, address, country, data],
   );
   const BreadCrumbs = () => {
     return (

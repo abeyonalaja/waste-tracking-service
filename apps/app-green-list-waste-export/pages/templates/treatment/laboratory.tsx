@@ -148,7 +148,7 @@ const Laboratory = () => {
   const apiConfig = useApiConfig();
   const [laboratoryPage, dispatchLaboratoryPage] = useReducer(
     laboratoryReducer,
-    initialState
+    initialState,
   );
   const [refData, setRefData] = useState<Array<optionType>>();
   const [templateId, setTemplateId] = useState<string>(null);
@@ -194,7 +194,7 @@ const Laboratory = () => {
     const fetchData = async () => {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/reference-data/disposal-codes`,
-        { headers: apiConfig }
+        { headers: apiConfig },
       )
         .then((response) => {
           if (response.ok) return response.json();
@@ -216,7 +216,7 @@ const Laboratory = () => {
       if (templateId !== null) {
         await fetch(
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
-          { headers: apiConfig }
+          { headers: apiConfig },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -232,10 +232,10 @@ const Laboratory = () => {
               });
               if (data.values !== undefined) {
                 const labSite = data.values.filter(
-                  (site) => site.recoveryFacilityType?.type === 'Laboratory'
+                  (site) => site.recoveryFacilityType?.type === 'Laboratory',
                 );
                 const emptyRecords = data.values.filter(
-                  (site) => site.addressDetails === undefined
+                  (site) => site.addressDetails === undefined,
                 );
 
                 if (labSite.length > 0) {
@@ -284,7 +284,7 @@ const Laboratory = () => {
       faxNumber: validateInternationalFax(contactDetails?.faxNumber),
       disposalCode: validateFieldNotEmpty(
         recoveryFacilityType?.disposalCode,
-        ''
+        '',
       ),
     };
     if (isNotEmpty(newErrors)) {
@@ -323,11 +323,11 @@ const Laboratory = () => {
             emailAddress: validateEmail(contactDetails?.emailAddress, true),
             phoneNumber: validateInternationalPhone(
               contactDetails?.phoneNumber,
-              true
+              true,
             ),
             faxNumber: validateInternationalFax(
               contactDetails?.faxNumber,
-              true
+              true,
             ),
           };
           body = {
@@ -367,7 +367,7 @@ const Laboratory = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(body),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -420,7 +420,7 @@ const Laboratory = () => {
         }
       }
     },
-    [laboratoryPage.data, addressDetails, contactDetails, recoveryFacilityType]
+    [laboratoryPage.data, addressDetails, contactDetails, recoveryFacilityType],
   );
 
   const onAddressDetailsChange = (e) => {
@@ -454,7 +454,7 @@ const Laboratory = () => {
           method: 'POST',
           headers: apiConfig,
           body: JSON.stringify({ status: 'Started' }),
-        }
+        },
       )
         .then((response) => {
           if (response.ok) return response.json();

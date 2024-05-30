@@ -26,7 +26,7 @@ describe('FeedbackPlugin', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(400);
       expect(mockJsonp).toHaveBeenCalledWith(
-        new BadRequestError('Bad Request')
+        new BadRequestError('Bad Request'),
       );
     });
   });

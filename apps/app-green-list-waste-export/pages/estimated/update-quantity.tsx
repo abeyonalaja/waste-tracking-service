@@ -78,7 +78,7 @@ const QuantityEntry = () => {
           `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/submissions/${id}?submitted=true`,
           {
             headers: apiConfig,
-          }
+          },
         )
           .then((response) => {
             if (response.ok) return response.json();
@@ -91,7 +91,7 @@ const QuantityEntry = () => {
             if (data !== undefined) {
               setData(data.wasteQuantity);
               setQuantityType(
-                data.wasteQuantity.estimateData.quantityType || null
+                data.wasteQuantity.estimateData.quantityType || null,
               );
 
               if (data.wasteQuantity.quantityType === 'Weight')
@@ -125,14 +125,14 @@ const QuantityEntry = () => {
           weight,
           quantityType,
           bulkWaste,
-          bulkWaste ? 'tonnes' : 'kilograms'
+          bulkWaste ? 'tonnes' : 'kilograms',
         ),
         quantityVolumeError: validateQuantityValue(
           quantityType === 'Volume',
           volume,
           quantityType,
           bulkWaste,
-          'cubic metres'
+          'cubic metres',
         ),
       };
       if (isNotEmpty(newErrors)) {
@@ -153,8 +153,8 @@ const QuantityEntry = () => {
               quantityType === 'Volume'
                 ? 'Cubic Metre'
                 : bulkWaste
-                ? 'Tonne'
-                : 'Kilogram',
+                  ? 'Tonne'
+                  : 'Kilogram',
             value: parseFloat(quantityType === 'Weight' ? weight : volume),
           };
         }
@@ -166,7 +166,7 @@ const QuantityEntry = () => {
               method: 'PUT',
               headers: apiConfig,
               body: JSON.stringify(updatedData),
-            }
+            },
           )
             .then((response) => {
               if (response.ok) return response.json();
@@ -184,7 +184,7 @@ const QuantityEntry = () => {
         }
       }
     },
-    [id, quantityType, weight, volume, bulkWaste]
+    [id, quantityType, weight, volume, bulkWaste],
   );
 
   const changeQuantityType = (e, type) => {
@@ -235,7 +235,7 @@ const QuantityEntry = () => {
                         <>
                           <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                             {t(
-                              'exportJourney.updateActualQuantity.Weight.title'
+                              'exportJourney.updateActualQuantity.Weight.title',
                             )}
                           </GovUK.Fieldset.Legend>
                           <GovUK.Paragraph>
@@ -256,7 +256,7 @@ const QuantityEntry = () => {
                               onClick={(e) => changeQuantityType(e, 'Volume')}
                             >
                               {t(
-                                'exportJourney.updateActualQuantity.updateInCubic'
+                                'exportJourney.updateActualQuantity.updateInCubic',
                               )}
                             </AppLink>
                           </Paragraph>
@@ -266,12 +266,12 @@ const QuantityEntry = () => {
                         <>
                           <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                             {t(
-                              'exportJourney.updateActualQuantity.Volume.title'
+                              'exportJourney.updateActualQuantity.Volume.title',
                             )}
                           </GovUK.Fieldset.Legend>
                           <GovUK.Paragraph>
                             {t(
-                              'exportJourney.updateActualQuantity.Volume.intro'
+                              'exportJourney.updateActualQuantity.Volume.intro',
                             )}
                           </GovUK.Paragraph>
                           <InputWithSuffix
@@ -289,7 +289,7 @@ const QuantityEntry = () => {
                               onClick={(e) => changeQuantityType(e, 'Weight')}
                             >
                               {t(
-                                'exportJourney.updateActualQuantity.updateInTonnes'
+                                'exportJourney.updateActualQuantity.updateInTonnes',
                               )}
                             </AppLink>
                           </Paragraph>
@@ -327,7 +327,7 @@ const QuantityEntry = () => {
                       <InputWithSuffix
                         id="valueWeight"
                         label={t(
-                          'exportJourney.quantityValueSmall.weightLabelActual'
+                          'exportJourney.quantityValueSmall.weightLabelActual',
                         )}
                         onChange={(e) => setWeight(e.target.value)}
                         value={weight}

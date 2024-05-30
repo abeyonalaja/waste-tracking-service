@@ -20,7 +20,7 @@ export class PrivateAudienceServiceBackend implements Backend {
   constructor(
     private client: DaprLimitedAudienceClient,
     private cache: LRUCache<string, boolean>,
-    private logger: Logger
+    private logger: Logger,
   ) {}
 
   async addUser(dcidSubjectId: string, invitationToken: string): Promise<void> {
@@ -42,7 +42,7 @@ export class PrivateAudienceServiceBackend implements Backend {
 
       this.logger.error(
         'Unhandled status code from limited-audience service',
-        response.error
+        response.error,
       );
       throw Boom.internal();
     }
@@ -86,7 +86,7 @@ const plugin: Plugin<PluginOptions> = {
         try {
           await backend.addUser(
             auth.credentials.subjectId as string,
-            invitationToken
+            invitationToken,
           );
 
           return h.response().code(201);

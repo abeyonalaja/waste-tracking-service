@@ -90,7 +90,7 @@ const mockClient = {
 describe(AnnexViiServiceSubmissionBackend, () => {
   const subject = new AnnexViiServiceSubmissionBackend(
     mockClient as unknown as DaprAnnexViiClient,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {
@@ -231,7 +231,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     mockClient.createDraft.mockResolvedValueOnce(mockCreateDraftResponse);
 
     await expect(
-      subject.createSubmission(accountId, reference)
+      subject.createSubmission(accountId, reference),
     ).rejects.toHaveProperty('isBoom', true);
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -391,38 +391,38 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     expect(result.id).toEqual(id);
     expect(result.reference).toBe(reference);
     expect(result.wasteDescription).toBe(
-      mockCreateDraftResponse.value.wasteDescription
+      mockCreateDraftResponse.value.wasteDescription,
     );
     expect(result.wasteQuantity).toBe(
-      mockCreateDraftResponse.value.wasteQuantity
+      mockCreateDraftResponse.value.wasteQuantity,
     );
     expect(result.exporterDetail).toBe(
-      mockCreateDraftResponse.value.exporterDetail
+      mockCreateDraftResponse.value.exporterDetail,
     );
     expect(result.importerDetail).toBe(
-      mockCreateDraftResponse.value.importerDetail
+      mockCreateDraftResponse.value.importerDetail,
     );
     expect(result.collectionDate).toBe(
-      mockCreateDraftResponse.value.collectionDate
+      mockCreateDraftResponse.value.collectionDate,
     );
     expect(result.carriers).toBe(mockCreateDraftResponse.value.carriers);
     expect(result.collectionDetail).toBe(
-      mockCreateDraftResponse.value.collectionDetail
+      mockCreateDraftResponse.value.collectionDetail,
     );
     expect(result.ukExitLocation).toBe(
-      mockCreateDraftResponse.value.ukExitLocation
+      mockCreateDraftResponse.value.ukExitLocation,
     );
     expect(result.transitCountries).toBe(
-      mockCreateDraftResponse.value.transitCountries
+      mockCreateDraftResponse.value.transitCountries,
     );
     expect(result.recoveryFacilityDetail).toBe(
-      mockCreateDraftResponse.value.recoveryFacilityDetail
+      mockCreateDraftResponse.value.recoveryFacilityDetail,
     );
     expect(result.submissionDeclaration).toBe(
-      mockCreateDraftResponse.value.submissionDeclaration
+      mockCreateDraftResponse.value.submissionDeclaration,
     );
     expect(result.submissionState).toBe(
-      mockCreateDraftResponse.value.submissionState
+      mockCreateDraftResponse.value.submissionState,
     );
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -504,7 +504,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.setDraftWasteDescription.mockResolvedValueOnce(
-      mockSetDraftWasteDescriptionByIdResponse
+      mockSetDraftWasteDescriptionByIdResponse,
     );
 
     await subject.setWasteDescription({ id, accountId }, wasteDescription);
@@ -529,7 +529,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     });
 
     expect(result?.wasteQuantity).toEqual(
-      mockCreateDraftResponse.value.wasteQuantity
+      mockCreateDraftResponse.value.wasteQuantity,
     );
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -601,7 +601,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
 
     const { recoveryFacilityDetail } = await subject.createSubmission(
       accountId,
-      reference
+      reference,
     );
 
     expect(recoveryFacilityDetail.status).toBe('CannotStart');
@@ -681,7 +681,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.setDraftWasteDescription.mockResolvedValueOnce(
-      mockSetDraftWasteDescriptionByIdResponse
+      mockSetDraftWasteDescriptionByIdResponse,
     );
 
     await subject.setWasteDescription({ id, accountId }, wasteDescription);
@@ -706,7 +706,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     });
 
     expect(result?.recoveryFacilityDetail).toEqual(
-      mockCreateDraftResponse.value.recoveryFacilityDetail
+      mockCreateDraftResponse.value.recoveryFacilityDetail,
     );
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -790,7 +790,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.setDraftWasteDescription.mockResolvedValueOnce(
-      mockSetDraftWasteDescriptionByIdResponse
+      mockSetDraftWasteDescriptionByIdResponse,
     );
 
     await subject.setWasteDescription({ id, accountId }, wasteDescription);
@@ -815,7 +815,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     });
 
     expect(result?.recoveryFacilityDetail).toEqual(
-      mockCreateDraftResponse.value.recoveryFacilityDetail
+      mockCreateDraftResponse.value.recoveryFacilityDetail,
     );
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -847,7 +847,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     mockClient.createDraft.mockResolvedValueOnce(mockCreateDraftResponse);
 
     await expect(
-      subject.createSubmission(accountId, reference)
+      subject.createSubmission(accountId, reference),
     ).rejects.toHaveProperty('isBoom', true);
 
     const mockGetDraftWasteDescriptionByIdResponse: draft.GetDraftWasteDescriptionResponse =
@@ -861,11 +861,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.getDraftWasteDescription.mockResolvedValueOnce(
-      mockGetDraftWasteDescriptionByIdResponse
+      mockGetDraftWasteDescriptionByIdResponse,
     );
 
     await expect(
-      subject.getWasteDescription({ id, accountId })
+      subject.getWasteDescription({ id, accountId }),
     ).rejects.toHaveProperty('isBoom', true);
 
     const mockGetDraftCustomerReferenceByIdResponse: draft.GetDraftCustomerReferenceResponse =
@@ -879,11 +879,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.getDraftCustomerReference.mockResolvedValueOnce(
-      mockGetDraftCustomerReferenceByIdResponse
+      mockGetDraftCustomerReferenceByIdResponse,
     );
 
     await expect(
-      subject.getCustomerReference({ id, accountId })
+      subject.getCustomerReference({ id, accountId }),
     ).rejects.toHaveProperty('isBoom', true);
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -985,7 +985,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     };
 
     mockClient.createDraftCarriers.mockResolvedValueOnce(
-      mockCreateDraftCarriersResponse
+      mockCreateDraftCarriersResponse,
     );
 
     const carriers = await subject.createCarriers({ id, accountId }, status);
@@ -1025,7 +1025,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
       mockClient.setDraftCarriers.mockResolvedValueOnce(
-        mockSetDraftCarriersResponse
+        mockSetDraftCarriersResponse,
       );
 
       await subject.setCarriers({ id, accountId }, carrierId, value);
@@ -1036,11 +1036,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
       mockClient.getDraftCarriers.mockResolvedValueOnce(
-        mockGetDraftCarriersResponse
+        mockGetDraftCarriersResponse,
       );
 
       expect(await subject.getCarriers({ id, accountId }, carrierId)).toEqual(
-        value
+        value,
       );
 
       expect(mockClient.createDraft).toBeCalledWith({
@@ -1135,11 +1135,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.setDraftUkExitLocation.mockResolvedValueOnce(
-      mockSetDraftExitLocationByIdResponse
+      mockSetDraftExitLocationByIdResponse,
     );
 
     await expect(
-      subject.setExitLocation({ id, accountId }, setExitLocationRequest)
+      subject.setExitLocation({ id, accountId }, setExitLocationRequest),
     ).resolves.toEqual(undefined);
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -1222,7 +1222,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.setDraftTransitCountries.mockResolvedValueOnce(
-      mockSetDraftTransitCountriesResponse
+      mockSetDraftTransitCountriesResponse,
     );
 
     await subject.setTransitCountries({ id, accountId }, transitCountryData);
@@ -1234,11 +1234,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.getDraftTransitCountries.mockResolvedValueOnce(
-      mockGetDraftTransitCountriesResponse
+      mockGetDraftTransitCountriesResponse,
     );
 
     expect(await subject.getTransitCountries({ id, accountId })).toEqual(
-      transitCountryData
+      transitCountryData,
     );
 
     expect(mockClient.createDraft).toBeCalledWith({
@@ -1345,12 +1345,12 @@ describe(AnnexViiServiceSubmissionBackend, () => {
       };
 
     mockClient.createDraftRecoveryFacilityDetails.mockResolvedValueOnce(
-      mockCreateDraftRecoveryFacilityDetailsResponse
+      mockCreateDraftRecoveryFacilityDetailsResponse,
     );
 
     const recoveryFacilities = await subject.createRecoveryFacilityDetail(
       { id, accountId },
-      status
+      status,
     );
 
     if (recoveryFacilities.status !== 'Started') {
@@ -1387,7 +1387,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
         };
 
       mockClient.setDraftRecoveryFacilityDetails.mockResolvedValueOnce(
-        mockSetDraftRecoveryFacilityDetailsResponse
+        mockSetDraftRecoveryFacilityDetailsResponse,
       );
 
       await subject.setRecoveryFacilityDetail({ id, accountId }, rfdId, value);
@@ -1399,11 +1399,11 @@ describe(AnnexViiServiceSubmissionBackend, () => {
         };
 
       mockClient.getDraftRecoveryFacilityDetails.mockResolvedValueOnce(
-        mockGetDraftRecoveryFacilityDetailsResponse
+        mockGetDraftRecoveryFacilityDetailsResponse,
       );
 
       expect(
-        await subject.getRecoveryFacilityDetail({ id, accountId }, rfdId)
+        await subject.getRecoveryFacilityDetail({ id, accountId }, rfdId),
       ).toEqual(value);
 
       expect(mockClient.createDraft).toBeCalledWith({

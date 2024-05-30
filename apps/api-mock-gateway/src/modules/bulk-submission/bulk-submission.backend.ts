@@ -26,7 +26,7 @@ interface TestCsvRow {
 
 export async function createBatch(
   accountId: string,
-  inputs: Input[]
+  inputs: Input[],
 ): Promise<{ id: string }> {
   const id = uuidv4();
 
@@ -44,7 +44,7 @@ export async function createBatch(
           escape: '\\',
           ltrim: true,
           rtrim: true,
-        })
+        }),
       );
 
       parser.on('readable', function () {
@@ -1066,7 +1066,7 @@ export async function getBatchSubmissions({
 
   if (batch.state.status !== 'Submitted') {
     return Promise.reject(
-      new BadRequestError('Batch has not submitted records.')
+      new BadRequestError('Batch has not submitted records.'),
     );
   }
 
@@ -1103,6 +1103,6 @@ export async function getBatchSubmissions({
         submissionDeclaration: s.submissionDeclaration,
         submissionState: s.submissionState,
       };
-    })
+    }),
   );
 }

@@ -62,7 +62,7 @@ function setupFetchStub() {
     }
     if (
       _url.includes(
-        '/submissions/9be973f2-63dc-43b3-a32a-6725350a9dce/recovery-facility'
+        '/submissions/9be973f2-63dc-43b3-a32a-6725350a9dce/recovery-facility',
       )
     ) {
       data = defaultJsonResponse;
@@ -93,7 +93,7 @@ describe('Interim site pages', () => {
     fireEvent.click(submitButton);
 
     const errorMessage = screen.getAllByText(
-      'Select yes if the waste will go to an interim site'
+      'Select yes if the waste will go to an interim site',
     )[0];
     expect(errorMessage).toBeTruthy();
   });

@@ -9,5 +9,5 @@ module.exports = composePlugins(
     merge(config, {
       mode: configuration,
       experiments: { futureDefaults: true },
-    })
+    }),
 );

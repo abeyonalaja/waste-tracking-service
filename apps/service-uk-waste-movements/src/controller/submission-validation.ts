@@ -11,14 +11,14 @@ const ajv = new Ajv();
 
 export const validateSubmissionsRequest =
   ajv.compile<ValidateSubmissionsRequest>(
-    submissionSchema.validateSubmissionsRequest
+    submissionSchema.validateSubmissionsRequest,
   );
 
 export const validateCreateSubmissionsRequest =
   ajv.compile<CreateSubmissionsRequest>(
-    submissionSchema.createSubmissionsRequest
+    submissionSchema.createSubmissionsRequest,
   );
 
 export const validateGetDraftsRequest = ajv.compile<GetDraftRequest>(
-  draftSchema.getDraftsRequest
+  draftSchema.getDraftsRequest,
 );

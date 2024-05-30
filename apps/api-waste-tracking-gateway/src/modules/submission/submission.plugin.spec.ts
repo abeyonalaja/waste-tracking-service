@@ -56,7 +56,7 @@ const mockBackend = {
         pageNumber: number,
         pageLimit?: number,
         state?: Submission['submissionState']['status'][],
-        token?: string
+        token?: string,
       ) => Promise<SubmissionSummaryPage>
     >(),
   getCustomerReference:
@@ -115,7 +115,7 @@ const mockBackend = {
     jest.fn<
       (
         ref: SubmissionRef,
-        value: Omit<RecoveryFacilityDetail, 'values'>
+        value: Omit<RecoveryFacilityDetail, 'values'>,
       ) => Promise<RecoveryFacilityDetail>
     >(),
   getRecoveryFacilityDetail:
@@ -127,7 +127,7 @@ const mockBackend = {
       (
         ref: SubmissionRef,
         rfdId: string,
-        value: RecoveryFacilityDetail
+        value: RecoveryFacilityDetail,
       ) => Promise<void>
     >(),
   deleteRecoveryFacilityDetail:
@@ -319,7 +319,7 @@ describe('SubmissionPlugin', () => {
       expect(mockBackend.setCustomerReference).toBeCalledTimes(1);
       expect(mockBackend.setCustomerReference).toBeCalledWith(
         { id, accountId },
-        reference
+        reference,
       );
     });
   });
@@ -393,7 +393,7 @@ describe('SubmissionPlugin', () => {
       };
 
       mockBackend.getRecoveryFacilityDetail.mockRejectedValue(
-        Boom.badRequest()
+        Boom.badRequest(),
       );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
@@ -414,7 +414,7 @@ describe('SubmissionPlugin', () => {
       };
 
       mockBackend.getSubmissionConfirmation.mockRejectedValue(
-        Boom.badRequest()
+        Boom.badRequest(),
       );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);

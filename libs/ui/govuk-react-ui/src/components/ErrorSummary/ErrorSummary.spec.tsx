@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ErrorSummary } from './ErrorSummary';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 jest.mock('next/navigation', () => {
   return {
@@ -20,6 +20,7 @@ jest.mock('next/navigation', () => {
     useSearchParams: (): {
       get: () => void;
     } => ({
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       get: (): void => {},
     }),
   };

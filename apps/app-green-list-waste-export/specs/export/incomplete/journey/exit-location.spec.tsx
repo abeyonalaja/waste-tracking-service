@@ -18,7 +18,7 @@ global.fetch = jest.fn(
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ wasteCode: { type: 'NotApplicable' } }),
-    }) as Promise<Response>
+    }) as Promise<Response>,
 );
 
 describe('Point Of Exit page', () => {
@@ -33,7 +33,7 @@ describe('Point Of Exit page', () => {
       () =>
         new Promise(() => {
           return;
-        })
+        }),
     );
 
     await act(async () => {

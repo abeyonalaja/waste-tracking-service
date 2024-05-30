@@ -34,7 +34,7 @@ const mockClientReferenceData = {
 describe('ReferenceDataServiceBackend', () => {
   const subject = new ReferenceDataServiceBackend(
     mockClientReferenceData as unknown as DaprReferenceDataClient,
-    new Logger()
+    new Logger(),
   );
 
   beforeEach(() => {

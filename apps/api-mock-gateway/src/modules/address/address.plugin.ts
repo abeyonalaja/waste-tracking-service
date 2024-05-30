@@ -7,7 +7,7 @@ export default class AddressPlugin {
   constructor(
     private server: Application,
     private prefix: string,
-    private db: DB
+    private db: DB,
   ) {}
 
   async register(): Promise<void> {
