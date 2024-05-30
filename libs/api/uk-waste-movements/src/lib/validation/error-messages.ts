@@ -269,6 +269,11 @@ const WasteCollectionValidationErrorData: {
     message: `The carrier registration number must be fewer than ${constraints.WasteCollectionChar.max} characters`,
     field: 'Waste Collection Details Carrier Registration Number',
   },
+  [codes.wasteCollectionDateInThePastWasteCollectionDate]: {
+    type: 'message',
+    message: 'The expected waste collection date cannot be in the past',
+    field: 'Waste Collection Details Expected Waste Collection Date',
+  },
   [codes.wasteCollectionMissingWasteCollectionDate]: {
     type: 'message',
     message: 'Enter the expected Waste Collection Date',

@@ -20,8 +20,8 @@ import {
   CarrierDetailFlattened,
 } from '../model';
 
-import { parse, isValid } from 'date-fns';
-import { enGB } from 'date-fns/locale/en-GB';
+import { parse, isValid, isBefore } from 'date-fns';
+import { enGB } from 'date-fns/locale';
 
 function titleCase(str: string) {
   return str
@@ -598,6 +598,17 @@ export function validateWasteCollectionDetailSection(
         code: validation.errorCodes
           .wasteCollectionInvalidFormatWasteCollectionDate,
       });
+    } else {
+      const today = new Date();
+      parsedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      if (isBefore(parsedDate, today)) {
+        errors.push({
+          field: 'Waste Collection Details Expected Waste Collection Date',
+          code: validation.errorCodes
+            .wasteCollectionDateInThePastWasteCollectionDate,
+        });
+      }
     }
   }
 

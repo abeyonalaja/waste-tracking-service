@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { validation } from '../model';
 import {
   validateProducerDetailSection,
@@ -674,6 +675,61 @@ describe(validateWasteCollectionDetailSection, () => {
         field: 'Waste Collection Details Expected Waste Collection Date',
         code: validation.errorCodes
           .wasteCollectionInvalidFormatWasteCollectionDate,
+      },
+    ]);
+    const today = new Date();
+    const yesterday = format(
+      new Date(today.getTime() - 24 * 60 * 60 * 1000),
+      'dd/MM/yy',
+    );
+
+    response = validateWasteCollectionDetailSection(
+      {
+        wasteCollectionAddressLine1: faker.datatype.string(60),
+        wasteCollectionAddressLine2: faker.datatype.string(60),
+        wasteCollectionTownCity: faker.datatype.string(50),
+        wasteCollectionCountry: 'France',
+        wasteCollectionPostcode: faker.datatype.string(11),
+        wasteCollectionWasteSource: faker.datatype.string(),
+        wasteCollectionBrokerRegistrationNumber: faker.datatype.string(21),
+        wasteCollectionCarrierRegistrationNumber: faker.datatype.string(21),
+        wasteCollectionLocalAuthority: faker.datatype.string(251),
+        wasteCollectionExpectedWasteCollectionDate: yesterday,
+      },
+      localAuthorities,
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'Waste Collection Details Country',
+        code: validation.errorCodes.wasteCollectionInvalidCountry,
+      },
+      {
+        field: 'Waste Collection Details Postcode',
+        code: validation.errorCodes.wasteCollectionInvalidPostcode,
+      },
+      {
+        field: 'Waste Collection Details Waste Source',
+        code: validation.errorCodes.wasteCollectionInvalidWasteSource,
+      },
+      {
+        field: 'Local authority',
+        code: validation.errorCodes.wasteCollectionCharTooManyLocalAuthority,
+      },
+      {
+        field: 'Waste Collection Details Broker Registration Number',
+        code: validation.errorCodes
+          .wasteCollectionCharTooManyBrokerRegistrationNumber,
+      },
+      {
+        field: 'Waste Collection Details Carrier Registration Number',
+        code: validation.errorCodes
+          .wasteCollectionCharTooManyCarrierRegistrationNumber,
+      },
+      {
+        field: 'Waste Collection Details Expected Waste Collection Date',
+        code: validation.errorCodes
+          .wasteCollectionDateInThePastWasteCollectionDate,
       },
     ]);
   });

@@ -175,6 +175,7 @@ export const wasteCollectionInvalidFormatWasteCollectionDate = 12016;
 export const wasteCollectionEmptyLocalAuthority = 12017;
 export const wasteCollectionInvalidLocalAuthority = 12018;
 export const wasteCollectionCharTooManyLocalAuthority = 12019;
+export const wasteCollectionDateInThePastWasteCollectionDate = 12020;
 
 export const receiverEmptyAuthorizationType = 13000;
 export const receiverInvalidAuthorizationTypeLength = 13001;
