@@ -17,7 +17,7 @@ secret:
     IS_MULTIPLE_UPLOAD_ENABLED: 'true'
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
     FEATURE_PRIVATE_AUDIENCE_CHECKS: 'true'
-    IS_UKWM_BATCHES_ENABLED: 'true'
+    IS_UKWM_BATCHES_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'
