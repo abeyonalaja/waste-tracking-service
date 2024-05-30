@@ -264,7 +264,7 @@ const Guidance = () => {
                 <TableCell>
                   This should be 6 digits. For example 010101. <br />
                   You must enter at least 1 EWC code, but can enter up to 5
-                  codes if you need to, separated by commas.
+                  codes if you need to, separated by semicolons.
                 </TableCell>
               </GovUK.Table.Row>
 
@@ -695,8 +695,8 @@ const Guidance = () => {
             <GovUK.Paragraph>
               Enter all the transit countries the waste will travel through. You
               need to write the full name of the countries. You can enter up to
-              5 transit countries, separated by commas, in the order the waste
-              travels through them.
+              5 transit countries, separated by semicolons, in the order the
+              waste travels through them.
             </GovUK.Paragraph>
             <GovUK.Paragraph>
               If you do not need to enter any transit countries, leave the cells
