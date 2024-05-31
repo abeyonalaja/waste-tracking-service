@@ -114,15 +114,16 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                           },
                           {
                             key: 'Hazardous properties',
-                            value: wasteType.hasHazardousProperties || (
-                              <>Not provided</>
-                            ),
+                            value: wasteType.hasHazardousProperties
+                              ? 'Yes'
+                              : 'No',
                           },
                           {
                             key: 'Hazardous waste codes',
                             value:
-                              wasteType.hazardousWasteCodes ===
-                              undefined ? undefined : (
+                              wasteType.hazardousWasteCodes === undefined ? (
+                                'Not provided'
+                              ) : (
                                 <FormatHazCodes
                                   data={wasteType.hazardousWasteCodes}
                                 />
@@ -130,21 +131,23 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                           },
                           {
                             key: 'Persistent organic pollutants (POPs)',
-                            value: wasteType.containsPops || 'Not provided',
+                            value: wasteType.containsPops ? 'Yes' : 'No',
                           },
                           {
                             key: 'Persistent organic pollutants (POPs) details',
                             value:
-                              wasteType.hazardousWasteCodes ===
-                              undefined ? undefined : (
+                              wasteType.hazardousWasteCodes === undefined ? (
+                                'Not provided'
+                              ) : (
                                 <FormatPopDetails data={wasteType.pops} />
                               ),
                           },
                           {
                             key: 'Persistent organic pollutants (POPs) concentration value',
                             value:
-                              wasteType.hazardousWasteCodes ===
-                              undefined ? undefined : (
+                              wasteType.hazardousWasteCodes === undefined ? (
+                                'Not provided'
+                              ) : (
                                 <FormatPopConcentrate data={wasteType.pops} />
                               ),
                           },
@@ -166,9 +169,11 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 },
                 {
                   key: 'Special handling requirements details',
-                  value:
-                    data.wasteInformation.wasteTransportation
-                      .specialHandlingRequirements,
+                  value: data.wasteInformation.wasteTransportation
+                    .specialHandlingRequirements
+                    ? data.wasteInformation.wasteTransportation
+                        .specialHandlingRequirements
+                    : 'Not provided',
                 },
               ]}
               hideEmptyRows
@@ -227,9 +232,11 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 },
                 {
                   key: 'Broker registration number',
-                  value:
-                    data.producerAndCollection.wasteCollection
-                      .brokerRegistrationNumber,
+                  value: data.producerAndCollection.wasteCollection
+                    .brokerRegistrationNumber
+                    ? data.producerAndCollection.wasteCollection
+                        .brokerRegistrationNumber
+                    : 'Not provided',
                 },
               ]}
             />
