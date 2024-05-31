@@ -157,7 +157,7 @@
     "react-i18next": "^14.1.2",
     "react-is": "18.3.1",
     "snappy": "^7.2.2",
-    "styled-components": "^6.1.11",
+    "styled-components": "^5.3.6",
     "tslib": "^2.6.2",
     "uuid": "^9.0.1",
     "webpack": "^5.91.0",
