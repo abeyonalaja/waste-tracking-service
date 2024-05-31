@@ -180,6 +180,7 @@ export function getUkwmSubmission({
     id: v.id,
     transactionId: v.transactionId,
     wasteInformation: v.wasteInformation,
+    carrier: v.carrier,
     receiver: v.receiver,
     producerAndCollection: v.producerAndCollection,
     submissionDeclaration: v.submissionDeclaration,

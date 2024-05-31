@@ -38,6 +38,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
   }>({
     aboutWaste: true,
     producerCollector: true,
+    carrierDetails: true,
     receiverDetails: true,
   });
   function toggleSection(section: string) {
@@ -180,6 +181,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
             />
           )}
         </AccordionSection>
+
         <AccordionSection
           id="producerCollector"
           title="Producer and collection details"
@@ -199,7 +201,17 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 },
                 {
                   key: 'Producer address',
-                  value: `${data.producerAndCollection.producer.address.addressLine1}, ${data.producerAndCollection.producer.address.townCity}, ${data.producerAndCollection.producer.address.postcode}, ${data.producerAndCollection.producer.address.country}`,
+                  value: (
+                    <>
+                      {data.producerAndCollection.producer.address.addressLine1}
+                      <br />
+                      {data.producerAndCollection.producer.address.townCity}
+                      <br />
+                      {data.producerAndCollection.producer.address.postcode}
+                      <br />
+                      {data.producerAndCollection.producer.address.country}
+                    </>
+                  ),
                 },
                 {
                   key: 'Producer contact name',
@@ -219,7 +231,29 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 },
                 {
                   key: 'Waste collection address',
-                  value: `${data.producerAndCollection.wasteCollection.address.addressLine1}, ${data.producerAndCollection.wasteCollection.address.townCity}, ${data.producerAndCollection.wasteCollection.address.postcode}, ${data.producerAndCollection.wasteCollection.address.country}`,
+                  value: (
+                    <>
+                      {
+                        data.producerAndCollection.wasteCollection.address
+                          .addressLine1
+                      }
+                      <br />
+                      {
+                        data.producerAndCollection.wasteCollection.address
+                          .townCity
+                      }
+                      <br />
+                      {
+                        data.producerAndCollection.wasteCollection.address
+                          .postcode
+                      }
+                      <br />
+                      {
+                        data.producerAndCollection.wasteCollection.address
+                          .country
+                      }
+                    </>
+                  ),
                 },
                 {
                   key: 'Local authority',
@@ -237,6 +271,57 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                     ? data.producerAndCollection.wasteCollection
                         .brokerRegistrationNumber
                     : 'Not provided',
+                },
+              ]}
+            />
+          )}
+        </AccordionSection>
+        <AccordionSection
+          id="carrierDetails"
+          title="Carrier details"
+          summary="The waste carrier and collection details of the waste"
+          sections={sections}
+          toggle={toggleSection}
+          status={data.carrier.status}
+        >
+          {data.carrier.status === 'Complete' && (
+            <SummaryList
+              items={[
+                {
+                  key: 'Carrier organisation name',
+                  value: data.carrier.value.contact.organisationName,
+                },
+                {
+                  key: 'Carrier address',
+                  value: (
+                    <>
+                      {data.carrier.value.address.addressLine1}
+                      <br />
+                      {data.carrier.value.address.addressLine2 && (
+                        <>
+                          {data.carrier.value.address.addressLine2}
+                          <br />
+                        </>
+                      )}
+                      {data.carrier.value.address.townCity}
+                      <br />
+                      {data.carrier.value.address.postcode}
+                      <br />
+                      {data.carrier.value.address.country}
+                    </>
+                  ),
+                },
+                {
+                  key: 'Carrier contact name',
+                  value: data.carrier.value.contact.name,
+                },
+                {
+                  key: 'Carrier contact email address',
+                  value: data.carrier.value.contact.email,
+                },
+                {
+                  key: 'Carrier contact phone number',
+                  value: data.carrier.value.contact.phone,
                 },
               ]}
             />
@@ -267,7 +352,17 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                 },
                 {
                   key: 'Receiver address',
-                  value: `${data.receiver.value.address.addressLine1}, ${data.receiver.value.address.townCity}, ${data.receiver.value.address.postcode}, ${data.receiver.value.address.country}`,
+                  value: (
+                    <>
+                      {data.receiver.value.address.addressLine1}
+                      <br />
+                      {data.receiver.value.address.townCity}
+                      <br />
+                      {data.receiver.value.address.postcode}
+                      <br />
+                      {data.receiver.value.address.country}
+                    </>
+                  ),
                 },
                 {
                   key: 'Receiver postcode',
