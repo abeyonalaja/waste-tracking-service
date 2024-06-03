@@ -22,7 +22,8 @@ require 'report_builder'
 require 'axe-cucumber-steps'
 require 'axe-capybara'
 require 'to_words'
-
+require 'nokogiri'
+require 'yaml'
 
 World(Capybara::DSL)
 

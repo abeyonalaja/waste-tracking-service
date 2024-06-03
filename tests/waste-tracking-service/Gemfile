@@ -21,6 +21,7 @@ gem 'axe-core-cucumber'
 gem 'axe-core-capybara'
 gem 'browserstack-local'
 gem 'to_words'
+gem 'nokogiri', '~> 1.16', '>= 1.16.5'
 
 
 

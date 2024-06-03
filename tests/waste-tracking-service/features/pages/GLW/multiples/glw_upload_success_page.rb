@@ -31,6 +31,17 @@ class GlwUploadSuccessPage < GenericPage
     end
   end
 
+  def wait_to_error_page
+    max_wait_time = 30
+    begin
+      Timeout.timeout(max_wait_time) do
+        sleep 0.1 until page.has_css?('h1', text: 'Correct errors and upload the amended file')
+      end
+    rescue Timeout::Error
+      puts 'Upload did not complete successfully within the specified time.'
+    end
+  end
+
   def wait_to_submission
     max_wait_time = 30
     begin

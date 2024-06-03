@@ -3,7 +3,7 @@ And(/^I verify create multiple waste page is correctly translated$/) do
 end
 
 And(/^I click on guidance link$/) do
-  click_link(href: '/move-waste/en/multiples/guidance', :match => :first)
+  click_link(href: '/move-waste/en/multiples/guidance', match: :first)
   switch_to_window(windows.last)
 end
 
@@ -63,10 +63,61 @@ And(/^I click return Return to move waste in the UK button$/) do
   UkwmBulkConfirmationPage.new.return_button
 end
 
-And(/^I upload valid ukwm "([^"]*)" csv$/) do |file_name|
+And(/^I upload ukwm "([^"]*)" csv$/) do |file_name|
   CreateMultipleRecordsPage.new.upload_with_filename file_name
 end
 
 When(/^I wait for the submission to finish$/) do
   GlwUploadSuccessPage.new.wait_to_submission
+end
+
+And(/^I upload invalid ukwm csv$/) do
+  CreateMultipleRecordsPage.new.upload_file 'INVALID_UKWM'
+end
+
+Then(/^Bulk upload ukwm error is displayed for "([^"]*)" records$/) do |errors|
+  UkwmErrorSummaryPage.new.check_page_displayed(errors)
+end
+
+Then(/^I see ukwm summary page correctly translated$/) do
+  UkwmErrorSummaryPage.new.check_page_translation
+end
+
+And(/^I should see (\d+) column error details correctly displayed for "([^"]*)" csv$/) do |error_column_count, _file_path|
+  expect(UkwmErrorSummaryPage.new.by_column_error_count).to eq error_column_count
+end
+
+And(/^I should see (\d+) row error details correctly displayed$/) do |row|
+  (0..row - 1).each do |i|
+    UkwmErrorSummaryPage.new.rows_action(i)
+  end
+end
+
+Then(/^I should see column error details correctly displayed for "([^"]*)" csv$/) do |file_name|
+  actual_column_errors_json = UkwmErrorSummaryPage.new.column_errors
+  puts actual_column_errors_json
+
+  actual_column_errors_json = UkwmErrorSummaryPage.new.convert_to_json(actual_column_errors_json)
+  actual_column_errors_json = UkwmErrorSummaryPage.new.parse_json(actual_column_errors_json)
+  yaml_file_path = "#{File.dirname(__FILE__)}/../../data/UKM/expected_errors/column_errors/#{file_name}.yml"
+  expected_column_errors = UkwmErrorSummaryPage.new.load_yaml(yaml_file_path)
+  expect(UkwmErrorSummaryPage.new.compare_data(expected_column_errors, actual_column_errors_json)).to eq true
+end
+
+When(/^I wait for the error page to load$/) do
+  GlwUploadSuccessPage.new.wait_to_error_page
+end
+
+When(/^I click UKM errors by rows$/) do
+  GlwUploadErrorPage.new.errors_by_row.click
+end
+
+Then(/^I should see row error details correctly displayed for "([^"]*)"$/) do |file_name|
+  actual_row_errors_json = UkwmErrorSummaryPage.new.row_errors
+  puts actual_row_errors_json
+  actual_row_errors_json = UkwmErrorSummaryPage.new.convert_to_json(actual_row_errors_json)
+  actual_row_errors_json = UkwmErrorSummaryPage.new.parse_json(actual_row_errors_json)
+  yaml_file_path = "#{File.dirname(__FILE__)}/../../data/UKM/expected_errors/row_errors/#{file_name}.yml"
+  expected_row_errors = UkwmErrorSummaryPage.new.load_yaml(yaml_file_path)
+  expect(UkwmErrorSummaryPage.new.compare_data(expected_row_errors, actual_row_errors_json)).to eq true
 end

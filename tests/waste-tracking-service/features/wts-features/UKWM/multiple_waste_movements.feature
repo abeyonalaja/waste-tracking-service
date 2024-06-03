@@ -47,13 +47,39 @@ Feature: AS A Waste Controller
     And I click the upload button
     Then I remain on the Ukwm Create Multiple Waste page with an "Upload a CSV file" error message displayed
 
+  Scenario: Check UKM CSV error page and translation
+    Given I login into UKWM app
+    When the "Service Home" page is displayed
+    And I click Create a new multiple waste movement link
+    Then the "Ukwm Create Multiple Waste" page is displayed
+    And I upload ukwm "UKM_Producer_errors" csv
+    And I click the upload button
+    When I wait for the error page to load
+    Then Bulk upload ukwm error is displayed for "27" records
+    Then I see ukwm summary page correctly translated
+
+  Scenario: User upload invalid ukwm csv and verify error messages in the column table
+    Given I login into UKWM app
+    When the "Service Home" page is displayed
+    And I click Create a new multiple waste movement link
+    Then the "Ukwm Create Multiple Waste" page is displayed
+    And I upload ukwm "UKM_Producer_errors" csv
+    And I click the upload button
+    When I wait for the error page to load
+    Then Bulk upload ukwm error is displayed for "27" records
+    And I should see 11 column error details correctly displayed for "UKM_Producer_errors" csv
+    Then I should see column error details correctly displayed for "UKM_Producer_errors" csv
+    When I click UKM errors by rows
+    Then I should see row error details correctly displayed for "UKM_Producer_errors"
+
   Scenario: User navigates to upload success page by uploading valid ukwm csv
     Given I login into UKWM app
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm csv
+    And I upload ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
+    When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
     And I verify Bulk upload success page is correctly translated for "40" records
 
@@ -62,7 +88,7 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
+    And I upload ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
     When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
@@ -77,7 +103,7 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
+    And I upload ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
     When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
@@ -92,7 +118,7 @@ Feature: AS A Waste Controller
     When the "Service Home" page is displayed
     And I click Create a new multiple waste movement link
     Then the "Ukwm Create Multiple Waste" page is displayed
-    And I upload valid ukwm "UKWM_correct_40_rows_with_estimate" csv
+    And I upload ukwm "UKWM_correct_40_rows_with_estimate" csv
     And I click the upload button
     When I wait for the upload to finish
     Then Bulk upload success page is displayed for "40" records
@@ -102,3 +128,4 @@ Feature: AS A Waste Controller
     And I click continue to create records
     When I wait for the submission to finish
     Then Bulk confirmation page is displayed for "40" movements
+

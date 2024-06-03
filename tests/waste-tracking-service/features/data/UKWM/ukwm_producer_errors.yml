@@ -1,0 +1,65 @@
+- Column name: row 1
+  Error type: Enter a unique reference
+
+- Column name: row 1
+  Error type: Your unique reference must only contain letters and numbers
+
+- Column name: row 1
+  Error type: Your unique reference must be less than 20 characters
+
+- Column name: row 2
+  Error type: Enter the producer organisation name
+
+- Column name: row 2
+  Error type: The producer organisation name must be less than 250 characters
+
+- Column name: row 3
+  Error type: Enter the producer address line 1
+
+- Column name: row 3
+  Error type: The producer address line 1 must be less than 250 characters
+
+- Column name: row 4
+  Error type: The producer address line 2 must be less than 250 characters
+
+- Column name: row 5
+  Error type: Enter the producer town or city
+
+- Column name: row 5
+  Error type: The producer town or city must be less than 250 characters
+
+- Column name: row 6
+  Error type: Enter the producer country
+
+- Column name: row 6
+  Error type: The producer country must only be England, Wales, Scotland or Northern Ireland
+
+- Column name: row 7
+  Error type: Enter producer postcode in the correct format
+
+- Column name: row 8
+  Error type: Enter the producer contact name
+
+- Column name: row 8
+  Error type: The producer contact name must be less than 250 characters
+
+- Column name: row 9
+  Error type: Enter producer contact email address
+
+- Column name: row 9
+  Error type: Enter producer contact email address in correct format
+
+- Column name: row 9
+  Error type: The producer email address must be less than 250 characters
+
+- Column name: row 10
+  Error type: Enter producer contact phone number
+
+- Column name: row 10
+  Error type: Enter producer contact phone number in correct format
+
+- Column name: row 11
+  Error type: Enter producer SIC code
+
+- Column name: row 11
+  Error type: Enter producer SIC code in the correct format

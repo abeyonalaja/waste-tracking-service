@@ -71,4 +71,8 @@ class GlwUploadErrorPage < GenericPage
     expect(self).to have_text BANNER_TITLE
   end
 
+  def errors_by_row
+    find('tab_by-row')
+  end
+
 end

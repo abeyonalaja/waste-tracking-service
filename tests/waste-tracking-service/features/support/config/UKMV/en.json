@@ -114,6 +114,45 @@
     "uploadPage": {
       "title": "Creating multiple waste movements"
     },
+    "errors": {
+      "page": {
+        "headingOne": "Correct errors and upload the amended file",
+        "headingTwo": "Error summary",
+        "paragraphOne": "These are formatting errors that the system has identified. It cannot check for factual errors you might make when entering any details.",
+        "paragraphTwo": "You can upload your amended file after correcting any errors a row at a time, or you can correct all errors in the whole file and upload it and the end."
+      },
+      "totalErrorsSummary": {
+        "heading": "You have a total of { totalErrorCount } errors",
+        "prompt": "You need to correct these errors before you can create all your new waste movement records",
+        "linkText": "Error summary"
+      },
+      "instructions": {
+        "paragraphOne": "You need to correct all errors in your file and upload it again. This will replace your previous upload",
+        "paragraphTwoOne": "Review the guidance on ",
+        "linkText": "how to create multiple new waste movements using the CSV template (opens in new tab)",
+        "paragraphTwoTwo": " to understand how to fill it in"
+      },
+      "uploadForm": {
+        "heading": "Upload your corrected CSV file"
+      },
+      "errorTab": {
+        "byColumn": "Errors by column",
+        "byRow": "Errors by row",
+        "columnType": "Column name",
+        "rowType": "Row number",
+        "errorType": "Error type",
+        "errorAmount": "Error amount",
+        "action": "Action"
+      },
+      "errorRow": {
+        "errorCount": "errors",
+        "rowNumber": "Row number",
+        "reason": "Error reason",
+        "details": "Error details",
+        "show": "Show errors",
+        "hide": "Hide errors"
+      }
+    },
     "instructions": {
       "createAndUpload": {
         "heading": "How to create and upload your file ",
