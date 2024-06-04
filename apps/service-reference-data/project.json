@@ -74,7 +74,8 @@
             "type=ref,event=branch",
             "type=ref,event=tag",
             "type=ref,event=pr",
-            "type=sha,prefix=sha-"
+            "type=sha,prefix=sha-",
+            "type=raw,value=3.1.1"
           ]
         }
       }
