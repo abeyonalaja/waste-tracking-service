@@ -69,3 +69,7 @@ export const RecoveryFacilityLength = {
   min: 1,
   max: 5,
 };
+
+export const WasteCodeLength = {
+  max: 5,
+};

@@ -378,6 +378,22 @@ describe('validateWasteCodeSubSection', () => {
       {
         baselAnnexIXCode: '',
         oecdCode: '',
+        annexIIIACode: '1010;B1050',
+        annexIIIBCode: '',
+        laboratory: '',
+      },
+      wasteCodes,
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'WasteDescription',
+      message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+    });
+
+    response = validateWasteCodeSubSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
         annexIIIACode: '',
         annexIIIBCode: 'BEU99',
         laboratory: '',

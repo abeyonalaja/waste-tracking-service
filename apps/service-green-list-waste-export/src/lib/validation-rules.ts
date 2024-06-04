@@ -216,6 +216,15 @@ export function validateWasteCodeSubSection(
       .replace(/\s/g, '')
       .toUpperCase()
       .split(';');
+    if (codeArr.some((c) => c.length !== validation.WasteCodeLength.max)) {
+      return {
+        valid: false,
+        value: {
+          field: 'WasteDescription',
+          message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+        },
+      };
+    }
     const filteredWasteCodeList = wasteCodeList
       .filter((c) => c.type === 'AnnexIIIA')[0]
       .values.filter((v) => codeArr.every((c) => v.code.includes(c)));
