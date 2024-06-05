@@ -38,7 +38,7 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
-        affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*,govuk-*')
+        affected=$(npx nx show projects --affected --exclude 'api-mock-*,lib-*,tool-*')
         if [ -n "$affected" ]
         then
           echo "##vso[task.setvariable variable=appsAffectedBool;isOutput=true]true"
@@ -61,7 +61,7 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         echo "Recreating affected artifacts ${NX_HEAD} -> ${NX_BASE}..."
-        affected=$(npx nx show projects --affected --exclude 'api-*,client-*,util-*,govuk-*')
+        affected=$(npx nx show projects --affected --exclude 'api-mock-*,lib-*,tool-*')
         echo "The affected apps are: ${affected}"
         for project in ${affected}
         do
@@ -86,8 +86,8 @@ steps:
           echo "Parsed tag from project.json: $RAW_TAG_SEM_VER"
           echo "Latest Semantic Version Tag in ACR: $latest_semantic_version"
           if [[ "$RAW_TAG_SEM_VER" == "$latest_semantic_version" ]]; then
-            echo "ERROR: You haven't updated the app version to reflect the changes for app $project. Please update the version in the project.json."
-            echo "##vso[task.logissue type=error]You haven't updated the app version to reflect the changes for app $project. Please update the version in the project.json."
+            echo "ERROR: App version $RAW_TAG_SEM_VER for project $project already exists in ACR. Please update project.json file to reflect the new changes."
+            echo "##vso[task.logissue type=error]App version $RAW_TAG_SEM_VER for project $project already exists in ACR. Please update project.json file to reflect the new changes."
             exit 1
           fi
         done
