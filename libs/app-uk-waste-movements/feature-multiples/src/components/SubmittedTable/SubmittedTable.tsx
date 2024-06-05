@@ -1,14 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import { sortSubmissions } from '../../utils';
 import { useMemo } from 'react';
 import { Link } from '@wts/ui/navigation';
 import { Pagination } from '@wts/ui/shared-ui';
-import { useState } from 'react';
 import { SubmittedFilters } from '../SubmittedFilters';
-import { useSearchParams } from 'next/navigation';
 import styles from './SubmittedTable.module.scss';
 
 interface TableStrings {
@@ -30,7 +29,7 @@ export function SubmittedTable({
   submissions,
   tableStrings,
 }: SubmittedTableProps): React.ReactElement {
-  const searchParams = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const sortedSubmissions = useMemo(
     () => sortSubmissions(submissions, 'ascending'),
@@ -43,8 +42,8 @@ export function SubmittedTable({
   const totalPages = Math.ceil(filteredSubmissions.length / 15);
 
   const displayedSubmissions = filteredSubmissions.slice(
-    (Number(searchParams.get('page')) - 1) * 15,
-    Number(searchParams.get('page')) * 15,
+    (currentPage - 1) * 15,
+    currentPage * 15,
   );
 
   return (
@@ -53,6 +52,7 @@ export function SubmittedTable({
         <SubmittedFilters
           sortedSubmissions={sortedSubmissions}
           setFilteredSubmissions={setFilteredSubmissions}
+          setCurrentPage={setCurrentPage}
         />
       </GovUK.GridCol>
       <GovUK.GridCol size="two-thirds-from-desktop">
@@ -139,7 +139,11 @@ export function SubmittedTable({
             })}
           </tbody>
         </table>
-        <Pagination totalPages={totalPages} />
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
       </GovUK.GridCol>
     </GovUK.GridRow>
   );

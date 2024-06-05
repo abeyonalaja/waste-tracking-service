@@ -4,6 +4,61 @@ import { SubmittedTable } from './SubmittedTable';
 import { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import { NextIntlClientProvider } from 'next-intl';
 
+const messages = {
+  multiples: {
+    manage: {
+      breadCrumbs: {
+        home: 'Home',
+        moveWaste: 'Move waste in the UK',
+        current: 'Manage waste movements',
+      },
+      headingOne: 'Waste movement records for {company}',
+      table: {
+        headerOne: 'Waste movement ID',
+        headerTwo: 'Collection date',
+        headerThree: 'EWC code',
+        headerFour: 'Producer name',
+        headerFive: 'Action',
+        action: 'Action',
+        notFound: 'No record found',
+      },
+      submittedTable: {
+        filters: {
+          heading: 'Filter',
+          show: 'Show',
+          hide: 'Hide',
+          showAll: 'Show all sections',
+          hideAll: 'Hide all sections',
+          collectionDate: {
+            title: 'Collection Date',
+            hint: 'The date the waste was collected from the producer',
+            error: 'Enter the full date',
+            labelOne: 'Day',
+            labelTwo: 'Month',
+            labelThree: 'Year',
+          },
+          ewcCode: {
+            title: 'EWC Code',
+            hint: 'Search for any EWC code in your waste movements',
+          },
+          producerName: {
+            title: 'Producer name',
+            hint: 'Search for a producer name',
+          },
+          wasteMovementId: {
+            title: 'Waste Movement ID',
+            hint: 'Search for a waste movement ID',
+          },
+          buttons: {
+            apply: 'Apply filters',
+            reset: 'Reset filters',
+          },
+        },
+      },
+    },
+  },
+};
+
 const strings = {
   headerOne: 'Waste movement ID',
   headerTwo: 'Collection date',
@@ -11,6 +66,7 @@ const strings = {
   headerFour: 'Producer name',
   headerFive: 'Action',
   action: 'View',
+  notFound: 'No submissions found',
 };
 
 const mockSubmisssions: UkwmSubmissionReference[] = [
@@ -70,7 +126,7 @@ describe('SubmittedTable component', () => {
     setPageNumber.mockReturnValue(1);
 
     render(
-      <NextIntlClientProvider locale="en">
+      <NextIntlClientProvider locale="en" messages={messages}>
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
       </NextIntlClientProvider>,
     );
@@ -88,7 +144,7 @@ describe('SubmittedTable component', () => {
     setPageNumber.mockReturnValue(1);
 
     render(
-      <NextIntlClientProvider locale="en">
+      <NextIntlClientProvider locale="en" messages={messages}>
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
       </NextIntlClientProvider>,
     );
@@ -102,7 +158,7 @@ describe('SubmittedTable component', () => {
     setPageNumber.mockReturnValue(1);
 
     render(
-      <NextIntlClientProvider locale="en">
+      <NextIntlClientProvider locale="en" messages={messages}>
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
       </NextIntlClientProvider>,
     );
@@ -116,7 +172,7 @@ describe('SubmittedTable component', () => {
     setPageNumber.mockReturnValue(1);
 
     render(
-      <NextIntlClientProvider locale="en">
+      <NextIntlClientProvider locale="en" messages={messages}>
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
       </NextIntlClientProvider>,
     );
@@ -130,7 +186,7 @@ describe('SubmittedTable component', () => {
     setPageNumber.mockReturnValue(1);
 
     render(
-      <NextIntlClientProvider locale="en">
+      <NextIntlClientProvider locale="en" messages={messages}>
         <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
       </NextIntlClientProvider>,
     );

@@ -34,7 +34,6 @@ interface PageProps {
 
 export default async function ManagePage({
   params,
-  searchParams,
 }: PageProps): Promise<React.ReactElement | undefined> {
   const t = await getTranslations('multiples.manage');
   const session: Session | null = await getServerSession(options);
@@ -59,13 +58,6 @@ export default async function ManagePage({
   if (state.status !== 'Submitted' || !('submissions' in state)) {
     redirect(`/multiples/${params.id}`);
     return;
-  }
-
-  const totalPages = Math.ceil(state.submissions.length / 15);
-  const pageNumber = Number(searchParams.page);
-
-  if (pageNumber > totalPages || pageNumber < 1 || Number.isNaN(pageNumber)) {
-    redirect(`/multiples/${params.id}/view?page=1`);
   }
 
   const breadcrumbs = [

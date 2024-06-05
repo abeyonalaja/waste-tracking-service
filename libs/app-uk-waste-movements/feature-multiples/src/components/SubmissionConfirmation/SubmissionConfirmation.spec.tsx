@@ -14,6 +14,7 @@ const messages = {
       bodyP2: 'You can also:',
       bullet1:
         'view all these created waste movement records (opens in new tab)',
+      bullet2: 'download a CSV file of these waste movements',
       subHeading2: 'What happens next',
       bodyP3:
         'The receivers of the waste will need to confirm collection and receipt of the waste using the waste tracking service.',
@@ -33,7 +34,11 @@ describe('Submission Confirmation component', () => {
   test('renders banner correctly with 5 records', async () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmissionConfirmation submissionId="123" recordCount={5} />
+        <SubmissionConfirmation
+          submissionId="123"
+          recordCount={5}
+          token={'Bearer 124'}
+        />
       </NextIntlClientProvider>,
     );
     expect(screen.getByText('5 waste movements created')).toBeInTheDocument();
@@ -42,7 +47,11 @@ describe('Submission Confirmation component', () => {
   test('renders banner correctly with 1 record', async () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmissionConfirmation submissionId="123" recordCount={1} />
+        <SubmissionConfirmation
+          submissionId="123"
+          recordCount={1}
+          token={'Bearer 124'}
+        />
       </NextIntlClientProvider>,
     );
     expect(screen.getByText('1 waste movement created')).toBeInTheDocument();
@@ -54,6 +63,7 @@ describe('Submission Confirmation component', () => {
         <SubmissionConfirmation
           submissionId="fa9fb092-1b60-4391-bf08-5cc8d60606b5"
           recordCount={548}
+          token={'Bearer 124'}
         />
       </NextIntlClientProvider>,
     );
@@ -61,7 +71,7 @@ describe('Submission Confirmation component', () => {
       screen.getByText(messages.multiples.confirmation.bullet1.toString()),
     ).toHaveAttribute(
       'href',
-      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view?page=1',
+      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view',
     );
   });
 });

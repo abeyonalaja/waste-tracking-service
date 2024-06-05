@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 import { filterSubmissions } from '../../utils';
 import type { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import styles from './SubmittedFilters.module.scss';
@@ -16,6 +14,7 @@ interface SubmittedFiltersProps {
   setFilteredSubmissions: React.Dispatch<
     React.SetStateAction<UkwmSubmissionReference[]>
   >;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface SubmittedPageFormData {
@@ -30,10 +29,9 @@ export interface SubmittedPageFormData {
 export function SubmittedFilters({
   sortedSubmissions,
   setFilteredSubmissions,
+  setCurrentPage,
 }: SubmittedFiltersProps): JSX.Element {
   const t = useTranslations('multiples.manage.submittedTable.filters');
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const {
     register,
@@ -48,22 +46,16 @@ export function SubmittedFilters({
 
   const onSubmit = handleSubmit((formData) => {
     setFilteredSubmissions(filterSubmissions(sortedSubmissions, formData));
-    window.history.pushState(
-      {},
-      '',
-      `${pathname}?${updateSearchParamsPage(1)}`,
-    );
+    setCurrentPage(1);
+    window.scrollTo(0, 0);
   });
 
   function resetFilters(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     reset();
+    setCurrentPage(1);
     setFilteredSubmissions(sortedSubmissions);
-    window.history.pushState(
-      {},
-      '',
-      `${pathname}?${updateSearchParamsPage(1)}`,
-    );
+    window.scrollTo(0, 0);
   }
 
   function validateCollectionDate(): boolean {
@@ -80,12 +72,6 @@ export function SubmittedFilters({
     } else {
       return true;
     }
-  }
-
-  function updateSearchParamsPage(page: number): string {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
-    return params.toString();
   }
 
   const [sections, setSections] = useState<{ [key: string]: boolean }>({

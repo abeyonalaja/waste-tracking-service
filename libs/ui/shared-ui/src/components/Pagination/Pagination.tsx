@@ -1,28 +1,20 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 import { getPageRange } from '../../utils';
 
 interface PaginationProps {
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
 }
 
 export function Pagination({
+  currentPage,
   totalPages,
+  setCurrentPage,
 }: PaginationProps): React.ReactElement | undefined {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const currentPage = Number(searchParams.get('page'));
   const pageRange = getPageRange(currentPage, totalPages);
-
-  function updateSearchParamsPage(page: number): string {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
-    return params.toString();
-  }
 
   if (totalPages > 1) {
     return (
@@ -35,11 +27,8 @@ export function Pagination({
               className="govuk-link govuk-pagination__link"
               onClick={(e) => {
                 e.preventDefault();
-                window.history.pushState(
-                  {},
-                  '',
-                  `${pathname}?${updateSearchParamsPage(currentPage - 1)}`,
-                );
+                setCurrentPage(Number(currentPage - 1));
+                window.scrollTo(0, 0);
               }}
             >
               <svg
@@ -88,11 +77,8 @@ export function Pagination({
                     aria-current={page === currentPage ? 'page' : undefined}
                     onClick={(e) => {
                       e.preventDefault();
-                      window.history.pushState(
-                        {},
-                        '',
-                        `${pathname}?${updateSearchParamsPage(Number(page))}`,
-                      );
+                      setCurrentPage(Number(page));
+                      window.scrollTo(0, 0);
                     }}
                   >
                     {page}
@@ -110,11 +96,8 @@ export function Pagination({
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                window.history.pushState(
-                  {},
-                  '',
-                  `${pathname}?${updateSearchParamsPage(currentPage + 1)}`,
-                );
+                setCurrentPage(Number(currentPage + 1));
+                window.scrollTo(0, 0);
               }}
             >
               <span className="govuk-pagination__link-title">

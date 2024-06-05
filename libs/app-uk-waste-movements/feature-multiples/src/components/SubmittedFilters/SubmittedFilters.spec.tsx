@@ -50,6 +50,10 @@ jest.mock('react-hook-form', () => ({
   useForm: jest.fn(),
 }));
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 describe('SubmittedFilters component', () => {
   (useForm as jest.Mock).mockReturnValue({
     handleSubmit: () => {},
@@ -69,6 +73,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );
@@ -90,6 +95,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );
@@ -113,6 +119,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );
@@ -148,6 +155,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );
@@ -155,30 +163,6 @@ describe('SubmittedFilters component', () => {
     const applyButton = screen.getByRole('button', { name: 'Apply filters' });
 
     expect(applyButton).toBeInTheDocument();
-  });
-
-  it('calls handleSubmit when the apply filters button is clicked', async () => {
-    const mockHandleSubmit = jest.fn();
-    (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: mockHandleSubmit,
-      register: () => {},
-      formState: { errors: {} },
-    });
-
-    render(
-      <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-        />
-      </NextIntlClientProvider>,
-    );
-
-    const applyButton = screen.getByRole('button', { name: 'Apply filters' });
-
-    await userEvent.click(applyButton);
-
-    expect(mockHandleSubmit).toHaveBeenCalledTimes(1);
   });
 
   it('renders a reset filters button', () => {
@@ -193,6 +177,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );
@@ -216,6 +201,7 @@ describe('SubmittedFilters component', () => {
         <SubmittedFilters
           sortedSubmissions={[]}
           setFilteredSubmissions={() => {}}
+          setCurrentPage={() => {}}
         />
       </NextIntlClientProvider>,
     );

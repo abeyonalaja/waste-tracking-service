@@ -36,7 +36,7 @@ export default async function SingleRecord({
   );
   const submission: UkwmDraftSubmission = await response.json();
   return (
-    <Page beforeChildren={<BackLink href={'../view?page=1'} />}>
+    <Page beforeChildren={<BackLink href={'../view'} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
           <Submission data={submission} />
