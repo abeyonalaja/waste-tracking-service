@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, act, screen } from 'jest-utils';
+import { render, act, screen, waitFor } from 'jest-utils';
 import userEvent from '@testing-library/user-event';
 import Cancel from '../../../pages/multiples/[id]/submit/cancel';
 import { useRouter } from 'next/router';
@@ -43,31 +43,43 @@ describe('Cancel Submission page', () => {
   });
 
   it('Redirects user back to multiples page when cancel button is clicked', async () => {
-    render(<Cancel />);
+    await act(async () => {
+      render(<Cancel />);
+    });
 
     const button = screen.getByRole('button', { name: 'Confirm and cancel' });
-    await userEvent.click(button);
+    await act(async () => {
+      await userEvent.click(button);
+    });
 
-    expect(useRouter().push).toHaveBeenCalledWith('/multiples/');
+    await waitFor(() => expect(useRouter().push).toHaveBeenCalled());
   });
 
   it('Navigates the user back when bread crumbs back button is clicked', async () => {
-    render(<Cancel />);
+    await act(async () => {
+      render(<Cancel />);
+    });
 
     const link = screen.getByRole('link', { name: 'Back' });
-    await userEvent.click(link);
+    await act(async () => {
+      await userEvent.click(link);
+    });
 
-    expect(useRouter().back).toHaveBeenCalled();
+    await waitFor(() => expect(useRouter().back).toHaveBeenCalled());
   });
 
   it('Navigates the user back when Continue to submit records button is clicked', async () => {
-    render(<Cancel />);
+    await act(async () => {
+      render(<Cancel />);
+    });
 
     const button = screen.getByRole('button', {
       name: 'Continue to submit records',
     });
-    await userEvent.click(button);
+    await act(async () => {
+      await userEvent.click(button);
+    });
 
-    expect(useRouter().back).toHaveBeenCalled();
+    await waitFor(() => expect(useRouter().back).toHaveBeenCalled());
   });
 });

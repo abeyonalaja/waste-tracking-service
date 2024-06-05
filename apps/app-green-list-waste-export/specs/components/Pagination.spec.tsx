@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from 'jest-utils';
+import { render, screen, act } from 'jest-utils';
 import { Pagination } from 'components';
 import '@testing-library/jest-dom';
 import 'i18n/config';
@@ -8,11 +8,11 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  }),
+  } as Response),
 );
 
 describe('Pagination Component', () => {
-  it('renders the component with page numbers and previous/next buttons', () => {
+  it('renders the component with page numbers and previous/next buttons', async () => {
     const pages = [
       {
         pageNumber: 1,
@@ -28,9 +28,11 @@ describe('Pagination Component', () => {
       },
     ];
 
-    render(
-      <Pagination url="test" currentPage={2} totalPages={3} pages={pages} />,
-    );
+    await act(async () => {
+      render(
+        <Pagination url="test" currentPage={2} totalPages={3} pages={pages} />,
+      );
+    });
 
     const paginationNav = screen.findByText('results');
     expect(paginationNav).toBeTruthy();

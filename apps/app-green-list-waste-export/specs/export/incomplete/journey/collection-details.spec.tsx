@@ -60,10 +60,6 @@ beforeEach(() => {
     .mockImplementation(setupFetchStub(defaultJsonResponse));
 });
 
-afterEach(() => {
-  global.fetch.mockClear();
-});
-
 describe('Collection details page', () => {
   it('should render the page', async () => {
     await act(async () => {

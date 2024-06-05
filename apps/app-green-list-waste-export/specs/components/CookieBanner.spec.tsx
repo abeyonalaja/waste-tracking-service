@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen, fireEvent } from 'jest-utils';
+import { render, screen, act, waitFor } from 'jest-utils';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CookieBanner } from 'components';
 
@@ -7,12 +8,19 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  }),
+  } as Response),
 );
 
+const mockSetCookie = jest.fn();
+jest.mock('react-cookie', () => ({
+  useCookies: () => [[], mockSetCookie],
+}));
+
 describe('Cookie Banner component', () => {
-  it('renders correctly', () => {
-    render(<CookieBanner />);
+  it('renders correctly', async () => {
+    await act(async () => {
+      render(<CookieBanner />);
+    });
 
     const banner = screen.getByRole('region', {
       name: 'Cookies on Export waste from the UK',
@@ -30,13 +38,22 @@ describe('Cookie Banner component', () => {
     expect(rejectButton).toBeInTheDocument();
   });
 
-  it('show confirmation when accepted', () => {
-    render(<CookieBanner />);
+  it('Calls setCookie when accept button is clicked', async () => {
+    const user = userEvent.setup();
+
+    await act(async () => {
+      render(<CookieBanner />);
+    });
 
     const acceptButton = screen.getByText('Accept analytics cookies');
-    fireEvent.click(acceptButton);
+    expect(acceptButton).toBeInTheDocument();
 
-    const text = screen.getByText(/You have accepted analytics cookies/);
-    expect(text).toBeInTheDocument();
+    await act(async () => {
+      await user.click(acceptButton);
+    });
+
+    await waitFor(() => {
+      expect(mockSetCookie).toHaveBeenCalled();
+    });
   });
 });

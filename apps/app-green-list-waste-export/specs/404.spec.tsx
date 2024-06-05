@@ -15,8 +15,8 @@ global.fetch = jest.fn(
 );
 
 describe('Custom404', () => {
-  test('renders without crashing', () => {
-    act(() => {
+  test('renders without crashing', async () => {
+    await act(async () => {
       render(<Custom404 />);
     });
     expect(screen.findByText('Page not found')).toBeTruthy();

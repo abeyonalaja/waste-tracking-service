@@ -3,7 +3,7 @@ import * as GovUK from 'govuk-react';
 import { AppLink } from './AppLink';
 import { useTranslation } from 'react-i18next';
 
-export const Error404Content = () => {
+export const Error404Content = (): JSX.Element => {
   const { t } = useTranslation();
   return (
     <>

@@ -7,12 +7,14 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  }),
+  } as Response),
 );
 
 describe('ErrorSummary', () => {
-  it('renders with default props', () => {
-    render(<ErrorSummary />);
+  it('renders with default props', async () => {
+    await act(async () => {
+      render(<ErrorSummary />);
+    });
 
     expect(
       screen.getByRole('heading', { name: 'There is a problem' }),
@@ -21,19 +23,21 @@ describe('ErrorSummary', () => {
     expect(screen.queryByRole('list')).toBeNull();
   });
 
-  it('renders with custom props', () => {
+  it('renders with custom props', async () => {
     const errors = [
       { targetName: 'error1', text: 'Error 1' },
       { targetName: 'error2', text: 'Error 2' },
     ];
 
-    render(
-      <ErrorSummary
-        heading="Custom Heading"
-        description="Custom Description"
-        errors={errors}
-      />,
-    );
+    await act(async () => {
+      render(
+        <ErrorSummary
+          heading="Custom Heading"
+          description="Custom Description"
+          errors={errors}
+        />,
+      );
+    });
 
     expect(
       screen.getByRole('heading', { name: 'Custom Heading' }),

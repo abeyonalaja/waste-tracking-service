@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'jest-utils';
+import { render, fireEvent, act, screen } from 'jest-utils';
 import '@testing-library/jest-dom';
 import { InputWithSuffix } from 'components';
 
@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  }),
+  } as Response),
 );
 
 describe('Input field with suffix', () => {
@@ -20,32 +20,39 @@ describe('Input field with suffix', () => {
     maxLength: 250,
   };
 
-  it('should render without errors', () => {
-    render(<InputWithSuffix {...defaultProps} />);
+  it('should render without errors', async () => {
+    await act(async () => {
+      render(<InputWithSuffix {...defaultProps} />);
+    });
   });
 
-  it('renders the label and suffix correctly', () => {
-    const { getByText, getByTestId } = render(
-      <InputWithSuffix {...defaultProps} />,
-    );
-    expect(getByText('Input label')).toBeInTheDocument();
-    expect(getByTestId('testId')).toHaveTextContent('suffix');
+  it('renders the label and suffix correctly', async () => {
+    await act(async () => {
+      render(<InputWithSuffix {...defaultProps} />);
+    });
+
+    expect(screen.getByText('Input label')).toBeInTheDocument();
+    expect(screen.getByTestId('testId')).toHaveTextContent('suffix');
   });
 
-  it('renders the hint text correctly', () => {
-    const { getByText } = render(
-      <InputWithSuffix {...defaultProps} hint="Hint text" />,
-    );
-    expect(getByText('Hint text')).toBeInTheDocument();
+  it('renders the hint text correctly', async () => {
+    await act(async () => {
+      render(<InputWithSuffix {...defaultProps} hint="Hint text" />);
+    });
+    expect(screen.getByText('Hint text')).toBeInTheDocument();
   });
 
-  it('calls the onChange function when the input value changes', () => {
+  it('calls the onChange function when the input value changes', async () => {
     const handleChange = jest.fn();
-    const { getByLabelText } = render(
-      <InputWithSuffix {...defaultProps} onChange={handleChange} />,
-    );
-    const input = getByLabelText('Input label');
+
+    await act(async () => {
+      render(<InputWithSuffix {...defaultProps} onChange={handleChange} />);
+    });
+
+    const input = screen.getByLabelText('Input label');
+
     fireEvent.change(input, { target: { value: 'new value' } });
+
     expect(handleChange).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'jest-utils';
+import { render, fireEvent, screen, act } from 'jest-utils';
 import { TextareaCharCount } from 'components';
 import 'i18n/config';
 
@@ -7,7 +7,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: {} }),
-  }),
+  } as Response),
 );
 
 describe('Character count textarea component', () => {
@@ -18,57 +18,78 @@ describe('Character count textarea component', () => {
     children: 'Test label',
   };
 
-  it('should render without errors', () => {
-    render(<TextareaCharCount {...defaultProps} />);
+  it('should render without errors', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} />);
+    });
   });
 
-  it('should display the label', () => {
-    const { getByLabelText } = render(<TextareaCharCount {...defaultProps} />);
-    const labelElement = getByLabelText('Test label');
+  it('should display the label', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} />);
+    });
+
+    const labelElement = screen.getByLabelText('Test label');
+
     expect(labelElement).toBeTruthy();
   });
 
-  it('should display the hint text', () => {
-    const { getByText } = render(
-      <TextareaCharCount {...defaultProps} hint="Test Hint" />,
-    );
-    const hintElement = getByText('Test Hint');
+  it('should display the hint text', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} hint="Test Hint" />);
+    });
+
+    const hintElement = screen.getByText('Test Hint');
+
     expect(hintElement).toBeTruthy();
   });
 
-  it('should display the character count message', () => {
-    const { getByText } = render(<TextareaCharCount {...defaultProps} />);
-    const messageElement = getByText('You have 100 characters remaining');
+  it('should display the character count message', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} />);
+    });
+
+    const messageElement = screen.getByText(
+      'You have 100 characters remaining',
+    );
+
     expect(messageElement).toBeTruthy();
   });
 
-  it('should update the character count when typing', () => {
-    const { getByLabelText, getByText } = render(
-      <TextareaCharCount {...defaultProps} />,
-    );
-    const textareaElement = getByLabelText('Test label');
+  it('should update the character count when typing', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} />);
+    });
+
+    const textareaElement = screen.getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });
-    const messageElement = getByText('You have 90 characters remaining');
+    const messageElement = screen.getByText('You have 90 characters remaining');
+
     expect(messageElement).toBeTruthy();
   });
 
-  it('should display an error message when the character count exceeds the limit', () => {
-    const { getByLabelText, getByText } = render(
-      <TextareaCharCount {...defaultProps} />,
-    );
-    const textareaElement = getByLabelText('Test label');
+  it('should display an error message when the character count exceeds the limit', async () => {
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} />);
+    });
+
+    const textareaElement = screen.getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'a'.repeat(101) } });
-    const messageElement = getByText('You have 1 character too many');
+    const messageElement = screen.getByText('You have 1 character too many');
+
     expect(messageElement).toBeTruthy();
   });
 
-  it('should call the onChange callback when typing', () => {
+  it('should call the onChange callback when typing', async () => {
     const onChange = jest.fn();
-    const { getByLabelText } = render(
-      <TextareaCharCount {...defaultProps} onChange={onChange} />,
-    );
-    const textareaElement = getByLabelText('Test label');
+
+    await act(async () => {
+      render(<TextareaCharCount {...defaultProps} onChange={onChange} />);
+    });
+
+    const textareaElement = screen.getByLabelText('Test label');
     fireEvent.change(textareaElement, { target: { value: 'test value' } });
+
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 });

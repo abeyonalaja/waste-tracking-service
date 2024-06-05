@@ -111,7 +111,9 @@ describe('Submission Confirmation page', () => {
       error: true,
     });
 
-    render(<Index />);
+    await act(async () => {
+      render(<Index />);
+    });
 
     expect(useRouter().push).toHaveBeenCalledWith('/404');
   });

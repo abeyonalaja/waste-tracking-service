@@ -15,8 +15,12 @@ global.fetch = jest.fn(() =>
         { name: 'Andorra(AD)' },
         { name: 'Angola(AO)' },
       ]),
-  }),
+  } as Response),
 );
+
+const apiConfig = {
+  Authorization: 'Bearer 1234',
+};
 
 const defaultProps = {
   id: 'country',
@@ -33,13 +37,13 @@ const defaultProps = {
 describe('Country selector component', () => {
   it('should render without errors', async () => {
     await act(async () => {
-      render(<CountrySelector {...defaultProps} />);
+      render(<CountrySelector {...defaultProps} apiConfig={apiConfig} />);
     });
   });
 
   it('should display the label', async () => {
     await act(async () => {
-      render(<CountrySelector {...defaultProps} />);
+      render(<CountrySelector {...defaultProps} apiConfig={apiConfig} />);
     });
     const labelElement = screen.getByLabelText(defaultProps.label);
     expect(labelElement).toBeTruthy();
@@ -47,7 +51,7 @@ describe('Country selector component', () => {
 
   it('should display the hint text', async () => {
     await act(async () => {
-      render(<CountrySelector {...defaultProps} />);
+      render(<CountrySelector {...defaultProps} apiConfig={apiConfig} />);
     });
     const hintElement = screen.getByText(defaultProps.hint);
     expect(hintElement).toBeTruthy();
@@ -55,7 +59,7 @@ describe('Country selector component', () => {
 
   it('should display the list of countries when input is focused', async () => {
     await act(async () => {
-      render(<CountrySelector {...defaultProps} />);
+      render(<CountrySelector {...defaultProps} apiConfig={apiConfig} />);
     });
     const labelElement = screen.getByLabelText(defaultProps.label);
     await act(async () => {

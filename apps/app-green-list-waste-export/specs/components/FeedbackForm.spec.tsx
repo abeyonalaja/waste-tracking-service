@@ -162,7 +162,10 @@ describe('FeedbackForm component', () => {
     const hint = screen.getByText('You have 1200 characters remaining');
     expect(hint).toBeInTheDocument();
     textarea.focus();
-    await userEvent.type(textarea, 'a');
+
+    await act(async () => {
+      await userEvent.type(textarea, 'a');
+    });
     expect(hint).toHaveTextContent('You have 1199 characters remaining');
   });
 

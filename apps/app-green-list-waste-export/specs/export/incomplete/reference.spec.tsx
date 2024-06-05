@@ -14,7 +14,7 @@ global.fetch = jest.fn(() =>
       Promise.resolve({
         data: {},
       }),
-  }),
+  } as Response),
 );
 
 jest.mock('next/router', () => require('next-router-mock'));
