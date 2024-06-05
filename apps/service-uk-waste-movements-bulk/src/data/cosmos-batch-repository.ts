@@ -136,7 +136,7 @@ export class CosmosBatchRepository implements BatchRepository {
           wasteCollectionWasteSource:
             producerAndCollection?.wasteCollection?.wasteSource || '',
           wasteCollectionBrokerRegistrationNumber:
-            producerAndCollection?.wasteCollection?.carrierRegistrationNumber ||
+            producerAndCollection?.wasteCollection?.brokerRegistrationNumber ||
             '',
           wasteCollectionCarrierRegistrationNumber:
             producerAndCollection?.wasteCollection?.carrierRegistrationNumber ||

@@ -158,6 +158,7 @@ describe(CosmosBatchRepository, () => {
                     },
                     wasteCollection: {
                       wasteSource: 'Household',
+                      brokerRegistrationNumber: 'NSZ6112',
                       carrierRegistrationNumber: 'CBDL5221',
                       expectedWasteCollectionDate: {
                         day: '18',
@@ -298,7 +299,7 @@ describe(CosmosBatchRepository, () => {
           wasteCollectionPostcode: '',
           wasteCollectionLocalAuthority: 'Hartlepool',
           wasteCollectionWasteSource: 'Household',
-          wasteCollectionBrokerRegistrationNumber: 'CBDL5221',
+          wasteCollectionBrokerRegistrationNumber: 'NSZ6112',
           wasteCollectionCarrierRegistrationNumber: 'CBDL5221',
           wasteCollectionExpectedWasteCollectionDate: '18/02/2066',
           carrierOrganisationName: 'Producer org name',
