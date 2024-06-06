@@ -188,8 +188,8 @@ export default class SubmissionController {
         collectionDate = {
           type: value.type,
           actualDate: {
-            day: value.actualDate.day,
-            month: value.actualDate.month,
+            day: value.actualDate.day?.padStart(2, '0'),
+            month: value.actualDate.month?.padStart(2, '0'),
             year: value.actualDate.year,
           },
           estimateDate: submission.collectionDate.estimateDate,
@@ -198,8 +198,8 @@ export default class SubmissionController {
         collectionDate = {
           type: value.type,
           estimateDate: {
-            day: value.estimateDate.day,
-            month: value.estimateDate.month,
+            day: value.estimateDate.day?.padStart(2, '0'),
+            month: value.estimateDate.month?.padStart(2, '0'),
             year: value.estimateDate.year,
           },
           actualDate: submission.collectionDate.actualDate,

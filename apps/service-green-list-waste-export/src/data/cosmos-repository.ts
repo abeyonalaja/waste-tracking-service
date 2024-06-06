@@ -89,25 +89,52 @@ function getListQuery(
       }
     } else {
       if (!ids) {
-        querySpec = {
-          query: `SELECT * FROM c 
-                      WHERE
-                        ARRAY_CONTAINS(@state, c["value"]["submissionState"].status)
-                      AND
-                        c["value"].accountId = @accountId
-                      ORDER BY
-                        c["value"]["submissionState"].timestamp ${order}`,
-          parameters: [
-            {
-              name: '@accountId',
-              value: accountId,
-            },
-            {
-              name: '@state',
-              value: state,
-            },
-          ],
-        };
+        if (
+          state.includes('UpdatedWithActuals') ||
+          state.includes('SubmittedWithActuals')
+        ) {
+          querySpec = {
+            query: `SELECT * FROM c 
+                        WHERE
+                          ARRAY_CONTAINS(@state, c["value"]["submissionState"].status)
+                        AND
+                          c["value"].accountId = @accountId
+                        ORDER BY
+                        c['value']['collectionDate']['actualDate']['year']  ${order},
+                        c['value']['collectionDate']['actualDate']['month']  ${order},
+                        c['value']['collectionDate']['actualDate']['day'] ${order}`,
+            parameters: [
+              {
+                name: '@accountId',
+                value: accountId,
+              },
+              {
+                name: '@state',
+                value: state,
+              },
+            ],
+          };
+        } else {
+          querySpec = {
+            query: `SELECT * FROM c 
+                          WHERE
+                            ARRAY_CONTAINS(@state, c["value"]["submissionState"].status)
+                          AND
+                            c["value"].accountId = @accountId
+                          ORDER BY
+                            c["value"]["submissionState"].timestamp ${order}`,
+            parameters: [
+              {
+                name: '@accountId',
+                value: accountId,
+              },
+              {
+                name: '@state',
+                value: state,
+              },
+            ],
+          };
+        }
       } else {
         querySpec = {
           query: `SELECT * FROM c 

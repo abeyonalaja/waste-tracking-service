@@ -578,14 +578,14 @@ export function validateWasteCollectionDetailSection(
         .wasteCollectionCharTooManyCarrierRegistrationNumber,
     });
   }
-
+  let parsedDate: Date | undefined;
   if (!value.wasteCollectionExpectedWasteCollectionDate) {
     errors.push({
       field: 'Waste Collection Details Expected Waste Collection Date',
       code: validation.errorCodes.wasteCollectionMissingWasteCollectionDate,
     });
   } else {
-    const parsedDate = parse(
+    parsedDate = parse(
       value.wasteCollectionExpectedWasteCollectionDate,
       'P',
       new Date(),
@@ -629,9 +629,9 @@ export function validateWasteCollectionDetailSection(
         : value.wasteCollectionBrokerRegistrationNumber,
       carrierRegistrationNumber: value.wasteCollectionCarrierRegistrationNumber,
       expectedWasteCollectionDate: {
-        day: dateParts[0],
-        month: dateParts[1],
-        year: dateParts[2],
+        day: dateParts[0]?.padStart(2, '0'),
+        month: dateParts[1]?.padStart(2, '0'),
+        year: parsedDate?.getFullYear()?.toString() || dateParts[2],
       },
       localAuthority: value.wasteCollectionLocalAuthority,
       address: {

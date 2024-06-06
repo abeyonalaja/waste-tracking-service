@@ -1002,6 +1002,7 @@ export function validateCollectionDateSection(
   const errors: FieldFormatError[] = [];
 
   let dateArr: string[] = [];
+  let collectionDate: Date | undefined;
   if (!value.wasteCollectionDate) {
     errors.push({
       field: 'CollectionDate',
@@ -1009,7 +1010,7 @@ export function validateCollectionDateSection(
     });
   } else {
     dateArr = value.wasteCollectionDate.replace(/-/g, '/').split('/');
-    const collectionDate = new Date(
+    collectionDate = new Date(
       Number(dateArr[2]),
       Number(dateArr[1]) - 1,
       Number(dateArr[0]),
@@ -1055,9 +1056,9 @@ export function validateCollectionDateSection(
   }
 
   const date = {
-    day: dateArr[0],
-    month: dateArr[1],
-    year: dateArr[2],
+    day: dateArr[0]?.padStart(2, '0'),
+    month: dateArr[1]?.padStart(2, '0'),
+    year: collectionDate?.getFullYear()?.toString() || dateArr[2],
   };
   return {
     valid: true,

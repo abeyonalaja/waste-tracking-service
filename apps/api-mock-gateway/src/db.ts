@@ -77,7 +77,1576 @@ export const db: DB = {
   ],
 
   drafts: [],
-  submissions: [],
+  submissions: [
+    {
+      id: '401bc30e-c2eb-408a-b69e-550254a4a124',
+      reference: 'ref7',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIA',
+          code: 'B1010 and B1070',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '23',
+          month: '03',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Air',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Scotland',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_401BC30E',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '183230e0-886b-49f3-827c-240c354cb638',
+      reference: 'ref8',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIB',
+          code: 'BEU04',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '12',
+          month: '05',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Sea',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Wales',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'adderss',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_183230E0',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '979508fd-d246-4701-8b1d-ef1fde4776c3',
+      reference: 'ref777',
+      wasteDescription: {
+        wasteCode: {
+          type: 'OECD',
+          code: 'GB040',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {
+          quantityType: 'Weight',
+          value: 2.5,
+          unit: 'Tonne',
+        },
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Tonne',
+          value: 2.4,
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'England',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '16',
+          month: '08',
+          year: '2024',
+        },
+        estimateDate: {
+          day: '04',
+          month: '08',
+          year: '2024',
+        },
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Rail',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'England',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_979508FD',
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '401bc30e-c2eb-408a-b69e-550254a4a124',
+      reference: 'ref7',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIA',
+          code: 'B1010 and B1070',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '15',
+          month: '07',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Air',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Scotland',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_401BC30E',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '183230e0-886b-49f3-827c-240c354cb638',
+      reference: 'ref8',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIB',
+          code: 'BEU04',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '23',
+          month: '06',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Sea',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Wales',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'adderss',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_183230E0',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '979508fd-d246-4701-8b1d-ef1fde4776c3',
+      reference: 'ref777',
+      wasteDescription: {
+        wasteCode: {
+          type: 'OECD',
+          code: 'GB040',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {
+          quantityType: 'Weight',
+          value: 2.5,
+          unit: 'Tonne',
+        },
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Tonne',
+          value: 2.4,
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'England',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '4',
+          month: '08',
+          year: '2024',
+        },
+        estimateDate: {
+          day: '04',
+          month: '08',
+          year: '2024',
+        },
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Rail',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'England',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_979508FD',
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '401bc30e-c2eb-408a-b69e-550254a4a124',
+      reference: 'ref7',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIA',
+          code: 'B1010 and B1070',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '15',
+          month: '06',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Air',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Scotland',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_401BC30E',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '183230e0-886b-49f3-827c-240c354cb638',
+      reference: 'ref8',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIB',
+          code: 'BEU04',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '8',
+          month: '06',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Sea',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Wales',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'adderss',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_183230E0',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '979508fd-d246-4701-8b1d-ef1fde4776c3',
+      reference: 'ref777',
+      wasteDescription: {
+        wasteCode: {
+          type: 'OECD',
+          code: 'GB040',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {
+          quantityType: 'Weight',
+          value: 2.5,
+          unit: 'Tonne',
+        },
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Tonne',
+          value: 2.4,
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'England',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '2',
+          month: '08',
+          year: '2024',
+        },
+        estimateDate: {
+          day: '04',
+          month: '08',
+          year: '2024',
+        },
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Rail',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'England',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_979508FD',
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '401bc30e-c2eb-408a-b69e-550254a4a124',
+      reference: 'ref7',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIA',
+          code: 'B1010 and B1070',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '15',
+          month: '06',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Air',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Scotland',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_401BC30E',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '183230e0-886b-49f3-827c-240c354cb638',
+      reference: 'ref8',
+      wasteDescription: {
+        wasteCode: {
+          type: 'AnnexIIIB',
+          code: 'BEU04',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {},
+        actualData: {
+          quantityType: 'Weight',
+          value: 2.3,
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'Scotland',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '04',
+          month: '06',
+          year: '2024',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Sea',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'Wales',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'adderss',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_183230E0',
+      },
+      submissionState: {
+        status: 'SubmittedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+    {
+      id: '979508fd-d246-4701-8b1d-ef1fde4776c3',
+      reference: 'ref777',
+      wasteDescription: {
+        wasteCode: {
+          type: 'OECD',
+          code: 'GB040',
+        },
+        ewcCodes: [
+          {
+            code: '010101',
+          },
+        ],
+        nationalCode: {
+          provided: 'No',
+        },
+        description: 'test',
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        estimateData: {
+          quantityType: 'Weight',
+          value: 2.5,
+          unit: 'Tonne',
+        },
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Tonne',
+          value: 2.4,
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          country: 'England',
+          postcode: 'EC2N 4AY',
+        },
+        exporterContactDetails: {
+          organisationName: 'res',
+          fullName: 'asrs',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          organisationName: 'res',
+          address: 'est\ntest',
+          country: 'Bulgaria [BG]',
+        },
+        importerContactDetails: {
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+          faxNumber: '',
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          day: '04',
+          month: '08',
+          year: '2024',
+        },
+        estimateDate: {
+          day: '04',
+          month: '08',
+          year: '2024',
+        },
+      },
+      carriers: [
+        {
+          addressDetails: {
+            organisationName: 'res',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'res',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          transportDetails: {
+            type: 'Rail',
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: 'est',
+          addressLine2: 'test',
+          townCity: 'City',
+          postcode: 'EC2N 4AY',
+          country: 'England',
+        },
+        contactDetails: {
+          organisationName: 'res',
+          fullName: 'res',
+          emailAddress: 'ga@sfa.bg',
+          phoneNumber: '01903230482',
+        },
+      },
+      ukExitLocation: {
+        provided: 'No',
+      },
+      transitCountries: [],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            name: 'asrs',
+            address: 'est\ntest',
+            country: 'Bulgaria [BG]',
+          },
+          contactDetails: {
+            fullName: 'asrs',
+            emailAddress: 'ga@sfa.bg',
+            phoneNumber: '01903230482',
+          },
+          recoveryFacilityType: {
+            type: 'RecoveryFacility',
+            recoveryCode: 'R3',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: '2405_979508FD',
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+      accountId: '649376df-cdba-ee11-a569-00224883a091',
+    },
+  ],
   templates: [],
   batches: [],
   ukwmBatches: [],

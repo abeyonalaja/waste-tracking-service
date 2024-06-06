@@ -599,8 +599,8 @@ export default class DraftController {
             value: {
               type: value.value.type,
               actualDate: {
-                day: value.value.actualDate.day,
-                month: value.value.actualDate.month,
+                day: value.value.actualDate.day?.padStart(2, '0'),
+                month: value.value.actualDate.month?.padStart(2, '0'),
                 year: value.value.actualDate.year,
               },
               estimateDate: draft.collectionDate.value.estimateDate,
@@ -612,8 +612,8 @@ export default class DraftController {
             value: {
               type: value.value.type,
               estimateDate: {
-                day: value.value.estimateDate.day,
-                month: value.value.estimateDate.month,
+                day: value.value.estimateDate.day?.padStart(2, '0'),
+                month: value.value.estimateDate.month?.padStart(2, '0'),
                 year: value.value.estimateDate.year,
               },
               actualDate: draft.collectionDate.value.actualDate,

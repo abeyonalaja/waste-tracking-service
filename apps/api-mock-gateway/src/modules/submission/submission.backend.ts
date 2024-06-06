@@ -93,10 +93,27 @@ export async function getSubmissions(
   token?: string,
 ): Promise<SubmissionSummaryPage> {
   let rawValues: DraftSubmission[] | Submission[];
+
   if (
-    state?.includes('SubmittedWithEstimates') ||
     state?.includes('SubmittedWithActuals') ||
-    state?.includes('UpdatedWithActuals') ||
+    state?.includes('UpdatedWithActuals')
+  ) {
+    rawValues = db.submissions.filter(
+      (s) => s.accountId === accountId,
+    ) as Submission[];
+
+    rawValues.sort((a, b) => {
+      const dateA = new Date(
+        `${a.collectionDate.actualDate.year}-${a.collectionDate.actualDate.month?.padStart(2, '0')}-${a.collectionDate.actualDate.day?.padStart(2, '0')}`,
+      );
+      const dateB = new Date(
+        `${b.collectionDate.actualDate.year}-${b.collectionDate.actualDate.month?.padStart(2, '0')}-${b.collectionDate.actualDate.day?.padStart(2, '0')}`,
+      );
+
+      return dateB.getTime() - dateA.getTime();
+    });
+  } else if (
+    state?.includes('SubmittedWithEstimates') ||
     state?.includes('Cancelled')
   ) {
     rawValues = db.submissions.filter(
