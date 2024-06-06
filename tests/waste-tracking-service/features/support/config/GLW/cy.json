@@ -569,7 +569,7 @@
   "multiples.cancel.title": "You have not submitted your Annex VII records yet",
   "multiples.success.intro": "If you cancel submitting these records now, you will have to upload the CSV file again.",
   "multiples.success.submitButton": "Continue and submit all records",
-  "multiples.upload.button": "Upload",
+  "multiples.uploadForm.button": "Upload",
   "multiples.cancel.confirmButton": "Confirm and cancel",
   "multiples.cancel.submitButton": "Continue to submit records",
   "multiples.exportSubmitted.panelTitle": "{{count}} Annex VII record submitted",

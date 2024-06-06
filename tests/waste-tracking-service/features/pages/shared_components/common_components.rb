@@ -84,6 +84,7 @@ module CommonComponents
     fill_in FAX_ID, with: int_fax, visible: false
     TestStatus.set_test_status("#{page}_fax_number".to_sym, int_fax)
   end
+
   def has_reference_organisation_name?(organisation_name)
     find(ORGANISATION_NAME_ID).value == organisation_name
   end
@@ -142,6 +143,10 @@ module CommonComponents
 
   def export_count
     all(:css, 'table > tbody >tr').count
+  end
+
+  def header_columns
+    all(:css, 'table > thead >tr >th')
   end
 
 

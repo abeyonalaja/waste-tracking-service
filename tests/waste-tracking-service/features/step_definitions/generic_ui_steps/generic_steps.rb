@@ -93,5 +93,9 @@ When(/^I click the "([^"]*)" button$/) do |option|
 end
 
 And(/^I click the upload button$/) do
-  click_on Translations.value 'multiples.upload.button'
+  click_on Translations.value 'multiples.uploadForm.button'
+end
+
+And(/^I switch to new tab$/) do
+  switch_to_window(windows.last)
 end

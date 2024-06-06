@@ -129,3 +129,24 @@ Feature: AS A Waste Controller
     When I wait for the submission to finish
     Then Bulk confirmation page is displayed for "40" movements
 
+  Scenario: User navigates to view all waste movement records page from submission page
+    Given I login into UKWM app
+    When the "Service Home" page is displayed
+    And I click Create a new multiple waste movement link
+    Then the "Ukwm Create Multiple Waste" page is displayed
+    And I upload ukwm "UKWM_correct_40_rows_with_estimate" csv
+    And I click the upload button
+    When I wait for the upload to finish
+    Then Bulk upload success page is displayed for "40" records
+    And I click Continue and create button
+    When I wait for the submission to finish
+    Then Bulk confirmation page is displayed for "40" movements
+    When I click the "view all these created waste movement records" link
+    And I switch to new tab
+    Then Waste movement records list page
+    And I can see the header columns on the UKM list page correctly displayed
+    And I can view all the 40 records in 3 pagination pages
+
+
+
+

@@ -121,3 +121,28 @@ Then(/^I should see row error details correctly displayed for "([^"]*)"$/) do |f
   expected_row_errors = UkwmErrorSummaryPage.new.load_yaml(yaml_file_path)
   expect(UkwmErrorSummaryPage.new.compare_data(expected_row_errors, actual_row_errors_json)).to eq true
 end
+
+Then(/^Waste movement records list page$/) do
+  WasteMovementRecordsListPage.new.check_page_displayed
+end
+
+And(/^I can view all the 40 records in 3 pagination pages$/) do
+  expect(WasteMovementRecordsListPage.new.export_count).to eq 15
+  expect(WasteMovementRecordsListPage.new.next_link.text).to eq "Next\npage"
+  WasteMovementRecordsListPage.new.click_next_link
+  expect(WasteMovementRecordsListPage.new.export_count).to eq 15
+  WasteMovementRecordsListPage.new.click_next_link
+  expect(WasteMovementRecordsListPage.new.export_count).to eq 10
+  WasteMovementRecordsListPage.new.click_previous_link
+  expect(WasteMovementRecordsListPage.new.export_count).to eq 15
+  Log.info 'Successfully tested UKM pagination in the Run'
+end
+
+And(/^I can see the header columns on the UKM list page correctly displayed$/) do
+  expect(WasteMovementRecordsListPage.new.header_columns.count).to eq 5
+  expect(WasteMovementRecordsListPage.new.header_columns[0].text).to eq 'Waste movement ID'
+  expect(WasteMovementRecordsListPage.new.header_columns[1].text).to eq 'Collection date'
+  expect(WasteMovementRecordsListPage.new.header_columns[2].text).to eq 'EWC code'
+  expect(WasteMovementRecordsListPage.new.header_columns[3].text).to eq 'Producer name'
+  expect(WasteMovementRecordsListPage.new.header_columns[4].text).to eq 'Action'
+end

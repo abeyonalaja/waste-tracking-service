@@ -46,7 +46,7 @@ class GlwUploadSuccessPage < GenericPage
     max_wait_time = 30
     begin
       Timeout.timeout(max_wait_time) do
-        sleep 0.1 until page.has_css?( 'h2', text: 'About the waste', exact_text: true)
+        sleep 0.1 until page.has_css?( 'h2', text: 'What you must do next', exact_text: true)
       end
     rescue Timeout::Error
       puts 'Upload did not complete successfully within the specified time.'

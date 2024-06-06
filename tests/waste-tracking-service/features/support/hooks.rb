@@ -23,6 +23,10 @@ Before('@csv_helper_ukmw') do
   TestStatus.set_feature_flag('UKWMMultipleGuidanceViewed', 'false')
 end
 
+Before('@UKMV') do
+  $translation_file = 'UKM'
+end
+
 Before('not @cookies') do
   @reset_cookies = true
 end
