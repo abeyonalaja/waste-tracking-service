@@ -816,6 +816,25 @@ describe('validateSetCollectionDetailRequest', () => {
     expect(validateSetCollectionDetailRequest(data)).toBe(true);
   });
 
+  it('should return true for a request with a missing postcode', () => {
+    const data = {
+      status: 'Complete',
+      address: {
+        addressLine1: '123 Main St',
+        townCity: 'Anytown',
+        country: 'UK',
+      },
+      contactDetails: {
+        organisationName: 'Acme Inc.',
+        fullName: 'John Doe',
+        emailAddress: 'johndoe@acme.com',
+        phoneNumber: '555-1234',
+        faxNumber: '555-5678',
+      },
+    };
+    expect(validateSetCollectionDetailRequest(data)).toBe(true);
+  });
+
   it('should return false for object with invalid address', () => {
     const data = {
       status: 'Started',

@@ -486,10 +486,10 @@ export const validateSetCollectionDetailRequest =
         properties: {
           addressLine1: { type: 'string' },
           townCity: { type: 'string' },
-          postcode: { type: 'string' },
           country: { type: 'string' },
         },
         optionalProperties: {
+          postcode: { type: 'string' },
           addressLine2: { type: 'string' },
         },
       },
