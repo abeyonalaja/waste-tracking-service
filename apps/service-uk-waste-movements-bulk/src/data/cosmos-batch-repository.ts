@@ -251,21 +251,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[0]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          firstWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[0]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[0]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          firstWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[0]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[0]?.hasHazardousProperties,
+                ) || ''
+              : '',
           firstWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[0]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          firstWasteTypeContainsPops: wasteInformation?.wasteTypes[0]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[0]?.containsPops) ||
-              ''
-            : '',
+          firstWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[0]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[0]?.containsPops,
+                ) || ''
+              : '',
           firstWasteTypePopsString:
             wasteInformation?.wasteTypes[0]?.pops
               ?.map((p) => p?.name)
@@ -311,21 +312,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[1]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          secondWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[1]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[1]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          secondWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[1]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[1]?.hasHazardousProperties,
+                ) || ''
+              : '',
           secondWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[1]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          secondWasteTypeContainsPops: wasteInformation?.wasteTypes[1]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[1]?.containsPops) ||
-              ''
-            : '',
+          secondWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[1]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[1]?.containsPops,
+                ) || ''
+              : '',
           secondWasteTypePopsString:
             wasteInformation?.wasteTypes[1]?.pops
               ?.map((p) => p?.name)
@@ -371,21 +373,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[2]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          thirdWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[2]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[2]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          thirdWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[2]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[2]?.hasHazardousProperties,
+                ) || ''
+              : '',
           thirdWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[2]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          thirdWasteTypeContainsPops: wasteInformation?.wasteTypes[2]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[2]?.containsPops) ||
-              ''
-            : '',
+          thirdWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[2]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[2]?.containsPops,
+                ) || ''
+              : '',
           thirdWasteTypePopsString:
             wasteInformation?.wasteTypes[2]?.pops
               ?.map((p) => p?.name)
@@ -431,22 +434,23 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[3]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          fourthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[3]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[3]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          fourthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[3]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[3]?.hasHazardousProperties,
+                ) || ''
+              : '',
 
           fourthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[3]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          fourthWasteTypeContainsPops: wasteInformation?.wasteTypes[3]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[3]?.containsPops) ||
-              ''
-            : '',
+          fourthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[3]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[3]?.containsPops,
+                ) || ''
+              : '',
           fourthWasteTypePopsString:
             wasteInformation?.wasteTypes[3]?.pops
               ?.map((p) => p?.name)
@@ -492,21 +496,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[4]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          fifthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[4]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[4]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          fifthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[4]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[4]?.hasHazardousProperties,
+                ) || ''
+              : '',
           fifthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[4]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          fifthWasteTypeContainsPops: wasteInformation?.wasteTypes[4]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[4]?.containsPops) ||
-              ''
-            : '',
+          fifthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[4]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[4]?.containsPops,
+                ) || ''
+              : '',
           fifthWasteTypePopsString:
             wasteInformation?.wasteTypes[4]?.pops
               ?.map((p) => p?.name)
@@ -552,21 +557,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[5]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          sixthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[5]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[5]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          sixthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[5]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[5]?.hasHazardousProperties,
+                ) || ''
+              : '',
           sixthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[5]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          sixthWasteTypeContainsPops: wasteInformation?.wasteTypes[5]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[5]?.containsPops) ||
-              ''
-            : '',
+          sixthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[5]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[5]?.containsPops,
+                ) || ''
+              : '',
           sixthWasteTypePopsString:
             wasteInformation?.wasteTypes[5]?.pops
               ?.map((p) => p?.name)
@@ -613,21 +619,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[6]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          seventhWasteTypeHasHazardousProperties: wasteInformation
-            ?.wasteTypes[6]?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[6]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          seventhWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[6]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[6]?.hasHazardousProperties,
+                ) || ''
+              : '',
           seventhWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[6]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          seventhWasteTypeContainsPops: wasteInformation?.wasteTypes[6]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[6]?.containsPops) ||
-              ''
-            : '',
+          seventhWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[6]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[6]?.containsPops,
+                ) || ''
+              : '',
           seventhWasteTypePopsString:
             wasteInformation?.wasteTypes[6]?.pops
               ?.map((p) => p?.name)
@@ -673,21 +680,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[7]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          eighthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[7]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[7]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          eighthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[7]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[7]?.hasHazardousProperties,
+                ) || ''
+              : '',
           eighthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[7]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          eighthWasteTypeContainsPops: wasteInformation?.wasteTypes[7]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[7]?.containsPops) ||
-              ''
-            : '',
+          eighthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[7]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[7]?.containsPops,
+                ) || ''
+              : '',
           eighthWasteTypePopsString:
             wasteInformation?.wasteTypes[7]?.pops
               ?.map((p) => p?.name)
@@ -733,21 +741,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[8]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          ninthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[8]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[8]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          ninthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[8]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[8]?.hasHazardousProperties,
+                ) || ''
+              : '',
           ninthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[8]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          ninthWasteTypeContainsPops: wasteInformation?.wasteTypes[8]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[8]?.containsPops) ||
-              ''
-            : '',
+          ninthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[8]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[8]?.containsPops,
+                ) || ''
+              : '',
           ninthWasteTypePopsString:
             wasteInformation?.wasteTypes[8]?.pops
               ?.map((p) => p?.name)
@@ -793,21 +802,22 @@ export class CosmosBatchRepository implements BatchRepository {
             wasteInformation?.wasteTypes[9]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
-          tenthWasteTypeHasHazardousProperties: wasteInformation?.wasteTypes[9]
-            ?.hasHazardousProperties
-            ? containsMap.get(
-                wasteInformation?.wasteTypes[9]?.hasHazardousProperties,
-              ) || ''
-            : '',
+          tenthWasteTypeHasHazardousProperties:
+            wasteInformation?.wasteTypes[9]?.hasHazardousProperties?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[9]?.hasHazardousProperties,
+                ) || ''
+              : '',
           tenthWasteTypeHazardousWasteCodesString:
             wasteInformation?.wasteTypes[9]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          tenthWasteTypeContainsPops: wasteInformation?.wasteTypes[9]
-            ?.containsPops
-            ? containsMap.get(wasteInformation?.wasteTypes[9]?.containsPops) ||
-              ''
-            : '',
+          tenthWasteTypeContainsPops:
+            wasteInformation?.wasteTypes[9]?.containsPops?.toString()
+              ? containsMap.get(
+                  wasteInformation?.wasteTypes[9]?.containsPops,
+                ) || ''
+              : '',
           tenthWasteTypePopsString:
             wasteInformation?.wasteTypes[9]?.pops
               ?.map((p) => p?.name)
