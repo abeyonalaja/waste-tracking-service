@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 // Hook taken from:
 // https://stackoverflow.com/questions/73343986/next-js-abort-fetching-component-for-route-login
 
-const useSafePush = () => {
+const useSafePush = (): { safePush: (path: string) => void } => {
   const [onChanging, setOnChanging] = useState(false);
   const handleRouteChange = () => {
     setOnChanging(false);

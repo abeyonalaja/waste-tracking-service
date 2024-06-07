@@ -156,7 +156,7 @@ const TelephoneInput = styled(GovUK.Input)`
   max-width: 20.5em;
 `;
 
-const WasteCarriers = () => {
+const WasteCarriers = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

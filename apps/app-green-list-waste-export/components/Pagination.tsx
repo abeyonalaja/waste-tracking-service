@@ -107,7 +107,7 @@ export const Pagination = ({
   pages,
   currentPage = 0,
   totalPages = 1,
-}: Props) => {
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
 
   const getPaginationToken = (pageNumber) => {

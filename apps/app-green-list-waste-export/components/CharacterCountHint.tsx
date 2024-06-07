@@ -11,7 +11,7 @@ export function CharacterCountHint({
   currentCount,
   maxCount,
   id,
-}: CharacterCountHintProps) {
+}: CharacterCountHintProps): React.ReactNode {
   const { t } = useTranslation();
 
   if (maxCount - currentCount >= 0) {

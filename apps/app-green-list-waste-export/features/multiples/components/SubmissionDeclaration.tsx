@@ -16,7 +16,7 @@ interface SubmissionDeclarationProps {
 export function SubmissionDeclaration({
   recordCount,
   hasEstimates,
-}: SubmissionDeclarationProps) {
+}: SubmissionDeclarationProps): React.ReactNode {
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
   const router = useRouter();

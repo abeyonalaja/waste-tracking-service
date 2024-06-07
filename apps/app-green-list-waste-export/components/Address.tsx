@@ -56,7 +56,10 @@ const isHouseNumber = (addessLine) => {
   return startsWithNumber(addessLine) || endsWithNumber(addessLine);
 };
 
-export const Address = ({ instanceNo = '', address }: Props) => {
+export const Address = ({
+  instanceNo = '',
+  address,
+}: Props): React.ReactNode => {
   return (
     <StyledAddress>
       <span

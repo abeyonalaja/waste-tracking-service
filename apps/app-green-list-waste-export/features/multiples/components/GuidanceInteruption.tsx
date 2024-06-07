@@ -152,7 +152,7 @@ interface GuidanceTypeProps {
 
 export const GuidanceInteruption = ({
   acknowledgeGuidance,
-}: GuidanceTypeProps) => {
+}: GuidanceTypeProps): React.ReactNode => {
   const { t } = useTranslation();
 
   return (

@@ -41,7 +41,7 @@ const TownCountryInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ExporterDetails = () => {
+const ExporterDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

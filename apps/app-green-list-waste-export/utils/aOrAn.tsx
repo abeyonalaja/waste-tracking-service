@@ -1,4 +1,4 @@
-const aOrAn = (firstLetter: string) => {
+const aOrAn = (firstLetter: string): string => {
   if (/[aeiou]/.test(firstLetter.toLowerCase())) return 'an';
   return 'a';
 };

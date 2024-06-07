@@ -10,7 +10,10 @@ const StyledBreadcrumbWrap = styled('div')`
   padding-top: 0;
 `;
 
-export const BreadcrumbWrap = ({ children, testId }: Props) => {
+export const BreadcrumbWrap = ({
+  children,
+  testId,
+}: Props): React.ReactNode => {
   return (
     <StyledBreadcrumbWrap data-testid={testId}>{children}</StyledBreadcrumbWrap>
   );

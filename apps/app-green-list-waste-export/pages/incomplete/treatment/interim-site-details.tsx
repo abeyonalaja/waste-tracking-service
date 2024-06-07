@@ -140,7 +140,7 @@ type codeType = Array<{
   description: string;
 }>;
 
-const InterimSiteDetails = () => {
+const InterimSiteDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

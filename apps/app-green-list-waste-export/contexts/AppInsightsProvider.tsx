@@ -10,7 +10,7 @@ interface AppInsightsProviderProps {
 
 export default function AppInsightsProvider({
   children,
-}: AppInsightsProviderProps) {
+}: AppInsightsProviderProps): React.ReactNode {
   const reactPlugin = new ReactPlugin();
 
   useEffect(() => {

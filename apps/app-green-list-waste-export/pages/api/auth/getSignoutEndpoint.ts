@@ -1,4 +1,9 @@
-export default function handler(req, res) {
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+): void {
   const fetchData = async () => {
     const response = await fetch(process.env.DCID_WELLKNOWN, {
       cache: 'force-cache',

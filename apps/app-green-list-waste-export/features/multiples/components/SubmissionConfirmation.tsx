@@ -70,7 +70,7 @@ export function SubmissionConfirmation({
   transactionId,
   recordCount,
   pageCount = 200,
-}: SubmissionConfirmationProps) {
+}: SubmissionConfirmationProps): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

@@ -14,7 +14,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}) {
+}): React.ReactNode {
   noStore();
   const [queryClient] = useState(() => {
     return new QueryClient({

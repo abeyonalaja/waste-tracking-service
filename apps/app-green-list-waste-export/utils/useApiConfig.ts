@@ -1,7 +1,7 @@
 import type { DCIDSession } from 'pages/api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
 
-const useApiConfig = () => {
+const useApiConfig = (): Record<string, string> => {
   const apiConfig: HeadersInit = {
     'Content-Type': 'application/json',
   };

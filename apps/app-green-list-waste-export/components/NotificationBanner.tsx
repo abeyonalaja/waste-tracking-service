@@ -15,7 +15,7 @@ export const NotificationBanner = ({
   headingText,
   id = undefined,
   children = null,
-}: NotificationBannerProps) => {
+}: NotificationBannerProps): React.ReactNode => {
   const bannerClasses = `govuk-notification-banner ${
     type === 'important'
       ? 'govuk-notification-banner--important'

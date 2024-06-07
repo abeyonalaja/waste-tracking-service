@@ -98,7 +98,7 @@ const IdDisplay = styled.div`
   font-weight: 600;
 `;
 
-const ExportSubmitted = () => {
+const ExportSubmitted = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

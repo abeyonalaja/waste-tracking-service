@@ -13,7 +13,7 @@ import {
   SaveReturnButton,
 } from 'components';
 
-const WasteCodeWarning = () => {
+const WasteCodeWarning = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
 

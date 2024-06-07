@@ -56,7 +56,12 @@ const StyledLinkAsButton = styled('a')`
   }
 `;
 
-export const SaveReturnButton = ({ onClick, id, testId, children }: Props) => {
+export const SaveReturnButton = ({
+  onClick,
+  id,
+  testId,
+  children,
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <StyledLinkAsButton

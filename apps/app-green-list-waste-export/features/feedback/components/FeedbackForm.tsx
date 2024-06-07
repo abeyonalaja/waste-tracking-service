@@ -25,7 +25,9 @@ interface FeedbackFormProps {
   children: React.ReactNode;
 }
 
-export default function FeedbackForm({ children }: FeedbackFormProps) {
+export default function FeedbackForm({
+  children,
+}: FeedbackFormProps): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

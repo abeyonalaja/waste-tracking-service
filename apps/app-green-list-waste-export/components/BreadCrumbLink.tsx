@@ -45,6 +45,9 @@ interface BreadCrumbLinkProps {
   children: React.ReactNode;
 }
 
-export function BreadCrumbLink({ href, children }: BreadCrumbLinkProps) {
+export function BreadCrumbLink({
+  href,
+  children,
+}: BreadCrumbLinkProps): React.ReactNode {
   return <StyledLink href={href}>{children}</StyledLink>;
 }

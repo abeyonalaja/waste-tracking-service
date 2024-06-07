@@ -46,7 +46,11 @@ const StyledPDFDownloadLink = styled(PDFDownloadLink)`
   }
 `;
 
-export const DownloadPDFLink = ({ transactionId, children, data }: Props) => {
+export const DownloadPDFLink = ({
+  transactionId,
+  children,
+  data,
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <>

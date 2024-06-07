@@ -117,7 +117,7 @@ export const SubmittedSummary = ({
   testId,
   showEstimateLinks = true,
   isMultiple = false,
-}: Props) => {
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
   const getRefData = useRefDataLookup(apiConfig);
   const [expandedAll, setExpandedAll] = useState(!estimate || isMultiple);

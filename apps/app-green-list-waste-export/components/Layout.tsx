@@ -7,7 +7,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children }: LayoutProps): React.ReactNode {
   const [cookies] = useCookies(['cookieConsent']);
   const [gaId, setGaId] = useState(null);
   const [featureFlags, setFeatureFlags] = useState(null);

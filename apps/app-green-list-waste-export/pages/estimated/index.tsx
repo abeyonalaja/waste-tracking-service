@@ -135,7 +135,7 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const UpdateAnnex7 = () => {
+const UpdateAnnex7 = (): React.ReactNode => {
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
   const getRefData = useRefDataLookup(apiConfig);

@@ -39,7 +39,7 @@ const FooterLink = styled(Link)`
   }
 `;
 
-export const Footer = () => {
+export const Footer = (): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <>

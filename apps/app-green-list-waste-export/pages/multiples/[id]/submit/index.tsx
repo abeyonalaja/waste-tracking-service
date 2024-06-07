@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { getValidationResult, Loader } from 'features/multiples';
 
-export default function Submit() {
+export default function Submit(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
   const queryClient = useQueryClient();

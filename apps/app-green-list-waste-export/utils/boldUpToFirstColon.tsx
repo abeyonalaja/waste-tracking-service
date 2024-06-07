@@ -1,6 +1,6 @@
 import React from 'react';
 
-const boldUpToFirstColon = (string: string) => {
+const boldUpToFirstColon = (string: string): string | React.ReactNode => {
   if (string === undefined) return;
   const parts = string.split(':');
   if (parts.length > 1) {

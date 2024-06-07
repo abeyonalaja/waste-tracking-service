@@ -55,7 +55,7 @@ const nationalCodeReducer = (state, action) => {
   }
 };
 
-const NationalCode = () => {
+const NationalCode = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

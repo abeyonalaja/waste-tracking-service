@@ -13,6 +13,6 @@ const BrokenString = styled.span`
   max-width: 100%;
 `;
 
-export const BreakableString = ({ children }: Props) => {
+export const BreakableString = ({ children }: Props): React.ReactNode => {
   return <BrokenString>{children}</BrokenString>;
 };

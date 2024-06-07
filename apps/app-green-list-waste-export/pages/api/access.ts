@@ -4,7 +4,7 @@ import { getToken } from 'next-auth/jwt';
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
-) {
+): Promise<void> {
   if (req.method === 'GET') {
     const token = await getToken({ req });
     const invitationToken = req.query.invitation;

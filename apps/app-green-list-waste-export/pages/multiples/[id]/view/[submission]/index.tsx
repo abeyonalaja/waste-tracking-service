@@ -32,7 +32,7 @@ const ActionHeader = styled(GovUK.H2)`
   margin-bottom: 0.5em;
 `;
 
-export function ViewRecord() {
+export function ViewRecord(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

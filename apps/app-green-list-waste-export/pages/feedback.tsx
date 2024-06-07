@@ -11,7 +11,7 @@ import {
   SuccessBanner,
 } from 'features/feedback';
 
-export default function Feedback() {
+export default function Feedback(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
   const [newWindow, setNewWindow] = useState<boolean>(false);

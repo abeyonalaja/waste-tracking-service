@@ -18,7 +18,7 @@ const Message = styled(Main)`
   margin-bottom: -10px;
 `;
 
-export const CookieBanner = () => {
+export const CookieBanner = (): React.ReactNode => {
   const { t } = useTranslation();
   const [isBannerVisible, setIsBannerVisible] = useState<boolean>(false);
   const [analyticsConsent, setAnalyticsConsent] = useState<boolean>();

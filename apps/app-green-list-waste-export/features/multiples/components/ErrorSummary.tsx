@@ -8,7 +8,7 @@ interface ErrorRowTableProps {
   errors: BulkSubmissionValidationRowError[];
 }
 
-export function ErrorSummary({ errors }: ErrorRowTableProps) {
+export function ErrorSummary({ errors }: ErrorRowTableProps): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
 

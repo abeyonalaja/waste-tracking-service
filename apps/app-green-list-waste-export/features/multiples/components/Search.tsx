@@ -13,7 +13,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-export function Search() {
+export function Search(): React.ReactNode {
   const { t } = useTranslation();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

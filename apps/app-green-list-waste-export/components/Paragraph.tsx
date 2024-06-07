@@ -24,7 +24,12 @@ const P = styled('p')<{ $mb?: number }>`
   }
 `;
 
-export const Paragraph = ({ children, mb = 4, testId, id }: Props) => {
+export const Paragraph = ({
+  children,
+  mb = 4,
+  testId,
+  id,
+}: Props): React.ReactNode => {
   return (
     <P data-testid={testId} $mb={mb} id={id}>
       {children}

@@ -75,7 +75,7 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const SignDeclaration = () => {
+const SignDeclaration = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
 

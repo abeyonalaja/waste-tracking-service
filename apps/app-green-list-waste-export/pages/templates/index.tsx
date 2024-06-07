@@ -117,7 +117,7 @@ const TableHeader = styled(GovUK.Table.CellHeader)`
   vertical-align: top;
 `;
 
-const ManageTemplates = () => {
+const ManageTemplates = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

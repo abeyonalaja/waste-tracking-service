@@ -86,7 +86,7 @@ const interimReducer = (state: State, action: Action) => {
   }
 };
 
-const InterimSiteDetails = () => {
+const InterimSiteDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

@@ -68,7 +68,7 @@ const idify = (value) => {
   return value.replace(/\W/g, '-').toLowerCase();
 };
 
-export const SummaryList = ({ content, id }: Props) => {
+export const SummaryList = ({ content, id }: Props): React.ReactNode => {
   return (
     <DefinitionList id={id}>
       {content.map((listItem, index) => {

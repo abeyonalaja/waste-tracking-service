@@ -148,7 +148,7 @@ const useRefDataLookup = (apiConfig) => {
     return '';
   };
 
-  return (type, code, category?) => {
+  return (type, code, category?): string => {
     let description = '';
 
     if (type === 'EWC') {

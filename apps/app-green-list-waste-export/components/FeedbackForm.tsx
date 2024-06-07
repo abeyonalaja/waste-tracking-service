@@ -38,7 +38,7 @@ export function FeedbackForm({
   onSubmit,
   validateFeedback,
   isPending,
-}: FeedbackFormProps) {
+}: FeedbackFormProps): React.ReactNode {
   const { t } = useTranslation();
   const { register, handleSubmit, watch, formState } =
     useFormContext<SendFeedbackRequest>();

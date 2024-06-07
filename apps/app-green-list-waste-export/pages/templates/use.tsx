@@ -99,7 +99,7 @@ const templateReducer = (state: State, action: Action) => {
   }
 };
 
-const TemplateUse = () => {
+const TemplateUse = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

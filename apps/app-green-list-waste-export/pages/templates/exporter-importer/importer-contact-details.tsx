@@ -34,7 +34,7 @@ const PostcodeInput = styled(GovUK.InputField)`
   margin-bottom: 20px;
 `;
 
-const ImporterContactDetails = () => {
+const ImporterContactDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

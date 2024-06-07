@@ -16,7 +16,7 @@ import { Radio } from 'govuk-react';
 import { useCookies } from 'react-cookie';
 import { add } from 'date-fns';
 
-const Cookies = () => {
+const Cookies = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [analyticsConsent, setAnalyticsConsent] = useState<boolean>(false);

@@ -9,7 +9,7 @@ import {
   validateTownCity,
 } from 'utils/validators';
 
-export const getStatusExporter = (data) => {
+export const getStatusExporter = (data): string => {
   const newErrors = {
     townCity: validateTownCity(data?.exporterAddress?.townCity),
     country: validateCountrySelect(data?.exporterAddress?.country),

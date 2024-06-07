@@ -9,7 +9,7 @@ import {
 } from 'features/multiples';
 import { useQueryClient } from '@tanstack/react-query';
 
-function Upload() {
+function Upload(): React.ReactNode {
   const queryClient = useQueryClient();
   const [cookies, setCookie] = useCookies(['GLWMultipleGuidanceViewed']);
   const [showGuidance, setShowGuidance] = useState<boolean>(false);

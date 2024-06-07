@@ -2,7 +2,7 @@ import React from 'react';
 import { Tag } from 'govuk-react';
 import { useTranslation } from 'react-i18next';
 
-export const DocumentStatus = (props) => {
+export const DocumentStatus = (props): React.ReactNode => {
   const { t } = useTranslation();
   const { status } = props;
   let name;

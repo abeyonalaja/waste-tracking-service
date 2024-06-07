@@ -67,7 +67,7 @@ const checkYourReportReducer = (state: State, action: Action) => {
   }
 };
 
-const CheckYourReport = () => {
+const CheckYourReport = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

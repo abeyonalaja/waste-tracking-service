@@ -9,7 +9,7 @@ import React from 'react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';
 
-const SignIn = () => {
+const SignIn = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const { data: session } = useSession();

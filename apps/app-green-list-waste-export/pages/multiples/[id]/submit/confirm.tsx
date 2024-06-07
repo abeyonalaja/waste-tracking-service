@@ -9,7 +9,7 @@ import {
   Loader,
 } from 'features/multiples';
 
-export default function Confirm() {
+export default function Confirm(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
 

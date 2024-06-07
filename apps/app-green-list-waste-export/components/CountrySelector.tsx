@@ -39,7 +39,7 @@ export const CountrySelector = ({
   hint,
   apiConfig,
   includeUk = false,
-}: Props) => {
+}: Props): React.ReactNode => {
   const currentLanguage = i18n.language;
   const [countryList, setCountryList] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

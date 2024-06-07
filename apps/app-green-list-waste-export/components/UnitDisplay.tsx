@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const UnitDisplay = ({ type, quantityType }) => {
+export const UnitDisplay = ({ type, quantityType }): React.ReactNode => {
   let unit = '';
 
   if (type === 'NotApplicable' && quantityType === 'Weight') {

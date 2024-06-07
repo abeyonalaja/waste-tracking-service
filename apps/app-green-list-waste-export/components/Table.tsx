@@ -99,19 +99,19 @@ const CellStyled = styled.td<CellStyledProps>`
   }
 `;
 
-export const Table = ({ children }) => {
+export const Table = ({ children }): React.ReactNode => {
   return <TableStyled>{children}</TableStyled>;
 };
 
-export const Thead = ({ children }) => {
+export const Thead = ({ children }): React.ReactNode => {
   return <HeadStyled>{children}</HeadStyled>;
 };
 
-export const Tbody = ({ children }) => {
+export const Tbody = ({ children }): React.ReactNode => {
   return <BodyStyled>{children}</BodyStyled>;
 };
 
-export const Row = ({ children }) => {
+export const Row = ({ children }): React.ReactNode => {
   return <RowStyled>{children}</RowStyled>;
 };
 
@@ -125,7 +125,7 @@ export const CellHeader = ({
   setWidth?: string;
   textAlign?: 'left' | 'right';
   scope?: 'col' | 'row';
-}) => {
+}): React.ReactNode => {
   return (
     <CellHeaderStyled $setWidth={setWidth} $textAlign={textAlign} scope={scope}>
       {children}
@@ -143,7 +143,7 @@ export const Cell = ({
   children?: React.ReactNode;
   label?: string;
   textAlign?: 'left' | 'right';
-}) => {
+}): React.ReactNode => {
   return (
     <CellStyled bold={bold} data-label={label} $textAlign={textAlign}>
       {children}

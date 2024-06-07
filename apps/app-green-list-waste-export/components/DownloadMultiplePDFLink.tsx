@@ -70,7 +70,7 @@ export const DownloadMultiplePDFLink = ({
   transactionId,
   children,
   apiConfig,
-}: Props) => {
+}: Props): React.ReactNode => {
   const [showLink, setShowLink] = useState<boolean>(false);
   const [action, setAction] = useState<boolean>(false);
   const [pdfData, setPdfData] = useState<Submission[]>();

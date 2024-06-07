@@ -14,7 +14,7 @@ export function PageLayout({
   breadCrumbs = null,
   setWidth = 'two-thirds',
   children,
-}: PageLayoutProps) {
+}: PageLayoutProps): React.ReactNode {
   const { t } = useTranslation();
 
   return (

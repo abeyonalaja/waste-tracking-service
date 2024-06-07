@@ -6,7 +6,9 @@ interface SuccessBannerProps {
   newWindow: boolean;
 }
 
-export default function SuccessBanner({ newWindow }: SuccessBannerProps) {
+export default function SuccessBanner({
+  newWindow,
+}: SuccessBannerProps): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
 

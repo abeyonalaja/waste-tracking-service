@@ -62,7 +62,7 @@ export const InputWithSuffix = ({
   suffix,
   testId,
   maxLength = 250,
-}: Props) => {
+}: Props): React.ReactNode => {
   return (
     <FormGroup error={errorMessage !== undefined}>
       <Label htmlFor={id}>

@@ -89,7 +89,7 @@ const templateReducer = (state: State, action: Action) => {
   }
 };
 
-const TemplateCreateFromRecord = () => {
+const TemplateCreateFromRecord = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

@@ -53,7 +53,7 @@ const BreadCrumbs = ({ id }) => {
   );
 };
 
-const QuantityEntry = () => {
+const QuantityEntry = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);

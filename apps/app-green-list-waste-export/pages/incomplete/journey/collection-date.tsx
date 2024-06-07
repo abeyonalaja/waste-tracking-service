@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { isNotEmpty, validateDate, validateDateType } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
-const CollectionDate = () => {
+const CollectionDate = (): React.ReactNode => {
   interface Date {
     day: string;
     month: string;

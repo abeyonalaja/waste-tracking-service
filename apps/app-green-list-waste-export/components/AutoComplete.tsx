@@ -20,7 +20,13 @@ interface Props {
   confirm: (optionType) => void;
 }
 
-export const AutoComplete = ({ id, name, options, value, confirm }: Props) => {
+export const AutoComplete = ({
+  id,
+  name,
+  options,
+  value,
+  confirm,
+}: Props): React.ReactNode => {
   const currentLanguage = i18n.language;
   function suggest(query, populateResults) {
     const searchTerm = query.split(':')[0].toLowerCase();

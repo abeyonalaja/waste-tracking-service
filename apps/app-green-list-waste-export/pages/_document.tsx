@@ -28,7 +28,7 @@ export default class CustomDocument extends Document {
     return { ...initialProps, styles };
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <Html
         className={`govuk-template ${

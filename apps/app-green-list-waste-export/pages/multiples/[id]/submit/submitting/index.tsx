@@ -13,7 +13,7 @@ const StyledDiv = styled.div`
   align-items: center;
 `;
 
-export default function Index() {
+export default function Index(): React.ReactNode {
   const router = useRouter();
   const { safePush } = useSafePush();
 

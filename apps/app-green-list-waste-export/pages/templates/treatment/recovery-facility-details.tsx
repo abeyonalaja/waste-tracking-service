@@ -159,7 +159,7 @@ interface optionType {
   };
 }
 
-const RecoveryFacilityDetails = () => {
+const RecoveryFacilityDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

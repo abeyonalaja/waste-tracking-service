@@ -29,7 +29,7 @@ const LoadingStyled = styled(LoadingBox)<{ $size?: string }>`
   }
 `;
 
-export const Loading = ({ size, testId }: Props) => {
+export const Loading = ({ size, testId }: Props): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <LoadingStyled

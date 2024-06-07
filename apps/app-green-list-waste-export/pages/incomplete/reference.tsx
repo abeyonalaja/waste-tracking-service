@@ -15,7 +15,7 @@ import {
 import { isNotEmpty, validateReference } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
-export function Reference() {
+export function Reference(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

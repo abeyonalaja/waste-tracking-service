@@ -1,5 +1,9 @@
 import { useContext } from 'react';
 
-import { SubmissionContext } from './submissionContext';
+import {
+  SubmissionContext,
+  ISubmissionContextProps,
+} from './submissionContext';
 
-export const useSubmissionContext = () => useContext(SubmissionContext);
+export const useSubmissionContext = (): ISubmissionContextProps =>
+  useContext(SubmissionContext);

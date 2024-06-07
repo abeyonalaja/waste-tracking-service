@@ -174,7 +174,7 @@ const ListItem = styled(GovUK.ListItem)`
   margin-bottom: 0.8em !important;
 `;
 
-const TemplateTasklist = () => {
+const TemplateTasklist = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

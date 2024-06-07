@@ -59,7 +59,7 @@ const pointOfExitReducer = (state, action) => {
   }
 };
 
-const ExitLocation = () => {
+const ExitLocation = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

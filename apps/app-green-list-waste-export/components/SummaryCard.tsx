@@ -90,7 +90,12 @@ const ActionsListItem = styled.li`
     }
   }
 `;
-export const SummaryCard = ({ title, children, id, actions }: Props) => {
+export const SummaryCard = ({
+  title,
+  children,
+  id,
+  actions,
+}: Props): React.ReactNode => {
   return (
     <SumCard id={id}>
       <SumCardTitleWrap id={`${id}-header`}>

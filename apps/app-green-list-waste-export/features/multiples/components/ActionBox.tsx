@@ -18,7 +18,7 @@ interface ActionBoxProps {
   pageCount: number;
 }
 
-export function ActionBox({ pageCount }: ActionBoxProps) {
+export function ActionBox({ pageCount }: ActionBoxProps): React.ReactNode {
   const { t } = useTranslation();
 
   return (

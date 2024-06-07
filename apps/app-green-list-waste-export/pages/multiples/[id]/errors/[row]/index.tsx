@@ -16,7 +16,7 @@ const ErrorBanner = styled('div')`
   margin-bottom: 30px;
 `;
 
-export default function RowErrors() {
+export default function RowErrors(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
 

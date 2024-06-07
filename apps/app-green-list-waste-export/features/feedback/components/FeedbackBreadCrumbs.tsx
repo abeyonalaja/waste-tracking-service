@@ -13,7 +13,7 @@ interface FeedbackBreadCrumbsProps {
 
 export default function FeedbackBreadCrumbs({
   newWindow,
-}: FeedbackBreadCrumbsProps) {
+}: FeedbackBreadCrumbsProps): React.ReactNode {
   const router = useRouter();
 
   if (!newWindow) {

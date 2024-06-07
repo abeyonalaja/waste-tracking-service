@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-export default function Status() {
+export default function Status(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
   const [context, setContext] = useState<string>('');

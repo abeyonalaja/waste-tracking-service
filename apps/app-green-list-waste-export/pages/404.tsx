@@ -4,7 +4,7 @@ import * as GovUK from 'govuk-react';
 import React from 'react';
 import Head from 'next/head';
 
-export default function Custom404() {
+export default function Custom404(): React.ReactNode {
   const { t } = useTranslation();
   return (
     <>

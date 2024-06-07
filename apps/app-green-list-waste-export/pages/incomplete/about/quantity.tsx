@@ -21,7 +21,7 @@ import {
   DraftSubmission,
 } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
-const Quantity = () => {
+const Quantity = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string>();

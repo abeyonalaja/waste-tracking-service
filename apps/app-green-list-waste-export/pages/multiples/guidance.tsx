@@ -37,7 +37,7 @@ const BreadCrumbs = () => {
   );
 };
 
-const Guidance = () => {
+const Guidance = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
 

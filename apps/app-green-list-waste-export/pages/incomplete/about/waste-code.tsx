@@ -19,7 +19,7 @@ import { isNotEmpty, validateWasteCodeCategory } from 'utils/validators';
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
-const WasteCode = () => {
+const WasteCode = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState<string | string[]>(null);

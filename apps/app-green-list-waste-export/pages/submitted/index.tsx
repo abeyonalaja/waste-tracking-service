@@ -79,7 +79,7 @@ const Action = styled.div`
   margin-bottom: 7px;
 `;
 
-const Index = () => {
+const Index = (): React.ReactNode => {
   const { t } = useTranslation();
   const apiConfig = useApiConfig();
   const getRefData = useRefDataLookup(apiConfig);

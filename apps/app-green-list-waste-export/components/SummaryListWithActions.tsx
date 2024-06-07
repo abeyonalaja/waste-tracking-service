@@ -74,7 +74,7 @@ export const SummaryListWithActions = ({
   actions,
   id,
   prefixNumbers,
-}: Props) => {
+}: Props): React.ReactNode => {
   return (
     <DefinitionList id={id}>
       {content.map((title, index) => {

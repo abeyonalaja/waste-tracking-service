@@ -4,7 +4,7 @@ import { Footer, Header } from '../../components';
 import React from 'react';
 import Head from 'next/head';
 
-const Accessibility = () => {
+const Accessibility = (): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <>

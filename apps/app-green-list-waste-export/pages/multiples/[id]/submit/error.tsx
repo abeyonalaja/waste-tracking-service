@@ -3,7 +3,7 @@ import * as GovUK from 'govuk-react';
 import { PageLayout } from 'features/multiples';
 import { Paragraph } from 'components';
 
-export default function SubmitErrorPage() {
+export default function SubmitErrorPage(): React.ReactNode {
   const { t } = useTranslation();
   return (
     <PageLayout setWidth="two-thirds">

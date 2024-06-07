@@ -17,6 +17,6 @@ interface FileUploadProps {
   children: React.ReactNode;
 }
 
-export function FileUpload({ children }: FileUploadProps) {
+export function FileUpload({ children }: FileUploadProps): React.ReactNode {
   return <StyledInput>{children}</StyledInput>;
 }

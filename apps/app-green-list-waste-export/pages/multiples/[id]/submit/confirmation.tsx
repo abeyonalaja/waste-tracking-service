@@ -8,7 +8,7 @@ import {
   Loader,
 } from 'features/multiples';
 
-export default function ConfirmationPage() {
+export default function ConfirmationPage(): React.ReactNode {
   const router = useRouter();
 
   const { isPending, data, error } = useQuery({

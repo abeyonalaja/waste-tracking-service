@@ -80,7 +80,7 @@ export const RadioList = ({
   options,
   errorMessage,
   onChange,
-}: Props) => {
+}: Props): React.ReactNode => {
   const currentLanguage = i18n.language;
   return (
     <RadioFormGroup id={id} error={!!errorMessage}>

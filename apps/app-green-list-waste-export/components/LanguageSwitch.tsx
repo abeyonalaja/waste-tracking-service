@@ -90,7 +90,7 @@ const LanguageListItemCurrent = styled.li`
   }
 `;
 
-export const LanguageSwitch = () => {
+export const LanguageSwitch = (): React.ReactNode => {
   const { t } = useTranslation();
   const isLanguagesEnabled =
     process.env.NEXT_PUBLIC_LANGUAGES_ENABLED === 'true';

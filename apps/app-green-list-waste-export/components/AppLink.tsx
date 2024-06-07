@@ -76,7 +76,7 @@ export const AppLink = ({
   rel,
   disabled,
   target,
-}: Props) => {
+}: Props): React.ReactNode => {
   const getColour = (colour: string) => {
     if (colour === 'red') {
       return {

@@ -41,7 +41,7 @@ export function SubmittedTable({
   sortOrder,
   apiConfig,
   pageNumber,
-}: SubmittedTableProps) {
+}: SubmittedTableProps): React.ReactNode {
   const getRefData = useRefDataLookup(apiConfig);
 
   const { t } = useTranslation();

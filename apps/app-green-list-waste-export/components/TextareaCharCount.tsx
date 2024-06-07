@@ -42,7 +42,7 @@ export const TextareaCharCount = ({
   onChange,
   children,
   testId,
-}: Props) => {
+}: Props): React.ReactNode => {
   const [count, setCount] = useState(value?.length || 0);
   const [error, setError] = useState(false);
   const { t } = useTranslation();

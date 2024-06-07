@@ -30,7 +30,7 @@ interface UploadFormProps {
 export function UploadForm({
   setShowNotificationBanner,
   children,
-}: UploadFormProps) {
+}: UploadFormProps): React.ReactNode {
   const router = useRouter();
   const apiConfig = useApiConfig();
   const { t } = useTranslation();

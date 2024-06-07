@@ -207,7 +207,7 @@ interface codeType {
   };
 }
 
-const EwcCodes = () => {
+const EwcCodes = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

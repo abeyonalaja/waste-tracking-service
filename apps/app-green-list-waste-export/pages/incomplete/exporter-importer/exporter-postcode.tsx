@@ -26,7 +26,7 @@ const PostcodeInput = styled(GovUK.Input)`
   max-width: 23ex;
 `;
 
-const ExporterPostcode = () => {
+const ExporterPostcode = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

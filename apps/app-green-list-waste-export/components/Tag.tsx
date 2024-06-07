@@ -38,6 +38,6 @@ const TagStyled = styled('strong')`
   }
 `;
 
-export const Tag = ({ children, testId }: Props) => {
+export const Tag = ({ children, testId }: Props): React.ReactNode => {
   return <TagStyled data-testid={testId}>{children}</TagStyled>;
 };

@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const PDFLayout = (props: PDFProps) => {
+export const PDFLayout = (props: PDFProps): React.ReactNode => {
   return (
     <Document
       title={props.title}
@@ -143,7 +143,7 @@ export const PDFLayout = (props: PDFProps) => {
   );
 };
 
-const Pages = ({ data }) => {
+const Pages = ({ data }): React.ReactNode => {
   const recFacCount = data.recoveryFacilityDetail.length | 0;
   let ewcCodesCount = data.wasteDescription.ewcCodes.length | 0;
 

@@ -49,7 +49,7 @@ const StyledSvg = styled.svg`
   stroke: #b1b4b6;
 `;
 
-export function Instructions() {
+export function Instructions(): React.ReactNode {
   const { t } = useTranslation();
 
   return (

@@ -13,7 +13,10 @@ const StyledConditionalRadioWrap = styled.div`
   border-left: 4px solid #b1b4b6;
 `;
 
-export const ConditionalRadioWrap = ({ children, testId }: Props) => {
+export const ConditionalRadioWrap = ({
+  children,
+  testId,
+}: Props): React.ReactNode => {
   return (
     <StyledConditionalRadioWrap data-testid={testId}>
       {children}

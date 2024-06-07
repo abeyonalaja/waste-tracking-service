@@ -142,7 +142,7 @@ interface optionType {
   };
 }
 
-const Laboratory = () => {
+const Laboratory = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

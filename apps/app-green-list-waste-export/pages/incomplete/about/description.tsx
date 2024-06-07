@@ -23,7 +23,6 @@ import {
 } from 'components';
 import { isNotEmpty, validateWasteDescription } from 'utils/validators';
 import styled from 'styled-components';
-
 import { GetWasteDescriptionResponse } from '@wts/api/waste-tracking-gateway';
 import useApiConfig from 'utils/useApiConfig';
 
@@ -84,7 +83,7 @@ const StyledHeading = styled(GovUK.Heading)`
   margin-bottom: 15px;
 `;
 
-const Description = () => {
+const Description = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

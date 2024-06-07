@@ -8,7 +8,7 @@ import {
   validateOrganisationName,
 } from 'utils/validators';
 
-export const getStatusImporter = (data) => {
+export const getStatusImporter = (data): string => {
   const newErrors = {
     organisationName: validateOrganisationName(
       data?.importerAddressDetails?.organisationName,

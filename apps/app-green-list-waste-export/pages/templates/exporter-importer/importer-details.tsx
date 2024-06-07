@@ -27,7 +27,7 @@ const AddressInput = styled(GovUK.InputField)`
   }
 `;
 
-const ImporterDetails = () => {
+const ImporterDetails = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

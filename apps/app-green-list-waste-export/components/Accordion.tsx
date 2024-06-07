@@ -36,6 +36,7 @@ const Button = styled.button`
   background: none;
   cursor: pointer;
   -webkit-appearance: none;
+  appearance: none;
   &:active {
     color: #0b0c0c;
     background: none;
@@ -112,7 +113,7 @@ export const Accordion = ({
   expandedAll = true,
   id = 'accordion',
   onToggleShowAll,
-}: Props) => {
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <AccordionWrap id={id}>

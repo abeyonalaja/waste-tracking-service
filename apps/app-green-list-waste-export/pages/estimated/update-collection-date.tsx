@@ -19,7 +19,7 @@ import { isNotEmpty, validateActualDate } from 'utils/validators';
 import { format, addBusinessDays } from 'date-fns';
 import useApiConfig from 'utils/useApiConfig';
 
-const CollectionDate = () => {
+const CollectionDate = (): React.ReactNode => {
   interface Date {
     day: string;
     month: string;

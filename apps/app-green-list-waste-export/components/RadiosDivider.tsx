@@ -15,7 +15,7 @@ const StyledRadiosDivider = styled('div')`
   }
 `;
 
-export const RadiosDivider = ({ children, testId }: Props) => {
+export const RadiosDivider = ({ children, testId }: Props): React.ReactNode => {
   return (
     <StyledRadiosDivider data-testid={testId}>{children}</StyledRadiosDivider>
   );

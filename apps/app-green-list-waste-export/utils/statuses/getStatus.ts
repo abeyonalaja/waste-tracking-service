@@ -1,4 +1,9 @@
-export const getStatus = (wasteCode, ewcCodes, nationalCode, description) => {
+export const getStatus = (
+  wasteCode,
+  ewcCodes,
+  nationalCode,
+  description,
+): string => {
   let subTasksCompleted = 0;
 
   if (wasteCode !== undefined) {

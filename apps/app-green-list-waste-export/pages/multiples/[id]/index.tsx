@@ -5,7 +5,7 @@ import useSafePush from 'utils/useRouterChange';
 import { PageLayout, Loader } from 'features/multiples';
 import { getValidationResult } from 'features/multiples';
 
-export default function Index() {
+export default function Index(): React.ReactNode {
   const router = useRouter();
   const { safePush } = useSafePush();
 

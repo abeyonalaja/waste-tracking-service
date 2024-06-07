@@ -162,7 +162,7 @@ export const AccordionSection = ({
   expandedAll,
   id = 'accordion-section',
   showTag = false,
-}: Props) => {
+}: Props): React.ReactNode => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = React.useState<boolean>(true);
 

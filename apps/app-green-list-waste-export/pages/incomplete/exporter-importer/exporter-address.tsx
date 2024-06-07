@@ -90,7 +90,7 @@ const Actions = styled('dd')`
   }
 `;
 
-const ExporterAddress = () => {
+const ExporterAddress = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [id, setId] = useState(null);

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Paragraph } from 'components';
 
-export default function Custom403() {
+export default function Custom403(): React.ReactNode {
   const [userRef, setUserRef] = useState<string>(null);
   const baseUrl =
     process.env['NODE_ENV'] === 'production' ? '/export-annex-VII-waste' : '';

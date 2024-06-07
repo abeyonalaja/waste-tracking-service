@@ -16,7 +16,7 @@ interface ValidationSuccessProps {
 export function ValidationSuccess({
   recordCount,
   hasCorrectedErrors,
-}: ValidationSuccessProps) {
+}: ValidationSuccessProps): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
 

@@ -8,7 +8,7 @@ const StyledWarningText = styled(WarningText)<{
   margin-bottom: ${(props) => (props.$mb ? `${props.$mb}px` : '0')};
 `;
 
-export function EstimatesBanner() {
+export function EstimatesBanner(): React.ReactNode {
   const { t } = useTranslation();
 
   return (

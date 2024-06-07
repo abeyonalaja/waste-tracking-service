@@ -31,7 +31,7 @@ interface codeType {
   type: string;
   values: Array<singleCodeType>;
 }
-const WasteCodeDesc = () => {
+const WasteCodeDesc = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const [templateId, setTemplateId] = useState<string>(null);

@@ -33,7 +33,7 @@ const BreadCrumbs = () => {
   );
 };
 
-function Index() {
+function Index(): React.ReactNode {
   const router = useRouter();
   const apiConfig = useApiConfig();
   const { setSubmission, featureFlags } = useSubmissionContext();

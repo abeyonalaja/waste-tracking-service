@@ -12,7 +12,10 @@ interface CrownIconProps {
   width?: number;
 }
 
-export const CrownIcon = ({ height = 30, width = 148 }: CrownIconProps) => {
+export const CrownIcon = ({
+  height = 30,
+  width = 148,
+}: CrownIconProps): React.ReactNode => {
   return (
     <StyledCrownIcon
       focusable="false"

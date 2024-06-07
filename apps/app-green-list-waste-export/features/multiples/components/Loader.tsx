@@ -31,7 +31,7 @@ const StyledSpinner = styled.span`
   animation: ${rotation} 1s linear infinite;
 `;
 
-export function Loader({ filename }: LoaderProps) {
+export function Loader({ filename }: LoaderProps): React.ReactNode {
   return (
     <StyledSpan>
       {filename && (

@@ -5,7 +5,7 @@ import * as GovUK from 'govuk-react';
 import { PageLayout } from 'features/multiples';
 import { Paragraph, SaveReturnButton, ButtonGroup } from 'components';
 
-export default function Cancel() {
+export default function Cancel(): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
   const queryClient = useQueryClient();

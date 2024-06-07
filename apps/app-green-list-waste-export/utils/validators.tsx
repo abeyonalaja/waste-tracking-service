@@ -3,7 +3,7 @@ import aOrAn from './aOrAn';
 import i18next from 'i18next';
 const t = i18next.t;
 
-export function isNotEmpty(obj) {
+export function isNotEmpty(obj): boolean {
   return Object.keys(obj).some((key) => obj[key]?.length > 0);
 }
 

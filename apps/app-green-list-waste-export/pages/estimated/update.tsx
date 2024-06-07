@@ -63,7 +63,7 @@ const viewRecordReducer = (state: State, action: Action) => {
   }
 };
 
-const UpdateRecord = () => {
+const UpdateRecord = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

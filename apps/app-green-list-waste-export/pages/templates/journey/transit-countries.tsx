@@ -127,7 +127,7 @@ const wasteTransitReducer = (state: State, action: Action) => {
   }
 };
 
-const TransitCountries = () => {
+const TransitCountries = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

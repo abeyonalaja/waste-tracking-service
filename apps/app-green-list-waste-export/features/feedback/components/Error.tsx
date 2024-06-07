@@ -7,7 +7,7 @@ interface ErrorProps {
   newWindow: boolean;
 }
 
-export default function Error({ newWindow }: ErrorProps) {
+export default function Error({ newWindow }: ErrorProps): React.ReactNode {
   const router = useRouter();
   const { t } = useTranslation();
 

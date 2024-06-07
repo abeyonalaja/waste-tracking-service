@@ -43,7 +43,7 @@ const ActionHeader = styled(GovUK.H2)`
   margin-bottom: 0.5em;
 `;
 
-export default function Submitted() {
+export default function Submitted(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const { safePush } = useSafePush();

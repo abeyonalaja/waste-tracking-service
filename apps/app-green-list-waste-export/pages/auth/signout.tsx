@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-const BreadCrumbs = () => {
+const BreadCrumbs = (): React.ReactNode => {
   const { t } = useTranslation();
   return (
     <BreadcrumbWrap>
@@ -24,7 +24,7 @@ const BreadCrumbs = () => {
   );
 };
 
-const SignOut = () => {
+const SignOut = (): React.ReactNode => {
   const router = useRouter();
   const [callbackUrl, setCallbackUrl] = useState<string>('/');
 

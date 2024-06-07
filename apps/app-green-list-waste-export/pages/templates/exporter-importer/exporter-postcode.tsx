@@ -30,7 +30,7 @@ const Paragraph = styled.div`
   font-size: 19px;
 `;
 
-const ExporterPostcode = () => {
+const ExporterPostcode = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

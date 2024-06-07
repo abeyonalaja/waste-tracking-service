@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Breadcrumbs } from 'govuk-react';
 import { BreadCrumbLink, BreadcrumbWrap } from 'components';
 
-export function UploadBreadCrumbs() {
+export function UploadBreadCrumbs(): React.ReactNode {
   const { t } = useTranslation();
 
   return (

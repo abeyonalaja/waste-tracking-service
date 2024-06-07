@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
 
 const getToken = async () => {
   const baseUrl =
@@ -12,7 +13,7 @@ const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_GATEWAY_URL,
 });
 
-const apiClient = async ({ ...options }) => {
+const apiClient = async ({ ...options }): Promise<AxiosResponse<unknown>> => {
   const token = await getToken();
   client.defaults.headers.common.Authorization = `Bearer ${token}`;
 

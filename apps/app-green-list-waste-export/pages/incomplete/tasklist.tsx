@@ -129,7 +129,7 @@ const TaskStatus = styled.span`
   }
 `;
 
-const Tasklist = () => {
+const Tasklist = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();

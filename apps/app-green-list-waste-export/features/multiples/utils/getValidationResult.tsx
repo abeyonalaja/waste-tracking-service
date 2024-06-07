@@ -8,6 +8,7 @@ async function getToken() {
   return token.token;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getValidationResult(id: string) {
   const token = await getToken();
   const url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/batches/${id}`;

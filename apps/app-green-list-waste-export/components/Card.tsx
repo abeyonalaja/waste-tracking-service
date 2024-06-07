@@ -58,7 +58,7 @@ const CardContent = styled.div`
   }
 `;
 
-export const Card = ({ title, children, id }: Props) => {
+export const Card = ({ title, children, id }: Props): React.ReactNode => {
   return (
     <CardBox id={id}>
       <CardTitleWrap id={`${id}-header`}>

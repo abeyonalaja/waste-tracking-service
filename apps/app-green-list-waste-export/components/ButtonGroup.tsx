@@ -30,6 +30,6 @@ const Group = styled('div')`
   }
 `;
 
-export const ButtonGroup = ({ children, testId }: Props) => {
+export const ButtonGroup = ({ children, testId }: Props): React.ReactNode => {
   return <Group data-testid={testId}>{children}</Group>;
 };

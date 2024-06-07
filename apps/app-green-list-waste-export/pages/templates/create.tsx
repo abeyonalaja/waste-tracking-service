@@ -19,7 +19,7 @@ import {
 } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
 
-const TemplateCreate = () => {
+const TemplateCreate = (): React.ReactNode => {
   const { t } = useTranslation();
   const router = useRouter();
   const apiConfig = useApiConfig();
