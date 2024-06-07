@@ -16,7 +16,6 @@ import {
   RecoveryFacilityDetail,
   RecoveryFacilityPartial,
   DraftSubmission,
-  SubmissionBase,
   SubmissionConfirmation,
   SubmissionDeclaration,
   DraftSubmissionState,
@@ -40,15 +39,9 @@ import {
   isWasteCodeChangingBulkToBulkDifferentType,
   isWasteCodeChangingBulkToBulkSameType,
   setBaseWasteDescription,
-  setBaseExporterDetail,
-  setBaseImporterDetail,
   createBaseCarriers,
-  setBaseNoCarriers,
   setBaseCarriers,
   deleteBaseCarriers,
-  setBaseCollectionDetail,
-  setBaseExitLocation,
-  setBaseTransitCountries,
   createBaseRecoveryFacilityDetail,
   setBaseRecoveryFacilityDetail,
   deleteBaseRecoveryFacilityDetail,
@@ -61,11 +54,6 @@ import {
   getSubmissionData,
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
-
-export interface SubmissionBasePlusId {
-  submissionBase: SubmissionBase;
-  id: string;
-}
 
 export interface SubmissionRef {
   id: string;
@@ -484,7 +472,9 @@ export async function setWasteDescription(
   }
 
   const submissionBase = setBaseWasteDescription(
-    submission as SubmissionBase,
+    submission.wasteDescription,
+    submission.carriers,
+    submission.recoveryFacilityDetail,
     value,
   );
   submission.wasteDescription = submissionBase.wasteDescription;
@@ -660,10 +650,7 @@ export async function setExporterDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  submission.exporterDetail = setBaseExporterDetail(
-    submission as SubmissionBase,
-    value,
-  ).exporterDetail;
+  submission.exporterDetail = value;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -697,10 +684,7 @@ export async function setImporterDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  submission.importerDetail = setBaseImporterDetail(
-    submission as SubmissionBase,
-    value,
-  ).importerDetail;
+  submission.importerDetail = value;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -854,21 +838,24 @@ export async function createCarriers(
     }
   }
 
-  const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
-    submission as SubmissionBase,
+  submission.carriers = createBaseCarriers(
+    submission.carriers,
+    submission.wasteDescription,
     value,
   );
-
-  submission.carriers = submissionBasePlusId.submissionBase.carriers;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-  return Promise.resolve({
-    status: value.status,
-    transport: submission.carriers.transport,
-    values: [{ id: submissionBasePlusId.id }],
-  });
+  if (submission.carriers.status !== 'NotStarted') {
+    return Promise.resolve({
+      status: value.status,
+      transport: submission.carriers.transport,
+      values: [{ id: submission.carriers.values[0].id }],
+    });
+  } else {
+    return Promise.reject(new BadRequestError('Incorrect carrier status.'));
+  }
 }
 
 export async function getCarriers(
@@ -927,11 +914,7 @@ export async function setCarriers(
   }
 
   if (value.status === 'NotStarted') {
-    submission.carriers = setBaseNoCarriers(
-      submission as SubmissionBase,
-      carrierId,
-      value,
-    ).carriers;
+    submission.carriers = value;
   } else {
     const carrier = value.values.find((c) => {
       return c.id === carrierId;
@@ -947,12 +930,11 @@ export async function setCarriers(
       return Promise.reject('Index not found.');
     }
     submission.carriers = setBaseCarriers(
-      submission as SubmissionBase,
-      carrierId,
+      submission.carriers,
       value,
       carrier,
       index,
-    ).carriers;
+    );
   }
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -985,9 +967,10 @@ export async function deleteCarriers(
   }
 
   submission.carriers = deleteBaseCarriers(
-    submission as SubmissionBase,
+    submission.carriers,
+    submission.wasteDescription,
     carrierId,
-  ).carriers;
+  );
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -1021,11 +1004,7 @@ export async function setCollectionDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  submission.collectionDetail = setBaseCollectionDetail(
-    submission as SubmissionBase,
-    value,
-  ).collectionDetail;
-
+  submission.collectionDetail = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
@@ -1057,11 +1036,7 @@ export async function setExitLocation(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  submission.ukExitLocation = setBaseExitLocation(
-    submission as SubmissionBase,
-    value,
-  ).ukExitLocation;
-
+  submission.ukExitLocation = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
@@ -1093,11 +1068,7 @@ export async function setTransitCountries(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  submission.transitCountries = setBaseTransitCountries(
-    submission as SubmissionBase,
-    value,
-  ).transitCountries;
-
+  submission.transitCountries = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
@@ -1152,19 +1123,23 @@ export async function createRecoveryFacilityDetail(
     }
   }
 
-  const submissionBasePlusId: SubmissionBasePlusId =
-    createBaseRecoveryFacilityDetail(submission as SubmissionBase, value);
-
-  submission.recoveryFacilityDetail =
-    submissionBasePlusId.submissionBase.recoveryFacilityDetail;
-
+  submission.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
+    submission.recoveryFacilityDetail,
+    value,
+  );
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-  return Promise.resolve({
-    status: value.status,
-    values: [{ id: submissionBasePlusId.id }],
-  });
+  if (submission.recoveryFacilityDetail.status === 'Started') {
+    return Promise.resolve({
+      status: value.status,
+      values: [{ id: submission.recoveryFacilityDetail.values[0].id }],
+    });
+  } else {
+    return Promise.reject(
+      new BadRequestError('Incorrect recovery facility status.'),
+    );
+  }
 }
 
 export async function getRecoveryFacilityDetail(
@@ -1244,10 +1219,10 @@ export async function setRecoveryFacilityDetail(
   }
 
   submission.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-    submission as SubmissionBase,
+    submission.recoveryFacilityDetail,
     rfdId,
     value,
-  ).recoveryFacilityDetail;
+  );
 
   if (
     submission.recoveryFacilityDetail.status !== 'Started' &&
@@ -1288,9 +1263,9 @@ export async function deleteRecoveryFacilityDetail(
   }
 
   submission.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-    submission as SubmissionBase,
+    submission.recoveryFacilityDetail,
     rfdId,
-  ).recoveryFacilityDetail;
+  );
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);

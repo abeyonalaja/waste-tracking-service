@@ -17,11 +17,9 @@ import {
   DraftSubmission,
   RecordState,
   Submission,
-  SubmissionBase,
 } from '../../model';
 import { Handler } from '@wts/api/common';
 import {
-  SubmissionBasePlusId,
   createBaseCarriers,
   createBaseRecoveryFacilityDetail,
   deleteBaseCarriers,
@@ -33,13 +31,7 @@ import {
   isWasteCodeChangingBulkToSmall,
   isWasteCodeChangingSmallToBulk,
   setBaseCarriers,
-  setBaseCollectionDetail,
-  setBaseExitLocation,
-  setBaseExporterDetail,
-  setBaseImporterDetail,
-  setBaseNoCarriers,
   setBaseRecoveryFacilityDetail,
-  setBaseTransitCountries,
   setBaseWasteDescription,
   setSubmissionConfirmationStatus,
   setSubmissionDeclarationStatus,
@@ -318,7 +310,9 @@ export default class DraftController {
       }
 
       const submissionBase = setBaseWasteDescription(
-        draft as SubmissionBase,
+        draft.wasteDescription,
+        draft.carriers,
+        draft.recoveryFacilityDetail,
         value,
       );
 
@@ -477,11 +471,7 @@ export default class DraftController {
         accountId,
       )) as DraftSubmission;
 
-      draft.exporterDetail = setBaseExporterDetail(
-        draft as SubmissionBase,
-        value,
-      ).exporterDetail;
-
+      draft.exporterDetail = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
 
@@ -532,10 +522,8 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
-      draft.importerDetail = setBaseImporterDetail(
-        draft as SubmissionBase,
-        value,
-      ).importerDetail;
+
+      draft.importerDetail = value;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -743,12 +731,7 @@ export default class DraftController {
         }
       }
 
-      const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
-        draft as SubmissionBase,
-        value,
-      );
-
-      draft.carriers = submissionBasePlusId.submissionBase.carriers;
+      draft.carriers = createBaseCarriers(draft.carriers, value);
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -758,11 +741,15 @@ export default class DraftController {
         { ...draft },
         accountId,
       );
-      return success({
-        status: value.status,
-        transport: submissionBasePlusId.submissionBase.carriers.transport,
-        values: [{ id: submissionBasePlusId.id }],
-      });
+      if (draft.carriers.status === 'Started') {
+        return success({
+          status: value.status,
+          transport: draft.carriers.transport,
+          values: [{ id: draft.carriers.values[0].id }],
+        });
+      } else {
+        return fromBoom(Boom.badRequest());
+      }
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -792,11 +779,7 @@ export default class DraftController {
       }
 
       if (value.status === 'NotStarted') {
-        draft.carriers = setBaseNoCarriers(
-          draft as SubmissionBase,
-          carrierId,
-          value,
-        ).carriers;
+        draft.carriers = value;
       } else {
         const carrier = value.values.find((c) => {
           return c.id === carrierId;
@@ -811,13 +794,7 @@ export default class DraftController {
         if (index === -1) {
           return fromBoom(Boom.notFound());
         }
-        draft.carriers = setBaseCarriers(
-          draft as SubmissionBase,
-          carrierId,
-          value,
-          carrier,
-          index,
-        ).carriers;
+        draft.carriers = setBaseCarriers(draft.carriers, value, carrier, index);
       }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -865,10 +842,7 @@ export default class DraftController {
         return fromBoom(Boom.notFound());
       }
 
-      draft.carriers = deleteBaseCarriers(
-        draft as SubmissionBase,
-        carrierId,
-      ).carriers;
+      draft.carriers = deleteBaseCarriers(draft.carriers, carrierId);
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -920,11 +894,8 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
-      draft.collectionDetail = setBaseCollectionDetail(
-        draft as SubmissionBase,
-        value,
-      ).collectionDetail;
 
+      draft.collectionDetail = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
 
@@ -975,10 +946,7 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
-      draft.ukExitLocation = setBaseExitLocation(
-        draft as SubmissionBase,
-        value,
-      ).ukExitLocation;
+      draft.ukExitLocation = value;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1030,11 +998,8 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
-      draft.transitCountries = setBaseTransitCountries(
-        draft as SubmissionBase,
-        value,
-      ).transitCountries;
 
+      draft.transitCountries = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
 
@@ -1163,11 +1128,10 @@ export default class DraftController {
         }
       }
 
-      const submissionBasePlusId: SubmissionBasePlusId =
-        createBaseRecoveryFacilityDetail(draft as SubmissionBase, value);
-
-      draft.recoveryFacilityDetail =
-        submissionBasePlusId.submissionBase.recoveryFacilityDetail;
+      draft.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
+        draft.recoveryFacilityDetail,
+        value,
+      );
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1177,10 +1141,15 @@ export default class DraftController {
         { ...draft },
         accountId,
       );
-      return success({
-        status: value.status,
-        values: [{ id: submissionBasePlusId.id }],
-      });
+
+      if (draft.recoveryFacilityDetail.status === 'Started') {
+        return success({
+          status: value.status,
+          values: [{ id: draft.recoveryFacilityDetail.values[0].id }],
+        });
+      } else {
+        return fromBoom(Boom.badRequest());
+      }
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1229,10 +1198,10 @@ export default class DraftController {
       }
 
       draft.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-        draft as SubmissionBase,
+        draft.recoveryFacilityDetail,
         rfdId,
         value,
-      ).recoveryFacilityDetail;
+      );
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1282,9 +1251,9 @@ export default class DraftController {
       }
 
       draft.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-        draft as SubmissionBase,
+        draft.recoveryFacilityDetail,
         rfdId,
-      ).recoveryFacilityDetail;
+      );
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);

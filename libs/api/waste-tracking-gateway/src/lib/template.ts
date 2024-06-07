@@ -1,5 +1,15 @@
 import { AccountIdRequest } from '@wts/api/common';
-import { PageMetadata, SubmissionBase } from './submission';
+import {
+  PageMetadata,
+  WasteDescription,
+  ExporterDetail,
+  ImporterDetail,
+  Carriers,
+  CollectionDetail,
+  ExitLocation,
+  TransitCountries,
+  RecoveryFacilityDetail,
+} from './submission';
 
 export interface TemplateDetails {
   name: string;
@@ -8,7 +18,16 @@ export interface TemplateDetails {
   lastModified: Date;
 }
 
-export interface Template extends SubmissionBase {
+export interface Template {
+  id: string;
+  wasteDescription: WasteDescription;
+  exporterDetail: ExporterDetail;
+  importerDetail: ImporterDetail;
+  carriers: Carriers;
+  collectionDetail: CollectionDetail;
+  ukExitLocation: ExitLocation;
+  transitCountries: TransitCountries;
+  recoveryFacilityDetail: RecoveryFacilityDetail;
   templateDetails: TemplateDetails;
 }
 

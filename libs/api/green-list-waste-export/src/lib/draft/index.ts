@@ -124,7 +124,6 @@ export type {
   SetDraftSubmissionDeclarationResponse,
   GetDraftSubmissionDeclarationRequest,
   GetDraftSubmissionDeclarationResponse,
-  SubmissionBase,
 } from './dto';
 
 export * as schema from './schema';

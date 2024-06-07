@@ -10,7 +10,6 @@ import { Logger } from 'winston';
 import {
   DraftCarriers,
   Template,
-  SubmissionBase,
   DraftCarrierPartial,
   DraftCarrier,
   DraftRecoveryFacility,
@@ -23,22 +22,16 @@ import { Handler } from '@wts/api/common';
 import {
   isSmallWaste,
   setBaseWasteDescription,
-  setBaseExporterDetail,
-  setBaseImporterDetail,
-  SubmissionBasePlusId,
   createBaseCarriers,
-  setBaseNoCarriers,
   setBaseCarriers,
   deleteBaseCarriers,
-  setBaseCollectionDetail,
-  setBaseExitLocation,
-  setBaseTransitCountries,
   createBaseRecoveryFacilityDetail,
   setBaseRecoveryFacilityDetail,
   deleteBaseRecoveryFacilityDetail,
   isTemplateNameValid,
   copyCarriersNoTransport,
   copyRecoveryFacilities,
+  updateCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 
@@ -278,7 +271,9 @@ export default class TemplateController {
       )) as Template;
 
       const submissionBase = setBaseWasteDescription(
-        template as SubmissionBase,
+        template.wasteDescription,
+        template.carriers,
+        template.recoveryFacilityDetail,
         value,
       );
 
@@ -337,10 +332,7 @@ export default class TemplateController {
         accountId,
       )) as Template;
 
-      template.exporterDetail = setBaseExporterDetail(
-        template as SubmissionBase,
-        value,
-      ).exporterDetail;
+      template.exporterDetail = value;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -390,12 +382,9 @@ export default class TemplateController {
         id,
         accountId,
       )) as Template;
-      template.importerDetail = setBaseImporterDetail(
-        template as SubmissionBase,
-        value,
-      ).importerDetail;
-
+      template.importerDetail = value;
       template.templateDetails.lastModified = new Date();
+
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
@@ -511,12 +500,13 @@ export default class TemplateController {
         }
       }
 
-      const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
-        template as SubmissionBase,
-        value,
-      );
+      template.carriers = createBaseCarriers(template.carriers, value);
 
-      template.carriers = submissionBasePlusId.submissionBase.carriers;
+      template.carriers.transport =
+        template.wasteDescription.status !== 'NotStarted' &&
+        template.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -524,11 +514,15 @@ export default class TemplateController {
         { ...template },
         accountId,
       );
-      return success({
-        status: value.status,
-        transport: submissionBasePlusId.submissionBase.carriers.transport,
-        values: [{ id: submissionBasePlusId.id }],
-      });
+      if (template.carriers.status === 'Started') {
+        return success({
+          status: value.status,
+          transport: template.carriers.transport,
+          values: [{ id: template.carriers.values[0].id }],
+        });
+      } else {
+        return fromBoom(Boom.badRequest());
+      }
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -558,11 +552,7 @@ export default class TemplateController {
       }
 
       if (value.status === 'NotStarted') {
-        template.carriers = setBaseNoCarriers(
-          template as SubmissionBase,
-          carrierId,
-          value,
-        ).carriers;
+        template.carriers = value;
       } else {
         const carrier = value.values.find((c) => {
           return c.id === carrierId;
@@ -578,12 +568,11 @@ export default class TemplateController {
           return fromBoom(Boom.notFound());
         }
         template.carriers = setBaseCarriers(
-          template as SubmissionBase,
-          carrierId,
+          template.carriers,
           value,
           carrier,
           index,
-        ).carriers;
+        );
       }
 
       template.templateDetails.lastModified = new Date();
@@ -629,10 +618,12 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
-      template.carriers = deleteBaseCarriers(
-        template as SubmissionBase,
-        carrierId,
-      ).carriers;
+      template.carriers = deleteBaseCarriers(template.carriers, carrierId);
+
+      template.carriers = updateCarrierTransport(
+        template.wasteDescription,
+        template.carriers,
+      );
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -682,10 +673,7 @@ export default class TemplateController {
         id,
         accountId,
       )) as Template;
-      template.collectionDetail = setBaseCollectionDetail(
-        template as SubmissionBase,
-        value,
-      ).collectionDetail;
+      template.collectionDetail = value;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -735,12 +723,10 @@ export default class TemplateController {
         id,
         accountId,
       )) as Template;
-      template.ukExitLocation = setBaseExitLocation(
-        template as SubmissionBase,
-        value,
-      ).ukExitLocation;
 
+      template.ukExitLocation = value;
       template.templateDetails.lastModified = new Date();
+
       await this.repository.saveRecord(
         templateContainerName,
         { ...template },
@@ -788,10 +774,7 @@ export default class TemplateController {
         id,
         accountId,
       )) as Template;
-      template.transitCountries = setBaseTransitCountries(
-        template as SubmissionBase,
-        value,
-      ).transitCountries;
+      template.transitCountries = value;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -918,22 +901,29 @@ export default class TemplateController {
         }
       }
 
-      const submissionBasePlusId: SubmissionBasePlusId =
-        createBaseRecoveryFacilityDetail(template as SubmissionBase, value);
-
-      template.recoveryFacilityDetail =
-        submissionBasePlusId.submissionBase.recoveryFacilityDetail;
-
-      template.templateDetails.lastModified = new Date();
-      await this.repository.saveRecord(
-        templateContainerName,
-        { ...template },
-        accountId,
+      template.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
+        template.recoveryFacilityDetail,
+        value,
       );
-      return success({
-        status: value.status,
-        values: [{ id: submissionBasePlusId.id }],
-      });
+
+      if (
+        template.recoveryFacilityDetail.status === 'Started' ||
+        template.recoveryFacilityDetail.status === 'Complete'
+      ) {
+        template.templateDetails.lastModified = new Date();
+        await this.repository.saveRecord(
+          templateContainerName,
+          { ...template },
+          accountId,
+        );
+
+        return success({
+          status: value.status,
+          values: [{ id: template.recoveryFacilityDetail.values[0].id }],
+        });
+      } else {
+        return fromBoom(Boom.badRequest());
+      }
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -982,10 +972,10 @@ export default class TemplateController {
       }
 
       template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-        template as SubmissionBase,
+        template.recoveryFacilityDetail,
         rfdId,
         value,
-      ).recoveryFacilityDetail;
+      );
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -1033,9 +1023,9 @@ export default class TemplateController {
       }
 
       template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-        template as SubmissionBase,
+        template.recoveryFacilityDetail,
         rfdId,
-      ).recoveryFacilityDetail;
+      );
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(

@@ -18,7 +18,6 @@ import {
   RecoveryFacilityDetail,
   RecoveryFacilityPartial,
   Submission,
-  SubmissionBase,
   Template,
   TemplateSummary,
   TemplateSummaryPage,
@@ -28,15 +27,9 @@ import {
 import { validation } from '@wts/api/green-list-waste-export';
 import {
   paginateArray,
-  setBaseExporterDetail,
-  setBaseImporterDetail,
   createBaseCarriers,
-  setBaseNoCarriers,
   setBaseCarriers,
   deleteBaseCarriers,
-  setBaseCollectionDetail,
-  setBaseExitLocation,
-  setBaseTransitCountries,
   createBaseRecoveryFacilityDetail,
   setBaseRecoveryFacilityDetail,
   deleteBaseRecoveryFacilityDetail,
@@ -47,11 +40,6 @@ import {
   setBaseWasteDescription,
   doesTemplateAlreadyExist,
 } from '../../lib/util';
-
-export interface SubmissionBasePlusId {
-  submissionBase: SubmissionBase;
-  id: string;
-}
 
 export interface SubmissionRef {
   id: string;
@@ -500,7 +488,9 @@ export async function setWasteDescription(
   }
 
   const submissionBase = setBaseWasteDescription(
-    template as SubmissionBase,
+    template.wasteDescription,
+    template.carriers,
+    template.recoveryFacilityDetail,
     value,
   );
   template.wasteDescription =
@@ -538,11 +528,7 @@ export async function setExporterDetail(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
-  template.exporterDetail = setBaseExporterDetail(
-    template as SubmissionBase,
-    value,
-  ).exporterDetail;
-
+  template.exporterDetail = value;
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -573,11 +559,7 @@ export async function setImporterDetail(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
-  template.importerDetail = setBaseImporterDetail(
-    template as SubmissionBase,
-    value,
-  ).importerDetail;
-
+  template.importerDetail = value;
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -626,20 +608,23 @@ export async function createCarriers(
     }
   }
 
-  const submissionBasePlusId: SubmissionBasePlusId = createBaseCarriers(
-    template as SubmissionBase,
+  template.carriers = createBaseCarriers(
+    template.carriers,
+    template.wasteDescription,
     value,
   );
 
-  template.carriers = submissionBasePlusId.submissionBase.carriers;
-
   template.templateDetails.lastModified = new Date();
 
-  return Promise.resolve({
-    status: value.status,
-    transport: template.carriers.transport,
-    values: [{ id: submissionBasePlusId.id }],
-  });
+  if (template.carriers.status !== 'NotStarted') {
+    return Promise.resolve({
+      status: value.status,
+      transport: template.carriers.transport,
+      values: [{ id: template.carriers.values[0].id }],
+    });
+  } else {
+    return Promise.reject(new BadRequestError('Incorrect carrier status.'));
+  }
 }
 
 export async function getCarriers(
@@ -698,11 +683,7 @@ export async function setCarriers(
   }
 
   if (value.status === 'NotStarted') {
-    template.carriers = setBaseNoCarriers(
-      template as SubmissionBase,
-      carrierId,
-      value,
-    ).carriers;
+    template.carriers = value;
   } else {
     const carrier = value.values.find((c) => {
       return c.id === carrierId;
@@ -718,12 +699,11 @@ export async function setCarriers(
       return Promise.reject(new NotFoundError('Index not found.'));
     }
     template.carriers = setBaseCarriers(
-      template as SubmissionBase,
-      carrierId,
+      template.carriers,
       value,
       carrier,
       index,
-    ).carriers;
+    );
   }
 
   template.templateDetails.lastModified = new Date();
@@ -755,9 +735,10 @@ export async function deleteCarriers(
   }
 
   template.carriers = deleteBaseCarriers(
-    template as SubmissionBase,
+    template.carriers,
+    template.wasteDescription,
     carrierId,
-  ).carriers;
+  );
 
   template.templateDetails.lastModified = new Date();
 
@@ -789,11 +770,7 @@ export async function setCollectionDetail(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
-  template.collectionDetail = setBaseCollectionDetail(
-    template as SubmissionBase,
-    value,
-  ).collectionDetail;
-
+  template.collectionDetail = value;
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -824,11 +801,7 @@ export async function setExitLocation(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
-  template.ukExitLocation = setBaseExitLocation(
-    template as SubmissionBase,
-    value,
-  ).ukExitLocation;
-
+  template.ukExitLocation = value;
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -859,11 +832,7 @@ export async function setTransitCountries(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
-  template.transitCountries = setBaseTransitCountries(
-    template as SubmissionBase,
-    value,
-  ).transitCountries;
-
+  template.transitCountries = value;
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -917,18 +886,23 @@ export async function createRecoveryFacilityDetail(
     }
   }
 
-  const submissionBasePlusId: SubmissionBasePlusId =
-    createBaseRecoveryFacilityDetail(template as SubmissionBase, value);
-
-  template.recoveryFacilityDetail =
-    submissionBasePlusId.submissionBase.recoveryFacilityDetail;
+  template.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
+    template.recoveryFacilityDetail,
+    value,
+  );
 
   template.templateDetails.lastModified = new Date();
 
-  return Promise.resolve({
-    status: value.status,
-    values: [{ id: submissionBasePlusId.id }],
-  });
+  if (template.recoveryFacilityDetail.status === 'Started') {
+    return Promise.resolve({
+      status: value.status,
+      values: [{ id: template.recoveryFacilityDetail.values[0].id }],
+    });
+  } else {
+    return Promise.reject(
+      new BadRequestError('Incorrect recovery facility status.'),
+    );
+  }
 }
 
 export async function getRecoveryFacilityDetail(
@@ -1006,10 +980,10 @@ export async function setRecoveryFacilityDetail(
   }
 
   template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-    template as SubmissionBase,
+    template.recoveryFacilityDetail,
     rfdId,
     value,
-  ).recoveryFacilityDetail;
+  );
 
   if (
     template.recoveryFacilityDetail.status !== 'Started' &&
@@ -1049,9 +1023,9 @@ export async function deleteRecoveryFacilityDetail(
   }
 
   template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-    template as SubmissionBase,
+    template.recoveryFacilityDetail,
     rfdId,
-  ).recoveryFacilityDetail;
+  );
 
   template.templateDetails.lastModified = new Date();
 

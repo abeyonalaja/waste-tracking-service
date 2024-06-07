@@ -10,7 +10,6 @@ import {
   ImporterDetail,
   NumberOfSubmissions,
   RecoveryFacilityDetail,
-  SubmissionBase,
   CancellationType,
   SubmissionConfirmation,
   SubmissionDeclaration,
@@ -26,11 +25,6 @@ import {
 } from '@wts/api/waste-tracking-gateway';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { Logger } from 'winston';
-
-export interface SubmissionBasePlusId {
-  submissionBase: SubmissionBase;
-  id: string;
-}
 
 export interface SubmissionRef {
   id: string;

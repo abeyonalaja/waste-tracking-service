@@ -2,29 +2,17 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   DraftCarrier,
   DraftCarriers,
-  DraftCollectionDetail,
-  DraftUkExitLocation,
-  DraftExporterDetail,
-  DraftImporterDetail,
   DraftSubmission,
-  DraftTransitCountries,
   DraftWasteDescription,
   DraftWasteQuantity,
   DraftRecoveryFacility,
   Submission,
-  SubmissionBase,
   validation,
   DraftCarrierPartial,
   DraftRecoveryFacilityDetails,
   DraftRecoveryFacilityPartial,
   WasteQuantity,
 } from '../model';
-
-export interface SubmissionBasePlusId {
-  submissionBase: SubmissionBase;
-  id: string;
-}
-
 export function setWasteQuantityUnit(
   wasteQuantity: WasteQuantity,
   submission: Submission,
@@ -245,27 +233,33 @@ export function copyRecoveryFacilities(
 }
 
 export function setBaseWasteDescription(
-  submissionBase: SubmissionBase,
+  draftWasteDescription: DraftWasteDescription,
+  draftCarriers: DraftCarriers,
+  draftRecoveryFacilityDetail: DraftRecoveryFacilityDetails,
   value: DraftWasteDescription,
-): SubmissionBase {
-  let recoveryFacilityDetail: SubmissionBase['recoveryFacilityDetail'] =
-    submissionBase.recoveryFacilityDetail.status === 'CannotStart' &&
+): {
+  wasteDescription: DraftWasteDescription;
+  carriers: DraftCarriers;
+  recoveryFacilityDetail: DraftRecoveryFacilityDetails;
+} {
+  let recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
+    draftRecoveryFacilityDetail.status === 'CannotStart' &&
     value.status !== 'NotStarted' &&
     value.wasteCode !== undefined
       ? { status: 'NotStarted' }
-      : submissionBase.recoveryFacilityDetail;
+      : draftRecoveryFacilityDetail;
 
-  let carriers: SubmissionBase['carriers'] = submissionBase.carriers;
+  let carriers: DraftSubmission['carriers'] = draftCarriers;
 
   if (
-    submissionBase.wasteDescription.status === 'NotStarted' &&
+    draftWasteDescription.status === 'NotStarted' &&
     value.status !== 'NotStarted' &&
     value.wasteCode?.type === 'NotApplicable'
   ) {
     carriers.transport = false;
   }
 
-  if (isWasteCodeChangingBulkToSmall(submissionBase.wasteDescription, value)) {
+  if (isWasteCodeChangingBulkToSmall(draftWasteDescription, value)) {
     if (value.status === 'Started') {
       value.ewcCodes = undefined;
       value.nationalCode = undefined;
@@ -277,7 +271,7 @@ export function setBaseWasteDescription(
     recoveryFacilityDetail = { status: 'NotStarted' };
   }
 
-  if (isWasteCodeChangingSmallToBulk(submissionBase.wasteDescription, value)) {
+  if (isWasteCodeChangingSmallToBulk(draftWasteDescription, value)) {
     if (value.status === 'Started') {
       value.ewcCodes = undefined;
       value.nationalCode = undefined;
@@ -290,10 +284,7 @@ export function setBaseWasteDescription(
   }
 
   if (
-    isWasteCodeChangingBulkToBulkDifferentType(
-      submissionBase.wasteDescription,
-      value,
-    )
+    isWasteCodeChangingBulkToBulkDifferentType(draftWasteDescription, value)
   ) {
     if (value.status === 'Started') {
       value.ewcCodes = undefined;
@@ -306,275 +297,204 @@ export function setBaseWasteDescription(
     recoveryFacilityDetail = { status: 'NotStarted' };
   }
 
-  if (
-    isWasteCodeChangingBulkToBulkSameType(
-      submissionBase.wasteDescription,
-      value,
-    )
-  ) {
+  if (isWasteCodeChangingBulkToBulkSameType(draftWasteDescription, value)) {
     if (value.status === 'Started') {
       value.ewcCodes = undefined;
       value.nationalCode = undefined;
       value.description = undefined;
     }
 
-    if (submissionBase.carriers.status !== 'NotStarted') {
+    if (draftCarriers.status !== 'NotStarted') {
       carriers = {
         status: 'Started',
         transport: true,
-        values: submissionBase.carriers.values,
+        values: draftCarriers.values,
       };
     }
 
     if (
-      submissionBase.recoveryFacilityDetail.status === 'Started' ||
-      submissionBase.recoveryFacilityDetail.status === 'Complete'
+      draftRecoveryFacilityDetail.status === 'Started' ||
+      draftRecoveryFacilityDetail.status === 'Complete'
     ) {
       recoveryFacilityDetail = {
         status: 'Started',
-        values: submissionBase.recoveryFacilityDetail.values,
+        values: draftRecoveryFacilityDetail.values,
       };
     }
   }
 
-  submissionBase.wasteDescription = value;
-  submissionBase.carriers = carriers;
-  submissionBase.recoveryFacilityDetail = recoveryFacilityDetail;
+  draftWasteDescription = value;
+  draftCarriers = carriers;
+  draftRecoveryFacilityDetail = recoveryFacilityDetail;
 
-  return submissionBase;
-}
-
-export function setBaseExporterDetail(
-  submissionBase: SubmissionBase,
-  value: DraftExporterDetail,
-): SubmissionBase {
-  submissionBase.exporterDetail = value;
-
-  return submissionBase;
-}
-
-export function setBaseImporterDetail(
-  submissionBase: SubmissionBase,
-  value: DraftImporterDetail,
-): SubmissionBase {
-  submissionBase.importerDetail = value;
-
-  return submissionBase;
+  return {
+    wasteDescription: draftWasteDescription,
+    carriers: draftCarriers,
+    recoveryFacilityDetail: draftRecoveryFacilityDetail,
+  };
 }
 
 export function createBaseCarriers(
-  submissionBase: SubmissionBase,
+  carrier: DraftCarriers,
   value: Omit<DraftCarriers, 'transport' | 'values'>,
-): SubmissionBasePlusId {
-  const submissionBasePlusId = {
-    submissionBase: submissionBase,
-    id: uuidv4(),
-  };
-  const transport: DraftCarriers['transport'] =
-    submissionBase.wasteDescription.status !== 'NotStarted' &&
-    submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
-      ? false
-      : true;
+): DraftCarriers {
+  const uuid = uuidv4();
 
-  if (submissionBase.carriers.status === 'NotStarted') {
-    submissionBasePlusId.submissionBase.carriers = {
+  if (carrier.status === 'NotStarted') {
+    carrier = {
       status: value.status as 'Started',
-      transport: transport,
-      values: [{ id: submissionBasePlusId.id }],
+      transport: carrier.transport,
+      values: [{ id: uuid }],
     };
 
-    return submissionBasePlusId;
+    return carrier;
   }
 
   const carriers: DraftCarrierPartial[] = [];
-  for (const c of submissionBase.carriers.values) {
+  for (const c of carrier.values) {
     carriers.push(c);
   }
-  carriers.push({ id: submissionBasePlusId.id });
-  submissionBasePlusId.submissionBase.carriers = {
+  carriers.push({ id: uuid });
+  carrier = {
     status: value.status as 'Started',
-    transport: transport,
+    transport: carrier.transport,
     values: carriers,
   };
 
-  return submissionBasePlusId;
-}
-
-export function setBaseNoCarriers(
-  submissionBase: SubmissionBase,
-  carrierId: string,
-  value: DraftCarriers,
-): SubmissionBase {
-  if (value.status === 'NotStarted') {
-    submissionBase.carriers = value;
-
-    return submissionBase;
-  }
-
-  return submissionBase;
+  return carrier;
 }
 
 export function setBaseCarriers(
-  submissionBase: SubmissionBase,
-  carrierId: string,
+  carriers: DraftCarriers,
   value: DraftCarriers,
   carrier: DraftCarrier | DraftCarrierPartial,
   index: number,
-): SubmissionBase {
+): DraftCarriers {
   if (
-    submissionBase !== undefined &&
-    submissionBase.carriers.status !== 'NotStarted' &&
+    carriers !== undefined &&
+    carriers.status !== 'NotStarted' &&
     value.status !== 'NotStarted'
   ) {
-    submissionBase.carriers.status = value.status;
-    submissionBase.carriers.values[index] = carrier;
+    carriers.status = value.status;
+    carriers.values[index] = carrier;
   }
-  return submissionBase;
+  return carriers;
 }
 
-export function deleteBaseCarriers(
-  submissionBase: SubmissionBase,
-  carrierId: string,
-): SubmissionBase {
-  if (submissionBase.carriers.status !== 'NotStarted') {
-    const index = submissionBase.carriers.values.findIndex((c) => {
-      return c.id === carrierId;
-    });
-
-    submissionBase.carriers.values.splice(index, 1);
-    if (submissionBase.carriers.values.length === 0) {
+export function updateCarrierTransport(
+  wasteDescription: DraftWasteDescription,
+  carriers: DraftCarriers,
+): DraftCarriers {
+  if (carriers.status !== 'NotStarted') {
+    if (carriers.values.length === 0) {
       const transport: DraftCarriers['transport'] =
-        submissionBase.wasteDescription.status !== 'NotStarted' &&
-        submissionBase.wasteDescription.wasteCode?.type === 'NotApplicable'
+        wasteDescription.status !== 'NotStarted' &&
+        wasteDescription.wasteCode?.type === 'NotApplicable'
           ? false
           : true;
 
-      submissionBase.carriers = {
+      return {
         status: 'NotStarted',
         transport: transport,
       };
     }
   }
-
-  return submissionBase;
+  return carriers;
 }
 
-export function setBaseCollectionDetail(
-  submissionBase: SubmissionBase,
-  value: DraftCollectionDetail,
-): SubmissionBase {
-  submissionBase.collectionDetail = value;
-
-  return submissionBase;
-}
-
-export function setBaseExitLocation(
-  submissionBase: SubmissionBase,
-  value: DraftUkExitLocation,
-): SubmissionBase {
-  submissionBase.ukExitLocation = value;
-
-  return submissionBase;
-}
-
-export function setBaseTransitCountries(
-  submissionBase: SubmissionBase,
-  value: DraftTransitCountries,
-): SubmissionBase {
-  submissionBase.transitCountries = value;
-
-  return submissionBase;
+export function deleteBaseCarriers(
+  carriers: DraftCarriers,
+  carrierId: string,
+): DraftCarriers {
+  if (carriers.status !== 'NotStarted') {
+    const index = carriers.values.findIndex((c) => {
+      return c.id === carrierId;
+    });
+    carriers.values.splice(index, 1);
+  }
+  return carriers;
 }
 
 export function createBaseRecoveryFacilityDetail(
-  submissionBase: SubmissionBase,
+  recoveryFacilityDetail: DraftRecoveryFacilityDetails,
   value: Omit<DraftRecoveryFacilityDetails, 'values'>,
-): SubmissionBasePlusId {
-  const submissionBasePlusId = {
-    submissionBase: submissionBase,
-    id: uuidv4(),
-  };
+): DraftRecoveryFacilityDetails {
   if (
-    submissionBase.recoveryFacilityDetail.status !== 'Started' &&
-    submissionBase.recoveryFacilityDetail.status !== 'Complete'
+    recoveryFacilityDetail.status !== 'Started' &&
+    recoveryFacilityDetail.status !== 'Complete'
   ) {
-    submissionBasePlusId.submissionBase.recoveryFacilityDetail = {
+    recoveryFacilityDetail = {
       status: value.status as 'Started',
-      values: [{ id: submissionBasePlusId.id }],
+      values: [{ id: uuidv4() }],
     };
-
-    return submissionBasePlusId;
+    return recoveryFacilityDetail;
   }
 
   const facilities: DraftRecoveryFacilityPartial[] = [];
-  for (const rf of submissionBase.recoveryFacilityDetail.values) {
+  for (const rf of recoveryFacilityDetail.values) {
     facilities.push(rf);
   }
-  facilities.push({ id: submissionBasePlusId.id });
-  submissionBasePlusId.submissionBase.recoveryFacilityDetail = {
+  facilities.push({ id: recoveryFacilityDetail.values[0].id });
+  recoveryFacilityDetail = {
     status: value.status as 'Started',
     values: facilities,
   };
 
-  return submissionBasePlusId;
+  return recoveryFacilityDetail;
 }
 
 export function setBaseRecoveryFacilityDetail(
-  submissionBase: SubmissionBase,
+  recoveryFacilityDetail: DraftRecoveryFacilityDetails,
   rfdId: string,
   value: DraftRecoveryFacilityDetails,
-): SubmissionBase {
-  if (submissionBase !== undefined) {
+): DraftRecoveryFacilityDetails {
+  if (recoveryFacilityDetail !== undefined) {
     if (
-      submissionBase.recoveryFacilityDetail.status === 'Started' ||
-      submissionBase.recoveryFacilityDetail.status === 'Complete'
+      recoveryFacilityDetail.status === 'Started' ||
+      recoveryFacilityDetail.status === 'Complete'
     ) {
       if (value.status !== 'Started' && value.status !== 'Complete') {
-        submissionBase.recoveryFacilityDetail = value;
-        return submissionBase;
+        recoveryFacilityDetail = value;
+        return recoveryFacilityDetail;
       }
 
       const recoveryFacility = value.values.find((rf) => {
         return rf.id === rfdId;
       });
 
-      const index = submissionBase.recoveryFacilityDetail.values.findIndex(
-        (rf) => {
-          return rf.id === rfdId;
-        },
-      );
-      submissionBase.recoveryFacilityDetail.status = value.status;
-      submissionBase.recoveryFacilityDetail.values[index] =
+      const index = recoveryFacilityDetail.values.findIndex((rf) => {
+        return rf.id === rfdId;
+      });
+      recoveryFacilityDetail.status = value.status;
+      recoveryFacilityDetail.values[index] =
         recoveryFacility as DraftRecoveryFacility;
     }
   }
 
-  return submissionBase;
+  return recoveryFacilityDetail;
 }
 
 export function deleteBaseRecoveryFacilityDetail(
-  submissionBase: SubmissionBase,
+  recoveryFacilityDetails: DraftRecoveryFacilityDetails,
   rfdId: string,
-): SubmissionBase {
+): DraftRecoveryFacilityDetails {
   if (
-    submissionBase.recoveryFacilityDetail.status === 'Started' ||
-    submissionBase.recoveryFacilityDetail.status === 'Complete'
+    recoveryFacilityDetails.status === 'Started' ||
+    recoveryFacilityDetails.status === 'Complete'
   ) {
-    const index = submissionBase.recoveryFacilityDetail.values.findIndex(
-      (rf) => {
-        return rf.id === rfdId;
-      },
-    );
+    const index = recoveryFacilityDetails.values.findIndex((rf) => {
+      return rf.id === rfdId;
+    });
 
     if (index !== -1) {
-      submissionBase.recoveryFacilityDetail.values.splice(index, 1);
-      if (submissionBase.recoveryFacilityDetail.values.length === 0) {
-        submissionBase.recoveryFacilityDetail = { status: 'NotStarted' };
+      recoveryFacilityDetails.values.splice(index, 1);
+      if (recoveryFacilityDetails.values.length === 0) {
+        recoveryFacilityDetails = { status: 'NotStarted' };
       }
     }
   }
 
-  return submissionBase;
+  return recoveryFacilityDetails;
 }
 
 export function isWasteCodeChangingBulkToSmall(
@@ -624,9 +544,7 @@ export function isWasteCodeChangingBulkToBulkSameType(
     currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
     newWasteDescription.status !== 'NotStarted' &&
     currentWasteDescription.wasteCode?.type ===
-      newWasteDescription.wasteCode?.type &&
-    currentWasteDescription.wasteCode?.code !==
-      newWasteDescription.wasteCode?.code
+      newWasteDescription.wasteCode?.type
   );
 }
 

@@ -446,13 +446,3 @@ export const setDraftSubmissionDeclaration: Method = {
   name: 'setDraftSubmissionDeclaration',
   httpVerb: 'POST',
 };
-
-export type SubmissionBase = { id: string } & Omit<
-  DraftSubmission,
-  | 'reference'
-  | 'wasteQuantity'
-  | 'collectionDate'
-  | 'submissionConfirmation'
-  | 'submissionDeclaration'
-  | 'submissionState'
->;
