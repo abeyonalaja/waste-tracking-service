@@ -89,6 +89,16 @@ describe(BatchController, () => {
       const id = faker.datatype.uuid();
       const value: SubmissionFlattenedDownload[] = [
         {
+          producerAddressLine1: '110 Bishopsgate',
+          producerAddressLine2: 'Mulberry street',
+          producerContactEmail: 'guy@test.com',
+          producerContactName: 'Pro Name',
+          producerContactPhone: '00447811111213',
+          producerCountry: 'Wales',
+          producerOrganisationName: 'Producer org name',
+          producerPostcode: 'CV12RD',
+          producerSicCode: '208016',
+          producerTownCity: 'London',
           wasteCollectionAddressLine1: '110 Bishopsgate',
           wasteCollectionAddressLine2: 'Mulberry street',
           wasteCollectionTownCity: 'London',

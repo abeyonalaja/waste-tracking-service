@@ -292,6 +292,16 @@ describe(CosmosBatchRepository, () => {
       const result = await subject.downloadProducerCsv(id);
       expect(result).toEqual([
         {
+          producerAddressLine1: '110 Bishopsgate',
+          producerAddressLine2: 'Mulberry street',
+          producerContactEmail: 'guy@test.com',
+          producerContactName: 'Pro Name',
+          producerContactPhone: '00447811111213',
+          producerCountry: 'Wales',
+          producerOrganisationName: 'Producer org name',
+          producerPostcode: 'CV12RD',
+          producerSicCode: '208016',
+          producerTownCity: 'London',
           wasteCollectionAddressLine1: '110 Bishopsgate',
           wasteCollectionAddressLine2: 'Mulberry street',
           wasteCollectionTownCity: 'London',
@@ -329,17 +339,17 @@ describe(CosmosBatchRepository, () => {
             'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
           firstWasteTypePhysicalForm: 'Gas',
           firstWasteTypeWasteQuantity: '1.1',
-          firstWasteTypeWasteQuantityUnit: 'Tonne',
-          firstWasteTypeWasteQuantityType: 'ActualData',
+          firstWasteTypeWasteQuantityUnit: 'tonnes',
+          firstWasteTypeWasteQuantityType: 'Actual',
           firstWasteTypeChemicalAndBiologicalComponentsString:
             'Chlorinated solvents',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
             '20.35',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
             'mg/kg',
-          firstWasteTypeHasHazardousProperties: 'true',
+          firstWasteTypeHasHazardousProperties: 'Y',
           firstWasteTypeHazardousWasteCodesString: 'HP1',
-          firstWasteTypeContainsPops: 'true',
+          firstWasteTypeContainsPops: 'Y',
           firstWasteTypePopsString: 'Endosulfan',
           firstWasteTypePopsConcentrationsString: '9823.75',
           firstWasteTypePopsConcentrationUnitsString: 'mg/k',

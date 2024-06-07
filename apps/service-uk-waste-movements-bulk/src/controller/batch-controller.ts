@@ -282,7 +282,7 @@ export class BatchController {
       )) as api.SubmissionFlattenedDownload[];
 
       let csvText = downloadSections + '\n' + downloadHeaders + '\n';
-      console.log(downloadHeaders);
+
       for (const submission of result) {
         const keys = Object.keys(submission);
         const values = keys.map((key) => {

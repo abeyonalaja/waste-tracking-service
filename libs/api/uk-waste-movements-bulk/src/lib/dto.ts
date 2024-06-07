@@ -379,7 +379,8 @@ export type SubmissionFlattened = ProducerDetailFlattened &
 
 export type SubmissionFlattenedDownload = {
   transactionId: string;
-} & WasteTransportationDetailFlattened &
+} & Omit<ProducerDetailFlattened, 'customerReference'> &
+  WasteTransportationDetailFlattened &
   WasteCollectionDetailFlattened &
   CarrierDetailFlattened &
   WasteTypeDetailFlattened &
