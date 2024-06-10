@@ -490,7 +490,7 @@ const CollectionDetails = (): React.ReactNode => {
       const newErrors = {
         addressLine1: validateAddress(addressDetails?.addressLine1),
         townCity: validateTownCity(addressDetails?.townCity),
-        postcode: validatePostcode(addressDetails?.postcode),
+        postcode: validatePostcode(addressDetails?.postcode, true),
         country: validateCountrySelect(addressDetails?.country),
       };
       if (isNotEmpty(newErrors)) {

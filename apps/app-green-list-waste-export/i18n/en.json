@@ -115,7 +115,7 @@
   "address.addressLine2": "Address line 2 (optional)",
   "address.addressLine.hint": "Use a comma to separate multiple lines",
   "address.townCity": "Town or city",
-  "address.postcode": "Postcode",
+  "address.postcode": "Postcode (optional)",
   "address.postcodeOptional": "Postcode (optional)",
   "address.country": "Country",
   "address.change": "Change address",
