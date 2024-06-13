@@ -159,7 +159,6 @@ export function SubmittedFilters({
                   />
                 </div>
               </div>
-
               <div className="govuk-date-input__item">
                 <div className="govuk-form-group">
                   <label

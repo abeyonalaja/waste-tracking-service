@@ -95,4 +95,23 @@ describe('AccordionSection component', () => {
 
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
+
+  it('has an id on the show/hide-all-button', () => {
+    render(
+      <AccordionSection
+        id="section1"
+        title="Section Title"
+        summary="Section Summary"
+        sections={sections}
+        toggle={toggle}
+      >
+        <div>Child Content</div>
+      </AccordionSection>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'id',
+      'show-hide-button-section1',
+    );
+  });
 });

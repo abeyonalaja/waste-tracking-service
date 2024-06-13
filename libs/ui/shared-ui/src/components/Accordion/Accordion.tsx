@@ -33,6 +33,7 @@ export function Accordion({
         <button
           type="button"
           className="govuk-accordion__show-all"
+          id="show-hide-all-button"
           aria-expanded={allSectionsExpanded}
           onClick={toggleAllSections}
         >

@@ -95,4 +95,15 @@ describe('Accordion component', () => {
       section3: true,
     });
   });
+
+  it('has an id on the show/hide button', () => {
+    render(
+      <Accordion id="test-id" sections={sections} setSections={setSections}>
+        <div>Child Content</div>
+      </Accordion>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('id', 'show-hide-all-button');
+  });
 });

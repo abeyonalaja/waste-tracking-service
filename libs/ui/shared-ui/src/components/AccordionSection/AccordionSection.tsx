@@ -36,6 +36,7 @@ export function AccordionSection({
           <button
             type="button"
             aria-controls={`${id}-content`}
+            id={`show-hide-button-${id}`}
             className="govuk-accordion__section-button"
             aria-expanded={expanded}
             aria-label={title}
