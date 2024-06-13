@@ -24,7 +24,8 @@ export default function handler(
     COOKIE_CONSENT_NAME: process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME
       ? process.env.NEXT_PUBLIC_COOKIE_CONSENT_NAME
       : undefined,
-    APPINSIGHTS_CONNECTION_STRING: process.env.APPINSIGHTS_CONNECTION_STRING,
+    APPINSIGHTS_CONNECTION_STRING:
+      process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING,
   };
 
   return res.status(200).json(environmentVariables);
