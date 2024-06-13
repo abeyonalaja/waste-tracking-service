@@ -544,7 +544,9 @@ export function isWasteCodeChangingBulkToBulkSameType(
     currentWasteDescription.wasteCode?.type !== 'NotApplicable' &&
     newWasteDescription.status !== 'NotStarted' &&
     currentWasteDescription.wasteCode?.type ===
-      newWasteDescription.wasteCode?.type
+      newWasteDescription.wasteCode?.type &&
+    currentWasteDescription.wasteCode?.code !==
+      newWasteDescription.wasteCode?.code
   );
 }
 
