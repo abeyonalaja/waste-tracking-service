@@ -4,8 +4,9 @@ import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { AzureMonitorTraceExporter } from '@azure/monitor-opentelemetry-exporter';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
 
-if (process.env['APPINSIGHTS_CONNECTION_STRING']) {
-  const connectionString = process.env['APPINSIGHTS_CONNECTION_STRING'];
+if (process.env['NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING']) {
+  const connectionString =
+    process.env['NEXT_PUBLC_APPINSIGHTS_CONNECTION_STRING'];
 
   const sdk = new NodeSDK({
     resource: new Resource({
