@@ -20,6 +20,7 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
+  Paragraph,
 } from 'components';
 import { isNotEmpty, validateNationalCode } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
@@ -231,9 +232,9 @@ const NationalCode = (): React.ReactNode => {
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                       {t('exportJourney.nationalCode.title')}
                     </GovUK.Fieldset.Legend>
-                    <GovUK.Paragraph>
+                    <Paragraph>
                       {t('exportJourney.nationalCode.intro')}
-                    </GovUK.Paragraph>
+                    </Paragraph>
                     <GovUK.MultiChoice
                       mb={6}
                       hint={t('exportJourney.nationalCode.hint')}

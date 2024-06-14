@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import * as GovUK from 'govuk-react';
-import { AppLink } from 'components';
+import { AppLink, Paragraph } from 'components';
 import { BulkSubmissionValidationRowError } from '@wts/api/waste-tracking-gateway';
 
 interface ErrorRowTableProps {
@@ -17,9 +17,9 @@ export function ErrorSummary({ errors }: ErrorRowTableProps): React.ReactNode {
       <GovUK.H2 size="M">
         {t('multiples.errorSummaryPage.errorSummary.title')}
       </GovUK.H2>
-      <GovUK.Paragraph>
+      <Paragraph>
         {t('multiples.errorSummaryPage.errorSummary.startParagraph')}
-      </GovUK.Paragraph>
+      </Paragraph>
       <GovUK.Table
         head={
           <GovUK.Table.Row>

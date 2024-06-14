@@ -242,17 +242,17 @@ const ExportSubmitted = (): React.ReactNode => {
 
                     <Paragraph>
                       {t('exportJourney.exportSubmitted.secondListHeader')}
-                      <StyledUnorderedList>
-                        <GovUK.ListItem>
-                          {' '}
-                          {t('exportJourney.exportSubmitted.secondListItemOne')}
-                        </GovUK.ListItem>
-                        <GovUK.ListItem>
-                          {' '}
-                          {t('exportJourney.exportSubmitted.secondListItemTwo')}
-                        </GovUK.ListItem>
-                      </StyledUnorderedList>
                     </Paragraph>
+                    <StyledUnorderedList>
+                      <GovUK.ListItem>
+                        {' '}
+                        {t('exportJourney.exportSubmitted.secondListItemOne')}
+                      </GovUK.ListItem>
+                      <GovUK.ListItem>
+                        {' '}
+                        {t('exportJourney.exportSubmitted.secondListItemTwo')}
+                      </GovUK.ListItem>
+                    </StyledUnorderedList>
                   </>
                 )}
 

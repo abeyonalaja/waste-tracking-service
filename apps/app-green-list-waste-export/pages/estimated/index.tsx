@@ -522,9 +522,9 @@ const UpdateAnnex7 = (): React.ReactNode => {
                         {t('exportJourney.updateAnnexSeven.delete.title')}
                       </GovUK.Fieldset.Legend>
                     </GovUK.Fieldset>
-                    <GovUK.Paragraph>
+                    <Paragraph>
                       {t('exportJourney.updateAnnexSeven.delete.paragraph')}
-                    </GovUK.Paragraph>
+                    </Paragraph>
                     <GovUK.FormGroup>
                       <GovUK.MultiChoice
                         label=""

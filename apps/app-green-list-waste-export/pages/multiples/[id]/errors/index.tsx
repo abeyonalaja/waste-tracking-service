@@ -75,9 +75,7 @@ export default function Index(): JSX.Element {
         <GovUK.Heading size="L">
           {t('multiples.errorSummaryPage.heading')}
         </GovUK.Heading>
-        <GovUK.Paragraph>
-          {t('multiples.errorSummaryPage.leadParagraph')}
-        </GovUK.Paragraph>
+        <Paragraph>{t('multiples.errorSummaryPage.leadParagraph')}</Paragraph>
         <Paragraph>
           {t('multiples.errorSummaryPage.linkParagraphStart')}
           <AppLink href={'/multiples/guidance'} target="_blank">

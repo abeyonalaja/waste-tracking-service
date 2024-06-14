@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import * as GovUK from 'govuk-react';
-import { AppLink } from 'components';
+import { AppLink, Paragraph } from 'components';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { BLACK, YELLOW, WHITE } from 'govuk-colours';
@@ -160,12 +160,10 @@ export const GuidanceInteruption = ({
       <MainHeading size="XL">
         {t('multiples.guidance.bouncePage.title')}
       </MainHeading>
-      <GovUK.Paragraph>
-        {t('multiples.guidance.bouncePage.firstParagraph')}
-      </GovUK.Paragraph>
-      <GovUK.Paragraph>
+      <Paragraph>{t('multiples.guidance.bouncePage.firstParagraph')}</Paragraph>
+      <Paragraph>
         {t('multiples.guidance.bouncePage.secondParagraph')}
-      </GovUK.Paragraph>
+      </Paragraph>
       <DocumentSection>
         <Thumbnail>
           <AppLink href={'/multiples/guidance'} target="_blank">

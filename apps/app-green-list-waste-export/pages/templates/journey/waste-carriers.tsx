@@ -21,6 +21,7 @@ import {
   Loading,
   SummaryCard,
   SummaryList,
+  Paragraph,
   CountrySelector,
 } from 'components';
 import {
@@ -950,12 +951,12 @@ const WasteCarriers = (): React.ReactNode => {
                             'exportJourney.wasteCarrier.carriersPage.removeQuestion',
                           )}
                         </GovUK.Fieldset.Legend>
-                        <GovUK.Paragraph>
+                        <Paragraph>
                           {
                             carrierPage.carrierData.addressDetails
                               ?.organisationName
                           }
-                        </GovUK.Paragraph>
+                        </Paragraph>
                         <GovUK.MultiChoice
                           mb={6}
                           label=""

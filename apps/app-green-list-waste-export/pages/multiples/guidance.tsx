@@ -6,6 +6,7 @@ import {
   Header,
   BreadCrumbLink,
   BreadcrumbWrap,
+  Paragraph,
 } from 'components';
 import Head from 'next/head';
 import styled from 'styled-components';
@@ -73,7 +74,7 @@ const Guidance = (): React.ReactNode => {
             </GovUK.LeadParagraph>
             <GovUK.SectionBreak level="LARGE" visible />
 
-            <GovUK.Paragraph>Contents</GovUK.Paragraph>
+            <Paragraph>Contents</Paragraph>
             <GovUK.UnorderedList>
               <ListItemDashed>
                 <AppLink href={'#details'}>Details</AppLink>
@@ -103,41 +104,39 @@ const Guidance = (): React.ReactNode => {
             <GovUK.H2 size="MEDIUM">
               <a id="details">Details</a>
             </GovUK.H2>
-            <GovUK.Paragraph>
+            <Paragraph>
               Use this CSV template and guidance if you want to submit multiple
               Annex VII records at the same time to the Export waste from the UK
               service https://track-waste-prd.azure.defra.cloud/. This is
               instead of submitting one Annex VII record at a time.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
-              It’s important the information you enter is:
-            </GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>It’s important the information you enter is:</Paragraph>
             <GovUK.UnorderedList>
               <GovUK.ListItem>accurate</GovUK.ListItem>
               <GovUK.ListItem>spelt correctly</GovUK.ListItem>
               <GovUK.ListItem>formatted correctly</GovUK.ListItem>
             </GovUK.UnorderedList>
-            <GovUK.Paragraph>
+            <Paragraph>
               Make sure you check for errors before you upload your file.
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.H3 size="SMALL">Documents </GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               Green list waste multiple exports: Multiple Annex VII CSV template
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.H3 size="SMALL">Multiple Annex VII CSV template</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               You need to fill in the CSV template with information you would
               usually provide when you complete an Annex VII record. The
               template is designed so that it is accessible for most users and
               is compatible with as many programs as possible. For example, it
               does not include colours, freeze panes or pre-populated dropdowns,
               as these features do not work on all systems.
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.H3 size="SMALL">Get help with technical issues</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               You can contact the waste tracking service support team if you
               need help with a technical issue, such as:
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.UnorderedList>
               <GovUK.ListItem>
                 problems with uploading green list waste export details using a
@@ -147,21 +146,21 @@ const Guidance = (): React.ReactNode => {
                 any other technical service-related query
               </GovUK.ListItem>
             </GovUK.UnorderedList>
-            <GovUK.Paragraph>
+            <Paragraph>
               You can contact the waste tracking service support team by
               emailing wastetracking@defra.gov.uk
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.H3 size="SMALL">Get help with regulatory issues</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               The waste tracking service support team will not be able to answer
               regulatory questions. You should contact your relevant regulatory
               team instead.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Your national regulatory team will not be able to answer technical
               questions about service problems.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Use this guidance to help you complete the CSV template to upload
               multiple exports at a time. If there are any sections or questions
               that do not apply to your shipment, leave the cell blank. You must
@@ -173,40 +172,40 @@ const Guidance = (): React.ReactNode => {
               section that applies to your shipment (for example, a waste
               carrier or recovery facility), you need to complete all relevant
               details for that section and cannot leave any cells blank.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H2 size="MEDIUM">
               <a id="reference">Your unique reference</a>
             </GovUK.H2>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               You need to use a unique reference for each new record you submit.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Your unique reference can be anything that helps you to identify
               your shipment. For example, it could match a reference on a system
               you already use to identify shipments.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Your unique reference can only have numbers and letters and should
               be a maximum of 20 characters. For example, ABC10001.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Make sure your unique reference is different for each shipment.
               Each row on the CSV template is a unique shipment. For example, if
               you put ABC10001 in one row, then you might put ABC10002 in the
               next to show it is different.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H2 size="MEDIUM">
               <a id="waste">Waste codes and description</a>
             </GovUK.H2>
             <GovUK.H3 size="SMALL">Waste codes</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               Not all waste codes will apply to your waste export. Enter all the
               waste codes (opens in new tab) that are relevant to your shipment
               in the relevant columns in the template.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.Table>
               <GovUK.Table.Row>
@@ -278,28 +277,28 @@ const Guidance = (): React.ReactNode => {
 
             <GovUK.H3 size="SMALL">Waste description</GovUK.H3>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               Enter a description. Give the usual description of the waste. For
               example, `baled PET bottles, bagged HDPE pellets or OCC
               paper.&rsquo;
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Your description must be 100 characters or less.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H2 size="MEDIUM">
               <a id="quantity">Quantity of waste and description</a>
             </GovUK.H2>
 
             <GovUK.H3 size="SMALL">Waste quantity</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               Provide the waste quantity either in tonnes or in cubic metres.
               You do not need to provide both.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               For example, if you provided the waste quantity in tonnes, leave
               the volume cell blank.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.Table>
               <GovUK.Table.Row>
@@ -368,24 +367,24 @@ const Guidance = (): React.ReactNode => {
 
             <GovUK.H3 size="SMALL">Waste collection (shipping) date</GovUK.H3>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               Enter the date the waste will be collected. The collection date is
               also known as the shipping date.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Use slashes between the day, month and year. For example,
               &lsquo;06/10/2024&rsquo;.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H4 size="SMALL">
               Estimated or actual waste collection date
             </GovUK.H4>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               Enter whether the waste collection date is an estimate or the
               actual date. Enter &lsquo;estimated&rsquo; or
               &lsquo;actual&rsquo;.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H2 size="MEDIUM">
               <a id="exporter">Exporter and importer details</a>
@@ -394,14 +393,14 @@ const Guidance = (): React.ReactNode => {
               Exporter (person who organises the shipment) details
             </GovUK.H3>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               The exporter is also known as the person who organises the
               shipment. This section must be completed in full.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               The email address of the exporter will be where we will send the
               confirmation email of your submitted exports.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H3 size="SMALL">
               Exporter address and contact details
@@ -483,10 +482,10 @@ const Guidance = (): React.ReactNode => {
 
             <GovUK.H3 size="SMALL">Importer (consignee) details</GovUK.H3>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               The importer is also known as the consignee. This section must be
               completed in full.
-            </GovUK.Paragraph>
+            </Paragraph>
             <GovUK.H3 size="SMALL">
               Importer (consignee) address and contact details
             </GovUK.H3>
@@ -571,17 +570,17 @@ const Guidance = (): React.ReactNode => {
               <a id="journey">Journey of waste</a>
             </GovUK.H2>
             <GovUK.H3 size="SMALL">Waste carrier details</GovUK.H3>
-            <GovUK.Paragraph>
+            <Paragraph>
               You can enter up to 5 sets of information for any carriers
               involved in the transportation of your waste. If you do not have a
               particular waste carrier`s information, you can leave these
               sections blank.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               If you start to fill in a section for a particular waste carrier,
               you need to complete all relevant details for that section and
               cannot leave any cells blank.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H3 size="SMALL">
               Waste carrier address and contact details
@@ -688,39 +687,39 @@ const Guidance = (): React.ReactNode => {
               </GovUK.Table.Row>
             </GovUK.Table>
 
-            <GovUK.Paragraph>
+            <Paragraph>
               Countries the waste will travel through (transit countries,
               optional)
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Enter all the transit countries the waste will travel through. You
               need to write the full name of the countries. You can enter up to
               5 transit countries, separated by semicolons, in the order the
               waste travels through them.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               If you do not need to enter any transit countries, leave the cells
               blank.
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.H2 size="MEDIUM">
               <a id="treatment">Treatment of waste</a>
             </GovUK.H2>
-            <GovUK.Paragraph>
+            <Paragraph>
               If you are exporting small waste to a recovery facility or
               laboratory, you need to fill in this section. You can enter 1
               laboratory&rsquo;s details, or up to 1 interim site and 5 recovery
               facility details.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               For any recovery facility or laboratory details you enter, you
               must complete all the address and contact details for that
               facility.
-            </GovUK.Paragraph>
-            <GovUK.Paragraph>
+            </Paragraph>
+            <Paragraph>
               Interim site, recovery facility and laboratory address and contact
               details
-            </GovUK.Paragraph>
+            </Paragraph>
 
             <GovUK.Table>
               <GovUK.Table.Row>

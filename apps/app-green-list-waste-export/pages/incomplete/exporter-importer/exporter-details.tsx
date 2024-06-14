@@ -26,6 +26,7 @@ import {
   validateFax,
 } from 'utils/validators';
 import useApiConfig from 'utils/useApiConfig';
+import { UrlObject } from 'url';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -154,7 +155,7 @@ const ExporterDetails = (): React.ReactNode => {
                 router.push({
                   pathname: path,
                   query: { id },
-                });
+                } as UrlObject);
               }
             });
         } catch (e) {
@@ -219,7 +220,7 @@ const ExporterDetails = (): React.ReactNode => {
                       input={{
                         name: 'organisationName',
                         id: 'organisationName',
-                        value: organisationName,
+                        value: organisationName || '',
                         maxLength: 250,
                         onChange: (e) => setOrganisationName(e.target.value),
                       }}
@@ -235,7 +236,7 @@ const ExporterDetails = (): React.ReactNode => {
                       input={{
                         name: 'fullName',
                         id: 'fullName',
-                        value: fullName,
+                        value: fullName || '',
                         maxLength: 250,
                         autoComplete: 'name',
                         onChange: (e) => setFullName(e.target.value),
@@ -251,7 +252,7 @@ const ExporterDetails = (): React.ReactNode => {
                       input={{
                         name: 'email',
                         id: 'email',
-                        value: email,
+                        value: email || '',
                         spellCheck: false,
                         autoComplete: 'email',
                         maxLength: 250,
@@ -268,7 +269,7 @@ const ExporterDetails = (): React.ReactNode => {
                       input={{
                         name: 'phone',
                         id: 'phone',
-                        value: phone,
+                        value: phone || '',
                         autoComplete: 'tel',
                         maxLength: 250,
                         onChange: (e) => setPhone(e.target.value),
@@ -284,7 +285,7 @@ const ExporterDetails = (): React.ReactNode => {
                       input={{
                         name: 'fax',
                         id: 'fax',
-                        value: fax,
+                        value: fax || '',
                         maxLength: 250,
                         onChange: (e) => setFax(e.target.value),
                       }}

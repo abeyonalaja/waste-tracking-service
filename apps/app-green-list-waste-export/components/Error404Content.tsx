@@ -1,6 +1,6 @@
 import React from 'react';
 import * as GovUK from 'govuk-react';
-import { AppLink } from './AppLink';
+import { AppLink, Paragraph } from 'components';
 import { useTranslation } from 'react-i18next';
 
 export const Error404Content = (): JSX.Element => {
@@ -8,9 +8,9 @@ export const Error404Content = (): JSX.Element => {
   return (
     <>
       <GovUK.Heading size="LARGE">{t('404.title')}</GovUK.Heading>
-      <GovUK.Paragraph>{t('404.paragraph1')}</GovUK.Paragraph>
-      <GovUK.Paragraph>{t('404.paragraph2')}</GovUK.Paragraph>
-      <p>
+      <Paragraph>{t('404.paragraph1')}</Paragraph>
+      <Paragraph>{t('404.paragraph2')}</Paragraph>
+      <Paragraph>
         <AppLink
           href={{
             pathname: '/',
@@ -18,7 +18,7 @@ export const Error404Content = (): JSX.Element => {
         >
           {t('404.link')}
         </AppLink>
-      </p>
+      </Paragraph>
     </>
   );
 };

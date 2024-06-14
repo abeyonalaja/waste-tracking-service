@@ -12,6 +12,7 @@ import {
   Loading,
   SaveReturnButton,
   ButtonGroup,
+  Paragraph,
 } from 'components';
 
 import styled from 'styled-components';
@@ -191,9 +192,9 @@ const SignDeclaration = (): React.ReactNode => {
                 <StyledHeading size="LARGE">
                   {t('exportJourney.checkAnswers.signDeclaration.title')}
                 </StyledHeading>
-                <GovUK.Paragraph id="first-paragraph">
+                <Paragraph id="first-paragraph">
                   {t('exportJourney.checkAnswers.signDeclaration.paragraph')}
-                </GovUK.Paragraph>
+                </Paragraph>
                 {signDeclarationPage.data.wasteDescription.status ===
                   'Complete' && (
                   <GovUK.UnorderedList>

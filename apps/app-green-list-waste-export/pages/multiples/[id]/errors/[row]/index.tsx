@@ -78,9 +78,9 @@ export default function RowErrors(): React.ReactNode {
           rowNumber: router.query.row,
         })}
       </GovUK.Heading>
-      <GovUK.Paragraph>
+      <Paragraph>
         {t('multiples.errorSummaryPage.errorList.rowCorrection.para')}
-      </GovUK.Paragraph>
+      </Paragraph>
       <GovUK.Table
         caption={null}
         head={

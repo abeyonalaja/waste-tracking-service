@@ -276,11 +276,11 @@ const QuantityEntry = (): React.ReactNode => {
                         .
                       </Paragraph>
                     ) : (
-                      <GovUK.Paragraph>
+                      <Paragraph>
                         {t(
                           'exportJourney.quantity.entry.bulk.estimateWeight.intro',
                         )}
-                      </GovUK.Paragraph>
+                      </Paragraph>
                     )}
                     {estimate && (
                       <StyledInputWrap>
@@ -303,7 +303,7 @@ const QuantityEntry = (): React.ReactNode => {
                               )
                         }
                         onChange={(e) => setWeight(e.target.value)}
-                        value={weight}
+                        value={weight || ''}
                         errorMessage={errors?.quantityWeightError}
                         suffix={t('weight.tonnes')}
                         maxLength={10}
@@ -349,11 +349,11 @@ const QuantityEntry = (): React.ReactNode => {
                         .
                       </Paragraph>
                     ) : (
-                      <GovUK.Paragraph>
+                      <Paragraph>
                         {t(
                           'exportJourney.quantity.entry.bulk.estimateVolume.intro',
                         )}
-                      </GovUK.Paragraph>
+                      </Paragraph>
                     )}
                     {estimate && (
                       <StyledInputWrap>
@@ -376,7 +376,7 @@ const QuantityEntry = (): React.ReactNode => {
                               )
                         }
                         onChange={(e) => setVolume(e.target.value)}
-                        value={volume}
+                        value={volume || ''}
                         errorMessage={errors?.quantityVolumeError}
                         suffix={t('volume.m3')}
                         maxLength={10}
@@ -416,9 +416,9 @@ const QuantityEntry = (): React.ReactNode => {
                         .
                       </Paragraph>
                     ) : (
-                      <GovUK.Paragraph>
+                      <Paragraph>
                         {t('exportJourney.quantityValueSmall.Estimate.intro')}
-                      </GovUK.Paragraph>
+                      </Paragraph>
                     )}
                     {estimate && (
                       <StyledInputWrap>
@@ -441,7 +441,7 @@ const QuantityEntry = (): React.ReactNode => {
                               )
                         }
                         onChange={(e) => setWeight(e.target.value)}
-                        value={weight}
+                        value={weight || ''}
                         errorMessage={errors?.quantityWeightError}
                         suffix={t('weight.kg')}
                         maxLength={10}

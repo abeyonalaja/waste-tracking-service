@@ -10,6 +10,7 @@ import {
   RadiosDivider,
   SaveReturnButton,
   SubmissionNotFound,
+  Paragraph,
 } from 'components';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 
@@ -274,9 +275,9 @@ const Quantity = (): React.ReactNode => {
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                       {t('exportJourney.quantity.title')}
                     </GovUK.Fieldset.Legend>
-                    <GovUK.Paragraph>
+                    <Paragraph>
                       {t('exportJourney.quantity.paragraph')}
-                    </GovUK.Paragraph>
+                    </Paragraph>
                     <GovUK.MultiChoice
                       mb={6}
                       label=""

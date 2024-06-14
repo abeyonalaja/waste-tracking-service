@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     textDecoration: 'underline',
     fontSize: '10pt',
     marginBottom: 5,
+    fontFamily: 'Helvetica-Bold',
   },
   standardText: {
     fontFamily: 'Helvetica',
@@ -267,7 +268,7 @@ const Pages = ({ data }): React.ReactNode => {
             </Text>
             <Text>
               {data.recoveryFacilityDetail.map((facility, index) => {
-                if (facility.recoveryFacilityType.type === 'Laboratory') {
+                if (facility.recoveryFacilityType?.type === 'Laboratory') {
                   return (
                     <Text key={`facility${index}`}>
                       Disposal Code:{' '}
@@ -276,7 +277,7 @@ const Pages = ({ data }): React.ReactNode => {
                     </Text>
                   );
                 }
-                if (facility.recoveryFacilityType.type === 'InterimSite') {
+                if (facility.recoveryFacilityType?.type === 'InterimSite') {
                   return (
                     <Text key={`facility${index}`}>
                       Recovery Code:{' '}
@@ -285,7 +286,9 @@ const Pages = ({ data }): React.ReactNode => {
                     </Text>
                   );
                 }
-                if (facility.recoveryFacilityType.type === 'RecoveryFacility') {
+                if (
+                  facility.recoveryFacilityType?.type === 'RecoveryFacility'
+                ) {
                   return (
                     <Text key={`facility${index}`}>
                       {facility.recoveryFacilityType.recoveryCode}
@@ -934,7 +937,7 @@ const formatTransportType = (type) => {
 };
 
 const SiteDetails = ({ data, type, index, inlineFax = false }) => {
-  const facilities = data.filter((f) => f.recoveryFacilityType.type === type);
+  const facilities = data.filter((f) => f.recoveryFacilityType?.type === type);
   let facility;
 
   if (index === 0 && facilities.length > 0) {

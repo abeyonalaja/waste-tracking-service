@@ -238,9 +238,9 @@ const QuantityEntry = (): React.ReactNode => {
                               'exportJourney.updateActualQuantity.Weight.title',
                             )}
                           </GovUK.Fieldset.Legend>
-                          <GovUK.Paragraph>
+                          <Paragraph>
                             {t('exportJourney.quantityValue.intro')}
-                          </GovUK.Paragraph>
+                          </Paragraph>
                           <InputWithSuffix
                             id="valueWeight"
                             label={t('exportJourney.quantityValue.weightLabel')}
@@ -269,11 +269,11 @@ const QuantityEntry = (): React.ReactNode => {
                               'exportJourney.updateActualQuantity.Volume.title',
                             )}
                           </GovUK.Fieldset.Legend>
-                          <GovUK.Paragraph>
+                          <Paragraph>
                             {t(
                               'exportJourney.updateActualQuantity.Volume.intro',
                             )}
-                          </GovUK.Paragraph>
+                          </Paragraph>
                           <InputWithSuffix
                             id="valueVolume"
                             label={t('exportJourney.quantityValue.volumeLabel')}
@@ -320,9 +320,9 @@ const QuantityEntry = (): React.ReactNode => {
                     <GovUK.Heading size="LARGE">
                       {t('exportJourney.quantityValueSmall.Actual.title')}
                     </GovUK.Heading>
-                    <GovUK.Paragraph>
+                    <Paragraph>
                       {t('exportJourney.quantityValueSmall.Actual.intro')}
-                    </GovUK.Paragraph>
+                    </Paragraph>
                     <form onSubmit={handleSubmit}>
                       <InputWithSuffix
                         id="valueWeight"

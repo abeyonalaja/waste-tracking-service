@@ -42,6 +42,7 @@ import { GetCollectionDetailResponse } from '@wts/api/waste-tracking-gateway';
 import { countriesData } from 'utils/countriesData';
 import { BORDER_COLOUR } from 'govuk-colours';
 import useApiConfig from 'utils/useApiConfig';
+import { UrlObject } from 'url';
 
 const VIEWS = {
   POSTCODE_SEARCH: 1,
@@ -473,7 +474,7 @@ const CollectionDetails = (): React.ReactNode => {
                     ? `/incomplete/tasklist`
                     : `/incomplete/journey/exit-location`,
                   query: { id },
-                });
+                } as UrlObject);
               }
             });
         } catch (e) {
@@ -528,7 +529,7 @@ const CollectionDetails = (): React.ReactNode => {
                   router.push({
                     pathname: `/incomplete/tasklist`,
                     query: { id },
-                  });
+                  } as UrlObject);
                 } else {
                   setViewToReturnTo(VIEWS.MANUAL_ADDRESS);
                   dispatchAddressPage({
@@ -603,7 +604,7 @@ const CollectionDetails = (): React.ReactNode => {
               router.push({
                 pathname: `/incomplete/tasklist`,
                 query: { id },
-              });
+              } as UrlObject);
             }
           }}
         >
@@ -717,7 +718,7 @@ const CollectionDetails = (): React.ReactNode => {
                             router.push({
                               pathname: `/incomplete/tasklist`,
                               query: { id },
-                            })
+                            } as UrlObject)
                           }
                         >
                           {t('returnToDraft')}
@@ -835,7 +836,7 @@ const CollectionDetails = (): React.ReactNode => {
                         input={{
                           name: 'addressLine1',
                           id: 'addressLine1',
-                          value: addressDetails?.addressLine1,
+                          value: addressDetails?.addressLine1 || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -853,7 +854,7 @@ const CollectionDetails = (): React.ReactNode => {
                         input={{
                           name: 'addressLine2',
                           id: 'addressLine2',
-                          value: addressDetails?.addressLine2,
+                          value: addressDetails?.addressLine2 || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -870,7 +871,7 @@ const CollectionDetails = (): React.ReactNode => {
                         input={{
                           name: 'townCity',
                           id: 'townCity',
-                          value: addressDetails?.townCity,
+                          value: addressDetails?.townCity || '',
                           maxLength: 250,
                           onChange: onAddressDetailsChange,
                         }}
@@ -898,7 +899,7 @@ const CollectionDetails = (): React.ReactNode => {
                           <PostcodeInput
                             name="postcode"
                             id="postcode"
-                            value={addressDetails?.postcode}
+                            value={addressDetails?.postcode || ''}
                             maxLength={50}
                             autoComplete="postal-code"
                             error={!!addressPage.errors?.postcode}
@@ -1102,7 +1103,7 @@ const CollectionDetails = (): React.ReactNode => {
                             router.push({
                               pathname: `/incomplete/tasklist`,
                               query: { id },
-                            });
+                            } as UrlObject);
                           }}
                         />
                       </ButtonGroup>
@@ -1139,7 +1140,7 @@ const CollectionDetails = (): React.ReactNode => {
                             input={{
                               name: 'fullName',
                               id: 'fullName',
-                              value: contactDetails?.fullName,
+                              value: contactDetails?.fullName || '',
                               maxLength: 250,
                               onChange: onContactDetailsChange,
                             }}

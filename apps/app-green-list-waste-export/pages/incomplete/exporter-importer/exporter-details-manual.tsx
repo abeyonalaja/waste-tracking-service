@@ -28,6 +28,7 @@ import { countriesData } from 'utils/countriesData';
 
 import { getStatusExporter } from 'utils/statuses/getStatusExporter';
 import useApiConfig from 'utils/useApiConfig';
+import { UrlObject } from 'url';
 
 const AddressInput = styled(GovUK.InputField)`
   max-width: 66ex;
@@ -153,7 +154,7 @@ const ExporterManual = (): React.ReactNode => {
                 router.push({
                   pathname: path,
                   query: { id },
-                });
+                } as UrlObject);
               }
             });
         } catch (e) {
@@ -220,7 +221,7 @@ const ExporterManual = (): React.ReactNode => {
                       input={{
                         name: 'address',
                         id: 'address',
-                        value: address,
+                        value: address || '',
                         maxLength: 250,
                         onChange: (e) => setAddress(e.target.value),
                       }}
@@ -236,7 +237,7 @@ const ExporterManual = (): React.ReactNode => {
                       input={{
                         name: 'address2',
                         id: 'address2',
-                        value: address2,
+                        value: address2 || '',
                         maxLength: 250,
                         onChange: (e) => setAddress2(e.target.value),
                       }}
@@ -247,7 +248,7 @@ const ExporterManual = (): React.ReactNode => {
                       input={{
                         name: 'townCity',
                         id: 'townCity',
-                        value: townCity,
+                        value: townCity || '',
                         maxLength: 250,
                         onChange: (e) => setTownCity(e.target.value),
                       }}
@@ -262,7 +263,7 @@ const ExporterManual = (): React.ReactNode => {
                       input={{
                         name: 'postcode',
                         id: 'postcode',
-                        value: postcode,
+                        value: postcode || '',
                         maxLength: 8,
                         onChange: (e) => setPostcode(e.target.value),
                       }}

@@ -20,6 +20,7 @@ import {
   SubmissionNotFound,
   SaveReturnButton,
   ButtonGroup,
+  Paragraph,
 } from 'components';
 import {
   isNotEmpty,
@@ -242,9 +243,9 @@ const ExitLocation = (): React.ReactNode => {
                     <GovUK.Fieldset.Legend isPageHeading size="LARGE">
                       {t('exportJourney.pointOfExit.title')}
                     </GovUK.Fieldset.Legend>
-                    <GovUK.Paragraph>
+                    <Paragraph>
                       {t('exportJourney.pointOfExit.intro')}
-                    </GovUK.Paragraph>
+                    </Paragraph>
                     <GovUK.MultiChoice
                       mb={6}
                       label=""
