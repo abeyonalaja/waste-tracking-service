@@ -1,4 +1,14 @@
-import { AccountIdRequest, SectionSummary } from '@wts/api/common';
+export type Method = Readonly<{
+  name: string;
+}>;
+
+export interface AccountIdRequest {
+  accountId: string;
+}
+
+export interface SectionSummary {
+  status: 'CannotStart' | 'NotStarted' | 'Started' | 'Complete';
+}
 
 export type CustomerReference = string;
 

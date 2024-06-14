@@ -3,7 +3,6 @@ import { submission as api, common } from '@wts/api/green-list-waste-export';
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
-import { Handler } from '@wts/api/common';
 import {
   FieldFormatError,
   InvalidAttributeCombinationError,
@@ -22,6 +21,10 @@ import {
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
 import { setWasteQuantityUnit } from '../../lib/util';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 const draftContainerName = 'drafts';
 const submissionContainerName = 'submissions';

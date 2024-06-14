@@ -4,6 +4,7 @@ import {
   draft as api,
   validation,
 } from '@wts/api/green-list-waste-export';
+
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
@@ -18,7 +19,6 @@ import {
   RecordState,
   Submission,
 } from '../../model';
-import { Handler } from '@wts/api/common';
 import {
   createBaseCarriers,
   createBaseRecoveryFacilityDetail,
@@ -38,6 +38,10 @@ import {
   setDraftWasteQuantityUnit,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 const draftContainerName = 'drafts';
 const submissionContainerName = 'submissions';

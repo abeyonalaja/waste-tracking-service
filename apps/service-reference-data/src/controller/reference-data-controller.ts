@@ -3,7 +3,6 @@ import * as api from '@wts/api/reference-data';
 import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
 import { ReferenceDataRepository } from '../data/repository';
-import { Handler } from '@wts/api/common';
 import {
   Country,
   RecoveryCode,
@@ -12,6 +11,10 @@ import {
   Pop,
   LocalAuthority,
 } from '../model';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 const wasteCodesId = 'waste-codes';
 const ewcCodesId = 'ewc-codes';

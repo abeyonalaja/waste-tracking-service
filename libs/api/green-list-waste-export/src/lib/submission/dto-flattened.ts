@@ -1,4 +1,4 @@
-import { AccountIdRequest, Method } from '@wts/api/common';
+import { AccountIdRequest, Method } from '../common';
 import { Response } from '@wts/util/invocation';
 import { ValidationResult } from '../validation';
 
@@ -199,5 +199,4 @@ export type ValidateSubmissionsRequest = AccountIdRequest & {
 export type ValidateSubmissionsResponse = Response<ValidationResult>;
 export const validateSubmissions: Method = {
   name: 'validateSubmissions',
-  httpVerb: 'POST',
 };

@@ -3,7 +3,6 @@ import * as api from '@wts/api/uk-waste-movements';
 import { v4 as uuidv4 } from 'uuid';
 import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
-import { Handler } from '@wts/api/common';
 import {
   FieldFormatError,
   InvalidAttributeCombinationError,
@@ -15,6 +14,10 @@ import {
 } from '../model';
 import { validationRules } from '../lib';
 import { CosmosRepository } from '../data';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 const submissionsContainerName = 'drafts';
 

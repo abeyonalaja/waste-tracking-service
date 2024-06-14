@@ -1,4 +1,4 @@
-import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
+import { AccountIdRequest, IdRequest, Method } from '../common';
 import { Response } from '@wts/util/invocation';
 import {
   OptionalStringInput,
@@ -181,21 +181,18 @@ export type GetSubmissionsResponse = Response<
 >;
 export const getSubmissions: Method = {
   name: 'getSubmissions',
-  httpVerb: 'POST',
 };
 
 export type GetSubmissionRequest = IdRequest & AccountIdRequest;
 export type GetSubmissionResponse = Response<Submission>;
 export const getSubmission: Method = {
   name: 'getSubmission',
-  httpVerb: 'POST',
 };
 
 export type GetWasteQuantityRequest = IdRequest & AccountIdRequest;
 export type GetWasteQuantityResponse = Response<WasteQuantity>;
 export const getWasteQuantity: Method = {
   name: 'getWasteQuantity',
-  httpVerb: 'POST',
 };
 
 export type SetWasteQuantityRequest = IdRequest &
@@ -203,14 +200,12 @@ export type SetWasteQuantityRequest = IdRequest &
 export type SetWasteQuantityResponse = Response<void>;
 export const setWasteQuantity: Method = {
   name: 'setWasteQuantity',
-  httpVerb: 'POST',
 };
 
 export type GetCollectionDateRequest = IdRequest & AccountIdRequest;
 export type GetCollectionDateResponse = Response<CollectionDate>;
 export const getCollectionDate: Method = {
   name: 'getCollectionDate',
-  httpVerb: 'POST',
 };
 
 export type SetCollectionDateRequest = IdRequest &
@@ -218,7 +213,6 @@ export type SetCollectionDateRequest = IdRequest &
 export type SetCollectionDateResponse = Response<void>;
 export const setCollectionDate: Method = {
   name: 'setCollectionDate',
-  httpVerb: 'POST',
 };
 
 export type CancelSubmissionRequest = IdRequest &
@@ -226,7 +220,6 @@ export type CancelSubmissionRequest = IdRequest &
 export type CancelSubmissionResponse = Response<void>;
 export const cancelSubmission: Method = {
   name: 'cancelSubmission',
-  httpVerb: 'POST',
 };
 
 export interface NumberOfSubmissions {
@@ -238,7 +231,6 @@ export type GetNumberOfSubmissionsRequest = AccountIdRequest;
 export type GetNumberOfSubmissionsResponse = Response<NumberOfSubmissions>;
 export const getNumberOfSubmissions: Method = {
   name: 'getNumberOfSubmissions',
-  httpVerb: 'POST',
 };
 
 export type CreateSubmissionsRequest = AccountIdRequest &
@@ -248,7 +240,6 @@ export type CreateSubmissionsRequest = AccountIdRequest &
 export type CreateSubmissionsResponse = Response<Submission[]>;
 export const createSubmissions: Method = {
   name: 'createSubmissions',
-  httpVerb: 'POST',
 };
 
 export type GetBulkSubmissionsRequest = AccountIdRequest & {
@@ -257,5 +248,4 @@ export type GetBulkSubmissionsRequest = AccountIdRequest & {
 export type GetBulkSubmissionsResponse = Response<Submission[]>;
 export const getBulkSubmissions: Method = {
   name: 'getBulkSubmissions',
-  httpVerb: 'POST',
 };

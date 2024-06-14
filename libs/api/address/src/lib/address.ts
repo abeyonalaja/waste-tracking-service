@@ -1,5 +1,8 @@
-import { Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
+
+export type Method = Readonly<{
+  name: string;
+}>;
 
 export interface Address {
   addressLine1: string;
@@ -18,5 +21,4 @@ export type GetAddressByPostcodeResponse = Response<Address[]>;
 
 export const getAddressByPostcode: Method = {
   name: 'getAddressByPostcode',
-  httpVerb: 'GET',
 };

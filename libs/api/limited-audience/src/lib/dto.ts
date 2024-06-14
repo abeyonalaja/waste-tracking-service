@@ -2,7 +2,6 @@ import { Response } from '@wts/util/invocation';
 
 type Method = Readonly<{
   name: string;
-  httpVerb: 'GET' | 'PUT' | 'POST' | 'DELETE';
 }>;
 
 export interface CheckParticipationRequest {
@@ -30,15 +29,12 @@ export type AddParticipantResponse = Response<void>;
 
 export const checkParticipation: Method = {
   name: 'checkParticipation',
-  httpVerb: 'POST',
 };
 
 export const redeemInvitation: Method = {
   name: 'redeemInvitation',
-  httpVerb: 'POST',
 };
 
 export const addParticipant: Method = {
   name: 'addParticipant',
-  httpVerb: 'POST',
 };

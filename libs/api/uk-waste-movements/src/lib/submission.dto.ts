@@ -1,7 +1,17 @@
-import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { ValidationResult } from './validation';
 import { DraftSubmission } from './draft.dto';
+
+export type Method = Readonly<{
+  name: string;
+}>;
+
+export interface AccountIdRequest {
+  accountId: string;
+}
+export interface IdRequest {
+  id: string;
+}
 
 export type WasteSource = 'Household' | 'Commercial';
 export type WasteTransport =
@@ -375,7 +385,6 @@ export type ValidateSubmissionsRequest = AccountIdRequest & {
 export type ValidateSubmissionsResponse = Response<ValidationResult>;
 export const validateSubmissions: Method = {
   name: 'validateSubmissions',
-  httpVerb: 'POST',
 };
 
 export type PartialSubmission = Omit<
@@ -395,12 +404,10 @@ export type GetDraftResponse = Response<DraftSubmission>;
 
 export const createSubmissions: Method = {
   name: 'createSubmissions',
-  httpVerb: 'POST',
 };
 
 export const getDraft: Method = {
   name: 'getDraft',
-  httpVerb: 'POST',
 };
 
 export type DbContainerNameKey = 'drafts';

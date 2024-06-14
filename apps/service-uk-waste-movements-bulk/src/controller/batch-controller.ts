@@ -3,12 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { fromBoom, success } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
 import { BatchRepository } from '../data';
-import { Handler } from '@wts/api/common';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 import { BulkSubmission } from '../model';
 import { Field, ErrorCodeData, validation } from '@wts/api/uk-waste-movements';
 import { compress } from 'snappy';
 import { downloadHeaders, downloadSections } from '../lib/csv-content';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 export class BatchController {
   constructor(

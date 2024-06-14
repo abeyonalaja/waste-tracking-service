@@ -1,4 +1,3 @@
-import { AccountIdRequest } from '@wts/api/common';
 import {
   PageMetadata,
   WasteDescription,
@@ -9,6 +8,7 @@ import {
   ExitLocation,
   TransitCountries,
   RecoveryFacilityDetail,
+  AccountIdRequest,
 } from './submission';
 
 export interface TemplateDetails {

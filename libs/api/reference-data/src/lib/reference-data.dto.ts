@@ -1,5 +1,8 @@
-import { Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
+
+export type Method = Readonly<{
+  name: string;
+}>;
 
 export interface LanguageDescription {
   en: string;
@@ -72,75 +75,60 @@ export type CreatePopsResponse = Response<Pop[]>;
 
 export const getWasteCodes: Method = {
   name: 'getWasteCodes',
-  httpVerb: 'GET',
 };
 
 export const getEWCCodes: Method = {
   name: 'getEWCCodes',
-  httpVerb: 'GET',
 };
 
 export const getCountries: Method = {
   name: 'getCountries',
-  httpVerb: 'GET',
 };
 
 export const getRecoveryCodes: Method = {
   name: 'getRecoveryCodes',
-  httpVerb: 'GET',
 };
 
 export const getDisposalCodes: Method = {
   name: 'getDisposalCodes',
-  httpVerb: 'GET',
 };
 
 export const getHazardousCodes: Method = {
   name: 'getHazardousCodes',
-  httpVerb: 'GET',
 };
 
 export const getPops: Method = {
   name: 'getPops',
-  httpVerb: 'GET',
 };
 
 export const getLocalAuthorities: Method = {
   name: 'getLocalAuthorities',
-  httpVerb: 'GET',
 };
 
 export const createWasteCodes: Method = {
   name: 'createWasteCodes',
-  httpVerb: 'GET',
 };
 
 export const createEWCCodes: Method = {
   name: 'createEWCCodes',
-  httpVerb: 'GET',
 };
 
 export const createCountries: Method = {
   name: 'createCountries',
-  httpVerb: 'GET',
 };
 
 export const createRecoveryCodes: Method = {
   name: 'createRecoveryCodes',
-  httpVerb: 'GET',
 };
 
 export const createDisposalCodes: Method = {
   name: 'createDisposalCodes',
-  httpVerb: 'GET',
 };
 
 export const createHazardousCodes: Method = {
   name: 'createHazardousCodes',
-  httpVerb: 'GET',
 };
 
 export const createPops: Method = {
   name: 'createPops',
-  httpVerb: 'GET',
 };

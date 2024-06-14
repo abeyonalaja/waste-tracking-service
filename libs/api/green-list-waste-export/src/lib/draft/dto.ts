@@ -1,4 +1,4 @@
-import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
+import { AccountIdRequest, IdRequest, Method } from '../common';
 import { Response } from '@wts/util/invocation';
 import {
   Carrier,
@@ -175,27 +175,26 @@ export type DraftSubmissionSummary = Readonly<
 export type GetDraftsResponse = Response<
   RecordSummaryPage<DraftSubmissionSummary>
 >;
-export const getDrafts: Method = { name: 'getDrafts', httpVerb: 'POST' };
+export const getDrafts: Method = { name: 'getDrafts' };
 
 export type GetDraftRequest = IdRequest & AccountIdRequest;
 export type GetDraftResponse = Response<DraftSubmission>;
-export const getDraft: Method = { name: 'getDraft', httpVerb: 'POST' };
+export const getDraft: Method = { name: 'getDraft' };
 
 export type CreateDraftRequest = AccountIdRequest & {
   reference: CustomerReference;
 };
 export type CreateDraftResponse = Response<DraftSubmission>;
-export const createDraft: Method = { name: 'createDraft', httpVerb: 'POST' };
+export const createDraft: Method = { name: 'createDraft' };
 
 export type DeleteDraftRequest = IdRequest & AccountIdRequest;
 export type DeleteDraftResponse = Response<void>;
-export const deleteDraft: Method = { name: 'deleteDraft', httpVerb: 'POST' };
+export const deleteDraft: Method = { name: 'deleteDraft' };
 
 export type GetDraftCustomerReferenceRequest = IdRequest & AccountIdRequest;
 export type GetDraftCustomerReferenceResponse = Response<CustomerReference>;
 export const getDraftCustomerReference: Method = {
   name: 'getDraftCustomerReference',
-  httpVerb: 'POST',
 };
 
 export type SetDraftCustomerReferenceRequest = IdRequest &
@@ -203,14 +202,12 @@ export type SetDraftCustomerReferenceRequest = IdRequest &
 export type SetDraftCustomerReferenceResponse = Response<void>;
 export const setDraftCustomerReference: Method = {
   name: 'setDraftCustomerReference',
-  httpVerb: 'POST',
 };
 
 export type GetDraftWasteDescriptionRequest = IdRequest & AccountIdRequest;
 export type GetDraftWasteDescriptionResponse = Response<DraftWasteDescription>;
 export const getDraftWasteDescription: Method = {
   name: 'getDraftWasteDescription',
-  httpVerb: 'POST',
 };
 
 export type SetDraftWasteDescriptionRequest = IdRequest &
@@ -218,14 +215,12 @@ export type SetDraftWasteDescriptionRequest = IdRequest &
 export type SetDraftWasteDescriptionResponse = Response<void>;
 export const setDraftWasteDescription: Method = {
   name: 'setDraftWasteDescription',
-  httpVerb: 'POST',
 };
 
 export type GetDraftWasteQuantityRequest = IdRequest & AccountIdRequest;
 export type GetDraftWasteQuantityResponse = Response<DraftWasteQuantity>;
 export const getDraftWasteQuantity: Method = {
   name: 'getDraftWasteQuantity',
-  httpVerb: 'POST',
 };
 
 export type SetDraftWasteQuantityRequest = IdRequest &
@@ -233,14 +228,12 @@ export type SetDraftWasteQuantityRequest = IdRequest &
 export type SetDraftWasteQuantityResponse = Response<void>;
 export const setDraftWasteQuantity: Method = {
   name: 'setDraftWasteQuantity',
-  httpVerb: 'POST',
 };
 
 export type GetDraftExporterDetailRequest = IdRequest & AccountIdRequest;
 export type GetDraftExporterDetailResponse = Response<DraftExporterDetail>;
 export const getDraftExporterDetail: Method = {
   name: 'getDraftExporterDetail',
-  httpVerb: 'POST',
 };
 
 export type SetDraftExporterDetailRequest = IdRequest &
@@ -248,14 +241,12 @@ export type SetDraftExporterDetailRequest = IdRequest &
 export type SetDraftExporterDetailResponse = Response<void>;
 export const setDraftExporterDetail: Method = {
   name: 'setDraftExporterDetail',
-  httpVerb: 'POST',
 };
 
 export type GetDraftImporterDetailRequest = IdRequest & AccountIdRequest;
 export type GetDraftImporterDetailResponse = Response<DraftImporterDetail>;
 export const getDraftImporterDetail: Method = {
   name: 'getDraftImporterDetail',
-  httpVerb: 'POST',
 };
 
 export type SetDraftImporterDetailRequest = IdRequest &
@@ -263,14 +254,12 @@ export type SetDraftImporterDetailRequest = IdRequest &
 export type SetDraftImporterDetailResponse = Response<void>;
 export const setDraftImporterDetail: Method = {
   name: 'setDraftImporterDetail',
-  httpVerb: 'POST',
 };
 
 export type GetDraftCollectionDateRequest = IdRequest & AccountIdRequest;
 export type GetDraftCollectionDateResponse = Response<DraftCollectionDate>;
 export const getDraftCollectionDate: Method = {
   name: 'getDraftCollectionDate',
-  httpVerb: 'POST',
 };
 
 export type SetDraftCollectionDateRequest = IdRequest &
@@ -278,14 +267,12 @@ export type SetDraftCollectionDateRequest = IdRequest &
 export type SetDraftCollectionDateResponse = Response<void>;
 export const setDraftCollectionDate: Method = {
   name: 'setDraftCollectionDate',
-  httpVerb: 'POST',
 };
 
 export type ListDraftCarriersRequest = IdRequest & AccountIdRequest;
 export type ListDraftCarriersResponse = Response<DraftCarriers>;
 export const listDraftCarriers: Method = {
   name: 'listDraftCarriers',
-  httpVerb: 'POST',
 };
 
 export type CreateDraftCarriersRequest = IdRequest &
@@ -293,7 +280,6 @@ export type CreateDraftCarriersRequest = IdRequest &
 export type CreateDraftCarriersResponse = Response<DraftCarriers>;
 export const getDraftCarriers: Method = {
   name: 'getDraftCarriers',
-  httpVerb: 'POST',
 };
 
 export type GetDraftCarriersRequest = IdRequest &
@@ -302,7 +288,6 @@ export type GetDraftCarriersRequest = IdRequest &
 export type GetDraftCarriersResponse = Response<DraftCarriers>;
 export const createDraftCarriers: Method = {
   name: 'createDraftCarriers',
-  httpVerb: 'POST',
 };
 
 export type SetDraftCarriersRequest = IdRequest &
@@ -311,7 +296,6 @@ export type SetDraftCarriersRequest = IdRequest &
 export type SetDraftCarriersResponse = Response<void>;
 export const setDraftCarriers: Method = {
   name: 'setDraftCarriers',
-  httpVerb: 'POST',
 };
 
 export type DeleteDraftCarriersRequest = IdRequest &
@@ -320,14 +304,12 @@ export type DeleteDraftCarriersRequest = IdRequest &
 export type DeleteDraftCarriersResponse = Response<void>;
 export const deleteDraftCarriers: Method = {
   name: 'deleteDraftCarriers',
-  httpVerb: 'POST',
 };
 
 export type GetDraftUkExitLocationRequest = IdRequest & AccountIdRequest;
 export type GetDraftUkExitLocationResponse = Response<DraftUkExitLocation>;
 export const getDraftUkExitLocation: Method = {
   name: 'getDraftUkExitLocation',
-  httpVerb: 'POST',
 };
 
 export type SetDraftUkExitLocationRequest = IdRequest &
@@ -335,14 +317,12 @@ export type SetDraftUkExitLocationRequest = IdRequest &
 export type SetDraftUkExitLocationResponse = Response<void>;
 export const setDraftUkExitLocation: Method = {
   name: 'setDraftUkExitLocation',
-  httpVerb: 'POST',
 };
 
 export type GetDraftTransitCountriesRequest = IdRequest & AccountIdRequest;
 export type GetDraftTransitCountriesResponse = Response<DraftTransitCountries>;
 export const getDraftTransitCountries: Method = {
   name: 'getDraftTransitCountries',
-  httpVerb: 'POST',
 };
 
 export type SetDraftTransitCountriesRequest = IdRequest &
@@ -350,14 +330,12 @@ export type SetDraftTransitCountriesRequest = IdRequest &
 export type SetDraftTransitCountriesResponse = Response<void>;
 export const setDraftTransitCountries: Method = {
   name: 'setDraftTransitCountries',
-  httpVerb: 'POST',
 };
 
 export type GetDraftCollectionDetailRequest = IdRequest & AccountIdRequest;
 export type GetDraftCollectionDetailResponse = Response<DraftCollectionDetail>;
 export const getDraftCollectionDetail: Method = {
   name: 'getDraftCollectionDetail',
-  httpVerb: 'POST',
 };
 
 export type SetDraftCollectionDetailRequest = IdRequest &
@@ -365,7 +343,6 @@ export type SetDraftCollectionDetailRequest = IdRequest &
 export type SetDraftCollectionDetailResponse = Response<void>;
 export const setDraftCollectionDetail: Method = {
   name: 'setDraftCollectionDetail',
-  httpVerb: 'POST',
 };
 
 export type ListDraftRecoveryFacilityDetailsRequest = IdRequest &
@@ -374,7 +351,6 @@ export type ListDraftRecoveryFacilityDetailsResponse =
   Response<DraftRecoveryFacilityDetails>;
 export const listDraftRecoveryFacilityDetails: Method = {
   name: 'listDraftRecoveryFacilityDetails',
-  httpVerb: 'POST',
 };
 
 export type CreateDraftRecoveryFacilityDetailsRequest = IdRequest &
@@ -383,7 +359,6 @@ export type CreateDraftRecoveryFacilityDetailsResponse =
   Response<DraftRecoveryFacilityDetails>;
 export const createDraftRecoveryFacilityDetails: Method = {
   name: 'createDraftRecoveryFacilityDetails',
-  httpVerb: 'POST',
 };
 
 export type GetDraftRecoveryFacilityDetailsRequest = IdRequest &
@@ -393,7 +368,6 @@ export type GetDraftRecoveryFacilityDetailsResponse =
   Response<DraftRecoveryFacilityDetails>;
 export const getDraftRecoveryFacilityDetails: Method = {
   name: 'getDraftRecoveryFacilityDetails',
-  httpVerb: 'POST',
 };
 
 export type SetDraftRecoveryFacilityDetailsRequest = IdRequest &
@@ -402,7 +376,6 @@ export type SetDraftRecoveryFacilityDetailsRequest = IdRequest &
 export type SetDraftRecoveryFacilityDetailsResponse = Response<void>;
 export const setDraftRecoveryFacilityDetails: Method = {
   name: 'setDraftRecoveryFacilityDetails',
-  httpVerb: 'POST',
 };
 
 export type DeleteDraftRecoveryFacilityDetailsRequest = IdRequest &
@@ -411,7 +384,6 @@ export type DeleteDraftRecoveryFacilityDetailsRequest = IdRequest &
 export type DeleteDraftRecoveryFacilityDetailsResponse = Response<void>;
 export const deleteDraftRecoveryFacilityDetails: Method = {
   name: 'deleteDraftRecoveryFacilityDetails',
-  httpVerb: 'POST',
 };
 
 export type GetDraftSubmissionConfirmationRequest = IdRequest &
@@ -420,7 +392,6 @@ export type GetDraftSubmissionConfirmationResponse =
   Response<DraftSubmissionConfirmation>;
 export const getDraftSubmissionConfirmation: Method = {
   name: 'getDraftSubmissionConfirmation',
-  httpVerb: 'POST',
 };
 
 export type SetDraftSubmissionConfirmationRequest = IdRequest &
@@ -428,7 +399,6 @@ export type SetDraftSubmissionConfirmationRequest = IdRequest &
 export type SetDraftSubmissionConfirmationResponse = Response<void>;
 export const setDraftSubmissionConfirmation: Method = {
   name: 'setDraftSubmissionConfirmation',
-  httpVerb: 'POST',
 };
 
 export type GetDraftSubmissionDeclarationRequest = IdRequest & AccountIdRequest;
@@ -436,7 +406,6 @@ export type GetDraftSubmissionDeclarationResponse =
   Response<DraftSubmissionDeclaration>;
 export const getDraftSubmissionDeclaration: Method = {
   name: 'getDraftSubmissionDeclaration',
-  httpVerb: 'POST',
 };
 
 export type SetDraftSubmissionDeclarationRequest = IdRequest &
@@ -444,5 +413,4 @@ export type SetDraftSubmissionDeclarationRequest = IdRequest &
 export type SetDraftSubmissionDeclarationResponse = Response<void>;
 export const setDraftSubmissionDeclaration: Method = {
   name: 'setDraftSubmissionDeclaration',
-  httpVerb: 'POST',
 };

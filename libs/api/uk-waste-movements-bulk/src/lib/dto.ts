@@ -1,6 +1,13 @@
-import { AccountIdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { DraftSubmission, Submission } from '@wts/api/uk-waste-movements';
+
+export type Method = Readonly<{
+  name: string;
+}>;
+
+export interface AccountIdRequest {
+  accountId: string;
+}
 
 export type AddContentToBatchRequest = AccountIdRequest & {
   batchId?: string;
@@ -13,20 +20,16 @@ export type AddContentToBatchRequest = AccountIdRequest & {
 export type AddContentToBatchResponse = Response<{ batchId: string }>;
 export const addContentToBatch: Method = {
   name: 'ukwmAddContentToBatch',
-  httpVerb: 'POST',
 };
 export const getBatch: Method = {
   name: 'ukwmGetBatch',
-  httpVerb: 'POST',
 };
 export const finalizeBatch: Method = {
   name: 'ukwmFinalizeBatch',
-  httpVerb: 'POST',
 };
 
 export const downloadProducerCsv: Method = {
   name: 'ukwmDownloadBatch',
-  httpVerb: 'POST',
 };
 
 export type GetBatchRequest = { id: string } & AccountIdRequest;

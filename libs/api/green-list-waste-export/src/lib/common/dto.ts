@@ -1,4 +1,4 @@
-import { AccountIdRequest, OrderRequest } from '@wts/api/common';
+import { AccountIdRequest, OrderRequest } from './api-definitions';
 
 export type DbContainerNameKey = 'drafts' | 'submissions' | 'templates';
 

@@ -18,7 +18,6 @@ import {
   DraftSubmission,
   Submission,
 } from '../../model';
-import { Handler } from '@wts/api/common';
 import {
   isSmallWaste,
   setBaseWasteDescription,
@@ -34,6 +33,10 @@ import {
   updateCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 const draftContainerName = 'drafts';
 const submissionContainerName = 'submissions';

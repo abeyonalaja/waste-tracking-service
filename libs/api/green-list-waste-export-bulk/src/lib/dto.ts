@@ -1,6 +1,15 @@
-import { AccountIdRequest, IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import { submission } from '@wts/api/green-list-waste-export';
+
+export type Method = Readonly<{
+  name: string;
+}>;
+export interface AccountIdRequest {
+  accountId: string;
+}
+export interface IdRequest {
+  id: string;
+}
 
 export interface BulkSubmissionValidationRowError {
   rowNumber: number;
@@ -81,14 +90,12 @@ export type AddContentToBatchRequest = AccountIdRequest & {
 export type AddContentToBatchResponse = Response<{ batchId: string }>;
 export const addContentToBatch: Method = {
   name: 'addContentToBatch',
-  httpVerb: 'POST',
 };
 
 export type GetBatchRequest = IdRequest & AccountIdRequest;
 export type GetBatchResponse = Response<BulkSubmission>;
 export const getBatch: Method = {
   name: 'getBatch',
-  httpVerb: 'POST',
 };
 
 export type BulkSubmissionValidationSummary =
@@ -116,7 +123,6 @@ export type UpdateBatchRequest = IdRequest & AccountIdRequest;
 export type UpdateBatchResponse = Response<void>;
 export const updateBatch: Method = {
   name: 'updateBatch',
-  httpVerb: 'POST',
 };
 
 export interface CustomerReferenceFlattened {
@@ -319,5 +325,4 @@ export type GetBatchContentRequest = IdRequest & AccountIdRequest;
 export type GetBatchContentResponse = Response<submission.Submission[]>;
 export const getBatchContent: Method = {
   name: 'getBatchContent',
-  httpVerb: 'POST',
 };

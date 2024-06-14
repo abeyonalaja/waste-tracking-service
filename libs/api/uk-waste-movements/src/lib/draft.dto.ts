@@ -1,4 +1,3 @@
-import { IdRequest, Method } from '@wts/api/common';
 import { Response } from '@wts/util/invocation';
 import {
   ProducerDetail,
@@ -9,6 +8,8 @@ import {
   SubmissionDeclaration,
   SubmissionState,
   CarrierDetail,
+  IdRequest,
+  Method,
 } from './submission.dto';
 
 export type DraftReceiverDetail =
@@ -94,5 +95,4 @@ export type GetDraftsResponse = Response<GetDraftsResult>;
 
 export const getDrafts: Method = {
   name: 'getDrafts',
-  httpVerb: 'POST',
 };

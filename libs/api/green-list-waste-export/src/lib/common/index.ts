@@ -15,3 +15,10 @@ export type {
 } from './dto';
 
 export * as schema from './schema';
+
+export type {
+  IdRequest,
+  Method,
+  OrderRequest,
+  AccountIdRequest,
+} from './api-definitions';

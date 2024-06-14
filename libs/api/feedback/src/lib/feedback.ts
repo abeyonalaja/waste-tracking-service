@@ -1,5 +1,8 @@
 import { Response } from '@wts/util/invocation';
-import { Method } from '@wts/api/common';
+
+export type Method = Readonly<{
+  name: string;
+}>;
 
 export interface SendFeedbackRequest {
   serviceName: ServiceName;
@@ -21,5 +24,4 @@ export type SendFeedbackResponse = Response<FeedbackResponse>;
 
 export const sendFeedback: Method = {
   name: 'sendFeedback',
-  httpVerb: 'POST',
 };

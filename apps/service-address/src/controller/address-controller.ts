@@ -7,8 +7,11 @@ import {
   GetAddressByPostcodeResponse,
 } from '@wts/api/address';
 import FuzzySearch from 'fuzzy-search';
-import { Handler } from '@wts/api/common';
 import { Address } from '@wts/api/address';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 function titleCase(str: string): string {
   return str

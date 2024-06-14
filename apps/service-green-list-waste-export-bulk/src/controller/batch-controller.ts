@@ -3,11 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { fromBoom, success } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
 import { BatchRepository } from '../data/repository';
-import { Handler } from '@wts/api/common';
 import * as api from '@wts/api/green-list-waste-export-bulk';
 import { BulkSubmission } from '../model';
 import { DaprAnnexViiClient } from '@wts/client/green-list-waste-export';
 import { submission } from '@wts/api/green-list-waste-export';
+
+export type Handler<Request, Response> = (
+  request: Request,
+) => Promise<Response>;
 
 export default class BatchController {
   constructor(
