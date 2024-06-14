@@ -6,7 +6,7 @@ import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
 
 if (process.env['NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING']) {
   const connectionString =
-    process.env['NEXT_PUBLC_APPINSIGHTS_CONNECTION_STRING'];
+    process.env['NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING'];
 
   const sdk = new NodeSDK({
     resource: new Resource({
