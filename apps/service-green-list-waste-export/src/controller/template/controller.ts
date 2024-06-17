@@ -30,7 +30,7 @@ import {
   isTemplateNameValid,
   copyCarriersNoTransport,
   copyRecoveryFacilities,
-  updateCarrierTransport,
+  getCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 
@@ -503,13 +503,14 @@ export default class TemplateController {
         }
       }
 
-      template.carriers = createBaseCarriers(template.carriers, value);
-
-      template.carriers.transport =
-        template.wasteDescription.status !== 'NotStarted' &&
-        template.wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
+      template.carriers.transport = getCarrierTransport(
+        template.wasteDescription,
+      );
+      const { newCarrierId, carriers } = createBaseCarriers(
+        template.carriers,
+        value,
+      );
+      template.carriers = carriers;
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -517,15 +518,12 @@ export default class TemplateController {
         { ...template },
         accountId,
       );
-      if (template.carriers.status === 'Started') {
-        return success({
-          status: value.status,
-          transport: template.carriers.transport,
-          values: [{ id: template.carriers.values[0].id }],
-        });
-      } else {
-        return fromBoom(Boom.badRequest());
-      }
+
+      return success({
+        status: value.status,
+        transport: template.carriers.transport,
+        values: [{ id: newCarrierId }],
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -621,12 +619,10 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
-      template.carriers = deleteBaseCarriers(template.carriers, carrierId);
-
-      template.carriers = updateCarrierTransport(
+      template.carriers.transport = getCarrierTransport(
         template.wasteDescription,
-        template.carriers,
       );
+      template.carriers = deleteBaseCarriers(template.carriers, carrierId);
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -904,10 +900,12 @@ export default class TemplateController {
         }
       }
 
-      template.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
-        template.recoveryFacilityDetail,
-        value,
-      );
+      const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
+        createBaseRecoveryFacilityDetail(
+          template.recoveryFacilityDetail,
+          value,
+        );
+      template.recoveryFacilityDetail = recoveryFacilityDetails;
 
       if (
         template.recoveryFacilityDetail.status === 'Started' ||
@@ -922,7 +920,7 @@ export default class TemplateController {
 
         return success({
           status: value.status,
-          values: [{ id: template.recoveryFacilityDetail.values[0].id }],
+          values: [{ id: newRecoveryFacilityDetailId }],
         });
       } else {
         return fromBoom(Boom.badRequest());

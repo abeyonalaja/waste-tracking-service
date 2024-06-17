@@ -52,6 +52,7 @@ import {
   setSubmissionDeclaration,
   setWasteQuantityUnit,
   getSubmissionData,
+  getCarrierTransport,
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
 
@@ -838,11 +839,14 @@ export async function createCarriers(
     }
   }
 
-  submission.carriers = createBaseCarriers(
-    submission.carriers,
+  submission.carriers.transport = getCarrierTransport(
     submission.wasteDescription,
+  );
+  const { newCarrierId, carriers } = createBaseCarriers(
+    submission.carriers,
     value,
   );
+  submission.carriers = carriers;
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -851,7 +855,7 @@ export async function createCarriers(
     return Promise.resolve({
       status: value.status,
       transport: submission.carriers.transport,
-      values: [{ id: submission.carriers.values[0].id }],
+      values: [{ id: newCarrierId }],
     });
   } else {
     return Promise.reject(new BadRequestError('Incorrect carrier status.'));
@@ -966,11 +970,10 @@ export async function deleteCarriers(
     return Promise.reject(new NotFoundError('Index not found.'));
   }
 
-  submission.carriers = deleteBaseCarriers(
-    submission.carriers,
+  submission.carriers.transport = getCarrierTransport(
     submission.wasteDescription,
-    carrierId,
   );
+  submission.carriers = deleteBaseCarriers(submission.carriers, carrierId);
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -1123,17 +1126,17 @@ export async function createRecoveryFacilityDetail(
     }
   }
 
-  submission.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
-    submission.recoveryFacilityDetail,
-    value,
-  );
+  const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
+    createBaseRecoveryFacilityDetail(submission.recoveryFacilityDetail, value);
+  submission.recoveryFacilityDetail = recoveryFacilityDetails;
+
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
   if (submission.recoveryFacilityDetail.status === 'Started') {
     return Promise.resolve({
       status: value.status,
-      values: [{ id: submission.recoveryFacilityDetail.values[0].id }],
+      values: [{ id: newRecoveryFacilityDetailId }],
     });
   } else {
     return Promise.reject(

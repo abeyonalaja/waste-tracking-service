@@ -36,6 +36,7 @@ import {
   setSubmissionConfirmationStatus,
   setSubmissionDeclarationStatus,
   setDraftWasteQuantityUnit,
+  getCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 
@@ -735,7 +736,12 @@ export default class DraftController {
         }
       }
 
-      draft.carriers = createBaseCarriers(draft.carriers, value);
+      draft.carriers.transport = getCarrierTransport(draft.wasteDescription);
+      const { newCarrierId, carriers } = createBaseCarriers(
+        draft.carriers,
+        value,
+      );
+      draft.carriers = carriers;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -745,15 +751,12 @@ export default class DraftController {
         { ...draft },
         accountId,
       );
-      if (draft.carriers.status === 'Started') {
-        return success({
-          status: value.status,
-          transport: draft.carriers.transport,
-          values: [{ id: draft.carriers.values[0].id }],
-        });
-      } else {
-        return fromBoom(Boom.badRequest());
-      }
+
+      return success({
+        status: value.status,
+        transport: draft.carriers.transport,
+        values: [{ id: newCarrierId }],
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -846,6 +849,7 @@ export default class DraftController {
         return fromBoom(Boom.notFound());
       }
 
+      draft.carriers.transport = getCarrierTransport(draft.wasteDescription);
       draft.carriers = deleteBaseCarriers(draft.carriers, carrierId);
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -1132,10 +1136,9 @@ export default class DraftController {
         }
       }
 
-      draft.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
-        draft.recoveryFacilityDetail,
-        value,
-      );
+      const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
+        createBaseRecoveryFacilityDetail(draft.recoveryFacilityDetail, value);
+      draft.recoveryFacilityDetail = recoveryFacilityDetails;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1146,14 +1149,10 @@ export default class DraftController {
         accountId,
       );
 
-      if (draft.recoveryFacilityDetail.status === 'Started') {
-        return success({
-          status: value.status,
-          values: [{ id: draft.recoveryFacilityDetail.values[0].id }],
-        });
-      } else {
-        return fromBoom(Boom.badRequest());
-      }
+      return success({
+        status: value.status,
+        values: [{ id: newRecoveryFacilityDetailId }],
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

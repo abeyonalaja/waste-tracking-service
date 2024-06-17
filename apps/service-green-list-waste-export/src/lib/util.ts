@@ -13,6 +13,7 @@ import {
   DraftRecoveryFacilityPartial,
   WasteQuantity,
 } from '../model';
+
 export function setWasteQuantityUnit(
   wasteQuantity: WasteQuantity,
   submission: Submission,
@@ -335,33 +336,36 @@ export function setBaseWasteDescription(
 }
 
 export function createBaseCarriers(
-  carrier: DraftCarriers,
+  draftCarriers: DraftCarriers,
   value: Omit<DraftCarriers, 'transport' | 'values'>,
-): DraftCarriers {
+): { newCarrierId: string; carriers: DraftCarriers } {
   const uuid = uuidv4();
 
-  if (carrier.status === 'NotStarted') {
-    carrier = {
-      status: value.status as 'Started',
-      transport: carrier.transport,
-      values: [{ id: uuid }],
+  if (draftCarriers.status === 'NotStarted') {
+    return {
+      newCarrierId: uuid,
+      carriers: {
+        status: value.status as 'Started',
+        transport: draftCarriers.transport,
+        values: [{ id: uuid }],
+      },
     };
-
-    return carrier;
   }
 
   const carriers: DraftCarrierPartial[] = [];
-  for (const c of carrier.values) {
+  for (const c of draftCarriers.values) {
     carriers.push(c);
   }
   carriers.push({ id: uuid });
-  carrier = {
-    status: value.status as 'Started',
-    transport: carrier.transport,
-    values: carriers,
-  };
 
-  return carrier;
+  return {
+    newCarrierId: uuid,
+    carriers: {
+      status: value.status as 'Started',
+      transport: draftCarriers.transport,
+      values: carriers,
+    },
+  };
 }
 
 export function setBaseCarriers(
@@ -381,25 +385,13 @@ export function setBaseCarriers(
   return carriers;
 }
 
-export function updateCarrierTransport(
+export function getCarrierTransport(
   wasteDescription: DraftWasteDescription,
-  carriers: DraftCarriers,
-): DraftCarriers {
-  if (carriers.status !== 'NotStarted') {
-    if (carriers.values.length === 0) {
-      const transport: DraftCarriers['transport'] =
-        wasteDescription.status !== 'NotStarted' &&
-        wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
-
-      return {
-        status: 'NotStarted',
-        transport: transport,
-      };
-    }
-  }
-  return carriers;
+): boolean {
+  return wasteDescription.status !== 'NotStarted' &&
+    wasteDescription.wasteCode?.type === 'NotApplicable'
+    ? false
+    : true;
 }
 
 export function deleteBaseCarriers(
@@ -411,36 +403,52 @@ export function deleteBaseCarriers(
       return c.id === carrierId;
     });
     carriers.values.splice(index, 1);
+
+    if (carriers.values.length === 0) {
+      carriers = {
+        status: 'NotStarted',
+        transport: carriers.transport,
+      };
+    }
   }
   return carriers;
 }
 
 export function createBaseRecoveryFacilityDetail(
-  recoveryFacilityDetail: DraftRecoveryFacilityDetails,
+  draftRecoveryFacilityDetails: DraftRecoveryFacilityDetails,
   value: Omit<DraftRecoveryFacilityDetails, 'values'>,
-): DraftRecoveryFacilityDetails {
+): {
+  newRecoveryFacilityDetailId: string;
+  recoveryFacilityDetails: DraftRecoveryFacilityDetails;
+} {
+  const uuid = uuidv4();
+
   if (
-    recoveryFacilityDetail.status !== 'Started' &&
-    recoveryFacilityDetail.status !== 'Complete'
+    draftRecoveryFacilityDetails.status !== 'Started' &&
+    draftRecoveryFacilityDetails.status !== 'Complete'
   ) {
-    recoveryFacilityDetail = {
-      status: value.status as 'Started',
-      values: [{ id: uuidv4() }],
+    return {
+      newRecoveryFacilityDetailId: uuid,
+      recoveryFacilityDetails: {
+        status: value.status as 'Started',
+        values: [{ id: uuid }],
+      },
     };
-    return recoveryFacilityDetail;
   }
 
   const facilities: DraftRecoveryFacilityPartial[] = [];
-  for (const rf of recoveryFacilityDetail.values) {
+  for (const rf of draftRecoveryFacilityDetails.values) {
     facilities.push(rf);
   }
-  facilities.push({ id: recoveryFacilityDetail.values[0].id });
-  recoveryFacilityDetail = {
-    status: value.status as 'Started',
-    values: facilities,
-  };
+  facilities.push({ id: uuid });
 
-  return recoveryFacilityDetail;
+  return {
+    newRecoveryFacilityDetailId: uuid,
+    recoveryFacilityDetails: {
+      status: value.status as 'Started',
+      values: facilities,
+    },
+  };
 }
 
 export function setBaseRecoveryFacilityDetail(

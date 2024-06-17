@@ -39,6 +39,7 @@ import {
   isTemplateNameValid,
   setBaseWasteDescription,
   doesTemplateAlreadyExist,
+  getCarrierTransport,
 } from '../../lib/util';
 
 export interface SubmissionRef {
@@ -608,11 +609,12 @@ export async function createCarriers(
     }
   }
 
-  template.carriers = createBaseCarriers(
+  template.carriers.transport = getCarrierTransport(template.wasteDescription);
+  const { newCarrierId, carriers } = createBaseCarriers(
     template.carriers,
-    template.wasteDescription,
     value,
   );
+  template.carriers = carriers;
 
   template.templateDetails.lastModified = new Date();
 
@@ -620,7 +622,7 @@ export async function createCarriers(
     return Promise.resolve({
       status: value.status,
       transport: template.carriers.transport,
-      values: [{ id: template.carriers.values[0].id }],
+      values: [{ id: newCarrierId }],
     });
   } else {
     return Promise.reject(new BadRequestError('Incorrect carrier status.'));
@@ -734,11 +736,8 @@ export async function deleteCarriers(
     return Promise.reject(new NotFoundError('Index not found.'));
   }
 
-  template.carriers = deleteBaseCarriers(
-    template.carriers,
-    template.wasteDescription,
-    carrierId,
-  );
+  template.carriers.transport = getCarrierTransport(template.wasteDescription);
+  template.carriers = deleteBaseCarriers(template.carriers, carrierId);
 
   template.templateDetails.lastModified = new Date();
 
@@ -886,17 +885,16 @@ export async function createRecoveryFacilityDetail(
     }
   }
 
-  template.recoveryFacilityDetail = createBaseRecoveryFacilityDetail(
-    template.recoveryFacilityDetail,
-    value,
-  );
+  const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
+    createBaseRecoveryFacilityDetail(template.recoveryFacilityDetail, value);
+  template.recoveryFacilityDetail = recoveryFacilityDetails;
 
   template.templateDetails.lastModified = new Date();
 
   if (template.recoveryFacilityDetail.status === 'Started') {
     return Promise.resolve({
       status: value.status,
-      values: [{ id: template.recoveryFacilityDetail.values[0].id }],
+      values: [{ id: newRecoveryFacilityDetailId }],
     });
   } else {
     return Promise.reject(

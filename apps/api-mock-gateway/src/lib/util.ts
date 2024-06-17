@@ -371,25 +371,19 @@ export function setBaseWasteDescription(
 
 export function createBaseCarriers(
   draftCarriers: draft.DraftCarriers,
-  wasteDescription: draft.DraftWasteDescription,
   value: Omit<draft.DraftCarriers, 'transport' | 'values'>,
-): draft.DraftCarriers {
+): { newCarrierId: string; carriers: draft.DraftCarriers } {
   const uuid = uuidv4();
 
-  const transport: draft.DraftCarriers['transport'] =
-    wasteDescription.status !== 'NotStarted' &&
-    wasteDescription.wasteCode?.type === 'NotApplicable'
-      ? false
-      : true;
-
   if (draftCarriers.status === 'NotStarted') {
-    draftCarriers = {
-      status: value.status as 'Started',
-      transport: transport,
-      values: [{ id: uuid }],
+    return {
+      newCarrierId: uuid,
+      carriers: {
+        status: value.status as 'Started',
+        transport: draftCarriers.transport,
+        values: [{ id: uuid }],
+      },
     };
-
-    return draftCarriers;
   }
 
   const carriers: draft.DraftCarrierPartial[] = [];
@@ -397,13 +391,15 @@ export function createBaseCarriers(
     carriers.push(c);
   }
   carriers.push({ id: uuid });
-  draftCarriers = {
-    status: value.status as 'Started',
-    transport: transport,
-    values: carriers,
-  };
 
-  return draftCarriers;
+  return {
+    newCarrierId: uuid,
+    carriers: {
+      status: value.status as 'Started',
+      transport: draftCarriers.transport,
+      values: carriers,
+    },
+  };
 }
 
 export function setBaseCarriers(
@@ -423,27 +419,29 @@ export function setBaseCarriers(
   return carriers;
 }
 
+export function getCarrierTransport(
+  wasteDescription: draft.DraftWasteDescription,
+): boolean {
+  return wasteDescription.status !== 'NotStarted' &&
+    wasteDescription.wasteCode?.type === 'NotApplicable'
+    ? false
+    : true;
+}
+
 export function deleteBaseCarriers(
   carriers: draft.DraftCarriers,
-  wasteDescription: draft.DraftWasteDescription,
   carrierId: string,
 ): draft.DraftCarriers {
   if (carriers.status !== 'NotStarted') {
     const index = carriers.values.findIndex((c) => {
       return c.id === carrierId;
     });
-
     carriers.values.splice(index, 1);
-    if (carriers.values.length === 0) {
-      const transport: draft.DraftCarriers['transport'] =
-        wasteDescription.status !== 'NotStarted' &&
-        wasteDescription.wasteCode?.type === 'NotApplicable'
-          ? false
-          : true;
 
+    if (carriers.values.length === 0) {
       carriers = {
         status: 'NotStarted',
-        transport: transport,
+        transport: carriers.transport,
       };
     }
   }
@@ -453,18 +451,22 @@ export function deleteBaseCarriers(
 export function createBaseRecoveryFacilityDetail(
   recoveryFacilityDetail: draft.DraftRecoveryFacilityDetails,
   value: Omit<draft.DraftRecoveryFacilityDetails, 'values'>,
-): draft.DraftRecoveryFacilityDetails {
+): {
+  newRecoveryFacilityDetailId: string;
+  recoveryFacilityDetails: draft.DraftRecoveryFacilityDetails;
+} {
   const uuid = uuidv4();
   if (
     recoveryFacilityDetail.status !== 'Started' &&
     recoveryFacilityDetail.status !== 'Complete'
   ) {
-    recoveryFacilityDetail = {
-      status: value.status as 'Started',
-      values: [{ id: uuid }],
+    return {
+      newRecoveryFacilityDetailId: uuid,
+      recoveryFacilityDetails: {
+        status: value.status as 'Started',
+        values: [{ id: uuid }],
+      },
     };
-
-    return recoveryFacilityDetail;
   }
 
   const facilities: draft.DraftRecoveryFacilityPartial[] = [];
@@ -472,12 +474,14 @@ export function createBaseRecoveryFacilityDetail(
     facilities.push(rf);
   }
   facilities.push({ id: uuid });
-  recoveryFacilityDetail = {
-    status: value.status as 'Started',
-    values: facilities,
-  };
 
-  return recoveryFacilityDetail;
+  return {
+    newRecoveryFacilityDetailId: uuid,
+    recoveryFacilityDetails: {
+      status: value.status as 'Started',
+      values: facilities,
+    },
+  };
 }
 
 export function setBaseRecoveryFacilityDetail(
