@@ -146,3 +146,11 @@ And(/^I can see the header columns on the UKM list page correctly displayed$/) d
   expect(WasteMovementRecordsListPage.new.header_columns[3].text).to eq 'Producer name'
   expect(WasteMovementRecordsListPage.new.header_columns[4].text).to eq 'Action'
 end
+
+And(/^I see waste movement records list page translated$/) do
+  WasteMovementRecordsListPage.new.check_page_translation
+end
+
+And(/^I click show all sections$/) do
+  WasteMovementRecordsListPage.new.click_show_all_sections
+end

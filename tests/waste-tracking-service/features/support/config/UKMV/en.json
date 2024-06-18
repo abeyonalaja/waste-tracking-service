@@ -206,6 +206,56 @@
       "link": "How to create multiple new waste movements using the CSV template (opens in new tab)",
       "button": "Continue"
     },
+    "manage": {
+      "breadCrumbs": {
+        "home": "Home",
+        "moveWaste": "Move waste in the UK",
+        "current": "Manage waste movements"
+      },
+      "headingOne": "Waste movement records for {company}",
+      "table": {
+        "headerOne": "Waste movement ID",
+        "headerTwo": "Collection date",
+        "headerThree": "EWC code",
+        "headerFour": "Producer name",
+        "headerFive": "Action",
+        "action": "Action",
+        "notFound": "No record found"
+      },
+      "submittedTable": {
+        "filters": {
+          "heading": "Filter",
+          "show": "Show",
+          "hide": "Hide",
+          "showAll": "Show all sections",
+          "hideAll": "Hide all sections",
+          "collectionDate": {
+            "title": "Collection Date",
+            "hint": "The date the waste was collected from the producer",
+            "error": "Enter the full date",
+            "labelOne": "Day",
+            "labelTwo": "Month",
+            "labelThree": "Year"
+          },
+          "ewcCode": {
+            "title": "EWC Code",
+            "hint": "Search for any EWC code in your waste movements"
+          },
+          "producerName": {
+            "title": "Producer name",
+            "hint": "Search for a producer name"
+          },
+          "wasteMovementId": {
+            "title": "Waste Movement ID",
+            "hint": "Search for a waste movement ID"
+          },
+          "buttons": {
+            "apply": "Apply filters",
+            "reset": "Reset filters"
+          }
+        }
+      }
+    },
     "cancel": {
       "heading": "You have not created your new waste movement records yet",
       "paragraph": "If you cancel creating these records now, you will have to upload the CSV file again.",

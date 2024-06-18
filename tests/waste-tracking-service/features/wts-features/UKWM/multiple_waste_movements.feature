@@ -144,6 +144,8 @@ Feature: AS A Waste Controller
     When I click the "view all these created waste movement records" link
     And I switch to new tab
     Then Waste movement records list page
+    And I click show all sections
+    And I see waste movement records list page translated
     And I can see the header columns on the UKM list page correctly displayed
     And I can view all the 40 records in 3 pagination pages
 
