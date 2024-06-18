@@ -11,6 +11,8 @@ export default function SessionProvider({
   session: Session | null;
 }): JSX.Element {
   return (
-    <AuthSessionProvider session={session}>{children}</AuthSessionProvider>
+    <AuthSessionProvider session={session} refetchInterval={60}>
+      {children}
+    </AuthSessionProvider>
   );
 }

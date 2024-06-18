@@ -54,6 +54,7 @@ export const options: NextAuthOptions = {
           uniqueReference: profile.uniqueReference,
         };
       } else if (Date.now() > twoMinLessThanExpiry) {
+        console.log('Refresh the token');
         return refreshAccessToken(token) || token;
       }
       return token;
