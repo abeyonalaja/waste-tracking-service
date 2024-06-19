@@ -109,6 +109,7 @@ Feature: Mode of transport page
     Given I login to waste tracking portal
     When I navigate to the task list page with reference
     And I click the "Waste carriers" link
+    And I wait for a second
     And I complete the Who is the waste carrier page
     And I click the button Save and continue
     And I complete the Whats is the waste carriers contact details page

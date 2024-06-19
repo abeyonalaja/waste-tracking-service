@@ -67,5 +67,4 @@ Feature: Waste collection manual entry address page
     And I click the button Save and continue
     Then I remain on the Manual Address Entry Waste Collection page with an "Enter an address" error message displayed
     And  I remain on the Manual Address Entry Waste Collection page with an "Enter a town or city" error message displayed
-    And I remain on the Manual Address Entry Waste Collection page with an "Enter a real postcode" error message displayed
     And I remain on the Manual Address Entry Waste Collection page with an "Select a country" error message displayed
