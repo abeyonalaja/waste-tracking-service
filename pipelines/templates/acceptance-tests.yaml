@@ -20,12 +20,13 @@ parameters:
   - name: numberOfThreads
     displayName: Number of parallel threads (only applicable if test suite is executed in parallel)
     type: number
-    default: 6
+    default: 8
     values:
       - 2
       - 3
       - 4
       - 6
+      - 8
 
   - name: dependsOn
     displayName: Acceptance tests job dependencies
