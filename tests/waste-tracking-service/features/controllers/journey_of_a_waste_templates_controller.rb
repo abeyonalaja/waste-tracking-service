@@ -10,6 +10,7 @@ module JourneyOfAWasteTemplateController
     waste_collection_details_page = WasteCollectionAddressPage.new
     contact_details_address_page = ContactDetailsCollectionAddressPage.new
     countries_waste_will_travel_page = CountriesWasteWillTravelPage.new
+    countries_waste_will_travel_page.wait_for_element('country')
 
     who_is_waste_carrier_page.enter_organisation_name 'CompanyLTD'
     who_is_waste_carrier_page.enter_address 'Sample Address 1'
@@ -42,6 +43,7 @@ module JourneyOfAWasteTemplateController
     location_leaves_uk_page.save_and_continue
 
     sleep(2)
+    countries_waste_will_travel_page.wait_for_element('country')
     countries_waste_will_travel_page.choose_option 'Yes'
     countries_waste_will_travel_page.select_country_of_waste
     countries_waste_will_travel_page.save_and_continue

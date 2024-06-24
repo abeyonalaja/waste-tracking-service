@@ -14,7 +14,7 @@ module RecoveryFacilityController
 
     confirmation_interim_site_page.choose_option 'Yes'
     confirmation_interim_site_page.save_and_continue
-
+    interim_address_page.wait_for_element('country')
     interim_address_page.enter_name 'interim_site'
     interim_address_page.enter_address 'interim_site'
     interim_address_page.select_interim_site_country
@@ -29,6 +29,7 @@ module RecoveryFacilityController
     TestStatus.set_test_status(:interim_site_recovery_code, 'R12: Exchange of wastes for submission to any of the operations numbered R01 to R11')
     interim_site_recovery_code_page.save_and_continue
 
+    facility_address_page.wait_for_element('country')
     facility_address_page.enter_name 'recovery_facility'
     facility_address_page.enter_address 'recovery_facility'
     facility_address_page.select_recovery_facility_country '1st_recovery_facility_country'
@@ -39,6 +40,7 @@ module RecoveryFacilityController
     facility_contact_details_page.enter_phone_number 'recovery_facility'
     facility_contact_details_page.save_and_continue
 
+    recovery_code_page.wait_for_element('recoveryCode')
     recovery_code_page.select_first_option
     recovery_code_page.save_and_continue
 

@@ -3,6 +3,7 @@ And(/^I complete the "([^"]*)" waste carrier with "([^"]*)"$/) do |waste_carrier
   waste_carrier_title = "#{waste_carrier} waste carrier"
   waste_carrier_address = "#{waste_carrier} waste carrier address"
   sleep 1
+  WhoIsTheWasteCarrierPage.new.wait_for_element('country')
   WhoIsTheWasteCarrierPage.new.check_page_title(waste_carrier)
   WhoIsTheWasteCarrierPage.new.enter_organisation_name waste_carrier_org_name
   WhoIsTheWasteCarrierPage.new.enter_address waste_carrier_address

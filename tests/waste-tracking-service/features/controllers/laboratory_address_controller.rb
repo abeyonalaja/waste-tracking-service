@@ -4,6 +4,7 @@
 module LaboratoryAddressController
   def self.complete
     laboratory_address_page = LaboratoryAddressPage.new
+    laboratory_address_page.wait_for_element('country')
     laboratory_address_page.enter_name 'laboratory_address'
     laboratory_address_page.enter_address 'laboratory_address'
     laboratory_address_page.select_laboratory_country

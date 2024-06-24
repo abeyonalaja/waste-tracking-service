@@ -99,4 +99,10 @@ module GeneralHelpers
   def parse_json(json_string)
     JSON.parse(json_string)
   end
+
+  def wait_for_element(selector)
+    find(selector, wait: 10)
+  rescue Capybara::ElementNotFound
+    raise "Element with selector '#{selector}' not found within 10 seconds"
+  end
 end

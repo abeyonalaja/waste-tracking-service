@@ -26,6 +26,7 @@ module JourneyOfAWasteController
     collection_date_page.save_and_continue
     sleep(1)
     who_is_waste_carrier_page.check_page_displayed
+    who_is_waste_carrier_page.wait_for_element 'country'
     who_is_waste_carrier_page.enter_organisation_name 'CompanyLTD'
     who_is_waste_carrier_page.enter_address 'Sample Address 1'
     who_is_waste_carrier_page.enter_country 'Wales'
@@ -65,6 +66,7 @@ module JourneyOfAWasteController
     location_leaves_uk_page.save_and_continue
 
     sleep(2)
+    countries_waste_will_travel_page.wait_for_element('country')
     countries_waste_will_travel_page.choose_option 'Yes'
     countries_waste_will_travel_page.select_country_of_waste
     countries_waste_will_travel_page.save_and_continue
