@@ -1,14 +1,21 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { useTranslations } from 'next-intl';
-import { Link } from '../../navigation';
+import { Link, redirect } from '@wts/ui/navigation';
 import { Page } from '@wts/ui/shared-ui/server';
+import { getServerSession } from 'next-auth';
+import { getTranslations } from 'next-intl/server';
 
 export const metadata = {
   title: 'Waste tracking service',
 };
 
-export default function HomePage(): JSX.Element {
-  const t = useTranslations('startPage');
+export default async function HomePage(): Promise<JSX.Element> {
+  const session = await getServerSession();
+
+  if (session && session.user) {
+    redirect('/account');
+  }
+
+  const t = await getTranslations({ namespace: 'startPage' });
 
   return (
     <Page>
