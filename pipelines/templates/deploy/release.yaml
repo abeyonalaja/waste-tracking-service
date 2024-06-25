@@ -38,6 +38,9 @@ parameters:
   - name: deployChart
     type: string
     default: ''
+  - name: chartControlFilePath
+    type: string
+    default: ''
 
 steps:
   - task: AzureCLI@2
@@ -49,16 +52,22 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        response=$(az acr repository show-tags \
-          --repository $REPOSITORY_NAME \
-          --orderby time_desc \
-          --top 1
-        )
-        echo "Latest Helm chart tag for: ${REPOSITORY_NAME}"
-        echo $response | jq -r .[]
-        echo "##vso[task.setvariable variable=chartTag;isoutput=true]$( \
-          echo $response | jq -r .[] \
-        )"
+        chart_version=$(yq e '.${{ parameters.appName }}.version' ${CHART_CONTROL_FILEPATH})
+        if [[ "$chart_version" == "latest" ]]; then
+          response=$(az acr repository show-tags \
+            --repository $REPOSITORY_NAME \
+            --orderby time_desc \
+            --top 1
+          )
+          echo "Latest Helm chart tag for: ${REPOSITORY_NAME}"
+          echo $response | jq -r .[]
+          echo "##vso[task.setvariable variable=chartTag;isoutput=true]$( \
+            echo $response | jq -r .[] \
+          )"
+        else
+          echo "##vso[task.setvariable variable=chartTag;isoutput=true]${chart_version}"
+        fi
     env:
       AZURE_DEFAULTS_ACR: ${{ parameters.containerRegistryName }}
       REPOSITORY_NAME: charts/wts/${{ parameters.appName }}
+      CHART_CONTROL_FILEPATH: ${{ parameters.chartControlFilePath }}

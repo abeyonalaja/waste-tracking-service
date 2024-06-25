@@ -1,0 +1,24 @@
+api-waste-tracking-gateway:
+  version: '0.1.0-main.da192e05'
+app-green-list-waste-export:
+  version: '0.1.0-main.cdbeb85a'
+app-uk-waste-movements:
+  version: '0.1.0-main.7ff421df'
+app-waste-tracking-service:
+  version: '0.1.0-main.cdbeb85a'
+service-address:
+  version: '0.1.0-main.bf486b51'
+service-feedback:
+  version: '0.1.0-main.d77747ed'
+service-green-list-waste-export:
+  version: '0.1.0-main.bf486b51'
+service-green-list-waste-export-bulk:
+  version: '0.1.0-main.bf486b51'
+service-limited-audience:
+  version: '0.1.0-main.bf486b51'
+service-reference-data:
+  version: '0.1.0-main.bf486b51'
+service-uk-waste-movements:
+  version: '0.1.0-main.4c13cd48'
+service-uk-waste-movements-bulk:
+  version: '0.1.0-fix-small-bugs.dc2cbedf'

@@ -14,6 +14,9 @@ parameters:
   - name: valuesFilePath
     type: string
     default: ''
+  - name: chartControlFilePath
+    type: string
+    default: ''
   - name: appInsightsConnectionString
     type: string
     default: ''
@@ -32,6 +35,7 @@ steps:
       appName: ${{ parameters.appName }}
       appNameTag: ${{ parameters.appNameTag }}
       deployChart: ${{ parameters.deployChart }}
+      chartControlFilePath: ${{ parameters.chartControlFilePath }}
 
   - bash: |
       echo "Installing release: ${PROJECT_NAME}"

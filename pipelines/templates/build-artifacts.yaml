@@ -81,7 +81,6 @@ jobs:
           affectedCharts=$(echo $affected | tr ' ' ',')
           mkdir -p $(Build.ArtifactStagingDirectory)/runtimeVariables
           echo "$affectedCharts" > $(Build.ArtifactStagingDirectory)/runtimeVariables/affectedCharts
-          version="0.1.0-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
           updatedCharts=$(
             git diff --name-only $(branch) $(branch)~1 -R -- \
               | grep -Po "(?<=^charts\/)[a-z-]+(?=\/)" \
@@ -89,6 +88,10 @@ jobs:
           )
           for project in ${updatedCharts}
           do
+            PATH_TO_CHART="charts/${project}/Chart.yaml"
+            chart_version=$(grep -E '^version:' ${PATH_TO_CHART} | awk '{print $2}')
+            echo ${chart_version}
+            version="${chart_version}-$(Build.SourceBranchName).$(git rev-parse --short HEAD)"
             helm package ./charts/${project} \
               --version ${version} \
               --destination $(Build.StagingDirectory)
