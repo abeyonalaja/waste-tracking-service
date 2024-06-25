@@ -15,6 +15,7 @@ And(/^I should see correct date on draft application page$/) do
 end
 
 And(/^I should see waste code on draft application page$/) do
+  DraftRecordsPage.new.wait_for_text(TestStatus.test_status(:waste_code_description))
   expect(DraftRecordsPage.new.waste_code.text).to eq TestStatus.test_status(:waste_code_description)
 end
 

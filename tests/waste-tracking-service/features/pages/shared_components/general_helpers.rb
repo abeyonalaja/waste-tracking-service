@@ -105,4 +105,12 @@ module GeneralHelpers
   rescue Capybara::ElementNotFound
     raise "Element with selector '#{selector}' not found within 10 seconds"
   end
+
+  def wait_for_text(text, wait_time = Capybara.default_max_wait_time)
+    begin
+      page.has_text?(text, wait: wait_time)
+    rescue Capybara::ElementNotFound
+      raise "Text '#{text}' not found within #{wait_time} seconds"
+    end
+  end
 end

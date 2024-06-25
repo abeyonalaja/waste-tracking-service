@@ -66,8 +66,8 @@ module JourneyOfAWasteController
     location_leaves_uk_page.save_and_continue
 
     sleep(2)
-    countries_waste_will_travel_page.wait_for_element('country')
     countries_waste_will_travel_page.choose_option 'Yes'
+    countries_waste_will_travel_page.wait_for_element('country')
     countries_waste_will_travel_page.select_country_of_waste
     countries_waste_will_travel_page.save_and_continue
     countries_waste_will_travel_page.page_refresh
