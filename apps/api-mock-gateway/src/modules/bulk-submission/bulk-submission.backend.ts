@@ -95,6 +95,17 @@ export async function createBatch(
         accountId: accountId,
       };
       break;
+    case 'FailedCsvValidation':
+      value = {
+        id,
+        accountId,
+        state: {
+          status: 'FailedCsvValidation',
+          timestamp,
+          error: 'Invalid CSV file',
+        },
+      };
+      break;
     case 'FailedValidation':
       value = {
         id: uuidv4(),

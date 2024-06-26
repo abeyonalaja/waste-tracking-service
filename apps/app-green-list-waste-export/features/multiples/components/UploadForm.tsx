@@ -38,9 +38,7 @@ export function UploadForm({
 
   const [validationErrors, setValidationErrors] =
     useState<ValidationErrorsType>(
-      router.query.error
-        ? { file: router.query.error.toString().replace(/_/g, ' ') }
-        : {},
+      router.query.error ? { file: t('multiples.csvValidationError') } : {},
     );
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
