@@ -12,6 +12,7 @@ export { EWC } from './components';
 export { Interruption } from './components';
 export { Submission } from './components';
 export { SubmissionConfirmation } from './components';
+export { SubmittedResults } from './components';
 export { TotalErrorSummary } from './components';
 export { ValidationSuccess } from './components';
 export { ValidationCancel } from './components';

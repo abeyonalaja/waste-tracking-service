@@ -1,5 +1,11 @@
 import Boom from '@hapi/boom';
-import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
+import {
+  UkwmBulkSubmission,
+  UkwmColumnWithMessage,
+  UkwmPagedSubmissionData,
+  UkwmRowWithMessage,
+  UkwmSubmittedPartialSubmission,
+} from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { Readable } from 'stream';
 import { parse } from 'csv-parse';
@@ -9,6 +15,105 @@ import { UkwmBulkWithAccount, db } from '../../db';
 const downloadSections = `Waste collection details,,,,,,,,,,,,,,,,,,,Receiver (person or business who receives the waste for recovery or disposal) details,,,,,,,,,,,Waste transportation details,,First waste type details (compulsory),,,,,,,,,,,,,,,Second waste type details if required (all waste details are compulsory if you enter a second EWC code),,,,,,,,,,,,,,,Third waste type details if required (all waste details are compulsory if you enter a third EWC code),,,,,,,,,,,,,,,"Fourth waste type details if required (all waste details are compulsory if you enter a fourth EWC code)						",,,,,,,,,,,,,,,"Fifth waste type details if required (all waste details are compulsory if you enter a fifth EWC code)						",,,,,,,,,,,,,,,"Sixth waste type details if required (all waste details are compulsory if you enter a sixth EWC code)						",,,,,,,,,,,,,,,Seventh waste type details if required (all waste details are compulsory if you enter a seventh EWC code),,,,,,,,,,,,,,,Eighth waste type details if required (all waste details are compulsory if you enter a eighth EWC code),,,,,,,,,,,,,,,Ninth waste type details if required (all waste details are compulsory if you enter a ninth EWC code),,,,,,,,,,,,,,,Tenth waste type details if required (all waste details are compulsory if you enter a tenth EWC code),,,,,,,,,,,,,,`;
 
 const downloadHeaders = `Waste collection address Line 1 (only enter if different to producer address),Address Line 2,Town or city,Country,Waste collection postcode (only enter if different to producer address),Local authority,"Waste source (household, commercial, industrial, local authority, or demolition)",Broker registration number (only enter if applicable),"Carrier registration number (starts with CBD, then either U or L, followed by 4 to 6 numbers)","Expected waste collection date (only use numbers and slashes between the day, month and year, for example 13/01/25)",Carrier organisation name,Carrier address line 1,Carrier address line 2,Carrier town/city,Carrier country,Carrier postcode,Carrier contact name,Carrier contact email,Carrier contact phone,"Receiver  authorisation type (permit, licence, regulatory position statement, or other local agreement)",Receiver  environmental permit number or waste exepmtion number (if applicable),Receiver organisation name,Receiver address Line 1,Address Line 2,Town or city,Country,Receiver postcode,Receiver contact name,Receiver contact email,Receiver contact phone number,Number and type of transportation containers (max 250 characters),"Special handling requirements details (only enter if applicable, max 250 characters)","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","EWC code (six digits, only use numbers)",Enter waste description (maximum 100 charcaters),"Physical form of waste (gas, liquid, solid, powder, sludge, or mixed)",Waste quantity (numbers and decimal points only),"Quantity units (tonnes, kilograms, litres, or cubic metres)",Quantity of waste (actual or estimate),"Chemical and biological components of the waste (separate multiple components using a semi colon. For example, textured coatings; floor tiles)",Chemical or biological concentrations value (separate multiple amounts using a semi colon),"Chemical or biological concentrations unit of measure (% or mg/kg, separate multiple amounts using a semi colon)",Does the waste have hazardous properties? (Y/N),Enter all hazardous waste codes (if applicable),Does the waste contain persistent organic pollutants (POPs)? (Y/N),Enter persistent organic pollutants (POPs) details (if applicable),"Enter POPs concentration value, using only numbers and a full stop","Enter POPs concentration unit of measure, for example %","Service transaction ID (from the record creation, 13 characters, letters and numbers)","Your unique reference (maximum 20 characters, letters and numbers only)", Confirm the carrier details are correct (Y/N), Broker registration number (only enter if applicable), Carrier registration number, Enter the carrier organisation name, Enter the carrier address line 1 (if applicable), "The carrier address line 2 optional, (if applicable)", Enter the carrier town or city (if applicable), Enter the carrier country (if applicable), "Enter the carrier postcode in the correct format (optional, if applicable)", Enter the carrier contact name (if applicable), Enter the carrier contact email (if applicable), Enter the carrier phone number (if applicable), "Mode of waste transport (road, rail, air, sea, or inland waterway)", Vehicle registration number, Date waste collected, "Time waste collected (can be an estimate, for example 2:30pm)"`;
+
+const submissions: UkwmSubmittedPartialSubmission[] = [
+  ...Array(155).keys(),
+].map((i) => ({
+  id: uuidv4(),
+  transactionId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
+  producer: {
+    contact: {
+      organisationName: `Producer Org ${i}`,
+      email: `email${i}@example.com`,
+      name: `Producer ${i}`,
+      phone: `0123456789${i}`,
+    },
+    address: {
+      addressLine1: `Address Line 1 ${i}`,
+      addressLine2: `Address Line 2 ${i}`,
+      townCity: `City ${i}`,
+      country: `Country ${i}`,
+      postcode: `Postcode ${i}`,
+    },
+    reference: `Producer Ref ${i}`,
+    sicCode: i.toString().padStart(6, '0'),
+  },
+  receiver: {
+    contact: {
+      organisationName: `Receiver Org ${i}`,
+      email: `email${i}@example.com`,
+      name: `Receiver ${i}`,
+      phone: `0123456789${i}`,
+    },
+    address: {
+      addressLine1: `Address Line 1 ${i}`,
+      addressLine2: `Address Line 2 ${i}`,
+      townCity: `City ${i}`,
+      country: `Country ${i}`,
+      postcode: `Postcode ${i}`,
+    },
+    authorizationType: 'permit',
+    environmentalPermitNumber: `EPN ${i}`,
+  },
+  wasteTransportation: {
+    numberAndTypeOfContainers: `Containers ${i}`,
+    specialHandlingRequirements: `Special Handling ${i}`,
+  },
+  wasteCollection: {
+    expectedWasteCollectionDate: {
+      day: ((i % 31) + 1).toString(),
+      month: ((i % 12) + 1).toString(),
+      year: '2024',
+    },
+    address: {
+      addressLine1: `Address Line 1 ${i}`,
+      addressLine2: `Address Line 2 ${i}`,
+      country: `Country ${i}`,
+      postcode: `Postcode ${i}`,
+      townCity: `Town City ${i}`,
+    },
+    localAuthority: 'Local authority 1',
+    wasteSource: 'commercial',
+    brokerRegistrationNumber: `BRN ${i}`,
+    carrierRegistrationNumber: `CRN ${i}`,
+  },
+  wasteTypes: [
+    {
+      ewcCode: `${i.toString().padStart(3, '0')}012`,
+      physicalForm: 'Solid',
+      wasteQuantity: 1000,
+      wasteQuantityType: 'ActualData',
+      quantityUnit: 'Kilogram',
+      wasteDescription: `Waste Description ${i}`,
+      chemicalAndBiologicalComponents: [
+        {
+          concentration: 1,
+          concentrationUnit: 'Microgram',
+          name: `Chemical ${i}`,
+        },
+      ],
+      hasHazardousProperties: true,
+      hazardousWasteCodes: [
+        {
+          code: `HWC ${i}`,
+          name: `HWC Name ${i}`,
+        },
+      ],
+      containsPops: true,
+      pops: [
+        {
+          concentration: 1,
+          concentrationUnit: 'Microgram',
+          name: `POP ${i}`,
+        },
+      ],
+    },
+  ],
+  submissionState: {
+    status: 'SubmittedWithActuals',
+    timestamp: new Date(),
+  },
+}));
 
 export interface BatchRef {
   id: string;
@@ -22,6 +127,16 @@ export interface Input {
 
 interface TestCsvRow {
   state: string;
+}
+
+export interface RowRef {
+  rowId: string;
+  batchId: string;
+}
+
+export interface ColumnRef {
+  columnRef: string;
+  batchId: string;
 }
 
 export async function createBatch(
@@ -105,6 +220,17 @@ export async function createBatch(
         accountId: accountId,
       };
       break;
+    case 'FailedCsvValidation':
+      value = {
+        id: id,
+        accountId: accountId,
+        state: {
+          status: 'FailedCsvValidation',
+          timestamp: timestamp,
+          error: 'Invalid CSV',
+        },
+      };
+      break;
     case 'FailedValidation':
       value = {
         id: id,
@@ -112,262 +238,30 @@ export async function createBatch(
         state: {
           status: 'FailedValidation',
           timestamp: new Date(),
-          rowErrors: [
-            {
-              rowNumber: 3,
-              errorAmount: 12,
-              errorDetails: [
-                'The unique reference must be 20 characters or less',
-                'Enter the producer organisation name',
-                'Enter the producer address',
-                'Enter the producer town or city',
-                'Enter full name of producer contact',
-                'Enter producer contact email address in correct format',
-                'Enter the receiver organisation name',
-                'Enter the receiver address',
-                'Enter the receiver town or city',
-                'Enter full name of receiver contact',
-                'Enter receiver contact email address in correct format',
-                'Enter the number and type of containers',
-              ],
-            },
-            {
-              rowNumber: 4,
-              errorAmount: 16,
-              errorDetails: [
-                'The unique reference must be 20 characters or less',
-                'Enter the producer organisation name',
-                'Enter the producer address',
-                'Enter the producer town or city',
-                'The producer country must only be England, Wales, Scotland, or Northern Ireland',
-                'Enter full name of producer contact',
-                'Enter producer contact email address',
-                'Enter the receiver organisation name',
-                'Enter the receiver address',
-                'Enter the receiver town or city',
-                'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
-                'Enter full name of receiver contact',
-                'Enter receiver contact email address',
-                'Number and type of transportation details must be less than 100 characters',
-                'The waste collection address line 2 must be fewer than 250 characters',
-                'Enter the waste collection town or city',
-                'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
-              ],
-            },
-          ],
-          columnErrors: [
-            {
-              columnName: 'Producer address line 1',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the producer address',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the producer address',
-                },
-              ],
-            },
-            {
-              columnName: 'Producer contact name',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter full name of producer contact',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter full name of producer contact',
-                },
-              ],
-            },
-            {
-              columnName: 'Producer contact email address',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason:
-                    'Enter producer contact email address in correct format',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter producer contact email address',
-                },
-              ],
-            },
-            {
-              columnName: 'Producer country',
-              errorAmount: 1,
-              errorDetails: [
-                {
-                  rowNumber: 4,
-                  errorReason:
-                    'The producer country must only be England, Wales, Scotland, or Northern Ireland',
-                },
-              ],
-            },
-            {
-              columnName: 'Producer organisation name',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the producer organisation name',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the producer organisation name',
-                },
-              ],
-            },
-            {
-              columnName: 'Producer town or city',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the producer town or city',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the producer town or city',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver address line 1',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the receiver address',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the receiver address',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver contact name',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter full name of receiver contact',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter full name of receiver contact',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver contact email address',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason:
-                    'Enter receiver contact email address in correct format',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter receiver contact email address',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver country',
-              errorAmount: 1,
-              errorDetails: [
-                {
-                  rowNumber: 4,
-                  errorReason:
-                    'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver organisation name',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the receiver organisation name',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the receiver organisation name',
-                },
-              ],
-            },
-            {
-              columnName: 'Receiver town or city',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the receiver town or city',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason: 'Enter the receiver town or city',
-                },
-              ],
-            },
-            {
-              columnName: 'Waste Collection Details Invalid Town',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 6,
-                  errorReason:
-                    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
-                },
-                {
-                  rowNumber: 7,
-                  errorReason:
-                    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
-                },
-              ],
-            },
-            {
-              columnName: 'Reference',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason:
-                    'The unique reference must be 20 characters or less',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason:
-                    'The unique reference must be 20 characters or less',
-                },
-              ],
-            },
-            {
-              columnName: 'Number and type of transportation containers',
-              errorAmount: 2,
-              errorDetails: [
-                {
-                  rowNumber: 3,
-                  errorReason: 'Enter the number and type of containers',
-                },
-                {
-                  rowNumber: 4,
-                  errorReason:
-                    'Number and type of transportation details must be less than 100 characters',
-                },
-              ],
-            },
-          ],
+          errorSummary: {
+            columnBased: [
+              {
+                columnRef: 'Producer contact phone number',
+                count: 2,
+              },
+              {
+                columnRef: 'Waste Collection Details Country',
+                count: 1,
+              },
+            ],
+            rowBased: [
+              {
+                rowNumber: 1,
+                rowId: 'row1',
+                count: 2,
+              },
+              {
+                rowNumber: 2,
+                rowId: 'row2',
+                count: 1,
+              },
+            ],
+          },
         },
       };
       break;
@@ -379,162 +273,7 @@ export async function createBatch(
           status: 'PassedValidation',
           timestamp: timestamp,
           hasEstimates: true,
-          submissions: [
-            {
-              producer: {
-                reference: 'ref1',
-                sicCode: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteTypes: [
-                {
-                  containsPops: false,
-                  ewcCode: '01 03 04',
-                  hasHazardousProperties: false,
-                  physicalForm: 'Solid',
-                  quantityUnit: 'Tonne',
-                  wasteDescription: 'Waste description',
-                  wasteQuantity: 100,
-                  wasteQuantityType: 'ActualData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Microgram',
-                      name: 'Chemical 1',
-                    },
-                  ],
-                },
-              ],
-              wasteCollection: {
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Real Avenue',
-                  country: 'England',
-                  postcode: 'SW1A 1AA',
-                  townCity: 'London',
-                },
-                brokerRegistrationNumber: 'CBDL349812',
-                carrierRegistrationNumber: 'CBDL349812',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                localAuthority: 'Local authority 1',
-                wasteSource: 'LocalAuthority',
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: '20 x 40ft containers',
-                specialHandlingRequirements: 'Special handling requirements',
-              },
-            },
-            {
-              producer: {
-                reference: 'ref2',
-                sicCode: '20202',
-                contact: {
-                  email: 'janedoe@email.com',
-                  name: 'Jane Doe',
-                  organisationName: 'Company Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Apt 20',
-                  country: 'England',
-                  townCity: 'Manchester',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '2020202',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteTypes: [
-                {
-                  containsPops: true,
-                  ewcCode: '02 03 02',
-                  hasHazardousProperties: true,
-                  physicalForm: 'Liquid',
-                  quantityUnit: 'Cubic Metre',
-                  wasteDescription: 'Waste description',
-                  wasteQuantity: 200,
-                  wasteQuantityType: 'EstimateData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Microgram',
-                      name: 'Chemical 1',
-                    },
-                  ],
-                },
-              ],
-              wasteCollection: {
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Real Avenue',
-                  country: 'England',
-                  postcode: 'SW1A 1AA',
-                  townCity: 'London',
-                },
-                brokerRegistrationNumber: 'CBDL349812',
-                carrierRegistrationNumber: 'CBDL349812',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                localAuthority: 'Local authority 1',
-                wasteSource: 'LocalAuthority',
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: '20 x 40ft containers',
-                specialHandlingRequirements: 'Special handling requirements',
-              },
-            },
-          ],
+          rowsCount: 2,
         },
       };
       break;
@@ -546,166 +285,10 @@ export async function createBatch(
           status: 'Submitting',
           timestamp: timestamp,
           hasEstimates: true,
-          submissions: [
-            {
-              producer: {
-                reference: 'ref1',
-                sicCode: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteTypes: [
-                {
-                  containsPops: false,
-                  ewcCode: '01 03 04',
-                  hasHazardousProperties: false,
-                  physicalForm: 'Solid',
-                  quantityUnit: 'Tonne',
-                  wasteDescription: 'Waste description',
-                  wasteQuantity: 100,
-                  wasteQuantityType: 'ActualData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Microgram',
-                      name: 'Chemical 1',
-                    },
-                  ],
-                },
-              ],
-              wasteCollection: {
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Real Avenue',
-                  country: 'England',
-                  postcode: 'SW1A 1AA',
-                  townCity: 'London',
-                },
-                brokerRegistrationNumber: 'CBDL349812',
-                carrierRegistrationNumber: 'CBDL349812',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                localAuthority: 'Local authority 1',
-                wasteSource: 'LocalAuthority',
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: '20 x 40ft containers',
-                specialHandlingRequirements: 'Special handling requirements',
-              },
-            },
-            {
-              producer: {
-                reference: 'ref2',
-                sicCode: '20202',
-                contact: {
-                  email: 'janedoe@email.com',
-                  name: 'Jane Doe',
-                  organisationName: 'Company Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Apt 20',
-                  country: 'England',
-                  townCity: 'Manchester',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '2020202',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteTypes: [
-                {
-                  containsPops: true,
-                  ewcCode: '02 03 02',
-                  hasHazardousProperties: true,
-                  physicalForm: 'Liquid',
-                  quantityUnit: 'Kilogram',
-                  wasteDescription: 'Waste description',
-                  wasteQuantity: 200,
-                  wasteQuantityType: 'EstimateData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Microgram',
-                      name: 'Chemical 1',
-                    },
-                  ],
-                },
-              ],
-              wasteCollection: {
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Real Avenue',
-                  country: 'England',
-                  postcode: 'SW1A 1AA',
-                  townCity: 'London',
-                },
-                brokerRegistrationNumber: 'CBDL349812',
-                carrierRegistrationNumber: 'CBDL349812',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                localAuthority: 'Local authority 1',
-                wasteSource: 'LocalAuthority',
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: '20 x 40ft containers',
-                specialHandlingRequirements: 'Special handling requirements',
-              },
-            },
-          ],
+          transactionId: transactionId,
         },
       };
       break;
-
     case 'Submitted':
       value = {
         id: id,
@@ -714,19 +297,8 @@ export async function createBatch(
           status: 'Submitted',
           transactionId: transactionId,
           timestamp: timestamp,
-          submissions: [...Array(155).keys()].map((i) => ({
-            id: uuidv4(),
-            wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
-            producerName: `Producer Org ${i}`,
-            ewcCodes: [...Array((i % 5) + 1).keys()].map(
-              (ewc) => `${ewc.toString().padStart(3, '0')}012`,
-            ),
-            collectionDate: {
-              day: ((i % 31) + 1).toString(),
-              month: ((i % 12) + 1).toString(),
-              year: '2024',
-            },
-          })),
+          hasEstimates: true,
+          createRowsCount: 3,
         },
       };
       break;
@@ -768,21 +340,10 @@ export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
 
   value.state = {
     status: 'Submitted',
-    timestamp: timestamp,
     transactionId: transactionId,
-    submissions: [
-      {
-        id: id,
-        collectionDate: {
-          day: '01',
-          month: '01',
-          year: '2028',
-        },
-        ewcCodes: ['01 03 04'],
-        producerName: 'Example Ltd',
-        wasteMovementId: transactionId,
-      },
-    ],
+    timestamp: timestamp,
+    hasEstimates: true,
+    createRowsCount: 5,
   };
 
   return Promise.resolve();
@@ -806,4 +367,84 @@ export async function downloadCsv(): Promise<string | Buffer> {
   const buffer = Buffer.from(csvText, 'utf-8');
 
   return buffer;
+}
+
+export function getRow({ rowId }: RowRef): Promise<UkwmRowWithMessage> {
+  const rowWithMessage = db.ukwmRows.find((r) => r.id == rowId);
+  if (rowWithMessage === undefined) {
+    return Promise.reject(Boom.notFound());
+  }
+
+  return Promise.resolve(rowWithMessage);
+}
+
+export function getColumn({
+  columnRef,
+}: ColumnRef): Promise<UkwmColumnWithMessage> {
+  const columnWithMessage = db.ukwmColumns.find(
+    (r) => r.columnRef == columnRef,
+  );
+  if (columnWithMessage === undefined) {
+    return Promise.reject(Boom.notFound());
+  }
+  return Promise.resolve(columnWithMessage);
+}
+
+export function getSubmissions(
+  page: number,
+  pageSize: number,
+  collectionDate?: Date,
+  ewcCode?: string,
+  producerName?: string,
+  wasteMovementId?: string,
+): Promise<UkwmPagedSubmissionData> {
+  let filteredSubmissions = submissions;
+
+  if (wasteMovementId) {
+    filteredSubmissions = filteredSubmissions.filter(
+      (s) => s.transactionId === wasteMovementId,
+    );
+  }
+
+  if (collectionDate) {
+    filteredSubmissions = filteredSubmissions.filter(
+      (s) =>
+        s.wasteCollection.expectedWasteCollectionDate.day ===
+          collectionDate.getDate().toString() &&
+        s.wasteCollection.expectedWasteCollectionDate.month ===
+          (collectionDate.getMonth() + 1).toString() &&
+        s.wasteCollection.expectedWasteCollectionDate.year ===
+          collectionDate.getFullYear().toString(),
+    );
+  }
+
+  if (ewcCode) {
+    filteredSubmissions = filteredSubmissions.filter((s) =>
+      s.wasteTypes.some((wt) => wt.ewcCode === ewcCode),
+    );
+  }
+
+  if (producerName) {
+    filteredSubmissions = filteredSubmissions.filter((s) =>
+      s.producer.contact.organisationName.includes(producerName),
+    );
+  }
+
+  const pagedSubmissions = filteredSubmissions.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
+
+  return Promise.resolve({
+    totalRecords: filteredSubmissions.length,
+    totalPages: Math.ceil(filteredSubmissions.length / pageSize),
+    page,
+    values: pagedSubmissions.map((s) => ({
+      id: s.id,
+      wasteMovementId: s.transactionId,
+      producerName: s.producer.contact.organisationName,
+      ewcCode: s.wasteTypes[0].ewcCode,
+      collectionDate: s.wasteCollection.expectedWasteCollectionDate,
+    })),
+  });
 }

@@ -3,6 +3,10 @@ import {
   AddContentToBatchRequest,
   GetBatchRequest,
   FinalizeBatchRequest,
+  GetRowRequest,
+  GetColumnRequest,
+  GetBulkSubmissionsRequest,
+  BulkSubmissionPartialSummary,
 } from './dto';
 import {
   Address,
@@ -12,6 +16,8 @@ import {
   ExpectedWasteCollectionDate,
   CarrierDetail,
   DraftCarrierDetail,
+  ProducerDetail,
+  ReceiverDetail,
 } from '@wts/api/uk-waste-movements';
 
 const errorResponseValue: SchemaObject = {
@@ -52,7 +58,7 @@ const contact: JTDSchemaType<Contact> = {
   optionalProperties: {},
 };
 
-export const producer: SchemaObject = {
+export const producer: JTDSchemaType<ProducerDetail> = {
   properties: {
     reference: { type: 'string' },
     contact: contact,
@@ -91,12 +97,14 @@ export const producerAndCollection: SchemaObject = {
   },
 };
 
-export const receiver: SchemaObject = {
+export const receiver: JTDSchemaType<ReceiverDetail> = {
   properties: {
     authorizationType: { type: 'string' },
-    environmentalPermitNumber: { type: 'string' },
     contact: contact,
     address: address,
+  },
+  optionalProperties: {
+    environmentalPermitNumber: { type: 'string' },
   },
 };
 
@@ -225,7 +233,7 @@ export const draftSubmissionDeclaration: SchemaObject = {
   },
 };
 
-const bulkSubmissionStateBase: SchemaObject = {
+const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {
     Processing: {
@@ -242,26 +250,22 @@ const bulkSubmissionStateBase: SchemaObject = {
     FailedValidation: {
       properties: {
         timestamp: { type: 'timestamp' },
-        rowErrors: {
-          elements: {
-            properties: {
-              rowNumber: { type: 'uint16' },
-              errorAmount: { type: 'uint16' },
-              errorDetails: { elements: { type: 'string' } },
+        errorSummary: {
+          properties: {
+            rowBased: {
+              elements: {
+                properties: {
+                  count: { type: 'int32' },
+                  rowId: { type: 'string' },
+                  rowNumber: { type: 'int32' },
+                },
+              },
             },
-          },
-        },
-        columnErrors: {
-          elements: {
-            properties: {
-              errorAmount: { type: 'uint16' },
-              columnName: { type: 'string' },
-              errorDetails: {
-                elements: {
-                  properties: {
-                    rowNumber: { type: 'uint16' },
-                    errorReason: { type: 'string' },
-                  },
+            columnBased: {
+              elements: {
+                properties: {
+                  columnRef: { type: 'string' },
+                  count: { type: 'int32' },
                 },
               },
             },
@@ -273,22 +277,7 @@ const bulkSubmissionStateBase: SchemaObject = {
       properties: {
         timestamp: { type: 'timestamp' },
         hasEstimates: { type: 'boolean' },
-        submissions: {
-          elements: {
-            properties: {
-              receiver,
-              producer,
-              wasteCollection,
-              carrier,
-              wasteTransportation,
-              wasteTypes: {
-                elements: {
-                  ...wasteType,
-                },
-              },
-            },
-          },
-        },
+        rowsCount: { type: 'int32' },
       },
     },
     Submitting: {
@@ -296,22 +285,6 @@ const bulkSubmissionStateBase: SchemaObject = {
         timestamp: { type: 'timestamp' },
         hasEstimates: { type: 'boolean' },
         transactionId: { type: 'string' },
-        submissions: {
-          elements: {
-            properties: {
-              receiver,
-              producer,
-              wasteCollection,
-              carrier,
-              wasteTransportation,
-              wasteTypes: {
-                elements: {
-                  ...wasteType,
-                },
-              },
-            },
-          },
-        },
       },
     },
     Submitted: {
@@ -319,58 +292,7 @@ const bulkSubmissionStateBase: SchemaObject = {
         timestamp: { type: 'timestamp' },
         hasEstimates: { type: 'boolean' },
         transactionId: { type: 'string' },
-        submissions: {
-          elements: {
-            properties: {
-              id: { type: 'string' },
-              wasteMovementId: { type: 'string' },
-              producerName: { type: 'string' },
-              collectionDate: wasteCollectionDate,
-              ewcCodes: {
-                elements: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-const bulkSubmissionState: SchemaObject = {
-  discriminator: bulkSubmissionStateBase.discriminator,
-  mapping: {
-    ...bulkSubmissionStateBase.mapping,
-    FailedValidation: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-        rowErrors: {
-          elements: {
-            properties: {
-              rowNumber: { type: 'uint16' },
-              errorAmount: { type: 'uint16' },
-              errorDetails: { elements: { type: 'string' } },
-            },
-          },
-        },
-        columnErrors: {
-          elements: {
-            properties: {
-              errorAmount: { type: 'uint16' },
-              columnName: { type: 'string' },
-              errorDetails: {
-                elements: {
-                  properties: {
-                    rowNumber: { type: 'uint16' },
-                    errorReason: { type: 'string' },
-                  },
-                },
-              },
-            },
-          },
-        },
+        createdRowsCount: { type: 'int32' },
       },
     },
   },
@@ -380,52 +302,6 @@ const bulkSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
     state: bulkSubmissionState,
-  },
-};
-
-const codeWithArgs: JTDSchemaType<{
-  code: number;
-  args: string[];
-}> = {
-  properties: {
-    code: { type: 'int32' },
-    args: {
-      elements: {
-        type: 'string',
-      },
-    },
-  },
-};
-
-const bulkSubmissionCodeState: SchemaObject = {
-  discriminator: bulkSubmissionStateBase.discriminator,
-  mapping: {
-    ...bulkSubmissionStateBase.mapping,
-    FailedValidation: {
-      properties: {
-        timestamp: { type: 'timestamp' },
-        rowErrors: {
-          elements: {
-            properties: {
-              rowNumber: { type: 'uint16' },
-              errorAmount: { type: 'uint16' },
-              errorCodes: {
-                elements: {
-                  ...codeWithArgs,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
-export const bulkSubmissionCode: SchemaObject = {
-  properties: {
-    id: { type: 'string' },
-    state: bulkSubmissionCodeState,
   },
 };
 
@@ -491,6 +367,7 @@ export const finalizeBatchResponse: SchemaObject = {
 export const downloadCsvRequest: SchemaObject = {
   properties: {
     id: { type: 'string' },
+    accountId: { type: 'string' },
   },
 };
 
@@ -499,5 +376,118 @@ export const downloadCsvResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: { properties: { data: { type: 'string' } } },
+  },
+};
+
+export const getRowRequest: JTDSchemaType<GetRowRequest> = {
+  properties: {
+    accountId: { type: 'string' },
+    batchId: { type: 'string' },
+    rowId: { type: 'string' },
+  },
+};
+
+export const getRowResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      properties: {
+        id: { type: 'string' },
+        batchId: { type: 'string' },
+        accountId: { type: 'string' },
+        messages: {
+          elements: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+};
+
+export const getColumnRequest: JTDSchemaType<GetColumnRequest> = {
+  properties: {
+    accountId: { type: 'string' },
+    batchId: { type: 'string' },
+    columnRef: { type: 'string' },
+  },
+};
+
+export const getColumnResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      properties: {
+        columnRef: { type: 'string' },
+        batchId: { type: 'string' },
+        accountId: { type: 'string' },
+        errors: {
+          elements: {
+            properties: {
+              rowNumber: { type: 'int32' },
+              messages: {
+                elements: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const getBulkSubmissionsRequest: JTDSchemaType<GetBulkSubmissionsRequest> =
+  {
+    properties: {
+      accountId: { type: 'string' },
+      batchId: { type: 'string' },
+      page: { type: 'uint32' },
+    },
+    optionalProperties: {
+      ewcCode: { type: 'string' },
+      pageSize: { type: 'uint32' },
+      wasteMovementId: { type: 'string' },
+      producerName: { type: 'string' },
+      collectionDate: { type: 'timestamp' },
+    },
+  };
+
+const bulkSubmissionPartialSummary: JTDSchemaType<BulkSubmissionPartialSummary> =
+  {
+    properties: {
+      id: { type: 'string' },
+      wasteMovementId: { type: 'string' },
+      ewcCode: { type: 'string' },
+      collectionDate: {
+        properties: {
+          day: { type: 'string' },
+          month: { type: 'string' },
+          year: { type: 'string' },
+        },
+      },
+      producerName: { type: 'string' },
+    },
+  };
+
+export const getBulkSubmissionsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      properties: {
+        page: { type: 'int32' },
+        totalPages: { type: 'int32' },
+        totalRecords: { type: 'int32' },
+        values: {
+          elements: {
+            ...bulkSubmissionPartialSummary,
+          },
+        },
+      },
+    },
   },
 };

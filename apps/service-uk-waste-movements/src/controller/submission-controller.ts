@@ -1,6 +1,5 @@
 import Boom from '@hapi/boom';
 import * as api from '@wts/api/uk-waste-movements';
-import { v4 as uuidv4 } from 'uuid';
 import { fromBoom, success } from '@wts/util/invocation';
 import { Logger } from 'winston';
 import {
@@ -14,6 +13,7 @@ import {
 } from '../model';
 import { validationRules } from '../lib';
 import { CosmosRepository } from '../data';
+import { v4 as uuidv4 } from 'uuid';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -440,14 +440,22 @@ export default class SubmissionController {
     try {
       const submissions = values.map((s) => {
         const id = uuidv4();
-        const timestamp = new Date();
+        if (!s.id) {
+          s.id = id;
+        }
 
-        const transactionId =
-          'WM' +
-          timestamp.getFullYear().toString().substring(2) +
-          (timestamp.getMonth() + 1).toString().padStart(2, '0') +
-          '_' +
-          id.substring(0, 8).toUpperCase();
+        if (!s.transactionId) {
+          const timestamp = new Date();
+
+          const transactionId =
+            'WM' +
+            timestamp.getFullYear().toString().substring(2) +
+            (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+            '_' +
+            id.substring(0, 8).toUpperCase();
+
+          s.transactionId = transactionId;
+        }
 
         const wasteInformation: api.WasteInformation = {
           status: 'Complete',
@@ -475,7 +483,7 @@ export default class SubmissionController {
           status: 'Complete',
           values: {
             declarationTimestamp: new Date(),
-            transactionId: transactionId,
+            transactionId: s.transactionId,
           },
         };
 
@@ -488,8 +496,8 @@ export default class SubmissionController {
           timestamp: new Date(),
         };
         return {
-          id: id,
-          transactionId: transactionId,
+          id: s.id,
+          transactionId: s.transactionId,
           producerAndCollection: producerAndCollection,
           receiver: draftReceiver,
           wasteInformation: wasteInformation,
@@ -503,10 +511,7 @@ export default class SubmissionController {
         accountId,
         submissions,
       );
-      return {
-        success: true,
-        value: submissions,
-      };
+      return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

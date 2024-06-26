@@ -1,9 +1,5 @@
 'use client';
 
-import {
-  UkwmBulkSubmissionValidationRowError,
-  UkwmBulkSubmissionValidationColumnError,
-} from '@wts/api/waste-tracking-gateway';
 import { ErrorRow } from '../ErrorRow';
 import type { ErrorRowStrings } from '../ErrorRow/ErrorRow';
 import styles from './ErrorTab.module.scss';
@@ -17,18 +13,31 @@ interface ErrorTabStrings {
   rowStrings: ErrorRowStrings;
 }
 
+interface ColumnBasedErrorSummary {
+  columnRef: string;
+  count: number;
+}
+
+interface RowBasedErrorSummary {
+  rowNumber: number;
+  rowId: string;
+  count: number;
+}
+
 interface ErrorTabProps {
   type: 'column' | 'row';
-  errors:
-    | UkwmBulkSubmissionValidationRowError[]
-    | UkwmBulkSubmissionValidationColumnError[];
+  errorSummary: RowBasedErrorSummary[] | ColumnBasedErrorSummary[];
   strings: ErrorTabStrings;
+  token: string | null | undefined;
+  id: string;
 }
 
 export function ErrorTab({
   type,
-  errors,
+  errorSummary,
   strings,
+  token,
+  id,
 }: ErrorTabProps): JSX.Element {
   return (
     <table
@@ -42,7 +51,7 @@ export function ErrorTab({
             {type === 'column' ? strings.columnType : strings.rowType}
           </th>
           <th scope="col" className="govuk-table__header">
-            {type === 'column' ? strings.errorType : strings.errorAmount}
+            {strings.errorAmount}
           </th>
           <th scope="col" className="govuk-table__header">
             {strings.action}
@@ -50,23 +59,27 @@ export function ErrorTab({
         </tr>
       </thead>
       <tbody className="govuk-table__body">
-        {errors.map((error, index) => {
-          if ('columnName' in error) {
+        {errorSummary.map((error, index) => {
+          if (type === 'column') {
             return (
               <ErrorRow
                 error={error}
-                key={error.columnName}
+                key={'columnRef' in error ? error.columnRef : ''}
                 strings={strings.rowStrings}
                 rowIndex={index}
+                token={token}
+                id={id}
               />
             );
           }
           return (
             <ErrorRow
               error={error}
-              key={error.rowNumber}
+              key={'rowNumber' in error ? error.rowNumber : ''}
               strings={strings.rowStrings}
               rowIndex={index}
+              token={token}
+              id={id}
             />
           );
         })}

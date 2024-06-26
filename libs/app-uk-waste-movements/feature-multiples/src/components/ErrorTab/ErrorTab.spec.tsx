@@ -22,74 +22,67 @@ const strings = {
 
 const mockRowErrors = [
   {
-    rowNumber: 3,
-    errorAmount: 3,
-    errorDetails: [
-      'The unique reference must be 20 characters or less',
-      'Enter the producer organisation name',
-      'Enter the producer address',
-    ],
+    rowNumber: 1,
+    rowId: 'row1',
+    count: 2,
   },
   {
-    rowNumber: 4,
-    errorAmount: 2,
-    errorDetails: [
-      'Enter receiver contact email address',
-      'Number and type of transportation details must be less than 100 characters',
-    ],
+    rowNumber: 2,
+    rowId: 'row2',
+    count: 1,
   },
 ];
 
 const mockColumnErrors = [
   {
-    columnName: 'Producer address line 1',
-    errorAmount: 2,
-    errorDetails: [
-      {
-        rowNumber: 3,
-        errorReason: 'Enter the producer address',
-      },
-      {
-        rowNumber: 4,
-        errorReason: 'Enter the producer address',
-      },
-    ],
+    columnRef: 'Producer contact phone number',
+    count: 2,
   },
   {
-    columnName: 'Producer contact name',
-    errorAmount: 2,
-    errorDetails: [
-      {
-        rowNumber: 3,
-        errorReason: 'Enter full name of producer contact',
-      },
-      {
-        rowNumber: 4,
-        errorReason: 'Enter full name of producer contact',
-      },
-    ],
+    columnRef: 'Waste Collection Details Country',
+    count: 1,
   },
 ];
 
 describe('ErrorTab component', () => {
   it('renders without error', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
+      <ErrorTab
+        type="column"
+        errorSummary={mockColumnErrors}
+        strings={strings}
+        token={'token'}
+        id={'test-batch-id'}
+      />,
     );
   });
 
   it('Displays table headers when of column error type', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
+      <ErrorTab
+        type="column"
+        errorSummary={mockColumnErrors}
+        strings={strings}
+        token={'token'}
+        id={'test-batch-id'}
+      />,
     );
 
     expect(screen.getByText('Column name')).toBeInTheDocument();
-    expect(screen.getByText('Error type')).toBeInTheDocument();
+    expect(screen.getByText('Error amount')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
   });
 
   it('Displays table header rows when of row error type', () => {
-    render(<ErrorTab type="row" errors={mockRowErrors} strings={strings} />);
+    render(
+      <ErrorTab
+        type="row"
+        errorSummary={mockRowErrors}
+        strings={strings}
+        token={'token'}
+        id={'test-batch-id'}
+      />,
+    );
 
     expect(screen.getByText('Row number')).toBeInTheDocument();
     expect(screen.getByText('Error amount')).toBeInTheDocument();
@@ -98,17 +91,35 @@ describe('ErrorTab component', () => {
 
   it('Displays error count and type when of column error type', () => {
     render(
-      <ErrorTab type="column" errors={mockColumnErrors} strings={strings} />,
+      <ErrorTab
+        type="column"
+        errorSummary={mockColumnErrors}
+        strings={strings}
+        token={'token'}
+        id={'test-batch-id'}
+      />,
     );
 
-    expect(screen.getByText('Producer address line 1')).toBeInTheDocument();
-    expect(screen.getByText('Producer contact name')).toBeInTheDocument();
+    expect(
+      screen.getByText('Producer contact phone number'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Waste Collection Details Country'),
+    ).toBeInTheDocument();
   });
 
   it('Displays row number and error type when of row error type', () => {
-    render(<ErrorTab type="row" errors={mockRowErrors} strings={strings} />);
+    render(
+      <ErrorTab
+        type="row"
+        errorSummary={mockRowErrors}
+        strings={strings}
+        token={'token'}
+        id={'test-batch-id'}
+      />,
+    );
 
-    expect(screen.getByText('3')).toBeInTheDocument();
-    expect(screen.getByText('4')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 });

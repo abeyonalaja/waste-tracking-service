@@ -564,7 +564,6 @@ export const submissionState: SchemaObject = {
 
 export const createSubmissionsRequest: SchemaObject = {
   properties: {
-    id: { type: 'string' },
     accountId: { type: 'string' },
     values: {
       elements: {
@@ -579,6 +578,10 @@ export const createSubmissionsRequest: SchemaObject = {
               ...wasteType,
             },
           },
+        },
+        optionalProperties: {
+          id: { type: 'string' },
+          transactionId: { type: 'string' },
         },
       },
     },

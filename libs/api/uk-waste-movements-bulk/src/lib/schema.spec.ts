@@ -7,9 +7,14 @@ import {
   GetBatchResponse,
   FinalizeBatchRequest,
   FinalizeBatchResponse,
-  BulkSubmission,
   DownloadBatchRequest,
   DownloadBatchResponse,
+  GetRowRequest,
+  GetRowResponse,
+  GetColumnRequest,
+  GetColumnResponse,
+  GetBulkSubmissionsRequest,
+  GetBulkSubmissionsResponse,
 } from './dto';
 import {
   addContentToBatchRequest,
@@ -18,9 +23,14 @@ import {
   getBatchResponse,
   finalizeBatchRequest,
   finalizeBatchResponse,
-  bulkSubmissionCode,
   downloadCsvRequest,
   downloadCsvResponse,
+  getRowRequest,
+  getRowResponse,
+  getColumnRequest,
+  getColumnResponse,
+  getBulkSubmissionsRequest,
+  getBulkSubmissionsResponse,
 } from './schema';
 
 const ajv = new Ajv();
@@ -32,24 +42,24 @@ describe('addContentToBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: AddContentToBatchRequest = {
-      accountId: faker.datatype.uuid(),
-      batchId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
+      batchId: faker.string.uuid(),
       content: {
         type: 'text/csv',
         compression: 'Snappy',
-        value: faker.datatype.string(),
+        value: faker.string.sample(),
       },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      accountId: faker.datatype.uuid(),
-      batchId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
+      batchId: faker.string.uuid(),
       content: {
         type: 'text/csv',
         compression: 'Snappy',
-        value: faker.datatype.string(),
+        value: faker.string.sample(),
       },
     };
 
@@ -66,7 +76,7 @@ describe('addContentToBatchResponse', () => {
     const value: AddContentToBatchResponse = {
       success: true,
       value: {
-        batchId: faker.datatype.uuid(),
+        batchId: faker.string.uuid(),
       },
     };
 
@@ -92,8 +102,8 @@ describe('getBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: GetBatchRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -107,7 +117,7 @@ describe('getBatchResponse', () => {
     let value: GetBatchResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Processing',
           timestamp: new Date(),
@@ -120,7 +130,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'FailedCsvValidation',
           timestamp: new Date(),
@@ -134,29 +144,25 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'FailedValidation',
           timestamp: new Date(),
-          rowErrors: [
-            {
-              errorAmount: 3,
-              rowNumber: 1,
-              errorDetails: ['error1', 'error2'],
-            },
-          ],
-          columnErrors: [
-            {
-              columnName: 'column1',
-              errorAmount: 3,
-              errorDetails: [
-                {
-                  errorReason: 'error1',
-                  rowNumber: 1,
-                },
-              ],
-            },
-          ],
+          errorSummary: {
+            columnBased: [
+              {
+                columnRef: 'Carrier address line 1',
+                count: 3,
+              },
+            ],
+            rowBased: [
+              {
+                count: 3,
+                rowId: faker.string.uuid(),
+                rowNumber: 1,
+              },
+            ],
+          },
         },
       },
     };
@@ -166,105 +172,12 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'PassedValidation',
           timestamp: new Date(),
           hasEstimates: true,
-          submissions: [
-            {
-              wasteTransportation: {
-                numberAndTypeOfContainers: 'test',
-                specialHandlingRequirements: 'test',
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '1234',
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: '1234',
-                },
-                contact: {
-                  name: 'test',
-                  organisationName: 'test',
-                  phone: '1234',
-                  email: 'test@organisation.com',
-                },
-              },
-              producer: {
-                reference: '1234',
-                sicCode: '123456',
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
-                },
-                contact: {
-                  name: 'test',
-                  organisationName: 'test',
-                  phone: '1234',
-                  email: 'test@organisation.com',
-                },
-              },
-              wasteCollection: {
-                wasteSource: 'Household',
-                localAuthority: 'Local authority',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
-                },
-                brokerRegistrationNumber: '1234567',
-                carrierRegistrationNumber: 'CBDL1234',
-              },
-              carrier: {
-                contact: {
-                  organisationName: 'org',
-                  name: 'name',
-                  email: 'example@email.co.uk',
-                  phone: '02071234567',
-                },
-                address: {
-                  addressLine1: '123 Oxford Street',
-                  addressLine2: 'Westminster',
-                  townCity: 'London',
-                  postcode: 'W1A 1AA',
-                  country: 'England',
-                },
-              },
-              wasteTypes: [
-                {
-                  ewcCode: '1234',
-                  wasteDescription: 'test',
-                  physicalForm: 'Solid',
-                  wasteQuantity: 1,
-                  quantityUnit: 'Kilogram',
-                  wasteQuantityType: 'EstimateData',
-                  hasHazardousProperties: false,
-                  containsPops: false,
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Kilogram',
-                      name: 'test',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          rowsCount: 5,
         },
       },
     };
@@ -274,119 +187,12 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Submitting',
           timestamp: new Date(),
           transactionId: '2307_5678ABCD',
           hasEstimates: true,
-          submissions: [
-            {
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '1234',
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: '1234',
-                },
-                contact: {
-                  name: 'test',
-                  organisationName: 'test',
-                  phone: '1234',
-                  email: 'test@organisation.com',
-                },
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: 'test',
-                specialHandlingRequirements: 'test',
-              },
-              producer: {
-                reference: '1234',
-                sicCode: '123456',
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
-                },
-                contact: {
-                  name: 'test',
-                  organisationName: 'test',
-                  phone: '1234',
-                  email: 'test@organisation.com',
-                },
-              },
-              wasteCollection: {
-                address: {
-                  addressLine1: 'address1',
-                  addressLine2: 'address2',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'SW1A 1AA',
-                },
-                brokerRegistrationNumber: 'CBDU1234',
-                carrierRegistrationNumber: 'CBDU1234',
-                wasteSource: 'Household',
-                localAuthority: 'Local authority',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-              },
-              carrier: {
-                contact: {
-                  organisationName: 'org',
-                  name: 'name',
-                  email: 'example@email.co.uk',
-                  phone: '02071234567',
-                },
-                address: {
-                  addressLine1: '123 Oxford Street',
-                  addressLine2: 'Westminster',
-                  townCity: 'London',
-                  postcode: 'W1A 1AA',
-                  country: 'England',
-                },
-              },
-              wasteTypes: [
-                {
-                  ewcCode: '1234',
-                  wasteDescription: 'test',
-                  physicalForm: 'Solid',
-                  wasteQuantity: 1,
-                  quantityUnit: 'Kilogram',
-                  wasteQuantityType: 'EstimateData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 1,
-                      concentrationUnit: 'Kilogram',
-                      name: 'test',
-                    },
-                  ],
-                  hasHazardousProperties: false,
-                  containsPops: false,
-                  hazardousWasteCodes: [
-                    {
-                      code: 'HP1',
-                      name: 'test',
-                    },
-                  ],
-                  pops: [
-                    {
-                      concentration: 1,
-                      name: 'test',
-                      concentrationUnit: 'Kilogram',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
         },
       },
     };
@@ -396,25 +202,13 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Submitted',
           timestamp: new Date(),
           transactionId: '2307_5678ABCD',
           hasEstimates: true,
-          submissions: [
-            {
-              id: faker.datatype.uuid(),
-              collectionDate: {
-                day: '1',
-                month: '3',
-                year: '2024',
-              },
-              ewcCodes: ['010101'],
-              producerName: 'Test Producer',
-              wasteMovementId: 'WM2405_FDF4428',
-            },
-          ],
+          createdRowsCount: 5,
         },
       },
     };
@@ -441,8 +235,8 @@ describe('finalizeBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: FinalizeBatchRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -454,7 +248,8 @@ describe('downloadCsvRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: DownloadBatchRequest = {
-      id: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -515,27 +310,164 @@ describe('finalizeBatchResponse', () => {
   });
 });
 
-describe('bulkSubmissionCode', () => {
-  const validate = ajv.compile<BulkSubmission>(bulkSubmissionCode);
+describe('getRowRequest', () => {
+  const validate = ajv.compile<GetRowRequest>(getRowRequest);
 
   it('is compatible with dto values', () => {
-    const value: BulkSubmission = {
-      id: faker.datatype.uuid(),
-      state: {
-        status: 'FailedValidation',
-        timestamp: new Date(),
-        rowErrors: [
+    const value: GetRowRequest = {
+      rowId: faker.string.uuid(),
+      batchId: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getRowResponse', () => {
+  const validate = ajv.compile<GetRowResponse>(getRowResponse);
+
+  it('is compatible with dto values', () => {
+    const value: GetRowResponse = {
+      success: true,
+      value: {
+        id: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        accountId: faker.string.uuid(),
+        messages: [
+          faker.string.sample(),
+          faker.string.sample(),
+          faker.string.sample(),
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error values', () => {
+    const value: DownloadBatchResponse = {
+      success: false,
+      error: {
+        message: '',
+        name: '',
+        statusCode: 0,
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getColumnRequest', () => {
+  const validate = ajv.compile<GetColumnRequest>(getColumnRequest);
+
+  it('is compatible with dto values', () => {
+    const value: GetColumnRequest = {
+      columnRef: faker.string.sample(),
+      batchId: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getColumnReponse', () => {
+  const validate = ajv.compile<GetColumnResponse>(getColumnResponse);
+
+  it('is compatible with dto values', () => {
+    const value: GetColumnResponse = {
+      success: true,
+      value: {
+        columnRef: faker.string.sample(),
+        batchId: faker.string.uuid(),
+        accountId: faker.string.uuid(),
+        errors: [
           {
-            errorAmount: 3,
+            messages: ['Error 1', 'Error 2', 'Error 3'],
             rowNumber: 1,
-            errorCodes: [
-              {
-                code: 1234,
-                args: ['test'],
-              },
-            ],
           },
         ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error values', () => {
+    const value: DownloadBatchResponse = {
+      success: false,
+      error: {
+        message: '',
+        name: '',
+        statusCode: 0,
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getBulkSubmissionsRequest', () => {
+  const validate = ajv.compile<GetBulkSubmissionsRequest>(
+    getBulkSubmissionsRequest,
+  );
+
+  it('is compatible with dto values', () => {
+    const value: GetBulkSubmissionsRequest = {
+      batchId: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      page: 1,
+      collectionDate: new Date(),
+      ewcCode: faker.string.sample(),
+      pageSize: 1,
+      producerName: faker.string.sample(),
+      wasteMovementId: faker.string.sample(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getBulkSubmissionsResponse', () => {
+  const validate = ajv.compile<GetBulkSubmissionsResponse>(
+    getBulkSubmissionsResponse,
+  );
+
+  it('is compatible with dto values', () => {
+    const value: GetBulkSubmissionsResponse = {
+      success: true,
+      value: {
+        page: 1,
+        totalPages: 1,
+        totalRecords: 1,
+        values: [
+          {
+            id: faker.string.uuid(),
+            wasteMovementId: 'WM2406_C7049A7F',
+            ewcCode: faker.string.sample(),
+            producerName: faker.company.name(),
+            collectionDate: {
+              day: faker.date.soon().getDay().toString(),
+              month: faker.date.soon().getMonth().toString(),
+              year: faker.date.soon().getFullYear().toString(),
+            },
+          },
+        ],
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error values', () => {
+    const value: GetBulkSubmissionsResponse = {
+      success: false,
+      error: {
+        message: '',
+        name: '',
+        statusCode: 0,
       },
     };
 

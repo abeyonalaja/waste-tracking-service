@@ -1,9 +1,12 @@
 import Boom from '@hapi/boom';
 import { Plugin } from '@hapi/hapi';
-import { UkWasteMovementsBulkSubmissionBackend } from './uk-waste-movements-bulk-submission.backend';
+import {
+  SubmissionRef,
+  UkWasteMovementsBulkSubmissionBackend,
+} from './uk-waste-movements-bulk-submission.backend';
 import * as multipart from 'parse-multipart-data';
-import * as dto from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
+import { isValid } from 'date-fns';
 
 export interface PluginOptions {
   backend: UkWasteMovementsBulkSubmissionBackend;
@@ -44,6 +47,7 @@ const plugin: Plugin<PluginOptions> = {
       options: {
         payload: {
           parse: false,
+          maxBytes: 1000 * 1000 * 15,
           multipart: {
             output: 'stream',
           },
@@ -61,7 +65,7 @@ const plugin: Plugin<PluginOptions> = {
             id: params.id,
             accountId: h.request.auth.credentials.accountId as string,
           });
-          return value as dto.GetUwkwmBulkSubmissionResponse;
+          return value;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -104,6 +108,7 @@ const plugin: Plugin<PluginOptions> = {
         try {
           const csvData = await backend.downloadCsv({
             id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
           });
 
           return h
@@ -113,6 +118,110 @@ const plugin: Plugin<PluginOptions> = {
               'Content-Disposition',
               'attachment;filename=waste-tracking.csv',
             ) as unknown;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{batchId}/rows/{rowId}',
+      handler: async function ({ params }, h) {
+        try {
+          const row = await backend.getRow({
+            accountId: h.request.auth.credentials.accountId as string,
+            batchId: params.batchId,
+            rowId: params.rowId,
+          });
+
+          return row;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{batchId}/columns/{columnRef}',
+      handler: async function ({ params }, h) {
+        try {
+          const column = await backend.getColumn({
+            accountId: h.request.auth.credentials.accountId as string,
+            batchId: params.batchId,
+            columnRef: params.columnRef,
+          });
+
+          return column;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/{batchId}/submissions',
+      handler: async function ({ params, query }, h) {
+        try {
+          let collectionDate: Date | undefined;
+          const dateArr = query.collectionDate
+            ?.toString()
+            ?.replace(/-/g, '/')
+            .split('/');
+
+          if (dateArr?.length === 3) {
+            collectionDate = new Date(
+              Number(dateArr[2]),
+              Number(dateArr[1]) - 1,
+              Number(dateArr[0]),
+            );
+            if (
+              !isValid(collectionDate) ||
+              collectionDate.getMonth() + 1 !== Number(dateArr[1])
+            ) {
+              return Boom.badRequest('Invalid collection date');
+            }
+          }
+
+          let pageSize: number | undefined = Number(query.pageSize);
+          if (isNaN(pageSize)) {
+            pageSize = undefined;
+          }
+
+          const page: number | undefined = Number(query.page);
+          if (isNaN(page)) {
+            return Boom.badRequest('Invalid page');
+          }
+
+          const req: SubmissionRef = {
+            batchId: params.batchId,
+            accountId: h.request.auth.credentials.accountId as string,
+            page: page,
+            pageSize: pageSize,
+            collectionDate: collectionDate,
+            ewcCode: query.ewcCode,
+            producerName: query.producerName,
+            wasteMovementId: query.wasteMovementId,
+          };
+
+          return await backend.getSubmissions(req);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;

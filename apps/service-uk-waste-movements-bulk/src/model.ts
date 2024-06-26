@@ -55,3 +55,10 @@ export type ValidateCsvContentResponse = Response<{
 export type BulkSubmission = api.BulkSubmission;
 
 export type SubmissionFlattenedDownload = api.SubmissionFlattenedDownload;
+
+export type Row = api.Row;
+export type ErrorColumn = api.ErrorColumn;
+
+export type SubmittedPartialSubmission = api.SubmittedPartialSubmission;
+export type PagedSubmissionData = api.PagedSubmissionData;
+export type BulkSubmissionPartialSummary = api.BulkSubmissionPartialSummary;

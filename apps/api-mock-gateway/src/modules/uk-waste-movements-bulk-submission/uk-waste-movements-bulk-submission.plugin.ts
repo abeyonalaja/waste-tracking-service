@@ -7,12 +7,16 @@ import {
   getBatch,
   finalizeBatch,
   downloadCsv,
+  getColumn,
+  getRow,
+  getSubmissions,
 } from './uk-waste-movements-bulk-submission.backend';
 import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
 } from '../../lib/errors';
+import { isValid } from 'date-fns';
 
 const upload = multer();
 
@@ -98,6 +102,98 @@ export default class UkwmBulkSubmissionPlugin {
           'attachment; filename=waste-tracking.csv',
         );
         return res.send(csvData);
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          return err;
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.get(`${this.prefix}/:batchId/rows/:rowId`, async (req, res) => {
+      try {
+        const row = await getRow({
+          batchId: req.params.batchId,
+          rowId: req.params.rowId,
+        });
+        return res.send(row);
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          return err;
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.get(
+      `${this.prefix}/:batchId/columns/:columnRef`,
+      async (req, res) => {
+        try {
+          const column = await getColumn({
+            batchId: req.params.batchId,
+            columnRef: req.params.columnRef,
+          });
+          return res.send(column);
+        } catch (err) {
+          if (err instanceof NotFoundError) {
+            return err;
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.get(`${this.prefix}/:batchId/submissions`, async (req, res) => {
+      try {
+        const page = Number(req.query.page);
+        if (!page || page <= 0) {
+          return res.status(400).jsonp(new BadRequestError('Invalid page'));
+        }
+        const dateArr = req.query.collectionDate
+          ?.toString()
+          ?.replace(/-/g, '/')
+          .split('/');
+        let collectionDate: Date | undefined;
+
+        if (dateArr?.length === 3) {
+          collectionDate = new Date(
+            Number(dateArr[2]),
+            Number(dateArr[1]) - 1,
+            Number(dateArr[0]),
+          );
+          if (
+            !isValid(collectionDate) ||
+            collectionDate.getMonth() + 1 !== Number(dateArr[1])
+          ) {
+            return res
+              .status(400)
+              .jsonp(new BadRequestError('Invalid collection date'));
+          }
+        }
+
+        const pageSize = Number(req.query.pageSize) || 15;
+
+        const value = await getSubmissions(
+          page,
+          pageSize,
+          collectionDate,
+          req.query.ewcCode?.toString(),
+          req.query.producerName?.toString(),
+          req.query.wasteMovementId?.toString(),
+        );
+
+        return res.json(value as dto.UkwmGetDraftsResult);
       } catch (err) {
         if (err instanceof NotFoundError) {
           return err;

@@ -9,6 +9,7 @@ import {
   validateSubmissionsResponse,
   wasteCollection,
   carrier,
+  createSubmissionsRequest,
 } from './submission.schema';
 import {
   ProducerDetail,
@@ -19,6 +20,7 @@ import {
   ValidateSubmissionsResponse,
   WasteCollectionDetail,
   CarrierDetail,
+  CreateSubmissionsRequest,
 } from './submission.dto';
 
 const ajv = new Ajv();
@@ -245,7 +247,7 @@ describe('validateSubmissionsRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: ValidateSubmissionsRequest = {
-      accountId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
       padIndex: 2,
       values: [
         {
@@ -322,7 +324,7 @@ describe('validateSubmissionsResponse', () => {
       success: true,
       value: {
         valid: true,
-        accountId: faker.datatype.uuid(),
+        accountId: faker.string.uuid(),
         values: [
           {
             wasteTransportation: {
@@ -433,6 +435,129 @@ describe('validateSubmissionsResponse', () => {
           },
         ],
       },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('createSubmissionsRequest', () => {
+  const validate = ajv.compile<CreateSubmissionsRequest>(
+    createSubmissionsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: CreateSubmissionsRequest = {
+      accountId: faker.string.uuid(),
+      values: [
+        {
+          wasteTransportation: {
+            numberAndTypeOfContainers: 'test',
+            specialHandlingRequirements: 'test',
+          },
+          wasteCollection: {
+            address: {
+              addressLine1: 'Waste Collection Address Line 1',
+              addressLine2: 'Waste Collection Address Line 2',
+              country: 'Waste Collection Country',
+              postcode: 'Waste Collection Postcode',
+              townCity: 'Waste Collection Town/City',
+            },
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2024',
+            },
+            localAuthority: 'Waste Collection Local Authority',
+            wasteSource: 'Household',
+            brokerRegistrationNumber:
+              'Waste Collection Broker Registration Number',
+            carrierRegistrationNumber:
+              'Waste Collection Carrier Registration Number',
+          },
+          carrier: {
+            contact: {
+              organisationName: 'org',
+              name: 'name',
+              email: 'example@email.co.uk',
+              phone: '02071234567',
+            },
+            address: {
+              addressLine1: '123 Oxford Street',
+              addressLine2: 'Westminster',
+              townCity: 'London',
+              postcode: 'W1A 1AA',
+              country: 'England',
+            },
+          },
+          wasteTypes: [
+            {
+              ewcCode: '01 03 04',
+              wasteDescription: 'waste description',
+              physicalForm: 'Solid',
+              wasteQuantity: 100,
+              quantityUnit: 'Tonne',
+              wasteQuantityType: 'ActualData',
+              hasHazardousProperties: false,
+              containsPops: false,
+              chemicalAndBiologicalComponents: [
+                {
+                  concentration: 1,
+                  name: 'test',
+                  concentrationUnit: 'Milligram',
+                },
+              ],
+              hazardousWasteCodes: [
+                {
+                  code: 'HP1',
+                  name: 'test',
+                },
+              ],
+              pops: [
+                {
+                  concentration: 1,
+                  name: 'test',
+                  concentrationUnit: 'Milligram',
+                },
+              ],
+            },
+          ],
+          receiver: {
+            address: {
+              addressLine1: 'Receiver Address Line 1',
+              addressLine2: 'Receiver Address Line 2',
+              country: 'Receiver Country',
+              postcode: 'Receiver Postcode',
+              townCity: 'Receiver Town/City',
+            },
+            contact: {
+              email: 'Receiver Email',
+              name: 'Receiver Contact Name',
+              organisationName: 'Receiver Organisation Name',
+              phone: 'Receiver Phone',
+            },
+            authorizationType: 'permit',
+            environmentalPermitNumber: '123456',
+          },
+          producer: {
+            reference: 'ref',
+            sicCode: '123456',
+            address: {
+              addressLine1: 'Producer Address Line 1',
+              addressLine2: 'Producer Address Line 2',
+              country: 'Producer Country',
+              postcode: 'Producer Postcode',
+              townCity: 'Producer Town/City',
+            },
+            contact: {
+              email: 'Producer Email',
+              name: 'Producer Contact Name',
+              organisationName: 'Producer Organisation Name',
+              phone: 'Producer Phone',
+            },
+          },
+        },
+      ],
     };
 
     expect(validate(value)).toBe(true);

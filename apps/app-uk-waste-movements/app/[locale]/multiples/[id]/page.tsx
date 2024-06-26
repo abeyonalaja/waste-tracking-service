@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getServerSession, Session } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { options } from '../../../api/auth/[...nextauth]/options';
 import { getTranslations } from 'next-intl/server';
 import { redirect } from '@wts/ui/navigation';
@@ -42,10 +42,15 @@ export default async function StatusPage({
   searchParams,
 }: PageProps): Promise<JSX.Element> {
   const t = await getTranslations('multiples');
-  const session: Session | null = await getServerSession(options);
-  const token = session?.token;
   const headerList = headers();
   const hostname = headerList.get('host') || '';
+  const session = await getServerSession(options);
+  const token = session?.token;
+
+  if (typeof token !== 'string') {
+    console.error('No token present');
+    return redirect('/404');
+  }
 
   const uploadFormStrings = {
     heading: t('uploadForm.heading'),
@@ -55,7 +60,7 @@ export default async function StatusPage({
     summaryLabel: t('uploadForm.summaryLabel'),
   };
 
-  const response = await getSubmissionStatus(hostname, params.id, token!);
+  const response = await getSubmissionStatus(hostname, params.id, token);
 
   if (response.status === 401) {
     redirect('/404');
@@ -85,7 +90,7 @@ export default async function StatusPage({
         <GovUK.GridRow>
           <GovUK.GridCol size="two-thirds">
             <UploadForm
-              token={token!}
+              token={token}
               strings={uploadFormStrings}
               validationError={state.error}
             >
@@ -101,7 +106,9 @@ export default async function StatusPage({
   }
 
   if (state.status === 'FailedValidation') {
-    const totalErrorCount = calculateTotalErrors(state.columnErrors);
+    const totalErrorCount = calculateTotalErrors(
+      state.errorSummary.columnBased,
+    );
 
     const failedValidationFormStrings = {
       heading: t('errors.uploadForm.heading'),
@@ -138,7 +145,7 @@ export default async function StatusPage({
         <GovUK.GridRow>
           <GovUK.GridCol size="two-thirds">
             <UploadForm
-              token={token!}
+              token={token}
               strings={failedValidationFormStrings}
               totalErrorSummaryStrings={totalErrorSummaryStrings}
               showHint={false}
@@ -169,15 +176,19 @@ export default async function StatusPage({
                 <GovUK.TabsPanel id={'by-column'}>
                   <ErrorTab
                     type="column"
-                    errors={state.columnErrors}
+                    errorSummary={state.errorSummary.columnBased}
                     strings={tabStrings}
+                    token={token}
+                    id={params.id}
                   />
                 </GovUK.TabsPanel>
                 <GovUK.TabsPanel id={'by-row'}>
                   <ErrorTab
                     type="row"
-                    errors={state.rowErrors}
+                    errorSummary={state.errorSummary.rowBased}
                     strings={tabStrings}
+                    token={token}
+                    id={params.id}
                   />
                 </GovUK.TabsPanel>
               </GovUK.Tabs>
@@ -200,9 +211,9 @@ export default async function StatusPage({
               hasEstimates={state.hasEstimates}
               hasCorrectedErrors={searchParams.hasCorrectedErrors === 'true'}
               filename={searchParams.filename}
-              recordCount={state.submissions.length}
+              recordCount={state.rowsCount}
               submissionId={params.id}
-              token={token!}
+              token={token}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>
@@ -233,7 +244,7 @@ export default async function StatusPage({
             <SubmissionConfirmation
               submissionId={params.id}
               token={token}
-              recordCount={state.submissions.length}
+              recordCount={state.createRowsCount}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>

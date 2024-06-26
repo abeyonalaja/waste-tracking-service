@@ -13,7 +13,7 @@ export interface UkwmAddress {
   addressLine1: string;
   addressLine2?: string;
   townCity: string;
-  postcode: string;
+  postcode?: string;
   country: string;
 }
 
@@ -24,16 +24,24 @@ export interface UkwmContact {
   phone: string;
 }
 
+export interface UkwmWasteCollectionAddress {
+  addressLine1?: string;
+  addressLine2?: string;
+  townCity?: string;
+  postcode?: string;
+  country?: string;
+}
+
 export interface UkwmProducerDetail {
   reference: string;
-  sicCode: string;
+  sicCode?: string;
   contact: UkwmContact;
   address: UkwmAddress;
 }
 
 export interface UkwmReceiverDetail {
   authorizationType: string;
-  environmentalPermitNumber: string;
+  environmentalPermitNumber?: string;
   contact: UkwmContact;
   address: UkwmAddress;
 }
@@ -86,7 +94,7 @@ export interface UkwmWasteCollectionDetail {
   carrierRegistrationNumber?: string;
   localAuthority: string;
   expectedWasteCollectionDate: UkwmExpectedWasteCollectionDate;
-  address: UkwmAddress;
+  address: UkwmWasteCollectionAddress;
 }
 
 export interface UkwmWasteTransportationDetail {

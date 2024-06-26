@@ -1,13 +1,13 @@
-import { UkwmBulkSubmissionValidationColumnError } from '@wts/api/waste-tracking-gateway';
+interface ColumnBasedErrorSummary {
+  columnRef: string;
+  count: number;
+}
 
 export function calculateTotalErrors(
-  columnErrors: UkwmBulkSubmissionValidationColumnError[],
+  columnErrors: ColumnBasedErrorSummary[],
 ): number {
-  const totalColumnErrors = columnErrors.reduce(
-    (total: number, current: UkwmBulkSubmissionValidationColumnError) =>
-      total + current.errorAmount,
+  return columnErrors.reduce(
+    (total: number, current) => total + current.count,
     0,
   );
-
-  return totalColumnErrors;
 }

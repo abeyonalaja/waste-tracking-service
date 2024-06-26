@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ErrorRow } from './ErrorRow';
 
@@ -11,51 +11,27 @@ const strings = {
   hide: 'Hide errors',
 };
 
-const mockColumnError = {
-  columnName: 'Producer address line 1',
-  errorAmount: 2,
-  errorDetails: [
-    {
-      rowNumber: 3,
-      errorReason: 'Enter the producer address',
-    },
-    {
-      rowNumber: 4,
-      errorReason: 'Enter the producer address',
-    },
-  ],
-};
-
 const mockRowError = {
-  rowNumber: 4,
-  errorAmount: 16,
-  errorDetails: [
-    'The unique reference must be 20 characters or less',
-    'Enter the producer organisation name',
-    'Enter the producer address',
-    'Enter the producer town or city',
-    'The producer country must only be England, Wales, Scotland, or Northern Ireland',
-    'Enter full name of producer contact',
-    'Enter producer contact email address',
-    'Enter the receiver organisation name',
-    'Enter the receiver address',
-    'Enter the receiver town or city',
-    'The receiver country must only be England, Wales, Scotland, or Northern Ireland',
-    'Enter full name of receiver contact',
-    'Enter receiver contact email address',
-    'Number and type of transportation details must be less than 100 characters',
-    'The waste collection address line 2 must be fewer than 250 characters',
-    'Enter the waste collection town or city',
-    'The mode of transport must only be Road, Rail, Air, Sea or Inland Waterway',
-  ],
+  rowNumber: 2,
+  rowId: 'row2',
+  count: 1,
 };
-
-describe('ErrorRow component', () => {
+const mockColumnError = {
+  columnRef: 'Producer contact phone number',
+  count: 2,
+};
+describe('Error row component', () => {
   it('renders without error', () => {
     render(
       <table>
         <tbody>
-          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+          <ErrorRow
+            error={mockColumnError}
+            strings={strings}
+            rowIndex={1}
+            token={'token'}
+            id={'id'}
+          />
         </tbody>
       </table>,
     );
@@ -65,12 +41,18 @@ describe('ErrorRow component', () => {
     render(
       <table>
         <tbody>
-          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+          <ErrorRow
+            error={mockColumnError}
+            strings={strings}
+            rowIndex={1}
+            token={'token'}
+            id={'id'}
+          />
         </tbody>
       </table>,
     );
 
-    const columnName = screen.getByText('Producer address line 1');
+    const columnName = screen.getByText('Producer contact phone number');
 
     expect(columnName).toBeInTheDocument();
   });
@@ -79,12 +61,18 @@ describe('ErrorRow component', () => {
     render(
       <table>
         <tbody>
-          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
+          <ErrorRow
+            error={mockRowError}
+            strings={strings}
+            rowIndex={1}
+            token={'token'}
+            id={'id'}
+          />
         </tbody>
       </table>,
     );
 
-    const rowNumber = screen.getByText('4');
+    const rowNumber = screen.getByText('2');
 
     expect(rowNumber).toBeInTheDocument();
   });
@@ -93,7 +81,13 @@ describe('ErrorRow component', () => {
     render(
       <table>
         <tbody>
-          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
+          <ErrorRow
+            error={mockColumnError}
+            strings={strings}
+            rowIndex={1}
+            token={'token'}
+            id={'id'}
+          />
         </tbody>
       </table>,
     );
@@ -101,105 +95,5 @@ describe('ErrorRow component', () => {
     const errorCount = screen.getByText('2 errors');
 
     expect(errorCount).toBeInTheDocument();
-  });
-
-  it('Displays the error details when the show button is clicked on an error of column type', () => {
-    render(
-      <table>
-        <tbody>
-          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
-        </tbody>
-      </table>,
-    );
-
-    const showButton = screen.getByRole('button', { name: 'Show errors' });
-
-    act(() => {
-      showButton.click();
-    });
-
-    const errorDetails = screen.getByText('Row number');
-
-    expect(errorDetails).toBeInTheDocument();
-  });
-
-  it('Hides the error details when the hide button is clicked on error of column type', () => {
-    render(
-      <table>
-        <tbody>
-          <ErrorRow error={mockColumnError} strings={strings} rowIndex={1} />
-        </tbody>
-      </table>,
-    );
-
-    const showButton = screen.getByRole('button', { name: 'Show errors' });
-
-    act(() => {
-      showButton.click();
-    });
-
-    const errorDetails = screen.queryByText('Row number');
-
-    expect(errorDetails).toBeInTheDocument();
-
-    const hideButton = screen.getByRole('button', { name: 'Hide errors' });
-
-    act(() => {
-      hideButton.click();
-    });
-
-    expect(errorDetails).not.toBeInTheDocument();
-  });
-
-  it('Shows the error details when the show button is clicked on an error of row type', () => {
-    render(
-      <table>
-        <tbody>
-          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
-        </tbody>
-      </table>,
-    );
-
-    const showButton = screen.getByRole('button', { name: 'Show errors' });
-
-    act(() => {
-      showButton.click();
-    });
-
-    const errorDetails = screen.getByText(
-      'The unique reference must be 20 characters or less',
-    );
-
-    expect(errorDetails).toBeInTheDocument();
-  });
-
-  it('Hides the error details when the hide button is clicked on error of row type', () => {
-    render(
-      <table>
-        <tbody>
-          <ErrorRow error={mockRowError} strings={strings} rowIndex={1} />
-        </tbody>
-      </table>,
-    );
-
-    const showButton = screen.getByRole('button', { name: 'Show errors' });
-
-    act(() => {
-      showButton.click();
-    });
-
-    const errorDetails = screen.queryByText(
-      'The unique reference must be 20 characters or less',
-    );
-
-    expect(errorDetails).toBeInTheDocument();
-
-    const hideButton = screen.getByRole('button', { name: 'Hide errors' });
-
-    act(() => {
-      hideButton.click();
-    });
-
-    expect(errorDetails).not.toBeInTheDocument();
   });
 });

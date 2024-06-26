@@ -1487,9 +1487,7 @@ await server.invoker.listen(
       return fromBoom(Boom.badRequest('Missing body'));
     }
 
-    console.log(body);
     const request = submission.parse.getBulkSubmissionsRequest(body);
-    console.log(request);
     if (request === undefined) {
       return fromBoom(Boom.badRequest());
     }

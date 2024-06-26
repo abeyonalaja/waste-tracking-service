@@ -4,10 +4,10 @@ import { fromBoom, success } from '@wts/util/invocation';
 import Boom from '@hapi/boom';
 import { BatchRepository } from '../data';
 import * as api from '@wts/api/uk-waste-movements-bulk';
-import { BulkSubmission } from '../model';
-import { Field, ErrorCodeData, validation } from '@wts/api/uk-waste-movements';
+import { BulkSubmission, Row } from '../model';
 import { compress } from 'snappy';
 import { downloadHeaders, downloadSections } from '../lib/csv-content';
+import { ErrorCodeData, validation } from '@wts/api/uk-waste-movements';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -54,177 +54,9 @@ export class BatchController {
         accountId,
       );
       const response: api.GetBatchResponse = success(
-        data as unknown as api.BulkSubmissionDetail,
+        data as unknown as api.BulkSubmission,
       );
 
-      if (data.state.status === 'FailedValidation') {
-        const columnErrors: api.BulkSubmissionValidationColumnError[] = [];
-        const columnErrorsObj: {
-          [key in Field]: api.BulkSubmissionValidationColumnErrorDetail[];
-        } = {
-          'Producer address line 1': [],
-          'Producer address line 2': [],
-          'Producer contact name': [],
-          'Producer contact email address': [],
-          'Producer contact phone number': [],
-          'Producer country': [],
-          'Producer organisation name': [],
-          'Producer postcode': [],
-          'Producer Standard Industrial Classification (SIC) code': [],
-          'Producer town or city': [],
-          'Receiver address line 1': [],
-          'Receiver address line 2': [],
-          'Receiver postcode': [],
-          'Receiver contact name': [],
-          'Receiver contact email address': [],
-          'Receiver contact phone number': [],
-          'Receiver country': [],
-          'Receiver environmental permit number': [],
-          'Receiver organisation name': [],
-          'Receiver town or city': [],
-          'Receiver authorization type': [],
-          'Waste Collection Details Address Line 1': [],
-          'Waste Collection Details Address Line 2': [],
-          'Waste Collection Details Town or City': [],
-          'Waste Collection Details Country': [],
-          'Waste Collection Details Postcode': [],
-          'Waste Collection Details Waste Source': [],
-          'Waste Collection Details Broker Registration Number': [],
-          'Waste Collection Details Carrier Registration Number': [],
-          'Waste Collection Details Expected Waste Collection Date': [],
-          'Number and type of transportation containers': [],
-          'Special handling requirements details': [],
-          'EWC Code': [],
-          'Waste Description': [],
-          'Physical Form': [],
-          'Waste Quantity': [],
-          'Waste Quantity Units': [],
-          'Quantity of waste (actual or estimate)': [],
-          'Waste Has Hazardous Properties': [],
-          'Hazardous Waste Codes': [],
-          'Waste Contains POPs': [],
-          'Persistant organic pollutants (POPs)': [],
-          'Persistant organic pollutants (POPs) Concentration Values': [],
-          'Persistant organic pollutants (POPs) Concentration Units': [],
-          'Chemical and biological components of the waste': [],
-          'Chemical and biological concentration units of measure': [],
-          'Chemical and biological concentration values': [],
-          'Local authority': [],
-          'Carrier organisation name': [],
-          'Carrier address line 1': [],
-          'Carrier address line 2': [],
-          'Carrier town or city': [],
-          'Carrier country': [],
-          'Carrier postcode': [],
-          'Carrier contact name': [],
-          'Carrier contact email address': [],
-          'Carrier contact phone number': [],
-          Reference: [],
-        };
-
-        const rowErrors: api.BulkSubmissionValidationRowError[] = [];
-
-        for (const rowCodeError of data.state.rowErrors) {
-          rowErrors.push({
-            errorAmount: rowCodeError.errorAmount,
-            rowNumber: rowCodeError.rowNumber,
-            errorDetails: rowCodeError.errorCodes.map((ec) => {
-              let errorData: ErrorCodeData;
-              let args: string[] = [];
-
-              if (typeof ec === 'number') {
-                errorData = validation.UkwmErrorData[ec];
-              } else {
-                args = ec.args;
-                errorData = validation.UkwmErrorData[ec.code];
-              }
-
-              if (errorData.type === 'message') {
-                return errorData.message;
-              } else {
-                return errorData.builder(args);
-              }
-            }),
-          });
-        }
-
-        for (const rowError of data.state.rowErrors) {
-          for (const errorCode of rowError.errorCodes) {
-            let errorData: ErrorCodeData;
-            let args: string[] = [];
-
-            if (typeof errorCode === 'number') {
-              errorData = validation.UkwmErrorData[errorCode];
-            } else {
-              args = errorCode.args;
-              errorData = validation.UkwmErrorData[errorCode.code];
-            }
-
-            if (!columnErrorsObj[errorData.field]) {
-              continue;
-            }
-
-            columnErrorsObj[errorData.field].push({
-              rowNumber: rowError.rowNumber,
-              errorReason:
-                errorData.type === 'message'
-                  ? errorData.message
-                  : errorData.builder(args),
-            });
-          }
-        }
-
-        for (const key in columnErrorsObj) {
-          const keyAsField = key as Field;
-          const errorDetails = columnErrorsObj[keyAsField];
-          columnErrors.push({
-            columnName: keyAsField,
-            errorAmount: errorDetails.length,
-            errorDetails: errorDetails,
-          });
-        }
-
-        if (
-          response.success &&
-          response.value.state.status === 'FailedValidation'
-        ) {
-          response.value.state.columnErrors = columnErrors.filter(
-            (ce) => ce.errorAmount > 0,
-          );
-          response.value.state.rowErrors = rowErrors;
-        }
-      } else if (data.state.status === 'Submitted') {
-        const bulkSubmission = {
-          id: data.id,
-          state: {
-            status: data.state.status,
-            timestamp: data.state.timestamp,
-            transactionId: data.state.transactionId,
-            submissions: data.state.submissions.map((v) => ({
-              id: v.id,
-              wasteMovementId:
-                v.submissionDeclaration.status === 'Complete' &&
-                v.submissionDeclaration.values.transactionId,
-              producerName:
-                v.producerAndCollection.status === 'Complete' &&
-                v.producerAndCollection.producer.contact?.organisationName,
-              ewcCodes:
-                v.wasteInformation.status === 'Complete' &&
-                v.wasteInformation.wasteTypes.map((wt) => wt?.ewcCode),
-              collectionDate: v.producerAndCollection.status === 'Complete' && {
-                day: v.producerAndCollection.wasteCollection
-                  .expectedWasteCollectionDate?.day,
-                month:
-                  v.producerAndCollection.wasteCollection
-                    .expectedWasteCollectionDate?.month,
-                year: v.producerAndCollection.wasteCollection
-                  .expectedWasteCollectionDate?.year,
-              },
-            })),
-          },
-        } as api.BulkSubmissionDetail;
-        return success(bulkSubmission);
-      }
       return response;
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -259,7 +91,6 @@ export class BatchController {
             transactionId,
             timestamp,
             hasEstimates: submissions.state.hasEstimates,
-            submissions: submissions.state.submissions,
           },
         };
         return success(
@@ -278,14 +109,11 @@ export class BatchController {
   downloadProducerCsv: Handler<
     api.DownloadBatchRequest,
     api.DownloadBatchResponse
-  > = async ({ id }) => {
+  > = async ({ id, accountId }) => {
     try {
-      const result = (await this.repository.downloadProducerCsv(
-        id,
-      )) as api.SubmissionFlattenedDownload[];
+      const result = await this.repository.downloadProducerCsv(id, accountId);
 
       let csvText = downloadSections + '\n' + downloadHeaders + '\n';
-
       for (const submission of result) {
         const keys = Object.keys(submission);
         const values = keys.map((key) => {
@@ -304,6 +132,142 @@ export class BatchController {
       const base64Data = compressedBuffer.toString('base64');
 
       return success({ data: base64Data });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getRow: Handler<api.GetRowRequest, api.GetRowResponse> = async ({
+    accountId,
+    batchId,
+    rowId,
+  }) => {
+    try {
+      const row: Row = await this.repository.getRow(accountId, batchId, rowId);
+
+      const rowWithMessage: api.RowWithMessage = {
+        accountId: row.accountId,
+        batchId: row.batchId,
+        id: row.id,
+        messages: [],
+      };
+
+      if (!row.data.valid) {
+        for (const errorCode of row.data.codes) {
+          let errorData: ErrorCodeData;
+          let args: string[] = [];
+
+          if (typeof errorCode === 'number') {
+            errorData = validation.UkwmErrorData[errorCode];
+          } else {
+            args = errorCode.args;
+            errorData = validation.UkwmErrorData[errorCode.code];
+          }
+
+          if (errorData.type === 'message') {
+            rowWithMessage.messages.push(errorData.message);
+          } else {
+            rowWithMessage.messages.push(errorData.builder(args));
+          }
+        }
+      }
+
+      return success(rowWithMessage);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getColumn: Handler<api.GetColumnRequest, api.GetColumnResponse> = async ({
+    accountId,
+    batchId,
+    columnRef,
+  }) => {
+    try {
+      const column = await this.repository.getColumn(
+        accountId,
+        batchId,
+        columnRef,
+      );
+      const columnWithMessage: api.ColumnWithMessage = {
+        columnRef: column.id,
+        accountId: column.accountId,
+        batchId: column.batchId,
+        errors: [],
+      };
+
+      for (const error of column.errors) {
+        const messages = error.codes.map((errorCode) => {
+          let errorData: ErrorCodeData;
+          let args: string[] = [];
+
+          if (typeof errorCode === 'number') {
+            errorData = validation.UkwmErrorData[errorCode];
+          } else {
+            args = errorCode.args;
+            errorData = validation.UkwmErrorData[errorCode.code];
+          }
+
+          if (errorData.type === 'message') {
+            return errorData.message;
+          } else {
+            return errorData.builder(args);
+          }
+        });
+
+        columnWithMessage.errors.push({
+          messages,
+          rowNumber: error.rowNumber,
+        });
+      }
+
+      return success(columnWithMessage);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getBulkSubmissions: Handler<
+    api.GetBulkSubmissionsRequest,
+    api.GetBulkSubmissionsResponse
+  > = async ({
+    accountId,
+    batchId,
+    page,
+    collectionDate,
+    ewcCode,
+    pageSize,
+    producerName,
+    wasteMovementId,
+  }) => {
+    try {
+      const submissions = await this.repository.getBulkSubmissions(
+        batchId,
+        accountId,
+        page,
+        pageSize || 16,
+        collectionDate,
+        ewcCode,
+        producerName,
+        wasteMovementId,
+      );
+
+      return success(submissions);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

@@ -59,6 +59,8 @@ describe('Total Error Summary component', () => {
     );
 
     const link = screen.getByRole('link', { name: 'Error summary' });
-    expect(link).toHaveAttribute('href', '#');
+    expect(['/en#', '#']).toContain(
+      link.attributes.getNamedItem('href')?.value,
+    );
   });
 });

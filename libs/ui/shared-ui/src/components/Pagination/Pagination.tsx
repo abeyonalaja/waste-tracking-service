@@ -2,19 +2,28 @@
 import React from 'react';
 import Link from 'next/link';
 import { getPageRange } from '../../utils';
+import { useSearchParams } from 'next/navigation';
 
 interface PaginationProps {
   currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
 }
 
 export function Pagination({
   currentPage,
   totalPages,
-  setCurrentPage,
 }: PaginationProps): React.ReactElement | undefined {
   const pageRange = getPageRange(currentPage, totalPages);
+  const searchParams = useSearchParams();
+
+  let otherParams = '';
+  if (searchParams) {
+    searchParams.forEach((value, key) => {
+      if (key !== 'page') {
+        otherParams = otherParams.concat(`&${key}=${value}`);
+      }
+    });
+  }
 
   if (totalPages > 1) {
     return (
@@ -23,13 +32,8 @@ export function Pagination({
           <div className="govuk-pagination__prev">
             <Link
               rel="prev"
-              href="#"
+              href={`?page=${currentPage - 1}${otherParams}`}
               className="govuk-link govuk-pagination__link"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage(Number(currentPage - 1));
-                window.scrollTo(0, 0);
-              }}
             >
               <svg
                 className="govuk-pagination__icon govuk-pagination__icon--prev"
@@ -71,15 +75,10 @@ export function Pagination({
                   key={`pagination-page=${page}-${index}`}
                 >
                   <Link
-                    href={`#`}
+                    href={`?page=${page}${otherParams}`}
                     className={'govuk-link govuk-pagination__link'}
                     aria-label={`Page ${page}`}
                     aria-current={page === currentPage ? 'page' : undefined}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(Number(page));
-                      window.scrollTo(0, 0);
-                    }}
                   >
                     {page}
                   </Link>
@@ -93,12 +92,7 @@ export function Pagination({
             <Link
               className="govuk-link govuk-pagination__link"
               rel="next"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrentPage(Number(currentPage + 1));
-                window.scrollTo(0, 0);
-              }}
+              href={`?page=${currentPage + 1}${otherParams}`}
             >
               <span className="govuk-pagination__link-title">
                 Next<span className="govuk-visually-hidden">page</span>

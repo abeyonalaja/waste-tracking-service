@@ -12,6 +12,15 @@ import {
   DownloadBatchRequest,
   DownloadBatchResponse,
   downloadProducerCsv,
+  getRow,
+  GetRowRequest,
+  GetRowResponse,
+  getColumn,
+  GetColumnRequest,
+  GetColumnResponse,
+  getBulkSubmissions,
+  GetBulkSubmissionsRequest,
+  GetBulkSubmissionsResponse,
 } from '@wts/api/uk-waste-movements-bulk';
 
 export class DaprUkWasteMovementsBulkClient {
@@ -60,5 +69,34 @@ export class DaprUkWasteMovementsBulkClient {
       HttpMethod.POST,
       req,
     )) as DownloadBatchResponse;
+  }
+
+  async getRow(req: GetRowRequest): Promise<GetRowResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsBulkAppId,
+      getRow.name,
+      HttpMethod.POST,
+      req,
+    )) as GetRowResponse;
+  }
+
+  async getColumn(req: GetColumnRequest): Promise<GetColumnResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsBulkAppId,
+      getColumn.name,
+      HttpMethod.POST,
+      req,
+    )) as GetColumnResponse;
+  }
+
+  async getBulkSubmissions(
+    req: GetBulkSubmissionsRequest,
+  ): Promise<GetBulkSubmissionsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsBulkAppId,
+      getBulkSubmissions.name,
+      HttpMethod.POST,
+      req,
+    )) as GetBulkSubmissionsResponse;
   }
 }

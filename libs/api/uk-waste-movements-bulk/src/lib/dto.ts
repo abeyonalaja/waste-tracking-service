@@ -1,5 +1,9 @@
 import { Response } from '@wts/util/invocation';
-import { DraftSubmission, Submission } from '@wts/api/uk-waste-movements';
+import {
+  DraftSubmission,
+  Field,
+  Submission,
+} from '@wts/api/uk-waste-movements';
 
 export type Method = Readonly<{
   name: string;
@@ -32,50 +36,70 @@ export const downloadProducerCsv: Method = {
   name: 'ukwmDownloadBatch',
 };
 
+export const getRow: Method = {
+  name: 'ukwmGetRow',
+};
+
+export const getColumn: Method = {
+  name: 'ukwmGetColumn',
+};
+
+export const getBulkSubmissions: Method = {
+  name: 'ukwmGetBulkSubmissions',
+};
+
 export type GetBatchRequest = { id: string } & AccountIdRequest;
-export type GetBatchResponse = Response<BulkSubmissionDetail>;
+export type GetBatchResponse = Response<BulkSubmission>;
+
+export type GetRowRequest = {
+  rowId: string;
+  batchId: string;
+} & AccountIdRequest;
+export type GetRowResponse = Response<RowWithMessage>;
+
+export type GetColumnRequest = {
+  columnRef: string;
+  batchId: string;
+} & AccountIdRequest;
+export type GetColumnResponse = Response<ColumnWithMessage>;
 
 export type FinalizeBatchRequest = { id: string } & AccountIdRequest;
 export type FinalizeBatchResponse = Response<void>;
 
-export interface DownloadBatchRequest {
+export type DownloadBatchRequest = {
   id: string;
-}
+} & AccountIdRequest;
 export type DownloadBatchResponse = Response<{ data: string }>;
+
+export interface GetBulkSubmissionsRequest {
+  batchId: string;
+  accountId: string;
+  page: number;
+  pageSize?: number;
+  collectionDate?: Date;
+  ewcCode?: string;
+  producerName?: string;
+  wasteMovementId?: string;
+}
+
+export interface PagedSubmissionData {
+  totalRecords: number;
+  totalPages: number;
+  page: number;
+  values: BulkSubmissionPartialSummary[];
+}
+
+export type GetBulkSubmissionsResponse = Response<PagedSubmissionData>;
 
 export type PartialSubmission = Omit<
   Submission,
   'id' | 'submissionDeclaration' | 'submissionState'
 >;
 
-export interface BulkSubmissionValidationRowCodeError {
-  rowNumber: number;
-  errorAmount: number;
-  errorCodes: (
-    | number
-    | {
-        code: number;
-        args: string[];
-      }
-  )[];
-}
-
-export interface BulkSubmissionValidationRowError {
-  rowNumber: number;
-  errorAmount: number;
-  errorDetails: string[];
-}
-
-export interface BulkSubmissionValidationColumnErrorDetail {
-  rowNumber: number;
-  errorReason: string;
-}
-
-export interface BulkSubmissionValidationColumnError {
-  errorAmount: number;
-  columnName: string;
-  errorDetails: BulkSubmissionValidationColumnErrorDetail[];
-}
+export type SubmittedPartialSubmission = Omit<
+  Submission & { transactionId: string },
+  'submissionDeclaration' | 'submissionState'
+>;
 
 export type BulkSubmissionFullSummary = Readonly<DraftSubmission>;
 
@@ -83,7 +107,7 @@ export interface BulkSubmissionPartialSummary {
   id: string;
   wasteMovementId: string;
   producerName: string;
-  ewcCodes: string[];
+  ewcCode: string;
   collectionDate: {
     day: string;
     month: string;
@@ -91,36 +115,7 @@ export interface BulkSubmissionPartialSummary {
   };
 }
 
-interface FailedValidationCodeState {
-  status: 'FailedValidation';
-  timestamp: Date;
-  rowErrors: BulkSubmissionValidationRowCodeError[];
-}
-
-interface FailedValidationDetailState {
-  status: 'FailedValidation';
-  timestamp: Date;
-  rowErrors: BulkSubmissionValidationRowError[];
-  columnErrors?: BulkSubmissionValidationColumnError[];
-}
-
-interface FullSubmittedState {
-  status: 'Submitted';
-  timestamp: Date;
-  hasEstimates: boolean;
-  transactionId: string;
-  submissions: BulkSubmissionFullSummary[];
-}
-
-interface PartialSubmittedState {
-  status: 'Submitted';
-  timestamp: Date;
-  hasEstimates: boolean;
-  transactionId: string;
-  submissions: BulkSubmissionPartialSummary[];
-}
-
-type BulkSubmissionStateBase =
+type BulkSubmissionState =
   | {
       status: 'Processing';
       timestamp: Date;
@@ -131,35 +126,33 @@ type BulkSubmissionStateBase =
       error: string;
     }
   | {
+      status: 'FailedValidation';
+      timestamp: Date;
+      errorSummary: ErrorSummary;
+    }
+  | {
       status: 'PassedValidation';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: PartialSubmission[];
+      rowsCount: number;
     }
   | {
       status: 'Submitting';
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      submissions: PartialSubmission[];
+    }
+  | {
+      status: 'Submitted';
+      timestamp: Date;
+      hasEstimates: boolean;
+      transactionId: string;
+      createdRowsCount: number;
     };
-
-export type BulkSubmissionState =
-  | BulkSubmissionStateBase
-  | FailedValidationCodeState
-  | FullSubmittedState;
 
 export interface BulkSubmission {
   id: string;
   state: BulkSubmissionState;
-}
-
-export interface BulkSubmissionDetail {
-  id: string;
-  state:
-    | BulkSubmissionStateBase
-    | FailedValidationDetailState
-    | PartialSubmittedState;
 }
 
 export interface ProducerDetailFlattened {
@@ -395,7 +388,7 @@ export type SubmissionFlattenedDownload = {
 export interface CarrierConfirmationFlattened {
   carrierConfirmationUniqueReference: string;
   carrierConfirmationCorrectDetails: string;
-  carrierConfirmationbrokerRegistrationNumber: string;
+  carrierConfirmationBrokerRegistrationNumber: string;
   carrierConfirmationRegistrationNumber: string;
   carrierConfirmationOrganisationName: string;
   carrierConfirmationAddressLine1: string;
@@ -410,4 +403,83 @@ export interface CarrierConfirmationFlattened {
   carrierVehicleRegistrationNumber: string;
   carrierDateWasteCollected: string;
   carrierTimeWasteCollected: string;
+}
+
+interface ErrorSummary {
+  columnBased: ColumnSummary[];
+  rowBased: RowSummary[];
+}
+
+interface ColumnSummary {
+  columnRef: Field;
+  count: number;
+}
+
+interface RowSummary {
+  rowNumber: number;
+  rowId: string;
+  count: number;
+}
+
+export interface ErrorColumn {
+  id: Field;
+  batchId: string;
+  accountId: string;
+  errors: ErrorColumnDetail[];
+}
+
+export interface ErrorColumnDetail {
+  rowNumber: number;
+  codes: ErrorCode[];
+}
+
+export interface Row {
+  id: string;
+  batchId: string;
+  accountId: string;
+  data: RowData;
+}
+
+type RowData =
+  | {
+      valid: false;
+      rowNumber: number;
+      codes: ErrorCode[];
+    }
+  | ({
+      valid: true;
+    } & RowContent);
+
+type RowContent =
+  | {
+      submitted: true;
+      content: SubmittedPartialSubmission;
+    }
+  | {
+      submitted: false;
+      content: PartialSubmission;
+    };
+
+type ErrorCode =
+  | number
+  | {
+      code: number;
+      args: string[];
+    };
+
+export interface RowWithMessage {
+  id: string;
+  batchId: string;
+  accountId: string;
+  messages: string[];
+}
+
+export interface ColumnWithMessage {
+  columnRef: string;
+  batchId: string;
+  accountId: string;
+  errors: {
+    rowNumber: number;
+    messages: string[];
+  }[];
 }

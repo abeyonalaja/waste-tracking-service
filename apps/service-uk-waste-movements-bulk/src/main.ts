@@ -20,6 +20,7 @@ import {
   ContentToBeProcessedTask,
   ContentToBeSubmittedTask,
   ContentSubmissionTask,
+  Row,
 } from './model';
 import * as taskValidate from './lib/task-validation';
 import { CsvValidator } from './lib/csv-validator';
@@ -31,6 +32,7 @@ import {
 } from '@azure/service-bus';
 import {
   CreateSubmissionsResponse,
+  Field,
   ValidateSubmissionsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
@@ -84,10 +86,16 @@ const serviceBusClient = new ServiceBusClient(
   aadCredentials,
 );
 
+const containersMap = {
+  batches: process.env['COSMOS_BATCHES_CONTAINER_NAME'] || 'batches',
+  rows: process.env['COSMOS_ROWS_CONTAINER_NAME'] || 'rows',
+  columns: process.env['COSMOS_COLUMNS_CONTAINER_NAME'] || 'columns',
+};
+
 const repository = new CosmosBatchRepository(
   dbClient,
   process.env['COSMOS_DATABASE_NAME'] || 'uk-waste-movements-bulk',
-  process.env['COSMOS_DRAFTS_CONTAINER_NAME'] || 'drafts',
+  containersMap,
   logger,
 );
 
@@ -117,6 +125,7 @@ await server.invoker.listen(
         accountId: request.accountId,
         content: request.content,
       };
+
       const cloudEvent = new CloudEvent({
         specversion: '1.0',
         type: `${appId}.event.sent.ContentToBeProcessed`,
@@ -273,6 +282,60 @@ await server.invoker.listen(
   { method: HttpMethod.POST },
 );
 
+await server.invoker.listen(
+  api.getRow.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.GetRowRequest;
+    if (!parse.getRowRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await batchController.getRow(request);
+  },
+  { method: HttpMethod.POST },
+);
+
+await server.invoker.listen(
+  api.getColumn.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.GetColumnRequest;
+    if (!parse.getColumnRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await batchController.getColumn(request);
+  },
+  { method: HttpMethod.POST },
+);
+
+await server.invoker.listen(
+  api.getBulkSubmissions.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.GetBulkSubmissionsRequest;
+    request.collectionDate = request.collectionDate
+      ? new Date(request.collectionDate)
+      : undefined;
+    if (!parse.getBulkSubmissionsRequest(request)) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await batchController.getBulkSubmissions(request);
+  },
+  { method: HttpMethod.POST },
+);
+
 await server.start();
 
 const execute = true;
@@ -309,8 +372,71 @@ while (execute) {
             };
             await repository.saveBatch(value, body.data.accountId);
           } else {
-            const submissions: api.PartialSubmission[] = [];
-            const rowErrors: api.BulkSubmissionValidationRowCodeError[] = [];
+            const rows: api.Row[] = [];
+            const columnErrors: api.ErrorColumn[] = [];
+
+            const columnErrorsObj: {
+              [key in Field]: api.ErrorColumnDetail[];
+            } = {
+              'Producer address line 1': [],
+              'Producer address line 2': [],
+              'Producer contact name': [],
+              'Producer contact email address': [],
+              'Producer contact phone number': [],
+              'Producer country': [],
+              'Producer organisation name': [],
+              'Producer postcode': [],
+              'Producer Standard Industrial Classification (SIC) code': [],
+              'Producer town or city': [],
+              'Receiver address line 1': [],
+              'Receiver address line 2': [],
+              'Receiver postcode': [],
+              'Receiver contact name': [],
+              'Receiver contact email address': [],
+              'Receiver contact phone number': [],
+              'Receiver country': [],
+              'Receiver environmental permit number': [],
+              'Receiver organisation name': [],
+              'Receiver town or city': [],
+              'Receiver authorization type': [],
+              'Waste Collection Details Address Line 1': [],
+              'Waste Collection Details Address Line 2': [],
+              'Waste Collection Details Town or City': [],
+              'Waste Collection Details Country': [],
+              'Waste Collection Details Postcode': [],
+              'Waste Collection Details Waste Source': [],
+              'Waste Collection Details Broker Registration Number': [],
+              'Waste Collection Details Carrier Registration Number': [],
+              'Waste Collection Details Expected Waste Collection Date': [],
+              'Number and type of transportation containers': [],
+              'Special handling requirements details': [],
+              'EWC Code': [],
+              'Waste Description': [],
+              'Physical Form': [],
+              'Waste Quantity': [],
+              'Waste Quantity Units': [],
+              'Quantity of waste (actual or estimate)': [],
+              'Waste Has Hazardous Properties': [],
+              'Hazardous Waste Codes': [],
+              'Waste Contains POPs': [],
+              'Persistant organic pollutants (POPs)': [],
+              'Persistant organic pollutants (POPs) Concentration Values': [],
+              'Persistant organic pollutants (POPs) Concentration Units': [],
+              'Chemical and biological components of the waste': [],
+              'Chemical and biological concentration units of measure': [],
+              'Chemical and biological concentration values': [],
+              'Local authority': [],
+              'Carrier organisation name': [],
+              'Carrier address line 1': [],
+              'Carrier address line 2': [],
+              'Carrier town or city': [],
+              'Carrier country': [],
+              'Carrier postcode': [],
+              'Carrier contact name': [],
+              'Carrier contact email address': [],
+              'Carrier contact phone number': [],
+              Reference: [],
+            };
 
             const chunkSize = 50;
             for (let i = 0; i < records.value.rows.length; i += chunkSize) {
@@ -339,47 +465,115 @@ while (execute) {
 
               if (!response.value.valid) {
                 response.value.values.forEach((v) => {
-                  rowErrors.push({
-                    rowNumber: v.index,
-                    errorAmount: v.fieldFormatErrors.length,
-                    errorCodes: v.fieldFormatErrors
-                      .map((f) =>
+                  rows.push({
+                    id: uuidv4(),
+                    accountId: body.data.accountId,
+                    batchId: body.data.batchId,
+                    data: {
+                      valid: false,
+                      rowNumber: v.index,
+                      codes: v.fieldFormatErrors.map((f) =>
                         f.args?.length
                           ? { code: f.code, args: f.args }
                           : f.code,
-                      )
-                      .concat(v.invalidStructureErrors.map((i) => i.code)),
+                      ),
+                    },
                   });
+
+                  for (const error of v.fieldFormatErrors) {
+                    if (columnErrorsObj[error.field]) {
+                      columnErrorsObj[error.field].push({
+                        rowNumber: v.index,
+                        codes: [
+                          error.args?.length
+                            ? { code: error.code, args: error.args }
+                            : error.code,
+                        ],
+                      });
+                    }
+                  }
                 });
               } else {
-                submissions.push(...response.value.values);
+                const rowsWithContent: api.Row[] = response.value.values.map(
+                  (v) => ({
+                    id: uuidv4(),
+                    accountId: body.data.accountId,
+                    batchId: body.data.batchId,
+                    data: {
+                      valid: true,
+                      submitted: false,
+                      content: v,
+                    },
+                  }),
+                );
+
+                rows.push(...rowsWithContent);
               }
             }
 
-            const value: BulkSubmission =
-              rowErrors.length > 0
-                ? {
-                    id: body.data.batchId,
-                    state: {
-                      status: 'FailedValidation',
-                      timestamp: new Date(),
-                      rowErrors: rowErrors,
+            for (const key in columnErrorsObj) {
+              const keyAsField = key as Field;
+              const errorDetails = columnErrorsObj[keyAsField];
+
+              if (errorDetails.length === 0) {
+                continue;
+              }
+
+              columnErrors.push({
+                id: keyAsField,
+                accountId: body.data.accountId,
+                batchId: body.data.batchId,
+                errors: errorDetails,
+              });
+            }
+
+            const value: BulkSubmission = rows.some((r) => !r.data.valid)
+              ? {
+                  id: body.data.batchId,
+                  state: {
+                    status: 'FailedValidation',
+                    timestamp: new Date(),
+                    errorSummary: {
+                      columnBased: columnErrors.map((c) => ({
+                        columnRef: c.id,
+                        count: c.errors.length,
+                      })),
+                      rowBased: rows.map((r) => ({
+                        rowNumber: r.data.valid ? -1 : r.data.rowNumber,
+                        rowId: r.id,
+                        count: r.data.valid ? 0 : r.data.codes.length,
+                      })),
                     },
-                  }
-                : {
-                    id: body.data.batchId,
-                    state: {
-                      status: 'PassedValidation',
-                      timestamp: new Date(),
-                      hasEstimates: submissions.some((s) =>
-                        s.wasteTypes.some(
-                          (wasteType) =>
-                            wasteType.wasteQuantityType === 'EstimateData',
-                        ),
-                      ),
-                      submissions: submissions,
-                    },
-                  };
+                  },
+                }
+              : {
+                  id: body.data.batchId,
+                  state: {
+                    status: 'PassedValidation',
+                    timestamp: new Date(),
+                    rowsCount: rows.length,
+                    hasEstimates: rows.some((s) =>
+                      s.data.valid && !s.data.submitted
+                        ? s.data.content.wasteTypes.some(
+                            (wasteType) =>
+                              wasteType.wasteQuantityType === 'EstimateData',
+                          )
+                        : false,
+                    ),
+                  },
+                };
+
+            await repository.saveRows(
+              rows,
+              body.data.accountId,
+              body.data.batchId,
+            );
+
+            await repository.saveColumns(
+              columnErrors,
+              body.data.accountId,
+              body.data.batchId,
+            );
 
             await repository.saveBatch(value, body.data.accountId);
           }
@@ -457,25 +651,65 @@ while (execute) {
           throw Boom.internal(message);
         }
 
-        let response: CreateSubmissionsResponse;
-        try {
-          response = await daprUkwmClient.createSubmissions({
-            id: body.data.batchId,
-            accountId: body.data.accountId,
-            values: batch.state.submissions,
-          });
-        } catch (err) {
-          logger.error(
-            `Error receiving response from ${daprUkwmClient} service`,
-            { error: err },
-          );
-          throw Boom.internal();
+        const batchRows = await repository.getBatchRows(
+          body.data.batchId,
+          body.data.accountId,
+        );
+
+        const submittedRows: Row[] = [];
+
+        const chunkSize = 50;
+        for (let i = 0; i < batchRows.length; i += chunkSize) {
+          const chunk = batchRows.slice(i, i + chunkSize);
+
+          let response: CreateSubmissionsResponse;
+          try {
+            const rowContent: api.SubmittedPartialSubmission[] = [];
+
+            for (const row of chunk) {
+              if (row.data.valid && !row.data.submitted) {
+                const timestamp = new Date();
+                const id = uuidv4();
+                const transactionId =
+                  'WM' +
+                  timestamp.getFullYear().toString().substring(2) +
+                  (timestamp.getMonth() + 1).toString().padStart(2, '0') +
+                  '_' +
+                  id.substring(0, 8).toUpperCase();
+
+                row.data = {
+                  submitted: true,
+                  valid: true,
+                  content: {
+                    id,
+                    transactionId,
+                    ...row.data.content,
+                  },
+                };
+
+                rowContent.push(row.data.content);
+              }
+            }
+
+            response = await daprUkwmClient.createSubmissions({
+              accountId: body.data.accountId,
+              values: rowContent,
+            });
+          } catch (err) {
+            logger.error(`Error receiving response from ${ukwmAppId} service`, {
+              error: err,
+            });
+            throw Boom.internal();
+          }
+          if (!response.success) {
+            throw new Boom.Boom(response.error.message, {
+              statusCode: response.error.statusCode,
+            });
+          } else {
+            submittedRows.push(...chunk);
+          }
         }
-        if (!response.success) {
-          throw new Boom.Boom(response.error.message, {
-            statusCode: response.error.statusCode,
-          });
-        }
+
         const value: BulkSubmission = {
           id: body.data.batchId,
           state: {
@@ -483,24 +717,16 @@ while (execute) {
             timestamp: new Date(),
             hasEstimates: batch.state.hasEstimates,
             transactionId: batch.state.transactionId,
-            submissions: response.value.map((s) => {
-              return {
-                id: s.id,
-                transactionId: s.transactionId,
-                producerAndCollection: s.producerAndCollection,
-                wasteInformation: s.wasteInformation,
-                receiver: s.receiver,
-                carrier: s.carrier,
-                submissionState: s.submissionState,
-                submissionDeclaration: s.submissionDeclaration,
-                hasEstimates:
-                  s.submissionState.status == 'SubmittedWithEstimates'
-                    ? true
-                    : false,
-              };
-            }),
+            createdRowsCount: submittedRows.length,
           },
         };
+
+        await repository.saveRows(
+          submittedRows,
+          body.data.accountId,
+          body.data.batchId,
+        );
+
         await repository.saveBatch(value, body.data.accountId);
       }
     },

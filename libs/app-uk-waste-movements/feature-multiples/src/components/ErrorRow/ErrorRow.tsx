@@ -1,9 +1,5 @@
 'use client';
 
-import {
-  UkwmBulkSubmissionValidationRowError,
-  UkwmBulkSubmissionValidationColumnError,
-} from '@wts/api/waste-tracking-gateway';
 import { useState } from 'react';
 import { formatColumnName } from '../../utils';
 import styles from './ErrorRow.module.scss';
@@ -17,28 +13,99 @@ export interface ErrorRowStrings {
   hide: string;
 }
 
+interface ColumnBasedErrorSummary {
+  columnRef: string;
+  count: number;
+}
+
+interface RowBasedErrorSummary {
+  rowNumber: number;
+  rowId: string;
+  count: number;
+}
+
 interface ErrorRowProps {
-  error:
-    | UkwmBulkSubmissionValidationRowError
-    | UkwmBulkSubmissionValidationColumnError;
+  error: ColumnBasedErrorSummary | RowBasedErrorSummary;
   strings: ErrorRowStrings;
   rowIndex: number;
+  token: string | null | undefined;
+  id: string;
+}
+
+interface ErrorDetails {
+  rowNumber: number;
+  messages: Array<string>;
 }
 
 export function ErrorRow({
   error,
   strings,
   rowIndex,
+  token,
+  id,
 }: ErrorRowProps): JSX.Element {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const [colErrors, setColErrors] = useState<{ errors: ErrorDetails[] } | null>(
+    null,
+  );
+  const [rowErrors, setRowErrors] = useState<{ messages: string[] } | null>(
+    null,
+  );
 
-  function toggleExpanded() {
-    setDetailsExpanded(!detailsExpanded);
+  async function toggleExpanded(
+    error: RowBasedErrorSummary | ColumnBasedErrorSummary,
+  ) {
+    if (rowErrors !== null || colErrors !== null) {
+      setDetailsExpanded(!detailsExpanded);
+    } else {
+      await getErrorDetails(error);
+    }
+  }
+  console.log('');
+
+  console.log(token);
+
+  async function getErrorDetails(
+    error: RowBasedErrorSummary | ColumnBasedErrorSummary,
+  ) {
+    let url = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches/${id}`;
+
+    if ('columnRef' in error) {
+      url = `${url}/columns/${error.columnRef}`;
+    } else {
+      url = `${url}/rows/${error.rowId}`;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      await fetch(url, {
+        method: 'GET',
+        headers,
+      })
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((data) => {
+          if (data !== undefined) {
+            if ('columnRef' in error) {
+              setColErrors(data);
+            } else {
+              setRowErrors(data);
+            }
+            setDetailsExpanded(true);
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  if ('columnName' in error) {
-    const { columnName, errorAmount, errorDetails } = error;
-    const formattedColumnName = formatColumnName(columnName);
+  if ('columnRef' in error) {
+    const { columnRef, count } = error;
+    const formattedColumnName = formatColumnName(columnRef);
     return (
       <>
         <tr
@@ -47,16 +114,16 @@ export function ErrorRow({
           key={formattedColumnName}
         >
           <td
-            className="govuk-table__cell govuk-body govuk-!-font-weight-bold"
+            className="govuk-table__cell"
             id={`column-row-${rowIndex}-column-name`}
           >
-            {errorAmount} {strings.errorCount}
+            {columnRef}
           </td>
           <td
             className="govuk-table__cell"
             id={`column-row-${rowIndex}-error-type`}
           >
-            {columnName}
+            {count} {strings.errorCount}
           </td>
           <td
             className="govuk-table__cell"
@@ -65,7 +132,7 @@ export function ErrorRow({
             <button
               className={`govuk-accordion__show-all ${styles.showBtn}`}
               id={`column-row-${rowIndex}-action-button`}
-              onClick={toggleExpanded}
+              onClick={() => toggleExpanded(error)}
               aria-controls={`column-row-${rowIndex}-details`}
               aria-expanded={detailsExpanded}
             >
@@ -80,7 +147,7 @@ export function ErrorRow({
             </button>
           </td>
         </tr>
-        {detailsExpanded && (
+        {detailsExpanded && colErrors && (
           <tr
             id={`column-row-${rowIndex}-details`}
             className={`govuk-table__row`}
@@ -98,7 +165,7 @@ export function ErrorRow({
                   </tr>
                 </thead>
                 <tbody className="govuk-table__body">
-                  {errorDetails.map((errorDetail, index) => (
+                  {colErrors.errors.map((errorDetail, index) => (
                     <tr
                       className="govuk-table__row"
                       id={`column-row-${rowIndex}-details-${index}`}
@@ -114,7 +181,7 @@ export function ErrorRow({
                         className="govuk-table__cell"
                         id={`column-row-${rowIndex}-details-${index}-error-reason`}
                       >
-                        {errorDetail.errorReason}
+                        {errorDetail.messages[0]}
                       </td>
                     </tr>
                   ))}
@@ -127,7 +194,7 @@ export function ErrorRow({
     );
   }
 
-  const { rowNumber, errorAmount, errorDetails } = error;
+  const { rowNumber, count } = error;
 
   return (
     <>
@@ -146,13 +213,13 @@ export function ErrorRow({
           className="govuk-table__cell"
           id={`row-row-${rowIndex}-error-amount`}
         >
-          {errorAmount} {strings.errorCount}
+          {count} {strings.errorCount}
         </td>
         <td className="govuk-table__cell" id={`row-row-${rowIndex}-action`}>
           <button
             className={`govuk-accordion__show-all ${styles.showBtn}`}
             id={`row-row-${rowIndex}-action-button`}
-            onClick={toggleExpanded}
+            onClick={() => toggleExpanded(error)}
             aria-controls={`row-row-${rowIndex}-details`}
             aria-expanded={detailsExpanded}
           >
@@ -167,7 +234,7 @@ export function ErrorRow({
           </button>
         </td>
       </tr>
-      {detailsExpanded && (
+      {detailsExpanded && rowErrors && (
         <tr id={`row-row-${rowIndex}-details`} className={`govuk-table__row`}>
           <td colSpan={3} className={styles.spacer}>
             <table className={`govuk-table`}>
@@ -179,20 +246,22 @@ export function ErrorRow({
                 </tr>
               </thead>
               <tbody className="govuk-table__body">
-                {errorDetails.map((errorDetail, index) => (
-                  <tr
-                    className="govuk-table__row"
-                    key={errorDetail}
-                    id={`row-row-${rowIndex}-details-${index}`}
-                  >
-                    <td
-                      className="govuk-table__cell"
-                      id={`row-row-${rowIndex}-details-${index}-error-details`}
+                {rowErrors.messages.map(
+                  (errorDetail: string, index: number) => (
+                    <tr
+                      className="govuk-table__row"
+                      key={errorDetail}
+                      id={`row-row-${rowIndex}-details-${index}`}
                     >
-                      {errorDetail}
-                    </td>
-                  </tr>
-                ))}
+                      <td
+                        className="govuk-table__cell"
+                        id={`row-row-${rowIndex}-details-${index}-error-details`}
+                      >
+                        {errorDetail}
+                      </td>
+                    </tr>
+                  ),
+                )}
               </tbody>
             </table>
           </td>

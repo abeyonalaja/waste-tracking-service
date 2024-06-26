@@ -21,7 +21,7 @@ interface UploadFormProps {
   validationError?: string;
   showHint?: boolean;
   totalErrorCount?: number;
-  token: string;
+  token: string | null | undefined;
   children: React.ReactNode;
 }
 

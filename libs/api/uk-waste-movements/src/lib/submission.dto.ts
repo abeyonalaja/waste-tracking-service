@@ -388,16 +388,17 @@ export const validateSubmissions: Method = {
 };
 
 export type PartialSubmission = Omit<
-  Submission,
+  Submission & { transactionId?: string },
   'id' | 'submissionDeclaration' | 'submissionState'
->;
+> & {
+  id?: string;
+};
 
-export type CreateSubmissionsRequest = IdRequest &
-  AccountIdRequest & {
-    values: PartialSubmission[];
-  };
+export type CreateSubmissionsRequest = AccountIdRequest & {
+  values: PartialSubmission[];
+};
 
-export type CreateSubmissionsResponse = Response<DraftSubmission[]>;
+export type CreateSubmissionsResponse = Response<void>;
 
 export type GetDraftRequest = IdRequest;
 export type GetDraftResponse = Response<DraftSubmission>;

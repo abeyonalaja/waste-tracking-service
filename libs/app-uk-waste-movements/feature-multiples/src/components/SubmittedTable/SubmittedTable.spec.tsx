@@ -1,80 +1,31 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { SubmittedTable } from './SubmittedTable';
-import { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import { NextIntlClientProvider } from 'next-intl';
+import { BulkSubmissionPartialSummary } from '@wts/api/uk-waste-movements-bulk';
 
 const messages = {
   multiples: {
     manage: {
-      breadCrumbs: {
-        home: 'Home',
-        moveWaste: 'Move waste in the UK',
-        current: 'Manage waste movements',
-      },
-      headingOne: 'Waste movement records for {company}',
       table: {
         headerOne: 'Waste movement ID',
         headerTwo: 'Collection date',
         headerThree: 'EWC code',
         headerFour: 'Producer name',
         headerFive: 'Action',
-        action: 'Action',
+        action: 'View',
         notFound: 'No record found',
-      },
-      submittedTable: {
-        filters: {
-          heading: 'Filter',
-          show: 'Show',
-          hide: 'Hide',
-          showAll: 'Show all sections',
-          hideAll: 'Hide all sections',
-          collectionDate: {
-            title: 'Collection Date',
-            hint: 'The date the waste was collected from the producer',
-            error: 'Enter the full date',
-            labelOne: 'Day',
-            labelTwo: 'Month',
-            labelThree: 'Year',
-          },
-          ewcCode: {
-            title: 'EWC Code',
-            hint: 'Search for any EWC code in your waste movements',
-          },
-          producerName: {
-            title: 'Producer name',
-            hint: 'Search for a producer name',
-          },
-          wasteMovementId: {
-            title: 'Waste Movement ID',
-            hint: 'Search for a waste movement ID',
-          },
-          buttons: {
-            apply: 'Apply filters',
-            reset: 'Reset filters',
-          },
-        },
       },
     },
   },
 };
 
-const strings = {
-  headerOne: 'Waste movement ID',
-  headerTwo: 'Collection date',
-  headerThree: 'EWC codes',
-  headerFour: 'Producer name',
-  headerFive: 'Action',
-  action: 'View',
-  notFound: 'No submissions found',
-};
-
-const mockSubmisssions: UkwmSubmissionReference[] = [
+const mockSubmisssions: BulkSubmissionPartialSummary[] = [
   {
     id: '121',
     wasteMovementId: 'WM2405_01',
     producerName: 'Test Producer 1',
-    ewcCodes: ['150101'],
+    ewcCode: '150101',
     collectionDate: {
       day: '01',
       month: '01',
@@ -85,7 +36,7 @@ const mockSubmisssions: UkwmSubmissionReference[] = [
     id: '122',
     wasteMovementId: 'WM2405_02',
     producerName: 'Test Producer 2',
-    ewcCodes: ['150102'],
+    ewcCode: '150102',
     collectionDate: {
       day: '02',
       month: '01',
@@ -96,7 +47,7 @@ const mockSubmisssions: UkwmSubmissionReference[] = [
     id: '123',
     wasteMovementId: 'WM2405_03',
     producerName: 'Test Producer 3',
-    ewcCodes: ['150103'],
+    ewcCode: '150103',
     collectionDate: {
       day: '03',
       month: '01',
@@ -105,29 +56,11 @@ const mockSubmisssions: UkwmSubmissionReference[] = [
   },
 ];
 
-jest.mock('@wts/ui/navigation', () => ({
-  ...jest.requireActual('@wts/ui/navigation'),
-  usePathname: jest.fn(() => '/multiples/1234/view'),
-}));
-
-const setPageNumber = jest.fn();
-
-jest.mock('next/navigation', () => {
-  return {
-    ...jest.requireActual('next/navigation'),
-    useSearchParams: jest.fn(() => ({
-      get: setPageNumber,
-    })),
-  };
-});
-
 describe('SubmittedTable component', () => {
   it('displays the waste movement Ids for the submissions', async () => {
-    setPageNumber.mockReturnValue(1);
-
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
+        <SubmittedTable submissions={mockSubmisssions} />,
       </NextIntlClientProvider>,
     );
 
@@ -141,11 +74,9 @@ describe('SubmittedTable component', () => {
   });
 
   it('displays the collection date of the waste movement', () => {
-    setPageNumber.mockReturnValue(1);
-
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
+        <SubmittedTable submissions={mockSubmisssions} />
       </NextIntlClientProvider>,
     );
 
@@ -155,11 +86,9 @@ describe('SubmittedTable component', () => {
   });
 
   it('displays the first EWC code of the submission', () => {
-    setPageNumber.mockReturnValue(1);
-
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
+        <SubmittedTable submissions={mockSubmisssions} />
       </NextIntlClientProvider>,
     );
 
@@ -169,11 +98,9 @@ describe('SubmittedTable component', () => {
   });
 
   it('displays the producer name', () => {
-    setPageNumber.mockReturnValue(1);
-
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
+        <SubmittedTable submissions={mockSubmisssions} />
       </NextIntlClientProvider>,
     );
 
@@ -183,11 +110,9 @@ describe('SubmittedTable component', () => {
   });
 
   it('Has a link to view the individual submission', () => {
-    setPageNumber.mockReturnValue(1);
-
     render(
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SubmittedTable submissions={mockSubmisssions} tableStrings={strings} />
+        <SubmittedTable submissions={mockSubmisssions} />
       </NextIntlClientProvider>,
     );
 

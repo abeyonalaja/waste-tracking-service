@@ -4,6 +4,9 @@ import {
   FinalizeBatchRequest,
   schema,
   DownloadBatchRequest,
+  GetRowRequest,
+  GetColumnRequest,
+  GetBulkSubmissionsRequest,
 } from '@wts/api/uk-waste-movements-bulk';
 import Ajv from 'ajv/dist/jtd';
 
@@ -23,4 +26,14 @@ export const finalizeBatchRequest = ajv.compileParser<FinalizeBatchRequest>(
 
 export const downloadCsvRequest = ajv.compile<DownloadBatchRequest>(
   schema.downloadCsvRequest,
+);
+
+export const getRowRequest = ajv.compile<GetRowRequest>(schema.getRowRequest);
+
+export const getColumnRequest = ajv.compile<GetColumnRequest>(
+  schema.getColumnRequest,
+);
+
+export const getBulkSubmissionsRequest = ajv.compile<GetBulkSubmissionsRequest>(
+  schema.getBulkSubmissionsRequest,
 );

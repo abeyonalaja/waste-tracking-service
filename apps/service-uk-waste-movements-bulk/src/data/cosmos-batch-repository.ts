@@ -1,16 +1,31 @@
-import Boom from '@hapi/boom';
-import { Logger } from 'winston';
-import { BatchRepository } from './batch-repository';
-import { BulkSubmission } from '../model';
-import { CosmosClient, Database, PatchOperation } from '@azure/cosmos';
 import {
-  DraftSubmission,
-  QuantityUnit,
-  WasteQuantityType,
-} from '@wts/api/uk-waste-movements';
-import { SubmissionFlattenedDownload } from '@wts/api/uk-waste-movements-bulk';
+  CosmosClient,
+  Database,
+  SqlParameter,
+  SqlQuerySpec,
+} from '@azure/cosmos';
+import Boom from '@hapi/boom';
+import { QuantityUnit, WasteQuantityType } from '@wts/api/uk-waste-movements';
+import {
+  ErrorColumn,
+  Row,
+  SubmissionFlattenedDownload,
+} from '@wts/api/uk-waste-movements-bulk';
+import { Logger } from 'winston';
+import {
+  BulkSubmission,
+  BulkSubmissionPartialSummary,
+  PagedSubmissionData,
+} from '../model';
+import { BatchRepository } from './batch-repository';
 
 type BulkSubmissionData = BulkSubmission & { accountId: string };
+
+interface BulkContainersMap {
+  batches: string;
+  rows: string;
+  columns: string;
+}
 
 const wasteQuantityTypesMap: { [key in WasteQuantityType]: string } = {
   ActualData: 'Actual',
@@ -35,7 +50,7 @@ export class CosmosBatchRepository implements BatchRepository {
   constructor(
     private cosmosClient: CosmosClient,
     private cosmosDbName: string,
-    private draftContainerName: string,
+    private containersMap: BulkContainersMap,
     private logger: Logger,
   ) {
     this.cosmosDb = this.cosmosClient.database(this.cosmosDbName);
@@ -44,33 +59,15 @@ export class CosmosBatchRepository implements BatchRepository {
   async saveBatch(value: BulkSubmission, accountId: string): Promise<void> {
     const data: BulkSubmissionData = { ...value, accountId };
     try {
-      const { resource: item } = await this.cosmosDb
-        .container(this.draftContainerName)
-        .item(data.id, data.accountId)
-        .read();
-
-      if (!item) {
-        const createItem = {
-          id: data.id,
-          value: data,
-          partitionKey: data.accountId,
-        };
-        await this.cosmosDb
-          .container(this.draftContainerName)
-          .items.create(createItem);
-      } else {
-        const replaceOperation: PatchOperation[] = [
-          {
-            op: 'replace',
-            path: '/value',
-            value: data,
-          },
-        ];
-        await this.cosmosDb
-          .container(this.draftContainerName)
-          .item(data.id, data.accountId)
-          .patch(replaceOperation);
-      }
+      const item = {
+        id: data.id,
+        value: data,
+        partitionKey: data.accountId,
+      };
+      await this.cosmosDb
+        .container(this.containersMap.batches)
+        .scripts.storedProcedure('upsertRecords')
+        .execute(accountId, [[item]]);
     } catch (err) {
       this.logger.error('Unknown error thrown from Cosmos client', {
         error: err,
@@ -81,7 +78,7 @@ export class CosmosBatchRepository implements BatchRepository {
 
   async getBatch(id: string, accountId: string): Promise<BulkSubmission> {
     const { resource: item } = await this.cosmosDb
-      .container(this.draftContainerName)
+      .container(this.containersMap.batches)
       .item(id, accountId)
       .read();
 
@@ -96,744 +93,549 @@ export class CosmosBatchRepository implements BatchRepository {
     };
   }
 
-  async downloadProducerCsv(
-    id: string,
-  ): Promise<SubmissionFlattenedDownload[]> {
-    const querySpec = {
-      query: 'SELECT * FROM c WHERE c.id = @id',
+  async getBatchRows(batchId: string, accountId: string): Promise<Row[]> {
+    const query: SqlQuerySpec = {
+      query: `SELECT * FROM c 
+                WHERE c['value']['batchId']= @batchId AND c['value']['accountId'] = @accountId`,
       parameters: [
-        {
-          name: '@id',
-          value: id,
-        },
+        { name: '@batchId', value: batchId },
+        { name: '@accountId', value: accountId },
       ],
     };
 
     const { resources: items } = await this.cosmosDb
-      .container(this.draftContainerName)
-      .items.query(querySpec)
+      .container(this.containersMap.rows)
+      .items.query(query)
       .fetchAll();
 
-    if (items.length === 0) {
+    if (!items?.length) {
       throw Boom.notFound();
     }
 
+    return items.map((x) => x.value as Row);
+  }
+
+  async downloadProducerCsv(
+    id: string,
+    accountId: string,
+  ): Promise<SubmissionFlattenedDownload[]> {
+    const batch = await this.getBatch(id, accountId);
+    const rows = await this.getBatchRows(id, accountId);
+
     const flattenedSubmissionArray: SubmissionFlattenedDownload[] = [];
 
-    const batch = items[0].value as BulkSubmission;
-
     if (batch.state.status === 'Submitted') {
-      const dataSubmissions = batch.state.submissions as DraftSubmission[];
-      for (const submission of dataSubmissions) {
-        const wasteInformation =
-          submission?.wasteInformation?.status === 'Complete'
-            ? submission?.wasteInformation
-            : undefined;
-        const producerAndCollection =
-          submission?.producerAndCollection?.status === 'Complete'
-            ? submission?.producerAndCollection
-            : undefined;
-        const carrier =
-          submission?.carrier?.status === 'Complete'
-            ? submission?.carrier
-            : undefined;
-        const receiver =
-          submission?.receiver?.status === 'Complete'
-            ? submission?.receiver
-            : undefined;
+      for (const row of rows) {
+        const submission =
+          row.data.valid && row.data.submitted && row.data.content;
+        if (!submission) {
+          continue;
+        }
+
+        const producer = submission.producer;
+        const wasteTypes = submission.wasteTypes;
+        const wasteCollection = submission.wasteCollection;
+        const carrier = submission.carrier;
+        const receiver = submission.receiver;
+        const wasteTransportation = submission.wasteTransportation;
+
         const flattenedSubmission: SubmissionFlattenedDownload = {
-          producerOrganisationName:
-            producerAndCollection?.producer?.contact?.organisationName || '',
-          producerAddressLine1:
-            producerAndCollection?.producer?.address?.addressLine1 || '',
-          producerAddressLine2:
-            producerAndCollection?.producer?.address?.addressLine2 || '',
-          producerTownCity:
-            producerAndCollection?.producer?.address.townCity || '',
-          producerCountry:
-            producerAndCollection?.producer?.address?.country || '',
-          producerPostcode:
-            producerAndCollection?.producer?.address?.postcode || '',
-          producerContactName:
-            producerAndCollection?.producer?.contact?.name || '',
-          producerContactEmail:
-            producerAndCollection?.producer?.contact?.email || '',
-          producerContactPhone:
-            producerAndCollection?.producer?.contact?.phone || '',
-          producerSicCode: producerAndCollection?.producer?.sicCode || '',
+          producerOrganisationName: producer?.contact?.organisationName || '',
+          producerAddressLine1: producer?.address?.addressLine1 || '',
+          producerAddressLine2: producer?.address?.addressLine2 || '',
+          producerTownCity: producer?.address.townCity || '',
+          producerCountry: producer?.address?.country || '',
+          producerPostcode: producer?.address?.postcode || '',
+          producerContactName: producer?.contact?.name || '',
+          producerContactEmail: producer?.contact?.email || '',
+          producerContactPhone: producer?.contact?.phone || '',
+          producerSicCode: producer?.sicCode || '',
           wasteCollectionAddressLine1:
-            producerAndCollection?.wasteCollection?.address?.addressLine1 || '',
+            wasteCollection?.address?.addressLine1 || '',
           wasteCollectionAddressLine2:
-            producerAndCollection?.wasteCollection?.address?.addressLine2 || '',
-          wasteCollectionTownCity:
-            producerAndCollection?.wasteCollection?.address?.townCity || '',
-          wasteCollectionCountry:
-            producerAndCollection?.wasteCollection?.address?.country || '',
-          wasteCollectionPostcode:
-            producerAndCollection?.wasteCollection?.address?.postcode || '',
-          wasteCollectionLocalAuthority:
-            producerAndCollection?.wasteCollection?.localAuthority || '',
-          wasteCollectionWasteSource:
-            producerAndCollection?.wasteCollection?.wasteSource || '',
+            wasteCollection?.address?.addressLine2 || '',
+          wasteCollectionTownCity: wasteCollection?.address?.townCity || '',
+          wasteCollectionCountry: wasteCollection?.address?.country || '',
+          wasteCollectionPostcode: wasteCollection?.address?.postcode || '',
+          wasteCollectionLocalAuthority: wasteCollection?.localAuthority || '',
+          wasteCollectionWasteSource: wasteCollection?.wasteSource || '',
           wasteCollectionBrokerRegistrationNumber:
-            producerAndCollection?.wasteCollection?.brokerRegistrationNumber ||
-            '',
+            wasteCollection?.brokerRegistrationNumber || '',
           wasteCollectionCarrierRegistrationNumber:
-            producerAndCollection?.wasteCollection?.carrierRegistrationNumber ||
-            '',
-          wasteCollectionExpectedWasteCollectionDate: producerAndCollection
-            ?.wasteCollection?.expectedWasteCollectionDate
-            ? `${producerAndCollection?.wasteCollection?.expectedWasteCollectionDate?.day}/${producerAndCollection?.wasteCollection?.expectedWasteCollectionDate?.month}/${producerAndCollection?.wasteCollection?.expectedWasteCollectionDate?.year}`
+            wasteCollection?.carrierRegistrationNumber || '',
+          wasteCollectionExpectedWasteCollectionDate:
+            wasteCollection?.expectedWasteCollectionDate
+              ? `${wasteCollection?.expectedWasteCollectionDate?.day}/${wasteCollection?.expectedWasteCollectionDate?.month}/${wasteCollection?.expectedWasteCollectionDate?.year}`
+              : '',
+          carrierOrganisationName: carrier?.contact?.organisationName || '',
+          carrierAddressLine1: carrier?.address?.addressLine1 || '',
+          carrierAddressLine2: carrier?.address?.addressLine2 || '',
+          carrierTownCity: carrier?.address?.townCity || '',
+          carrierCountry: carrier?.address?.country || '',
+          carrierPostcode: carrier?.address?.postcode || '',
+          carrierContactName: carrier?.contact?.name || '',
+          carrierContactEmail: carrier?.contact?.email || '',
+          carrierContactPhone: carrier?.contact?.phone
+            ? `'${carrier?.contact?.phone}'`
             : '',
-          carrierOrganisationName:
-            carrier?.value?.contact?.organisationName || '',
-          carrierAddressLine1: carrier?.value?.address?.addressLine1 || '',
-          carrierAddressLine2: carrier?.value?.address?.addressLine2 || '',
-          carrierTownCity: carrier?.value?.address?.townCity || '',
-          carrierCountry: carrier?.value?.address?.country || '',
-          carrierPostcode: carrier?.value?.address?.postcode || '',
-          carrierContactName: carrier?.value?.contact?.name || '',
-          carrierContactEmail: carrier?.value?.contact?.email || '',
-          carrierContactPhone: carrier?.value?.contact?.phone
-            ? `'${carrier?.value?.contact?.phone}'`
-            : '',
-          receiverAuthorizationType: receiver?.value?.authorizationType || '',
+          receiverAuthorizationType: receiver?.authorizationType || '',
           receiverEnvironmentalPermitNumber:
-            receiver?.value?.environmentalPermitNumber || '',
-          receiverOrganisationName:
-            receiver?.value?.contact?.organisationName || '',
-          receiverAddressLine1: receiver?.value?.address?.addressLine1 || '',
-          receiverAddressLine2: receiver?.value?.address.addressLine2 || '',
-          receiverTownCity: receiver?.value?.address?.townCity || '',
-          receiverCountry: receiver?.value?.address?.country || '',
-          receiverPostcode: receiver?.value?.address?.postcode || '',
-          receiverContactName: receiver?.value?.contact?.name || '',
-          receiverContactEmail: receiver?.value?.contact?.email || '',
-          receiverContactPhone: receiver?.value?.contact?.phone
-            ? `'${receiver?.value?.contact?.phone}'`
+            receiver?.environmentalPermitNumber || '',
+          receiverOrganisationName: receiver?.contact?.organisationName || '',
+          receiverAddressLine1: receiver?.address?.addressLine1 || '',
+          receiverAddressLine2: receiver?.address.addressLine2 || '',
+          receiverTownCity: receiver?.address?.townCity || '',
+          receiverCountry: receiver?.address?.country || '',
+          receiverPostcode: receiver?.address?.postcode || '',
+          receiverContactName: receiver?.contact?.name || '',
+          receiverContactEmail: receiver?.contact?.email || '',
+          receiverContactPhone: receiver?.contact?.phone
+            ? `'${receiver?.contact?.phone}'`
             : '',
           wasteTransportationNumberAndTypeOfContainers:
-            wasteInformation?.wasteTransportation?.numberAndTypeOfContainers ||
-            '',
+            wasteTransportation?.numberAndTypeOfContainers || '',
           wasteTransportationSpecialHandlingRequirements:
-            wasteInformation?.wasteTransportation
-              ?.specialHandlingRequirements || '',
-          firstWasteTypeEwcCode: wasteInformation?.wasteTypes[0]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[0]?.ewcCode}'`
+            wasteTransportation?.specialHandlingRequirements || '',
+          firstWasteTypeEwcCode: wasteTypes[0]?.ewcCode
+            ? `'${wasteTypes[0]?.ewcCode}'`
             : '',
-          firstWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[0]?.wasteDescription || '',
-          firstWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[0]?.physicalForm || '',
+          firstWasteTypeWasteDescription: wasteTypes[0]?.wasteDescription || '',
+          firstWasteTypePhysicalForm: wasteTypes[0]?.physicalForm || '',
           firstWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[0]?.wasteQuantity?.toString() || '',
-          firstWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[0]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[0]?.quantityUnit
-              ]
+            wasteTypes[0]?.wasteQuantity?.toString() || '',
+          firstWasteTypeWasteQuantityUnit: wasteTypes[0]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[0]?.quantityUnit]
             : '',
-          firstWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[0]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[0]?.wasteQuantityType
-              ]
+          firstWasteTypeWasteQuantityType: wasteTypes[0]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[0]?.wasteQuantityType]
             : '',
           firstWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[0]?.chemicalAndBiologicalComponents
+            wasteTypes[0]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[0]?.chemicalAndBiologicalComponents
+            wasteTypes[0]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[0]?.chemicalAndBiologicalComponents
+            wasteTypes[0]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           firstWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[0]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[0]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[0]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[0]?.hasHazardousProperties) || ''
               : '',
           firstWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[0]?.hazardousWasteCodes
+            wasteTypes[0]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          firstWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[0]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[0]?.containsPops,
-                ) || ''
-              : '',
+          firstWasteTypeContainsPops: wasteTypes[0]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[0]?.containsPops) || ''
+            : '',
           firstWasteTypePopsString:
-            wasteInformation?.wasteTypes[0]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[0]?.pops?.map((p) => p?.name)?.join(';') || '',
           firstWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[0]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[0]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           firstWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[0]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          secondWasteTypeEwcCode: wasteInformation?.wasteTypes[1]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[1]?.ewcCode}'`
+            wasteTypes[0]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          secondWasteTypeEwcCode: wasteTypes[1]?.ewcCode
+            ? `'${wasteTypes[1]?.ewcCode}'`
             : '',
           secondWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[1]?.wasteDescription || '',
-          secondWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[1]?.physicalForm || '',
+            wasteTypes[1]?.wasteDescription || '',
+          secondWasteTypePhysicalForm: wasteTypes[1]?.physicalForm || '',
           secondWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[1]?.wasteQuantity?.toString() || '',
-          secondWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[1]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[1]?.quantityUnit
-              ]
+            wasteTypes[1]?.wasteQuantity?.toString() || '',
+          secondWasteTypeWasteQuantityUnit: wasteTypes[1]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[1]?.quantityUnit]
             : '',
-          secondWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[1]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[1]?.wasteQuantityType
-              ]
+          secondWasteTypeWasteQuantityType: wasteTypes[1]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[1]?.wasteQuantityType]
             : '',
           secondWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[1]?.chemicalAndBiologicalComponents
+            wasteTypes[1]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[1]?.chemicalAndBiologicalComponents
+            wasteTypes[1]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[1]?.chemicalAndBiologicalComponents
+            wasteTypes[1]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           secondWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[1]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[1]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[1]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[1]?.hasHazardousProperties) || ''
               : '',
           secondWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[1]?.hazardousWasteCodes
+            wasteTypes[1]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          secondWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[1]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[1]?.containsPops,
-                ) || ''
-              : '',
+          secondWasteTypeContainsPops: wasteTypes[1]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[1]?.containsPops) || ''
+            : '',
           secondWasteTypePopsString:
-            wasteInformation?.wasteTypes[1]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[1]?.pops?.map((p) => p?.name)?.join(';') || '',
           secondWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[1]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[1]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           secondWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[1]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          thirdWasteTypeEwcCode: wasteInformation?.wasteTypes[2]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[2]?.ewcCode}'`
+            wasteTypes[1]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          thirdWasteTypeEwcCode: wasteTypes[2]?.ewcCode
+            ? `'${wasteTypes[2]?.ewcCode}'`
             : '',
-          thirdWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[2]?.wasteDescription || '',
-          thirdWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[2]?.physicalForm || '',
+          thirdWasteTypeWasteDescription: wasteTypes[2]?.wasteDescription || '',
+          thirdWasteTypePhysicalForm: wasteTypes[2]?.physicalForm || '',
           thirdWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[2]?.wasteQuantity?.toString() || '',
-          thirdWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[2]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[2]?.quantityUnit
-              ]
+            wasteTypes[2]?.wasteQuantity?.toString() || '',
+          thirdWasteTypeWasteQuantityUnit: wasteTypes[2]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[2]?.quantityUnit]
             : '',
-          thirdWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[2]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[2]?.wasteQuantityType
-              ]
+          thirdWasteTypeWasteQuantityType: wasteTypes[2]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[2]?.wasteQuantityType]
             : '',
           thirdWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[2]?.chemicalAndBiologicalComponents
+            wasteTypes[2]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[2]?.chemicalAndBiologicalComponents
+            wasteTypes[2]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[2]?.chemicalAndBiologicalComponents
+            wasteTypes[2]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           thirdWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[2]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[2]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[2]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[2]?.hasHazardousProperties) || ''
               : '',
           thirdWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[2]?.hazardousWasteCodes
+            wasteTypes[2]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          thirdWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[2]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[2]?.containsPops,
-                ) || ''
-              : '',
+          thirdWasteTypeContainsPops: wasteTypes[2]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[2]?.containsPops) || ''
+            : '',
           thirdWasteTypePopsString:
-            wasteInformation?.wasteTypes[2]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[2]?.pops?.map((p) => p?.name)?.join(';') || '',
           thirdWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[2]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[2]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           thirdWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[2]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          fourthWasteTypeEwcCode: wasteInformation?.wasteTypes[3]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[3]?.ewcCode}'`
+            wasteTypes[2]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          fourthWasteTypeEwcCode: wasteTypes[3]?.ewcCode
+            ? `'${wasteTypes[3]?.ewcCode}'`
             : '',
           fourthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[3]?.wasteDescription || '',
-          fourthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[3]?.physicalForm || '',
+            wasteTypes[3]?.wasteDescription || '',
+          fourthWasteTypePhysicalForm: wasteTypes[3]?.physicalForm || '',
           fourthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[3]?.wasteQuantity?.toString() || '',
-          fourthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[3]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[3]?.quantityUnit
-              ]
+            wasteTypes[3]?.wasteQuantity?.toString() || '',
+          fourthWasteTypeWasteQuantityUnit: wasteTypes[3]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[3]?.quantityUnit]
             : '',
-          fourthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[3]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[3]?.wasteQuantityType
-              ]
+          fourthWasteTypeWasteQuantityType: wasteTypes[3]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[3]?.wasteQuantityType]
             : '',
           fourthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[3]?.chemicalAndBiologicalComponents
+            wasteTypes[3]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[3]?.chemicalAndBiologicalComponents
+            wasteTypes[3]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[3]?.chemicalAndBiologicalComponents
+            wasteTypes[3]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           fourthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[3]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[3]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[3]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[3]?.hasHazardousProperties) || ''
               : '',
 
           fourthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[3]?.hazardousWasteCodes
+            wasteTypes[3]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          fourthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[3]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[3]?.containsPops,
-                ) || ''
-              : '',
+          fourthWasteTypeContainsPops: wasteTypes[3]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[3]?.containsPops) || ''
+            : '',
           fourthWasteTypePopsString:
-            wasteInformation?.wasteTypes[3]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[3]?.pops?.map((p) => p?.name)?.join(';') || '',
           fourthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[3]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[3]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           fourthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[3]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          fifthWasteTypeEwcCode: wasteInformation?.wasteTypes[4]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[4]?.ewcCode}'`
+            wasteTypes[3]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          fifthWasteTypeEwcCode: wasteTypes[4]?.ewcCode
+            ? `'${wasteTypes[4]?.ewcCode}'`
             : '',
-          fifthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[4]?.wasteDescription || '',
-          fifthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[4]?.physicalForm || '',
+          fifthWasteTypeWasteDescription: wasteTypes[4]?.wasteDescription || '',
+          fifthWasteTypePhysicalForm: wasteTypes[4]?.physicalForm || '',
           fifthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[4]?.wasteQuantity?.toString() || '',
-          fifthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[4]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[4]?.quantityUnit
-              ]
+            wasteTypes[4]?.wasteQuantity?.toString() || '',
+          fifthWasteTypeWasteQuantityUnit: wasteTypes[4]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[4]?.quantityUnit]
             : '',
-          fifthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[4]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[4]?.wasteQuantityType
-              ]
+          fifthWasteTypeWasteQuantityType: wasteTypes[4]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[4]?.wasteQuantityType]
             : '',
           fifthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[4]?.chemicalAndBiologicalComponents
+            wasteTypes[4]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[4]?.chemicalAndBiologicalComponents
+            wasteTypes[4]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[4]?.chemicalAndBiologicalComponents
+            wasteTypes[4]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           fifthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[4]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[4]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[4]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[4]?.hasHazardousProperties) || ''
               : '',
           fifthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[4]?.hazardousWasteCodes
+            wasteTypes[4]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          fifthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[4]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[4]?.containsPops,
-                ) || ''
-              : '',
+          fifthWasteTypeContainsPops: wasteTypes[4]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[4]?.containsPops) || ''
+            : '',
           fifthWasteTypePopsString:
-            wasteInformation?.wasteTypes[4]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[4]?.pops?.map((p) => p?.name)?.join(';') || '',
           fifthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[4]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[4]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           fifthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[4]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          sixthWasteTypeEwcCode: wasteInformation?.wasteTypes[5]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[5]?.ewcCode}'`
+            wasteTypes[4]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          sixthWasteTypeEwcCode: wasteTypes[5]?.ewcCode
+            ? `'${wasteTypes[5]?.ewcCode}'`
             : '',
-          sixthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[5]?.wasteDescription || '',
-          sixthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[5]?.physicalForm || '',
+          sixthWasteTypeWasteDescription: wasteTypes[5]?.wasteDescription || '',
+          sixthWasteTypePhysicalForm: wasteTypes[5]?.physicalForm || '',
           sixthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[5]?.wasteQuantity?.toString() || '',
-          sixthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[5]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[5]?.quantityUnit
-              ]
+            wasteTypes[5]?.wasteQuantity?.toString() || '',
+          sixthWasteTypeWasteQuantityUnit: wasteTypes[5]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[5]?.quantityUnit]
             : '',
-          sixthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[5]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[5]?.wasteQuantityType
-              ]
+          sixthWasteTypeWasteQuantityType: wasteTypes[5]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[5]?.wasteQuantityType]
             : '',
           sixthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[5]?.chemicalAndBiologicalComponents
+            wasteTypes[5]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[5]?.chemicalAndBiologicalComponents
+            wasteTypes[5]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[5]?.chemicalAndBiologicalComponents
+            wasteTypes[5]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           sixthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[5]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[5]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[5]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[5]?.hasHazardousProperties) || ''
               : '',
           sixthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[5]?.hazardousWasteCodes
+            wasteTypes[5]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          sixthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[5]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[5]?.containsPops,
-                ) || ''
-              : '',
+          sixthWasteTypeContainsPops: wasteTypes[5]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[5]?.containsPops) || ''
+            : '',
           sixthWasteTypePopsString:
-            wasteInformation?.wasteTypes[5]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[5]?.pops?.map((p) => p?.name)?.join(';') || '',
           sixthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[5]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[5]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           sixthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[5]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          seventhWasteTypeEwcCode: wasteInformation?.wasteTypes[6]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[6]?.ewcCode}'`
+            wasteTypes[5]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          seventhWasteTypeEwcCode: wasteTypes[6]?.ewcCode
+            ? `'${wasteTypes[6]?.ewcCode}'`
             : '',
           seventhWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[6]?.wasteDescription || '',
-          seventhWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[6]?.physicalForm || '',
+            wasteTypes[6]?.wasteDescription || '',
+          seventhWasteTypePhysicalForm: wasteTypes[6]?.physicalForm || '',
           seventhWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[6]?.wasteQuantity?.toString() || '',
-          seventhWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[6]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[6]?.quantityUnit
-              ]
+            wasteTypes[6]?.wasteQuantity?.toString() || '',
+          seventhWasteTypeWasteQuantityUnit: wasteTypes[6]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[6]?.quantityUnit]
             : '',
 
-          seventhWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[6]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[6]?.wasteQuantityType
-              ]
+          seventhWasteTypeWasteQuantityType: wasteTypes[6]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[6]?.wasteQuantityType]
             : '',
           seventhWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[6]?.chemicalAndBiologicalComponents
+            wasteTypes[6]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[6]?.chemicalAndBiologicalComponents
+            wasteTypes[6]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[6]?.chemicalAndBiologicalComponents
+            wasteTypes[6]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           seventhWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[6]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[6]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[6]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[6]?.hasHazardousProperties) || ''
               : '',
           seventhWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[6]?.hazardousWasteCodes
+            wasteTypes[6]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          seventhWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[6]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[6]?.containsPops,
-                ) || ''
-              : '',
+          seventhWasteTypeContainsPops: wasteTypes[6]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[6]?.containsPops) || ''
+            : '',
           seventhWasteTypePopsString:
-            wasteInformation?.wasteTypes[6]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[6]?.pops?.map((p) => p?.name)?.join(';') || '',
           seventhWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[6]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[6]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           seventhWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[6]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          eighthWasteTypeEwcCode: wasteInformation?.wasteTypes[7]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[7]?.ewcCode}'`
+            wasteTypes[6]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          eighthWasteTypeEwcCode: wasteTypes[7]?.ewcCode
+            ? `'${wasteTypes[7]?.ewcCode}'`
             : '',
           eighthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[7]?.wasteDescription || '',
-          eighthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[7]?.physicalForm || '',
+            wasteTypes[7]?.wasteDescription || '',
+          eighthWasteTypePhysicalForm: wasteTypes[7]?.physicalForm || '',
           eighthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[7]?.wasteQuantity?.toString() || '',
-          eighthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[7]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[7]?.quantityUnit
-              ]
+            wasteTypes[7]?.wasteQuantity?.toString() || '',
+          eighthWasteTypeWasteQuantityUnit: wasteTypes[7]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[7]?.quantityUnit]
             : '',
-          eighthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[7]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[7]?.wasteQuantityType
-              ]
+          eighthWasteTypeWasteQuantityType: wasteTypes[7]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[7]?.wasteQuantityType]
             : '',
           eighthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[7]?.chemicalAndBiologicalComponents
+            wasteTypes[7]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[7]?.chemicalAndBiologicalComponents
+            wasteTypes[7]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[7]?.chemicalAndBiologicalComponents
+            wasteTypes[7]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           eighthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[7]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[7]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[7]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[7]?.hasHazardousProperties) || ''
               : '',
           eighthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[7]?.hazardousWasteCodes
+            wasteTypes[7]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          eighthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[7]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[7]?.containsPops,
-                ) || ''
-              : '',
+          eighthWasteTypeContainsPops: wasteTypes[7]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[7]?.containsPops) || ''
+            : '',
           eighthWasteTypePopsString:
-            wasteInformation?.wasteTypes[7]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[7]?.pops?.map((p) => p?.name)?.join(';') || '',
           eighthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[7]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[7]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           eighthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[7]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          ninthWasteTypeEwcCode: wasteInformation?.wasteTypes[8]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[8]?.ewcCode}'`
+            wasteTypes[7]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          ninthWasteTypeEwcCode: wasteTypes[8]?.ewcCode
+            ? `'${wasteTypes[8]?.ewcCode}'`
             : '',
-          ninthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[8]?.wasteDescription || '',
-          ninthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[8]?.physicalForm || '',
+          ninthWasteTypeWasteDescription: wasteTypes[8]?.wasteDescription || '',
+          ninthWasteTypePhysicalForm: wasteTypes[8]?.physicalForm || '',
           ninthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[8]?.wasteQuantity?.toString() || '',
-          ninthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[8]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[8]?.quantityUnit
-              ]
+            wasteTypes[8]?.wasteQuantity?.toString() || '',
+          ninthWasteTypeWasteQuantityUnit: wasteTypes[8]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[8]?.quantityUnit]
             : '',
-          ninthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[8]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[8]?.wasteQuantityType
-              ]
+          ninthWasteTypeWasteQuantityType: wasteTypes[8]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[8]?.wasteQuantityType]
             : '',
           ninthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[8]?.chemicalAndBiologicalComponents
+            wasteTypes[8]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[8]?.chemicalAndBiologicalComponents
+            wasteTypes[8]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[8]?.chemicalAndBiologicalComponents
+            wasteTypes[8]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           ninthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[8]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[8]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[8]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[8]?.hasHazardousProperties) || ''
               : '',
           ninthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[8]?.hazardousWasteCodes
+            wasteTypes[8]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          ninthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[8]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[8]?.containsPops,
-                ) || ''
-              : '',
+          ninthWasteTypeContainsPops: wasteTypes[8]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[8]?.containsPops) || ''
+            : '',
           ninthWasteTypePopsString:
-            wasteInformation?.wasteTypes[8]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[8]?.pops?.map((p) => p?.name)?.join(';') || '',
           ninthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[8]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[8]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           ninthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[8]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
-          tenthWasteTypeEwcCode: wasteInformation?.wasteTypes[9]?.ewcCode
-            ? `'${wasteInformation?.wasteTypes[9]?.ewcCode}'`
+            wasteTypes[8]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
+          tenthWasteTypeEwcCode: wasteTypes[9]?.ewcCode
+            ? `'${wasteTypes[9]?.ewcCode}'`
             : '',
-          tenthWasteTypeWasteDescription:
-            wasteInformation?.wasteTypes[9]?.wasteDescription || '',
-          tenthWasteTypePhysicalForm:
-            wasteInformation?.wasteTypes[9]?.physicalForm || '',
+          tenthWasteTypeWasteDescription: wasteTypes[9]?.wasteDescription || '',
+          tenthWasteTypePhysicalForm: wasteTypes[9]?.physicalForm || '',
           tenthWasteTypeWasteQuantity:
-            wasteInformation?.wasteTypes[9]?.wasteQuantity?.toString() || '',
-          tenthWasteTypeWasteQuantityUnit: wasteInformation?.wasteTypes[9]
-            ?.quantityUnit
-            ? wasteQuantityUnitsMap[
-                wasteInformation?.wasteTypes[9]?.quantityUnit
-              ]
+            wasteTypes[9]?.wasteQuantity?.toString() || '',
+          tenthWasteTypeWasteQuantityUnit: wasteTypes[9]?.quantityUnit
+            ? wasteQuantityUnitsMap[wasteTypes[9]?.quantityUnit]
             : '',
-          tenthWasteTypeWasteQuantityType: wasteInformation?.wasteTypes[9]
-            ?.wasteQuantityType
-            ? wasteQuantityTypesMap[
-                wasteInformation?.wasteTypes[9]?.wasteQuantityType
-              ]
+          tenthWasteTypeWasteQuantityType: wasteTypes[9]?.wasteQuantityType
+            ? wasteQuantityTypesMap[wasteTypes[9]?.wasteQuantityType]
             : '',
           tenthWasteTypeChemicalAndBiologicalComponentsString:
-            wasteInformation?.wasteTypes[9]?.chemicalAndBiologicalComponents
+            wasteTypes[9]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.name)
               ?.join(';') || '',
           tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            wasteInformation?.wasteTypes[9]?.chemicalAndBiologicalComponents
+            wasteTypes[9]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentration)
               ?.join(';') || '',
           tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[9]?.chemicalAndBiologicalComponents
+            wasteTypes[9]?.chemicalAndBiologicalComponents
               ?.map((c) => c?.concentrationUnit)
               ?.join(';') || '',
           tenthWasteTypeHasHazardousProperties:
-            wasteInformation?.wasteTypes[9]?.hasHazardousProperties?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[9]?.hasHazardousProperties,
-                ) || ''
+            wasteTypes[9]?.hasHazardousProperties?.toString()
+              ? containsMap.get(wasteTypes[9]?.hasHazardousProperties) || ''
               : '',
           tenthWasteTypeHazardousWasteCodesString:
-            wasteInformation?.wasteTypes[9]?.hazardousWasteCodes
+            wasteTypes[9]?.hazardousWasteCodes
               ?.map((h) => h?.code)
               ?.join(';') || '',
-          tenthWasteTypeContainsPops:
-            wasteInformation?.wasteTypes[9]?.containsPops?.toString()
-              ? containsMap.get(
-                  wasteInformation?.wasteTypes[9]?.containsPops,
-                ) || ''
-              : '',
+          tenthWasteTypeContainsPops: wasteTypes[9]?.containsPops?.toString()
+            ? containsMap.get(wasteTypes[9]?.containsPops) || ''
+            : '',
           tenthWasteTypePopsString:
-            wasteInformation?.wasteTypes[9]?.pops
-              ?.map((p) => p?.name)
-              ?.join(';') || '',
+            wasteTypes[9]?.pops?.map((p) => p?.name)?.join(';') || '',
           tenthWasteTypePopsConcentrationsString:
-            wasteInformation?.wasteTypes[9]?.pops
-              ?.map((p) => p?.concentration)
-              ?.join(';') || '',
+            wasteTypes[9]?.pops?.map((p) => p?.concentration)?.join(';') || '',
           tenthWasteTypePopsConcentrationUnitsString:
-            wasteInformation?.wasteTypes[9]?.pops
-              ?.map((p) => p?.concentrationUnit)
-              ?.join(';') || '',
+            wasteTypes[9]?.pops?.map((p) => p?.concentrationUnit)?.join(';') ||
+            '',
           transactionId: submission?.transactionId,
           carrierConfirmationUniqueReference: '',
           carrierConfirmationCorrectDetails: '',
-          carrierConfirmationbrokerRegistrationNumber: '',
+          carrierConfirmationBrokerRegistrationNumber: '',
           carrierConfirmationRegistrationNumber: '',
           carrierConfirmationOrganisationName: '',
           carrierConfirmationAddressLine1: '',
@@ -856,5 +658,246 @@ export class CosmosBatchRepository implements BatchRepository {
     } else {
       throw Boom.badRequest('Batch has not been submitted');
     }
+  }
+
+  async saveRows(
+    rows: Row[],
+    accountId: string,
+    batchId: string,
+  ): Promise<void> {
+    const chunkSize = 50;
+    for (let i = 0; i < rows.length; i += chunkSize) {
+      const chunk = rows.slice(i, i + chunkSize).map((row) => ({
+        id: row.id,
+        value: row,
+        partitionKey: {
+          accountId: row.accountId,
+          batchId: row.batchId,
+        },
+      }));
+
+      const partitionKey = [batchId, accountId];
+
+      await this.cosmosDb
+        .container(this.containersMap.rows)
+        .scripts.storedProcedure('upsertRecords')
+        .execute(partitionKey, [chunk]);
+    }
+  }
+
+  async saveColumns(
+    columns: ErrorColumn[],
+    accountId: string,
+    batchId: string,
+  ): Promise<void> {
+    for (const column of columns) {
+      const columnItem = {
+        id: column.id,
+        value: column,
+        partitionKey: {
+          accountId: column.accountId,
+          batchId: column.batchId,
+        },
+      };
+
+      const partitionKey = [batchId, accountId];
+
+      await this.cosmosDb
+        .container(this.containersMap.columns)
+        .scripts.storedProcedure('upsertRecords')
+        .execute(partitionKey, [[columnItem]]);
+    }
+  }
+
+  async getRow(
+    accountId: string,
+    batchId: string,
+    rowId: string,
+  ): Promise<Row> {
+    const partitionKey = [batchId, accountId];
+
+    const { resource: item } = await this.cosmosDb
+      .container(this.containersMap.rows)
+      .item(rowId, partitionKey)
+      .read();
+
+    if (!item) {
+      throw Boom.notFound();
+    }
+
+    return item.value as Row;
+  }
+
+  async getColumn(
+    accountId: string,
+    batchId: string,
+    columnRef: string,
+  ): Promise<ErrorColumn> {
+    const partitionKey = [batchId, accountId];
+
+    const { resource: item } = await this.cosmosDb
+      .container(this.containersMap.columns)
+      .item(columnRef, partitionKey)
+      .read();
+
+    if (!item) {
+      throw Boom.notFound();
+    }
+
+    return item.value as ErrorColumn;
+  }
+
+  async getBulkSubmissions(
+    batchId: string,
+    accountId: string,
+    page: number,
+    pageSize: number,
+    collectionDate?: Date,
+    ewcCode?: string,
+    producerName?: string,
+    wasteMovementId?: string,
+  ): Promise<PagedSubmissionData> {
+    if (page <= 0) {
+      page = 1;
+    }
+
+    let dataQuery = `SELECT distinct value {
+                        id: c["value"].data.content.id,
+                        wasteMovementId: c["value"].data.content.transactionId, 
+                        name: c["value"].data.content.producer.contact.organisationName,
+                        ewcCode: c["value"].data.content.wasteTypes[0].ewcCode,
+                        collectionDate: {
+                            day: c["value"].data.content.wasteCollection.expectedWasteCollectionDate.day,
+                            month: c["value"].data.content.wasteCollection.expectedWasteCollectionDate.month,
+                            year: c["value"].data.content.wasteCollection.expectedWasteCollectionDate.year
+                        }
+                    }
+                     FROM c JOIN wt IN c["value"].data.content.wasteTypes
+                     where c['value'].data.submitted
+                       and c['value'].batchId = @batchId
+                       and c['value'].accountId = @accountId`;
+
+    const queryParameters: SqlParameter[] = [
+      {
+        name: '@batchId',
+        value: batchId,
+      },
+      {
+        name: '@accountId',
+        value: accountId,
+      },
+    ];
+
+    if (wasteMovementId) {
+      dataQuery += ` and c["value"].data.content.transactionId = @wasteMovementId`;
+      const dataByTransactionIdQuerySpec: SqlQuerySpec = {
+        query: dataQuery,
+        parameters: [
+          ...queryParameters,
+          {
+            name: '@wasteMovementId',
+            value: wasteMovementId,
+          },
+        ],
+      };
+
+      const { resources: dataByTransactionIdItems } = await this.cosmosDb
+        .container(this.containersMap.rows)
+        .items.query<BulkSubmissionPartialSummary>(dataByTransactionIdQuerySpec)
+        .fetchAll();
+
+      return {
+        page: 1,
+        totalPages: 1,
+        totalRecords: dataByTransactionIdItems.length,
+        values: dataByTransactionIdItems,
+      };
+    }
+
+    const queryFilters: string[] = [];
+
+    if (ewcCode) {
+      queryFilters.push(`wt["ewcCode"] = @ewcCode`);
+      queryParameters.push({
+        name: '@ewcCode',
+        value: ewcCode,
+      });
+    }
+
+    if (producerName) {
+      queryFilters.push(
+        `LOWER(c["value"].data.content.producer.contact.organisationName) like @producerOrgName`,
+      );
+      queryParameters.push({
+        name: '@producerOrgName',
+        value: `%${producerName.toLowerCase()}%`,
+      });
+    }
+
+    if (collectionDate) {
+      queryFilters.push(
+        `c["value"].data.content.wasteCollection.expectedWasteCollectionDate.day = @day AND 
+         c["value"].data.content.wasteCollection.expectedWasteCollectionDate.month = @month AND 
+         c["value"].data.content.wasteCollection.expectedWasteCollectionDate.year = @year`,
+      );
+      queryParameters.push({
+        name: '@day',
+        value: collectionDate.getDate().toString().padStart(2, '0'),
+      });
+      queryParameters.push({
+        name: '@month',
+        value: (collectionDate.getMonth() + 1).toString().padStart(2, '0'),
+      });
+      queryParameters.push({
+        name: '@year',
+        value: collectionDate.getFullYear().toString(),
+      });
+    }
+
+    if (queryFilters.length > 0) {
+      dataQuery += ` and ${queryFilters.join(' AND ')}`;
+    }
+
+    const countQuery = `SELECT VALUE count(data)
+                      FROM (${dataQuery}) as data`;
+
+    dataQuery += ` order by c["_ts"] desc OFFSET @offset LIMIT @limit`;
+
+    const dataQuerySpec: SqlQuerySpec = {
+      query: dataQuery,
+      parameters: [
+        {
+          name: '@offset',
+          value: (page - 1) * pageSize,
+        },
+        {
+          name: '@limit',
+          value: pageSize,
+        },
+        ...queryParameters,
+      ],
+    };
+
+    const countQuerySpec: SqlQuerySpec = {
+      query: countQuery,
+      parameters: queryParameters,
+    };
+
+    const { resources: countItems } = await this.cosmosDb
+      .container(this.containersMap.rows)
+      .items.query(countQuerySpec)
+      .fetchAll();
+
+    const { resources: dataItems } = await this.cosmosDb
+      .container(this.containersMap.rows)
+      .items.query<BulkSubmissionPartialSummary>(dataQuerySpec)
+      .fetchAll();
+
+    return {
+      page: page,
+      totalPages: Math.ceil(countItems[0] / pageSize),
+      totalRecords: countItems[0],
+      values: dataItems,
+    };
   }
 }

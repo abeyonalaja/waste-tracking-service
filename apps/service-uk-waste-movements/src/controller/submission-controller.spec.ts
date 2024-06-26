@@ -142,7 +142,7 @@ describe(SubmissionController, () => {
 
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -360,7 +360,7 @@ describe(SubmissionController, () => {
     });
 
     it('fails submission validation on all sections', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
 
       const response = await subject.validateSubmissions({
         accountId: accountId,
@@ -630,10 +630,11 @@ describe(SubmissionController, () => {
   describe('createSubmissions', () => {
     it('creates submissions', async () => {
       const response = await subject.createSubmissions({
-        accountId: faker.datatype.uuid(),
-        id: faker.datatype.uuid(),
+        accountId: faker.string.uuid(),
         values: [
           {
+            id: faker.string.uuid(),
+            transactionId: 'WM2406_C7049A7F',
             wasteTransportation: {
               numberAndTypeOfContainers: 'test',
               specialHandlingRequirements: 'test',
@@ -752,7 +753,7 @@ describe(SubmissionController, () => {
 
   describe('getDraft', () => {
     it('successfully returns value from the repository', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const value: DraftSubmission = {
         id: id,
         transactionId: '',
@@ -793,7 +794,7 @@ describe(SubmissionController, () => {
         totalRecords: 1,
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             producerName: faker.company.name(),
             wasteMovementId: 'WM24_0019ACAD',
             ewcCode: '01 01 01',

@@ -71,7 +71,7 @@ describe('Submission Confirmation component', () => {
       screen.getByText(messages.multiples.confirmation.bullet1.toString()),
     ).toHaveAttribute(
       'href',
-      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view',
+      '/en/multiples/fa9fb092-1b60-4391-bf08-5cc8d60606b5/view?page=1',
     );
   });
 });

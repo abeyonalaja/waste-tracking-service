@@ -2,7 +2,12 @@ import Boom from '@hapi/boom';
 import { DaprUkWasteMovementsBulkClient } from '@wts/client/uk-waste-movements-bulk';
 import { compress, uncompress } from 'snappy';
 import { Logger } from 'winston';
-import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
+import {
+  UkwmBulkSubmission,
+  UkwmRowWithMessage,
+  UkwmColumnWithMessage,
+  UkwmPagedSubmissionData,
+} from '@wts/api/waste-tracking-gateway';
 import * as api from '@wts/api/uk-waste-movements-bulk';
 
 export interface BatchRef {
@@ -12,6 +17,7 @@ export interface BatchRef {
 
 export interface DownloadRef {
   id: string;
+  accountId: string;
 }
 
 export interface Input {
@@ -19,11 +25,37 @@ export interface Input {
   data: Buffer;
 }
 
+export interface RowRef {
+  rowId: string;
+  batchId: string;
+  accountId: string;
+}
+
+export interface ColumnRef {
+  columnRef: string;
+  batchId: string;
+  accountId: string;
+}
+
+export interface SubmissionRef {
+  batchId: string;
+  accountId: string;
+  page: number;
+  pageSize?: number;
+  collectionDate?: Date;
+  ewcCode?: string;
+  producerName?: string;
+  wasteMovementId?: string;
+}
+
 export interface UkWasteMovementsBulkSubmissionBackend {
   createBatch(accountId: string, inputs: Input[]): Promise<{ id: string }>;
   getBatch(ref: BatchRef): Promise<UkwmBulkSubmission>;
   finalizeBatch(ref: BatchRef): Promise<void>;
   downloadCsv(ref: DownloadRef): Promise<string | Buffer>;
+  getRow(ref: RowRef): Promise<UkwmRowWithMessage>;
+  getColumn(ref: ColumnRef): Promise<UkwmColumnWithMessage>;
+  getSubmissions(ref: SubmissionRef): Promise<UkwmPagedSubmissionData>;
 }
 
 export class ServiceUkWasteMovementsBulkSubmissionBackend
@@ -128,10 +160,10 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
     }
   }
 
-  async downloadCsv({ id }: DownloadRef): Promise<string | Buffer> {
+  async downloadCsv({ id, accountId }: DownloadRef): Promise<string | Buffer> {
     let response: api.DownloadBatchResponse;
     try {
-      response = await this.client.downloadProducerCsv({ id });
+      response = await this.client.downloadProducerCsv({ id, accountId });
     } catch (err) {
       this.logger.error(err);
       throw Boom.internal();
@@ -147,5 +179,67 @@ export class ServiceUkWasteMovementsBulkSubmissionBackend
     const csvData = await uncompress(compressedData);
 
     return csvData;
+  }
+
+  async getRow({
+    rowId,
+    batchId,
+    accountId,
+  }: RowRef): Promise<UkwmRowWithMessage> {
+    let response: api.GetRowResponse;
+    try {
+      response = await this.client.getRow({ rowId, batchId, accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async getColumn({
+    accountId,
+    batchId,
+    columnRef,
+  }: ColumnRef): Promise<UkwmColumnWithMessage> {
+    let response: api.GetColumnResponse;
+    try {
+      response = await this.client.getColumn({ columnRef, batchId, accountId });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
+  }
+
+  async getSubmissions(req: SubmissionRef): Promise<UkwmPagedSubmissionData> {
+    let response: api.GetBulkSubmissionsResponse;
+    try {
+      response = await this.client.getBulkSubmissions(req);
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value;
   }
 }

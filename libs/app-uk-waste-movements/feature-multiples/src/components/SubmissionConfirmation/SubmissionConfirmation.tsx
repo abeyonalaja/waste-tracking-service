@@ -31,7 +31,10 @@ export function SubmissionConfirmation({
       <Paragraph>{t('bodyP2')}</Paragraph>
       <List type={'unordered'}>
         <ListItem>
-          <Link href={`/multiples/${submissionId}/view`} target={'_blank'}>
+          <Link
+            href={`/multiples/${submissionId}/view?page=1`}
+            target={'_blank'}
+          >
             {t('bullet1')}
           </Link>
         </ListItem>

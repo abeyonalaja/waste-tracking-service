@@ -44,7 +44,7 @@ export default async function UploadPage(): Promise<JSX.Element> {
     <Page beforeChildren={<GovUK.BackLink href={'../'} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <UploadForm token={token!} strings={uploadFormStrings}>
+          <UploadForm token={token} strings={uploadFormStrings}>
             <GovUK.Heading size={'l'} level={1}>
               {page('title')}
             </GovUK.Heading>

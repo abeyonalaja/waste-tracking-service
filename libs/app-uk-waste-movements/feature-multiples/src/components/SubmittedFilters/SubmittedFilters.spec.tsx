@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -50,31 +49,42 @@ jest.mock('react-hook-form', () => ({
   useForm: jest.fn(),
 }));
 
+jest.mock('next/navigation', () => ({
+  useRouter() {
+    return {
+      push: () => null,
+      useParams: () => null,
+    };
+  },
+  useParams() {
+    return { id: '123' };
+  },
+  usePathname() {
+    return '/123';
+  },
+  useSearchParams() {
+    return {
+      get: () => null,
+      has: () => null,
+    };
+  },
+}));
+
 beforeEach(() => {
   window.scrollTo = jest.fn();
 });
 
 describe('SubmittedFilters component', () => {
-  (useForm as jest.Mock).mockReturnValue({
-    handleSubmit: () => {},
-    register: () => {},
-    formState: { errors: {} },
-  });
-
   it('renders the filter heading', () => {
     (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
+      handleSubmit: () => null,
+      register: () => null,
       formState: { errors: {} },
     });
 
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 
@@ -84,19 +94,9 @@ describe('SubmittedFilters component', () => {
   });
 
   it('Renders a show all sections button', () => {
-    (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
-      formState: { errors: {} },
-    });
-
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 
@@ -108,19 +108,9 @@ describe('SubmittedFilters component', () => {
   });
 
   it('renders four show section buttons', () => {
-    (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
-      formState: { errors: {} },
-    });
-
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 
@@ -144,19 +134,9 @@ describe('SubmittedFilters component', () => {
   });
 
   it('renders an apply filters button', () => {
-    (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
-      formState: { errors: {} },
-    });
-
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 
@@ -166,19 +146,9 @@ describe('SubmittedFilters component', () => {
   });
 
   it('renders a reset filters button', () => {
-    (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
-      formState: { errors: {} },
-    });
-
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 
@@ -187,22 +157,18 @@ describe('SubmittedFilters component', () => {
     expect(resetButton).toBeInTheDocument();
   });
 
-  it('calls react-hook-form rest function when the Reset filters button is clicked', async () => {
+  it('calls react-hook-form reset function when the Reset filters button is clicked', async () => {
     const mockReset = jest.fn();
     (useForm as jest.Mock).mockReturnValue({
-      handleSubmit: () => {},
-      register: () => {},
+      handleSubmit: () => null,
+      register: () => null,
       reset: mockReset,
       formState: { errors: {} },
     });
 
     render(
       <NextIntlClientProvider messages={messages} locale="en">
-        <SubmittedFilters
-          sortedSubmissions={[]}
-          setFilteredSubmissions={() => {}}
-          setCurrentPage={() => {}}
-        />
+        <SubmittedFilters />
       </NextIntlClientProvider>,
     );
 

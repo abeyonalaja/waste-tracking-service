@@ -15,6 +15,8 @@ import {
   ListlocalAuthoritiesResponse,
   UkwmDraftSubmission,
   UkwmSubmissionFlattenedDownload,
+  UkwmRowWithMessage,
+  UkwmColumnWithMessage,
 } from '@wts/api/waste-tracking-gateway';
 
 export type DraftSubmissionWithAccount = DraftSubmission & {
@@ -24,6 +26,10 @@ export type SubmissionWithAccount = Submission & { accountId: string };
 export type TemplateWithAccount = Template & { accountId: string };
 export type BulkWithAccount = BulkSubmission & { accountId: string };
 export type UkwmBulkWithAccount = UkwmBulkSubmission & { accountId: string };
+export type UkwmRowWithAccountId = UkwmRowWithMessage & { accountId: string };
+export type UkwmColumnWithAccountId = UkwmColumnWithMessage & {
+  accountId: string;
+};
 
 export interface DB {
   addresses: ListAddressesResponse;
@@ -42,6 +48,8 @@ export interface DB {
   ukwmBatches: UkwmBulkWithAccount[];
   ukwmDrafts: UkwmDraftSubmission[];
   ukwmDownload: UkwmSubmissionFlattenedDownload[];
+  ukwmRows: UkwmRowWithAccountId[];
+  ukwmColumns: UkwmColumnWithAccountId[];
 }
 
 export const db: DB = {
@@ -3641,6 +3649,16 @@ export const db: DB = {
   ],
   ukwmDownload: [
     {
+      producerOrganisationName: 'Producer Organisation Name',
+      producerContactName: 'Producer Contact Name',
+      producerContactEmail: 'Producer Email',
+      producerContactPhone: 'Producer Phone',
+      producerAddressLine1: 'Producer Address Line 1',
+      producerAddressLine2: 'Producer Address Line 1',
+      producerTownCity: 'Producer Town/City',
+      producerPostcode: 'Producer Postcode',
+      producerCountry: 'Producer Country',
+      producerSicCode: '123456',
       wasteCollectionAddressLine1: '110 Bishopsgate',
       wasteCollectionAddressLine2: 'Mulberry street',
       wasteCollectionTownCity: 'London',
@@ -3834,7 +3852,7 @@ export const db: DB = {
       transactionId: 'WM2405_FDF4428F',
       carrierConfirmationUniqueReference: '',
       carrierConfirmationCorrectDetails: '',
-      carrierConfirmationbrokerRegistrationNumber: '',
+      carrierConfirmationBrokerRegistrationNumber: '',
       carrierConfirmationRegistrationNumber: '',
       carrierConfirmationOrganisationName: '',
       carrierConfirmationAddressLine1: '',
@@ -3849,6 +3867,53 @@ export const db: DB = {
       carrierVehicleRegistrationNumber: '',
       carrierDateWasteCollected: '',
       carrierTimeWasteCollected: '',
+    },
+  ],
+
+  ukwmRows: [
+    {
+      id: 'row1',
+      batchId: 'batch1',
+      accountId: 'account1',
+      messages: ['Message 1', 'Message 2', 'Message 3'],
+    },
+    {
+      id: 'row2',
+      batchId: 'batch1',
+      accountId: 'account1',
+      messages: ['Message 4', 'Message 5', 'Message 6'],
+    },
+  ],
+  ukwmColumns: [
+    {
+      columnRef: 'Producer contact phone number',
+      batchId: 'batch1',
+      accountId: 'account1',
+      errors: [
+        {
+          rowNumber: 1,
+          messages: ['Error 1'],
+        },
+        {
+          rowNumber: 2,
+          messages: ['Error 2'],
+        },
+      ],
+    },
+    {
+      columnRef: 'Waste Collection Details Country',
+      batchId: 'batch1',
+      accountId: 'account1',
+      errors: [
+        {
+          rowNumber: 1,
+          messages: ['Error 3'],
+        },
+        {
+          rowNumber: 2,
+          messages: ['Error 4'],
+        },
+      ],
     },
   ],
 };

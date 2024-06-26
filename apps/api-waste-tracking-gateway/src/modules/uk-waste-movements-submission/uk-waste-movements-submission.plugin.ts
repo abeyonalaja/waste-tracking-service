@@ -63,8 +63,13 @@ const plugin: Plugin<PluginOptions> = {
             pageSize = undefined;
           }
 
+          const page: number | undefined = Number(query.page);
+          if (isNaN(page)) {
+            return Boom.badRequest('Invalid page');
+          }
+
           const req: dto.UkwmGetDraftsRequest = {
-            page: Number(query.page),
+            page: page,
             pageSize: pageSize,
             collectionDate: collectionDate,
             ewcCode: query.ewcCode,

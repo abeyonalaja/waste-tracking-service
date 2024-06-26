@@ -5,12 +5,14 @@ import {
   ItemResponse,
   Items,
   QueryIterator,
+  SqlQuerySpec,
 } from '@azure/cosmos';
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import { Logger } from 'winston';
 import { CosmosBatchRepository } from './cosmos-batch-repository';
+import { when } from 'jest-when';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -23,6 +25,11 @@ const mockPatch = jest.fn<typeof Item.prototype.patch>();
 const mockCreate = jest.fn<typeof Items.prototype.create>();
 const mockFetchNext = jest.fn<typeof QueryIterator.prototype.fetchNext>();
 const mockFetchAll = jest.fn<typeof QueryIterator.prototype.fetchAll>();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const mockQuery = jest.fn((_query: SqlQuerySpec) => ({
+  fetchNext: mockFetchNext,
+  fetchAll: mockFetchAll,
+}));
 
 jest.mock('@azure/cosmos', () => ({
   CosmosClient: jest.fn().mockImplementation(() => ({
@@ -34,10 +41,7 @@ jest.mock('@azure/cosmos', () => ({
         })),
         items: {
           create: mockCreate,
-          query: jest.fn(() => ({
-            fetchNext: mockFetchNext,
-            fetchAll: mockFetchAll,
-          })),
+          query: mockQuery,
         },
       })),
     })),
@@ -51,12 +55,20 @@ describe(CosmosBatchRepository, () => {
     mockCreate.mockClear();
     mockFetchNext.mockClear();
     mockFetchAll.mockClear();
+    mockQuery.mockReturnValue({
+      fetchNext: mockFetchNext,
+      fetchAll: mockFetchAll,
+    });
   });
 
-  const mockCosmosEndpoint = faker.datatype.string();
-  const mockCosmosKey = faker.datatype.string();
-  const mockCosmosDbName = faker.datatype.string();
-  const mockCosmosContainerName = faker.datatype.string();
+  const mockCosmosEndpoint = faker.string.sample();
+  const mockCosmosKey = faker.string.sample();
+  const mockCosmosDbName = faker.string.sample();
+  const mockCosmosContainerMap = {
+    batches: faker.string.alpha(),
+    columns: faker.string.alpha(),
+    rows: faker.string.alpha(),
+  };
   const logger = new Logger();
 
   const subject = new CosmosBatchRepository(
@@ -65,14 +77,14 @@ describe(CosmosBatchRepository, () => {
       key: mockCosmosKey,
     }),
     mockCosmosDbName,
-    mockCosmosContainerName,
+    mockCosmosContainerMap,
     logger,
   );
 
   describe('getBatch', () => {
     it('retrieves a value with the associated id', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const timestamp = new Date();
       const mockResponse = {
         id,
@@ -85,11 +97,11 @@ describe(CosmosBatchRepository, () => {
           },
         },
         partitionKey: accountId,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -107,8 +119,8 @@ describe(CosmosBatchRepository, () => {
     });
 
     it("throws Not Found exception if key doesn't exist", async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRead.mockResolvedValueOnce({
         resource: undefined,
       } as unknown as ItemResponse<object>);
@@ -120,165 +132,446 @@ describe(CosmosBatchRepository, () => {
 
   describe('downloadBatch', () => {
     it('retrieves a value with flattened properties', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
-      const mockResponse = [
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const mockBatch = {
+        id,
+        value: {
+          id,
+          accountId,
+          state: {
+            status: 'Submitted',
+            timestamp: '2024-05-27T11:58:10.672Z',
+            hasEstimates: false,
+            transactionId: '2405_0A9E118F',
+            createdRowsCount: 1,
+          },
+        },
+        partitionKey: accountId,
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockBatch,
+      } as unknown as ItemResponse<object>);
+
+      const rowId = faker.string.uuid();
+      const mockRows = [
         {
-          id: id,
+          id: rowId,
           value: {
-            id,
+            id: rowId,
             accountId,
-            state: {
-              status: 'Submitted',
-              timestamp: '2024-05-27T11:58:10.672Z',
-              hasEstimates: false,
-              transactionId: '2405_0A9E118F',
-              submissions: [
-                {
-                  id: 'a5b9d42e-6333-4a43-9cba-0224db6bd492',
-                  transactionId: 'WM2405_A5B9D42E',
-                  producerAndCollection: {
-                    status: 'Complete',
-                    producer: {
-                      reference: '100ANSHFFBF',
-                      sicCode: '208016',
-                      address: {
-                        addressLine1: '110 Bishopsgate',
-                        addressLine2: 'Mulberry street',
-                        country: 'Wales',
-                        postcode: 'CV12RD',
-                        townCity: 'London',
-                      },
-                      contact: {
-                        email: 'guy@test.com',
-                        name: 'Pro Name',
-                        organisationName: 'Producer org name',
-                        phone: '00447811111213',
-                      },
-                    },
-                    wasteCollection: {
-                      wasteSource: 'Household',
-                      brokerRegistrationNumber: 'NSZ6112',
-                      carrierRegistrationNumber: 'CBDL5221',
-                      expectedWasteCollectionDate: {
-                        day: '18',
-                        month: '02',
-                        year: '2066',
-                      },
-                      localAuthority: 'Hartlepool',
-                      address: {
-                        addressLine1: '110 Bishopsgate',
-                        addressLine2: 'Mulberry street',
-                        townCity: 'London',
-                        postcode: '',
-                        country: 'Scotland',
-                      },
-                    },
+            batchId: mockBatch.id,
+            data: {
+              submitted: true,
+              valid: true,
+              content: {
+                id: 'c7049a7f-0eed-486e-b2c8-7e570df6086c',
+                transactionId: 'WM2406_C7049A7F',
+                producer: {
+                  reference: 'UKMREF99',
+                  sicCode: '208016',
+                  address: {
+                    addressLine1: '110 Bishopsgate',
+                    addressLine2: 'Mulberry street',
+                    country: 'Wales',
+                    postcode: 'CV12RD',
+                    townCity: 'London',
                   },
-                  wasteInformation: {
-                    status: 'Complete',
-                    wasteTypes: [
+                  contact: {
+                    email: 'guy@test.com',
+                    name: 'Pro Name',
+                    organisationName: 'Producer org name',
+                    phone: '00447811111213',
+                  },
+                },
+                receiver: {
+                  authorizationType: 'Permit DEFRA',
+                  environmentalPermitNumber: 'DEFRA 1235',
+                  address: {
+                    addressLine1: '12 Mulberry Street',
+                    addressLine2: 'West coast, Northwest',
+                    country: 'Wales',
+                    postcode: 'DA112AB',
+                    townCity: 'West coast',
+                  },
+                  contact: {
+                    email: 'smithjones@hotmail.com',
+                    name: 'Mr. Smith Jones',
+                    organisationName: "Mac Donald 's",
+                    phone: '07811111111',
+                  },
+                },
+                wasteTypes: [
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
                       {
-                        ewcCode: '010101',
-                        containsPops: true,
-                        hasHazardousProperties: true,
-                        physicalForm: 'Gas',
-                        quantityUnit: 'Tonne',
-                        wasteDescription:
-                          'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
-                        wasteQuantity: 1.1,
-                        wasteQuantityType: 'ActualData',
-                        chemicalAndBiologicalComponents: [
-                          {
-                            name: 'Chlorinated solvents',
-                            concentration: 20.35,
-                            concentrationUnit: 'mg/kg',
-                          },
-                        ],
-                        hazardousWasteCodes: [
-                          {
-                            code: 'HP1',
-                            name: 'Explosive',
-                          },
-                        ],
-                        pops: [
-                          {
-                            name: 'Endosulfan',
-                            concentration: 9823.75,
-                            concentrationUnit: 'mg/k',
-                          },
-                        ],
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
                       },
                     ],
-                    wasteTransportation: {
-                      numberAndTypeOfContainers: '123456',
-                      specialHandlingRequirements: '',
-                    },
-                  },
-                  receiver: {
-                    status: 'Complete',
-                    value: {
-                      authorizationType: 'Permit DEFRA',
-                      environmentalPermitNumber: 'DEFRA 1235',
-                      address: {
-                        addressLine1: '12 Mulberry Street',
-                        addressLine2: 'West coast, Northwest',
-                        country: 'Wales',
-                        postcode: 'DA112AB',
-                        townCity: 'West coast',
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
                       },
-                      contact: {
-                        email: 'smithjones@hotmail.com',
-                        name: 'Mr. Smith Jones',
-                        organisationName: "Mac Donald 's",
-                        phone: '07811111111',
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
                       },
-                    },
+                    ],
                   },
-                  carrier: {
-                    status: 'Complete',
-                    value: {
-                      address: {
-                        addressLine1: '110 Bishopsgate',
-                        addressLine2: 'Mulberry street',
-                        townCity: 'London',
-                        country: 'Wales',
-                        postcode: 'CV12RD',
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
                       },
-                      contact: {
-                        email: 'guy@test.com',
-                        name: 'Pro Name',
-                        phone: `00447811111213'`,
-                        organisationName: 'Producer org name',
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
                       },
-                    },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
                   },
-                  submissionState: {
-                    status: 'SubmittedWithActuals',
-                    timestamp: '2024-05-27T11:58:09.389Z',
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
                   },
-                  submissionDeclaration: {
-                    status: 'Complete',
-                    values: {
-                      declarationTimestamp: '2024-05-27T11:58:09.389Z',
-                      transactionId: 'WM2405_A5B9D42E',
-                    },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
                   },
-                  hasEstimates: false,
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'EstimateData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                  {
+                    ewcCode: '170102',
+                    containsPops: true,
+                    hasHazardousProperties: true,
+                    physicalForm: 'Gas',
+                    quantityUnit: 'Tonne',
+                    wasteDescription:
+                      'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+                    wasteQuantity: 99.1,
+                    wasteQuantityType: 'ActualData',
+                    chemicalAndBiologicalComponents: [
+                      {
+                        name: 'Chlorinated solvents',
+                        concentration: 118.35,
+                        concentrationUnit: 'mg/kg',
+                      },
+                    ],
+                    hazardousWasteCodes: [
+                      {
+                        code: 'HP12',
+                        name: 'Release of an acute toxic gas',
+                      },
+                    ],
+                    pops: [
+                      {
+                        name: 'Endosulfan',
+                        concentration: 9921.75,
+                        concentrationUnit: 'mg/k',
+                      },
+                    ],
+                  },
+                ],
+                wasteCollection: {
+                  wasteSource: 'Household',
+                  carrierRegistrationNumber: 'CBDL5221',
+                  brokerRegistrationNumber: 'NSZ6112',
+                  expectedWasteCollectionDate: {
+                    day: '18',
+                    month: '02',
+                    year: '2066',
+                  },
+                  localAuthority: 'Hartlepool',
+                  address: {
+                    addressLine1: '110 Bishopsgate',
+                    addressLine2: 'Mulberry street',
+                    townCity: 'London',
+                    postcode: '',
+                    country: 'Scotland',
+                  },
                 },
-              ],
+                wasteTransportation: {
+                  numberAndTypeOfContainers: '123456',
+                  specialHandlingRequirements: '',
+                },
+                carrier: {
+                  address: {
+                    addressLine1: '110 Bishopsgate',
+                    addressLine2: 'Mulberry street',
+                    townCity: 'London',
+                    country: 'Wales',
+                    postcode: 'CV12RD',
+                  },
+                  contact: {
+                    email: 'guy@test.com',
+                    name: 'Pro Name',
+                    phone: "00447811111213'",
+                    organisationName: 'Producer org name',
+                  },
+                },
+              },
             },
           },
-          partitionKey: accountId,
-          _rid: faker.datatype.string(),
-          _self: faker.datatype.string(),
-          _etag: faker.datatype.string(),
-          _attachments: faker.datatype.string(),
-          _ts: faker.datatype.bigInt(),
+          partitionKey: {
+            accountId: accountId,
+            batchId: mockBatch.id,
+          },
+          _rid: faker.string.sample(),
+          _self: faker.string.sample(),
+          _etag: faker.string.sample(),
+          _attachments: faker.string.sample(),
+          _ts: faker.number.bigInt(),
         },
       ];
+
       mockFetchAll.mockResolvedValueOnce({
-        resources: mockResponse,
+        resources: mockRows,
         hasMoreResults: false,
         continuation: () => null,
         continuationToken: null,
@@ -289,7 +582,8 @@ describe(CosmosBatchRepository, () => {
         statusCode: 200,
       } as unknown as FeedResponse<object>);
 
-      const result = await subject.downloadProducerCsv(id);
+      const result = await subject.downloadProducerCsv(id, accountId);
+
       expect(result).toEqual([
         {
           producerAddressLine1: '110 Bishopsgate',
@@ -334,177 +628,200 @@ describe(CosmosBatchRepository, () => {
           receiverContactPhone: "'07811111111'",
           wasteTransportationNumberAndTypeOfContainers: '123456',
           wasteTransportationSpecialHandlingRequirements: '',
-          firstWasteTypeEwcCode: "'010101'",
+          firstWasteTypeEwcCode: "'170102'",
           firstWasteTypeWasteDescription:
             'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
           firstWasteTypePhysicalForm: 'Gas',
-          firstWasteTypeWasteQuantity: '1.1',
+          firstWasteTypeWasteQuantity: '99.1',
           firstWasteTypeWasteQuantityUnit: 'tonnes',
           firstWasteTypeWasteQuantityType: 'Actual',
           firstWasteTypeChemicalAndBiologicalComponentsString:
             'Chlorinated solvents',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            '20.35',
+            '118.35',
           firstWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
             'mg/kg',
           firstWasteTypeHasHazardousProperties: 'Y',
-          firstWasteTypeHazardousWasteCodesString: 'HP1',
+          firstWasteTypeHazardousWasteCodesString: 'HP12',
           firstWasteTypeContainsPops: 'Y',
           firstWasteTypePopsString: 'Endosulfan',
-          firstWasteTypePopsConcentrationsString: '9823.75',
+          firstWasteTypePopsConcentrationsString: '9921.75',
           firstWasteTypePopsConcentrationUnitsString: 'mg/k',
-          secondWasteTypeEwcCode: '',
-          secondWasteTypeWasteDescription: '',
-          secondWasteTypePhysicalForm: '',
-          secondWasteTypeWasteQuantity: '',
-          secondWasteTypeWasteQuantityUnit: '',
-          secondWasteTypeWasteQuantityType: '',
-          secondWasteTypeChemicalAndBiologicalComponentsString: '',
+          secondWasteTypeEwcCode: "'170102'",
+          secondWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          secondWasteTypePhysicalForm: 'Gas',
+          secondWasteTypeWasteQuantity: '99.1',
+          secondWasteTypeWasteQuantityUnit: 'tonnes',
+          secondWasteTypeWasteQuantityType: 'Actual',
+          secondWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
           secondWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            '',
+            '118.35',
           secondWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          secondWasteTypeHasHazardousProperties: '',
-          secondWasteTypeHazardousWasteCodesString: '',
-          secondWasteTypeContainsPops: '',
-          secondWasteTypePopsString: '',
-          secondWasteTypePopsConcentrationsString: '',
-          secondWasteTypePopsConcentrationUnitsString: '',
-          thirdWasteTypeEwcCode: '',
-          thirdWasteTypeWasteDescription: '',
-          thirdWasteTypePhysicalForm: '',
-          thirdWasteTypeWasteQuantity: '',
-          thirdWasteTypeWasteQuantityUnit: '',
-          thirdWasteTypeWasteQuantityType: '',
-          thirdWasteTypeChemicalAndBiologicalComponentsString: '',
-          thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+            'mg/kg',
+          secondWasteTypeHasHazardousProperties: 'Y',
+          secondWasteTypeHazardousWasteCodesString: 'HP12',
+          secondWasteTypeContainsPops: 'Y',
+          secondWasteTypePopsString: 'Endosulfan',
+          secondWasteTypePopsConcentrationsString: '9921.75',
+          secondWasteTypePopsConcentrationUnitsString: 'mg/k',
+          thirdWasteTypeEwcCode: "'170102'",
+          thirdWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          thirdWasteTypePhysicalForm: 'Gas',
+          thirdWasteTypeWasteQuantity: '99.1',
+          thirdWasteTypeWasteQuantityUnit: 'tonnes',
+          thirdWasteTypeWasteQuantityType: 'Actual',
+          thirdWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          thirdWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '118.35',
           thirdWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          thirdWasteTypeHasHazardousProperties: '',
-          thirdWasteTypeHazardousWasteCodesString: '',
-          thirdWasteTypeContainsPops: '',
-          thirdWasteTypePopsString: '',
-          thirdWasteTypePopsConcentrationsString: '',
-          thirdWasteTypePopsConcentrationUnitsString: '',
-          fourthWasteTypeEwcCode: '',
-          fourthWasteTypeWasteDescription: '',
-          fourthWasteTypePhysicalForm: '',
-          fourthWasteTypeWasteQuantity: '',
-          fourthWasteTypeWasteQuantityUnit: '',
-          fourthWasteTypeWasteQuantityType: '',
-          fourthWasteTypeChemicalAndBiologicalComponentsString: '',
+            'mg/kg',
+          thirdWasteTypeHasHazardousProperties: 'Y',
+          thirdWasteTypeHazardousWasteCodesString: 'HP12',
+          thirdWasteTypeContainsPops: 'Y',
+          thirdWasteTypePopsString: 'Endosulfan',
+          thirdWasteTypePopsConcentrationsString: '9921.75',
+          thirdWasteTypePopsConcentrationUnitsString: 'mg/k',
+          fourthWasteTypeEwcCode: "'170102'",
+          fourthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          fourthWasteTypePhysicalForm: 'Gas',
+          fourthWasteTypeWasteQuantity: '99.1',
+          fourthWasteTypeWasteQuantityUnit: 'tonnes',
+          fourthWasteTypeWasteQuantityType: 'Actual',
+          fourthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
           fourthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            '',
+            '118.35',
           fourthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          fourthWasteTypeHasHazardousProperties: '',
-          fourthWasteTypeHazardousWasteCodesString: '',
-          fourthWasteTypeContainsPops: '',
-          fourthWasteTypePopsString: '',
-          fourthWasteTypePopsConcentrationsString: '',
-          fourthWasteTypePopsConcentrationUnitsString: '',
-          fifthWasteTypeEwcCode: '',
-          fifthWasteTypeWasteDescription: '',
-          fifthWasteTypePhysicalForm: '',
-          fifthWasteTypeWasteQuantity: '',
-          fifthWasteTypeWasteQuantityUnit: '',
-          fifthWasteTypeWasteQuantityType: '',
-          fifthWasteTypeChemicalAndBiologicalComponentsString: '',
-          fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+            'mg/kg',
+          fourthWasteTypeHasHazardousProperties: 'Y',
+          fourthWasteTypeHazardousWasteCodesString: 'HP12',
+          fourthWasteTypeContainsPops: 'Y',
+          fourthWasteTypePopsString: 'Endosulfan',
+          fourthWasteTypePopsConcentrationsString: '9921.75',
+          fourthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          fifthWasteTypeEwcCode: "'170102'",
+          fifthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          fifthWasteTypePhysicalForm: 'Gas',
+          fifthWasteTypeWasteQuantity: '99.1',
+          fifthWasteTypeWasteQuantityUnit: 'tonnes',
+          fifthWasteTypeWasteQuantityType: 'Actual',
+          fifthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          fifthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '118.35',
           fifthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          fifthWasteTypeHasHazardousProperties: '',
-          fifthWasteTypeHazardousWasteCodesString: '',
-          fifthWasteTypeContainsPops: '',
-          fifthWasteTypePopsString: '',
-          fifthWasteTypePopsConcentrationsString: '',
-          fifthWasteTypePopsConcentrationUnitsString: '',
-          sixthWasteTypeEwcCode: '',
-          sixthWasteTypeWasteDescription: '',
-          sixthWasteTypePhysicalForm: '',
-          sixthWasteTypeWasteQuantity: '',
-          sixthWasteTypeWasteQuantityUnit: '',
-          sixthWasteTypeWasteQuantityType: '',
-          sixthWasteTypeChemicalAndBiologicalComponentsString: '',
-          sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+            'mg/kg',
+          fifthWasteTypeHasHazardousProperties: 'Y',
+          fifthWasteTypeHazardousWasteCodesString: 'HP12',
+          fifthWasteTypeContainsPops: 'Y',
+          fifthWasteTypePopsString: 'Endosulfan',
+          fifthWasteTypePopsConcentrationsString: '9921.75',
+          fifthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          sixthWasteTypeEwcCode: "'170102'",
+          sixthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          sixthWasteTypePhysicalForm: 'Gas',
+          sixthWasteTypeWasteQuantity: '99.1',
+          sixthWasteTypeWasteQuantityUnit: 'tonnes',
+          sixthWasteTypeWasteQuantityType: 'Actual',
+          sixthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          sixthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '118.35',
           sixthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          sixthWasteTypeHasHazardousProperties: '',
-          sixthWasteTypeHazardousWasteCodesString: '',
-          sixthWasteTypeContainsPops: '',
-          sixthWasteTypePopsString: '',
-          sixthWasteTypePopsConcentrationsString: '',
-          sixthWasteTypePopsConcentrationUnitsString: '',
-          seventhWasteTypeEwcCode: '',
-          seventhWasteTypeWasteDescription: '',
-          seventhWasteTypePhysicalForm: '',
-          seventhWasteTypeWasteQuantity: '',
-          seventhWasteTypeWasteQuantityUnit: '',
-          seventhWasteTypeWasteQuantityType: '',
-          seventhWasteTypeChemicalAndBiologicalComponentsString: '',
+            'mg/kg',
+          sixthWasteTypeHasHazardousProperties: 'Y',
+          sixthWasteTypeHazardousWasteCodesString: 'HP12',
+          sixthWasteTypeContainsPops: 'Y',
+          sixthWasteTypePopsString: 'Endosulfan',
+          sixthWasteTypePopsConcentrationsString: '9921.75',
+          sixthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          seventhWasteTypeEwcCode: "'170102'",
+          seventhWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          seventhWasteTypePhysicalForm: 'Gas',
+          seventhWasteTypeWasteQuantity: '99.1',
+          seventhWasteTypeWasteQuantityUnit: 'tonnes',
+          seventhWasteTypeWasteQuantityType: 'Actual',
+          seventhWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
           seventhWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            '',
+            '118.35',
           seventhWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          seventhWasteTypeHasHazardousProperties: '',
-          seventhWasteTypeHazardousWasteCodesString: '',
-          seventhWasteTypeContainsPops: '',
-          seventhWasteTypePopsString: '',
-          seventhWasteTypePopsConcentrationsString: '',
-          seventhWasteTypePopsConcentrationUnitsString: '',
-          eighthWasteTypeEwcCode: '',
-          eighthWasteTypeWasteDescription: '',
-          eighthWasteTypePhysicalForm: '',
-          eighthWasteTypeWasteQuantity: '',
-          eighthWasteTypeWasteQuantityUnit: '',
-          eighthWasteTypeWasteQuantityType: '',
-          eighthWasteTypeChemicalAndBiologicalComponentsString: '',
+            'mg/kg',
+          seventhWasteTypeHasHazardousProperties: 'Y',
+          seventhWasteTypeHazardousWasteCodesString: 'HP12',
+          seventhWasteTypeContainsPops: 'Y',
+          seventhWasteTypePopsString: 'Endosulfan',
+          seventhWasteTypePopsConcentrationsString: '9921.75',
+          seventhWasteTypePopsConcentrationUnitsString: 'mg/k',
+          eighthWasteTypeEwcCode: "'170102'",
+          eighthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          eighthWasteTypePhysicalForm: 'Gas',
+          eighthWasteTypeWasteQuantity: '99.1',
+          eighthWasteTypeWasteQuantityUnit: 'tonnes',
+          eighthWasteTypeWasteQuantityType: 'Actual',
+          eighthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
           eighthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
-            '',
+            '118.35',
           eighthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          eighthWasteTypeHasHazardousProperties: '',
-          eighthWasteTypeHazardousWasteCodesString: '',
-          eighthWasteTypeContainsPops: '',
-          eighthWasteTypePopsString: '',
-          eighthWasteTypePopsConcentrationsString: '',
-          eighthWasteTypePopsConcentrationUnitsString: '',
-          ninthWasteTypeEwcCode: '',
-          ninthWasteTypeWasteDescription: '',
-          ninthWasteTypePhysicalForm: '',
-          ninthWasteTypeWasteQuantity: '',
-          ninthWasteTypeWasteQuantityUnit: '',
-          ninthWasteTypeWasteQuantityType: '',
-          ninthWasteTypeChemicalAndBiologicalComponentsString: '',
-          ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+            'mg/kg',
+          eighthWasteTypeHasHazardousProperties: 'Y',
+          eighthWasteTypeHazardousWasteCodesString: 'HP12',
+          eighthWasteTypeContainsPops: 'Y',
+          eighthWasteTypePopsString: 'Endosulfan',
+          eighthWasteTypePopsConcentrationsString: '9921.75',
+          eighthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          ninthWasteTypeEwcCode: "'170102'",
+          ninthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          ninthWasteTypePhysicalForm: 'Gas',
+          ninthWasteTypeWasteQuantity: '99.1',
+          ninthWasteTypeWasteQuantityUnit: 'tonnes',
+          ninthWasteTypeWasteQuantityType: 'Estimate',
+          ninthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          ninthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '118.35',
           ninthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          ninthWasteTypeHasHazardousProperties: '',
-          ninthWasteTypeHazardousWasteCodesString: '',
-          ninthWasteTypeContainsPops: '',
-          ninthWasteTypePopsString: '',
-          ninthWasteTypePopsConcentrationsString: '',
-          ninthWasteTypePopsConcentrationUnitsString: '',
-          tenthWasteTypeEwcCode: '',
-          tenthWasteTypeWasteDescription: '',
-          tenthWasteTypePhysicalForm: '',
-          tenthWasteTypeWasteQuantity: '',
-          tenthWasteTypeWasteQuantityUnit: '',
-          tenthWasteTypeWasteQuantityType: '',
-          tenthWasteTypeChemicalAndBiologicalComponentsString: '',
-          tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString: '',
+            'mg/kg',
+          ninthWasteTypeHasHazardousProperties: 'Y',
+          ninthWasteTypeHazardousWasteCodesString: 'HP12',
+          ninthWasteTypeContainsPops: 'Y',
+          ninthWasteTypePopsString: 'Endosulfan',
+          ninthWasteTypePopsConcentrationsString: '9921.75',
+          ninthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          tenthWasteTypeEwcCode: "'170102'",
+          tenthWasteTypeWasteDescription:
+            'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings',
+          tenthWasteTypePhysicalForm: 'Gas',
+          tenthWasteTypeWasteQuantity: '99.1',
+          tenthWasteTypeWasteQuantityUnit: 'tonnes',
+          tenthWasteTypeWasteQuantityType: 'Actual',
+          tenthWasteTypeChemicalAndBiologicalComponentsString:
+            'Chlorinated solvents',
+          tenthWasteTypeChemicalAndBiologicalComponentsConcentrationsString:
+            '118.35',
           tenthWasteTypeChemicalAndBiologicalComponentsConcentrationUnitsString:
-            '',
-          tenthWasteTypeHasHazardousProperties: '',
-          tenthWasteTypeHazardousWasteCodesString: '',
-          tenthWasteTypeContainsPops: '',
-          tenthWasteTypePopsString: '',
-          tenthWasteTypePopsConcentrationsString: '',
-          tenthWasteTypePopsConcentrationUnitsString: '',
-          transactionId: 'WM2405_A5B9D42E',
+            'mg/kg',
+          tenthWasteTypeHasHazardousProperties: 'Y',
+          tenthWasteTypeHazardousWasteCodesString: 'HP12',
+          tenthWasteTypeContainsPops: 'Y',
+          tenthWasteTypePopsString: 'Endosulfan',
+          tenthWasteTypePopsConcentrationsString: '9921.75',
+          tenthWasteTypePopsConcentrationUnitsString: 'mg/k',
+          transactionId: 'WM2406_C7049A7F',
           carrierConfirmationUniqueReference: '',
           carrierConfirmationCorrectDetails: '',
-          carrierConfirmationbrokerRegistrationNumber: '',
+          carrierConfirmationBrokerRegistrationNumber: '',
           carrierConfirmationRegistrationNumber: '',
           carrierConfirmationOrganisationName: '',
           carrierConfirmationAddressLine1: '',
@@ -524,8 +841,25 @@ describe(CosmosBatchRepository, () => {
       expect(mockFetchAll).toBeCalledTimes(1);
     });
 
-    it("throws Not Found exception if key doesn't exist", async () => {
-      const id = faker.datatype.uuid();
+    it("throws Not Found exception batch or rows don't exist", async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
+
+      expect(subject.downloadProducerCsv(id, accountId)).rejects.toThrow(
+        Boom.notFound(),
+      );
+      expect(mockRead).toBeCalledTimes(1);
+
+      mockRead.mockResolvedValueOnce({
+        resource: {
+          value: { id, data: {} },
+        },
+      } as unknown as ItemResponse<object>);
+
       mockFetchAll.mockResolvedValueOnce({
         resources: [],
         hasMoreResults: false,
@@ -538,8 +872,310 @@ describe(CosmosBatchRepository, () => {
         statusCode: 200,
       } as unknown as FeedResponse<object>);
 
-      expect(subject.downloadProducerCsv(id)).rejects.toThrow(Boom.notFound());
+      expect(subject.downloadProducerCsv(id, accountId)).rejects.toThrow(
+        Boom.notFound(),
+      );
+      expect(mockRead).toBeCalledTimes(2);
+    });
+  });
+
+  describe('getRow', () => {
+    it('retrieves a value with the associated id', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const rowId = faker.string.uuid();
+      const mockResponse = {
+        id: rowId,
+        value: {
+          id: rowId,
+          batchId,
+          accountId,
+          data: {
+            valid: false,
+            codes: [1, 2, 3],
+          },
+        },
+        partitionKey: {
+          accountId,
+          batchId,
+        },
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
+
+      const result = await subject.getRow(accountId, batchId, rowId);
+      expect(result).toEqual({
+        id: rowId,
+        batchId,
+        accountId,
+        data: {
+          valid: false,
+          codes: [1, 2, 3],
+        },
+      });
+      expect(mockRead).toBeCalledTimes(1);
+    });
+
+    it("throws Not Found exception if key doesn't exist", async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const rowId = faker.string.uuid();
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
+
+      expect(subject.getRow(accountId, batchId, rowId)).rejects.toThrow(
+        Boom.notFound(),
+      );
+      expect(mockRead).toBeCalledTimes(1);
+    });
+  });
+
+  describe('getColumn', () => {
+    it('retrieves a value with the associated id', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const columnRef = faker.string.sample();
+      const mockResponse = {
+        id: columnRef,
+        value: {
+          columnRef,
+          batchId,
+          accountId,
+          errors: [
+            {
+              codes: [1, 2, 3],
+              rowNumber: 1,
+            },
+          ],
+        },
+        partitionKey: {
+          accountId,
+          batchId,
+        },
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
+      };
+      mockRead.mockResolvedValueOnce({
+        resource: mockResponse,
+      } as unknown as ItemResponse<object>);
+
+      const result = await subject.getColumn(accountId, batchId, columnRef);
+      expect(result).toEqual({
+        columnRef,
+        batchId,
+        accountId,
+        errors: [
+          {
+            codes: [1, 2, 3],
+            rowNumber: 1,
+          },
+        ],
+      });
+      expect(mockRead).toBeCalledTimes(1);
+    });
+
+    it("throws Not Found exception if key doesn't exist", async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const columnRef = faker.string.sample();
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
+
+      expect(subject.getColumn(accountId, batchId, columnRef)).rejects.toThrow(
+        Boom.notFound(),
+      );
+      expect(mockRead).toBeCalledTimes(1);
+    });
+  });
+
+  describe('getBulkSubmissions', () => {
+    it('retrieves a value with the associated id', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const rowId = faker.string.uuid();
+      const mockRows = [
+        {
+          id: rowId,
+          wasteMovementId: 'WM2406_C7049A7F',
+          ewcCode: faker.string.sample(),
+          producerName: faker.company.name(),
+          collectionDate: {
+            day: faker.date.soon().getDay().toString(),
+            month: faker.date.soon().getMonth().toString(),
+            year: faker.date.soon().getFullYear().toString(),
+          },
+          _rid: faker.string.sample(),
+          _self: faker.string.sample(),
+          _etag: faker.string.sample(),
+          _attachments: faker.string.sample(),
+          _ts: faker.number.bigInt(),
+        },
+      ];
+
+      const dataFetchAll = jest.fn<typeof QueryIterator.prototype.fetchAll>();
+
+      dataFetchAll.mockResolvedValueOnce({
+        resources: mockRows,
+        hasMoreResults: false,
+        continuation: () => null,
+        continuationToken: null,
+        queryMetrics: {},
+        requestCharge: 0,
+        activityId: '',
+        headers: {},
+        statusCode: 200,
+      } as unknown as FeedResponse<object>);
+
+      const countFetchAll = jest.fn<typeof QueryIterator.prototype.fetchAll>();
+
+      countFetchAll.mockResolvedValueOnce({
+        resources: [1],
+        hasMoreResults: false,
+        continuation: () => null,
+        continuationToken: null,
+        queryMetrics: {},
+        requestCharge: 0,
+        activityId: '',
+        headers: {},
+        statusCode: 200,
+      } as unknown as FeedResponse<object>);
+
+      const isCountQuery = when((arg: SqlQuerySpec) =>
+        arg.query.includes('SELECT VALUE count(data)'),
+      );
+      const isDataQuery = when(
+        (arg: SqlQuerySpec) => !arg.query.includes('SELECT VALUE count(data)'),
+      );
+
+      when(mockQuery).calledWith(isCountQuery).mockReturnValue({
+        fetchNext: mockFetchNext,
+        fetchAll: countFetchAll,
+      });
+
+      when(mockQuery).calledWith(isDataQuery).mockReturnValue({
+        fetchNext: mockFetchNext,
+        fetchAll: dataFetchAll,
+      });
+
+      const request = {
+        accountId,
+        batchId,
+        page: 1,
+        pageSize: 16,
+        ewcCode: faker.string.sample(),
+        producerName: faker.string.sample(),
+        wasteMovementId: undefined,
+        collectionDate: new Date(),
+      };
+
+      const result = await subject.getBulkSubmissions(
+        batchId,
+        accountId,
+        request.page,
+        request.pageSize,
+        request.collectionDate,
+        request.ewcCode,
+        request.producerName,
+        request.wasteMovementId,
+      );
+      expect(result).toEqual({
+        page: request.page,
+        totalPages: 1,
+        totalRecords: 1,
+        values: mockRows,
+      });
+      expect(dataFetchAll).toBeCalledTimes(1);
+      expect(countFetchAll).toBeCalledTimes(1);
+    });
+
+    it('doent make unnecessary calls when provided a wasteMovementId', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const rowId = faker.string.uuid();
+      const mockRows = [
+        {
+          id: rowId,
+          wasteMovementId: 'WM2406_C7049A7F',
+          ewcCode: faker.string.sample(),
+          producerName: faker.company.name(),
+          collectionDate: {
+            day: faker.date.soon().getDay().toString(),
+            month: faker.date.soon().getMonth().toString(),
+            year: faker.date.soon().getFullYear().toString(),
+          },
+          _rid: faker.string.sample(),
+          _self: faker.string.sample(),
+          _etag: faker.string.sample(),
+          _attachments: faker.string.sample(),
+          _ts: faker.number.bigInt(),
+        },
+      ];
+
+      mockFetchAll.mockResolvedValueOnce({
+        resources: mockRows,
+        hasMoreResults: false,
+        continuation: () => null,
+        continuationToken: null,
+        queryMetrics: {},
+        requestCharge: 0,
+        activityId: '',
+        headers: {},
+        statusCode: 200,
+      } as unknown as FeedResponse<object>);
+
+      const request = {
+        accountId,
+        batchId,
+        page: 1,
+        pageSize: 16,
+        ewcCode: faker.string.sample(),
+        producerName: faker.string.sample(),
+        wasteMovementId: 'WM2406_C7049A7F',
+        collectionDate: new Date(),
+      };
+
+      const result = await subject.getBulkSubmissions(
+        batchId,
+        accountId,
+        request.page,
+        request.pageSize,
+        request.collectionDate,
+        request.ewcCode,
+        request.producerName,
+        request.wasteMovementId,
+      );
+      expect(result).toEqual({
+        page: request.page,
+        totalPages: 1,
+        totalRecords: 1,
+        values: mockRows,
+      });
       expect(mockFetchAll).toBeCalledTimes(1);
+    });
+
+    it("throws Not Found exception if key doesn't exist", async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const columnRef = faker.string.sample();
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
+
+      expect(subject.getColumn(accountId, batchId, columnRef)).rejects.toThrow(
+        Boom.notFound(),
+      );
+      expect(mockRead).toBeCalledTimes(1);
     });
   });
 });

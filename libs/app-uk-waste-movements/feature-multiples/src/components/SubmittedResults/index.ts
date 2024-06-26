@@ -1,0 +1,1 @@
+export { SubmittedResults } from './SubmittedResults';

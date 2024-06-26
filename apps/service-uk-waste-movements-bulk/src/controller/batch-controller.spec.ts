@@ -3,7 +3,14 @@ import { faker } from '@faker-js/faker';
 import winston from 'winston';
 import Boom from '@hapi/boom';
 import { BatchController } from './batch-controller';
-import { BulkSubmission, SubmissionFlattenedDownload } from '../model';
+import {
+  BulkSubmission,
+  ErrorColumn,
+  PagedSubmissionData,
+  Row,
+  SubmissionFlattenedDownload,
+} from '../model';
+import { Field, validation } from '@wts/api/uk-waste-movements';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -17,7 +24,48 @@ const mockRepository = {
   getBatch:
     jest.fn<(id: string, accountId: string) => Promise<BulkSubmission>>(),
   downloadProducerCsv:
-    jest.fn<(id: string) => Promise<SubmissionFlattenedDownload[]>>(),
+    jest.fn<
+      (id: string, accountId: string) => Promise<SubmissionFlattenedDownload[]>
+    >(),
+  getBatchRows:
+    jest.fn<(batchId: string, accountId: string) => Promise<Row[]>>(),
+  saveRows:
+    jest.fn<
+      (rows: Row[], accountId: string, batchId: string) => Promise<void>
+    >(),
+  saveColumns:
+    jest.fn<
+      (
+        columns: ErrorColumn[],
+        accountId: string,
+        batchId: string,
+      ) => Promise<void>
+    >(),
+  getRow:
+    jest.fn<
+      (accountId: string, batchId: string, rowId: string) => Promise<Row>
+    >(),
+  getColumn:
+    jest.fn<
+      (
+        accountId: string,
+        batchId: string,
+        columnRef: string,
+      ) => Promise<ErrorColumn>
+    >(),
+  getBulkSubmissions:
+    jest.fn<
+      (
+        batchId: string,
+        accountId: string,
+        page: number,
+        pageSize: number,
+        collectionDate?: Date,
+        ewcCode?: string,
+        producerName?: string,
+        wasteMovementId?: string,
+      ) => Promise<PagedSubmissionData>
+    >(),
 };
 
 describe(BatchController, () => {
@@ -30,8 +78,8 @@ describe(BatchController, () => {
 
   describe('getBatch', () => {
     it('forwards thrown Boom errors', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRepository.getBatch.mockRejectedValue(Boom.teapot());
 
       const response = await subject.getBatch({ id, accountId });
@@ -46,8 +94,8 @@ describe(BatchController, () => {
     });
 
     it('successfully returns value from the repository', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const value: BulkSubmission = {
         id,
         state: {
@@ -71,22 +119,24 @@ describe(BatchController, () => {
 
   describe('downloadProducerCsv', () => {
     it('forwards thrown Boom errors', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRepository.downloadProducerCsv.mockRejectedValue(Boom.teapot());
 
-      const response = await subject.downloadProducerCsv({ id });
+      const response = await subject.downloadProducerCsv({ id, accountId });
 
       expect(response.success).toBe(false);
       if (response.success) {
         return;
       }
 
-      expect(mockRepository.downloadProducerCsv).toBeCalledWith(id);
+      expect(mockRepository.downloadProducerCsv).toBeCalledWith(id, accountId);
       expect(response.error.statusCode).toBe(418);
     });
 
     it('successfully returns base64 formatted csv data of the record', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const value: SubmissionFlattenedDownload[] = [
         {
           producerAddressLine1: '110 Bishopsgate',
@@ -301,7 +351,7 @@ describe(BatchController, () => {
           transactionId: 'WM2405_A5B9D42E',
           carrierConfirmationUniqueReference: '',
           carrierConfirmationCorrectDetails: '',
-          carrierConfirmationbrokerRegistrationNumber: '',
+          carrierConfirmationBrokerRegistrationNumber: '',
           carrierConfirmationRegistrationNumber: '',
           carrierConfirmationOrganisationName: '',
           carrierConfirmationAddressLine1: '',
@@ -321,21 +371,24 @@ describe(BatchController, () => {
 
       mockRepository.downloadProducerCsv.mockResolvedValue(value);
 
-      const response = await subject.downloadProducerCsv({ id });
+      const response = await subject.downloadProducerCsv({ id, accountId });
       expect(response.success).toBe(true);
       if (!response.success) {
         return;
       }
 
-      expect(mockRepository.downloadProducerCsv).toHaveBeenCalledWith(id);
+      expect(mockRepository.downloadProducerCsv).toHaveBeenCalledWith(
+        id,
+        accountId,
+      );
       expect(response.value.data).toBeTruthy();
     });
   });
 
   describe('finalizeBatch', () => {
     it('forwards thrown Boom errors', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
 
       mockRepository.getBatch.mockRejectedValue(Boom.teapot());
 
@@ -355,13 +408,10 @@ describe(BatchController, () => {
         state: {
           status: 'FailedValidation',
           timestamp: new Date(),
-          rowErrors: [
-            {
-              errorAmount: 3,
-              rowNumber: 1,
-              errorCodes: [1001, 1002],
-            },
-          ],
+          errorSummary: {
+            columnBased: [],
+            rowBased: [],
+          },
         },
       };
       mockRepository.getBatch.mockResolvedValue(value);
@@ -379,8 +429,8 @@ describe(BatchController, () => {
     });
 
     it('Successfully updates value in the repository', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
 
       const value: BulkSubmission = {
         id,
@@ -388,100 +438,7 @@ describe(BatchController, () => {
           status: 'PassedValidation',
           timestamp: new Date(),
           hasEstimates: true,
-          submissions: [
-            {
-              producer: {
-                reference: 'ref1',
-                sicCode: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              receiver: {
-                authorizationType: 'permit',
-                environmentalPermitNumber: '1010101',
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteCollection: {
-                address: {
-                  addressLine1: '123 Real Street',
-                  addressLine2: 'Real Avenue',
-                  country: 'England',
-                  postcode: 'SW1A 1AA',
-                  townCity: 'London',
-                },
-                brokerRegistrationNumber: 'CBDL349812',
-                carrierRegistrationNumber: 'CBDL349812',
-                expectedWasteCollectionDate: {
-                  day: '01',
-                  month: '01',
-                  year: '2028',
-                },
-                localAuthority: 'Local Authority',
-                wasteSource: 'LocalAuthority',
-              },
-              carrier: {
-                contact: {
-                  email: 'example@email.com',
-                  name: 'John Doe',
-                  organisationName: 'Example Ltd',
-                  phone: '0044140000000',
-                },
-                address: {
-                  addressLine1: '123 Fake Street',
-                  addressLine2: 'Apt 10',
-                  country: 'England',
-                  townCity: 'London',
-                  postcode: 'FA1 2KE',
-                },
-              },
-              wasteTransportation: {
-                numberAndTypeOfContainers: '10x20ft',
-                specialHandlingRequirements: 'Special handling requirements',
-              },
-              wasteTypes: [
-                {
-                  containsPops: false,
-                  ewcCode: '01 03 04',
-                  hasHazardousProperties: false,
-                  physicalForm: 'Solid',
-                  quantityUnit: 'Tonne',
-                  wasteDescription: 'Waste description',
-                  wasteQuantity: 100,
-                  wasteQuantityType: 'ActualData',
-                  chemicalAndBiologicalComponents: [
-                    {
-                      concentration: 10,
-                      name: 'Component name',
-                      concentrationUnit: 'Percentage',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+          rowsCount: 1,
         },
       };
       mockRepository.getBatch.mockResolvedValue(value);
@@ -507,11 +464,11 @@ describe(BatchController, () => {
     it('forwards thrown Boom errors', async () => {
       mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
       const response = await subject.addContentToBatch({
-        accountId: faker.datatype.uuid(),
+        accountId: faker.string.uuid(),
         content: {
           type: 'text/csv',
           compression: 'Snappy',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       });
 
@@ -522,6 +479,243 @@ describe(BatchController, () => {
 
       expect(mockRepository.saveBatch).toBeCalled();
       expect(response.error.statusCode).toBe(418);
+    });
+  });
+
+  describe('getRow', () => {
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRow.mockRejectedValue(Boom.teapot());
+
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        rowId: faker.string.uuid(),
+      };
+
+      const response = await subject.getRow(request);
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRow).toBeCalledWith(
+        request.accountId,
+        request.batchId,
+        request.rowId,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('successfully returns value from the repository', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const rowId = faker.string.uuid();
+      const code = validation.errorCodes.carrierCharTooManyAddressLine1;
+
+      mockRepository.getRow.mockResolvedValue({
+        accountId,
+        batchId,
+        id: rowId,
+        data: {
+          valid: false,
+          rowNumber: 1,
+          codes: [code],
+        },
+      });
+
+      const response = await subject.getRow({
+        accountId,
+        batchId,
+        rowId,
+      });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      const message =
+        validation.UkwmErrorData[code].type === 'message'
+          ? validation.UkwmErrorData[code].message
+          : '';
+
+      expect(message).toBeTruthy();
+
+      expect(mockRepository.getRow).toBeCalledWith(accountId, batchId, rowId);
+      expect(response.value).toEqual({
+        accountId,
+        batchId,
+        id: rowId,
+        messages: [message],
+      });
+    });
+  });
+
+  describe('getColumn', () => {
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getColumn.mockRejectedValue(Boom.teapot());
+
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        columnRef: faker.string.sample(),
+      };
+
+      const response = await subject.getColumn(request);
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getColumn).toBeCalledWith(
+        request.accountId,
+        request.batchId,
+        request.columnRef,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('successfully returns value from the repository', async () => {
+      const accountId = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const columnRef = faker.string.sample();
+      const code = validation.errorCodes.carrierCharTooManyAddressLine1;
+
+      mockRepository.getColumn.mockResolvedValue({
+        accountId,
+        batchId,
+        id: columnRef as Field,
+        errors: [
+          {
+            codes: [code],
+            rowNumber: 1,
+          },
+        ],
+      });
+
+      const response = await subject.getColumn({
+        accountId,
+        batchId,
+        columnRef,
+      });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      const message =
+        validation.UkwmErrorData[code].type === 'message'
+          ? validation.UkwmErrorData[code].message
+          : '';
+
+      expect(message).toBeTruthy();
+
+      expect(mockRepository.getColumn).toBeCalledWith(
+        accountId,
+        batchId,
+        columnRef,
+      );
+      expect(response.value).toEqual({
+        accountId,
+        batchId,
+        columnRef,
+        errors: [
+          {
+            messages: [message],
+            rowNumber: 1,
+          },
+        ],
+      });
+    });
+  });
+
+  describe('getBulkSubmissions', () => {
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getBulkSubmissions.mockRejectedValue(Boom.teapot());
+
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        page: faker.number.int({ min: 1 }),
+        pageSize: faker.number.int({ min: 1 }),
+        ewcCode: faker.string.sample(),
+        producerName: faker.string.sample(),
+        wasteMovementId: 'WM2406_C7049A7F',
+        collectionDate: new Date(),
+      };
+
+      const response = await subject.getBulkSubmissions(request);
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getBulkSubmissions).toBeCalledWith(
+        request.batchId,
+        request.accountId,
+        request.page,
+        request.pageSize,
+        request.collectionDate,
+        request.ewcCode,
+        request.producerName,
+        request.wasteMovementId,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('successfully returns value from the repository', async () => {
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        page: faker.number.int({ min: 1 }),
+        pageSize: faker.number.int({ min: 1 }),
+        ewcCode: faker.string.sample(),
+        producerName: faker.string.sample(),
+        wasteMovementId: 'WM2406_C7049A7F',
+        collectionDate: new Date(),
+      };
+
+      const result: PagedSubmissionData = {
+        page: request.page,
+        totalPages: 1,
+        totalRecords: 1,
+        values: [
+          {
+            id: faker.string.uuid(),
+            wasteMovementId: 'WM2406_C7049A7F',
+            ewcCode: faker.string.sample(),
+            producerName: faker.company.name(),
+            collectionDate: {
+              day: faker.date.soon().getDay().toString(),
+              month: faker.date.soon().getMonth().toString(),
+              year: faker.date.soon().getFullYear().toString(),
+            },
+          },
+        ],
+      };
+
+      mockRepository.getBulkSubmissions.mockResolvedValue(result);
+
+      const response = await subject.getBulkSubmissions(request);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.getBulkSubmissions).toBeCalledWith(
+        request.batchId,
+        request.accountId,
+        request.page,
+        request.pageSize,
+        request.collectionDate,
+        request.ewcCode,
+        request.producerName,
+        request.wasteMovementId,
+      );
+
+      expect(response.value).toEqual(result);
     });
   });
 });

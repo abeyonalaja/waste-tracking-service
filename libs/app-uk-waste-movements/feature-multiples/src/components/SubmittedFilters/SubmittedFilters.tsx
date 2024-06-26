@@ -1,21 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { filterSubmissions } from '../../utils';
-import type { UkwmSubmissionReference } from '@wts/api/waste-tracking-gateway';
 import styles from './SubmittedFilters.module.scss';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Accordion, AccordionSection } from '@wts/ui/shared-ui/server';
-
-interface SubmittedFiltersProps {
-  sortedSubmissions: UkwmSubmissionReference[];
-  setFilteredSubmissions: React.Dispatch<
-    React.SetStateAction<UkwmSubmissionReference[]>
-  >;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-}
+import { useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from '@wts/ui/navigation';
 
 export interface SubmittedPageFormData {
   wasteMovementId: string;
@@ -26,36 +18,59 @@ export interface SubmittedPageFormData {
   producerName: string;
 }
 
-export function SubmittedFilters({
-  sortedSubmissions,
-  setFilteredSubmissions,
-  setCurrentPage,
-}: SubmittedFiltersProps): JSX.Element {
+export function SubmittedFilters(): JSX.Element {
   const t = useTranslations('multiples.manage.submittedTable.filters');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const {
     register,
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<SubmittedPageFormData>({
     mode: 'onSubmit',
     shouldFocusError: false,
   });
 
-  const onSubmit = handleSubmit((formData) => {
-    setFilteredSubmissions(filterSubmissions(sortedSubmissions, formData));
-    setCurrentPage(1);
-    window.scrollTo(0, 0);
-  });
+  useEffect(() => {
+    if (searchParams.has('collectionDate')) {
+      const collectionDate = searchParams.get('collectionDate') as string;
+      const [day, month, year] = collectionDate.split('/');
+      console.log('year', year, 'month', month, 'day', day);
+      setValue('day', day);
+      setValue('month', month);
+      setValue('year', year);
+    }
+    if (searchParams.has('ewcCode')) {
+      setValue('ewcCode', searchParams.get('ewcCode') as string);
+    }
+
+    if (searchParams.has('producerName')) {
+      setValue('producerName', searchParams.get('producerName') as string);
+    }
+
+    if (searchParams.has('wasteMovementId')) {
+      setValue(
+        'wasteMovementId',
+        searchParams.get('wasteMovementId') as string,
+      );
+    }
+  }, [searchParams, setValue]);
 
   function resetFilters(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     reset();
-    setCurrentPage(1);
-    setFilteredSubmissions(sortedSubmissions);
-    window.scrollTo(0, 0);
+    setSections({
+      collectionDate: false,
+      ewcCode: false,
+      producerName: false,
+      wasteMovementId: false,
+    });
+    router.push(`${pathname}?page=1`);
   }
 
   function validateCollectionDate(): boolean {
@@ -74,11 +89,36 @@ export function SubmittedFilters({
     }
   }
 
+  function onSubmit(data: SubmittedPageFormData) {
+    const searchParams = new URLSearchParams();
+    const formattedDay = data.day.length === 1 ? `0${data.day}` : data.day;
+    const formattedMonth =
+      data.month.length === 1 ? `0${data.month}` : data.month;
+
+    if (data.day && data.month && data.year) {
+      searchParams.set(
+        'collectionDate',
+        `${formattedDay}/${formattedMonth}/${data.year}`,
+      );
+    }
+    if (data.ewcCode) {
+      searchParams.set('ewcCode', data.ewcCode);
+    }
+    if (data.producerName) {
+      searchParams.set('producerName', data.producerName);
+    }
+    if (data.wasteMovementId) {
+      searchParams.set('wasteMovementId', data.wasteMovementId);
+    }
+
+    router.push(`${pathname}?page=1&${searchParams.toString()}`);
+  }
+
   const [sections, setSections] = useState<{ [key: string]: boolean }>({
-    collectionDate: false,
-    ewcCode: false,
-    producerName: false,
-    wasteMovementId: false,
+    collectionDate: searchParams.has('collectionDate') ? true : false,
+    ewcCode: searchParams.has('ewcCode') ? true : false,
+    producerName: searchParams.has('producerName') ? true : false,
+    wasteMovementId: searchParams.has('wasteMovementId') ? true : false,
   });
 
   function toggleSection(id: string) {
@@ -89,7 +129,7 @@ export function SubmittedFilters({
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <GovUK.Heading level={2} size="m">
         {t('heading')}
       </GovUK.Heading>
@@ -233,7 +273,7 @@ export function SubmittedFilters({
         </AccordionSection>
       </Accordion>
       <div className={styles.buttons}>
-        <button className="govuk-button" type="submit" onClick={onSubmit}>
+        <button className="govuk-button" type="submit">
           {t('buttons.apply')}
         </button>
         <button

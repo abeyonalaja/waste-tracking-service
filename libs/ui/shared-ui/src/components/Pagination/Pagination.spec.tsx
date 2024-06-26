@@ -4,35 +4,17 @@ import { Pagination } from './Pagination';
 
 describe('Pagination component', () => {
   it('should render the component', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={1}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={1} />);
   });
 
   it('should render with a next link when on page 1', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={1}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={1} />);
 
     expect(screen.getByRole('link', { name: /Next/ })).toBeInTheDocument();
   });
 
   it('should not render a next link when on the last page', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={10}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={10} />);
 
     expect(
       screen.queryByRole('link', { name: /Next/ }),
@@ -40,13 +22,7 @@ describe('Pagination component', () => {
   });
 
   it('should not render a previous link when on page 1 ', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={1}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={1} />);
 
     expect(
       screen.queryByRole('link', { name: /Previous/ }),
@@ -54,25 +30,13 @@ describe('Pagination component', () => {
   });
 
   it('Should render the previous link when not on page 1', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={2}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={2} />);
 
     expect(screen.getByRole('link', { name: /Previous/ })).toBeInTheDocument();
   });
 
   it('Should render links to the correct pages when on page 1', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={1}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={1} />);
 
     const page2Link = screen.getByRole('link', { name: /2/ });
     const page3Link = screen.getByRole('link', { name: /3/ });
@@ -88,13 +52,7 @@ describe('Pagination component', () => {
   });
 
   it('should have the aria-current "page" attribute on the current page', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={3}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={3} />);
 
     const page3Link = screen.getByRole('link', { name: /3/ });
 
@@ -102,13 +60,7 @@ describe('Pagination component', () => {
   });
 
   it('should not have the aria-current "page" attribute on the other pages', () => {
-    render(
-      <Pagination
-        totalPages={10}
-        currentPage={1}
-        setCurrentPage={() => null}
-      />,
-    );
+    render(<Pagination totalPages={10} currentPage={1} />);
 
     const page2Link = screen.getByRole('link', { name: /2/ });
     const page4Link = screen.getByRole('link', { name: /4/ });

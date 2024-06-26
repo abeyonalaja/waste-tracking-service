@@ -1,9 +1,9 @@
-.byColumn > thead tr th:first-of-type,
-.errorTable > thead tr th:nth-of-type(3) {
+.byColumn > thead tr th,
+.errorTable > thead tr th {
   width: 25%;
 }
 
-.byColumn > thead tr th:nth-of-type(2) {
+.byColumn > thead tr th:first-child {
   width: 50%;
 }
 

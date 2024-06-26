@@ -1,4 +1,5 @@
 // Client Components
+export { SubmittedFilters } from './SubmittedFilters';
 export { SubmittedTable } from './SubmittedTable';
 export { ErrorTab } from './ErrorTab';
 export { InterruptionButton } from './InterruptionButton';
@@ -18,6 +19,7 @@ export { ProducerAndCollectionDetails } from './Guidance/CSVGuidance/ProducerAnd
 export { ReceiverDetails } from './Guidance/CSVGuidance/ReceiverDetails';
 export { Submission } from './Submisison';
 export { SubmissionConfirmation } from './SubmissionConfirmation';
+export { SubmittedResults } from './SubmittedResults';
 export { TotalErrorSummary } from './TotalErrorSummary';
 export { UniqueReference } from './Guidance/CSVGuidance/UniqueReference';
 export { ValidationSuccess } from './ValidationSuccess';

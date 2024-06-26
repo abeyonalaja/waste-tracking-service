@@ -1,25 +1,93 @@
 import { UkwmSubmission } from './ukwm';
+import { Response } from '@wts/util/invocation';
 
 export type UkwmPartialSubmission = Omit<
   UkwmSubmission,
-  'id' | 'submissionConfirmation' | 'transactionId' | 'submissionState'
+  'id' | 'transactionId' | 'submissionState'
 >;
 
-export interface UkwmBulkSubmissionValidationRowError {
-  rowNumber: number;
-  errorAmount: number;
-  errorDetails: string[];
+export type UkwmSubmittedPartialSubmission = Omit<
+  UkwmSubmission & { transactionId: string },
+  'submissionDeclaration' | 'submissionState'
+>;
+
+interface UkwmErrorSummary {
+  columnBased: UkwmColumnSummary[];
+  rowBased: UkwmRowSummary[];
 }
 
-export interface UkwmBulkSubmissionValidationRowErrorDetails {
-  rowNumber: number;
-  errorReason: string;
+interface UkwmColumnSummary {
+  columnRef: string;
+  count: number;
 }
 
-export interface UkwmBulkSubmissionValidationColumnError {
-  errorAmount: number;
-  columnName: string;
-  errorDetails: UkwmBulkSubmissionValidationRowErrorDetails[];
+interface UkwmRowSummary {
+  rowNumber: number;
+  rowId: string;
+  count: number;
+}
+
+export interface UkwmErrorColumn {
+  id: string;
+  batchId: string;
+  accountId: string;
+  errors: UkwmErrorColumnDetail[];
+}
+
+export interface UkwmErrorColumnDetail {
+  rowNumber: number;
+  codes: UkwmErrorCode[];
+}
+
+export interface Row {
+  id: string;
+  batchId: string;
+  accountId: string;
+  data: UkwmRowData;
+}
+
+type UkwmRowData =
+  | {
+      valid: false;
+      rowNumber: number;
+      codes: UkwmErrorCode[];
+    }
+  | ({
+      valid: true;
+    } & UkwmRowContent);
+
+type UkwmRowContent =
+  | {
+      submitted: true;
+      content: UkwmSubmittedPartialSubmission;
+    }
+  | {
+      submitted: false;
+      content: UkwmPartialSubmission;
+    };
+
+type UkwmErrorCode =
+  | number
+  | {
+      code: number;
+      args: string[];
+    };
+
+export interface UkwmRowWithMessage {
+  id: string;
+  batchId: string;
+  accountId: string;
+  messages: string[];
+}
+
+export interface UkwmColumnWithMessage {
+  columnRef: string;
+  batchId: string;
+  accountId: string;
+  errors: {
+    rowNumber: number;
+    messages: string[];
+  }[];
 }
 
 export interface UkwmSubmissionReference {
@@ -27,6 +95,18 @@ export interface UkwmSubmissionReference {
   wasteMovementId: string;
   producerName: string;
   ewcCodes: string[];
+  collectionDate: {
+    day: string;
+    month: string;
+    year: string;
+  };
+}
+
+export interface UkwmBulkSubmissionPartialSummary {
+  id: string;
+  wasteMovementId: string;
+  producerName: string;
+  ewcCode: string;
   collectionDate: {
     day: string;
     month: string;
@@ -47,26 +127,26 @@ export type UkwmBulkSubmissionState =
   | {
       status: 'FailedValidation';
       timestamp: Date;
-      rowErrors: UkwmBulkSubmissionValidationRowError[];
-      columnErrors: UkwmBulkSubmissionValidationColumnError[];
+      errorSummary: UkwmErrorSummary;
     }
   | {
       status: 'PassedValidation';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: UkwmPartialSubmission[];
+      rowsCount: number;
     }
   | {
       status: 'Submitting';
       timestamp: Date;
       hasEstimates: boolean;
-      submissions: UkwmPartialSubmission[];
+      transactionId: string;
     }
   | {
       status: 'Submitted';
       timestamp: Date;
+      hasEstimates: boolean;
       transactionId: string;
-      submissions: UkwmSubmissionReference[];
+      createRowsCount: number;
     };
 
 export interface UkwmBulkSubmission {
@@ -74,11 +154,12 @@ export interface UkwmBulkSubmission {
   state: UkwmBulkSubmissionState;
 }
 
-export type GetUwkwmBulkSubmissionResponse = UkwmBulkSubmission;
+export type GetUwkwmBulkSubmissionResponse = Response<UkwmBulkSubmission>;
 
 export type UkwmSubmissionFlattenedDownload = {
   transactionId: string;
-} & UkwmWasteTransportationDetailFlattened &
+} & Omit<UkwmProducerDetailFlattened, 'customerReference'> &
+  UkwmWasteTransportationDetailFlattened &
   UkwmWasteCollectionDetailFlattened &
   UkwmCarrierDetailFlattened &
   UkwmWasteTypeDetailFlattened &
@@ -86,6 +167,20 @@ export type UkwmSubmissionFlattenedDownload = {
   UkwmCarrierConfirmationFlattened & {
     [key: string]: string;
   };
+
+export interface UkwmProducerDetailFlattened {
+  customerReference: string;
+  producerOrganisationName: string;
+  producerContactName: string;
+  producerContactEmail: string;
+  producerContactPhone: string;
+  producerAddressLine1: string;
+  producerAddressLine2?: string;
+  producerTownCity: string;
+  producerPostcode?: string;
+  producerCountry: string;
+  producerSicCode?: string;
+}
 
 export interface UkwmWasteCollectionDetailFlattened {
   wasteCollectionAddressLine1?: string;
@@ -287,7 +382,7 @@ export interface UkwmWasteTypeDetailFlattened {
 export interface UkwmCarrierConfirmationFlattened {
   carrierConfirmationUniqueReference: string;
   carrierConfirmationCorrectDetails: string;
-  carrierConfirmationbrokerRegistrationNumber: string;
+  carrierConfirmationBrokerRegistrationNumber: string;
   carrierConfirmationRegistrationNumber: string;
   carrierConfirmationOrganisationName: string;
   carrierConfirmationAddressLine1: string;
@@ -302,4 +397,28 @@ export interface UkwmCarrierConfirmationFlattened {
   carrierVehicleRegistrationNumber: string;
   carrierDateWasteCollected: string;
   carrierTimeWasteCollected: string;
+}
+
+export interface UkwmRowWithMessage {
+  id: string;
+  batchId: string;
+  accountId: string;
+  messages: string[];
+}
+
+export interface UkwmColumnWithMessage {
+  columnRef: string;
+  batchId: string;
+  accountId: string;
+  errors: {
+    rowNumber: number;
+    messages: string[];
+  }[];
+}
+
+export interface UkwmPagedSubmissionData {
+  totalRecords: number;
+  totalPages: number;
+  page: number;
+  values: UkwmBulkSubmissionPartialSummary[];
 }

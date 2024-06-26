@@ -13,6 +13,10 @@ import {
   FinalizeBatchResponse,
   DownloadBatchRequest,
   DownloadBatchResponse,
+  GetRowRequest,
+  GetRowResponse,
+  GetColumnRequest,
+  GetColumnResponse,
 } from '@wts/api/uk-waste-movements-bulk';
 import Boom from '@hapi/boom';
 import { compress } from 'snappy';
@@ -42,6 +46,9 @@ const mockFinalizeBatch =
   jest.fn<(req: FinalizeBatchRequest) => Promise<FinalizeBatchResponse>>();
 const mockDownloadProducerCsv =
   jest.fn<(req: DownloadBatchRequest) => Promise<DownloadBatchResponse>>();
+const mockGetRow = jest.fn<(req: GetRowRequest) => Promise<GetRowResponse>>();
+const mockGetColumn =
+  jest.fn<(req: GetColumnRequest) => Promise<GetColumnResponse>>();
 
 jest.mock('@wts/client/uk-waste-movements-bulk', () => ({
   DaprUkWasteMovementsBulkClient: jest.fn().mockImplementation(() => ({
@@ -49,15 +56,14 @@ jest.mock('@wts/client/uk-waste-movements-bulk', () => ({
     getBatch: mockGetBatch,
     finalizeBatch: mockFinalizeBatch,
     downloadProducerCsv: mockDownloadProducerCsv,
+    getRow: mockGetRow,
+    getColumn: mockGetColumn,
   })),
 }));
 
 describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
   const subject = new ServiceUkWasteMovementsBulkSubmissionBackend(
-    new DaprUkWasteMovementsBulkClient(
-      new DaprClient(),
-      faker.datatype.string(),
-    ),
+    new DaprUkWasteMovementsBulkClient(new DaprClient(), faker.string.sample()),
     new winston.Logger(),
   );
 
@@ -70,7 +76,7 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
 
   describe('createBatch', () => {
     it('throws client error if no CSV content', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'application/json',
@@ -87,14 +93,14 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
 
     it('throws client error if empty input', async () => {
       try {
-        await subject.createBatch(faker.datatype.uuid(), []);
+        await subject.createBatch(faker.string.uuid(), []);
       } catch (err) {
         expect(err).toEqual(Boom.badRequest());
       }
     });
 
     it('forwards thrown Boom errors', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
@@ -127,7 +133,7 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
     });
 
     it('throws server error if response cannot be returned via Dapr', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
@@ -153,14 +159,14 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
     });
 
     it('returns successful response', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
           data: Buffer.from('test,test'),
         },
       ];
-      const batchId = faker.datatype.uuid();
+      const batchId = faker.string.uuid();
       mockAddContentToBatch.mockResolvedValueOnce({
         success: true,
         value: {
@@ -186,8 +192,8 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
   describe('getBatch', () => {
     it('throws client error if unsuccessful response was returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockGetBatch.mockResolvedValueOnce({
         success: false,
@@ -208,8 +214,8 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
 
     it('throws server error if response cannot be returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockGetBatch.mockRejectedValueOnce(Boom.teapot());
 
@@ -222,9 +228,9 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
     });
 
     it('returns successful response', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const timestamp = new Date();
-      const request = { id: id, accountId: faker.datatype.uuid() };
+      const request = { id: id, accountId: faker.string.uuid() };
       mockGetBatch.mockResolvedValueOnce({
         success: true,
         value: {
@@ -250,7 +256,8 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
   describe('downloadCsv', () => {
     it('throws client error if unsuccessful response was returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockDownloadProducerCsv.mockResolvedValueOnce({
         success: false,
@@ -271,7 +278,8 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
 
     it('throws server error if response cannot be returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockDownloadProducerCsv.mockRejectedValueOnce(Boom.teapot());
 
@@ -284,8 +292,10 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
     });
 
     it('returns successful response', async () => {
-      const id = faker.datatype.uuid();
-      const request = { id: id };
+      const request = {
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
+      };
 
       const expectedData = 'This,is,array,of,submissions';
       const buffer = Buffer.from(expectedData, 'utf-8');
@@ -302,6 +312,154 @@ describe(ServiceUkWasteMovementsBulkSubmissionBackend, () => {
       const result = await subject.downloadCsv(request);
       expect(result.toString()).toEqual(expectedData);
       expect(mockDownloadProducerCsv).toBeCalledWith(request);
+    });
+  });
+
+  describe('getRow', () => {
+    it('throws client error if unsuccessful response was returned via Dapr', async () => {
+      const request = {
+        rowId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        accountId: faker.string.uuid(),
+      };
+      mockGetRow.mockResolvedValueOnce({
+        success: false,
+        error: {
+          statusCode: 404,
+          name: 'Test',
+          message: 'Not Found',
+        },
+      });
+
+      try {
+        await subject.getRow(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.notFound());
+      }
+      expect(mockGetRow).toBeCalledWith(request);
+    });
+
+    it('throws server error if response cannot be returned via Dapr', async () => {
+      const request = {
+        rowId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        accountId: faker.string.uuid(),
+      };
+      mockGetRow.mockRejectedValueOnce(Boom.teapot());
+
+      try {
+        await subject.getRow(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.internal());
+      }
+      expect(mockGetRow).toBeCalledWith(request);
+    });
+
+    it('returns successful response', async () => {
+      const id = faker.string.uuid();
+      const batchId = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const request = {
+        rowId: id,
+        batchId,
+        accountId,
+      };
+      mockGetRow.mockResolvedValueOnce({
+        success: true,
+        value: {
+          id,
+          accountId,
+          batchId,
+          messages: ['Test message 1'],
+        },
+      });
+
+      expect(await subject.getRow(request)).toEqual({
+        id,
+        accountId,
+        batchId,
+        messages: ['Test message 1'],
+      });
+      expect(mockGetRow).toBeCalledWith(request);
+    });
+  });
+
+  describe('getColumn', () => {
+    it('throws client error if unsuccessful response was returned via Dapr', async () => {
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        columnRef: faker.string.sample(),
+      };
+      mockGetColumn.mockResolvedValueOnce({
+        success: false,
+        error: {
+          statusCode: 404,
+          name: 'Test',
+          message: 'Not Found',
+        },
+      });
+
+      try {
+        await subject.getColumn(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.notFound());
+      }
+      expect(mockGetColumn).toBeCalledWith(request);
+    });
+
+    it('throws server error if response cannot be returned via Dapr', async () => {
+      const request = {
+        accountId: faker.string.uuid(),
+        batchId: faker.string.uuid(),
+        columnRef: faker.string.sample(),
+      };
+      mockGetColumn.mockRejectedValueOnce(Boom.teapot());
+
+      try {
+        await subject.getColumn(request);
+      } catch (err) {
+        expect(err).toEqual(Boom.internal());
+      }
+      expect(mockGetColumn).toBeCalledWith(request);
+    });
+
+    it('returns successful response', async () => {
+      const columnRef = faker.string.sample();
+      const batchId = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const request = {
+        columnRef,
+        batchId,
+        accountId,
+      };
+      mockGetColumn.mockResolvedValueOnce({
+        success: true,
+        value: {
+          columnRef,
+          accountId,
+          batchId,
+          errors: [
+            {
+              messages: ['Enter producer SIC code in the correct format'],
+              rowNumber: 302,
+            },
+          ],
+        },
+      });
+
+      expect(await subject.getColumn(request)).toEqual({
+        columnRef,
+        accountId,
+        batchId,
+        errors: [
+          {
+            messages: ['Enter producer SIC code in the correct format'],
+            rowNumber: 302,
+          },
+        ],
+      });
+      expect(mockGetColumn).toBeCalledWith(request);
     });
   });
 });
