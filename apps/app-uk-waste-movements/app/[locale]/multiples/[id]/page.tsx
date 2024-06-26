@@ -94,7 +94,7 @@ export default async function StatusPage({
             <UploadForm
               token={token}
               strings={uploadFormStrings}
-              validationError={state.error}
+              validationError={t('errors.csvValidationError')}
             >
               <GovUK.Heading size={'l'} level={1}>
                 {t('uploadPage.title')}

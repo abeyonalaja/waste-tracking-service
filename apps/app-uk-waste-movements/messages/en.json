@@ -151,6 +151,7 @@
         "paragraphOne": "These are formatting errors that the system has identified. It cannot check for factual errors you might make when entering any details.",
         "paragraphTwo": "You can upload your amended file after correcting any errors a row at a time, or you can correct all errors in the whole file and upload it and the end."
       },
+      "csvValidationError": "The CSV file has errors in it. Check your file for errors",
       "totalErrorsSummary": {
         "heading": "You have a total of { totalErrorCount } errors",
         "prompt": "You need to correct these errors before you can create all your new waste movement records",
