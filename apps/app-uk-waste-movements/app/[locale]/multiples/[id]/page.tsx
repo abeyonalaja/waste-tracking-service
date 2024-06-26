@@ -58,6 +58,8 @@ export default async function StatusPage({
     button: t('uploadForm.button'),
     errorLabel: t('uploadForm.errorLabel'),
     summaryLabel: t('uploadForm.summaryLabel'),
+    missingFileError: t('uploadForm.missingFileError'),
+    invalidFileTypeError: t('uploadForm.invalidFileTypeError'),
   };
 
   const response = await getSubmissionStatus(hostname, params.id, token);
@@ -116,6 +118,8 @@ export default async function StatusPage({
       button: t('uploadForm.button'),
       errorLabel: t('uploadForm.errorLabel'),
       summaryLabel: t('uploadForm.summaryLabel'),
+      missingFileError: t('uploadForm.missingFileError'),
+      invalidFileTypeError: t('uploadForm.invalidFileTypeError'),
     };
 
     const totalErrorSummaryStrings = {

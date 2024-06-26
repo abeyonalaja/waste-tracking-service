@@ -30,6 +30,8 @@ export default async function UploadPage(): Promise<JSX.Element> {
     button: form('button'),
     errorLabel: form('errorLabel'),
     summaryLabel: form('summaryLabel'),
+    missingFileError: form('missingFileError'),
+    invalidFileTypeError: form('invalidFileTypeError'),
   };
 
   if (!guidanceViewedCookie) {

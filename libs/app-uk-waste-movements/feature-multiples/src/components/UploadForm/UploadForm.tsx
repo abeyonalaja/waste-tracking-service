@@ -12,6 +12,8 @@ interface UploadFormProps {
     button: string;
     errorLabel: string;
     summaryLabel: string;
+    missingFileError: string;
+    invalidFileTypeError: string;
   };
   totalErrorSummaryStrings?: {
     heading: string;
@@ -47,13 +49,6 @@ export function UploadForm({
     }
   }
 
-  function validateFile(file: File | null | undefined): string | void {
-    if (file === null || file === undefined || file.type !== 'text/csv') {
-      window.scrollTo(0, 0);
-      return 'Upload a CSV file';
-    }
-  }
-
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>,
   ): Promise<void> {
@@ -61,21 +56,28 @@ export function UploadForm({
     setButtonDisabled(true);
     setErrors(null);
 
-    if (validateFile(file)) {
+    if (file === null) {
       setButtonDisabled(false);
-      setFile(null);
-      setErrors([{ text: validateFile(file)!, href: '#file-upload' }]);
+      window.scrollTo(0, 0);
+      setErrors([{ text: strings.missingFileError, href: '#file-upload' }]);
+      return;
+    }
+
+    if (file.type !== 'text/csv') {
+      setButtonDisabled(false);
+      window.scrollTo(0, 0);
+      setErrors([{ text: strings.invalidFileTypeError, href: '#file-upload' }]);
       return;
     }
 
     const formData = new FormData();
-    formData.append('input', file!);
-
-    let response: Response;
+    formData.append('input', file);
 
     const headers = {
       Authorization: `Bearer ${token}`,
     };
+
+    let response: Response;
 
     try {
       response = await fetch(
@@ -88,15 +90,15 @@ export function UploadForm({
       );
     } catch (error) {
       console.error(error);
-      router.push(`/404`);
+      return router.push(`/404`);
     }
 
-    if (response!.status === 201) {
-      const data = await response!.json();
+    if (response.status === 201) {
+      const data = await response.json();
       const hasCorrectedErrors =
         totalErrorCount > 0 ? '&hasCorrectedErrors=true' : '';
       router.push(
-        `/multiples/${data.id}?filename=${file!.name}${hasCorrectedErrors}`,
+        `/multiples/${data.id}?filename=${file.name}${hasCorrectedErrors}`,
       );
     } else {
       router.push(`/404`);
@@ -105,9 +107,9 @@ export function UploadForm({
 
   return (
     <>
-      {!errors && totalErrorCount > 0 && (
+      {!errors && totalErrorCount > 0 && totalErrorSummaryStrings && (
         <TotalErrorSummary
-          strings={totalErrorSummaryStrings!}
+          strings={totalErrorSummaryStrings}
           href="#error-tabs"
         />
       )}

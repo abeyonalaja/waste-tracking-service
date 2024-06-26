@@ -61,9 +61,6 @@ export function ErrorRow({
       await getErrorDetails(error);
     }
   }
-  console.log('');
-
-  console.log(token);
 
   async function getErrorDetails(
     error: RowBasedErrorSummary | ColumnBasedErrorSummary,

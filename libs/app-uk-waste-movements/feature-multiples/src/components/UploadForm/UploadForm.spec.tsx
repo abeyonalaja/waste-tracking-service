@@ -17,6 +17,8 @@ const strings = {
   button: 'Upload',
   errorLabel: 'Error: ',
   summaryLabel: 'There is a problem',
+  missingFileError: 'Upload a file',
+  invalidFileTypeError: 'Invalid file type',
 };
 
 function MockChild(): JSX.Element {

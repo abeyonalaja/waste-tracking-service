@@ -209,7 +209,9 @@
       "hint": "You need to review and check for errors before uploading",
       "button": "Upload",
       "errorLabel": "Error: ",
-      "summaryLabel": "There is a problem"
+      "summaryLabel": "There is a problem",
+      "missingFileError": "Upload a file",
+      "invalidFileTypeError": "Upload a CSV file"
     },
     "processingPage": {
       "label": "Uploading"
