@@ -1,5 +1,5 @@
 image:
-  tag: '4.0.2'
+  tag: '4.0.15'
 resources:
   requests:
     cpu: 50m
