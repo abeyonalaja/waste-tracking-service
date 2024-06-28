@@ -103,6 +103,7 @@ jobs:
             cp report/screenshot_*.png screenshots/
         displayName: Run tests ${{ parameters.environment }}
         workingDirectory: tests/waste-tracking-service
+        timeoutInMinutes: 120
         env:
           ENVIRONMENT: ${{ parameters.environment }}
           TAGS: ${{ parameters.tags }}
