@@ -20,6 +20,7 @@ import { FormatChemicalAndBiologicalComponents } from './FormatChemicalAndBiolog
 import { FormatHazCodes } from './FormatHazCodes';
 import { FormatPopDetails } from './FormatPopDetails';
 import { FormatPopConcentrate } from './FormatPopConcentrate';
+import { slugify } from '../../utils';
 
 interface SubmissionProps {
   data: UkwmDraftSubmission;
@@ -50,7 +51,9 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
 
   return (
     <>
-      <Caption>Your reference: {data.transactionId}</Caption>
+      <Caption id={`reference-${data.transactionId}`}>
+        Your reference: {data.transactionId}
+      </Caption>
       <Heading>Waste movement record</Heading>
       <Accordion
         id="submissionAccordion"
@@ -72,6 +75,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   <SummaryCard
                     key={`ewc-card-${index}`}
                     title={`EWC ${wasteType.ewcCode}`}
+                    id={`card-${slugify(wasteType.ewcCode)}`}
                   >
                     <SummaryList
                       hideBorders
@@ -386,7 +390,11 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
         </AccordionSection>
       </Accordion>
       <ButtonGroup>
-        <Button secondary={true} href={'../view?page=1'}>
+        <Button
+          secondary={true}
+          href={'../view?page=1'}
+          id="return-view-all-link"
+        >
           Return to view all records
         </Button>
       </ButtonGroup>

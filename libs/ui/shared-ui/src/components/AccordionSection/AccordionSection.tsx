@@ -48,7 +48,7 @@ export function AccordionSection({
               <span className="govuk-accordion__section-heading-text-focus">
                 {title}
               </span>
-              {status && <Tag>{status}</Tag>}
+              {status && <Tag id={`${id}-status`}>{status}</Tag>}
             </span>
 
             {summary && (

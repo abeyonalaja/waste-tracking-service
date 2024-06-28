@@ -1,18 +1,21 @@
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode } from 'react';
 
-interface Props {
+interface CustomProps {
   size?: 'm' | 'l' | 'xl';
   children?: ReactNode;
   testId?: string;
 }
 
+type CaptionProps = HTMLAttributes<HTMLSpanElement> & CustomProps;
+
 export const Caption = ({
   size = 'l',
   children,
   testId,
-}: Props): JSX.Element => {
+  ...rest
+}: CaptionProps): JSX.Element => {
   return (
-    <span className={`govuk-caption-${size}`} data-testid={testId}>
+    <span {...rest} className={`govuk-caption-${size}`} data-testid={testId}>
       {children}
     </span>
   );

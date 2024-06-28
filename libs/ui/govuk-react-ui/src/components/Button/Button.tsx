@@ -11,6 +11,7 @@ interface Props {
   onClick?: () => void;
   disabled?: boolean;
   testId?: string;
+  id?: string;
 }
 
 export const Button = ({
@@ -23,6 +24,7 @@ export const Button = ({
   onClick,
   disabled,
   testId,
+  id,
 }: Props): JSX.Element => {
   if (href === undefined) {
     return (
@@ -33,6 +35,7 @@ export const Button = ({
         data-testid={testId}
         onClick={onClick}
         disabled={disabled}
+        id={id}
       >
         {text || children}
         {start && (
@@ -58,6 +61,7 @@ export const Button = ({
           start && `govuk-button--start`
         }`}
         data-testid={testId}
+        id={id}
       >
         {text || children}
         {start && (

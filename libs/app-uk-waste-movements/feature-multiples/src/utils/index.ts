@@ -5,4 +5,5 @@ export { getSubmissionStatus } from './getSubmissionStatus';
 export { getSubmissions } from './getSubmissions';
 export { getSubmission } from './getSubmission';
 export { pick } from './pick';
+export { slugify } from './slugify';
 export { sortSubmissions } from './sortSubmissions';

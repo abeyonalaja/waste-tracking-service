@@ -15,6 +15,7 @@ interface Props {
     | 'orange'
     | 'yellow';
   testId?: string;
+  id?: string;
 }
 
 export const Tag = ({
@@ -22,11 +23,13 @@ export const Tag = ({
   classes,
   colour,
   testId,
+  id,
 }: Props): JSX.Element => {
   return (
     <strong
       className={`govuk-tag ${colour && `govuk-tag--${colour}`} ${classes}`}
       data-testid={testId}
+      id={id && id}
     >
       {children}
     </strong>

@@ -42,8 +42,18 @@ export function SummaryList({
               key={`${slugify(item.value)}-${index}`}
               className="govuk-summary-list__row"
             >
-              <dt className="govuk-summary-list__key">{item.key}</dt>
-              <dd className="govuk-summary-list__value">{item.value}</dd>
+              <dt
+                className="govuk-summary-list__key"
+                id={`${slugify(item.key)}-label`}
+              >
+                {item.key}
+              </dt>
+              <dd
+                className="govuk-summary-list__value"
+                id={`${slugify(item.key)}-value`}
+              >
+                {item.value}
+              </dd>
             </div>
           );
         }
