@@ -35,6 +35,7 @@ parameters:
 jobs:
   - job: test_${{ parameters.environment }}
     displayName: Acceptance tests ${{ parameters.environment }}
+    timeoutInMinutes: 120
 
     dependsOn: ${{ parameters.dependsOn }}
 
@@ -103,7 +104,6 @@ jobs:
             cp report/screenshot_*.png screenshots/
         displayName: Run tests ${{ parameters.environment }}
         workingDirectory: tests/waste-tracking-service
-        timeoutInMinutes: 120
         env:
           ENVIRONMENT: ${{ parameters.environment }}
           TAGS: ${{ parameters.tags }}
