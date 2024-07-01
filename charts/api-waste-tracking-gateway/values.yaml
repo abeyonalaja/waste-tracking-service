@@ -94,7 +94,7 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  targetMemoryAverageValue: 200Mi
+  targetMemoryAverageValue: 900Mi
   labels: {}
 
 # Profile of the service exposing containers
