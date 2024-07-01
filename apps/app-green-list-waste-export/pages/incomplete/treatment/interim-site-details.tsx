@@ -39,6 +39,7 @@ import {
 
 import i18n from 'i18next';
 import useApiConfig from 'utils/useApiConfig';
+import { getTreatmentStatus } from '../../../utils/statuses/getTreatmentStatus';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -296,10 +297,6 @@ const InterimSiteDetails = (): React.ReactNode => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -324,10 +321,6 @@ const InterimSiteDetails = (): React.ReactNode => {
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -344,10 +337,6 @@ const InterimSiteDetails = (): React.ReactNode => {
           };
 
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -357,6 +346,8 @@ const InterimSiteDetails = (): React.ReactNode => {
           };
           break;
       }
+
+      body.status = getTreatmentStatus(interimPage.data, body);
 
       if (isNotEmpty(newErrors)) {
         dispatchInterimPage({ type: 'ERRORS_UPDATE', payload: newErrors });

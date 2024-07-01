@@ -5,6 +5,7 @@ interface Props {
   children: ReactNode;
   mb?: number;
   testId?: string;
+  colour?: 'black' | 'white';
   id?: string;
 }
 
@@ -22,16 +23,20 @@ const P = styled('p')<{ $mb?: number }>`
     line-height: 1.32;
     margin-bottom: ${(props) => (props.$mb ? `${props.$mb * 5}px` : '20px')};
   }
+  &.colour-white {
+    color: #fff;
+  }
 `;
 
 export const Paragraph = ({
   children,
   mb = 4,
   testId,
+  colour = 'black',
   id,
 }: Props): React.ReactNode => {
   return (
-    <P data-testid={testId} $mb={mb} id={id}>
+    <P data-testid={testId} $mb={mb} id={id} className={`colour-${colour}`}>
       {children}
     </P>
   );

@@ -160,8 +160,10 @@ export const GuidanceInteruption = ({
       <MainHeading size="XL">
         {t('multiples.guidance.bouncePage.title')}
       </MainHeading>
-      <Paragraph>{t('multiples.guidance.bouncePage.firstParagraph')}</Paragraph>
-      <Paragraph>
+      <Paragraph colour={'white'}>
+        {t('multiples.guidance.bouncePage.firstParagraph')}
+      </Paragraph>
+      <Paragraph colour={'white'}>
         {t('multiples.guidance.bouncePage.secondParagraph')}
       </Paragraph>
       <DocumentSection>

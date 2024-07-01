@@ -34,6 +34,7 @@ import {
 
 import i18n from 'i18next';
 import useApiConfig from 'utils/useApiConfig';
+import { getTreatmentStatus } from '../../../utils/statuses/getTreatmentStatus';
 const VIEWS = {
   ADDRESS_DETAILS: 1,
   CONTACT_DETAILS: 2,
@@ -285,10 +286,6 @@ const InterimSiteDetails = (): React.ReactNode => {
           nextView = VIEWS.CONTACT_DETAILS;
           newErrors = {};
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -316,10 +313,6 @@ const InterimSiteDetails = (): React.ReactNode => {
             ),
           };
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -332,10 +325,6 @@ const InterimSiteDetails = (): React.ReactNode => {
           newErrors = {};
 
           body = {
-            status:
-              interimPage.data.status === 'NotStarted'
-                ? 'Started'
-                : interimPage.data.status,
             values: [
               {
                 ...interimPage.facilityData,
@@ -345,6 +334,7 @@ const InterimSiteDetails = (): React.ReactNode => {
           };
           break;
       }
+      body.status = getTreatmentStatus(interimPage.data, body);
 
       if (isNotEmpty(newErrors)) {
         dispatchInterimPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -459,7 +449,7 @@ const InterimSiteDetails = (): React.ReactNode => {
             });
             dispatchInterimPage({
               type: 'DATA_FETCH_SUCCESS',
-              payload: { status: 'Started', value: data.values[0] },
+              payload: { status: 'Started', values: data.values },
             });
             dispatchInterimPage({
               type: 'SHOW_VIEW',

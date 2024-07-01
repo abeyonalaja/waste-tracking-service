@@ -18,6 +18,7 @@
   "status.inProgress": "In progress",
   "status.completed": "Completed",
   "status.actualNeeded": "Actual needed",
+  "notAnswered": "Not answered",
   "charCount.positive": "You have 1 character remaining",
   "charCount.negative": "You have 1 character too many",
   "charsCount.positive": "You have {{n}} characters remaining",

@@ -37,6 +37,7 @@ import styled from 'styled-components';
 import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gateway';
 import i18n from 'i18next';
 import useApiConfig from 'utils/useApiConfig';
+import { getTreatmentStatus } from '../../../utils/statuses/getTreatmentStatus';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -403,7 +404,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
           nextView = VIEWS.CONTACT_DETAILS;
           newErrors = {};
           body = {
-            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -430,7 +430,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
             ),
           };
           body = {
-            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -443,7 +442,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
           nextView = VIEWS.LIST;
           newErrors = {};
           body = {
-            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -453,6 +451,8 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
           };
           break;
       }
+
+      body.status = getTreatmentStatus(recoveryPage.data, body);
 
       if (isNotEmpty(newErrors)) {
         dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -705,10 +705,14 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
   );
 
   const getCodeDescription = (recCode) => {
-    const result = refData.find(({ code }) => code === recCode);
-    if (result) {
-      return result.value.description[currentLanguage];
+    if (refData) {
+      const result = refData.find(({ code }) => code === recCode);
+      if (result) {
+        return result.value.description[currentLanguage];
+      }
+      return null;
     }
+    return null;
   };
 
   const completedRecoveryFacilities = (facilities) => {
@@ -1070,21 +1074,30 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
                                   title: t(
                                     'exportJourney.recoveryFacilities.name',
                                   ),
-                                  definition: facility.addressDetails.name,
+                                  definition:
+                                    facility.addressDetails.name ||
+                                    t('notAnswered'),
                                 },
                                 {
                                   title: t('address.country'),
-                                  definition: facility.addressDetails.country,
+                                  definition:
+                                    facility.addressDetails.country ||
+                                    t('notAnswered'),
                                 },
                                 {
                                   title: t(
                                     'exportJourney.recoveryFacilities.recoveryCode',
                                   ),
-                                  definition: `${
-                                    facility.recoveryFacilityType?.recoveryCode
-                                  }: ${getCodeDescription(
-                                    facility.recoveryFacilityType?.recoveryCode,
-                                  )}`,
+                                  definition: facility.recoveryFacilityType
+                                    ?.recoveryCode
+                                    ? `${
+                                        facility.recoveryFacilityType
+                                          ?.recoveryCode
+                                      }: ${getCodeDescription(
+                                        facility.recoveryFacilityType
+                                          ?.recoveryCode,
+                                      )}`
+                                    : t('notAnswered'),
                                 },
                               ]}
                             />

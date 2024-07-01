@@ -43,6 +43,7 @@ import { GetRecoveryFacilityDetailResponse } from '@wts/api/waste-tracking-gatew
 
 import i18n from 'i18next';
 import useApiConfig from 'utils/useApiConfig';
+import { getTreatmentStatus } from '../../../utils/statuses/getTreatmentStatus';
 
 const VIEWS = {
   ADDRESS_DETAILS: 1,
@@ -394,7 +395,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -418,7 +418,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
           body = {
-            status: 'Started',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -435,7 +434,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
             ),
           };
           body = {
-            status: 'Complete',
             values: [
               {
                 ...recoveryPage.facilityData,
@@ -445,6 +443,8 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
           };
           break;
       }
+
+      body.status = getTreatmentStatus(recoveryPage.data, body);
 
       if (isNotEmpty(newErrors)) {
         dispatchRecoveryPage({ type: 'ERRORS_UPDATE', payload: newErrors });
@@ -1077,21 +1077,30 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
                                   title: t(
                                     'exportJourney.recoveryFacilities.name',
                                   ),
-                                  definition: facility.addressDetails.name,
+                                  definition:
+                                    facility.addressDetails.name ||
+                                    t('notAnswered'),
                                 },
                                 {
                                   title: t('address.country'),
-                                  definition: facility.addressDetails.country,
+                                  definition:
+                                    facility.addressDetails.country ||
+                                    t('notAnswered'),
                                 },
                                 {
                                   title: t(
                                     'exportJourney.recoveryFacilities.recoveryCode',
                                   ),
-                                  definition: `${
-                                    facility.recoveryFacilityType?.recoveryCode
-                                  }: ${getCodeDescription(
-                                    facility.recoveryFacilityType?.recoveryCode,
-                                  )}`,
+                                  definition: facility.recoveryFacilityType
+                                    ?.recoveryCode
+                                    ? `${
+                                        facility.recoveryFacilityType
+                                          ?.recoveryCode
+                                      }: ${getCodeDescription(
+                                        facility.recoveryFacilityType
+                                          ?.recoveryCode,
+                                      )}`
+                                    : t('notAnswered'),
                                 },
                               ]}
                             />
