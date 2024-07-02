@@ -524,6 +524,7 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
       contactDetails,
       recoveryFacilityType,
       recoveryPage.facilityData,
+      recoveryPage.data,
     ],
   );
 

@@ -26,7 +26,8 @@ export const getTreatmentStatus = (
   if (data.status === 'Complete' || data.status === 'Started') {
     const id = facilityData?.values[0]?.id;
     const objIndex = data.values?.findIndex((obj) => obj.id == id);
-    if (objIndex > 0) {
+
+    if (objIndex !== -1) {
       data.values[objIndex] = facilityData.values[0];
     }
     const recFacilityCount = data.values?.filter(
@@ -63,7 +64,6 @@ export const getTreatmentStatus = (
     });
     return status;
   } else {
-    console.log(123);
     return 'Started';
   }
 };
