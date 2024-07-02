@@ -140,28 +140,13 @@ await server.invoker.listen(
         tracestate: headers?.tracestate || '',
       });
 
-      const messages = [
-        {
-          body: HTTP.structured(cloudEvent),
-        },
-      ];
+      const message = {
+        body: HTTP.structured(cloudEvent),
+      };
 
       const sender = serviceBusClient.createSender(tasksQueueName);
-      let batch = await sender.createMessageBatch();
-      for (const message of messages) {
-        if (!batch.tryAddMessage(message)) {
-          await sender.sendMessages(batch);
-          batch = await sender.createMessageBatch();
-          if (!batch.tryAddMessage(message)) {
-            const message = 'Message too big to fit in a batch';
-            logger.error(message);
-            throw Boom.internal(message);
-          }
-        }
-      }
-
-      await sender.sendMessages(batch);
-      logger.info(`Sent a batch of messages to the queue: ${tasksQueueName}`);
+      await sender.sendMessages(message);
+      logger.info(`Sent a message to the queue: ${tasksQueueName}`);
       await sender.close();
     } catch (err) {
       logger.error('Error publishing work item', { error: err });
@@ -228,31 +213,13 @@ await server.invoker.listen(
         traceparent: headers?.traceparent || '',
         tracestate: headers?.tracestate || '',
       });
-      const messages = [
-        {
-          body: HTTP.structured(cloudEvent),
-        },
-      ];
-
+      const message = {
+        body: HTTP.structured(cloudEvent),
+      };
       const sender = serviceBusClient.createSender(submissionsQueueName);
 
-      let batch = await sender.createMessageBatch();
-      for (const message of messages) {
-        if (!batch.tryAddMessage(message)) {
-          await sender.sendMessages(batch);
-          batch = await sender.createMessageBatch();
-          if (!batch.tryAddMessage(message)) {
-            const message = 'Message too big to fit in a batch';
-            logger.error(message);
-            throw Boom.internal(message);
-          }
-        }
-      }
-
-      await sender.sendMessages(batch);
-      logger.info(
-        `Sent a batch of messages to the queue: ${submissionsQueueName}`,
-      );
+      await sender.sendMessages(message);
+      logger.info(`Sent a message to the queue: ${submissionsQueueName}`);
       await sender.close();
     } catch (err) {
       logger.error('Error publishing work item', { error: err });

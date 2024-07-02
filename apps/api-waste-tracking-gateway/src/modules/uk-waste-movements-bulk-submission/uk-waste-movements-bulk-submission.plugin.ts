@@ -47,7 +47,7 @@ const plugin: Plugin<PluginOptions> = {
       options: {
         payload: {
           parse: false,
-          maxBytes: 1000 * 1000 * 15,
+          maxBytes: 1024 * 1024 * 15,
           multipart: {
             output: 'stream',
           },

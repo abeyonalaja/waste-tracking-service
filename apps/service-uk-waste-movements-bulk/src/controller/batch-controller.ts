@@ -79,6 +79,7 @@ export class BatchController {
 
         const timestamp = new Date();
         const transactionId =
+          'WM' +
           timestamp.getFullYear().toString().substring(2) +
           (timestamp.getMonth() + 1).toString().padStart(2, '0') +
           '_' +
