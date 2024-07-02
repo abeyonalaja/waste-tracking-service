@@ -298,7 +298,7 @@ export async function createBatch(
           transactionId: transactionId,
           timestamp: timestamp,
           hasEstimates: true,
-          createRowsCount: 3,
+          createdRowsCount: 3,
         },
       };
       break;
@@ -343,7 +343,7 @@ export function finalizeBatch({ id, accountId }: BatchRef): Promise<void> {
     transactionId: transactionId,
     timestamp: timestamp,
     hasEstimates: true,
-    createRowsCount: 5,
+    createdRowsCount: 5,
   };
 
   return Promise.resolve();

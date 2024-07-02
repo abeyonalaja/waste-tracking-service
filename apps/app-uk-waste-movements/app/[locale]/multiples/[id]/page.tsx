@@ -248,7 +248,7 @@ export default async function StatusPage({
             <SubmissionConfirmation
               submissionId={params.id}
               token={token}
-              recordCount={state.createRowsCount}
+              recordCount={state.createdRowsCount}
             />
           </GovUK.GridCol>
         </GovUK.GridRow>

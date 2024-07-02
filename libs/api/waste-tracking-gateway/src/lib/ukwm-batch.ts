@@ -146,7 +146,7 @@ export type UkwmBulkSubmissionState =
       timestamp: Date;
       hasEstimates: boolean;
       transactionId: string;
-      createRowsCount: number;
+      createdRowsCount: number;
     };
 
 export interface UkwmBulkSubmission {
