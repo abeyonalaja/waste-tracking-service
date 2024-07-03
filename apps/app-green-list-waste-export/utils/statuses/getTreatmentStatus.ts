@@ -35,7 +35,8 @@ export const getTreatmentStatus = (
         site.recoveryFacilityType?.type === 'RecoveryFacility',
     ).length;
     let status = 'Complete';
-    if (recFacilityCount === 0) {
+
+    if (recFacilityCount === 0 || recFacilityCount === undefined) {
       return 'Started';
     }
     data.values?.forEach((facility: RecoveryFacilityData) => {
