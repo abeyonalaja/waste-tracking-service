@@ -243,17 +243,17 @@ describe(validateProducerDetailSection, () => {
     ]);
 
     result = validateProducerDetailSection({
-      producerAddressLine1: faker.datatype.string(251),
-      producerAddressLine2: faker.datatype.string(251),
-      producerContactName: faker.datatype.string(251),
-      producerCountry: faker.datatype.string(251),
-      producerContactEmail: faker.datatype.string(251),
-      producerOrganisationName: faker.datatype.string(251),
-      producerContactPhone: faker.datatype.string(251),
-      producerPostcode: faker.datatype.string(251),
-      producerSicCode: faker.datatype.string(251),
-      producerTownCity: faker.datatype.string(251),
-      customerReference: faker.datatype.string(21),
+      producerAddressLine1: faker.string.sample(251),
+      producerAddressLine2: faker.string.sample(251),
+      producerContactName: faker.string.sample(251),
+      producerCountry: faker.string.sample(251),
+      producerContactEmail: faker.string.sample(251),
+      producerOrganisationName: faker.string.sample(251),
+      producerContactPhone: faker.string.sample(251),
+      producerPostcode: faker.string.sample(251),
+      producerSicCode: faker.string.sample(251),
+      producerTownCity: faker.string.sample(251),
+      customerReference: faker.string.sample(21),
     });
 
     expect(result.valid).toBe(false);
@@ -337,7 +337,7 @@ describe(validateReceiverDetailSection, () => {
       receiverPostcode: '',
       receiverAuthorizationType: 'Denied',
       receiverTownCity: '',
-      receiverEnvironmentalPermitNumber: faker.datatype.string(21),
+      receiverEnvironmentalPermitNumber: faker.string.sample(21),
     });
 
     expect(result.valid).toBe(false);
@@ -433,17 +433,17 @@ describe(validateReceiverDetailSection, () => {
     ]);
 
     result = validateReceiverDetailSection({
-      receiverAddressLine1: faker.datatype.string(251),
-      receiverAddressLine2: faker.datatype.string(251),
-      receiverContactName: faker.datatype.string(251),
+      receiverAddressLine1: faker.string.sample(251),
+      receiverAddressLine2: faker.string.sample(251),
+      receiverContactName: faker.string.sample(251),
       receiverCountry: 'France',
       receiverContactEmail: 'not_an_email',
-      receiverOrganisationName: faker.datatype.string(251),
-      receiverContactPhone: faker.datatype.string(251),
-      receiverPostcode: faker.datatype.string(251),
-      receiverAuthorizationType: faker.datatype.string(251),
-      receiverTownCity: faker.datatype.string(251),
-      receiverEnvironmentalPermitNumber: faker.datatype.string(21),
+      receiverOrganisationName: faker.string.sample(251),
+      receiverContactPhone: faker.string.sample(251),
+      receiverPostcode: faker.string.sample(251),
+      receiverAuthorizationType: faker.string.sample(251),
+      receiverTownCity: faker.string.sample(251),
+      receiverEnvironmentalPermitNumber: faker.string.sample(21),
     });
 
     expect(result.valid).toBe(false);
@@ -523,9 +523,8 @@ describe(validateWasteTransportationDetailSection, () => {
     ]);
 
     result = validateWasteTransportationDetailSection({
-      wasteTransportationNumberAndTypeOfContainers: faker.datatype.string(251),
-      wasteTransportationSpecialHandlingRequirements:
-        faker.datatype.string(251),
+      wasteTransportationNumberAndTypeOfContainers: faker.string.sample(251),
+      wasteTransportationSpecialHandlingRequirements: faker.string.sample(251),
     });
 
     expect(result.valid).toBe(false);
@@ -618,16 +617,16 @@ describe(validateWasteCollectionDetailSection, () => {
 
     response = validateWasteCollectionDetailSection(
       {
-        wasteCollectionAddressLine1: faker.datatype.string(251),
-        wasteCollectionAddressLine2: faker.datatype.string(251),
-        wasteCollectionTownCity: faker.datatype.string(251),
+        wasteCollectionAddressLine1: faker.string.sample(251),
+        wasteCollectionAddressLine2: faker.string.sample(251),
+        wasteCollectionTownCity: faker.string.sample(251),
         wasteCollectionCountry: 'France',
-        wasteCollectionPostcode: faker.datatype.string(11),
-        wasteCollectionWasteSource: faker.datatype.string(),
-        wasteCollectionBrokerRegistrationNumber: faker.datatype.string(21),
-        wasteCollectionCarrierRegistrationNumber: faker.datatype.string(21),
-        wasteCollectionLocalAuthority: faker.datatype.string(251),
-        wasteCollectionExpectedWasteCollectionDate: faker.datatype.string(),
+        wasteCollectionPostcode: faker.string.sample(11),
+        wasteCollectionWasteSource: faker.string.sample(),
+        wasteCollectionBrokerRegistrationNumber: faker.string.sample(21),
+        wasteCollectionCarrierRegistrationNumber: faker.string.sample(21),
+        wasteCollectionLocalAuthority: faker.string.sample(251),
+        wasteCollectionExpectedWasteCollectionDate: faker.string.sample(),
       },
       localAuthorities,
     );
@@ -685,15 +684,15 @@ describe(validateWasteCollectionDetailSection, () => {
 
     response = validateWasteCollectionDetailSection(
       {
-        wasteCollectionAddressLine1: faker.datatype.string(60),
-        wasteCollectionAddressLine2: faker.datatype.string(60),
-        wasteCollectionTownCity: faker.datatype.string(50),
+        wasteCollectionAddressLine1: faker.string.sample(60),
+        wasteCollectionAddressLine2: faker.string.sample(60),
+        wasteCollectionTownCity: faker.string.sample(50),
         wasteCollectionCountry: 'France',
-        wasteCollectionPostcode: faker.datatype.string(11),
-        wasteCollectionWasteSource: faker.datatype.string(),
-        wasteCollectionBrokerRegistrationNumber: faker.datatype.string(21),
-        wasteCollectionCarrierRegistrationNumber: faker.datatype.string(21),
-        wasteCollectionLocalAuthority: faker.datatype.string(251),
+        wasteCollectionPostcode: faker.string.sample(11),
+        wasteCollectionWasteSource: faker.string.sample(),
+        wasteCollectionBrokerRegistrationNumber: faker.string.sample(21),
+        wasteCollectionCarrierRegistrationNumber: faker.string.sample(21),
+        wasteCollectionLocalAuthority: faker.string.sample(251),
         wasteCollectionExpectedWasteCollectionDate: yesterday,
       },
       localAuthorities,
@@ -844,7 +843,7 @@ describe(validateWasteTypeDetailSection, () => {
       {
         firstWasteTypeEwcCode: 'non_existant',
         firstWasteTypePhysicalForm: 'plasma',
-        firstWasteTypeWasteDescription: faker.datatype.string(101),
+        firstWasteTypeWasteDescription: faker.string.sample(101),
         firstWasteTypeWasteQuantity: 'not_a_number',
         firstWasteTypeWasteQuantityType: 'possible',
         firstWasteTypeWasteQuantityUnit: 'ounces',
@@ -1134,12 +1133,28 @@ describe(validateCarrierDetailSection, () => {
       carrierCountry: 'England',
       carrierContactEmail: 'john.smith@john.smith',
       carrierOrganisationName: 'Test organization',
-      carrierContactPhone: '0044140000000',
+      carrierContactPhone: "'0044140000000'",
       carrierPostcode: 'AB1 1CB',
       carrierTownCity: 'London',
     });
 
     expect(result.valid).toBe(true);
+
+    expect(result.value).toEqual({
+      address: {
+        addressLine1: '123 Real Street',
+        addressLine2: '',
+        country: 'England',
+        postcode: 'AB1 1CB',
+        townCity: 'London',
+      },
+      contact: {
+        email: 'john.smith@john.smith',
+        name: 'John Smith',
+        organisationName: 'Test organization',
+        phone: '0044140000000',
+      },
+    });
 
     result = validateCarrierDetailSection({
       carrierAddressLine1: '',
@@ -1250,15 +1265,15 @@ describe(validateCarrierDetailSection, () => {
     ]);
 
     result = validateCarrierDetailSection({
-      carrierAddressLine1: faker.datatype.string(251),
-      carrierAddressLine2: faker.datatype.string(251),
-      carrierContactName: faker.datatype.string(251),
-      carrierCountry: faker.datatype.string(251),
-      carrierContactEmail: faker.datatype.string(251),
-      carrierOrganisationName: faker.datatype.string(251),
-      carrierContactPhone: faker.datatype.string(251),
-      carrierPostcode: faker.datatype.string(251),
-      carrierTownCity: faker.datatype.string(251),
+      carrierAddressLine1: faker.string.sample(251),
+      carrierAddressLine2: faker.string.sample(251),
+      carrierContactName: faker.string.sample(251),
+      carrierCountry: faker.string.sample(251),
+      carrierContactEmail: faker.string.sample(251),
+      carrierOrganisationName: faker.string.sample(251),
+      carrierContactPhone: faker.string.sample(251),
+      carrierPostcode: faker.string.sample(251),
+      carrierTownCity: faker.string.sample(251),
     });
 
     expect(result.valid).toBe(false);

@@ -187,16 +187,16 @@ export function validateProducerDetailSection(
     });
   }
 
-  const reformattedReceiverContactPhoneNumber = value.producerContactPhone
+  const reformattedProducerContactPhoneNumber = value.producerContactPhone
     ?.replace(/'/g, '')
     ?.trim();
-  if (!reformattedReceiverContactPhoneNumber) {
+  if (!reformattedProducerContactPhoneNumber) {
     errors.push({
       field: 'Producer contact phone number',
       code: validation.errorCodes.producerEmptyPhone,
     });
   } else if (
-    !validation.phoneRegex.test(reformattedReceiverContactPhoneNumber)
+    !validation.phoneRegex.test(reformattedProducerContactPhoneNumber)
   ) {
     errors.push({
       field: 'Producer contact phone number',
@@ -256,7 +256,7 @@ export function validateProducerDetailSection(
         email: value.producerContactEmail,
         name: value.producerContactName,
         organisationName: value.producerOrganisationName,
-        phone: reformattedReceiverContactPhoneNumber,
+        phone: reformattedProducerContactPhoneNumber,
       },
     },
   };
@@ -268,6 +268,10 @@ export function validateCarrierDetailSection(
   | { valid: true; value: CarrierDetail } {
   const errors: FieldFormatError[] = [];
 
+  const reformattedCarrierContactPhoneNumber = value.carrierContactPhone
+    ?.replace(/'/g, '')
+    ?.trim();
+
   if (
     value.carrierOrganisationName?.trim() ||
     value.carrierAddressLine1?.trim() ||
@@ -277,7 +281,7 @@ export function validateCarrierDetailSection(
     value.carrierPostcode?.trim() ||
     value.carrierContactName?.trim() ||
     value.carrierContactEmail?.trim() ||
-    value.carrierContactPhone?.trim()
+    reformattedCarrierContactPhoneNumber
   ) {
     if (!value.carrierOrganisationName?.trim()) {
       errors.push({
@@ -366,9 +370,6 @@ export function validateCarrierDetailSection(
       });
     }
 
-    const reformattedCarrierContactPhoneNumber = value.carrierContactPhone
-      ?.replace(/'/g, '')
-      ?.trim();
     if (!reformattedCarrierContactPhoneNumber) {
       errors.push({
         field: 'Carrier contact phone number',
@@ -421,7 +422,7 @@ export function validateCarrierDetailSection(
       contact: {
         email: value.carrierContactEmail || '',
         name: value.carrierContactName || '',
-        phone: value.carrierContactPhone || '',
+        phone: reformattedCarrierContactPhoneNumber || '',
         organisationName: value.carrierOrganisationName || '',
       },
     },
