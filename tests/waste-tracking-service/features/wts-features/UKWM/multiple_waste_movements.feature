@@ -160,7 +160,7 @@ Feature: AS A Waste Controller
     Then Bulk upload success page is displayed for one record
     And I click Continue and create button
     When I wait for the submission to finish
-    Then Bulk confirmation page is displayed for "0" movements
+    Then Bulk confirmation page is displayed for one movement record
     When I click the "view all these created waste movement records" link
     And I switch to new tab
     Then Waste movement records list page

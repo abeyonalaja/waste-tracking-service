@@ -17,6 +17,11 @@ class UkwmBulkConfirmationPage < GenericPage
     expect(self).to have_css 'h1', text: title, exact_text: true
   end
 
+  def check_page_displayed_for_1_record
+    title = '1 waste movement created'
+    expect(self).to have_css 'h1', text: title, exact_text: true
+  end
+
   def check_page_translation
     expect(self).to have_text SUB_HEADING
     expect(self).to have_text BODY_P1

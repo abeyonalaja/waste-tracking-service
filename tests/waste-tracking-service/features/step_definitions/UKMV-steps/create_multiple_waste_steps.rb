@@ -170,7 +170,7 @@ And(/^I can see all the details from the uploaded record$/) do
   expect(UkwmSingleRecordPage.new.physical_form_label).to eq 'Physical form'
   expect(UkwmSingleRecordPage.new.physical_form_value).to eq 'Gas'
   expect(UkwmSingleRecordPage.new.waste_quantity_label).to eq 'Waste quantity'
-  expect(UkwmSingleRecordPage.new.waste_quantity_value).to eq 'Estimated\n1.1tonnes'
+  expect(UkwmSingleRecordPage.new.waste_quantity_value).to eq "Estimated\n1.1tonnes"
   expect(UkwmSingleRecordPage.new.chemical_biological_label).to eq 'Chemical and biological components of waste'
   expect(UkwmSingleRecordPage.new.chemical_biological_value).to eq '20.35mg/kg Chlorinated solvents'
   expect(UkwmSingleRecordPage.new.hazardous_properties_label).to eq 'Hazardous properties'
@@ -216,7 +216,7 @@ And(/^I can see all the details from the uploaded record$/) do
   expect(UkwmSingleRecordPage.new.carrier_contact_email_label).to eq 'Carrier contact email address'
   expect(UkwmSingleRecordPage.new.carrier_contact_email_value).to eq 'guy@test.com'
   expect(UkwmSingleRecordPage.new.carrier_contact_phone_label).to eq 'Carrier contact phone number'
-  expect(UkwmSingleRecordPage.new.carrier_contact_phone_value).to eq '00447811111213\''
+  expect(UkwmSingleRecordPage.new.carrier_contact_phone_value).to eq '00447811111213'
   expect(UkwmSingleRecordPage.new.receiver_authorisation_label).to eq 'Receiver authorisation type'
   expect(UkwmSingleRecordPage.new.receiver_authorisation_value).to eq 'Permit DEFRA'
   expect(UkwmSingleRecordPage.new.receiver_permit_number_label).to eq 'Receiver permit number or waste exemption number'
@@ -233,4 +233,8 @@ And(/^I can see all the details from the uploaded record$/) do
   expect(UkwmSingleRecordPage.new.receiver_contact_email_value).to eq 'smithjones@hotmail.com'
   expect(UkwmSingleRecordPage.new.receiver_contact_phone_label).to eq 'Receiver contact phone number'
   expect(UkwmSingleRecordPage.new.receiver_contact_phone_value).to eq '07811111111'
+end
+
+Then(/^Bulk confirmation page is displayed for one movement record$/) do
+  UkwmBulkConfirmationPage.new.check_page_displayed_for_1_record
 end
