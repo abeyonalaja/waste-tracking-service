@@ -219,7 +219,7 @@
         "headerThree": "EWC code",
         "headerFour": "Producer name",
         "headerFive": "Action",
-        "action": "Action",
+        "action": "View",
         "notFound": "No record found"
       },
       "submittedTable": {

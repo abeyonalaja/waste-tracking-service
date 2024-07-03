@@ -16,6 +16,7 @@ export function ShowHide({ id, children }: ShowHideProps): React.ReactElement {
         aria-controls={id}
         className="govuk-accordion__show-all"
         aria-expanded={expanded}
+        id="show-hide-button"
         onClick={() => setExpanded(!expanded)}
       >
         <span

@@ -16,6 +16,10 @@ class UkwmUploadSuccessPage < GenericPage
     expect(self).to have_css 'p', text: HEADING.gsub!('{count}', count), exact_text: true, wait: 10
   end
 
+  def check_page_displayed_1_record
+    expect(self).to have_css 'p', text: (Translations.ukmv_value 'multiples.success.heading').gsub!('{1, plural, =1 {record} other {records}}', 'record'), exact_text: true, wait: 10
+  end
+
   def check_page_translation(count)
     expect(self).to have_text NOTIFICATION_TITLE
     expect(self).to have_text PAGE_HEADING.gsub!('{count}', count)

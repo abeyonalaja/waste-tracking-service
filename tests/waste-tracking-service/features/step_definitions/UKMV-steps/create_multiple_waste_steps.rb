@@ -154,3 +154,83 @@ end
 And(/^I click show all sections$/) do
   WasteMovementRecordsListPage.new.click_show_all_sections
 end
+
+Then(/^Bulk upload success page is displayed for one record$/) do
+  UkwmUploadSuccessPage.new.check_page_displayed_1_record
+end
+
+And(/^I click View link for the first record$/) do
+  click_link('row-WM2407_B5AA6454-view-link')
+end
+
+And(/^I can see all the details from the uploaded record$/) do
+  click_button 'show-hide-button'
+  expect(UkwmSingleRecordPage.new.waste_description_label).to eq 'Waste description'
+  expect(UkwmSingleRecordPage.new.waste_description_value).to eq 'Circuit boards; Batteries (lithium-ion); Display screens; Plastic casings'
+  expect(UkwmSingleRecordPage.new.physical_form_label).to eq 'Physical form'
+  expect(UkwmSingleRecordPage.new.physical_form_value).to eq 'Gas'
+  expect(UkwmSingleRecordPage.new.waste_quantity_label).to eq 'Waste quantity'
+  expect(UkwmSingleRecordPage.new.waste_quantity_value).to eq 'Estimated\n1.1tonnes'
+  expect(UkwmSingleRecordPage.new.chemical_biological_label).to eq 'Chemical and biological components of waste'
+  expect(UkwmSingleRecordPage.new.chemical_biological_value).to eq '20.35mg/kg Chlorinated solvents'
+  expect(UkwmSingleRecordPage.new.hazardous_properties_label).to eq 'Hazardous properties'
+  expect(UkwmSingleRecordPage.new.hazardous_properties_value).to eq 'Yes'
+  expect(UkwmSingleRecordPage.new.hazardous_waste_codes_label).to eq 'Hazardous waste codes'
+  expect(UkwmSingleRecordPage.new.hazardous_waste_codes_value).to eq 'HP1: Explosive'
+  expect(UkwmSingleRecordPage.new.pops_label).to eq 'Persistent organic pollutants (POPs)'
+  expect(UkwmSingleRecordPage.new.pops_value).to eq 'Yes'
+  expect(UkwmSingleRecordPage.new.pops_details_label).to eq 'Persistent organic pollutants (POPs) details'
+  expect(UkwmSingleRecordPage.new.pops_details_value).to eq 'Endosulfan'
+  expect(UkwmSingleRecordPage.new.pops_concentration_label).to eq 'Persistent organic pollutants (POPs) concentration value'
+  expect(UkwmSingleRecordPage.new.pops_concentration_value).to eq '9823.75mg/k'
+  expect(UkwmSingleRecordPage.new.transportation_containers_label).to eq 'Number and type of transportation containers'
+  expect(UkwmSingleRecordPage.new.transportation_containers_value).to eq '123456'
+  expect(UkwmSingleRecordPage.new.special_handling_label).to eq 'Special handling requirements details'
+  expect(UkwmSingleRecordPage.new.special_handling_value).to eq 'Not provided'
+  expect(UkwmSingleRecordPage.new.producer_org_name_label).to eq 'Producer organisation name'
+  expect(UkwmSingleRecordPage.new.producer_org_name_value).to eq 'Producer org name2'
+  expect(UkwmSingleRecordPage.new.producer_address_label).to eq 'Producer address'
+  expect(UkwmSingleRecordPage.new.producer_address_value).to eq "110 Bishopsgate\nLondon\nCV12RD\nWales"
+  expect(UkwmSingleRecordPage.new.producer_contact_name_label).to eq 'Producer contact name'
+  expect(UkwmSingleRecordPage.new.producer_contact_name_value).to eq 'Pro Name'
+  expect(UkwmSingleRecordPage.new.producer_contact_email_label).to eq 'Producer contact email address'
+  expect(UkwmSingleRecordPage.new.producer_contact_email_value).to eq 'guy@test.com'
+  expect(UkwmSingleRecordPage.new.producer_contact_phone_label).to eq 'Producer contact phone number'
+  expect(UkwmSingleRecordPage.new.producer_contact_phone_value).to eq '00447811111213'
+  expect(UkwmSingleRecordPage.new.producer_sic_code_label).to eq 'Producer Standard Industrial Classification (SIC) code'
+  expect(UkwmSingleRecordPage.new.producer_sic_code_value).to eq '208016'
+  expect(UkwmSingleRecordPage.new.waste_collection_address_label).to eq 'Waste collection address'
+  expect(UkwmSingleRecordPage.new.waste_collection_address_value).to eq "110 Bishopsgate\nLondon\n\nScotland"
+  expect(UkwmSingleRecordPage.new.local_authority_label).to eq 'Local authority'
+  expect(UkwmSingleRecordPage.new.local_authority_value).to eq 'Hartlepool'
+  expect(UkwmSingleRecordPage.new.waste_source_label).to eq 'Waste source'
+  expect(UkwmSingleRecordPage.new.waste_source_value).to eq 'Household'
+  expect(UkwmSingleRecordPage.new.broker_registration_num_label).to eq 'Broker registration number'
+  expect(UkwmSingleRecordPage.new.broker_registration_num_value).to eq 'Not provided'
+  expect(UkwmSingleRecordPage.new.carrier_org_name_label).to eq 'Carrier organisation name'
+  expect(UkwmSingleRecordPage.new.carrier_org_name_value).to eq 'Producer org name'
+  expect(UkwmSingleRecordPage.new.carrier_address_label).to eq 'Carrier address'
+  expect(UkwmSingleRecordPage.new.carrier_address_value).to eq "110 Bishopsgate\nMulberry street\nLondon\nCV12RD\nWales"
+  expect(UkwmSingleRecordPage.new.carrier_contact_name_label).to eq 'Carrier contact name'
+  expect(UkwmSingleRecordPage.new.carrier_contact_name_value).to eq 'Pro Name'
+  expect(UkwmSingleRecordPage.new.carrier_contact_email_label).to eq 'Carrier contact email address'
+  expect(UkwmSingleRecordPage.new.carrier_contact_email_value).to eq 'guy@test.com'
+  expect(UkwmSingleRecordPage.new.carrier_contact_phone_label).to eq 'Carrier contact phone number'
+  expect(UkwmSingleRecordPage.new.carrier_contact_phone_value).to eq '00447811111213\''
+  expect(UkwmSingleRecordPage.new.receiver_authorisation_label).to eq 'Receiver authorisation type'
+  expect(UkwmSingleRecordPage.new.receiver_authorisation_value).to eq 'Permit DEFRA'
+  expect(UkwmSingleRecordPage.new.receiver_permit_number_label).to eq 'Receiver permit number or waste exemption number'
+  expect(UkwmSingleRecordPage.new.receiver_permit_number_value).to eq 'DEFRA 1235'
+  expect(UkwmSingleRecordPage.new.receiver_org_name_label).to eq 'Receiver organisation name'
+  expect(UkwmSingleRecordPage.new.receiver_org_name_value).to eq 'Mac Donald \'s'
+  expect(UkwmSingleRecordPage.new.receiver_address_label).to eq 'Receiver address'
+  expect(UkwmSingleRecordPage.new.receiver_address_value).to eq "12 Mulberry Street\nWest coast\nDA112AB\nWales"
+  expect(UkwmSingleRecordPage.new.receiver_postcode_label).to eq 'Receiver postcode'
+  expect(UkwmSingleRecordPage.new.receiver_postcode_value).to eq 'DA112AB'
+  expect(UkwmSingleRecordPage.new.receiver_contact_name_label).to eq 'Receiver contact name'
+  expect(UkwmSingleRecordPage.new.receiver_contact_name_value).to eq 'Mr. Smith Jones'
+  expect(UkwmSingleRecordPage.new.receiver_contact_email_label).to eq 'Receiver contact email address'
+  expect(UkwmSingleRecordPage.new.receiver_contact_email_value).to eq 'smithjones@hotmail.com'
+  expect(UkwmSingleRecordPage.new.receiver_contact_phone_label).to eq 'Receiver contact phone number'
+  expect(UkwmSingleRecordPage.new.receiver_contact_phone_value).to eq '07811111111'
+end
