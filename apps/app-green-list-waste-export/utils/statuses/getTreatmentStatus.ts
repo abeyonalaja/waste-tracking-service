@@ -27,20 +27,17 @@ export const getTreatmentStatus = (
     const id = facilityData?.values[0]?.id;
     const objIndex = data.values?.findIndex((obj) => obj.id == id);
 
-    if (objIndex !== -1) {
+    if (objIndex !== undefined) {
       data.values[objIndex] = facilityData.values[0];
     }
     const recFacilityCount = data.values?.filter(
       (site: RecoveryFacilityData) =>
         site.recoveryFacilityType?.type === 'RecoveryFacility',
     ).length;
-
     let status = 'Complete';
-
     if (recFacilityCount === 0) {
       return 'Started';
     }
-
     data.values?.forEach((facility: RecoveryFacilityData) => {
       const newErrors = {
         name: validateRecoveryFacilityName(facility.addressDetails?.name),
@@ -53,7 +50,7 @@ export const getTreatmentStatus = (
         ),
         faxNumber: validateInternationalFax(facility.contactDetails?.faxNumber),
         recoveryCode: validateRecoveryCode(
-          facility.recoveryFacilityType.type !== 'Laboratory'
+          facility.recoveryFacilityType?.type !== 'Laboratory'
             ? facility.recoveryFacilityType?.recoveryCode
             : '',
         ),

@@ -40,7 +40,6 @@ export function SubmittedFilters(): JSX.Element {
     if (searchParams.has('collectionDate')) {
       const collectionDate = searchParams.get('collectionDate') as string;
       const [day, month, year] = collectionDate.split('/');
-      console.log('year', year, 'month', month, 'day', day);
       setValue('day', day);
       setValue('month', month);
       setValue('year', year);

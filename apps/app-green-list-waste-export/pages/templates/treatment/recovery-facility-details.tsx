@@ -311,7 +311,7 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
                 (filteredValues === undefined && emptyRecords === undefined) ||
                 (filteredValues.length === 0 && emptyRecords.length === 0)
               ) {
-                createRecoveryFacility();
+                createRecoveryFacility(data);
               } else {
                 let record;
                 if (filteredValues.length > 0) {
@@ -350,7 +350,7 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
     }
   }, [router.isReady, templateId, startPage]);
 
-  const createRecoveryFacility = () => {
+  const createRecoveryFacility = (existingData = undefined) => {
     try {
       fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/templates/${templateId}/recovery-facility`,
@@ -377,9 +377,20 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
             if (recoveryPage.data?.values !== undefined) {
               recoveryPage.data.values.push({ id: facility.id });
             } else {
+              let dataToUpdate: {
+                values: { id: string }[];
+              };
+              if (existingData?.values !== undefined) {
+                dataToUpdate = {
+                  ...existingData,
+                  values: [...existingData.values, { id: facility.id }],
+                };
+              } else {
+                dataToUpdate = data;
+              }
               dispatchRecoveryPage({
                 type: 'DATA_UPDATE',
-                payload: data,
+                payload: dataToUpdate,
               });
             }
 
@@ -451,7 +462,6 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
           };
           break;
       }
-
       body.status = getTreatmentStatus(recoveryPage.data, body);
 
       if (isNotEmpty(newErrors)) {
