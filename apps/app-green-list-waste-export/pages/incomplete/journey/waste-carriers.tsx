@@ -42,6 +42,7 @@ import {
 import { GetCarriersResponse } from '@wts/api/waste-tracking-gateway';
 import styled from 'styled-components';
 import useApiConfig from 'utils/useApiConfig';
+import { getCarrierStatus } from '../../../utils/statuses/getCarriersStatus';
 
 enum VIEWS {
   ADDRESS_DETAILS = 1,
@@ -311,7 +312,6 @@ const WasteCarriers = (): React.ReactNode => {
             country: validateCountry(addressDetails?.country),
           };
           body = {
-            status: carrierId ? 'Complete' : 'Started',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -331,11 +331,6 @@ const WasteCarriers = (): React.ReactNode => {
             faxNumber: validateInternationalFax(contactDetails?.faxNumber),
           };
           body = {
-            status: carrierId
-              ? 'Complete'
-              : showTransport
-                ? 'Started'
-                : 'Complete',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -363,7 +358,6 @@ const WasteCarriers = (): React.ReactNode => {
             ),
           };
           body = {
-            status: 'Complete',
             values: [
               {
                 ...carrierPage.carrierData,
@@ -375,6 +369,7 @@ const WasteCarriers = (): React.ReactNode => {
       }
 
       body.transport = showTransport;
+      body.status = getCarrierStatus(carrierPage.data, body, showTransport);
 
       if (isNotEmpty(newErrors)) {
         dispatchCarrierPage({ type: 'ERRORS_UPDATE', payload: newErrors });
