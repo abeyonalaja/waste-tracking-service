@@ -1,10 +1,16 @@
 import { faker } from '@faker-js/faker';
+import Boom from '@hapi/boom';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
 import SubmissionController from './controller';
-import { DbContainerNameKey, Submission, validation } from '../../model';
+import {
+  DbContainerNameKey,
+  Submission,
+  WasteQuantity,
+  CollectionDate,
+  validation,
+} from '../../model';
 import { CosmosRepository } from '../../data';
-
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
@@ -198,9 +204,182 @@ describe(SubmissionController, () => {
     mockRepository.getTotalNumber.mockClear();
   });
 
+  describe('getSubmission', () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            organisationName: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    it('it returns a valid submission', async () => {
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.getSubmission({ id, accountId });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+      expect(response.value).toEqual(submission);
+    });
+
+    it('it rejects a cancelled submission', async () => {
+      submission.submissionState = {
+        status: 'Cancelled',
+        timestamp: new Date(),
+        cancellationType: {
+          type: 'Other',
+          reason: faker.string.sample(),
+        },
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.getSubmission({ id, accountId });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+  });
+
   describe('getNumberOfSubmissions', () => {
     it('successfully returns number of submissions from repository', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       mockRepository.getTotalNumber.mockResolvedValue(3);
       mockRepository.getTotalNumber.mockResolvedValue(3);
       mockRepository.getTotalNumber.mockResolvedValue(3);
@@ -237,8 +416,8 @@ describe(SubmissionController, () => {
 
   describe('cancelDraftSubmission', () => {
     it('successfully cancels a draft submission', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
 
       mockRepository.getRecord.mockResolvedValue({
         id,
@@ -334,7 +513,7 @@ describe(SubmissionController, () => {
 
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -641,7 +820,7 @@ describe(SubmissionController, () => {
     });
 
     it('fails submission validation on all sections', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -1019,7 +1198,7 @@ describe(SubmissionController, () => {
     });
 
     it('fails submission validation on cross sections', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const response = await subject.validateSubmissions({
         accountId: accountId,
         padIndex: 2,
@@ -1224,64 +1403,64 @@ describe(SubmissionController, () => {
   describe('createSubmissions', () => {
     it('creates submissions', async () => {
       const response = await subject.createSubmissions({
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
         values: [
           {
-            reference: faker.datatype.string(),
+            reference: faker.string.sample(),
             wasteDescription: {
               wasteCode: {
                 type: 'BaselAnnexIX',
-                code: faker.datatype.string(),
+                code: faker.string.sample(),
               },
               ewcCodes: [
                 {
-                  code: faker.datatype.string(),
+                  code: faker.string.sample(),
                 },
                 {
-                  code: faker.datatype.string(),
+                  code: faker.string.sample(),
                 },
               ],
-              description: faker.datatype.string(),
+              description: faker.string.sample(),
             },
             wasteQuantity: {
               type: 'ActualData',
               actualData: {
                 quantityType: 'Weight',
-                value: faker.datatype.float(),
+                value: faker.number.float(),
                 unit: 'Tonne',
               },
               estimateData: {
                 quantityType: 'Weight',
-                value: faker.datatype.float(),
+                value: faker.number.float(),
                 unit: 'Tonne',
               },
             },
             exporterDetail: {
               exporterAddress: {
-                country: faker.datatype.string(),
-                postcode: faker.datatype.string(),
-                townCity: faker.datatype.string(),
-                addressLine1: faker.datatype.string(),
-                addressLine2: faker.datatype.string(),
+                country: faker.string.sample(),
+                postcode: faker.string.sample(),
+                townCity: faker.string.sample(),
+                addressLine1: faker.string.sample(),
+                addressLine2: faker.string.sample(),
               },
               exporterContactDetails: {
-                organisationName: faker.datatype.string(),
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                organisationName: faker.string.sample(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             importerDetail: {
               importerAddressDetails: {
-                address: faker.datatype.string(),
-                country: faker.datatype.string(),
-                organisationName: faker.datatype.string(),
+                address: faker.string.sample(),
+                country: faker.string.sample(),
+                organisationName: faker.string.sample(),
               },
               importerContactDetails: {
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             collectionDate: {
@@ -1300,50 +1479,50 @@ describe(SubmissionController, () => {
                   description: 'RyanAir',
                 },
                 addressDetails: {
-                  address: faker.datatype.string(),
-                  country: faker.datatype.string(),
-                  organisationName: faker.datatype.string(),
+                  address: faker.string.sample(),
+                  country: faker.string.sample(),
+                  organisationName: faker.string.sample(),
                 },
                 contactDetails: {
-                  emailAddress: faker.datatype.string(),
-                  faxNumber: faker.datatype.string(),
-                  fullName: faker.datatype.string(),
-                  phoneNumber: faker.datatype.string(),
+                  emailAddress: faker.string.sample(),
+                  faxNumber: faker.string.sample(),
+                  fullName: faker.string.sample(),
+                  phoneNumber: faker.string.sample(),
                 },
               },
             ],
             collectionDetail: {
               address: {
-                addressLine1: faker.datatype.string(),
-                addressLine2: faker.datatype.string(),
-                townCity: faker.datatype.string(),
-                postcode: faker.datatype.string(),
-                country: faker.datatype.string(),
+                addressLine1: faker.string.sample(),
+                addressLine2: faker.string.sample(),
+                townCity: faker.string.sample(),
+                postcode: faker.string.sample(),
+                country: faker.string.sample(),
               },
               contactDetails: {
-                organisationName: faker.datatype.string(),
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                organisationName: faker.string.sample(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             ukExitLocation: {
               provided: 'Yes',
-              value: faker.datatype.string(),
+              value: faker.string.sample(),
             },
             transitCountries: ['Albania (AL)'],
             recoveryFacilityDetail: [
               {
                 addressDetails: {
-                  address: faker.datatype.string(),
-                  country: faker.datatype.string(),
-                  name: faker.datatype.string(),
+                  address: faker.string.sample(),
+                  country: faker.string.sample(),
+                  name: faker.string.sample(),
                 },
                 contactDetails: {
-                  emailAddress: faker.datatype.string(),
-                  faxNumber: faker.datatype.string(),
-                  fullName: faker.datatype.string(),
-                  phoneNumber: faker.datatype.string(),
+                  emailAddress: faker.string.sample(),
+                  faxNumber: faker.string.sample(),
+                  fullName: faker.string.sample(),
+                  phoneNumber: faker.string.sample(),
                 },
                 recoveryFacilityType: {
                   type: 'Laboratory',
@@ -1353,61 +1532,61 @@ describe(SubmissionController, () => {
             ],
           },
           {
-            reference: faker.datatype.string(),
+            reference: faker.string.sample(),
 
             wasteDescription: {
               wasteCode: {
                 type: 'BaselAnnexIX',
-                code: faker.datatype.string(),
+                code: faker.string.sample(),
               },
               ewcCodes: [
                 {
-                  code: faker.datatype.string(),
+                  code: faker.string.sample(),
                 },
                 {
-                  code: faker.datatype.string(),
+                  code: faker.string.sample(),
                 },
               ],
-              description: faker.datatype.string(),
+              description: faker.string.sample(),
             },
             wasteQuantity: {
               type: 'ActualData',
               actualData: {
                 quantityType: 'Weight',
-                value: faker.datatype.float(),
+                value: faker.number.float(),
                 unit: 'Tonne',
               },
               estimateData: {
                 quantityType: 'Weight',
-                value: faker.datatype.float(),
+                value: faker.number.float(),
                 unit: 'Tonne',
               },
             },
             exporterDetail: {
               exporterAddress: {
-                country: faker.datatype.string(),
-                postcode: faker.datatype.string(),
-                townCity: faker.datatype.string(),
-                addressLine1: faker.datatype.string(),
-                addressLine2: faker.datatype.string(),
+                country: faker.string.sample(),
+                postcode: faker.string.sample(),
+                townCity: faker.string.sample(),
+                addressLine1: faker.string.sample(),
+                addressLine2: faker.string.sample(),
               },
               exporterContactDetails: {
-                organisationName: faker.datatype.string(),
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                organisationName: faker.string.sample(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             importerDetail: {
               importerAddressDetails: {
-                address: faker.datatype.string(),
-                country: faker.datatype.string(),
-                organisationName: faker.datatype.string(),
+                address: faker.string.sample(),
+                country: faker.string.sample(),
+                organisationName: faker.string.sample(),
               },
               importerContactDetails: {
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             collectionDate: {
@@ -1426,50 +1605,50 @@ describe(SubmissionController, () => {
                   description: 'RyanAir',
                 },
                 addressDetails: {
-                  address: faker.datatype.string(),
-                  country: faker.datatype.string(),
-                  organisationName: faker.datatype.string(),
+                  address: faker.string.sample(),
+                  country: faker.string.sample(),
+                  organisationName: faker.string.sample(),
                 },
                 contactDetails: {
-                  emailAddress: faker.datatype.string(),
-                  faxNumber: faker.datatype.string(),
-                  fullName: faker.datatype.string(),
-                  phoneNumber: faker.datatype.string(),
+                  emailAddress: faker.string.sample(),
+                  faxNumber: faker.string.sample(),
+                  fullName: faker.string.sample(),
+                  phoneNumber: faker.string.sample(),
                 },
               },
             ],
             collectionDetail: {
               address: {
-                addressLine1: faker.datatype.string(),
-                addressLine2: faker.datatype.string(),
-                townCity: faker.datatype.string(),
-                postcode: faker.datatype.string(),
-                country: faker.datatype.string(),
+                addressLine1: faker.string.sample(),
+                addressLine2: faker.string.sample(),
+                townCity: faker.string.sample(),
+                postcode: faker.string.sample(),
+                country: faker.string.sample(),
               },
               contactDetails: {
-                organisationName: faker.datatype.string(),
-                fullName: faker.datatype.string(),
-                emailAddress: faker.datatype.string(),
-                phoneNumber: faker.datatype.string(),
+                organisationName: faker.string.sample(),
+                fullName: faker.string.sample(),
+                emailAddress: faker.string.sample(),
+                phoneNumber: faker.string.sample(),
               },
             },
             ukExitLocation: {
               provided: 'Yes',
-              value: faker.datatype.string(),
+              value: faker.string.sample(),
             },
             transitCountries: ['Albania (AL)'],
             recoveryFacilityDetail: [
               {
                 addressDetails: {
-                  address: faker.datatype.string(),
-                  country: faker.datatype.string(),
-                  name: faker.datatype.string(),
+                  address: faker.string.sample(),
+                  country: faker.string.sample(),
+                  name: faker.string.sample(),
                 },
                 contactDetails: {
-                  emailAddress: faker.datatype.string(),
-                  faxNumber: faker.datatype.string(),
-                  fullName: faker.datatype.string(),
-                  phoneNumber: faker.datatype.string(),
+                  emailAddress: faker.string.sample(),
+                  faxNumber: faker.string.sample(),
+                  fullName: faker.string.sample(),
+                  phoneNumber: faker.string.sample(),
                 },
                 recoveryFacilityType: {
                   type: 'Laboratory',
@@ -1486,6 +1665,1179 @@ describe(SubmissionController, () => {
       }
       expect(mockRepository.createBulkRecords).toBeCalled();
       expect(response.error.statusCode).toBe(500);
+    });
+  });
+
+  describe('getBulkSubmissions', () => {
+    const id = faker.string.uuid();
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            organisationName: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    const bulkSubmissions = [submission, submission];
+    bulkSubmissions[1].id = faker.string.uuid();
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecords.mockRejectedValue(Boom.notFound());
+
+      const response = await subject.getBulkSubmissions({
+        accountId: faker.string.uuid(),
+        submissionIds: bulkSubmissions.map((s) => s.id),
+      });
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('gets bulk submissions', async () => {
+      const accountId = faker.string.uuid();
+
+      mockRepository.getRecords.mockResolvedValue({
+        totalRecords: 2,
+        totalPages: 1,
+        currentPage: 1,
+        pages: [],
+        values: bulkSubmissions,
+      });
+
+      const response = await subject.getBulkSubmissions({
+        accountId,
+        submissionIds: bulkSubmissions.map((s) => s.id),
+      });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value).toEqual(bulkSubmissions);
+      expect(mockRepository.getRecords).toBeCalled();
+    });
+  });
+
+  describe('getWasteQuantity', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            organisationName: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.notFound());
+
+      const response = await subject.getWasteQuantity({ id, accountId });
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('returns waste quantity', async () => {
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.getWasteQuantity({ id, accountId });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+      expect(response.value).toBe(submission.wasteQuantity);
+    });
+  });
+
+  describe('setWasteQuantity', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {},
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            organisationName: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    const actualWasteQuantity = {
+      type: 'ActualData',
+      actualData: {
+        quantityType: 'Weight',
+        value: faker.number.float(),
+        unit: 'Tonne',
+      },
+    } as WasteQuantity;
+
+    const estimateWasteQuantity = {
+      type: 'EstimateData',
+      estimateData: {
+        quantityType: 'Weight',
+        value: faker.number.float(),
+        unit: 'Tonne',
+      },
+    } as WasteQuantity;
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.notFound());
+
+      const response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('is successful but does not update the record when it already contains actual values', async () => {
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+      expect(response.value).toBe(undefined);
+    });
+
+    it('updates the record when a valid waste quantity is provided', async () => {
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.actualData).toBe(
+        actualWasteQuantity.actualData,
+      );
+      expect(submission.wasteQuantity.actualData.unit).toBe('Tonne');
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+    });
+
+    it('sets the correct WasteQuantity unit based upon the waste codes provided', async () => {
+      submission.wasteDescription.wasteCode.type = 'NotApplicable';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      let response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.actualData).toBe(
+        actualWasteQuantity.actualData,
+      );
+      expect(submission.wasteQuantity.actualData.unit).toBe('Kilogram');
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+
+      submission.wasteDescription.wasteCode.type = 'NotApplicable';
+      actualWasteQuantity.actualData.quantityType = 'Volume';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.actualData).toBe(
+        actualWasteQuantity.actualData,
+      );
+      expect(submission.wasteQuantity.actualData.unit).toBe('Litre');
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+
+      submission.wasteDescription.wasteCode.type = 'NotApplicable';
+      estimateWasteQuantity.estimateData.quantityType = 'Volume';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Volume',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: estimateWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.estimateData).toBe(
+        estimateWasteQuantity.estimateData,
+      );
+      expect(submission.wasteQuantity.estimateData.unit).toBe('Litre');
+      expect(submission.submissionState.status).toBe('SubmittedWithEstimates');
+
+      submission.wasteDescription.wasteCode.type = 'NotApplicable';
+      estimateWasteQuantity.estimateData.quantityType = 'Weight';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: estimateWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.estimateData).toBe(
+        estimateWasteQuantity.estimateData,
+      );
+      expect(submission.wasteQuantity.estimateData.unit).toBe('Kilogram');
+      expect(submission.submissionState.status).toBe('SubmittedWithEstimates');
+
+      submission.wasteDescription.wasteCode.type = 'AnnexIIIB';
+      actualWasteQuantity.actualData.quantityType = 'Volume';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Volume',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.actualData).toBe(
+        actualWasteQuantity.actualData,
+      );
+      expect(submission.wasteQuantity.actualData.unit).toBe('Cubic Metre');
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+
+      submission.wasteDescription.wasteCode.type = 'AnnexIIIB';
+      actualWasteQuantity.actualData.quantityType = 'Weight';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: actualWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.actualData).toBe(
+        actualWasteQuantity.actualData,
+      );
+      expect(submission.wasteQuantity.actualData.unit).toBe('Tonne');
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+
+      submission.wasteDescription.wasteCode.type = 'AnnexIIIB';
+      estimateWasteQuantity.estimateData.quantityType = 'Weight';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: estimateWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.estimateData).toBe(
+        estimateWasteQuantity.estimateData,
+      );
+      expect(submission.wasteQuantity.estimateData.unit).toBe('Tonne');
+      expect(submission.submissionState.status).toBe('SubmittedWithEstimates');
+
+      submission.wasteDescription.wasteCode.type = 'AnnexIIIB';
+      estimateWasteQuantity.estimateData.quantityType = 'Volume';
+
+      submission.wasteQuantity = {
+        type: 'EstimateData',
+        actualData: {},
+        estimateData: {
+          quantityType: 'Volume',
+          value: faker.number.float(),
+        },
+      };
+
+      submission.submissionState = {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      response = await subject.setWasteQuantity({
+        id,
+        accountId,
+        value: estimateWasteQuantity,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.wasteQuantity.estimateData).toBe(
+        estimateWasteQuantity.estimateData,
+      );
+      expect(submission.wasteQuantity.estimateData.unit).toBe('Cubic Metre');
+      expect(submission.submissionState.status).toBe('SubmittedWithEstimates');
+    });
+  });
+
+  describe('getCollectionDate', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'ActualDate',
+        actualDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+        estimateDate: {},
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            organisationName: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.notFound());
+
+      const response = await subject.getCollectionDate({ id, accountId });
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('returns the collection date', async () => {
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.getCollectionDate({ id, accountId });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+      expect(response.value).toBe(submission.collectionDate);
+    });
+  });
+
+  describe('setCollectionDate', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+
+    const submission = {
+      id: id,
+      reference: faker.string.sample(),
+      wasteDescription: {
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: faker.string.sample(),
+        },
+        ewcCodes: [
+          {
+            code: faker.string.sample(),
+          },
+          {
+            code: faker.string.sample(),
+          },
+        ],
+        description: faker.string.sample(),
+      },
+      wasteQuantity: {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          value: faker.number.float(),
+          unit: 'Tonne',
+        },
+        estimateData: {},
+      },
+      exporterDetail: {
+        exporterAddress: {
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      importerDetail: {
+        importerAddressDetails: {
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
+        },
+        importerContactDetails: {
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      collectionDate: {
+        type: 'EstimateDate',
+        actualDate: {},
+        estimateDate: {
+          year: '01',
+          month: '01',
+          day: '2025',
+        },
+      },
+      carriers: [
+        {
+          transportDetails: {
+            type: 'Air',
+            description: 'RyanAir',
+          },
+          addressDetails: {
+            address: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+        },
+      ],
+      collectionDetail: {
+        address: {
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
+        },
+        contactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
+        },
+      },
+      ukExitLocation: {
+        provided: 'Yes',
+        value: faker.string.sample(),
+      },
+      transitCountries: ['Albania (AL)'],
+      recoveryFacilityDetail: [
+        {
+          addressDetails: {
+            address: faker.string.sample(),
+            country: faker.string.sample(),
+            name: faker.string.sample(),
+          },
+          contactDetails: {
+            emailAddress: faker.string.sample(),
+            faxNumber: faker.string.sample(),
+            fullName: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+          },
+          recoveryFacilityType: {
+            type: 'Laboratory',
+            disposalCode: 'D1',
+          },
+        },
+      ],
+      submissionDeclaration: {
+        declarationTimestamp: new Date(),
+        transactionId: faker.string.sample(),
+      },
+      submissionState: {
+        status: 'SubmittedWithEstimates',
+        timestamp: new Date(),
+      },
+    } as Submission;
+
+    const actualCollectionDate = {
+      type: 'ActualDate',
+      actualDate: {
+        year: '01',
+        month: '01',
+        day: '2025',
+      },
+    } as CollectionDate;
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.notFound());
+
+      const response = await subject.setCollectionDate({
+        id,
+        accountId,
+        value: actualCollectionDate,
+      });
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('successfully sets the collection date', async () => {
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.setCollectionDate({
+        id,
+        accountId,
+        value: actualCollectionDate,
+      });
+
+      expect(response.success).toBe(true);
+      expect(submission.collectionDate.actualDate).toStrictEqual(
+        actualCollectionDate.actualDate,
+      );
+      expect(submission.submissionState.status).toBe('UpdatedWithActuals');
+    });
+
+    it('returns undefined success when the submission status is not SubmittedWithEstimates', async () => {
+      submission.submissionState = {
+        status: 'UpdatedWithActuals',
+        timestamp: new Date(),
+      };
+
+      mockRepository.getRecord.mockResolvedValue(submission);
+
+      const response = await subject.setCollectionDate({
+        id,
+        accountId,
+        value: actualCollectionDate,
+      });
+
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+      expect(response.value).toBe(undefined);
     });
   });
 });
