@@ -1,6 +1,6 @@
 {
-  "tag": "PRIVATE BETA",
-  "app.title": "Export waste from the UK",
+  "tag": "Private beta",
+  "app.title": "Export green list waste from the UK",
   "app.parentTitle": "Move, export or import waste",
   "404.title": "Page not found",
   "404.paragraph1": "If you typed the web address, check it is correct.",
@@ -23,7 +23,7 @@
   "charCount.negative": "You have 1 character too many",
   "charsCount.positive": "You have {{n}} characters remaining",
   "charsCount.negative": "You have {{n}} characters too many",
-  "dashboard.title": "Export waste from the UK",
+  "dashboard.title": "Export green list waste from the UK",
   "header.iconTitle": "GOV.UK",
   "header.serviceBanner-1": "This is a new service - your ",
   "header.serviceBanner-2": " will help us to improve it.",

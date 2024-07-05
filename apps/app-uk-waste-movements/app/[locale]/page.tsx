@@ -5,7 +5,7 @@ import { DashboardCard } from '@wts/app-uk-waste-movements/feature-homepage/serv
 import { Breadcrumbs } from '@wts/ui/shared-ui';
 
 export const metadata = {
-  title: 'UK waste movements',
+  title: 'Move and track waste in the UK',
 };
 
 export default function Index(): JSX.Element {

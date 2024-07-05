@@ -9,11 +9,11 @@
     "title": "Move or export waste",
     "cards": {
       "UKWM": {
-        "title": "Move waste in the UK",
+        "title": "Move and track waste in the UK",
         "description": "Create, update and manage your waste movements to move and track waste for processing and recovery around the UK."
       },
       "GLW": {
-        "title": "Create a green list waste movement record",
+        "title": "Export green list waste from the UK",
         "description": "Create, update and manage your Annex VII records and inform environmental agency officers if you plan to export green list waste."
       }
     }

@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Move and track waste",
+    "title": "Move and track waste in the UK",
     "phaseBanner": "This is a new service - your <link>feedback</link> will help us improve it."
   },
   "404": {
@@ -71,23 +71,12 @@
       "linkFour": "Business Cymru Waste Legislation"
     }
   },
-  "accountPage": {
-    "company": "{company}",
-    "name": "{name}",
-    "titleTwo": "Move, export or import waste",
-    "cardOneTitle": "Move waste in the UK",
-    "cardOneContent": "Create a digital waste record to move and track hazardous and non-hazardous waste for processing and recovery around the UK.",
-    "cardTwoTitle": "Export waste from the UK",
-    "cardTwoContent": "Create an Annex VII and inform environmental agency officers if you plan to export green list waste.",
-    "cardThreeTitle": "Import waste to the UK",
-    "cardThreeContent": "Inform environmental agency officers if you've received imported green list waste."
-  },
   "moveWastePage": {
     "breadcrumbs": {
       "home": "Home",
-      "current": "Move waste in the UK"
+      "current": "Move and track waste in the UK"
     },
-    "title": "Move waste in the UK",
+    "title": "Move and track waste in the UK",
     "name": "{name}",
     "titleTwo": "Move, export or import waste",
     "cardTitle": "Create new waste movements",
@@ -139,7 +128,7 @@
   "multiples": {
     "breadcrumbs": {
       "accountHome": "Home",
-      "ukwmHome": "Move waste in the UK"
+      "ukwmHome": "Move and track waste in the UK"
     },
     "uploadPage": {
       "title": "Creating multiple waste movements"
@@ -251,7 +240,7 @@
     "manage": {
       "breadCrumbs": {
         "home": "Home",
-        "moveWaste": "Move waste in the UK",
+        "moveWaste": "Move and track waste in the UK",
         "current": "Manage waste movements"
       },
       "headingOne": "Waste movement records for {company}",
