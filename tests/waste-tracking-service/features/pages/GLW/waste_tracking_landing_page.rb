@@ -2,6 +2,7 @@
 
 # this page is for export waste from uk page details
 class WasteTrackingLandingPage < GenericPage
+  include GeneralHelpers
 
   TITLE = 'Move or export waste'
 

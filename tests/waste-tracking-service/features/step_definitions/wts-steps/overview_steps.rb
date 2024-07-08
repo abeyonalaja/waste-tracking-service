@@ -7,6 +7,7 @@ Given(/^I login to waste tracking portal$/) do
   HelperMethods.wait_for_a_sec
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
+  WasteTrackingLandingPage.new.wait_for_element('link-card-GLW')
   WasteTrackingLandingPage.new.check_page_displayed
   WasteTrackingLandingPage.new.create_green_list_waste_record
   ExportWasteFromUkPage.new.check_page_displayed
