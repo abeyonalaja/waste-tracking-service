@@ -2,7 +2,6 @@
 import { useRouter } from '@wts/ui/navigation';
 import { Button } from '@wts/ui/govuk-react-ui';
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 interface SubmitButtonsProps {
   buttonText: string;
@@ -18,13 +17,13 @@ export function SubmitButton({
   secondary = false,
 }: SubmitButtonsProps): JSX.Element {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPending(true);
     let response: Response;
+
     try {
       response = await fetch(
         `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm-batches/${submissionId}/finalize`,
@@ -36,17 +35,15 @@ export function SubmitButton({
           },
         },
       );
+
+      if (response.status === 201) {
+        return router.push(`/multiples/${submissionId}`);
+      }
     } catch (error) {
       console.error(error);
     }
 
-    if (response!.status === 201) {
-      router.push(
-        `/multiples/${submissionId}?filename=${searchParams.get('filename')}`,
-      );
-    } else {
-      router.push(`/404`);
-    }
+    return router.push('/404');
   }
   return (
     <form onSubmit={handleSubmit}>
