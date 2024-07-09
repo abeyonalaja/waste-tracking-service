@@ -29,7 +29,14 @@ export default async function RootLayout({
         >
           <GovUK.SkipLink />
           <GovUK.Header
-            serviceName={t('title')}
+            serviceNameLink={
+              <Link
+                href="/"
+                className="govuk-header__link govuk-header__service-name"
+              >
+                {t('title')}
+              </Link>
+            }
             navigation={
               <Suspense>
                 <AuthNavigation />
