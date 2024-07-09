@@ -35,6 +35,8 @@ export class CsvValidator {
           escape: '\\',
           ltrim: true,
           rtrim: true,
+          skip_empty_lines: true,
+          skip_records_with_empty_values: true,
         }),
       );
 
