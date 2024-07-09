@@ -2,11 +2,11 @@ image:
   tag: '3.1.12'
 resources:
   requests:
-    cpu: 50m
-    memory: 256Mi
-  limits:
     cpu: 100m
-    memory: 512Mi
+    memory: 0.5Gi
+  limits:
+    cpu: 150m
+    memory: 0.75Gi
 podAnnotations:
   dapr.io/sidecar-cpu-request: '5m'
   dapr.io/sidecar-cpu-limit: '10m'
