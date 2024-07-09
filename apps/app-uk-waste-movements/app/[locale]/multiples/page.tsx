@@ -31,6 +31,7 @@ export default async function UploadPage(): Promise<JSX.Element> {
     errorLabel: form('errorLabel'),
     summaryLabel: form('summaryLabel'),
     missingFileError: form('missingFileError'),
+    exceedsFileSizeError: form('exceedsFileSizeError'),
     invalidFileTypeError: form('invalidFileTypeError'),
   };
 

@@ -59,6 +59,7 @@ export default async function StatusPage({
     errorLabel: t('uploadForm.errorLabel'),
     summaryLabel: t('uploadForm.summaryLabel'),
     missingFileError: t('uploadForm.missingFileError'),
+    exceedsFileSizeError: t('uploadForm.exceedsFileSizeError'),
     invalidFileTypeError: t('uploadForm.invalidFileTypeError'),
   };
 
@@ -119,6 +120,7 @@ export default async function StatusPage({
       errorLabel: t('uploadForm.errorLabel'),
       summaryLabel: t('uploadForm.summaryLabel'),
       missingFileError: t('uploadForm.missingFileError'),
+      exceedsFileSizeError: t('uploadForm.exceedsFileSizeError'),
       invalidFileTypeError: t('uploadForm.invalidFileTypeError'),
     };
 

@@ -13,6 +13,7 @@ interface UploadFormProps {
     errorLabel: string;
     summaryLabel: string;
     missingFileError: string;
+    exceedsFileSizeError: string;
     invalidFileTypeError: string;
   };
   totalErrorSummaryStrings?: {
@@ -60,6 +61,13 @@ export function UploadForm({
       setButtonDisabled(false);
       window.scrollTo(0, 0);
       setErrors([{ text: strings.missingFileError, href: '#file-upload' }]);
+      return;
+    }
+
+    if (file.size >= 15 * 1024 * 1024) {
+      setButtonDisabled(false);
+      window.scrollTo(0, 0);
+      setErrors([{ text: strings.exceedsFileSizeError, href: '#file-upload' }]);
       return;
     }
 

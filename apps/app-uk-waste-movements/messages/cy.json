@@ -211,6 +211,7 @@
       "errorLabel": "Error: ",
       "summaryLabel": "There is a problem",
       "missingFileError": "Upload a file",
+      "exceedsFileSizeError": "Upload a file less than 15 MB",
       "invalidFileTypeError": "Upload a CSV file"
     },
     "processingPage": {
