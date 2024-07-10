@@ -38,10 +38,6 @@ export function SubmitButton({
           },
         },
       );
-
-      if (response.status === 201) {
-        return router.push(`/multiples/${submissionId}`);
-      }
     } catch (error) {
       console.error(error);
       return router.push('/404');
