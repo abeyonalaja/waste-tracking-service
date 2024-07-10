@@ -104,7 +104,9 @@ export function UploadForm({
     if (response.status === 201) {
       const data = await response.json();
       const hasCorrectedErrors =
-        totalErrorCount > 0 ? '&hasCorrectedErrors=true' : '';
+        totalErrorCount > 0
+          ? '&hasCorrectedErrors=true'
+          : '&hasCorrectedErrors=false';
       router.push(
         `/multiples/${data.id}?filename=${file.name}${hasCorrectedErrors}`,
       );

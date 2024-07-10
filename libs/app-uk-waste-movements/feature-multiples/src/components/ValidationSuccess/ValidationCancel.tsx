@@ -4,11 +4,13 @@ import { SubmitButton } from './SubmitButton';
 
 interface ValidationCancelProps {
   submissionId: string;
+  filename: string;
   token: string | null | undefined;
 }
 
 export function ValidationCancel({
   submissionId,
+  filename,
   token,
 }: ValidationCancelProps): JSX.Element {
   const t = useTranslations('multiples.cancel');
@@ -22,6 +24,7 @@ export function ValidationCancel({
           buttonText={t('buttonSecondary')}
           secondary={true}
           submissionId={submissionId}
+          filename={filename}
           token={token}
         />
       </GovUK.ButtonGroup>

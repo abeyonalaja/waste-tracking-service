@@ -45,6 +45,7 @@ export function ValidationSuccess({
       <ButtonGroup>
         <SubmitButton
           buttonText={t('button')}
+          filename={filename}
           submissionId={submissionId}
           token={token}
         />

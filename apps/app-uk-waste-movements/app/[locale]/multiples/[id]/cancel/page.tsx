@@ -10,11 +10,21 @@ export const metadata: Metadata = {
   description: 'Creating multiple waste movements',
 };
 
+interface PageProps {
+  params: {
+    locale: string;
+    id: string;
+  };
+  searchParams: {
+    filename: string;
+    hasCorrectedErrors?: string;
+  };
+}
+
 export default async function CancelPage({
   params,
-}: {
-  params: { id: string };
-}): Promise<JSX.Element> {
+  searchParams,
+}: PageProps): Promise<JSX.Element> {
   const session: Session | null = await getServerSession(options);
   const token = session?.token;
 
@@ -22,7 +32,11 @@ export default async function CancelPage({
     <Page beforeChildren={<BackLink href="./" />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <ValidationCancel submissionId={params.id} token={token} />
+          <ValidationCancel
+            submissionId={params.id}
+            filename={searchParams.filename}
+            token={token}
+          />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>
