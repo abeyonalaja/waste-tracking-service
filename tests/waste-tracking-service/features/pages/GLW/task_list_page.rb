@@ -58,7 +58,7 @@ class TaskListPage < GenericPage
   end
 
   def breadcrumb_export_waste_from_uk
-    link = all(:link, text: 'Export waste from the UK').last
+    link = all(:link, text: 'Export green list waste from the UK').last
     link.click
   end
 

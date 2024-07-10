@@ -369,6 +369,8 @@ const WasteCarriers = (): React.ReactNode => {
       }
 
       body.transport = showTransport;
+      body.status = 'Started';
+
       body.status = getCarrierStatus(carrierPage.data, body, showTransport);
 
       if (isNotEmpty(newErrors)) {

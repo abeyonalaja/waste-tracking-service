@@ -42,7 +42,7 @@ class AddReferenceNumberPage < GenericPage
   end
 
   def export_waste_from_the_uk
-    link = all(:link, text: 'Export waste from the UK').last
+    link = all(:link, text: 'Export green list waste from the UK').last
     link.click
   end
 

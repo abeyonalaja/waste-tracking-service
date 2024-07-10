@@ -24,9 +24,8 @@ export const getCarrierStatus = (
     ) {
       const updatedCarrierId = updatedCarrier?.values[0]?.id;
       const objIndex = existingData.values?.findIndex(
-        (carrier) => carrier.id == updatedCarrierId,
+        (carrier) => carrier.id === updatedCarrierId,
       );
-
       if (objIndex !== undefined) {
         existingData.values[objIndex] = updatedCarrier.values[0];
       }
