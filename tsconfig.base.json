@@ -26,6 +26,7 @@
         "libs/api/green-list-waste-export-bulk/src/index.ts"
       ],
       "@wts/api/limited-audience": ["libs/api/limited-audience/src/index.ts"],
+      "@wts/api/payment": ["libs/api/payment/src/index.ts"],
       "@wts/api/reference-data": ["libs/api/reference-data/src/index.ts"],
       "@wts/api/uk-waste-movements": [
         "libs/api/uk-waste-movements/src/index.ts"
@@ -66,6 +67,7 @@
       "@wts/client/limited-audience": [
         "libs/client/limited-audience/src/index.ts"
       ],
+      "@wts/client/payment": ["libs/client/payment/src/index.ts"],
       "@wts/client/reference-data": ["libs/client/reference-data/src/index.ts"],
       "@wts/client/uk-waste-movements": [
         "libs/client/uk-waste-movements/src/index.ts"

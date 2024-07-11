@@ -57,6 +57,12 @@ import {
   UkWasteMovementsSubmissionBackend,
   ukWasteMovementsSubmissionPlugin,
 } from './modules/uk-waste-movements-submission';
+import {
+  PaymentBackend,
+  paymentPlugin,
+  PaymentServiceBackend,
+} from './modules/payment';
+import { DaprPaymentClient } from '@wts/client/payment';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -83,6 +89,7 @@ let backend: {
   privateBeta: PrivateBetaBackend;
   ukWasteMovementsBulkSubmission: UkWasteMovementsBulkSubmissionBackend;
   ukWasteMovements: UkWasteMovementsSubmissionBackend;
+  payment: PaymentBackend;
 };
 
 if (process.env['NODE_ENV'] === 'development') {
@@ -161,6 +168,19 @@ if (process.env['NODE_ENV'] === 'development') {
         client,
         process.env['UKWM_APP_ID'] || 'service-uk-waste-movements',
       ),
+      logger,
+    ),
+    payment: new PaymentServiceBackend(
+      new DaprPaymentClient(
+        client,
+        process.env['PAYMENT_APP_ID'] || 'service-payment',
+      ),
+      new LRUCache({
+        ttl: 1000 * 60 * 60,
+        ttlAutopurge: false,
+        maxSize: 1000,
+        sizeCalculation: (): number => 1,
+      }),
       logger,
     ),
   };
@@ -310,6 +330,19 @@ if (process.env['IS_UKWM_BATCHES_ENABLED'] === 'true') {
     },
     routes: {
       prefix: '/api/ukwm',
+    },
+  });
+}
+
+if (process.env['IS_SERVICE_CHARGE_ENABLED'] === 'true') {
+  await app.register({
+    plugin: paymentPlugin,
+    options: {
+      backend: backend.payment,
+      logger,
+    },
+    routes: {
+      prefix: '/api/payments',
     },
   });
 }

@@ -624,7 +624,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
   ): Promise<void> {
     let response:
       | draft.SetDraftCollectionDateResponse
-      | submission.SetCollectionDateRequest;
+      | submission.SetCollectionDateResponse;
     try {
       if (!submitted) {
         response = await this.client.setDraftCollectionDate({

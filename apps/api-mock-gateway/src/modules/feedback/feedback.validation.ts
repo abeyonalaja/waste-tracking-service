@@ -6,11 +6,16 @@ const ajv = new Ajv();
 
 export const validateSendFeedback = ajv.compile<SendFeedbackRequest>({
   properties: {
-    rating: {
-      type: 'uint8',
-    },
-    feedback: {
-      type: 'string',
+    serviceName: { enum: ['glw', 'ukwm'] },
+    surveyData: {
+      optionalProperties: {
+        rating: {
+          type: 'uint8',
+        },
+        feedback: {
+          type: 'string',
+        },
+      },
     },
   },
 });

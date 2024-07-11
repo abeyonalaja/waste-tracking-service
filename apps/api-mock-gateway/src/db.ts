@@ -17,6 +17,8 @@ import {
   UkwmSubmissionFlattenedDownload,
   UkwmRowWithMessage,
   UkwmColumnWithMessage,
+  CreatedPayment,
+  PaymentRecord,
 } from '@wts/api/waste-tracking-gateway';
 
 export type DraftSubmissionWithAccount = DraftSubmission & {
@@ -28,6 +30,12 @@ export type BulkWithAccount = BulkSubmission & { accountId: string };
 export type UkwmBulkWithAccount = UkwmBulkSubmission & { accountId: string };
 export type UkwmRowWithAccountId = UkwmRowWithMessage & { accountId: string };
 export type UkwmColumnWithAccountId = UkwmColumnWithMessage & {
+  accountId: string;
+};
+export type CreatedPaymentWithAccountId = CreatedPayment & {
+  accountId: string;
+};
+export type PaymentRecordWithAccountId = PaymentRecord & {
   accountId: string;
 };
 
@@ -50,6 +58,8 @@ export interface DB {
   ukwmDownload: UkwmSubmissionFlattenedDownload[];
   ukwmRows: UkwmRowWithAccountId[];
   ukwmColumns: UkwmColumnWithAccountId[];
+  paymentDrafts: CreatedPaymentWithAccountId[];
+  payments: PaymentRecordWithAccountId[];
 }
 
 export const db: DB = {
@@ -3916,4 +3926,6 @@ export const db: DB = {
       ],
     },
   ],
+  paymentDrafts: [],
+  payments: [],
 };
