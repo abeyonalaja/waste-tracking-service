@@ -16,6 +16,8 @@ service-green-list-waste-export-bulk:
   version: '0.1.0-main.bf486b51'
 service-limited-audience:
   version: '0.1.0-main.bf486b51'
+service-payment:
+  version: 'latest'
 service-reference-data:
   version: '0.1.0-main.bf486b51'
 service-uk-waste-movements:

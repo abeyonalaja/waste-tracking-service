@@ -21,10 +21,11 @@ parameters:
       - app-uk-waste-movements
       - app-waste-tracking-service
       - service-address
+      - service-feedback
       - service-green-list-waste-export
       - service-green-list-waste-export-bulk
-      - service-feedback
       - service-limited-audience
+      - service-payment
       - service-reference-data
       - service-uk-waste-movements
       - service-uk-waste-movements-bulk

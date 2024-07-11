@@ -80,6 +80,7 @@ secret:
     REFERENCE_DATA_APP_ID: 'service-reference-data.service-reference-data'
     UKWM_BULK_APP_ID: 'service-uk-waste-movements-bulk.service-uk-waste-movements-bulk'
     UKWM_APP_ID: 'service-uk-waste-movements.service-uk-waste-movements'
+    PAYMENT_APP_ID: 'service-payment.service-payment'
     DCID_CLIENT_ID: ''
     DCID_WELLKNOWN: ''
     ALLOWED_USERS: ''
@@ -87,6 +88,7 @@ secret:
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
     FEATURE_PRIVATE_AUDIENCE_CHECKS: 'false'
     IS_UKWM_BATCHES_ENABLED: 'false'
+    IS_SERVICE_CHARGE_ENABLED: 'false'
 
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
@@ -132,5 +134,7 @@ ingress:
         - path: /api/ukwm-batches
           pathType: Prefix
         - path: /api/ukwm
+          pathType: Prefix
+        - path: /api/payments
           pathType: Prefix
   labels: {}

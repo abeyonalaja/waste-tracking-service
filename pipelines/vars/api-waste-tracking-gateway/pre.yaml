@@ -18,6 +18,7 @@ secret:
     IS_AUTO_EMAIL_CONFIRMATION_ENABLED: 'false'
     FEATURE_PRIVATE_AUDIENCE_CHECKS: 'true'
     IS_UKWM_BATCHES_ENABLED: 'false'
+    IS_SERVICE_CHARGE_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'
@@ -44,4 +45,6 @@ ingress:
         - path: /api/ukwm-batches
           pathType: Prefix
         - path: /api/ukwm
+          pathType: Prefix
+        - path: /api/payments
           pathType: Prefix

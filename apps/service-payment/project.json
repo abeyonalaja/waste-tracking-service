@@ -1,38 +1,35 @@
 {
   "name": "service-payment",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "apps/service-payment/src",
   "projectType": "application",
   "targets": {
-    "es-build": {
-      "executor": "@nx/esbuild:esbuild",
+    "build": {
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "platform": "node",
-        "outputPath": "dist/{projectRoot}",
-        "format": ["cjs"],
-        "bundle": true,
-        "main": "{projectRoot}/src/main.ts",
-        "tsConfig": "{projectRoot}/tsconfig.app.json",
-        "assets": ["{projectRoot}/src/assets"],
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/service-payment",
+        "main": "apps/service-payment/src/main.ts",
+        "tsConfig": "apps/service-payment/tsconfig.app.json",
+        "assets": ["apps/service-payment/src/assets"],
+        "webpackConfig": "apps/service-payment/webpack.config.js",
         "generatePackageJson": true,
-        "esbuildConfig": "{projectRoot}/esbuild.config.js",
-        "additionalEntryPoints": ["{projectRoot}/src/tracing.ts"]
+        "additionalEntryPoints": [
+          {
+            "entryName": "tracing",
+            "entryPath": "apps/service-payment/src/tracing.ts"
+          }
+        ]
       },
       "configurations": {
         "development": {},
         "production": {
-          "optimization": true
+          "optimization": true,
+          "generateLockFile": true
         }
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["es-build"],
-      "options": {
-        "commands": ["npm install --only=production"],
-        "cwd": "dist/{projectRoot}"
       }
     },
     "serve": {
@@ -40,7 +37,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "service-payment:build",
-        "runtimeArgs": ["--require", "./dist/{projectRoot}/tracing.js"]
+        "runtimeArgs": ["--require", "./dist/apps/service-payment/tracing.js"]
       },
       "configurations": {
         "development": {
@@ -55,14 +52,14 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["{projectRoot}/**/*.ts"]
+        "lintFilePatterns": ["apps/service-payment/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": ["{workspaceRoot}/coverage/apps/service-payment"],
       "options": {
-        "jestConfig": "{projectRoot}/jest.config.ts",
+        "jestConfig": "apps/service-payment/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -86,7 +83,7 @@
             "type=ref,event=tag",
             "type=ref,event=pr",
             "type=sha,prefix=sha-",
-            "type=raw,value=1.0.0"
+            "type=raw,value=1.0.1"
           ]
         }
       }
@@ -95,7 +92,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.app.json --noEmit",
-        "cwd": "{projectRoot}",
+        "cwd": "apps/service-payment",
         "forwardAllArgs": false
       }
     }

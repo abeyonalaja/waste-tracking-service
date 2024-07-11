@@ -17,14 +17,16 @@ parameters:
         nameTag: app_waste_tracking_service
       - name: service-address
         nameTag: service_address
+      - name: service-feedback
+        nameTag: service_feedback
       - name: service-green-list-waste-export
         nameTag: service_green_list_waste_export
       - name: service-green-list-waste-export-bulk
         nameTag: service_green_list_waste_export_bulk
-      - name: service-feedback
-        nameTag: service_feedback
       - name: service-limited-audience
         nameTag: service_limited_audience
+      - name: service-payment
+        nameTag: service_payment
       - name: service-reference-data
         nameTag: service_reference_data
       - name: service-uk-waste-movements
