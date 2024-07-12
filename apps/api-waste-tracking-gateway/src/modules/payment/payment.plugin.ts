@@ -78,6 +78,29 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'POST',
+      path: '/{id}/cancel',
+      handler: async function ({ params }, h) {
+        try {
+          return h
+            .response(
+              (await backend.cancelPayment({
+                id: params.id,
+                accountId: h.request.auth.credentials.accountId as string,
+              })) as dto.CancelPaymentResponse,
+            )
+            .code(204);
+        } catch (error) {
+          if (error instanceof Boom.Boom) {
+            return error;
+          }
+          logger.error('Unknown error', { error: error });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

@@ -25,8 +25,8 @@ const publicKey = Buffer.from(
 describe(createToken, () => {
   it('signs tokens with the provided key', () => {
     const token = createToken(
-      { id: faker.datatype.uuid(), cohort: 'GLW' },
-      { id: faker.datatype.uuid(), content: privateKey },
+      { id: faker.string.uuid(), cohort: 'GLW' },
+      { id: faker.string.uuid(), content: privateKey },
     );
 
     expect(() => verify(token, publicKey)).not.toThrow();
@@ -34,11 +34,11 @@ describe(createToken, () => {
 
   it('includes provided properties in payload', () => {
     const participant: Participant = {
-      id: faker.datatype.uuid(),
+      id: faker.string.uuid(),
       cohort: 'UKWM',
     };
     const key: PrivateKey = {
-      id: faker.datatype.uuid(),
+      id: faker.string.uuid(),
       content: privateKey,
     };
 

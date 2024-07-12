@@ -43,13 +43,13 @@ describe(PrivateAudienceServiceBackend, () => {
         success: true,
         value: {
           participant: true,
-          participantId: faker.datatype.uuid(),
+          participantId: faker.string.uuid(),
         },
       });
 
       const cred = {
         uniqueReference: 'X',
-        dcidSubjectId: faker.datatype.uuid(),
+        dcidSubjectId: faker.string.uuid(),
       };
       expect(await subject.userFilter(cred)).toBe(true);
       expect(mockClient.checkParticipation).toHaveBeenCalledTimes(1);
@@ -69,7 +69,7 @@ describe(PrivateAudienceServiceBackend, () => {
 
       const cred = {
         uniqueReference: 'X',
-        dcidSubjectId: faker.datatype.uuid(),
+        dcidSubjectId: faker.string.uuid(),
       };
       expect(await subject.userFilter(cred)).toBe(false);
       expect(mockClient.checkParticipation).toHaveBeenCalledTimes(1);
@@ -80,7 +80,7 @@ describe(PrivateAudienceServiceBackend, () => {
     });
 
     it('does not invoke backend service if cached true', async () => {
-      const dcidSubjectId = faker.datatype.uuid();
+      const dcidSubjectId = faker.string.uuid();
       mockCache.get.mockReturnValue(true);
       expect(
         await subject.userFilter({ uniqueReference: 'X', dcidSubjectId }),

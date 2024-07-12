@@ -1,6 +1,5 @@
 export type {
   DbContainerNameKey,
-  Link,
   PaymentState,
   PaymentFailureStatus,
   PaymentStatusErrorCode,
@@ -12,6 +11,8 @@ export type {
   SetPaymentResponse,
   GetPaymentRequest,
   GetPaymentResponse,
+  CancelPaymentRequest,
+  CancelPaymentResponse,
 } from './payment';
 
 export {
@@ -19,6 +20,7 @@ export {
   createPayment,
   setPayment,
   getPayment,
+  cancelPayment,
 } from './payment';
 
 export * as schema from './schema';

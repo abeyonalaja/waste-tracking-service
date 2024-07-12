@@ -4,7 +4,6 @@ import { paths } from '../lib/schema.v1';
 import createClient from 'openapi-fetch';
 import {
   CreatedPayment,
-  Link,
   PaymentFailureStatus,
   PaymentRecord,
   PaymentState,
@@ -20,6 +19,7 @@ export interface ServiceChargeClient {
     amount?: number,
   ): Promise<Omit<CreatedPayment, 'id'>>;
   getPayment(paymentId: string): Promise<Omit<PaymentRecord, 'id'>>;
+  cancelPayment(paymentId: string): Promise<void>;
 }
 
 export default class GovUkPayServiceChargeClient
@@ -62,13 +62,11 @@ export default class GovUkPayServiceChargeClient
           throw boomErr;
         }
 
-        // Should be only thrown if 401 is returned
         throw new Boom.Boom(undefined, {
           statusCode: response.status,
         });
       }
 
-      // Do I need to throw?
       if (!data) {
         this.logger.error('Error receiving response data from Gov.UK Pay');
         throw Boom.internal();
@@ -81,8 +79,7 @@ export default class GovUkPayServiceChargeClient
         paymentId: data.payment_id as string,
         createdDate: data.created_date as string,
         returnUrl: data.return_url as string,
-        redirectUrl: data._links?.next_url as Link,
-        cancelUrl: data._links?.cancel as Link,
+        redirectUrl: data._links?.next_url?.href as string,
       };
     } catch (err) {
       this.logger.error('Gov.UK Pay API Unknown error', err);
@@ -112,7 +109,6 @@ export default class GovUkPayServiceChargeClient
           throw boomErr;
         }
 
-        // Should be only thrown if 401 is returned
         throw new Boom.Boom(undefined, {
           statusCode: response.status,
         });
@@ -152,6 +148,46 @@ export default class GovUkPayServiceChargeClient
         paymentId: data.payment_id as string,
         state: state,
       };
+    } catch (err) {
+      this.logger.error('Gov.UK Pay API Unknown error', err);
+      throw Boom.internal();
+    }
+  }
+
+  async cancelPayment(paymentId: string): Promise<void> {
+    try {
+      const { response, data, error } = await this.client.POST(
+        '/v1/payments/{paymentId}/cancel',
+        {
+          params: {
+            path: { paymentId: paymentId },
+          },
+        },
+      );
+      console.log(response.status);
+      console.log('Error: ############');
+      console.log(error);
+
+      if (!response.ok) {
+        if (error) {
+          const boomErr = new Boom.Boom(`${error.code}: ${error.description}`, {
+            statusCode: response.status,
+          });
+          this.logger.error('Gov.UK Pay API returned unsuccessful response', {
+            error: boomErr.message,
+          });
+          throw boomErr;
+        }
+
+        throw new Boom.Boom(undefined, {
+          statusCode: response.status,
+        });
+      }
+
+      if (!data) {
+        this.logger.error('Error receiving response data from Gov.UK Pay');
+        throw Boom.internal();
+      }
     } catch (err) {
       this.logger.error('Gov.UK Pay API Unknown error', err);
       throw Boom.internal();

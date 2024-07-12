@@ -39,11 +39,11 @@ describe(BatchController, () => {
     it('forwards thrown Boom errors', async () => {
       mockRepository.saveBatch.mockRejectedValue(Boom.teapot());
       const response = await subject.addContentToBatch({
-        accountId: faker.datatype.uuid(),
+        accountId: faker.string.uuid(),
         content: {
           type: 'text/csv',
           compression: 'Snappy',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       });
 
@@ -59,8 +59,8 @@ describe(BatchController, () => {
 
   describe('getBatch', () => {
     it('forwards thrown Boom errors', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRepository.getBatch.mockRejectedValue(Boom.teapot());
 
       const response = await subject.getBatch({ id, accountId });
@@ -75,8 +75,8 @@ describe(BatchController, () => {
     });
 
     it('successfully returns value from the repository', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const value: BulkSubmission = {
         id,
         state: {
@@ -100,8 +100,8 @@ describe(BatchController, () => {
 
   describe('updateBatch', () => {
     it('forwards thrown Boom errors', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
 
       const value: BulkSubmission = {
         id,
@@ -126,8 +126,8 @@ describe(BatchController, () => {
     });
 
     it('successfully updates value from the repository', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
 
       const value: BulkSubmission = {
         id,

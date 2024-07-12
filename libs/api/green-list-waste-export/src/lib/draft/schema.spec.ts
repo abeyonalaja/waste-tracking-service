@@ -61,8 +61,8 @@ describe('getDraftsResponse', () => {
         ],
         values: [
           {
-            id: faker.datatype.uuid(),
-            reference: faker.datatype.string(10),
+            id: faker.string.uuid(),
+            reference: faker.string.sample(10),
             wasteDescription: { status: 'NotStarted' },
             collectionDate: { status: 'NotStarted' },
             submissionDeclaration: { status: 'CannotStart' },
@@ -97,8 +97,8 @@ describe('getDraftResponse', () => {
     const value: GetDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
-        reference: faker.datatype.string(10),
+        id: faker.string.uuid(),
+        reference: faker.string.sample(10),
         wasteDescription: {
           status: 'Complete',
           wasteCode: {
@@ -266,15 +266,15 @@ describe('deleteDraftRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: DeleteDraftRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -303,16 +303,16 @@ describe('setDraftWasteQuantityRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftWasteQuantityRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: { status: 'NotStarted' },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Started',
         value: { type: 'ActualData' },
@@ -322,8 +322,8 @@ describe('setDraftWasteQuantityRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         value: {
@@ -348,16 +348,16 @@ describe('setDraftCollectionDateRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftCollectionDateRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: { status: 'NotStarted' },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         value: {
@@ -389,16 +389,16 @@ describe('listDraftCarriersResponse', () => {
         transport: true,
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             addressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
             transportDetails: {
               type: 'Air',
@@ -431,8 +431,8 @@ describe('createDraftCarriersRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: CreateDraftCarriersRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Started',
       },
@@ -448,10 +448,10 @@ describe('setDraftCarrierRequest', () => {
   );
 
   it('is compatible with dto values', () => {
-    const carrierId = faker.datatype.uuid();
+    const carrierId = faker.string.uuid();
     let value: SetDraftCarriersRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       carrierId: carrierId,
       value: {
         status: 'Started',
@@ -460,14 +460,14 @@ describe('setDraftCarrierRequest', () => {
           {
             id: carrierId,
             addressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
             transportDetails: {
               type: 'InlandWaterways',
@@ -481,8 +481,8 @@ describe('setDraftCarrierRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       carrierId: carrierId,
       value: {
         status: 'NotStarted',
@@ -493,8 +493,8 @@ describe('setDraftCarrierRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       carrierId: carrierId,
       value: {
         status: 'Started',
@@ -503,14 +503,14 @@ describe('setDraftCarrierRequest', () => {
           {
             id: carrierId,
             addressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
           },
         ],
@@ -528,9 +528,9 @@ describe('deleteDraftCarrierRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: DeleteDraftCarriersRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-      carrierId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      carrierId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -544,13 +544,13 @@ describe('setDraftExitLocationRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftUkExitLocationRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         exitLocation: {
           provided: 'Yes',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       },
     };
@@ -558,8 +558,8 @@ describe('setDraftExitLocationRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         exitLocation: {
@@ -579,8 +579,8 @@ describe('setDraftTransitCountriesRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftTransitCountriesRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'NotStarted',
       },
@@ -589,8 +589,8 @@ describe('setDraftTransitCountriesRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Started',
         values: ['N.Ireland', 'Wales'],
@@ -599,8 +599,8 @@ describe('setDraftTransitCountriesRequest', () => {
 
     expect(validate(value)).toBe(true);
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         values: ['N.Ireland', 'Wales', 'England'],
@@ -623,20 +623,20 @@ describe('listDraftRecoveryFacilityDetailsResponse', () => {
         status: 'Complete',
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             recoveryFacilityType: {
               type: 'Laboratory',
-              disposalCode: faker.datatype.string(),
+              disposalCode: faker.string.sample(),
             },
             addressDetails: {
-              name: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              name: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
           },
         ],
@@ -665,8 +665,8 @@ describe('createDraftRecoveryFacilityDetailsRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: CreateDraftRecoveryFacilityDetailsRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Started',
       },
@@ -683,27 +683,27 @@ describe('setDraftRecoveryFacilityDetailsRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftRecoveryFacilityDetailsRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-      rfdId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      rfdId: faker.string.uuid(),
       value: {
         status: 'Started',
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             recoveryFacilityType: {
               type: 'InterimSite',
-              recoveryCode: faker.datatype.string(),
+              recoveryCode: faker.string.sample(),
             },
             addressDetails: {
-              name: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              name: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
           },
         ],
@@ -713,9 +713,9 @@ describe('setDraftRecoveryFacilityDetailsRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-      rfdId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      rfdId: faker.string.uuid(),
       value: {
         status: 'NotStarted',
       },
@@ -724,27 +724,27 @@ describe('setDraftRecoveryFacilityDetailsRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-      rfdId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      rfdId: faker.string.uuid(),
       value: {
         status: 'Started',
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             recoveryFacilityType: {
               type: 'RecoveryFacility',
-              recoveryCode: faker.datatype.string(),
+              recoveryCode: faker.string.sample(),
             },
             addressDetails: {
-              name: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              name: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
           },
         ],
@@ -762,9 +762,9 @@ describe('deleteDraftRecoveryFacilityDetailsRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: DeleteDraftRecoveryFacilityDetailsRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
-      rfdId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      rfdId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -778,8 +778,8 @@ describe('setDraftSubmissionConfirmationRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftSubmissionConfirmationRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'CannotStart',
       },
@@ -788,8 +788,8 @@ describe('setDraftSubmissionConfirmationRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'NotStarted',
       },
@@ -798,8 +798,8 @@ describe('setDraftSubmissionConfirmationRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
         confirmation: faker.datatype.boolean(),
@@ -817,8 +817,8 @@ describe('setDraftSubmissionDeclarationRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetDraftSubmissionDeclarationRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'CannotStart',
       },
@@ -827,8 +827,8 @@ describe('setDraftSubmissionDeclarationRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'NotStarted',
       },
@@ -837,8 +837,8 @@ describe('setDraftSubmissionDeclarationRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         status: 'Complete',
       },

@@ -33,6 +33,7 @@ const mockBackend = {
     jest.fn<
       (accountId: PaymentRef['accountId']) => Promise<PaymentReference>
     >(),
+  cancelPayment: jest.fn<(ref: PaymentRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -78,6 +79,7 @@ describe('PaymentPlugin', () => {
     mockBackend.createPayment.mockClear();
     mockBackend.setPayment.mockClear();
     mockBackend.getPayment.mockClear();
+    mockBackend.cancelPayment.mockClear();
   });
 
   describe('POST /payments', () => {

@@ -5,6 +5,7 @@ import {
   PaymentRecord,
   PaymentReference,
 } from '@wts/api/waste-tracking-gateway';
+import * as dto from '@wts/api/payment';
 import { v4 as uuidv4 } from 'uuid';
 import { NotFoundError } from '../../lib/errors';
 
@@ -58,11 +59,11 @@ function generateRandomResponse(
   description: string,
   reference: string,
   paymentId: string,
-): Omit<PaymentRecord, 'id'> {
+): Omit<dto.PaymentRecord, 'id'> {
   let dt = new Date();
   dt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60 * 1000);
 
-  const response: Omit<PaymentRecord, 'id'> = {
+  const response: Omit<dto.PaymentRecord, 'id'> = {
     amount,
     description,
     reference,
@@ -110,9 +111,9 @@ export async function createPayment(
   value: PaymentDetail,
 ): Promise<CreatedPayment> {
   const id = uuidv4();
-  const paymentId = generateRandomAlphaNumericString(26).toLowerCase(); // or reuse id?
+  const paymentId = generateRandomAlphaNumericString(26).toLowerCase();
 
-  const response: Omit<CreatedPayment, 'id'> = {
+  const response: Omit<dto.CreatedPayment, 'id'> = {
     amount: !value.amount ? 2000 : value.amount,
     description: !value.description
       ? 'Annual waste tracking service charge'
@@ -121,24 +122,20 @@ export async function createPayment(
     paymentId: paymentId,
     createdDate: new Date().toJSON(),
     returnUrl: value.returnUrl,
-    redirectUrl: {
-      href: value.returnUrl,
-      method: 'GET',
-    },
-    cancelUrl: {
-      href: `http://localhost:3000/api/payments/${paymentId}/cancel`,
-      method: 'POST',
-    },
+    redirectUrl: value.returnUrl,
   };
 
-  const record: CreatedPayment = {
+  const record: dto.CreatedPayment = {
     id,
     ...response,
   };
 
   db.paymentDrafts.push({ ...record, accountId });
 
-  return Promise.resolve(record);
+  return Promise.resolve({
+    id: record.id,
+    redirectUrl: record.redirectUrl,
+  });
 }
 
 export async function setPayment({
@@ -158,7 +155,7 @@ export async function setPayment({
     draftPayment.reference,
     draftPayment.paymentId,
   );
-  const value: PaymentRecord = {
+  const value: dto.PaymentRecord = {
     id,
     ...response,
   };
@@ -198,7 +195,14 @@ export async function setPayment({
     }
   }
 
-  return Promise.resolve(value);
+  return Promise.resolve({
+    id: value.id,
+    amount: value.amount,
+    description: value.description,
+    reference: value.reference,
+    state: value.state,
+    expiryDate: value.expiryDate,
+  });
 }
 
 export async function getPayment(
@@ -227,17 +231,22 @@ export async function getPayment(
   });
 }
 
-// Added to mock Gov.UK Pay cancel by service scenario
-export async function cancelPayment(
-  paymentId: string,
-  accountId: PaymentRef['accountId'],
-): Promise<void> {
+export async function cancelPayment({
+  id,
+  accountId,
+}: PaymentRef): Promise<void> {
   const draftPayment = db.paymentDrafts.find(
-    (s) => s.paymentId == paymentId && s.accountId == accountId,
+    (s) => s.id == id && s.accountId == accountId,
   );
   if (draftPayment === undefined) {
     return Promise.reject(new NotFoundError('Not found.'));
   }
+
+  const index = db.paymentDrafts.findIndex((d) => {
+    return d.id === draftPayment.id;
+  });
+
+  db.paymentDrafts.splice(index, 1);
 
   return Promise.resolve();
 }

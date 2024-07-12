@@ -40,7 +40,7 @@ describe(AddressController, () => {
       expect(mockAddressClient.getAddressByPostcode).toBeCalledWith(postcode);
       expect(response.error.statusCode).toBe(418);
 
-      const buildingNameOrNumber = faker.datatype.string();
+      const buildingNameOrNumber = faker.string.sample();
       response = await subject.getAddressByPostcode({
         postcode,
         buildingNameOrNumber,
@@ -73,7 +73,7 @@ describe(AddressController, () => {
       );
       expect(response.value).toEqual([]);
 
-      const buildingNameOrNumber = faker.datatype.string();
+      const buildingNameOrNumber = faker.string.sample();
       response = await subject.getAddressByPostcode({
         postcode,
         buildingNameOrNumber,

@@ -4,23 +4,9 @@ export interface PaymentDetail {
   amount?: number;
 }
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
-export interface Link {
-  href: string;
-  method: HttpMethod;
-}
-
 export interface CreatedPayment {
   id: string;
-  amount: number;
-  description: string;
-  reference: string;
-  paymentId: string;
-  createdDate: string;
-  returnUrl: string;
-  redirectUrl: Link;
-  cancelUrl: Link;
+  redirectUrl: string;
 }
 
 export type CreatePaymentRequest = PaymentDetail;
@@ -53,7 +39,6 @@ export interface PaymentRecord {
   amount: number;
   description: string;
   reference: string;
-  paymentId: string;
   state: PaymentState;
   expiryDate?: string;
 }
@@ -67,3 +52,5 @@ export interface PaymentReference {
 }
 
 export type GetPaymentResponse = PaymentReference;
+
+export type CancelPaymentResponse = undefined;

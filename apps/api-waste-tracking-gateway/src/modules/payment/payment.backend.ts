@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom';
 import {
+  CancelPaymentResponse,
   CreatePaymentResponse,
   GetPaymentResponse,
   SetPaymentResponse,
@@ -26,6 +27,7 @@ export interface PaymentBackend {
   ): Promise<CreatedPayment>;
   setPayment(ref: PaymentRef): Promise<PaymentRecord>;
   getPayment(accountId: PaymentRef['accountId']): Promise<PaymentReference>;
+  cancelPayment(ref: PaymentRef): Promise<void>;
 }
 
 export class PaymentServiceBackend implements PaymentBackend {
@@ -103,6 +105,26 @@ export class PaymentServiceBackend implements PaymentBackend {
     }
 
     this.cache.set(accountId, response.value);
+    return response.value;
+  }
+
+  async cancelPayment({ id, accountId }: PaymentRef): Promise<void> {
+    let response: CancelPaymentResponse;
+    try {
+      response = await this.client.cancelPayment({
+        id,
+        accountId,
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
     return response.value;
   }
 }

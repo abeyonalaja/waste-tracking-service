@@ -97,7 +97,7 @@ describe('getRecordsRequest', () => {
 
   it('is compatible with success value', () => {
     const value: GetRecordsRequest = {
-      accountId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
       order: 'DESC',
       state: ['SubmittedWithActuals', 'UpdatedWithActuals'],
     };

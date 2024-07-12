@@ -61,7 +61,7 @@ const mockClient = {
 };
 
 describe(AnnexViiServiceTemplateBackend, () => {
-  const accountId = faker.datatype.uuid();
+  const accountId = faker.string.uuid();
   const subject = new AnnexViiServiceTemplateBackend(
     mockClient as unknown as DaprAnnexViiClient,
     new Logger(),
@@ -153,20 +153,20 @@ describe(AnnexViiServiceTemplateBackend, () => {
 
   it('persists a template created from a submission', async () => {
     const mockSubmission = {
-      id: faker.datatype.uuid(),
+      id: faker.string.uuid(),
       reference: 'abc',
       wasteDescription: {
         status: 'Complete',
         wasteCode: {
-          type: faker.datatype.string(),
-          code: faker.datatype.string(),
+          type: faker.string.sample(),
+          code: faker.string.sample(),
         },
-        ewcCodes: [faker.datatype.string()],
+        ewcCodes: [faker.string.sample()],
         nationalCode: {
           provided: 'Yes',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
-        description: faker.datatype.string(),
+        description: faker.string.sample(),
       },
       wasteQuantity: {
         status: 'Complete',
@@ -174,7 +174,7 @@ describe(AnnexViiServiceTemplateBackend, () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
-            value: faker.datatype.number(),
+            value: faker.number.float(),
           },
           estimateData: {},
         },
@@ -182,30 +182,30 @@ describe(AnnexViiServiceTemplateBackend, () => {
       exporterDetail: {
         status: 'Complete',
         exporterAddress: {
-          country: faker.datatype.string(),
-          postcode: faker.datatype.string(),
-          townCity: faker.datatype.string(),
-          addressLine1: faker.datatype.string(),
-          addressLine2: faker.datatype.string(),
+          country: faker.string.sample(),
+          postcode: faker.string.sample(),
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
         },
         exporterContactDetails: {
-          organisationName: faker.datatype.string(),
-          fullName: faker.datatype.string(),
-          emailAddress: faker.datatype.string(),
-          phoneNumber: faker.datatype.string(),
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
         },
       },
       importerDetail: {
         status: 'Complete',
         importerAddressDetails: {
-          address: faker.datatype.string(),
-          country: faker.datatype.string(),
-          organisationName: faker.datatype.string(),
+          address: faker.string.sample(),
+          country: faker.string.sample(),
+          organisationName: faker.string.sample(),
         },
         importerContactDetails: {
-          fullName: faker.datatype.string(),
-          emailAddress: faker.datatype.string(),
-          phoneNumber: faker.datatype.string(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
         },
       },
       collectionDate: {
@@ -213,9 +213,9 @@ describe(AnnexViiServiceTemplateBackend, () => {
         value: {
           type: 'ActualDate',
           actualDate: {
-            year: faker.datatype.string(),
-            month: faker.datatype.string(),
-            day: faker.datatype.string(),
+            year: faker.string.sample(),
+            month: faker.string.sample(),
+            day: faker.string.sample(),
           },
           estimateDate: {},
         },
@@ -230,41 +230,41 @@ describe(AnnexViiServiceTemplateBackend, () => {
               description: 'Somewhere beyond the sea...',
             },
             addressDetails: {
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
-              organisationName: faker.datatype.string(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
+              organisationName: faker.string.sample(),
             },
             contactDetails: {
-              emailAddress: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
-              fullName: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              emailAddress: faker.string.sample(),
+              faxNumber: faker.string.sample(),
+              fullName: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
           },
         ],
       },
       collectionDetail: {
         status: 'Complete',
         address: {
-          addressLine1: faker.datatype.string(),
-          addressLine2: faker.datatype.string(),
-          townCity: faker.datatype.string(),
-          postcode: faker.datatype.string(),
-          country: faker.datatype.string(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+          townCity: faker.string.sample(),
+          postcode: faker.string.sample(),
+          country: faker.string.sample(),
         },
         contactDetails: {
-          organisationName: faker.datatype.string(),
-          fullName: faker.datatype.string(),
-          emailAddress: faker.datatype.string(),
-          phoneNumber: faker.datatype.string(),
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          emailAddress: faker.string.sample(),
+          phoneNumber: faker.string.sample(),
         },
       },
       ukExitLocation: {
         status: 'Complete',
         exitLocation: {
           provided: 'Yes',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       },
       transitCountries: {
@@ -276,21 +276,21 @@ describe(AnnexViiServiceTemplateBackend, () => {
         values: [
           {
             addressDetails: {
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
-              name: faker.datatype.string(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
+              name: faker.string.sample(),
             },
             contactDetails: {
-              emailAddress: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
-              fullName: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
+              emailAddress: faker.string.sample(),
+              faxNumber: faker.string.sample(),
+              fullName: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
             },
             recoveryFacilityType: {
               type: 'Laboratory',
               disposalCode: 'D1',
             },
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
           },
         ],
       },

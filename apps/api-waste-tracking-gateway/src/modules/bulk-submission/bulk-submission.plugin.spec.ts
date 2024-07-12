@@ -87,7 +87,7 @@ describe('BulkSubmissionPlugin', () => {
     it("Responds 404 if bulk submission doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/batches/${faker.datatype.uuid()}`,
+        url: `/batches/${faker.string.uuid()}`,
       };
 
       mockBackend.getBatch.mockRejectedValue(Boom.notFound());
@@ -100,7 +100,7 @@ describe('BulkSubmissionPlugin', () => {
     it('Responds 201 with no request payload', async () => {
       const options = {
         method: 'POST',
-        url: `/batches/${faker.datatype.uuid()}/finalize`,
+        url: `/batches/${faker.string.uuid()}/finalize`,
       };
 
       const response = await app.inject(options);

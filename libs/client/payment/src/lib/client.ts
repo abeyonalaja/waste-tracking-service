@@ -1,5 +1,7 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
+  CancelPaymentRequest,
+  CancelPaymentResponse,
   CreatePaymentRequest,
   CreatePaymentResponse,
   GetPaymentRequest,
@@ -9,6 +11,7 @@ import {
   createPayment,
   getPayment,
   setPayment,
+  cancelPayment,
 } from '@wts/api/payment';
 
 export class DaprPaymentClient {
@@ -44,5 +47,16 @@ export class DaprPaymentClient {
       HttpMethod.POST,
       req,
     )) as GetPaymentResponse;
+  }
+
+  async cancelPayment(
+    req: CancelPaymentRequest,
+  ): Promise<CancelPaymentResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.paymentAppId,
+      cancelPayment.name,
+      HttpMethod.POST,
+      req,
+    )) as CancelPaymentResponse;
   }
 }

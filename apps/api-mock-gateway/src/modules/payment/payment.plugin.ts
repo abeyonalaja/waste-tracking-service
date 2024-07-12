@@ -88,19 +88,16 @@ export default class FeedbackPlugin {
       }
     });
 
-    // Added to mock Gov.UK Pay cancel by service scenario
-    this.server.post(`${this.prefix}/:paymentId/cancel`, async (req, res) => {
+    this.server.post(`${this.prefix}/:id/cancel`, async (req, res) => {
       const user = req.user as User;
 
       try {
-        return res
-          .status(204)
-          .jsonp(
-            await cancelPayment(
-              req.params.paymentId,
-              user.credentials.accountId,
-            ),
-          );
+        return res.status(204).jsonp(
+          await cancelPayment({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+          }),
+        );
       } catch (error) {
         if (error instanceof CustomError) {
           return res.status(error.statusCode).json({ message: error.message });

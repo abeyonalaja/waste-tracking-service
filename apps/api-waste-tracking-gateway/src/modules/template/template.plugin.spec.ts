@@ -146,7 +146,7 @@ describe('TemplatePlugin', () => {
     it("Responds 404 if template doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/templates/${faker.datatype.uuid()}`,
+        url: `/templates/${faker.string.uuid()}`,
       };
 
       mockBackend.getTemplate.mockRejectedValue(Boom.notFound());

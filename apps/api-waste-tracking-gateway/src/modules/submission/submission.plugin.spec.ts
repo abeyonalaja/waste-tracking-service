@@ -257,7 +257,7 @@ describe('SubmissionPlugin', () => {
     it("Responds 404 if submission doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/submissions/${faker.datatype.uuid()}`,
+        url: `/submissions/${faker.string.uuid()}`,
       };
 
       mockBackend.getSubmission.mockRejectedValue(Boom.notFound());
@@ -270,7 +270,7 @@ describe('SubmissionPlugin', () => {
     it('Responds 400 if action is not supported', async () => {
       const options = {
         method: 'PUT',
-        url: `/submissions/${faker.datatype.uuid()}/cancel`,
+        url: `/submissions/${faker.string.uuid()}/cancel`,
       };
 
       const response = await app.inject(options);
@@ -282,7 +282,7 @@ describe('SubmissionPlugin', () => {
     it("Responds 404 if submission doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/submissions/${faker.datatype.uuid()}/reference`,
+        url: `/submissions/${faker.string.uuid()}/reference`,
       };
 
       mockBackend.getCustomerReference.mockRejectedValue(Boom.notFound());
@@ -293,7 +293,7 @@ describe('SubmissionPlugin', () => {
 
   describe('PUT /submissions/{id}/reference', () => {
     it('Does NOT support null values', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       mockBackend.setCustomerReference.mockResolvedValue();
       const response = await app.inject({
         method: 'PUT',
@@ -305,8 +305,8 @@ describe('SubmissionPlugin', () => {
     });
 
     it('Supports string values', async () => {
-      const id = faker.datatype.uuid();
-      const reference = faker.datatype.string(10);
+      const id = faker.string.uuid();
+      const reference = faker.string.sample(10);
       mockBackend.setCustomerReference.mockResolvedValue();
       const response = await app.inject({
         method: 'PUT',
@@ -328,7 +328,7 @@ describe('SubmissionPlugin', () => {
     it("Responds 404 if carrier doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/submissions/${faker.datatype.uuid()}/carriers/${faker.datatype.uuid()}`,
+        url: `/submissions/${faker.string.uuid()}/carriers/${faker.string.uuid()}`,
       };
 
       mockBackend.getCarriers.mockRejectedValue(Boom.notFound());
@@ -339,8 +339,8 @@ describe('SubmissionPlugin', () => {
 
   describe('PUT /submissions/{id}/carriers/{carrierId}', () => {
     it("Responds 400 if carrier id doesn't match with id from payload", async () => {
-      const id = faker.datatype.uuid();
-      const carrierId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const carrierId = faker.string.uuid();
       mockBackend.setCarriers.mockResolvedValue();
       const options = {
         method: 'PUT',
@@ -349,7 +349,7 @@ describe('SubmissionPlugin', () => {
           status: 'Started',
           values: [
             {
-              id: faker.datatype.uuid(),
+              id: faker.string.uuid(),
             },
           ],
         }),
@@ -365,7 +365,7 @@ describe('SubmissionPlugin', () => {
     it("Responds 404 if recovery facility doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/submissions/${faker.datatype.uuid()}/recovery-facility/${faker.datatype.uuid()}`,
+        url: `/submissions/${faker.string.uuid()}/recovery-facility/${faker.string.uuid()}`,
       };
 
       mockBackend.getRecoveryFacilityDetail.mockRejectedValue(Boom.notFound());
@@ -376,8 +376,8 @@ describe('SubmissionPlugin', () => {
 
   describe('PUT /submissions/{id}/recovery-facility/{rfdId}', () => {
     it("Responds 400 if recovery facility id doesn't match with id from payload", async () => {
-      const id = faker.datatype.uuid();
-      const rfdId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const rfdId = faker.string.uuid();
       mockBackend.setRecoveryFacilityDetail.mockResolvedValue();
       const options = {
         method: 'PUT',
@@ -386,7 +386,7 @@ describe('SubmissionPlugin', () => {
           status: 'Started',
           values: [
             {
-              id: faker.datatype.uuid(),
+              id: faker.string.uuid(),
             },
           ],
         }),
@@ -402,7 +402,7 @@ describe('SubmissionPlugin', () => {
 
   describe('PUT /submissions/{id}/submission-confirmation', () => {
     it('Responds 400 if invalid request is received from payload', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       mockBackend.setSubmissionConfirmation.mockResolvedValue();
       const options = {
         method: 'PUT',
@@ -423,7 +423,7 @@ describe('SubmissionPlugin', () => {
 
   describe('PUT /submissions/{id}/submission-declaration', () => {
     it('Responds 400 if invalid request is received from payload', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       mockBackend.setSubmissionDeclaration.mockResolvedValue();
       const options = {
         method: 'PUT',

@@ -25,15 +25,15 @@ describe('validateCreateSubmissionRequest', () => {
   it('Rejects invalid values', () => {
     expect(validate(undefined)).toBe(false);
     expect(validate({})).toBe(false);
-    expect(validate(faker.datatype.string(10))).toBe(false);
-    expect(validate({ ref: faker.datatype.string(10) })).toBe(false);
-    expect(validate({ reference: faker.datatype.number() })).toBe(false);
+    expect(validate(faker.string.sample(10))).toBe(false);
+    expect(validate({ ref: faker.string.sample(10) })).toBe(false);
+    expect(validate({ reference: faker.number.int() })).toBe(false);
     expect(validate({ reference: faker.datatype.boolean() })).toBe(false);
     expect(validate({ reference: {} })).toBe(false);
   });
 
   it('Accepts valid values', () => {
-    expect(validate({ reference: faker.datatype.string(10) })).toBe(true);
+    expect(validate({ reference: faker.string.sample(10) })).toBe(true);
   });
 });
 
@@ -41,15 +41,15 @@ describe('validatePutReferenceRequest', () => {
   const validate = validatePutReferenceRequest;
 
   it('Rejects invalid values', () => {
-    expect(validate(faker.datatype.number())).toBe(false);
+    expect(validate(faker.number.int())).toBe(false);
     expect(validate(faker.datatype.array())).toBe(false);
     expect(validate({})).toBe(false);
-    expect(validate({ reference: faker.datatype.string(10) })).toBe(false);
+    expect(validate({ reference: faker.string.sample(10) })).toBe(false);
     expect(validate(undefined)).toBe(false);
   });
 
   it('Accepts valid values', () => {
-    expect(validate(faker.datatype.string(10))).toBe(true);
+    expect(validate(faker.string.sample(10))).toBe(true);
   });
 });
 
@@ -62,21 +62,21 @@ describe('validatePutWasteDescriptionRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteCode: { type: 'NotApplicable', code: faker.datatype.string(10) },
+        wasteCode: { type: 'NotApplicable', code: faker.string.sample(10) },
       }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Started',
-        nationalCode: { provided: 'No', code: faker.datatype.string(10) },
+        nationalCode: { provided: 'No', code: faker.string.sample(10) },
       }),
     ).toBe(false);
 
     expect(
       validate({
         status: 'Complete',
-        wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
+        wasteCode: { type: 'BaselAnnexIX', code: faker.string.sample(10) },
       }),
     ).toBe(false);
   });
@@ -98,14 +98,14 @@ describe('validatePutWasteDescriptionRequest', () => {
     expect(
       validate({
         status: 'Started',
-        wasteCode: { type: 'BaselAnnexIX', code: faker.datatype.string(10) },
+        wasteCode: { type: 'BaselAnnexIX', code: faker.string.sample(10) },
       }),
     ).toBe(true);
 
     expect(
       validate({
         status: 'Complete',
-        wasteCode: { type: 'AnnexIIIA', code: faker.datatype.string(10) },
+        wasteCode: { type: 'AnnexIIIA', code: faker.string.sample(10) },
         ewcCodes: [
           {
             code: '010101',
@@ -129,7 +129,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
         status: 'Started',
         value: {
           type: 'NotApplicable',
-          value: faker.datatype.string(10),
+          value: faker.string.sample(10),
         },
       }),
     ).toBe(false);
@@ -140,7 +140,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
         value: {
           type: 'ActualData',
           quantityType: 'Volume',
-          value: faker.datatype.number(),
+          value: faker.number.float(),
         },
       }),
     ).toBe(false);
@@ -150,7 +150,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
         status: 'Complete',
         value: {
           type: 'EstimateData',
-          value: faker.datatype.number(),
+          value: faker.number.float(),
         },
       }),
     ).toBe(false);
@@ -161,7 +161,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
         value: {
           type: 'ActualData',
           quantityType: 'Weight',
-          value: faker.datatype.string(10),
+          value: faker.string.sample(10),
         },
       }),
     ).toBe(false);
@@ -194,7 +194,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
-            value: faker.datatype.float({ precision: 0.01 }),
+            value: faker.number.float({ precision: 0.01 }),
           },
           estimateData: {},
         },
@@ -208,7 +208,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
-            value: faker.datatype.float({ precision: 0.01 }),
+            value: faker.number.float({ precision: 0.01 }),
           },
           estimateData: {},
         },
@@ -226,7 +226,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
     expect(
       validate({
         type: 'NotApplicable',
-        value: faker.datatype.string(10),
+        value: faker.string.sample(10),
       }),
     ).toBe(false);
 
@@ -234,14 +234,14 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
       validate({
         type: 'ActualData',
         quantityType: 'Volume',
-        value: faker.datatype.number(),
+        value: faker.number.float(),
       }),
     ).toBe(false);
 
     expect(
       validate({
         type: 'EstimateData',
-        value: faker.datatype.number(),
+        value: faker.number.float(),
       }),
     ).toBe(false);
 
@@ -249,7 +249,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
       validate({
         type: 'ActualData',
         quantityType: 'Weight',
-        value: faker.datatype.string(10),
+        value: faker.string.sample(10),
       }),
     ).toBe(false);
   });
@@ -260,7 +260,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'ActualData',
         actualData: {
           quantityType: 'Weight',
-          value: faker.datatype.float({ precision: 0.01 }),
+          value: faker.number.float({ precision: 0.01 }),
         },
         estimateData: {},
       }),
@@ -271,11 +271,11 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'EstimateData',
         actualData: {
           quantityType: 'Weight',
-          value: faker.datatype.float({ precision: 0.01 }),
+          value: faker.number.float({ precision: 0.01 }),
         },
         estimateData: {
           quantityType: 'Weight',
-          value: faker.datatype.float({ precision: 0.01 }),
+          value: faker.number.float({ precision: 0.01 }),
         },
       }),
     ).toBe(true);
@@ -587,7 +587,7 @@ describe('validateSetCarriersRequest', () => {
       transport: true,
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           addressDetails: {
             organisationName: 'Acme Inc',
             address: '123 Anytown',
@@ -615,7 +615,7 @@ describe('validateSetCarriersRequest', () => {
       transport: true,
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           addressDetails: {
             organisationName: 'Acme Inc',
             address: '123 Anytown',
@@ -643,7 +643,7 @@ describe('validateSetCarriersRequest', () => {
       transport: true,
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           addressDetails: {
             organisationName: 'Acme Inc',
             address: '123 Anytown',
@@ -672,7 +672,7 @@ describe('validateSetCarriersRequest', () => {
       transport: true,
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           addressDetails: {
             organisationName: 'Acme Inc',
             address: '123 Anytown',
@@ -730,7 +730,7 @@ describe('validateSetCarriersRequest', () => {
       transport: true,
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           addressDetails: {
             fullName: 'John Doe',
             emailAddress: 'johndoe@acme.com',
@@ -881,7 +881,7 @@ describe('validatePutExitLocationRequest', () => {
         status: 'Complete',
         exitLocation: {
           provided: 'No',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       }),
     ).toBe(false);
@@ -904,7 +904,7 @@ describe('validatePutExitLocationRequest', () => {
         status: 'Complete',
         exitLocation: {
           provided: 'Yes',
-          value: faker.datatype.string(),
+          value: faker.string.sample(),
         },
       }),
     ).toBe(true);
@@ -977,21 +977,21 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       status: 'Started',
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           recoveryFacilityType: {
             type: 'Laboratory',
-            disposalCode: faker.datatype.string(),
+            disposalCode: faker.string.sample(),
           },
           addressDetails: {
-            name: faker.datatype.string(),
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
+            name: faker.string.sample(),
+            address: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
       ],
@@ -1004,21 +1004,21 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       status: 'Started',
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           recoveryFacilityType: {
             type: 'InterimSite',
-            recoveryCode: faker.datatype.string(),
+            recoveryCode: faker.string.sample(),
           },
           addressDetails: {
-            name: faker.datatype.string(),
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
+            name: faker.string.sample(),
+            address: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
       ],
@@ -1031,21 +1031,21 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       status: 'Started',
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           recoveryFacilityType: {
             type: 'Laboratory',
-            recoveryCode: faker.datatype.string(),
+            recoveryCode: faker.string.sample(),
           },
           addressDetails: {
-            name: faker.datatype.string(),
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
+            name: faker.string.sample(),
+            address: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
       ],
@@ -1058,20 +1058,20 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       status: 'Started',
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           recoveryFacilityType: {
             type: 'InterimSite',
-            recoveryCode: faker.datatype.string(),
+            recoveryCode: faker.string.sample(),
           },
           addressDetails: {
-            name: faker.datatype.string(),
-            country: faker.datatype.string(),
+            name: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
       ],
@@ -1084,21 +1084,21 @@ describe('validateSetRecoveryFacilityDetailRequest', () => {
       status: 'Started',
       values: [
         {
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           recoveryFacilityType: {
             type: 'InterimSite',
-            recoveryCode: faker.datatype.string(),
+            recoveryCode: faker.string.sample(),
           },
           addressDetails: {
-            name: faker.datatype.string(),
-            address: faker.datatype.bigInt(),
-            country: faker.datatype.string(),
+            name: faker.string.sample(),
+            address: faker.number.bigInt(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
       ],

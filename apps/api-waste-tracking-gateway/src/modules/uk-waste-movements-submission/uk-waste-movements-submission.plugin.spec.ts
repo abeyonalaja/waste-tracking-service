@@ -71,7 +71,7 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
     it("Responds 404 if Ukwmsubmission doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/ukwm/${faker.datatype.uuid()}`,
+        url: `/ukwm/${faker.string.uuid()}`,
       };
 
       mockBackend.getUkwmSubmission.mockRejectedValue(Boom.notFound());

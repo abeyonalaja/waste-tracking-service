@@ -17,9 +17,8 @@ import {
   UkwmSubmissionFlattenedDownload,
   UkwmRowWithMessage,
   UkwmColumnWithMessage,
-  CreatedPayment,
-  PaymentRecord,
 } from '@wts/api/waste-tracking-gateway';
+import { CreatedPayment, PaymentRecord } from '@wts/api/payment';
 
 export type DraftSubmissionWithAccount = DraftSubmission & {
   accountId: string;

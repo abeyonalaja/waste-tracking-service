@@ -82,20 +82,7 @@ describe(PaymentServiceBackend, () => {
       const returnUrl = faker.string.sample();
       const value: CreatedPayment = {
         id,
-        amount: faker.number.int({ min: 0, max: 5000 }),
-        description: faker.string.sample(),
-        reference: faker.string.sample(10),
-        paymentId: faker.string.sample(),
-        createdDate: faker.string.sample(),
-        returnUrl: returnUrl,
-        redirectUrl: {
-          href: faker.string.sample(),
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: faker.string.sample(),
-          method: 'POST',
-        },
+        redirectUrl: faker.string.sample(),
       };
       mockClient.createPayment.mockResolvedValueOnce({
         success: true,
@@ -151,7 +138,6 @@ describe(PaymentServiceBackend, () => {
         amount: faker.number.int({ min: 0, max: 5000 }),
         description: faker.string.sample(),
         reference: faker.string.sample(10),
-        paymentId: faker.string.sample(),
         state: {
           status: 'Success',
           capturedDate: '2024-09-03',

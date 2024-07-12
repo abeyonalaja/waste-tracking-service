@@ -57,9 +57,9 @@ describe(CosmosRepository, () => {
     mockFetchNext.mockClear();
   });
 
-  const mockCosmosEndpoint = faker.datatype.string();
-  const mockCosmosKey = faker.datatype.string();
-  const mockCosmosDbName = faker.datatype.string();
+  const mockCosmosEndpoint = faker.string.sample();
+  const mockCosmosKey = faker.string.sample();
+  const mockCosmosDbName = faker.string.sample();
   const cosmosContainerMap = new Map<DbContainerNameKey, string>([
     ['drafts', 'drafts'],
     ['submissions', 'submissions'],
@@ -86,7 +86,7 @@ describe(CosmosRepository, () => {
       } as unknown as FeedResponse<object>);
 
       expect(
-        await subject.getRecords('drafts', faker.datatype.uuid(), 'ASC'),
+        await subject.getRecords('drafts', faker.string.uuid(), 'ASC'),
       ).toEqual({
         totalRecords: 0,
         totalPages: 0,
@@ -99,8 +99,8 @@ describe(CosmosRepository, () => {
 
   describe('getRecord', () => {
     it('retrieves a value with the associated id', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const timestamp = new Date();
       const mockResponse = {
         id,
@@ -123,11 +123,11 @@ describe(CosmosRepository, () => {
           submissionState: { status: 'InProgress', timestamp: timestamp },
         },
         partitionKey: accountId,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -159,7 +159,7 @@ describe(CosmosRepository, () => {
         id: id,
         value: {
           id: id,
-          reference: faker.datatype.string(),
+          reference: faker.string.sample(),
           wasteDescription: {
             wasteCode: {
               type: 'BaselAnnexIX',
@@ -174,7 +174,7 @@ describe(CosmosRepository, () => {
               provided: 'Yes',
               value: 'National Code',
             },
-            description: faker.datatype.string(),
+            description: faker.string.sample(),
           },
           wasteQuantity: {
             type: 'ActualData',
@@ -187,27 +187,27 @@ describe(CosmosRepository, () => {
           },
           exporterDetail: {
             exporterAddress: {
-              addressLine1: faker.datatype.string(),
-              addressLine2: faker.datatype.string(),
-              townCity: faker.datatype.string(),
+              addressLine1: faker.string.sample(),
+              addressLine2: faker.string.sample(),
+              townCity: faker.string.sample(),
               postcode: 'SW1A 1AA',
-              country: faker.datatype.string(),
+              country: faker.string.sample(),
             },
             exporterContactDetails: {
-              organisationName: faker.datatype.string(),
-              fullName: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              fullName: faker.string.sample(),
               emailAddress: 'test@mail.com',
               phoneNumber: '01234567890',
             },
           },
           importerDetail: {
             importerAddressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
               country: 'Puerto Rico [PR]',
             },
             importerContactDetails: {
-              fullName: faker.datatype.string(),
+              fullName: faker.string.sample(),
               emailAddress: 'mail@mail.com',
               phoneNumber: '01234567890',
               faxNumber: '0123567890',
@@ -225,50 +225,50 @@ describe(CosmosRepository, () => {
           carriers: [
             {
               addressDetails: {
-                organisationName: faker.datatype.string(),
-                address: faker.datatype.string(),
+                organisationName: faker.string.sample(),
+                address: faker.string.sample(),
                 country: 'United Kingdom (Wales) [GB-WLS]',
               },
               contactDetails: {
-                fullName: faker.datatype.string(),
+                fullName: faker.string.sample(),
                 emailAddress: 'sample@mail.com',
                 phoneNumber: '01234567890',
               },
               transportDetails: {
                 type: 'Road',
-                description: faker.datatype.string(),
+                description: faker.string.sample(),
               },
             },
           ],
           collectionDetail: {
             address: {
-              addressLine1: faker.datatype.string(),
-              addressLine2: faker.datatype.string(),
-              townCity: faker.datatype.string(),
+              addressLine1: faker.string.sample(),
+              addressLine2: faker.string.sample(),
+              townCity: faker.string.sample(),
               postcode: 'SW1A 1AA',
-              country: faker.datatype.string(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              organisationName: faker.datatype.string(),
-              fullName: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              fullName: faker.string.sample(),
               emailAddress: 'sample@mail.com',
               phoneNumber: '0123457890',
             },
           },
           ukExitLocation: {
             provided: 'Yes',
-            value: faker.datatype.string(),
+            value: faker.string.sample(),
           },
           transitCountries: [],
           recoveryFacilityDetail: [
             {
               addressDetails: {
-                name: faker.datatype.string(),
-                address: faker.datatype.string(),
+                name: faker.string.sample(),
+                address: faker.string.sample(),
                 country: 'Antarctica [AQ]',
               },
               contactDetails: {
-                fullName: faker.datatype.string(),
+                fullName: faker.string.sample(),
                 emailAddress: 'test@test.com',
                 phoneNumber: '01234567890',
                 faxNumber: '01234567890',
@@ -280,12 +280,12 @@ describe(CosmosRepository, () => {
             },
             {
               addressDetails: {
-                name: faker.datatype.string(),
-                address: faker.datatype.string(),
+                name: faker.string.sample(),
+                address: faker.string.sample(),
                 country: 'Belarus [BY]',
               },
               contactDetails: {
-                fullName: faker.datatype.string(),
+                fullName: faker.string.sample(),
                 emailAddress: 'test@test.biz',
                 phoneNumber: '01234567890',
               },
@@ -296,12 +296,12 @@ describe(CosmosRepository, () => {
             },
           ],
           submissionDeclaration: {
-            declarationTimestamp: faker.datatype.datetime(),
+            declarationTimestamp: faker.date.anytime(),
             transactionId: '2406_AFA5EDB9',
           },
           submissionState: {
             status: 'SubmittedWithActuals',
-            timestamp: faker.datatype.datetime(),
+            timestamp: faker.date.anytime(),
           },
           accountId: accountId,
         },
@@ -347,8 +347,8 @@ describe(CosmosRepository, () => {
           id,
           accountId,
           templateDetails: {
-            name: faker.datatype.string(),
-            description: faker.datatype.string(),
+            name: faker.string.sample(),
+            description: faker.string.sample(),
             created: new Date(),
             lastModified: new Date(),
           },
@@ -362,11 +362,11 @@ describe(CosmosRepository, () => {
           recoveryFacilityDetail: { status: 'CannotStart' },
         },
         partitionKey: accountId,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
 
       mockRead.mockResolvedValueOnce({
@@ -391,8 +391,8 @@ describe(CosmosRepository, () => {
     });
 
     it("throws Not Found exception if key doesn't exist", async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRead.mockResolvedValueOnce({
         resource: undefined,
       } as unknown as ItemResponse<object>);
@@ -411,15 +411,15 @@ describe(CosmosRepository, () => {
       } as unknown as FeedResponse<object>);
 
       expect(
-        await subject.getTotalNumber('drafts', faker.datatype.uuid()),
+        await subject.getTotalNumber('drafts', faker.string.uuid()),
       ).toEqual(2);
     });
   });
 
   describe('deleteRecord', () => {
     it('successfully deletes a record', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockDelete.mockResolvedValueOnce({
         resource: undefined,
       } as unknown as ItemResponse<object>);
@@ -430,8 +430,8 @@ describe(CosmosRepository, () => {
     });
 
     it('throws Not Found exception if record does not exist', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockDelete.mockRejectedValueOnce({
         code: 404,
       });
@@ -444,13 +444,13 @@ describe(CosmosRepository, () => {
 
   describe('saveRecord', () => {
     it('successfully saves a new record', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const record = {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         accountId,
-        reference: faker.datatype.string(),
+        reference: faker.string.sample(),
         wasteDescription: {
-          description: faker.datatype.string(),
+          description: faker.string.sample(),
           wasteCode: { type: 'NotApplicable' },
           ewcCodes: [{ code: 'EWC code' }, { code: 'EWC code' }],
         },
@@ -469,31 +469,31 @@ describe(CosmosRepository, () => {
         },
         exporterDetail: {
           exporterAddress: {
-            addressLine1: faker.datatype.string(),
-            addressLine2: faker.datatype.string(),
-            townCity: faker.datatype.string(),
-            postcode: faker.datatype.string(),
-            country: faker.datatype.string(),
+            addressLine1: faker.string.sample(),
+            addressLine2: faker.string.sample(),
+            townCity: faker.string.sample(),
+            postcode: faker.string.sample(),
+            country: faker.string.sample(),
           },
           exporterContactDetails: {
-            organisationName: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         importerDetail: {
           importerAddressDetails: {
-            organisationName: faker.datatype.string(),
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            address: faker.string.sample(),
+            country: faker.string.sample(),
           },
           importerContactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         collectionDate: {
@@ -512,31 +512,31 @@ describe(CosmosRepository, () => {
         carriers: [
           {
             addressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
+              faxNumber: faker.string.sample(),
             },
           },
         ],
         collectionDetail: {
           address: {
-            addressLine1: faker.datatype.string(),
-            townCity: faker.datatype.string(),
-            postcode: faker.datatype.string(),
-            country: faker.datatype.string(),
+            addressLine1: faker.string.sample(),
+            townCity: faker.string.sample(),
+            postcode: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            organisationName: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         ukExitLocation: {
@@ -546,15 +546,15 @@ describe(CosmosRepository, () => {
         recoveryFacilityDetail: [
           {
             addressDetails: {
-              name: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              name: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
+              faxNumber: faker.string.sample(),
             },
             recoveryFacilityType: {
               type: 'Laboratory',
@@ -568,7 +568,7 @@ describe(CosmosRepository, () => {
         },
         submissionDeclaration: {
           declarationTimestamp: new Date(),
-          transactionId: faker.datatype.string(),
+          transactionId: faker.string.sample(),
         },
       } as Submission;
 
@@ -587,13 +587,13 @@ describe(CosmosRepository, () => {
     });
 
     it('successfully updates an existing record', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const record = {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         accountId,
-        reference: faker.datatype.string(),
+        reference: faker.string.sample(),
         wasteDescription: {
-          description: faker.datatype.string(),
+          description: faker.string.sample(),
           wasteCode: { type: 'NotApplicable' },
           ewcCodes: [{ code: 'EWC code' }, { code: 'EWC code' }],
         },
@@ -612,31 +612,31 @@ describe(CosmosRepository, () => {
         },
         exporterDetail: {
           exporterAddress: {
-            addressLine1: faker.datatype.string(),
-            addressLine2: faker.datatype.string(),
-            townCity: faker.datatype.string(),
-            postcode: faker.datatype.string(),
-            country: faker.datatype.string(),
+            addressLine1: faker.string.sample(),
+            addressLine2: faker.string.sample(),
+            townCity: faker.string.sample(),
+            postcode: faker.string.sample(),
+            country: faker.string.sample(),
           },
           exporterContactDetails: {
-            organisationName: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         importerDetail: {
           importerAddressDetails: {
-            organisationName: faker.datatype.string(),
-            address: faker.datatype.string(),
-            country: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            address: faker.string.sample(),
+            country: faker.string.sample(),
           },
           importerContactDetails: {
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         collectionDate: {
@@ -655,31 +655,31 @@ describe(CosmosRepository, () => {
         carriers: [
           {
             addressDetails: {
-              organisationName: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              organisationName: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
+              faxNumber: faker.string.sample(),
             },
           },
         ],
         collectionDetail: {
           address: {
-            addressLine1: faker.datatype.string(),
-            townCity: faker.datatype.string(),
-            postcode: faker.datatype.string(),
-            country: faker.datatype.string(),
+            addressLine1: faker.string.sample(),
+            townCity: faker.string.sample(),
+            postcode: faker.string.sample(),
+            country: faker.string.sample(),
           },
           contactDetails: {
-            organisationName: faker.datatype.string(),
-            fullName: faker.datatype.string(),
-            emailAddress: faker.datatype.string(),
-            phoneNumber: faker.datatype.string(),
-            faxNumber: faker.datatype.string(),
+            organisationName: faker.string.sample(),
+            fullName: faker.string.sample(),
+            emailAddress: faker.string.sample(),
+            phoneNumber: faker.string.sample(),
+            faxNumber: faker.string.sample(),
           },
         },
         ukExitLocation: {
@@ -689,15 +689,15 @@ describe(CosmosRepository, () => {
         recoveryFacilityDetail: [
           {
             addressDetails: {
-              name: faker.datatype.string(),
-              address: faker.datatype.string(),
-              country: faker.datatype.string(),
+              name: faker.string.sample(),
+              address: faker.string.sample(),
+              country: faker.string.sample(),
             },
             contactDetails: {
-              fullName: faker.datatype.string(),
-              emailAddress: faker.datatype.string(),
-              phoneNumber: faker.datatype.string(),
-              faxNumber: faker.datatype.string(),
+              fullName: faker.string.sample(),
+              emailAddress: faker.string.sample(),
+              phoneNumber: faker.string.sample(),
+              faxNumber: faker.string.sample(),
             },
             recoveryFacilityType: {
               type: 'Laboratory',
@@ -711,7 +711,7 @@ describe(CosmosRepository, () => {
         },
         submissionDeclaration: {
           declarationTimestamp: new Date(),
-          transactionId: faker.datatype.string(),
+          transactionId: faker.string.sample(),
         },
       } as Submission;
 

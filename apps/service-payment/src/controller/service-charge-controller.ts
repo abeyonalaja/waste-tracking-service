@@ -5,6 +5,8 @@ import { ServiceChargeClient } from '../clients/service-charge-client';
 import CosmosServiceChargeRepository from '../data/cosmos-repository';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  CancelPaymentRequest,
+  CancelPaymentResponse,
   CreatePaymentRequest,
   CreatePaymentResponse,
   DbContainerNameKey,
@@ -89,7 +91,10 @@ export default class ServiceChargeController {
         value,
         accountId,
       );
-      return success(value);
+      return success({
+        id: value.id,
+        redirectUrl: value.redirectUrl,
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -155,7 +160,14 @@ export default class ServiceChargeController {
           );
         }
       }
-      return success(value);
+      return success({
+        id: value.id,
+        amount: value.amount,
+        description: value.description,
+        reference: value.reference,
+        state: value.state,
+        expiryDate: value.expiryDate,
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -193,6 +205,36 @@ export default class ServiceChargeController {
         expiryDate: startDate,
         renewalDate: this.calculateRenewalDate(startDate),
       });
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  cancelPayment: Handler<CancelPaymentRequest, CancelPaymentResponse> = async ({
+    id,
+    accountId,
+  }): Promise<CancelPaymentResponse> => {
+    try {
+      console.log('here');
+      const { paymentId } = await this.repository.getRecord(
+        accountId,
+        this.draftContainerName,
+        id,
+      );
+      console.log('Payment ID: ' + paymentId);
+      await this.serviceChargeClient.cancelPayment(paymentId);
+      console.log('here2');
+      await this.repository.deleteRecord(
+        this.draftContainerName,
+        id,
+        accountId,
+      );
+      return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

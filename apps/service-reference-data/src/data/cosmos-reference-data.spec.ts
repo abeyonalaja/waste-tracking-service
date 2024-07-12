@@ -58,10 +58,10 @@ describe(ReferenceDataDraftRepository, () => {
     mockCache.set.mockClear();
   });
 
-  const mockCosmosEndpoint = faker.datatype.string();
-  const mockCosmosKey = faker.datatype.string();
-  const mockCosmosDbName = faker.datatype.string();
-  const mockCosmosContainerName = faker.datatype.string();
+  const mockCosmosEndpoint = faker.string.sample();
+  const mockCosmosKey = faker.string.sample();
+  const mockCosmosDbName = faker.string.sample();
+  const mockCosmosContainerName = faker.string.sample();
   const logger = new Logger();
 
   const subject = new ReferenceDataDraftRepository(
@@ -100,11 +100,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -149,11 +149,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -187,11 +187,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -226,11 +226,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -271,11 +271,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -315,11 +315,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -356,11 +356,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -398,11 +398,11 @@ describe(ReferenceDataDraftRepository, () => {
           ],
         },
         partitionKey: id,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -425,7 +425,7 @@ describe(ReferenceDataDraftRepository, () => {
     });
 
     it("throws Not Found exception if key doesn't exist", async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       mockRead.mockResolvedValueOnce({
         resource: undefined,
       } as unknown as ItemResponse<object>);

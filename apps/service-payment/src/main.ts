@@ -127,6 +127,25 @@ async function init() {
     },
   );
 
+  await server.invoker.listen(
+    api.cancelPayment.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = parse.cancelPaymentRequest(body);
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await paymentController.cancelPayment(request);
+    },
+    {
+      method: HttpMethod.POST,
+    },
+  );
+
   await server.start();
 }
 

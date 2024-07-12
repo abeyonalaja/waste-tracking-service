@@ -18,8 +18,8 @@ describe('deleteTemplateRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: DeleteTemplateRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -44,7 +44,7 @@ describe('getTemplatesResponse', () => {
         ],
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             templateDetails: {
               name: 'My Template',
               description: 'My Template descripton',
@@ -78,7 +78,7 @@ describe('getTemplateResponse', () => {
     const value: GetTemplateResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         templateDetails: {
           name: 'My Template',
           description: 'My Template descripton',

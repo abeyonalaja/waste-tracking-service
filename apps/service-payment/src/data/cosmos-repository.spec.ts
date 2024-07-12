@@ -82,14 +82,8 @@ describe(ServiceChargeRepository, () => {
           paymentId,
           createdDate,
           returnUrl,
-          redirectUrl: {
-            href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-            method: 'GET',
-          },
-          cancelUrl: {
-            href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-            method: 'POST',
-          },
+          redirectUrl:
+            'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
         },
         partitionKey: accountId,
         _rid: faker.string.sample(),
@@ -111,14 +105,8 @@ describe(ServiceChargeRepository, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       });
       expect(mockRead).toBeCalledTimes(1);
     });
@@ -138,8 +126,8 @@ describe(ServiceChargeRepository, () => {
           state: {
             status: 'Success',
             capturedDate: '2024-06-28',
-            expiryDate: '2024-06-28',
           },
+          expiryDate: '2024-06-28',
         },
         partitionKey: accountId,
         _rid: faker.string.sample(),
@@ -162,8 +150,8 @@ describe(ServiceChargeRepository, () => {
         state: {
           status: 'Success',
           capturedDate: '2024-06-28',
-          expiryDate: '2024-06-28',
         },
+        expiryDate: '2024-06-28',
       });
       expect(mockRead).toBeCalledTimes(1);
     });

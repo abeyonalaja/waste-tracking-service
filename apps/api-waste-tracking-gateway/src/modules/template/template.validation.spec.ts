@@ -6,8 +6,8 @@ describe('validateCreateTemplateRequest', () => {
 
   it('Rejects invalid values', () => {
     expect(validate(undefined)).toBe(false);
-    expect(validate(faker.datatype.string(10))).toBe(false);
-    expect(validate({ ref: faker.datatype.string(10) })).toBe(false);
+    expect(validate(faker.string.sample(10))).toBe(false);
+    expect(validate({ ref: faker.string.sample(10) })).toBe(false);
     expect(validate({})).toBe(false);
   });
 
@@ -15,8 +15,8 @@ describe('validateCreateTemplateRequest', () => {
     expect(
       validate({
         templateDetails: {
-          name: faker.datatype.string(),
-          description: faker.datatype.string(),
+          name: faker.string.sample(),
+          description: faker.string.sample(),
         },
       }),
     ).toBe(true);

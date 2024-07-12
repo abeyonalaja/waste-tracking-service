@@ -18,7 +18,7 @@ describe('validateSubmissionsRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: ValidateSubmissionsRequest = {
-      accountId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
       padIndex: 2,
       values: [
         {
@@ -185,7 +185,7 @@ describe('validateSubmissionsResponse', () => {
       success: true,
       value: {
         valid: true,
-        accountId: faker.datatype.uuid(),
+        accountId: faker.string.uuid(),
         values: [
           {
             reference: 'testRef',

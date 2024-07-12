@@ -1,5 +1,7 @@
 import Ajv from 'ajv/dist/jtd';
 import {
+  CancelPaymentRequest,
+  CancelPaymentResponse,
   CreatePaymentRequest,
   CreatePaymentResponse,
   GetPaymentRequest,
@@ -8,6 +10,8 @@ import {
   SetPaymentResponse,
 } from './payment';
 import {
+  cancelPaymentRequest,
+  cancelPaymentResponse,
   createPaymentRequest,
   createPaymentResponse,
   getPaymentRequest,
@@ -43,20 +47,8 @@ describe('createPaymentResponse', () => {
       success: true,
       value: {
         id,
-        amount: 2000,
-        description: 'Annual service charge',
-        reference: 'Demo reference',
-        paymentId: 'ud5ua5ltse7bh8cq1o866kl6km',
-        createdDate: '2024-06-28T12:00:48.894Z',
-        returnUrl: 'https://track-waste-snd.azure.defra.cloud/',
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       },
     };
 
@@ -100,7 +92,6 @@ describe('setPaymentResponse', () => {
         amount: 2000,
         description: 'Annual service charge',
         reference: 'Demo reference',
-        paymentId: 'ud5ua5ltse7bh8cq1o866kl6km',
         state: {
           status: 'Success',
           capturedDate: '2024-06-28',
@@ -192,6 +183,43 @@ describe('getPaymentResponse', () => {
     expect(validate(value)).toBe(true);
 
     value.value.serviceChargePaid = false;
+
+    expect(validate(value)).toBe(true);
+  });
+
+  it('is compatible with error value', () => {
+    validate({
+      success: false,
+      error: {
+        statusCode: 400,
+        name: 'BadRequest',
+        message: 'Bad request',
+      },
+    });
+  });
+});
+
+describe('cancelPaymentRequest', () => {
+  const validate = ajv.compile<CancelPaymentRequest>(cancelPaymentRequest);
+
+  it('is compatible with success value', () => {
+    const value: CancelPaymentRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('cancelPaymentResponse', () => {
+  const validate = ajv.compile<CancelPaymentResponse>(cancelPaymentResponse);
+
+  it('is compatible with success value', () => {
+    const value: CancelPaymentResponse = {
+      success: true,
+      value: undefined,
+    };
 
     expect(validate(value)).toBe(true);
   });

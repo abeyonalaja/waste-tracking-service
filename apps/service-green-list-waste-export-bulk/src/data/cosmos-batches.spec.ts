@@ -49,10 +49,10 @@ describe(CosmosBatchRepository, () => {
     mockFetchNext.mockClear();
   });
 
-  const mockCosmosEndpoint = faker.datatype.string();
-  const mockCosmosKey = faker.datatype.string();
-  const mockCosmosDbName = faker.datatype.string();
-  const mockCosmosContainerName = faker.datatype.string();
+  const mockCosmosEndpoint = faker.string.sample();
+  const mockCosmosKey = faker.string.sample();
+  const mockCosmosDbName = faker.string.sample();
+  const mockCosmosContainerName = faker.string.sample();
   const logger = new Logger();
 
   const subject = new CosmosBatchRepository(
@@ -67,8 +67,8 @@ describe(CosmosBatchRepository, () => {
 
   describe('getBatch', () => {
     it('retrieves a value with the associated id', async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       const timestamp = new Date();
       const mockResponse = {
         id,
@@ -81,11 +81,11 @@ describe(CosmosBatchRepository, () => {
           },
         },
         partitionKey: accountId,
-        _rid: faker.datatype.string(),
-        _self: faker.datatype.string(),
-        _etag: faker.datatype.string(),
-        _attachments: faker.datatype.string(),
-        _ts: faker.datatype.bigInt(),
+        _rid: faker.string.sample(),
+        _self: faker.string.sample(),
+        _etag: faker.string.sample(),
+        _attachments: faker.string.sample(),
+        _ts: faker.number.bigInt(),
       };
       mockRead.mockResolvedValueOnce({
         resource: mockResponse,
@@ -103,8 +103,8 @@ describe(CosmosBatchRepository, () => {
     });
 
     it("throws Not Found exception if key doesn't exist", async () => {
-      const id = faker.datatype.uuid();
-      const accountId = faker.datatype.uuid();
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
       mockRead.mockResolvedValueOnce({
         resource: undefined,
       } as unknown as ItemResponse<object>);

@@ -4,8 +4,6 @@ type Method = Readonly<{
   name: string;
 }>;
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
 export type DbContainerNameKey = 'drafts' | 'service-charges';
 
 interface IdRequest {
@@ -16,11 +14,6 @@ interface AccountIdRequest {
   accountId: string;
 }
 
-export interface Link {
-  href: string;
-  method: HttpMethod;
-}
-
 export interface CreatedPayment {
   id: string;
   amount: number;
@@ -29,8 +22,7 @@ export interface CreatedPayment {
   paymentId: string;
   createdDate: string;
   returnUrl: string;
-  redirectUrl: Link;
-  cancelUrl: Link;
+  redirectUrl: string;
 }
 
 export type CreatePaymentRequest = AccountIdRequest & {
@@ -38,7 +30,10 @@ export type CreatePaymentRequest = AccountIdRequest & {
   description?: string;
   amount?: number;
 };
-export type CreatePaymentResponse = Response<CreatedPayment>;
+export type CreatePaymentResponse = Response<{
+  id: CreatedPayment['id'];
+  redirectUrl: CreatedPayment['redirectUrl'];
+}>;
 
 export const PaymentStateDict: { [key: string]: string } = {
   P0010: 'Rejected',
@@ -86,7 +81,7 @@ export interface PaymentRecord {
 }
 
 export type SetPaymentRequest = IdRequest & AccountIdRequest;
-export type SetPaymentResponse = Response<PaymentRecord>;
+export type SetPaymentResponse = Response<Omit<PaymentRecord, 'paymentId'>>;
 
 export interface PaymentReference {
   serviceChargePaid: boolean;
@@ -96,6 +91,9 @@ export interface PaymentReference {
 
 export type GetPaymentRequest = AccountIdRequest;
 export type GetPaymentResponse = Response<PaymentReference>;
+
+export type CancelPaymentRequest = IdRequest & AccountIdRequest;
+export type CancelPaymentResponse = Response<void>;
 
 export const createPayment: Method = {
   name: 'createPayment',
@@ -107,4 +105,8 @@ export const setPayment: Method = {
 
 export const getPayment: Method = {
   name: 'getPayment',
+};
+
+export const cancelPayment: Method = {
+  name: 'cancelPayment',
 };

@@ -86,7 +86,6 @@ export default class CosmosServiceChargeRepository
           createdDate: data.createdDate,
           returnUrl: data.returnUrl,
           redirectUrl: data.redirectUrl,
-          cancelUrl: data.cancelUrl,
         };
       } else {
         const data = item.value as RecordData<PaymentRecord>;

@@ -281,7 +281,7 @@ describe('submissionDeclaration', () => {
   it('is compatible with dto values', () => {
     const value: SubmissionDeclaration = {
       declarationTimestamp: faker.date.soon(),
-      transactionId: faker.datatype.string(),
+      transactionId: faker.string.sample(),
     };
 
     expect(validate(value)).toBe(true);
@@ -307,7 +307,7 @@ describe('full submission', () => {
 
   it('is compatible with dto values', () => {
     const value: Submission = {
-      id: faker.datatype.uuid(),
+      id: faker.string.uuid(),
       reference: 'testRef',
       wasteDescription: {
         wasteCode: {
@@ -445,7 +445,7 @@ describe('full submission', () => {
       ],
       submissionDeclaration: {
         declarationTimestamp: faker.date.soon(),
-        transactionId: faker.datatype.string(),
+        transactionId: faker.string.sample(),
       },
       submissionState: {
         status: 'SubmittedWithActuals',
@@ -464,24 +464,24 @@ describe('cancelSubmissionRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: CancelSubmissionRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       cancellationType: { type: 'ChangeOfRecoveryFacilityOrLaboratory' },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       cancellationType: { type: 'ChangeOfRecoveryFacilityOrLaboratory' },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       cancellationType: {
         type: 'Other',
         reason: 'I just wanted to cancel it!',
@@ -510,8 +510,8 @@ describe('getSubmissionsResponse', () => {
         ],
         values: [
           {
-            id: faker.datatype.uuid(),
-            reference: faker.datatype.string(10),
+            id: faker.string.uuid(),
+            reference: faker.string.sample(10),
             wasteDescription: {
               wasteCode: {
                 type: 'NotApplicable',
@@ -570,8 +570,8 @@ describe('getSubmissionResponse', () => {
     const value: GetSubmissionResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
-        reference: faker.datatype.string(10),
+        id: faker.string.uuid(),
+        reference: faker.string.sample(10),
         wasteDescription: {
           wasteCode: {
             type: 'AnnexIIIA',
@@ -728,8 +728,8 @@ describe('setWasteQuantityRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetWasteQuantityRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         type: 'ActualData',
         estimateData: {},
@@ -744,8 +744,8 @@ describe('setWasteQuantityRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         type: 'ActualData',
         estimateData: {},
@@ -759,8 +759,8 @@ describe('setWasteQuantityRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         type: 'ActualData',
         estimateData: {
@@ -785,8 +785,8 @@ describe('setCollectionDateRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: SetCollectionDateRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         type: 'ActualDate',
         actualDate: {
@@ -801,8 +801,8 @@ describe('setCollectionDateRequest', () => {
     expect(validate(value)).toBe(true);
 
     value = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       value: {
         type: 'ActualDate',
         actualDate: {
@@ -828,8 +828,8 @@ describe('createSubmissionsRequest', () => {
   );
   it('is compatible with dto values', () => {
     const value: CreateSubmissionsRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
       values: [
         {
           reference: 'testRef',
@@ -982,7 +982,7 @@ describe('getBulkSubmissionsRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: GetBulkSubmissionsRequest = {
-      accountId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
       submissionIds: [
         '9d27808f-df68-430c-877c-920b66a435c9',
         'ae8ce10c-8f35-4165-af6e-37d4abdb6121',

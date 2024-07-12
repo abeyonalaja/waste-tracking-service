@@ -57,9 +57,9 @@ describe(CosmosRepository, () => {
     mockFetchAll.mockClear();
   });
 
-  const mockCosmosEndpoint = faker.datatype.string();
-  const mockCosmosKey = faker.datatype.string();
-  const mockCosmosDbName = faker.datatype.string();
+  const mockCosmosEndpoint = faker.string.sample();
+  const mockCosmosKey = faker.string.sample();
+  const mockCosmosDbName = faker.string.sample();
   const cosmosContainerMap = new Map<DbContainerNameKey, string>([
     ['drafts', 'drafts'],
   ]);
@@ -77,7 +77,7 @@ describe(CosmosRepository, () => {
 
   describe('getDraft', () => {
     it('retrieves a draft with the associated id', async () => {
-      const mockId = faker.datatype.uuid();
+      const mockId = faker.string.uuid();
       const mockContainerName = 'drafts';
       const mockDraftSubmission = {
         id: mockId,
@@ -105,7 +105,7 @@ describe(CosmosRepository, () => {
       const mockContainerName = 'drafts';
       const mockDraftSubmissions: GetDraftsDto[] = [...Array(30).keys()].map(
         (i) => ({
-          id: faker.datatype.uuid(),
+          id: faker.string.uuid(),
           ewcCode: i.toString().padStart(6, '0'),
           producerName: faker.company.name(),
           wasteMovementId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,

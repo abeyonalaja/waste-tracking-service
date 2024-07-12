@@ -30,23 +30,23 @@ describe('addContentToBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     let value: AddContentToBatchRequest = {
-      accountId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
       content: {
         type: 'text/csv',
         compression: 'Snappy',
-        value: faker.datatype.string(),
+        value: faker.string.sample(),
       },
     };
 
     expect(validate(value)).toBe(true);
 
     value = {
-      accountId: faker.datatype.uuid(),
-      batchId: faker.datatype.uuid(),
+      accountId: faker.string.uuid(),
+      batchId: faker.string.uuid(),
       content: {
         type: 'text/csv',
         compression: 'Snappy',
-        value: faker.datatype.string(),
+        value: faker.string.sample(),
       },
     };
 
@@ -63,7 +63,7 @@ describe('addContentToBatchResponse', () => {
     const value: AddContentToBatchResponse = {
       success: true,
       value: {
-        batchId: faker.datatype.uuid(),
+        batchId: faker.string.uuid(),
       },
     };
 
@@ -76,8 +76,8 @@ describe('getBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: GetBatchRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -91,7 +91,7 @@ describe('getBatchResponse', () => {
     let value: GetBatchResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Processing',
           timestamp: new Date(),
@@ -104,7 +104,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'FailedCsvValidation',
           timestamp: new Date(),
@@ -118,7 +118,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'FailedValidation',
           timestamp: new Date(),
@@ -222,7 +222,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'PassedValidation',
           timestamp: new Date(),
@@ -376,7 +376,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Submitting',
           timestamp: new Date(),
@@ -531,7 +531,7 @@ describe('getBatchResponse', () => {
     value = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         state: {
           status: 'Submitted',
           transactionId: '3497_1224DCBA',
@@ -539,7 +539,7 @@ describe('getBatchResponse', () => {
           hasEstimates: true,
           submissions: [
             {
-              id: faker.datatype.uuid(),
+              id: faker.string.uuid(),
               submissionDeclaration: {
                 declarationTimestamp: new Date(),
                 transactionId: '3497_1224DCBA',
@@ -577,8 +577,8 @@ describe('updateBatchRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: UpdateBatchRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);
@@ -603,8 +603,8 @@ describe('getBatchContentRequest', () => {
 
   it('is compatible with dto values', () => {
     const value: GetBatchContentRequest = {
-      id: faker.datatype.uuid(),
-      accountId: faker.datatype.uuid(),
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
     };
 
     expect(validate(value)).toBe(true);

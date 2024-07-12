@@ -29,7 +29,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
   });
 
   it('returns submission', async () => {
-    const id = faker.datatype.uuid();
+    const id = faker.string.uuid();
     const mockGetDraftResponse: GetDraftResponse = {
       success: true,
       value: {
@@ -66,7 +66,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
   });
 
   it('returns drafts', async () => {
-    const id = faker.datatype.uuid();
+    const id = faker.string.uuid();
     const mockGetDraftsResponse: GetDraftsResponse = {
       success: true,
       value: {

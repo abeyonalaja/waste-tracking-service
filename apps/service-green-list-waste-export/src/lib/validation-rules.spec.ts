@@ -209,7 +209,7 @@ describe('validateCustomerReferenceSection', () => {
     });
 
     response = validateCustomerReferenceSection({
-      reference: faker.datatype.string(120),
+      reference: faker.string.sample(120),
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -838,7 +838,7 @@ describe('validateWasteDescriptionSubSection', () => {
       {
         ewcCodes: '010101',
         nationalCode: '',
-        wasteDescription: faker.datatype.string(120),
+        wasteDescription: faker.string.sample(120),
       },
       ewcCodes,
     );
@@ -1774,7 +1774,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '010101',
         nationalCode: '',
-        wasteDescription: faker.datatype.string(120),
+        wasteDescription: faker.string.sample(120),
       },
       wasteCodes,
       ewcCodes,
@@ -3505,16 +3505,16 @@ describe('validateExporterDetailSection', () => {
     ]);
 
     response = validateExporterDetailSection({
-      exporterOrganisationName: faker.datatype.string(251),
-      exporterAddressLine1: faker.datatype.string(251),
-      exporterAddressLine2: faker.datatype.string(251),
-      exporterTownOrCity: faker.datatype.string(251),
-      exporterCountry: faker.datatype.string(251),
-      exporterPostcode: faker.datatype.string(251),
-      exporterContactFullName: faker.datatype.string(251),
-      exporterContactPhoneNumber: faker.datatype.string(30),
-      exporterFaxNumber: faker.datatype.string(30),
-      exporterEmailAddress: faker.datatype.string(251),
+      exporterOrganisationName: faker.string.sample(251),
+      exporterAddressLine1: faker.string.sample(251),
+      exporterAddressLine2: faker.string.sample(251),
+      exporterTownOrCity: faker.string.sample(251),
+      exporterCountry: faker.string.sample(251),
+      exporterPostcode: faker.string.sample(251),
+      exporterContactFullName: faker.string.sample(251),
+      exporterContactPhoneNumber: faker.string.sample(30),
+      exporterFaxNumber: faker.string.sample(30),
+      exporterEmailAddress: faker.string.sample(251),
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -3725,13 +3725,13 @@ describe('validateImporterDetailSection', () => {
 
     response = validateImporterDetailSection(
       {
-        importerOrganisationName: faker.datatype.string(251),
-        importerAddress: faker.datatype.string(251),
-        importerCountry: faker.datatype.string(251),
-        importerContactFullName: faker.datatype.string(251),
-        importerContactPhoneNumber: faker.datatype.string(30),
-        importerFaxNumber: faker.datatype.string(30),
-        importerEmailAddress: faker.datatype.string(251),
+        importerOrganisationName: faker.string.sample(251),
+        importerAddress: faker.string.sample(251),
+        importerCountry: faker.string.sample(251),
+        importerContactFullName: faker.string.sample(251),
+        importerContactPhoneNumber: faker.string.sample(30),
+        importerFaxNumber: faker.string.sample(30),
+        importerEmailAddress: faker.string.sample(251),
       },
       countries,
     );
@@ -4156,15 +4156,15 @@ describe('validateCarriersSection', () => {
 
     response = validateCarriersSection(
       {
-        firstCarrierOrganisationName: faker.datatype.string(251),
-        firstCarrierAddress: faker.datatype.string(251),
-        firstCarrierCountry: faker.datatype.string(50),
-        firstCarrierContactFullName: faker.datatype.string(251),
-        firstCarrierContactPhoneNumber: faker.datatype.string(50),
-        firstCarrierFaxNumber: faker.datatype.string(50),
-        firstCarrierEmailAddress: faker.datatype.string(50),
-        firstCarrierMeansOfTransport: faker.datatype.string(50),
-        firstCarrierMeansOfTransportDetails: faker.datatype.string(201),
+        firstCarrierOrganisationName: faker.string.sample(251),
+        firstCarrierAddress: faker.string.sample(251),
+        firstCarrierCountry: faker.string.sample(50),
+        firstCarrierContactFullName: faker.string.sample(251),
+        firstCarrierContactPhoneNumber: faker.string.sample(50),
+        firstCarrierFaxNumber: faker.string.sample(50),
+        firstCarrierEmailAddress: faker.string.sample(50),
+        firstCarrierMeansOfTransport: faker.string.sample(50),
+        firstCarrierMeansOfTransportDetails: faker.string.sample(201),
         secondCarrierOrganisationName: '',
         secondCarrierAddress: '',
         secondCarrierCountry: '',
@@ -4756,16 +4756,16 @@ describe('validateCollectionDetailSection', () => {
     ]);
 
     response = validateCollectionDetailSection({
-      wasteCollectionOrganisationName: faker.datatype.string(251),
-      wasteCollectionAddressLine1: faker.datatype.string(251),
-      wasteCollectionAddressLine2: faker.datatype.string(251),
-      wasteCollectionTownOrCity: faker.datatype.string(251),
-      wasteCollectionCountry: faker.datatype.string(251),
-      wasteCollectionPostcode: faker.datatype.string(251),
-      wasteCollectionContactFullName: faker.datatype.string(251),
-      wasteCollectionContactPhoneNumber: faker.datatype.string(30),
-      wasteCollectionFaxNumber: faker.datatype.string(30),
-      wasteCollectionEmailAddress: faker.datatype.string(251),
+      wasteCollectionOrganisationName: faker.string.sample(251),
+      wasteCollectionAddressLine1: faker.string.sample(251),
+      wasteCollectionAddressLine2: faker.string.sample(251),
+      wasteCollectionTownOrCity: faker.string.sample(251),
+      wasteCollectionCountry: faker.string.sample(251),
+      wasteCollectionPostcode: faker.string.sample(251),
+      wasteCollectionContactFullName: faker.string.sample(251),
+      wasteCollectionContactPhoneNumber: faker.string.sample(30),
+      wasteCollectionFaxNumber: faker.string.sample(30),
+      wasteCollectionEmailAddress: faker.string.sample(251),
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
@@ -4853,7 +4853,7 @@ describe('validateUkExitLocationSection', () => {
 
   it('fails UkExitLocation section validation', async () => {
     let response = validateUkExitLocationSection({
-      whereWasteLeavesUk: faker.datatype.string(51),
+      whereWasteLeavesUk: faker.string.sample(51),
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
@@ -5435,14 +5435,14 @@ describe('validateRecoveryFacilityDetailSection', () => {
 
     response = validateRecoveryFacilityDetailSection(
       {
-        interimSiteOrganisationName: faker.datatype.string(251),
-        interimSiteAddress: faker.datatype.string(251),
-        interimSiteCountry: faker.datatype.string(50),
-        interimSiteContactFullName: faker.datatype.string(251),
-        interimSiteContactPhoneNumber: faker.datatype.string(50),
-        interimSiteFaxNumber: faker.datatype.string(50),
-        interimSiteEmailAddress: faker.datatype.string(50),
-        interimSiteRecoveryCode: faker.datatype.string(50),
+        interimSiteOrganisationName: faker.string.sample(251),
+        interimSiteAddress: faker.string.sample(251),
+        interimSiteCountry: faker.string.sample(50),
+        interimSiteContactFullName: faker.string.sample(251),
+        interimSiteContactPhoneNumber: faker.string.sample(50),
+        interimSiteFaxNumber: faker.string.sample(50),
+        interimSiteEmailAddress: faker.string.sample(50),
+        interimSiteRecoveryCode: faker.string.sample(50),
         laboratoryOrganisationName: '',
         laboratoryAddress: '',
         laboratoryCountry: '',
@@ -5451,14 +5451,14 @@ describe('validateRecoveryFacilityDetailSection', () => {
         laboratoryFaxNumber: '',
         laboratoryEmailAddress: '',
         laboratoryDisposalCode: '',
-        firstRecoveryFacilityOrganisationName: faker.datatype.string(251),
-        firstRecoveryFacilityAddress: faker.datatype.string(251),
-        firstRecoveryFacilityCountry: faker.datatype.string(50),
-        firstRecoveryFacilityContactFullName: faker.datatype.string(251),
-        firstRecoveryFacilityContactPhoneNumber: faker.datatype.string(50),
-        firstRecoveryFacilityFaxNumber: faker.datatype.string(50),
-        firstRecoveryFacilityEmailAddress: faker.datatype.string(50),
-        firstRecoveryFacilityRecoveryCode: faker.datatype.string(50),
+        firstRecoveryFacilityOrganisationName: faker.string.sample(251),
+        firstRecoveryFacilityAddress: faker.string.sample(251),
+        firstRecoveryFacilityCountry: faker.string.sample(50),
+        firstRecoveryFacilityContactFullName: faker.string.sample(251),
+        firstRecoveryFacilityContactPhoneNumber: faker.string.sample(50),
+        firstRecoveryFacilityFaxNumber: faker.string.sample(50),
+        firstRecoveryFacilityEmailAddress: faker.string.sample(50),
+        firstRecoveryFacilityRecoveryCode: faker.string.sample(50),
         secondRecoveryFacilityOrganisationName: '',
         secondRecoveryFacilityAddress: '',
         secondRecoveryFacilityCountry: '',
@@ -5681,14 +5681,14 @@ describe('validateRecoveryFacilityDetailSection', () => {
         interimSiteFaxNumber: '',
         interimSiteEmailAddress: '',
         interimSiteRecoveryCode: '',
-        laboratoryOrganisationName: faker.datatype.string(251),
-        laboratoryAddress: faker.datatype.string(251),
-        laboratoryCountry: faker.datatype.string(50),
-        laboratoryContactFullName: faker.datatype.string(251),
-        laboratoryContactPhoneNumber: faker.datatype.string(50),
-        laboratoryFaxNumber: faker.datatype.string(50),
-        laboratoryEmailAddress: faker.datatype.string(50),
-        laboratoryDisposalCode: faker.datatype.string(50),
+        laboratoryOrganisationName: faker.string.sample(251),
+        laboratoryAddress: faker.string.sample(251),
+        laboratoryCountry: faker.string.sample(50),
+        laboratoryContactFullName: faker.string.sample(251),
+        laboratoryContactPhoneNumber: faker.string.sample(50),
+        laboratoryFaxNumber: faker.string.sample(50),
+        laboratoryEmailAddress: faker.string.sample(50),
+        laboratoryDisposalCode: faker.string.sample(50),
         firstRecoveryFacilityOrganisationName: '',
         firstRecoveryFacilityAddress: '',
         firstRecoveryFacilityCountry: '',

@@ -43,8 +43,8 @@ describe(AssignmentController, () => {
     it('returns participant info if found', async () => {
       const assignment: Assignment = {
         content: 'GLW',
-        dcidSubjectId: faker.datatype.uuid(),
-        participantId: faker.datatype.uuid(),
+        dcidSubjectId: faker.string.uuid(),
+        participantId: faker.string.uuid(),
       };
       mockRepository.getAssignment.mockResolvedValueOnce(assignment);
 
@@ -77,7 +77,7 @@ describe(AssignmentController, () => {
 
     const result = await subject.checkParticipation({
       content: 'GLW',
-      dcidSubjectId: faker.datatype.uuid(),
+      dcidSubjectId: faker.string.uuid(),
     });
 
     expect(mockRepository.getAssignment).toHaveBeenCalled();
@@ -93,8 +93,8 @@ describe(AssignmentController, () => {
     it('makes assignment based on valid token', async () => {
       const assignment: Assignment = {
         content: 'GLW',
-        dcidSubjectId: faker.datatype.uuid(),
-        participantId: faker.datatype.uuid(),
+        dcidSubjectId: faker.string.uuid(),
+        participantId: faker.string.uuid(),
       };
       mockRepository.setAssignment.mockResolvedValueOnce(undefined);
       mockTokenValidator.validate.mockResolvedValueOnce({
@@ -116,14 +116,14 @@ describe(AssignmentController, () => {
     });
 
     it("doesn't attempt assignment based on invalid token", async () => {
-      const error = faker.datatype.string(20);
+      const error = faker.string.sample(20);
       mockTokenValidator.validate.mockResolvedValueOnce({
         valid: false,
         error,
       });
 
       const result = await subject.redeemInvitation({
-        dcidSubjectId: faker.datatype.uuid(),
+        dcidSubjectId: faker.string.uuid(),
         invitationToken: 'YQ==',
       });
 

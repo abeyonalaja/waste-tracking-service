@@ -49,7 +49,7 @@ jest.mock('@wts/client/green-list-waste-export-bulk', () => ({
 
 describe(AnnexViiBulkServiceBackend, () => {
   const subject = new AnnexViiBulkServiceBackend(
-    new DaprAnnexViiBulkClient(new DaprClient(), faker.datatype.string()),
+    new DaprAnnexViiBulkClient(new DaprClient(), faker.string.sample()),
     new winston.Logger(),
   );
 
@@ -61,7 +61,7 @@ describe(AnnexViiBulkServiceBackend, () => {
 
   describe('createBatch', () => {
     it('throws client error if no CSV content', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'application/json',
@@ -78,14 +78,14 @@ describe(AnnexViiBulkServiceBackend, () => {
 
     it('throws client error if empty input', async () => {
       try {
-        await subject.createBatch(faker.datatype.uuid(), []);
+        await subject.createBatch(faker.string.uuid(), []);
       } catch (err) {
         expect(err).toEqual(Boom.badRequest());
       }
     });
 
     it('forwards thrown Boom errors', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
@@ -118,7 +118,7 @@ describe(AnnexViiBulkServiceBackend, () => {
     });
 
     it('throws server error if response cannot be returned via Dapr', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
@@ -144,14 +144,14 @@ describe(AnnexViiBulkServiceBackend, () => {
     });
 
     it('returns successful response', async () => {
-      const accountId = faker.datatype.uuid();
+      const accountId = faker.string.uuid();
       const inputs = [
         {
           type: 'text/csv',
           data: Buffer.from('test,test'),
         },
       ];
-      const batchId = faker.datatype.uuid();
+      const batchId = faker.string.uuid();
       mockAddContentToBatch.mockResolvedValueOnce({
         success: true,
         value: {
@@ -177,8 +177,8 @@ describe(AnnexViiBulkServiceBackend, () => {
   describe('getBatch', () => {
     it('throws client error if unsuccessful response was returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockGetBatch.mockResolvedValueOnce({
         success: false,
@@ -199,8 +199,8 @@ describe(AnnexViiBulkServiceBackend, () => {
 
     it('throws server error if response cannot be returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockGetBatch.mockRejectedValueOnce(Boom.teapot());
 
@@ -213,9 +213,9 @@ describe(AnnexViiBulkServiceBackend, () => {
     });
 
     it('returns successful response', async () => {
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const timestamp = new Date();
-      const request = { id: id, accountId: faker.datatype.uuid() };
+      const request = { id: id, accountId: faker.string.uuid() };
       mockGetBatch.mockResolvedValueOnce({
         success: true,
         value: {
@@ -241,8 +241,8 @@ describe(AnnexViiBulkServiceBackend, () => {
   describe('finalizeBatch', () => {
     it('throws client error if unsuccessful response was returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockUpdateBatch.mockResolvedValueOnce({
         success: false,
@@ -263,8 +263,8 @@ describe(AnnexViiBulkServiceBackend, () => {
 
     it('throws server error if response cannot be returned via Dapr', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockUpdateBatch.mockRejectedValueOnce(Boom.teapot());
 
@@ -278,8 +278,8 @@ describe(AnnexViiBulkServiceBackend, () => {
 
     it('returns successful response', async () => {
       const request = {
-        id: faker.datatype.uuid(),
-        accountId: faker.datatype.uuid(),
+        id: faker.string.uuid(),
+        accountId: faker.string.uuid(),
       };
       mockUpdateBatch.mockResolvedValueOnce({
         success: true,

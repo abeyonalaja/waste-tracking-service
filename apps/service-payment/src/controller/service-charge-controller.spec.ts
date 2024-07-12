@@ -16,6 +16,7 @@ jest.mock('winston', () => ({
 const mockPaymentClient = {
   createPayment: jest.fn<GovUkPayServiceChargeClient['createPayment']>(),
   getPayment: jest.fn<GovUkPayServiceChargeClient['getPayment']>(),
+  cancelPayment: jest.fn<GovUkPayServiceChargeClient['cancelPayment']>(),
 };
 
 const mockRepository = {
@@ -34,6 +35,7 @@ describe(PaymentController, () => {
   beforeEach(() => {
     mockPaymentClient.getPayment.mockClear();
     mockPaymentClient.createPayment.mockClear();
+    mockPaymentClient.cancelPayment.mockClear();
     mockRepository.getRecord.mockClear();
     mockRepository.saveRecord.mockClear();
     mockRepository.deleteRecord.mockClear();
@@ -59,14 +61,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
 
       mockPaymentClient.createPayment.mockResolvedValueOnce(value);
@@ -142,14 +138,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
 
       mockPaymentClient.createPayment.mockResolvedValueOnce(value);
@@ -172,15 +162,8 @@ describe(PaymentController, () => {
         value,
         accountId,
       );
-      expect(response.value.id).toEqual(id);
-      expect(response.value.amount).toEqual(amount);
-      expect(response.value.description).toEqual(description);
-      expect(response.value).toHaveProperty('reference');
-      expect(response.value.paymentId).toEqual(value.paymentId);
-      expect(response.value.createdDate).toEqual(createdDate);
-      expect(response.value.returnUrl).toEqual(returnUrl);
-      expect(response.value).toHaveProperty('redirectUrl');
-      expect(response.value).toHaveProperty('cancelUrl');
+      expect(response.value.id).toEqual(value.id);
+      expect(response.value.redirectUrl).toEqual(value.redirectUrl);
     });
   });
 
@@ -218,14 +201,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
 
       mockRepository.getRecord.mockResolvedValueOnce(value);
@@ -275,14 +252,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
 
       mockRepository.getRecord.mockResolvedValueOnce(value);
@@ -340,14 +311,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
 
       mockRepository.getRecord.mockResolvedValueOnce(value);
@@ -383,7 +348,6 @@ describe(PaymentController, () => {
         amount,
         description,
         reference,
-        paymentId: value.paymentId,
         state: {
           status: 'InProgress',
         },
@@ -401,14 +365,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
       const responseValue: PaymentRecord = {
         id,
@@ -463,7 +421,14 @@ describe(PaymentController, () => {
         id,
         accountId,
       );
-      expect(response.value).toEqual(responseValue);
+      expect(response.value).toEqual({
+        id: responseValue.id,
+        amount: responseValue.amount,
+        description: responseValue.description,
+        reference: responseValue.reference,
+        state: responseValue.state,
+        expiryDate: responseValue.expiryDate,
+      });
     });
 
     it('successfully returns Success value for renewed payment', async () => {
@@ -477,14 +442,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
       const responseValue: PaymentRecord = {
         id,
@@ -542,7 +501,14 @@ describe(PaymentController, () => {
         id,
         accountId,
       );
-      expect(response.value).toEqual(responseValue);
+      expect(response.value).toEqual({
+        id: responseValue.id,
+        amount: responseValue.amount,
+        description: responseValue.description,
+        reference: responseValue.reference,
+        state: responseValue.state,
+        expiryDate: responseValue.expiryDate,
+      });
     });
 
     it('successfully returns Error value', async () => {
@@ -556,14 +522,8 @@ describe(PaymentController, () => {
         paymentId,
         createdDate,
         returnUrl,
-        redirectUrl: {
-          href: 'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
-          method: 'GET',
-        },
-        cancelUrl: {
-          href: 'https://publicapi.payments.service.gov.uk/v1/payments/ud5ua5ltse7bh8cq1o866kl6km/cancel',
-          method: 'POST',
-        },
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
       };
       const responseValue: PaymentRecord = {
         id,
@@ -609,7 +569,13 @@ describe(PaymentController, () => {
         id,
         accountId,
       );
-      expect(response.value).toEqual(responseValue);
+      expect(response.value).toEqual({
+        id: responseValue.id,
+        amount: responseValue.amount,
+        description: responseValue.description,
+        reference: responseValue.reference,
+        state: responseValue.state,
+      });
     });
   });
 
@@ -699,6 +665,133 @@ describe(PaymentController, () => {
         expiryDate: '2025-07-01',
         renewalDate: '2026-06-30',
       });
+    });
+  });
+
+  describe('cancelPayment', () => {
+    it('forwards thrown Boom errors from repository record', async () => {
+      const id = faker.string.uuid();
+      mockRepository.getRecord.mockRejectedValueOnce(Boom.teapot());
+
+      const response = await subject.cancelPayment({
+        id,
+        accountId,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        accountId,
+        subject.draftContainerName,
+        id,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('forwards thrown Boom errors from client', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const value: CreatedPayment = {
+        id,
+        amount,
+        description,
+        reference,
+        paymentId,
+        createdDate,
+        returnUrl,
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
+      };
+
+      mockRepository.getRecord.mockResolvedValueOnce(value);
+      mockPaymentClient.cancelPayment.mockRejectedValueOnce(Boom.teapot());
+
+      const response = await subject.cancelPayment({
+        id,
+        accountId,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        accountId,
+        subject.draftContainerName,
+        id,
+      );
+      expect(mockPaymentClient.cancelPayment).toBeCalledWith(value.paymentId);
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('forwards thrown unknown errors', async () => {
+      const id = faker.string.uuid();
+      mockRepository.getRecord.mockRejectedValueOnce(new Error());
+
+      const response = await subject.cancelPayment({
+        id,
+        accountId,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        accountId,
+        subject.draftContainerName,
+        id,
+      );
+      expect(response.error.statusCode).toBe(500);
+    });
+
+    it('successfully returns value', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const value: CreatedPayment = {
+        id,
+        amount,
+        description,
+        reference,
+        paymentId,
+        createdDate,
+        returnUrl,
+        redirectUrl:
+          'https://card.payments.service.gov.uk/secure/aa1afcd5-8f26-4e07-b4bd-b51076e61404',
+      };
+
+      mockRepository.getRecord.mockResolvedValueOnce(value);
+      mockPaymentClient.cancelPayment.mockResolvedValueOnce();
+      mockRepository.deleteRecord.mockResolvedValueOnce();
+
+      const response = await subject.cancelPayment({
+        id,
+        accountId,
+      });
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        accountId,
+        subject.draftContainerName,
+        id,
+      );
+      expect(mockPaymentClient.cancelPayment).toHaveBeenCalledWith(
+        value.paymentId,
+      );
+      expect(mockRepository.deleteRecord).toBeCalledWith(
+        subject.draftContainerName,
+        id,
+        accountId,
+      );
+      expect(response.value).toEqual(undefined);
     });
   });
 

@@ -10,7 +10,7 @@ describe('checkParticipationRequest', () => {
 
   it('is comatible with dto values', () => {
     const value: CheckParticipationRequest = {
-      dcidSubjectId: faker.datatype.uuid(),
+      dcidSubjectId: faker.string.uuid(),
       content: 'GLW',
     };
 
@@ -31,7 +31,7 @@ describe('redeemInvitationRequest', () => {
 
   it('is comatible with dto values', () => {
     const value: RedeemInvitationRequest = {
-      dcidSubjectId: faker.datatype.uuid(),
+      dcidSubjectId: faker.string.uuid(),
       invitationToken: 'YQ==',
     };
 

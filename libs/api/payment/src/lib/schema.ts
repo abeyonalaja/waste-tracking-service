@@ -2,9 +2,9 @@ import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 import {
   CreatePaymentRequest,
   GetPaymentRequest,
-  Link,
   CreatedPayment,
   SetPaymentRequest,
+  CancelPaymentRequest,
 } from './payment';
 
 const errorResponseValue: SchemaObject = {
@@ -12,13 +12,6 @@ const errorResponseValue: SchemaObject = {
     statusCode: { type: 'uint16' },
     name: { type: 'string' },
     message: { type: 'string' },
-  },
-};
-
-const link: JTDSchemaType<Link> = {
-  properties: {
-    href: { type: 'string' },
-    method: { enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] },
   },
 };
 
@@ -31,8 +24,7 @@ export const createdPayment: JTDSchemaType<CreatedPayment> = {
     paymentId: { type: 'string' },
     createdDate: { type: 'string' },
     returnUrl: { type: 'string' },
-    redirectUrl: link,
-    cancelUrl: link,
+    redirectUrl: { type: 'string' },
   },
 };
 
@@ -51,7 +43,12 @@ export const createPaymentResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
-    value: createdPayment,
+    value: {
+      properties: {
+        id: { type: 'string' },
+        redirectUrl: { type: 'string' },
+      },
+    },
   },
 };
 
@@ -119,7 +116,18 @@ export const setPaymentResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
-    value: paymentRecord,
+    value: {
+      properties: {
+        id: { type: 'string' },
+        amount: { type: 'uint16' },
+        description: { type: 'string' },
+        reference: { type: 'string' },
+        state: paymentState,
+      },
+      optionalProperties: {
+        expiryDate: { type: 'string' },
+      },
+    },
   },
 };
 
@@ -142,5 +150,22 @@ export const getPaymentResponse: SchemaObject = {
   optionalProperties: {
     error: errorResponseValue,
     value: paymentReference,
+  },
+};
+
+export const cancelPaymentRequest: JTDSchemaType<CancelPaymentRequest> = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const cancelPaymentResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      properties: {},
+    },
   },
 };

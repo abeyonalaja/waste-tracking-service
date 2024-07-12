@@ -19,9 +19,9 @@ describe(BoomiAddressClient, () => {
     mockAxios.get.mockClear();
   });
 
-  const addressLookupUrl = faker.datatype.string();
-  const cert = Buffer.from(faker.datatype.string(), 'base64');
-  const key = Buffer.from(faker.datatype.string(), 'base64');
+  const addressLookupUrl = faker.string.sample();
+  const cert = Buffer.from(faker.string.sample(), 'base64');
+  const key = Buffer.from(faker.string.sample(), 'base64');
   const subject = new BoomiAddressClient(
     new Logger(),
     addressLookupUrl,

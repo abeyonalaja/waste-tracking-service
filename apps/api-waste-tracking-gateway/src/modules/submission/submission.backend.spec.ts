@@ -139,13 +139,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('persists a created submission', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: '',
         wasteQuantity: {
           status: 'CannotStart',
@@ -216,8 +216,8 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('bad request if reference more than 20 chars', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(21);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(21);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: false,
@@ -240,13 +240,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
     });
   });
   it('creates a submission with a reference', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -319,13 +319,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('creates a submission and gets the submission using returned id to check all statuses are correct', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -433,13 +433,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('enables waste quantity on completion of waste description', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'NotStarted',
@@ -545,13 +545,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('cannot initially start recovery facility section', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         recoveryFacilityDetail: {
           status: 'CannotStart',
@@ -613,13 +613,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('enables recovery facility where some waste code is provided', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -722,13 +722,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('enables recovery facility where some waste code is provided', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -831,9 +831,9 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('rejects where reference not found', async () => {
-    const id = faker.datatype.uuid();
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: false,
@@ -901,13 +901,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('lets us change a carrier detail', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -968,7 +968,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
         transport: false,
         values: [
           {
-            id: faker.datatype.uuid(),
+            id: faker.string.uuid(),
             addressDetails: {
               organisationName: 'Acme Corporation',
               address: '123 Main St, Anytown',
@@ -1067,13 +1067,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('accepts set exit location if provided is Yes and value is given', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -1125,7 +1125,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
 
     const setExitLocationRequest: ExitLocation = {
       status: 'Complete',
-      exitLocation: { provided: 'Yes', value: faker.datatype.string() },
+      exitLocation: { provided: 'Yes', value: faker.string.sample() },
     };
 
     const mockSetDraftExitLocationByIdResponse: draft.SetDraftUkExitLocationResponse =
@@ -1154,13 +1154,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('lets us change a Transit Countries data', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -1257,13 +1257,13 @@ describe(AnnexViiServiceSubmissionBackend, () => {
   });
 
   it('lets us change a Recovery Facility Detail', async () => {
-    const accountId = faker.datatype.uuid();
-    const reference = faker.datatype.string(10);
+    const accountId = faker.string.uuid();
+    const reference = faker.string.sample(10);
 
     const mockCreateDraftResponse: draft.CreateDraftResponse = {
       success: true,
       value: {
-        id: faker.datatype.uuid(),
+        id: faker.string.uuid(),
         reference: reference,
         wasteQuantity: {
           status: 'CannotStart',
@@ -1324,7 +1324,7 @@ describe(AnnexViiServiceSubmissionBackend, () => {
           status: status.status,
           values: [
             {
-              id: faker.datatype.uuid(),
+              id: faker.string.uuid(),
               addressDetails: {
                 name: 'Acme Corporation',
                 address: '123 Main St, Anytown',
