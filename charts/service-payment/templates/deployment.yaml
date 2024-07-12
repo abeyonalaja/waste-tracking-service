@@ -40,4 +40,3 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
         env:          
           {{- include "service-payment.env" . | nindent 8 }}
-
