@@ -92,7 +92,9 @@
   },
   "optionalDependencies": {
     "@napi-rs/snappy-linux-x64-gnu": "^7.2.2",
-    "@nx/nx-linux-x64-gnu": "^19.1.1"
+    "@nx/nx-linux-x64-gnu": "^19.1.1",
+    "color-name": "^1.1.4",
+    "color-convert": "^2.0.1"
   },
   "dependencies": {
     "@azure/cosmos": "^4.0.0",
