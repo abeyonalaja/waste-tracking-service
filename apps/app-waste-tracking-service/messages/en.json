@@ -61,7 +61,7 @@
       "descriptionOne": "You can contact the move and track waste service support team if you need help with a technical issue, such as problems accessing the service.",
       "emailKey": "Email: ",
       "emailValue": "wasteuserresearch@defra.gov.uk",
-      "descriptionTwo": "The waste recording service support team will not be able to answer regulatory questions. "
+      "descriptionTwo": "The waste recording service support team will not be able to answer regulatory questions."
     },
     "getHelpRegulatoryIssue": {
       "title": "Get help with a regulatory issue",
@@ -71,6 +71,31 @@
       "linkTwo": "SEPA (Scottish Environment protection Agency) waste information",
       "linkThree": "DEARA ( Department of Agriculture, Environment and Rural Affairs) waste policy tracker",
       "linkFour": "Business Cymru Waste Legislation"
+    }
+  },
+  "charge": {
+    "guidance": {
+      "title": "Pay the annual waste tracking service charge",
+      "paragraphOne": "You need to pay the annual service charge to access the full waste tracking service. <strong>The cost is £{price} per year</strong> and gives access to all your admin and standard accounts linked to your business.",
+      "paragraphTwo": "It will allow these accounts to:",
+      "listOneListItemOne": "create and view new UK waste movement and Annex VII records",
+      "listOneListItemTwo": "update and confirm UK waste movement records if you are a carrier or receiver",
+      "listOneListItemThree": "view and update Annex VII records that you have previously submitted",
+      "paragraphThree": "If you do not pay the service charge, you will only be able to view:",
+      "listTwoListItemOne": "records that you have previously created or updated",
+      "listTwoListItemTwo": "templates that you have previously created",
+      "warning": "You will not be able to create or confirm any records until you have paid the service charge.",
+      "buttonPay": "Pay service charge",
+      "buttonCancel": "Continue without paying"
+    },
+    "review": {
+      "caption": "Move and track waste",
+      "headingOne": "Annual waste tracking service charge",
+      "paragraphOne": "Your business will have full access to the waste tracking service until <strong>11:59pm on {date}</strong> once you have paid this charge.",
+      "headingTwo": "Review the payment amount",
+      "tableHeading": "Total to pay",
+      "buttonAction": "Continue",
+      "buttonCancel": "Cancel"
     }
   }
 }

@@ -1,15 +1,8 @@
 import { JWT } from 'next-auth/jwt';
 
-export interface RefreshAccessToken {
-  token: JWT;
-  id_token: string;
-  idTokenExpires: number;
-  refreshToken: string;
-}
-
 export const refreshAccessToken = async (token: JWT): Promise<JWT> => {
   let tokenEndpoint;
-  const fetchData = async (): Promise<void | RefreshAccessToken> => {
+  const fetchData = async (): Promise<void> => {
     const response = await fetch(process.env.DCID_WELLKNOWN || '', {
       cache: 'force-cache',
       method: 'get',

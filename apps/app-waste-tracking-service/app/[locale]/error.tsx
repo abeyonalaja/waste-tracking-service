@@ -16,10 +16,6 @@ export default function Error({ error }: ErrorPageProps): JSX.Element {
         Sorry, there is a problem with the service
       </h1>
       <p>Try again later.</p>
-      <p>
-        We saved your answers. They will be available when you can access the
-        service again.
-      </p>
     </Page>
   );
 }

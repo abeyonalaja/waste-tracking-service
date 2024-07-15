@@ -1,0 +1,11 @@
+.tableRow {
+  display: flex;
+}
+
+.tableHeader {
+  flex-grow: 1;
+}
+
+.tableData {
+  flex-grow: 1.25;
+}

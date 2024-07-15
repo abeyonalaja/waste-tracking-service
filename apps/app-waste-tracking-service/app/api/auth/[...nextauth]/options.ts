@@ -23,6 +23,7 @@ export const options: NextAuthOptions = {
           id: profile.sub,
           name: `${profile.firstName} ${profile.lastName}`,
           email: profile.email,
+          relationships: profile.relationships,
         };
       },
     }),
@@ -34,16 +35,9 @@ export const options: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   jwt: { maxAge: 60 * 60 * 24 * 30 },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      const params = new URL(url).searchParams;
-      const callbackUrl = params.get('callbackUrl');
-      if (callbackUrl !== null && callbackUrl.includes(baseUrl)) {
-        return callbackUrl;
-      }
-      return url;
-    },
     async session({ session, token }) {
       session.token = token.id_token;
+      session.companyName = token.relationships as string;
       return session;
     },
     async jwt({ token, account, profile }) {
@@ -53,12 +47,14 @@ export const options: NextAuthOptions = {
         return {
           name: `${profile.firstName} ${profile.lastName}`,
           email: profile.email,
+          relationships: profile.relationships[0].split(':')[2],
           id_token: account.id_token,
           idTokenExpires: Date.now() + account.id_token_expires_in * 1000, // 20 minutes
           refreshToken: account.refresh_token,
           uniqueReference: profile.uniqueReference,
         };
       } else if (Date.now() > twoMinLessThanExpiry) {
+        console.log('Refresh the token');
         return refreshAccessToken(token) || token;
       }
       return token;

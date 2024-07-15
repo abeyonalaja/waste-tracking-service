@@ -6,6 +6,7 @@ import { JWT } from 'next-auth/jwt';
 declare module 'next-auth' {
   interface Session {
     token: string | null | undefined;
+    companyName: string;
   }
   interface Profile {
     sup: string;
@@ -13,6 +14,7 @@ declare module 'next-auth' {
     lastName: string;
     email: string;
     uniqueReference: string;
+    relationships: string[];
   }
   interface Account {
     id_token_expires_in: number;
