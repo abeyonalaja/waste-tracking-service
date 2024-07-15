@@ -11,6 +11,7 @@ import {
   ValidationResult,
   RecoveryFacilityDetail,
   Submission,
+  WasteQuantity,
 } from '../../model';
 import { validationRules } from '../../lib';
 import {
@@ -20,7 +21,6 @@ import {
   WasteCodeType,
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
-import { setWasteQuantityUnit } from '../../lib/util';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -124,7 +124,27 @@ export default class SubmissionController {
         return success(undefined);
       }
 
-      setWasteQuantityUnit(value, submission);
+      let volumeUnit: WasteQuantity['actualData']['unit'] = 'Cubic Metre';
+      let wasteUnit: WasteQuantity['actualData']['unit'] = 'Tonne';
+
+      if (submission.wasteDescription.wasteCode.type === 'NotApplicable') {
+        volumeUnit = 'Litre';
+        wasteUnit = 'Kilogram';
+      }
+
+      if (value.type === 'ActualData') {
+        value.actualData.quantityType === 'Volume'
+          ? (value.actualData.unit = volumeUnit)
+          : value.actualData.quantityType === 'Weight'
+            ? (value.actualData.unit = wasteUnit)
+            : null;
+      } else {
+        value.estimateData.quantityType === 'Volume'
+          ? (value.estimateData.unit = volumeUnit)
+          : value.estimateData.quantityType === 'Weight'
+            ? (value.estimateData.unit = wasteUnit)
+            : null;
+      }
       submission.wasteQuantity = value;
 
       submission.submissionState =

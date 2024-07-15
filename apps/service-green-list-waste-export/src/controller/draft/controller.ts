@@ -18,25 +18,17 @@ import {
   DraftSubmission,
   RecordState,
   Submission,
+  WasteQuantity,
 } from '../../model';
 import {
-  createBaseCarriers,
-  createBaseRecoveryFacilityDetail,
-  deleteBaseCarriers,
-  deleteBaseRecoveryFacilityDetail,
-  getSubmissionData,
   isCollectionDateValid,
   isWasteCodeChangingBulkToBulkDifferentType,
   isWasteCodeChangingBulkToBulkSameType,
   isWasteCodeChangingBulkToSmall,
   isWasteCodeChangingSmallToBulk,
-  setBaseCarriers,
-  setBaseRecoveryFacilityDetail,
   setBaseWasteDescription,
   setSubmissionConfirmationStatus,
   setSubmissionDeclarationStatus,
-  setDraftWasteQuantityUnit,
-  getCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 
@@ -379,7 +371,34 @@ export default class DraftController {
         accountId,
       )) as DraftSubmission;
 
-      setDraftWasteQuantityUnit(value, draft);
+      if (
+        draft.wasteDescription.status !== 'NotStarted' &&
+        value.status !== 'CannotStart' &&
+        value.status !== 'NotStarted'
+      ) {
+        let volumeUnit: WasteQuantity['actualData']['unit'] = 'Cubic Metre';
+        let wasteUnit: WasteQuantity['actualData']['unit'] = 'Tonne';
+
+        if (draft.wasteDescription.wasteCode?.type === 'NotApplicable') {
+          volumeUnit = 'Litre';
+          wasteUnit = 'Kilogram';
+        }
+
+        if (value.value?.type === 'ActualData') {
+          value.value?.actualData?.quantityType === 'Volume'
+            ? (value.value.actualData.unit = volumeUnit)
+            : value.value.actualData?.quantityType === 'Weight'
+              ? (value.value.actualData.unit = wasteUnit)
+              : null;
+        } else if (value.value?.type === 'EstimateData') {
+          value.value?.estimateData?.quantityType === 'Volume'
+            ? (value.value.estimateData.unit = volumeUnit)
+            : value.value.estimateData?.quantityType === 'Weight'
+              ? (value.value.estimateData.unit = wasteUnit)
+              : null;
+        }
+      }
+
       let wasteQuantity = value;
       if (
         value.status !== 'CannotStart' &&
@@ -736,12 +755,33 @@ export default class DraftController {
         }
       }
 
-      draft.carriers.transport = getCarrierTransport(draft.wasteDescription);
-      const { newCarrierId, carriers } = createBaseCarriers(
-        draft.carriers,
-        value,
-      );
-      draft.carriers = carriers;
+      draft.carriers.transport =
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
+      const uuid = uuidv4();
+
+      if (draft.carriers.status === 'NotStarted') {
+        draft.carriers = {
+          status: 'Started',
+          transport: draft.carriers.transport,
+          values: [{ id: uuid }],
+        };
+      } else {
+        const carriers: DraftCarrierPartial[] = [];
+        for (const c of draft.carriers.values) {
+          carriers.push(c);
+        }
+        carriers.push({ id: uuid });
+
+        draft.carriers = {
+          status: 'Started',
+          transport: draft.carriers.transport,
+          values: carriers,
+        };
+      }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -755,7 +795,7 @@ export default class DraftController {
       return success({
         status: value.status,
         transport: draft.carriers.transport,
-        values: [{ id: newCarrierId }],
+        values: [{ id: uuid }],
       });
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -801,7 +841,11 @@ export default class DraftController {
         if (index === -1) {
           return fromBoom(Boom.notFound());
         }
-        draft.carriers = setBaseCarriers(draft.carriers, value, carrier, index);
+
+        if (draft.carriers !== undefined) {
+          draft.carriers.status = value.status;
+          draft.carriers.values[index] = carrier;
+        }
       }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
@@ -849,8 +893,20 @@ export default class DraftController {
         return fromBoom(Boom.notFound());
       }
 
-      draft.carriers.transport = getCarrierTransport(draft.wasteDescription);
-      draft.carriers = deleteBaseCarriers(draft.carriers, carrierId);
+      draft.carriers.transport =
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
+      draft.carriers.values.splice(index, 1);
+
+      if (draft.carriers.values.length === 0) {
+        draft.carriers = {
+          status: 'NotStarted',
+          transport: draft.carriers.transport,
+        };
+      }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1120,6 +1176,8 @@ export default class DraftController {
         return fromBoom(Boom.notFound());
       }
 
+      const uuid = uuidv4();
+
       if (
         draft.recoveryFacilityDetail.status === 'Started' ||
         draft.recoveryFacilityDetail.status === 'Complete'
@@ -1134,14 +1192,23 @@ export default class DraftController {
             ),
           );
         }
+
+        const facilities: DraftRecoveryFacilityPartial[] = [];
+        for (const rf of draft.recoveryFacilityDetail.values) {
+          facilities.push(rf);
+        }
+        facilities.push({ id: uuid });
+
+        draft.recoveryFacilityDetail = {
+          status: 'Started',
+          values: facilities,
+        };
+      } else {
+        draft.recoveryFacilityDetail = {
+          status: 'Started',
+          values: [{ id: uuid }],
+        };
       }
-
-      const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
-        createBaseRecoveryFacilityDetail(draft.recoveryFacilityDetail, value);
-      draft.recoveryFacilityDetail = recoveryFacilityDetails;
-
-      draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
-      draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1149,10 +1216,7 @@ export default class DraftController {
         accountId,
       );
 
-      return success({
-        status: value.status,
-        values: [{ id: newRecoveryFacilityDetailId }],
-      });
+      return success(draft.recoveryFacilityDetail);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1198,13 +1262,11 @@ export default class DraftController {
         if (index === -1) {
           return fromBoom(Boom.notFound());
         }
-      }
 
-      draft.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-        draft.recoveryFacilityDetail,
-        rfdId,
-        value,
-      );
+        draft.recoveryFacilityDetail.status = value.status;
+        draft.recoveryFacilityDetail.values[index] =
+          recoveryFacility as DraftRecoveryFacility;
+      }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1253,10 +1315,10 @@ export default class DraftController {
         return fromBoom(Boom.notFound());
       }
 
-      draft.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-        draft.recoveryFacilityDetail,
-        rfdId,
-      );
+      draft.recoveryFacilityDetail.values.splice(index, 1);
+      if (draft.recoveryFacilityDetail.values.length === 0) {
+        draft.recoveryFacilityDetail = { status: 'NotStarted' };
+      }
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1400,17 +1462,80 @@ export default class DraftController {
         draft.wasteQuantity.value.type === 'ActualData'
           ? { status: 'SubmittedWithActuals', timestamp: timestamp }
           : { status: 'SubmittedWithEstimates', timestamp: timestamp };
+      let submission: Submission = null as unknown as Submission;
+
+      if (
+        draft.wasteDescription.status === 'Complete' &&
+        draft.wasteQuantity.status === 'Complete' &&
+        draft.wasteQuantity.value.type !== 'NotApplicable' &&
+        draft.exporterDetail.status === 'Complete' &&
+        draft.importerDetail.status === 'Complete' &&
+        draft.collectionDate.status === 'Complete' &&
+        draft.carriers.status === 'Complete' &&
+        draft.collectionDetail.status === 'Complete' &&
+        draft.ukExitLocation.status === 'Complete' &&
+        draft.transitCountries.status === 'Complete' &&
+        draft.recoveryFacilityDetail.status === 'Complete' &&
+        draft.submissionDeclaration.status === 'Complete' &&
+        (submissionState.status === 'SubmittedWithActuals' ||
+          submissionState.status === 'SubmittedWithEstimates' ||
+          submissionState.status === 'UpdatedWithActuals') &&
+        submissionDeclaration.status === 'Complete'
+      ) {
+        submission = {
+          id: draft.id,
+          reference: draft.reference,
+          wasteDescription: {
+            wasteCode: draft.wasteDescription.wasteCode,
+            ewcCodes: draft.wasteDescription.ewcCodes,
+            nationalCode: draft.wasteDescription.nationalCode,
+            description: draft.wasteDescription.description,
+          },
+          wasteQuantity: draft.wasteQuantity.value,
+          exporterDetail: {
+            exporterAddress: draft.exporterDetail.exporterAddress,
+            exporterContactDetails: draft.exporterDetail.exporterContactDetails,
+          },
+          importerDetail: {
+            importerAddressDetails: draft.importerDetail.importerAddressDetails,
+            importerContactDetails: draft.importerDetail.importerContactDetails,
+          },
+          collectionDate: draft.collectionDate.value,
+          carriers: draft.carriers.values.map((c) => {
+            return {
+              addressDetails: c.addressDetails,
+              contactDetails: c.contactDetails,
+              transportDetails: c.transportDetails,
+            };
+          }),
+          collectionDetail: {
+            address: draft.collectionDetail.address,
+            contactDetails: draft.collectionDetail.contactDetails,
+          },
+          ukExitLocation: draft.ukExitLocation.exitLocation,
+          transitCountries: draft.transitCountries.values,
+          recoveryFacilityDetail: draft.recoveryFacilityDetail.values.map(
+            (rf) => {
+              return {
+                addressDetails: rf.addressDetails,
+                contactDetails: rf.contactDetails,
+                recoveryFacilityType: rf.recoveryFacilityType,
+              };
+            },
+          ),
+          submissionDeclaration: submissionDeclaration.values,
+          submissionState: {
+            status: submissionState.status,
+            timestamp: submissionState.timestamp,
+          },
+        };
+      }
 
       await this.repository.saveRecord(
         submissionContainerName,
-        getSubmissionData({
-          ...draft,
-          submissionDeclaration: submissionDeclaration,
-          submissionState: submissionState,
-        }) as Submission,
+        submission,
         accountId,
       );
-
       await this.repository.deleteRecord(
         draftContainerName,
         draft.id,

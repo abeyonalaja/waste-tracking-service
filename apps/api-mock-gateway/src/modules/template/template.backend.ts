@@ -27,19 +27,9 @@ import {
 import { validation } from '@wts/api/green-list-waste-export';
 import {
   paginateArray,
-  createBaseCarriers,
-  setBaseCarriers,
-  deleteBaseCarriers,
-  createBaseRecoveryFacilityDetail,
-  setBaseRecoveryFacilityDetail,
-  deleteBaseRecoveryFacilityDetail,
   copyCarriersNoTransport,
-  copyRecoveryFacilities,
-  isSmallWaste,
-  isTemplateNameValid,
   setBaseWasteDescription,
   doesTemplateAlreadyExist,
-  getCarrierTransport,
 } from '../../lib/util';
 
 export interface SubmissionRef {
@@ -197,7 +187,12 @@ export async function createTemplate(
   accountId: string,
   templateDetails: { name: string; description: string },
 ): Promise<Template> {
-  if (!isTemplateNameValid(templateDetails.name)) {
+  if (
+    !templateDetails.name ||
+    templateDetails.name.length < validation.TemplateNameChar.min ||
+    templateDetails.name.length > validation.TemplateNameChar.max ||
+    !validation.templateNameRegex.test(templateDetails.name)
+  ) {
     throw new BadRequestError(
       `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
     );
@@ -248,7 +243,12 @@ export async function createTemplateFromSubmission(
   accountId: string,
   templateDetails: { name: string; description: string },
 ): Promise<Template> {
-  if (!isTemplateNameValid(templateDetails.name)) {
+  if (
+    !templateDetails.name ||
+    templateDetails.name.length < validation.TemplateNameChar.min ||
+    templateDetails.name.length > validation.TemplateNameChar.max ||
+    !validation.templateNameRegex.test(templateDetails.name)
+  ) {
     throw new BadRequestError(
       `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
@@ -292,25 +292,19 @@ export async function createTemplateFromSubmission(
       status: 'Complete',
       ...submission.importerDetail,
     },
-    carriers: copyCarriersNoTransport(
-      {
-        status: 'Complete',
-        transport: isSmallWaste({
-          status: 'Complete',
-          ...submission.wasteDescription,
-        }),
-        values: submission.carriers.map((c) => {
-          return {
-            id: uuidv4(),
-            ...c,
-          };
-        }),
-      },
-      isSmallWaste({
-        status: 'Complete',
-        ...submission.wasteDescription,
+    carriers: {
+      status:
+        submission.wasteDescription.wasteCode.type === 'NotApplicable'
+          ? 'Complete'
+          : 'Started',
+      transport: submission.wasteDescription.wasteCode.type === 'NotApplicable',
+      values: submission.carriers.map((c) => {
+        return {
+          id: uuidv4(),
+          ...c,
+        };
       }),
-    ),
+    },
     collectionDetail: {
       status: 'Complete',
       ...submission.collectionDetail,
@@ -323,7 +317,7 @@ export async function createTemplateFromSubmission(
       status: 'Complete',
       values: submission.transitCountries,
     },
-    recoveryFacilityDetail: copyRecoveryFacilities({
+    recoveryFacilityDetail: {
       status: 'Complete',
       values: submission.recoveryFacilityDetail.map((r) => {
         return {
@@ -331,7 +325,7 @@ export async function createTemplateFromSubmission(
           ...r,
         };
       }),
-    }),
+    },
     accountId,
   };
 
@@ -344,7 +338,12 @@ export async function createTemplateFromTemplate(
   accountId: string,
   templateDetails: { name: string; description: string },
 ): Promise<Template> {
-  if (!isTemplateNameValid(templateDetails.name)) {
+  if (
+    !templateDetails.name ||
+    templateDetails.name.length < validation.TemplateNameChar.min ||
+    templateDetails.name.length > validation.TemplateNameChar.max ||
+    !validation.templateNameRegex.test(templateDetails.name)
+  ) {
     throw new BadRequestError(
       `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
@@ -381,14 +380,13 @@ export async function createTemplateFromTemplate(
     importerDetail: template.importerDetail,
     carriers: copyCarriersNoTransport(
       template.carriers,
-      isSmallWaste(template.wasteDescription),
+      template.wasteDescription.status === 'Complete' &&
+        template.wasteDescription.wasteCode.type === 'NotApplicable',
     ),
     collectionDetail: template.collectionDetail,
     ukExitLocation: template.ukExitLocation,
     transitCountries: template.transitCountries,
-    recoveryFacilityDetail: copyRecoveryFacilities(
-      template.recoveryFacilityDetail,
-    ),
+    recoveryFacilityDetail: template.recoveryFacilityDetail,
     accountId: accountId,
   };
 
@@ -401,7 +399,12 @@ export async function updateTemplate(
   accountId: string,
   templateDetails: { name: string; description: string },
 ): Promise<Template> {
-  if (!isTemplateNameValid(templateDetails.name)) {
+  if (
+    !templateDetails.name ||
+    templateDetails.name.length < validation.TemplateNameChar.min ||
+    templateDetails.name.length > validation.TemplateNameChar.max ||
+    !validation.templateNameRegex.test(templateDetails.name)
+  ) {
     throw new BadRequestError(
       `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
     );
@@ -609,24 +612,41 @@ export async function createCarriers(
     }
   }
 
-  template.carriers.transport = getCarrierTransport(template.wasteDescription);
-  const { newCarrierId, carriers } = createBaseCarriers(
-    template.carriers,
-    value,
-  );
-  template.carriers = carriers;
+  template.carriers.transport =
+    template.wasteDescription.status !== 'NotStarted' &&
+    template.wasteDescription.wasteCode?.type === 'NotApplicable'
+      ? false
+      : true;
+
+  const uuid = uuidv4();
+
+  if (template.carriers.status === 'NotStarted') {
+    template.carriers = {
+      status: 'Started',
+      transport: template.carriers.transport,
+      values: [{ id: uuid }],
+    };
+  } else {
+    const carriers: CarrierPartial[] = [];
+    for (const c of template.carriers.values) {
+      carriers.push(c);
+    }
+    carriers.push({ id: uuid });
+
+    template.carriers = {
+      status: 'Started',
+      transport: template.carriers.transport,
+      values: carriers,
+    };
+  }
 
   template.templateDetails.lastModified = new Date();
 
-  if (template.carriers.status !== 'NotStarted') {
-    return Promise.resolve({
-      status: value.status,
-      transport: template.carriers.transport,
-      values: [{ id: newCarrierId }],
-    });
-  } else {
-    return Promise.reject(new BadRequestError('Incorrect carrier status.'));
-  }
+  return Promise.resolve({
+    status: value.status,
+    transport: template.carriers.transport,
+    values: [{ id: uuid }],
+  });
 }
 
 export async function getCarriers(
@@ -700,12 +720,11 @@ export async function setCarriers(
     if (index === -1) {
       return Promise.reject(new NotFoundError('Index not found.'));
     }
-    template.carriers = setBaseCarriers(
-      template.carriers,
-      value,
-      carrier,
-      index,
-    );
+
+    if (template.carriers !== undefined) {
+      template.carriers.status = value.status;
+      template.carriers.values[index] = carrier;
+    }
   }
 
   template.templateDetails.lastModified = new Date();
@@ -736,9 +755,20 @@ export async function deleteCarriers(
     return Promise.reject(new NotFoundError('Index not found.'));
   }
 
-  template.carriers.transport = getCarrierTransport(template.wasteDescription);
-  template.carriers = deleteBaseCarriers(template.carriers, carrierId);
+  template.carriers.transport =
+    template.wasteDescription.status !== 'NotStarted' &&
+    template.wasteDescription.wasteCode?.type === 'NotApplicable'
+      ? false
+      : true;
 
+  template.carriers.values.splice(index, 1);
+
+  if (template.carriers.values.length === 0) {
+    template.carriers = {
+      status: 'NotStarted',
+      transport: template.carriers.transport,
+    };
+  }
   template.templateDetails.lastModified = new Date();
 
   return Promise.resolve();
@@ -870,6 +900,8 @@ export async function createRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('Template not found.'));
   }
 
+  const uuid = uuidv4();
+
   if (
     template.recoveryFacilityDetail.status === 'Started' ||
     template.recoveryFacilityDetail.status === 'Complete'
@@ -883,18 +915,30 @@ export async function createRecoveryFacilityDetail(
         ),
       );
     }
-  }
 
-  const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
-    createBaseRecoveryFacilityDetail(template.recoveryFacilityDetail, value);
-  template.recoveryFacilityDetail = recoveryFacilityDetails;
+    const facilities: RecoveryFacilityPartial[] = [];
+    for (const rf of template.recoveryFacilityDetail.values) {
+      facilities.push(rf);
+    }
+    facilities.push({ id: uuid });
+
+    template.recoveryFacilityDetail = {
+      status: 'Started',
+      values: facilities,
+    };
+  } else {
+    template.recoveryFacilityDetail = {
+      status: 'Started',
+      values: [{ id: uuid }],
+    };
+  }
 
   template.templateDetails.lastModified = new Date();
 
   if (template.recoveryFacilityDetail.status === 'Started') {
     return Promise.resolve({
       status: value.status,
-      values: [{ id: newRecoveryFacilityDetailId }],
+      values: [{ id: uuid }],
     });
   } else {
     return Promise.reject(
@@ -975,13 +1019,11 @@ export async function setRecoveryFacilityDetail(
     if (index === -1) {
       return Promise.reject(new NotFoundError('Index not found.'));
     }
-  }
 
-  template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-    template.recoveryFacilityDetail,
-    rfdId,
-    value,
-  );
+    template.recoveryFacilityDetail.status = value.status;
+    template.recoveryFacilityDetail.values[index] =
+      recoveryFacility as RecoveryFacility;
+  }
 
   if (
     template.recoveryFacilityDetail.status !== 'Started' &&
@@ -1020,10 +1062,10 @@ export async function deleteRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('Index not found.'));
   }
 
-  template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-    template.recoveryFacilityDetail,
-    rfdId,
-  );
+  template.recoveryFacilityDetail.values.splice(index, 1);
+  if (template.recoveryFacilityDetail.values.length === 0) {
+    template.recoveryFacilityDetail = { status: 'NotStarted' };
+  }
 
   template.templateDetails.lastModified = new Date();
 

@@ -19,18 +19,8 @@ import {
   Submission,
 } from '../../model';
 import {
-  isSmallWaste,
   setBaseWasteDescription,
-  createBaseCarriers,
-  setBaseCarriers,
-  deleteBaseCarriers,
-  createBaseRecoveryFacilityDetail,
-  setBaseRecoveryFacilityDetail,
-  deleteBaseRecoveryFacilityDetail,
-  isTemplateNameValid,
   copyCarriersNoTransport,
-  copyRecoveryFacilities,
-  getCarrierTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 
@@ -112,7 +102,12 @@ export default class TemplateController {
     api.CreateTemplateRequest,
     api.CreateTemplateResponse
   > = async ({ accountId, templateDetails }) => {
-    if (!isTemplateNameValid(templateDetails.name)) {
+    if (
+      !templateDetails.name ||
+      templateDetails.name.length < validation.TemplateNameChar.min ||
+      templateDetails.name.length > validation.TemplateNameChar.max ||
+      !validation.templateNameRegex.test(templateDetails.name)
+    ) {
       return fromBoom(
         Boom.badRequest(
           `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
@@ -173,7 +168,12 @@ export default class TemplateController {
     api.UpdateTemplateRequest,
     api.UpdateTemplateResponse
   > = async ({ accountId, id, templateDetails }) => {
-    if (!isTemplateNameValid(templateDetails.name)) {
+    if (
+      !templateDetails.name ||
+      templateDetails.name.length < validation.TemplateNameChar.min ||
+      templateDetails.name.length > validation.TemplateNameChar.max ||
+      !validation.templateNameRegex.test(templateDetails.name)
+    ) {
       return fromBoom(
         Boom.badRequest(
           `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
@@ -503,14 +503,33 @@ export default class TemplateController {
         }
       }
 
-      template.carriers.transport = getCarrierTransport(
-        template.wasteDescription,
-      );
-      const { newCarrierId, carriers } = createBaseCarriers(
-        template.carriers,
-        value,
-      );
-      template.carriers = carriers;
+      template.carriers.transport =
+        template.wasteDescription.status !== 'NotStarted' &&
+        template.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
+      const uuid = uuidv4();
+
+      if (template.carriers.status === 'NotStarted') {
+        template.carriers = {
+          status: 'Started',
+          transport: template.carriers.transport,
+          values: [{ id: uuid }],
+        };
+      } else {
+        const carriers: DraftCarrierPartial[] = [];
+        for (const c of template.carriers.values) {
+          carriers.push(c);
+        }
+        carriers.push({ id: uuid });
+
+        template.carriers = {
+          status: 'Started',
+          transport: template.carriers.transport,
+          values: carriers,
+        };
+      }
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -522,7 +541,7 @@ export default class TemplateController {
       return success({
         status: value.status,
         transport: template.carriers.transport,
-        values: [{ id: newCarrierId }],
+        values: [{ id: uuid }],
       });
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -568,12 +587,11 @@ export default class TemplateController {
         if (index === -1) {
           return fromBoom(Boom.notFound());
         }
-        template.carriers = setBaseCarriers(
-          template.carriers,
-          value,
-          carrier,
-          index,
-        );
+
+        if (template.carriers !== undefined) {
+          template.carriers.status = value.status;
+          template.carriers.values[index] = carrier;
+        }
       }
 
       template.templateDetails.lastModified = new Date();
@@ -619,10 +637,20 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
-      template.carriers.transport = getCarrierTransport(
-        template.wasteDescription,
-      );
-      template.carriers = deleteBaseCarriers(template.carriers, carrierId);
+      template.carriers.transport =
+        template.wasteDescription.status !== 'NotStarted' &&
+        template.wasteDescription.wasteCode?.type === 'NotApplicable'
+          ? false
+          : true;
+
+      template.carriers.values.splice(index, 1);
+
+      if (template.carriers.values.length === 0) {
+        template.carriers = {
+          status: 'NotStarted',
+          transport: template.carriers.transport,
+        };
+      }
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -884,6 +912,8 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
+      const uuid = uuidv4();
+
       if (
         template.recoveryFacilityDetail.status === 'Started' ||
         template.recoveryFacilityDetail.status === 'Complete'
@@ -898,33 +928,32 @@ export default class TemplateController {
             ),
           );
         }
-      }
 
-      const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
-        createBaseRecoveryFacilityDetail(
-          template.recoveryFacilityDetail,
-          value,
-        );
-      template.recoveryFacilityDetail = recoveryFacilityDetails;
+        const facilities: DraftRecoveryFacilityPartial[] = [];
+        for (const rf of template.recoveryFacilityDetail.values) {
+          facilities.push(rf);
+        }
+        facilities.push({ id: uuid });
 
-      if (
-        template.recoveryFacilityDetail.status === 'Started' ||
-        template.recoveryFacilityDetail.status === 'Complete'
-      ) {
-        template.templateDetails.lastModified = new Date();
-        await this.repository.saveRecord(
-          templateContainerName,
-          { ...template },
-          accountId,
-        );
-
-        return success({
-          status: value.status,
-          values: [{ id: newRecoveryFacilityDetailId }],
-        });
+        template.recoveryFacilityDetail = {
+          status: 'Started',
+          values: facilities,
+        };
       } else {
-        return fromBoom(Boom.badRequest());
+        template.recoveryFacilityDetail = {
+          status: 'Started',
+          values: [{ id: uuid }],
+        };
       }
+
+      template.templateDetails.lastModified = new Date();
+      await this.repository.saveRecord(
+        templateContainerName,
+        { ...template },
+        accountId,
+      );
+
+      return success(template.recoveryFacilityDetail);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -970,13 +999,11 @@ export default class TemplateController {
         if (index === -1) {
           return fromBoom(Boom.notFound());
         }
-      }
 
-      template.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-        template.recoveryFacilityDetail,
-        rfdId,
-        value,
-      );
+        template.recoveryFacilityDetail.status = value.status;
+        template.recoveryFacilityDetail.values[index] =
+          recoveryFacility as DraftRecoveryFacility;
+      }
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -1023,10 +1050,10 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
-      template.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-        template.recoveryFacilityDetail,
-        rfdId,
-      );
+      template.recoveryFacilityDetail.values.splice(index, 1);
+      if (template.recoveryFacilityDetail.values.length === 0) {
+        template.recoveryFacilityDetail = { status: 'NotStarted' };
+      }
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(
@@ -1077,14 +1104,13 @@ export default class TemplateController {
         collectionDate: { status: 'NotStarted' },
         carriers: copyCarriersNoTransport(
           template.carriers,
-          isSmallWaste(template.wasteDescription),
+          template.wasteDescription.status === 'Complete' &&
+            template.wasteDescription.wasteCode.type === 'NotApplicable',
         ),
         collectionDetail: template.collectionDetail,
         ukExitLocation: template.ukExitLocation,
         transitCountries: template.transitCountries,
-        recoveryFacilityDetail: copyRecoveryFacilities(
-          template.recoveryFacilityDetail,
-        ),
+        recoveryFacilityDetail: template.recoveryFacilityDetail,
         submissionConfirmation: { status: 'CannotStart' },
         submissionDeclaration: { status: 'CannotStart' },
         submissionState: {
@@ -1110,7 +1136,12 @@ export default class TemplateController {
     api.CreateTemplateFromSubmissionRequest,
     api.CreateTemplateResponse
   > = async ({ accountId, id, templateDetails }) => {
-    if (!isTemplateNameValid(templateDetails.name)) {
+    if (
+      !templateDetails.name ||
+      templateDetails.name.length < validation.TemplateNameChar.min ||
+      templateDetails.name.length > validation.TemplateNameChar.max ||
+      !validation.templateNameRegex.test(templateDetails.name)
+    ) {
       return fromBoom(
         Boom.badRequest(
           `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
@@ -1159,10 +1190,8 @@ export default class TemplateController {
         carriers: copyCarriersNoTransport(
           {
             status: 'Complete',
-            transport: isSmallWaste({
-              status: 'Complete',
-              ...submission.wasteDescription,
-            }),
+            transport:
+              submission.wasteDescription.wasteCode.type === 'NotApplicable',
             values: submission.carriers.map((c) => {
               return {
                 id: uuidv4(),
@@ -1170,10 +1199,7 @@ export default class TemplateController {
               };
             }),
           },
-          isSmallWaste({
-            status: 'Complete',
-            ...submission.wasteDescription,
-          }),
+          submission.wasteDescription.wasteCode.type === 'NotApplicable',
         ),
         collectionDetail: {
           status: 'Complete',
@@ -1187,7 +1213,7 @@ export default class TemplateController {
           status: 'Complete',
           values: submission.transitCountries,
         },
-        recoveryFacilityDetail: copyRecoveryFacilities({
+        recoveryFacilityDetail: {
           status: 'Complete',
           values: submission.recoveryFacilityDetail.map((r) => {
             return {
@@ -1195,7 +1221,7 @@ export default class TemplateController {
               ...r,
             };
           }),
-        }),
+        },
       };
 
       await this.repository.saveRecord(
@@ -1219,7 +1245,12 @@ export default class TemplateController {
     api.CreateTemplateFromTemplateRequest,
     api.CreateTemplateFromTemplateResponse
   > = async ({ accountId, id, templateDetails }) => {
-    if (!isTemplateNameValid(templateDetails.name)) {
+    if (
+      !templateDetails.name ||
+      templateDetails.name.length < validation.TemplateNameChar.min ||
+      templateDetails.name.length > validation.TemplateNameChar.max ||
+      !validation.templateNameRegex.test(templateDetails.name)
+    ) {
       return fromBoom(
         Boom.badRequest(
           `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
@@ -1257,14 +1288,13 @@ export default class TemplateController {
         importerDetail: template.importerDetail,
         carriers: copyCarriersNoTransport(
           template.carriers,
-          isSmallWaste(template.wasteDescription),
+          template.wasteDescription.status === 'Complete' &&
+            template.wasteDescription.wasteCode.type === 'NotApplicable',
         ),
         collectionDetail: template.collectionDetail,
         ukExitLocation: template.ukExitLocation,
         transitCountries: template.transitCountries,
-        recoveryFacilityDetail: copyRecoveryFacilities(
-          template.recoveryFacilityDetail,
-        ),
+        recoveryFacilityDetail: template.recoveryFacilityDetail,
       };
 
       await this.repository.saveRecord(

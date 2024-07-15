@@ -1,4 +1,4 @@
-import { db } from '../../db';
+import { SubmissionWithAccount, db } from '../../db';
 import {
   CancellationType,
   Carrier,
@@ -32,27 +32,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { BadRequestError, NotFoundError } from '../../lib/errors';
 import {
   copyCarriersNoTransport,
-  isSmallWaste,
-  copyRecoveryFacilities,
   isWasteCodeChangingBulkToSmall,
   isWasteCodeChangingSmallToBulk,
   isWasteCodeChangingBulkToBulkDifferentType,
   isWasteCodeChangingBulkToBulkSameType,
   setBaseWasteDescription,
-  createBaseCarriers,
-  setBaseCarriers,
-  deleteBaseCarriers,
-  createBaseRecoveryFacilityDetail,
-  setBaseRecoveryFacilityDetail,
-  deleteBaseRecoveryFacilityDetail,
   isCollectionDateValid,
   paginateArray,
-  setDraftWasteQuantityUnit,
   setSubmissionConfirmation,
   setSubmissionDeclaration,
-  setWasteQuantityUnit,
-  getSubmissionData,
-  getCarrierTransport,
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
 
@@ -351,14 +339,13 @@ export async function createSubmissionFromTemplate(
     collectionDate: { status: 'NotStarted' },
     carriers: copyCarriersNoTransport(
       template.carriers,
-      isSmallWaste(template.wasteDescription),
+      template.wasteDescription.status === 'Complete' &&
+        template.wasteDescription.wasteCode.type === 'NotApplicable',
     ),
     collectionDetail: template.collectionDetail,
     ukExitLocation: template.ukExitLocation,
     transitCountries: template.transitCountries,
-    recoveryFacilityDetail: copyRecoveryFacilities(
-      template.recoveryFacilityDetail,
-    ),
+    recoveryFacilityDetail: template.recoveryFacilityDetail,
     submissionConfirmation: { status: 'CannotStart' },
     submissionDeclaration: { status: 'CannotStart' },
     submissionState: {
@@ -516,7 +503,35 @@ export async function setWasteQuantity(
     }
 
     const v = value as WasteQuantity;
-    setDraftWasteQuantityUnit(v, submission);
+
+    if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      v.status !== 'CannotStart' &&
+      v.status !== 'NotStarted'
+    ) {
+      let volumeUnit: WasteQuantityData['actualData']['unit'] = 'Cubic Metre';
+      let wasteUnit: WasteQuantityData['actualData']['unit'] = 'Tonne';
+
+      if (submission.wasteDescription.wasteCode?.type === 'NotApplicable') {
+        volumeUnit = 'Litre';
+        wasteUnit = 'Kilogram';
+      }
+
+      if (v.value?.type === 'ActualData') {
+        v.value?.actualData?.quantityType === 'Volume'
+          ? (v.value.actualData.unit = volumeUnit)
+          : v.value.actualData?.quantityType === 'Weight'
+            ? (v.value.actualData.unit = wasteUnit)
+            : null;
+      } else if (v.value?.type === 'EstimateData') {
+        v.value?.estimateData?.quantityType === 'Volume'
+          ? (v.value.estimateData.unit = volumeUnit)
+          : v.value.estimateData?.quantityType === 'Weight'
+            ? (v.value.estimateData.unit = wasteUnit)
+            : null;
+      }
+    }
+
     let wasteQuantity = v;
     if (
       v.status !== 'CannotStart' &&
@@ -572,7 +587,24 @@ export async function setWasteQuantity(
     }
 
     const v = value as WasteQuantityData;
-    setWasteQuantityUnit(v, submission);
+    let volumeUnit: WasteQuantityData['actualData']['unit'] = 'Cubic Metre';
+    let wasteUnit: WasteQuantityData['actualData']['unit'] = 'Tonne';
+
+    if (submission.wasteDescription.wasteCode.type === 'NotApplicable') {
+      volumeUnit = 'Litre';
+      wasteUnit = 'Kilogram';
+    }
+
+    if (v.type === 'ActualData') {
+      v.actualData.quantityType === 'Volume'
+        ? (v.actualData.unit = volumeUnit)
+        : (v.actualData.unit = wasteUnit);
+    } else {
+      v.estimateData.quantityType === 'Volume'
+        ? (v.estimateData.unit = volumeUnit)
+        : (v.estimateData.unit = wasteUnit);
+    }
+
     submission.wasteQuantity = v;
 
     submission.submissionState =
@@ -838,28 +870,42 @@ export async function createCarriers(
       );
     }
   }
+  submission.carriers.transport =
+    submission.wasteDescription.status !== 'NotStarted' &&
+    submission.wasteDescription.wasteCode?.type === 'NotApplicable'
+      ? false
+      : true;
 
-  submission.carriers.transport = getCarrierTransport(
-    submission.wasteDescription,
-  );
-  const { newCarrierId, carriers } = createBaseCarriers(
-    submission.carriers,
-    value,
-  );
-  submission.carriers = carriers;
+  const uuid = uuidv4();
+
+  if (submission.carriers.status === 'NotStarted') {
+    submission.carriers = {
+      status: value.status as 'Started',
+      transport: submission.carriers.transport,
+      values: [{ id: uuid }],
+    };
+
+    const carriers: CarrierPartial[] = [];
+    for (const c of submission.carriers.values) {
+      carriers.push(c);
+    }
+    carriers.push({ id: uuid });
+
+    submission.carriers = {
+      status: value.status as 'Started',
+      transport: submission.carriers.transport,
+      values: carriers,
+    };
+  }
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
-  if (submission.carriers.status !== 'NotStarted') {
-    return Promise.resolve({
-      status: value.status,
-      transport: submission.carriers.transport,
-      values: [{ id: newCarrierId }],
-    });
-  } else {
-    return Promise.reject(new BadRequestError('Incorrect carrier status.'));
-  }
+  return Promise.resolve({
+    status: value.status,
+    transport: submission.carriers.transport,
+    values: [{ id: uuid }],
+  });
 }
 
 export async function getCarriers(
@@ -933,12 +979,10 @@ export async function setCarriers(
     if (index === -1) {
       return Promise.reject('Index not found.');
     }
-    submission.carriers = setBaseCarriers(
-      submission.carriers,
-      value,
-      carrier,
-      index,
-    );
+    if (submission.carriers !== undefined) {
+      submission.carriers.status = value.status;
+      submission.carriers.values[index] = carrier;
+    }
   }
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
@@ -970,10 +1014,20 @@ export async function deleteCarriers(
     return Promise.reject(new NotFoundError('Index not found.'));
   }
 
-  submission.carriers.transport = getCarrierTransport(
-    submission.wasteDescription,
-  );
-  submission.carriers = deleteBaseCarriers(submission.carriers, carrierId);
+  submission.carriers.transport =
+    submission.wasteDescription.status !== 'NotStarted' &&
+    submission.wasteDescription.wasteCode?.type === 'NotApplicable'
+      ? false
+      : true;
+
+  submission.carriers.values.splice(index, 1);
+
+  if (submission.carriers.values.length === 0) {
+    submission.carriers = {
+      status: 'NotStarted',
+      transport: submission.carriers.transport,
+    };
+  }
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -1111,6 +1165,8 @@ export async function createRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
+  const uuid = uuidv4();
+
   if (
     submission.recoveryFacilityDetail.status === 'Started' ||
     submission.recoveryFacilityDetail.status === 'Complete'
@@ -1124,19 +1180,28 @@ export async function createRecoveryFacilityDetail(
         ),
       );
     }
+
+    const facilities: RecoveryFacilityPartial[] = [];
+    for (const rf of submission.recoveryFacilityDetail.values) {
+      facilities.push(rf);
+    }
+    facilities.push({ id: uuid });
+
+    submission.recoveryFacilityDetail = {
+      status: 'Started',
+      values: facilities,
+    };
+  } else {
+    submission.recoveryFacilityDetail = {
+      status: 'Started',
+      values: [{ id: uuid }],
+    };
   }
-
-  const { newRecoveryFacilityDetailId, recoveryFacilityDetails } =
-    createBaseRecoveryFacilityDetail(submission.recoveryFacilityDetail, value);
-  submission.recoveryFacilityDetail = recoveryFacilityDetails;
-
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
 
   if (submission.recoveryFacilityDetail.status === 'Started') {
     return Promise.resolve({
       status: value.status,
-      values: [{ id: newRecoveryFacilityDetailId }],
+      values: [{ id: uuid }],
     });
   } else {
     return Promise.reject(
@@ -1219,13 +1284,11 @@ export async function setRecoveryFacilityDetail(
     if (index === -1) {
       return Promise.reject(new Error('Not found.'));
     }
-  }
 
-  submission.recoveryFacilityDetail = setBaseRecoveryFacilityDetail(
-    submission.recoveryFacilityDetail,
-    rfdId,
-    value,
-  );
+    submission.recoveryFacilityDetail.status = value.status;
+    submission.recoveryFacilityDetail.values[index] =
+      recoveryFacility as RecoveryFacility;
+  }
 
   if (
     submission.recoveryFacilityDetail.status !== 'Started' &&
@@ -1265,10 +1328,11 @@ export async function deleteRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('Not found.'));
   }
 
-  submission.recoveryFacilityDetail = deleteBaseRecoveryFacilityDetail(
-    submission.recoveryFacilityDetail,
-    rfdId,
-  );
+  submission.recoveryFacilityDetail.values.splice(index, 1);
+
+  if (submission.recoveryFacilityDetail.values.length === 0) {
+    submission.recoveryFacilityDetail = { status: 'NotStarted' };
+  }
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
@@ -1389,7 +1453,81 @@ export async function updateSubmissionDeclaration(
         ? { status: 'SubmittedWithActuals', timestamp: timestamp }
         : { status: 'SubmittedWithEstimates', timestamp: timestamp };
 
-    db.submissions.push(getSubmissionData(accountId, submission));
+    let updatedSubmission: SubmissionWithAccount =
+      null as unknown as SubmissionWithAccount;
+
+    if (
+      submission.wasteDescription.status === 'Complete' &&
+      submission.wasteQuantity.status === 'Complete' &&
+      submission.wasteQuantity.value.type !== 'NotApplicable' &&
+      submission.exporterDetail.status === 'Complete' &&
+      submission.importerDetail.status === 'Complete' &&
+      submission.collectionDate.status === 'Complete' &&
+      submission.carriers.status === 'Complete' &&
+      submission.collectionDetail.status === 'Complete' &&
+      submission.ukExitLocation.status === 'Complete' &&
+      submission.transitCountries.status === 'Complete' &&
+      submission.recoveryFacilityDetail.status === 'Complete' &&
+      submission.submissionDeclaration.status === 'Complete' &&
+      (submission.submissionState.status === 'SubmittedWithActuals' ||
+        submission.submissionState.status === 'SubmittedWithEstimates' ||
+        submission.submissionState.status === 'UpdatedWithActuals') &&
+      submission.submissionDeclaration.status === 'Complete'
+    ) {
+      updatedSubmission = {
+        id: submission.id,
+        accountId: submission.accountId,
+        reference: submission.reference,
+        wasteDescription: {
+          wasteCode: submission.wasteDescription.wasteCode,
+          ewcCodes: submission.wasteDescription.ewcCodes,
+          nationalCode: submission.wasteDescription.nationalCode,
+          description: submission.wasteDescription.description,
+        },
+        wasteQuantity: submission.wasteQuantity.value,
+        exporterDetail: {
+          exporterAddress: submission.exporterDetail.exporterAddress,
+          exporterContactDetails:
+            submission.exporterDetail.exporterContactDetails,
+        },
+        importerDetail: {
+          importerAddressDetails:
+            submission.importerDetail.importerAddressDetails,
+          importerContactDetails:
+            submission.importerDetail.importerContactDetails,
+        },
+        collectionDate: submission.collectionDate.value,
+        carriers: submission.carriers.values.map((c) => {
+          return {
+            addressDetails: c.addressDetails,
+            contactDetails: c.contactDetails,
+            transportDetails: c.transportDetails,
+          };
+        }),
+        collectionDetail: {
+          address: submission.collectionDetail.address,
+          contactDetails: submission.collectionDetail.contactDetails,
+        },
+        ukExitLocation: submission.ukExitLocation.exitLocation,
+        transitCountries: submission.transitCountries.values,
+        recoveryFacilityDetail: submission.recoveryFacilityDetail.values.map(
+          (rf) => {
+            return {
+              addressDetails: rf.addressDetails,
+              contactDetails: rf.contactDetails,
+              recoveryFacilityType: rf.recoveryFacilityType,
+            };
+          },
+        ),
+        submissionDeclaration: submission.submissionDeclaration.values,
+        submissionState: {
+          status: submission.submissionState.status,
+          timestamp: submission.submissionState.timestamp,
+        },
+      };
+    }
+
+    db.submissions.push(updatedSubmission);
 
     const index = db.drafts.findIndex((d) => {
       return d.id === submission.id;
