@@ -230,3 +230,7 @@ export interface BulkSubmission {
 export type GetBulkSubmissionResponse = BulkSubmission;
 
 export type GetBulkSubmissionsResponse = Submission[];
+
+export interface CreateBulkSubmissionResponse {
+  id: string;
+}
