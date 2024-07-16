@@ -176,7 +176,7 @@ if (process.env['NODE_ENV'] === 'development') {
         process.env['PAYMENT_APP_ID'] || 'service-payment',
       ),
       new LRUCache({
-        ttl: 1000 * 60 * 60,
+        ttl: 1000 * 60 * 5,
         ttlAutopurge: false,
         maxSize: 1000,
         sizeCalculation: (): number => 1,
