@@ -4,6 +4,7 @@ import { CreatedPayment } from '@wts/api/payment';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { useCookies } from 'react-cookie';
 
 interface PaymentContinueButtonProps {
   label: string;
@@ -20,6 +21,7 @@ export function PaymentContinueButton({
 }: PaymentContinueButtonProps): JSX.Element {
   const [enabled, setEnabled] = useState(true);
   const router = useRouter();
+  const [, setCookie] = useCookies(['referenceId']);
 
   async function handleClick(): Promise<void> {
     setEnabled(false);
@@ -52,8 +54,8 @@ export function PaymentContinueButton({
         redirectUrl: CreatedPayment['redirectUrl'];
       } = await response.json();
 
-      document.cookie = `referenceId=${data.id}; secure; SameSite=Strict;`;
-      router.push(data.redirectUrl);
+      setCookie('referenceId', data.id, { path: '/' });
+      return router.push(data.redirectUrl);
     } catch (error) {
       console.error(error);
       setEnabled(true);

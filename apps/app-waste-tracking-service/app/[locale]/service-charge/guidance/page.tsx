@@ -24,7 +24,7 @@ export default async function GuidancePage(): Promise<JSX.Element> {
           <GovUK.Heading>{t('title')}</GovUK.Heading>
           <GovUK.Paragraph>
             {t.rich('paragraphOne', {
-              price: process.env.SERVICE_CHARGE_PRICE,
+              price: 20,
               strong: (chunks) => <strong>{chunks}</strong>,
             })}
           </GovUK.Paragraph>

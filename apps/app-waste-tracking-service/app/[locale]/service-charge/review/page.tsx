@@ -85,7 +85,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
                   {t('tableHeading')}
                 </th>
                 <td className={`govuk-table__cell ${styles.tableData}`}>
-                  {`£${process.env.SERVICE_CHARGE_PRICE}`}
+                  {`£20`}
                 </td>
               </tr>
             </tbody>
