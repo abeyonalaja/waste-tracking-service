@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "service-feedback.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "service-feedback.labels" . | nindent 4 }}
+    {{- range $name, $value := .Values.labels }}
+    {{ $name | quote }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  minAvailable: {{ include "service-feedback.pdbMinAvailable" . }}
+  selector:
+    matchLabels:
+      {{- include "service-feedback.selectorLabels" . | nindent 6 }}

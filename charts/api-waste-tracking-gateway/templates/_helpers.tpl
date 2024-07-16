@@ -81,3 +81,14 @@ Create the environment variables to use
       key: {{ $name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Define minAvailable replicas for PDB to enforce
+*/}}
+{{- define "api-waste-tracking-gateway.pdbMinAvailable" -}}
+{{- if not .Values.autoscaling.enabled }}
+{{- default .Values.replicaCount }}
+{{- else }}
+{{- default .Values.autoscaling.minReplicas }}
+{{- end }}
+{{- end }}

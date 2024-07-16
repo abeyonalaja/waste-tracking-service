@@ -88,3 +88,14 @@ Create the name of the secret provider class to use
 {{- define "service-address.secretProviderClassName" -}}
 {{- default (include "service-address.fullname" .) .Values.secretProviderClass.name }}
 {{- end }}
+
+{{/*
+Define minAvailable replicas for PDB to enforce
+*/}}
+{{- define "service-address.pdbMinAvailable" -}}
+{{- if not .Values.autoscaling.enabled }}
+{{- default .Values.replicaCount }}
+{{- else }}
+{{- default .Values.autoscaling.minReplicas }}
+{{- end }}
+{{- end }}
