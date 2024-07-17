@@ -96,6 +96,9 @@
       "tableHeading": "Total to pay",
       "buttonAction": "Continue",
       "buttonCancel": "Cancel"
+    },
+    "result": {
+      "loadingTitle": "Loading"
     }
   }
 }

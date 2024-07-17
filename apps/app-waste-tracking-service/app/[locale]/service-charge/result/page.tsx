@@ -2,19 +2,20 @@ import { getTranslations } from 'next-intl/server';
 import { getServerSession } from 'next-auth';
 import { redirect } from '@wts/ui/navigation';
 import { options } from '../../../api/auth/[...nextauth]/options';
-import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
 import { headers } from 'next/headers';
 import process from 'node:process';
 import { cookies } from 'next/headers';
-import { PaymentRecord } from '@wts/api/payment';
+import type { PaymentRecord } from '@wts/api/payment';
+import * as GovUK from '@wts/ui/govuk-react-ui';
+import { StatusChecker } from '@wts/app-waste-tracking-service/feature-service-charge';
 
 export const metadata = {
   title: 'Pay the annual waste tracking service charge',
 };
 
 export default async function PaymentResultPage(): Promise<React.ReactNode> {
-  const t = await getTranslations('charge.review');
+  const t = await getTranslations('charge.result');
 
   // Redirect to account page if service charge is not enabled
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
@@ -61,19 +62,39 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
   }
 
   if (!response.ok) {
-    console.error(response);
+    console.error('Error fetching payment record');
     return redirect('/404');
   }
 
-  const data: PaymentRecord = await response.json();
-  //   console.log(data);
+  const paymentRecord: PaymentRecord = await response.json();
+
+  if (
+    paymentRecord.state.status === 'Rejected' ||
+    paymentRecord.state.status === 'CancelledByService' ||
+    paymentRecord.state.status === 'CancelledByUser' ||
+    paymentRecord.state.status === 'SessionExpired' ||
+    paymentRecord.state.status === 'Error'
+  ) {
+    return redirect('/account');
+  }
+
+  if (paymentRecord.state.status === 'Success') {
+    return (
+      <Page>
+        <GovUK.GridRow>
+          <GovUK.GridCol size="two-thirds">
+            <p>The payment record reference is {paymentRecord.reference}</p>
+          </GovUK.GridCol>
+        </GovUK.GridRow>
+      </Page>
+    );
+  }
 
   return (
     <Page>
       <GovUK.GridRow>
-        <GovUK.GridCol size="two-thirds">
-          <GovUK.Heading>{t('headingOne')}</GovUK.Heading>
-          <p>The payment was {data.state.status}</p>
+        <GovUK.GridCol size="full">
+          <StatusChecker label={t('loadingTitle')} refreshInterval={3000} />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>
