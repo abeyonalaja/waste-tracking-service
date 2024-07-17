@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: GLW Api Document
+  title: WTS Api Document
   version: 1.0.0
 paths:
   /api/addresses:
@@ -640,6 +640,95 @@ paths:
           description: No Content
           content:
             application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/ukwm/drafts:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmDraftsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: collectionDate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ewcCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: producerName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: wasteMovementId
+          in: query
+          required: false
+          schema:
+            type: string
+  /api/ukwm-batches/{id}:
+    get:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmBatchResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
           content:
@@ -2168,6 +2257,141 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateRecoveryFacilityDetailRequest'
+  /api/ukwm/drafts/{id}:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmSubmissionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/ukwm-batches/{id}/download:
+    get:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadCsvResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/ukwm-batches/{batchId}/submissions:
+    get:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmSubmissionsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: collectionDate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ewcCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: producerName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: wasteMovementId
+          in: query
+          required: false
+          schema:
+            type: string
   /api/submissions/{id}/carriers/{carrierId}:
     get:
       tags:
@@ -2608,6 +2832,86 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SetCarriersRequest'
+  /api/ukwm-batches/{batchId}/columns/{columnRef}:
+    get:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmColumnWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: columnRef
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/ukwm-batches/{batchId}/rows/{rowId}:
+    get:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmRowWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: rowId
+          in: path
+          required: true
+          schema:
+            type: string
   /api/batches:
     post:
       tags:
@@ -2618,7 +2922,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateBulkSubmissionResponse'
+                $ref: '#/components/schemas/id'
         '500':
           description: Internal Server Error
           content:
@@ -2664,6 +2968,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SendFeedback'
+  /api/ukwm-batches:
+    post:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/id'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
   /api/privatebeta/users:
     post:
       tags:
@@ -2876,6 +3207,33 @@ paths:
           required: true
           schema:
             type: string
+  /api/ukwm-batches/{id}/finalize:
+    post:
+      tags:
+        - ukwm-bulk-submission
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
   /api/payments/{id}:
     put:
       tags:
@@ -3017,14 +3375,6 @@ components:
         - townCity
         - postcode
         - country
-      additionalProperties: false
-    CreateBulkSubmissionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-      required:
-        - id
       additionalProperties: false
     GetBulkSubmissionResponse:
       $ref: '#/components/schemas/BulkSubmission'
@@ -6130,6 +6480,647 @@ components:
       additionalProperties: false
     CancelPaymentResponse:
       not: {}
+    GetUkwmBatchResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        state:
+          $ref: '#/components/schemas/UkwmBulkSubmissionState'
+      required:
+        - id
+        - state
+      additionalProperties: false
+    UkwmBulkSubmissionState:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            status:
+              type: string
+          title: Processing
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            error:
+              type: string
+            status:
+              type: string
+          title: FailedCsvValidation
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            errorSummary:
+              type: object
+              properties:
+                columnBased:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      columnRef:
+                        type: string
+                      count:
+                        type: number
+                    required:
+                      - columnRef
+                      - count
+                    additionalProperties: false
+                rowBased:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      rowNumber:
+                        type: number
+                      rowId:
+                        type: string
+                      count:
+                        type: number
+                    required:
+                      - rowNumber
+                      - rowId
+                      - count
+                    additionalProperties: false
+              required:
+                - columnBased
+                - rowBased
+              additionalProperties: false
+            status:
+              type: string
+          title: FailedValidation
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            hasEstimates:
+              type: boolean
+            rowsCount:
+              type: number
+            status:
+              type: string
+          title: PassedValidation
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            hasEstimates:
+              type: boolean
+            transactionId:
+              type: string
+            status:
+              type: string
+          title: Submitting
+        - properties:
+            timestamp:
+              type: string
+              format: date-time
+            hasEstimates:
+              type: boolean
+            transactionId:
+              type: string
+            createdRowsCount:
+              type: number
+            status:
+              type: string
+          title: Submitted
+    DownloadCsvResponse:
+      anyOf:
+        - type: string
+        - type: string
+          format: binary
+    GetUkwmRowWithMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        batchId:
+          type: string
+        accountId:
+          type: string
+        messages:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - batchId
+        - accountId
+        - messages
+      additionalProperties: false
+    GetUkwmColumnWithMessageResponse:
+      type: object
+      properties:
+        columnRef:
+          type: string
+        batchId:
+          type: string
+        accountId:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              rowNumber:
+                type: number
+              messages:
+                type: array
+                items:
+                  type: string
+            required:
+              - rowNumber
+              - messages
+            additionalProperties: false
+      required:
+        - columnRef
+        - batchId
+        - accountId
+        - errors
+      additionalProperties: false
+    GetUkwmSubmissionsResponse:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+        totalPages:
+          type: number
+        page:
+          type: number
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmBulkSubmissionPartialSummary'
+      required:
+        - totalRecords
+        - totalPages
+        - page
+        - values
+      additionalProperties: false
+    UkwmBulkSubmissionPartialSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        wasteMovementId:
+          type: string
+        producerName:
+          type: string
+        ewcCode:
+          type: string
+        collectionDate:
+          type: object
+          properties:
+            day:
+              type: string
+            month:
+              type: string
+            year:
+              type: string
+          required:
+            - day
+            - month
+            - year
+          additionalProperties: false
+      required:
+        - id
+        - wasteMovementId
+        - producerName
+        - ewcCode
+        - collectionDate
+      additionalProperties: false
+    GetUkwmSubmissionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionId:
+          type: string
+        wasteInformation:
+          $ref: '#/components/schemas/UkwmWasteInformation'
+        receiver:
+          $ref: '#/components/schemas/UkwmDraftReceiverDetail'
+        producerAndCollection:
+          $ref: '#/components/schemas/UkwmProducerAndWasteCollectionDetail'
+        carrier:
+          $ref: '#/components/schemas/UkwmDraftCarrierDetail'
+        submissionDeclaration:
+          $ref: '#/components/schemas/UkwmDraftSubmissionDeclaration'
+        submissionState:
+          $ref: '#/components/schemas/UkwmSubmissionState'
+      required:
+        - id
+        - transactionId
+        - wasteInformation
+        - receiver
+        - producerAndCollection
+        - carrier
+        - submissionDeclaration
+        - submissionState
+      additionalProperties: false
+    UkwmWasteInformation:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            wasteTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/UkwmWasteTypeDetail'
+            wasteTransportation:
+              $ref: '#/components/schemas/UkwmWasteTransportationDetail'
+            status:
+              type: string
+          title: Complete
+    UkwmWasteTypeDetail:
+      type: object
+      properties:
+        ewcCode:
+          type: string
+        wasteDescription:
+          type: string
+        physicalForm:
+          $ref: '#/components/schemas/UkwmPhysicalForm'
+        wasteQuantity:
+          type: number
+        quantityUnit:
+          $ref: '#/components/schemas/UkwmQuantityUnit'
+        wasteQuantityType:
+          $ref: '#/components/schemas/UkwmWasteQuantityType'
+        chemicalAndBiologicalComponents:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmChemicalAndBiologicalComponent'
+        hasHazardousProperties:
+          type: boolean
+        containsPops:
+          type: boolean
+        hazardousWasteCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmHazardousWasteCode'
+        pops:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmPop'
+      required:
+        - ewcCode
+        - wasteDescription
+        - physicalForm
+        - wasteQuantity
+        - quantityUnit
+        - wasteQuantityType
+        - chemicalAndBiologicalComponents
+        - hasHazardousProperties
+        - containsPops
+      additionalProperties: false
+    UkwmPhysicalForm:
+      type: string
+      enum:
+        - Gas
+        - Liquid
+        - Solid
+        - Sludge
+        - Powder
+        - Mixed
+    UkwmQuantityUnit:
+      type: string
+      enum:
+        - Tonne
+        - Cubic Metre
+        - Kilogram
+        - Litre
+    UkwmWasteQuantityType:
+      type: string
+      enum:
+        - EstimateData
+        - ActualData
+    UkwmChemicalAndBiologicalComponent:
+      type: object
+      properties:
+        name:
+          type: string
+        concentration:
+          type: number
+        concentrationUnit:
+          type: string
+      required:
+        - name
+        - concentration
+        - concentrationUnit
+      additionalProperties: false
+    UkwmHazardousWasteCode:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - code
+        - name
+      additionalProperties: false
+    UkwmPop:
+      type: object
+      properties:
+        name:
+          type: string
+        concentration:
+          type: number
+        concentrationUnit:
+          type: string
+      required:
+        - name
+        - concentration
+        - concentrationUnit
+      additionalProperties: false
+    UkwmWasteTransportationDetail:
+      type: object
+      properties:
+        numberAndTypeOfContainers:
+          type: string
+        specialHandlingRequirements:
+          type: string
+      required:
+        - numberAndTypeOfContainers
+      additionalProperties: false
+    UkwmDraftReceiverDetail:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            value:
+              $ref: '#/components/schemas/UkwmReceiverDetail'
+            status:
+              type: string
+          title: Complete
+    UkwmReceiverDetail:
+      type: object
+      properties:
+        authorizationType:
+          type: string
+        environmentalPermitNumber:
+          type: string
+        contact:
+          $ref: '#/components/schemas/UkwmContact'
+        address:
+          $ref: '#/components/schemas/UkwmAddress'
+      required:
+        - authorizationType
+        - contact
+        - address
+      additionalProperties: false
+    UkwmContact:
+      type: object
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+      required:
+        - organisationName
+        - name
+        - email
+        - phone
+      additionalProperties: false
+    UkwmAddress:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        postcode:
+          type: string
+        country:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+      additionalProperties: false
+    UkwmProducerAndWasteCollectionDetail:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            producer:
+              $ref: '#/components/schemas/UkwmProducerDetail'
+            wasteCollection:
+              $ref: '#/components/schemas/UkwmWasteCollectionDetail'
+            status:
+              type: string
+          title: Complete
+    UkwmProducerDetail:
+      type: object
+      properties:
+        reference:
+          type: string
+        sicCode:
+          type: string
+        contact:
+          $ref: '#/components/schemas/UkwmContact'
+        address:
+          $ref: '#/components/schemas/UkwmAddress'
+      required:
+        - reference
+        - contact
+        - address
+      additionalProperties: false
+    UkwmWasteCollectionDetail:
+      type: object
+      properties:
+        wasteSource:
+          type: string
+        brokerRegistrationNumber:
+          type: string
+        carrierRegistrationNumber:
+          type: string
+        localAuthority:
+          type: string
+        expectedWasteCollectionDate:
+          $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
+        address:
+          $ref: '#/components/schemas/UkwmWasteCollectionAddress'
+      required:
+        - wasteSource
+        - localAuthority
+        - expectedWasteCollectionDate
+        - address
+      additionalProperties: false
+    UkwmExpectedWasteCollectionDate:
+      type: object
+      properties:
+        day:
+          type: string
+        month:
+          type: string
+        year:
+          type: string
+      required:
+        - day
+        - month
+        - year
+      additionalProperties: false
+    UkwmWasteCollectionAddress:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        postcode:
+          type: string
+        country:
+          type: string
+      additionalProperties: false
+    UkwmDraftCarrierDetail:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            value:
+              $ref: '#/components/schemas/UkwmCarrierDetail'
+            status:
+              type: string
+          title: Complete
+    UkwmCarrierDetail:
+      type: object
+      properties:
+        contact:
+          $ref: '#/components/schemas/UkwmContact'
+        address:
+          $ref: '#/components/schemas/UkwmAddress'
+      required:
+        - contact
+        - address
+      additionalProperties: false
+    UkwmDraftSubmissionDeclaration:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+              enum:
+                - CannotStart
+                - NotStarted
+        - properties:
+            values:
+              $ref: '#/components/schemas/UkwmSubmissionDeclaration'
+            status:
+              type: string
+          title: Complete
+    UkwmSubmissionDeclaration:
+      type: object
+      properties:
+        declarationTimestamp:
+          type: string
+          format: date-time
+        transactionId:
+          type: string
+      required:
+        - declarationTimestamp
+        - transactionId
+      additionalProperties: false
+    UkwmSubmissionState:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/UkwmSubmissionStateStatus'
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - timestamp
+      additionalProperties: false
+    UkwmSubmissionStateStatus:
+      type: string
+      enum:
+        - SubmittedWithEstimates
+        - SubmittedWithActuals
+        - UpdatedWithActuals
+    GetUkwmDraftsResponse:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+        totalPages:
+          type: number
+        page:
+          type: number
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmDraft'
+      required:
+        - totalRecords
+        - totalPages
+        - page
+        - values
+      additionalProperties: false
+    UkwmDraft:
+      type: object
+      properties:
+        id:
+          type: string
+        wasteMovementId:
+          type: string
+        producerName:
+          type: string
+        ewcCode:
+          type: string
+        collectionDate:
+          type: object
+          properties:
+            day:
+              type: string
+            month:
+              type: string
+            year:
+              type: string
+          required:
+            - day
+            - month
+            - year
+          additionalProperties: false
+      required:
+        - id
+        - wasteMovementId
+        - producerName
+        - ewcCode
+        - collectionDate
+      additionalProperties: false
     CreateSubmissionRequest:
       properties:
         reference:
