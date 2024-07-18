@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import { getServerSession } from 'next-auth';
-import { format } from 'date-fns';
 import { options } from '../../../api/auth/[...nextauth]/options';
 import { getUserPaymentStatus } from '@wts/app-waste-tracking-service/feature-service-charge';
 import { headers } from 'next/headers';
@@ -10,7 +9,10 @@ import styles from './page.module.css';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
 import { Link, redirect } from '@wts/ui/navigation';
-import { PaymentContinueButton } from '@wts/app-waste-tracking-service/feature-service-charge';
+import {
+  PaymentContinueButton,
+  formatExpiryDate,
+} from '@wts/app-waste-tracking-service/feature-service-charge';
 
 export const metadata = {
   title: 'Pay the annual waste tracking service charge',
@@ -55,11 +57,6 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
     return redirect('/account');
   }
 
-  const formattedRenewalDate = format(
-    new Date(renewalDate),
-    'EEEE d MMMM yyyy',
-  );
-
   return (
     <Page>
       <GovUK.GridRow>
@@ -68,7 +65,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
           <GovUK.Heading>{t('headingOne')}</GovUK.Heading>
           <GovUK.Paragraph>
             {t.rich('paragraphOne', {
-              date: formattedRenewalDate,
+              date: formatExpiryDate(renewalDate),
               strong: (chunks) => <strong>{chunks}</strong>,
             })}
           </GovUK.Paragraph>

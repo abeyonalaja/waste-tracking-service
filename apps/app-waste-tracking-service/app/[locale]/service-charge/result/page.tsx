@@ -1,14 +1,17 @@
 import { getTranslations } from 'next-intl/server';
 import { getServerSession } from 'next-auth';
-import { redirect } from '@wts/ui/navigation';
+import { redirect, Link } from '@wts/ui/navigation';
 import { options } from '../../../api/auth/[...nextauth]/options';
-import { Page } from '@wts/ui/shared-ui/server';
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 import process from 'node:process';
-import { cookies } from 'next/headers';
 import type { PaymentRecord } from '@wts/api/payment';
+import styles from './page.module.css';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { StatusChecker } from '@wts/app-waste-tracking-service/feature-service-charge';
+import { Page } from '@wts/ui/shared-ui/server';
+import {
+  StatusChecker,
+  formatExpiryDate,
+} from '@wts/app-waste-tracking-service/feature-service-charge';
 
 export const metadata = {
   title: 'Pay the annual waste tracking service charge',
@@ -78,12 +81,63 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
     return redirect('/account');
   }
 
-  if (paymentRecord.state.status === 'Success') {
+  if (paymentRecord.state.status === 'Success' && paymentRecord.expiryDate) {
     return (
       <Page>
         <GovUK.GridRow>
           <GovUK.GridCol size="two-thirds">
-            <p>The payment record reference is {paymentRecord.reference}</p>
+            <GovUK.Panel title={t('success.panel.title')}>
+              {t('success.panel.text')}
+              <br />
+              <strong>{paymentRecord.reference}</strong>
+            </GovUK.Panel>
+            <GovUK.Heading level={2} size="m">
+              {t('success.body.headingOne')}
+            </GovUK.Heading>
+            <GovUK.Paragraph>
+              {t.rich('success.body.content', {
+                date: formatExpiryDate(paymentRecord.expiryDate),
+                strong: (chunks) => <strong>{chunks}</strong>,
+              })}
+            </GovUK.Paragraph>
+            <GovUK.Heading level={2} size="m" id="payment-summary">
+              {t('success.body.headingTwo')}
+            </GovUK.Heading>
+            <table className="govuk-table" aria-labelledby="payment-summary">
+              <tbody className="govuk-table__body">
+                <tr className={`govuk-table__row ${styles.tableRow}`}>
+                  <th
+                    scope="row"
+                    id="payment-for-label"
+                    className={`govuk-table__header  ${styles.tableHeader}`}
+                  >
+                    {t('success.table.headingOne')}
+                  </th>
+                  <td
+                    className={`govuk-table__cell ${styles.tableData}`}
+                    id="payment-for-value"
+                  >
+                    {paymentRecord.description}
+                  </td>
+                </tr>
+                <tr className={`govuk-table__row  ${styles.tableRow}`}>
+                  <th
+                    scope="row"
+                    id="payment-amount-label"
+                    className={`govuk-table__header govuk-!-font-weight-regular ${styles.tableHeader}`}
+                  >
+                    {t('success.table.headingTwo')}
+                  </th>
+                  <td
+                    id="payment-for-value"
+                    className={`govuk-table__cell ${styles.tableData}`}
+                  >
+                    {`£${(paymentRecord.amount / 100).toFixed(2)}`}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Link href="/account">{t('success.link')}</Link>
           </GovUK.GridCol>
         </GovUK.GridRow>
       </Page>
@@ -94,7 +148,7 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
     <Page>
       <GovUK.GridRow>
         <GovUK.GridCol size="full">
-          <StatusChecker label={t('loadingTitle')} refreshInterval={3000} />
+          <StatusChecker label={t('loading.title')} refreshInterval={3000} />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>

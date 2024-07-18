@@ -10,7 +10,7 @@ export default function Loading(): React.ReactNode {
     <Page>
       <GovUK.GridRow>
         <GovUK.GridCol size="full">
-          <StatusChecker label={t('loadingTitle')} />
+          <StatusChecker label={t('loading.title')} />
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>

@@ -98,7 +98,25 @@
       "buttonCancel": "Cancel"
     },
     "result": {
-      "loadingTitle": "Loading"
+      "loading": {
+        "title": "Loading"
+      },
+      "success": {
+        "panel": {
+          "title": "Your payment was successful",
+          "text": "Your payment reference is "
+        },
+        "body": {
+          "headingOne": "What happens next",
+          "content": "We have sent you a confirmation email. Your business now has full access to the waste tracking service until <strong>11:59pm on {date}</strong>.",
+          "headingTwo": "Payment summary"
+        },
+        "table": {
+          "headingOne": "Payment for:",
+          "headingTwo": "Total amount:"
+        },
+        "link": "Go to the waste tracking service"
+      }
     }
   }
 }
