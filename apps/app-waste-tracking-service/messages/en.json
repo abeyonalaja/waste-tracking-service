@@ -6,6 +6,11 @@
     "link": "Go to your account"
   },
   "accountPage": {
+    "serviceChargeBanner": {
+      "one": "You have limited access to this service. ",
+      "link": "Pay your service charge ",
+      "two": "to have full access."
+    },
     "title": "Move or export waste",
     "cards": {
       "UKWM": {

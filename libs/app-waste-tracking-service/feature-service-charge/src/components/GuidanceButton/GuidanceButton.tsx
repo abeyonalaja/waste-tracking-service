@@ -23,6 +23,7 @@ export function GuidanceButton({
   }
 
   function handleClick(): void {
+    window.scrollTo(0, 0);
     return router.push('/service-charge/review');
   }
 

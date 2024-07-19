@@ -2,10 +2,9 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { GridRow, LinkCard } from '../../components';
 import { getTranslations } from 'next-intl/server';
 import UserHeading from './_components/UserHeading';
-import { Suspense } from 'react';
 import { getServerSession } from 'next-auth';
 import { Page } from '@wts/ui/shared-ui/server';
-import { redirect } from '@wts/ui/navigation';
+import { redirect, Link } from '@wts/ui/navigation';
 import { headers } from 'next/headers';
 import { getUserPaymentStatus } from '@wts/app-waste-tracking-service/feature-service-charge';
 import { PaymentReference } from '@wts/api/waste-tracking-gateway';
@@ -18,6 +17,7 @@ export const metadata = {
 
 export default async function Index(): Promise<JSX.Element> {
   const session = await getServerSession(options);
+  let serviceChargePaid = false;
 
   // Redirect to sign in page if not logged-in
   if (!session || !session.user) {
@@ -43,7 +43,9 @@ export default async function Index(): Promise<JSX.Element> {
       console.error('Error fetching payments', error);
       return redirect('/404');
     }
-    const { serviceChargePaid } = (await response.json()) as PaymentReference;
+
+    const paymentReference = (await response.json()) as PaymentReference;
+    serviceChargePaid = paymentReference.serviceChargePaid;
     const cookieStore = cookies();
     const serviceChargeGuidanceViewed = cookieStore.get(
       'serviceChargeGuidanceViewed',
@@ -61,38 +63,49 @@ export default async function Index(): Promise<JSX.Element> {
 
   return (
     <Page>
-      <Suspense>
+      {!serviceChargePaid && (
         <GovUK.GridRow>
-          <GovUK.GridCol size="full">
-            <UserHeading />
-            <GovUK.Heading size={'m'} level={2}>
-              {t('title')}
-            </GovUK.Heading>
-            <GovUK.SectionBreak size={'l'} />
-            <GridRow display="flex-from-tablet">
-              {process.env.NEXT_PUBLIC_UKWM_ENABLED === 'true' && (
-                <GovUK.GridCol size="one-third">
-                  <LinkCard
-                    id="link-card-UKWM"
-                    title={t('cards.UKWM.title')}
-                    content={t('cards.UKWM.description')}
-                    href="/move-waste"
-                  />
-                </GovUK.GridCol>
-              )}
-
-              <GovUK.GridCol size="one-third">
-                <LinkCard
-                  id="link-card-GLW"
-                  title={t('cards.GLW.title')}
-                  content={t('cards.GLW.description')}
-                  href="/export-annex-VII-waste"
-                />
-              </GovUK.GridCol>
-            </GridRow>
+          <GovUK.GridCol>
+            <GovUK.NotificationBanner title="Important">
+              {t('serviceChargeBanner.one')}
+              <Link className=" " href="/service-charge/guidance">
+                {t('serviceChargeBanner.link')}
+              </Link>
+              {t('serviceChargeBanner.two')}
+            </GovUK.NotificationBanner>
           </GovUK.GridCol>
         </GovUK.GridRow>
-      </Suspense>
+      )}
+      <GovUK.GridRow>
+        <GovUK.GridCol size="full">
+          <UserHeading />
+          <GovUK.Heading size={'m'} level={2}>
+            {t('title')}
+          </GovUK.Heading>
+          <GovUK.SectionBreak size={'l'} />
+          <GridRow display="flex-from-tablet">
+            {process.env.NEXT_PUBLIC_UKWM_ENABLED === 'true' && (
+              <GovUK.GridCol size="one-third">
+                <LinkCard
+                  id="link-card-UKWM"
+                  title={t('cards.UKWM.title')}
+                  content={t('cards.UKWM.description')}
+                  href="/move-waste"
+                />
+              </GovUK.GridCol>
+            )}
+
+            <GovUK.GridCol size="one-third">
+              <LinkCard
+                id="link-card-GLW"
+                title={t('cards.GLW.title')}
+                content={t('cards.GLW.description')}
+                href="/export-annex-VII-waste"
+              />
+            </GovUK.GridCol>
+          </GridRow>
+        </GovUK.GridCol>
+      </GovUK.GridRow>
     </Page>
   );
 }

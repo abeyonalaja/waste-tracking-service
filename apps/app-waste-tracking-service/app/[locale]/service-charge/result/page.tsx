@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { getServerSession } from 'next-auth';
-import { redirect, Link } from '@wts/ui/navigation';
+import { redirect } from '@wts/ui/navigation';
 import { options } from '../../../api/auth/[...nextauth]/options';
 import { headers, cookies } from 'next/headers';
 import process from 'node:process';
@@ -11,6 +11,7 @@ import { Page } from '@wts/ui/shared-ui/server';
 import {
   StatusChecker,
   formatExpiryDate,
+  SuccessPageLink,
 } from '@wts/app-waste-tracking-service/feature-service-charge';
 
 export const metadata = {
@@ -137,7 +138,7 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
                 </tr>
               </tbody>
             </table>
-            <Link href="/account">{t('success.link')}</Link>
+            <SuccessPageLink label={t('success.link')} />
           </GovUK.GridCol>
         </GovUK.GridRow>
       </Page>

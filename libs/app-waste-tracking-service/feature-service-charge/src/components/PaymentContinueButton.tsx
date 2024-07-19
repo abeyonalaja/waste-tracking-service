@@ -30,7 +30,6 @@ export function PaymentContinueButton({
     const body = {
       returnUrl,
       amount: 2000,
-      description: 'Waste tracking service',
     };
 
     try {
@@ -55,6 +54,7 @@ export function PaymentContinueButton({
       } = await response.json();
 
       setCookie('referenceId', data.id, { path: '/' });
+      window.scrollTo(0, 0);
       return router.push(data.redirectUrl);
     } catch (error) {
       console.error(error);
