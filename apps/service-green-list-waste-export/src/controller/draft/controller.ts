@@ -1210,13 +1210,19 @@ export default class DraftController {
         };
       }
 
+      draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
+      draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
         accountId,
       );
 
-      return success(draft.recoveryFacilityDetail);
+      return success({
+        status: value.status,
+        values: [{ id: uuid }],
+      });
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1476,11 +1482,10 @@ export default class DraftController {
         draft.ukExitLocation.status === 'Complete' &&
         draft.transitCountries.status === 'Complete' &&
         draft.recoveryFacilityDetail.status === 'Complete' &&
-        draft.submissionDeclaration.status === 'Complete' &&
+        submissionDeclaration.status === 'Complete' &&
         (submissionState.status === 'SubmittedWithActuals' ||
           submissionState.status === 'SubmittedWithEstimates' ||
-          submissionState.status === 'UpdatedWithActuals') &&
-        submissionDeclaration.status === 'Complete'
+          submissionState.status === 'UpdatedWithActuals')
       ) {
         submission = {
           id: draft.id,
