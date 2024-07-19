@@ -5,6 +5,7 @@ Given(/^I login to waste tracking portal$/) do
   visit(Env.start_page_url)
   click_link('Start now')
   HelperMethods.wait_for_a_sec
+  set_feature_cookies
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
   WasteTrackingLandingPage.new.wait_for_element('link-card-GLW')
@@ -12,7 +13,6 @@ Given(/^I login to waste tracking portal$/) do
   WasteTrackingLandingPage.new.create_green_list_waste_record
   ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
-  set_feature_cookies
 end
 
 Then(/^I can see all the sections$/) do
@@ -47,6 +47,10 @@ def add_custom_cookie(key, value)
   browser.manage.add_cookie name: key, value: value
 end
 
+def delete_custom_cookie(key)
+  page.driver.browser.manage.delete_cookie(key)
+end
+
 When(/^I click the incomplete records link$/) do
   click_link(href: '/export-annex-VII-waste/incomplete')
 end
@@ -61,4 +65,19 @@ end
 
 And(/^I click Manage your Annex VII record templates link$/) do
   click_link(href: '/export-annex-VII-waste/templates')
+end
+
+Given(/^I navigate to service charge page after login on DCID portal$/) do
+  Log.info("Start url: #{Env.start_page_url}")
+  TestStatus.set_test_status('Test ENV', Env.test_env)
+  TestStatus.set_test_status('Start url', Env.start_page_url)
+  visit(Env.start_page_url)
+  click_link('Start now')
+  HelperMethods.wait_for_a_sec
+  set_feature_cookies
+  delete_custom_cookie('serviceChargeGuidanceViewed')
+  DescriptionPage.new.page_refresh
+  user = "USER#{@current_process}"
+  OverviewPage.new.login_to_dcid(user)
+  DescriptionPage.new.check_page_displayed
 end

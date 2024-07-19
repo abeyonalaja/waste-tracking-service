@@ -13,6 +13,7 @@ Before do |scenario|
   TestStatus.reset_test_status
   TestStatus.set_feature_flag('GLWMultipleGuidanceViewed', 'true')
   TestStatus.set_feature_flag('UKWMMultipleGuidanceViewed', 'true')
+  TestStatus.set_feature_flag('serviceChargeGuidanceViewed', 'true')
 end
 
 Before('@csv_helper') do
@@ -21,6 +22,10 @@ end
 
 Before('@csv_helper_ukmw') do
   TestStatus.set_feature_flag('UKWMMultipleGuidanceViewed', 'false')
+end
+
+Before('@service_charge') do
+  page.driver.browser.manage.delete_cookie('serviceChargeGuidanceViewed')
 end
 
 Before('@UKMV') do

@@ -56,6 +56,47 @@
       "linkFour": "Business Cymru Waste Legislation"
     }
   },
+  "charge": {
+    "guidance": {
+      "title": "Pay the annual waste tracking service charge",
+      "paragraphOne": "You need to pay the annual service charge to access the full waste tracking service. The cost is £{price} per year and gives access to all your admin and standard accounts linked to your business.",
+      "paragraphTwo": "It will allow these accounts to:",
+      "listOneListItemOne": "create and view new UK waste movement and Annex VII records",
+      "listOneListItemTwo": "update and confirm UK waste movement records if you are a carrier or receiver",
+      "listOneListItemThree": "view and update Annex VII records that you have previously submitted",
+      "paragraphThree": "If you do not pay the service charge, you will only be able to view:",
+      "listTwoListItemOne": "records that you have previously created or updated",
+      "listTwoListItemTwo": "templates that you have previously created",
+      "warning": "You will not be able to create or confirm any records until you have paid the service charge.",
+      "buttonPay": "Pay service charge",
+      "buttonCancel": "Continue without paying"
+    },
+    "review": {
+      "caption": "Move and track waste",
+      "headingOne": "Annual waste tracking service charge",
+      "paragraphOne": "Your business will have full access to the waste tracking service until 11:59pm on {date} once you have paid this charge.",
+      "headingTwo": "Review the payment amount",
+      "tableHeading": "Total to pay",
+      "buttonAction": "Continue",
+      "buttonCancel": "Cancel"
+    },
+    "success": {
+      "panel": {
+        "title": "Your payment was successful",
+        "text": "Your payment reference is"
+      },
+      "body": {
+        "headingOne": "What happens next",
+        "content": "We have sent you a confirmation email. Your business now has full access to the waste tracking service until 11:59pm on {date}.",
+        "headingTwo": "Payment summary"
+      },
+      "table": {
+        "headingOne": "Payment for:",
+        "headingTwo": "Total amount:"
+      },
+      "link": "Go to the waste tracking service"
+    }
+  },
   "moveWastePage": {
     "breadcrumbs": {
       "home": "Home",

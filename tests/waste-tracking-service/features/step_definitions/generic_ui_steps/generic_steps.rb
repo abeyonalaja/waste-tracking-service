@@ -64,7 +64,7 @@ And(/^I wait for 10 second$/) do
 end
 
 And(/^I wait for a second long$/) do
-  sleep 100
+  sleep 10000
 end
 
 When(/^I click the first continue link$/) do
@@ -99,3 +99,5 @@ end
 And(/^I switch to new tab$/) do
   switch_to_window(windows.last)
 end
+
+
