@@ -76,6 +76,15 @@
       "home": "Home",
       "current": "Move and track waste in the UK"
     },
+    "serviceChargeBanner": {
+      "one": "You have limited access to this service. ",
+      "link": "Pay your service charge",
+      "two": " to have full access."
+    },
+    "serviceChargeRenewalBanner": {
+      "text": "You need to pay the service charge by {date} to keep full access to the waste tracking service. ",
+      "link": "Pay your service charge now"
+    },
     "title": "Move and track waste in the UK",
     "name": "{name}",
     "titleTwo": "Move, export or import waste",

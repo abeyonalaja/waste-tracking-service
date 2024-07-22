@@ -79,7 +79,7 @@ export default async function Index(): Promise<JSX.Element> {
               {t('serviceChargeBanner.one')}
               <Link
                 className="govuk-notification-banner__link"
-                href="/service-charge/guidance"
+                href="/service-charge/review"
               >
                 {t('serviceChargeBanner.link')}
               </Link>
@@ -97,7 +97,7 @@ export default async function Index(): Promise<JSX.Element> {
               })}
               <Link
                 className="govuk-notification-banner__link"
-                href="/service-charge/guidance"
+                href="/service-charge/review"
               >
                 {t('serviceChargeRenewalBanner.link')}
               </Link>
