@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 interface Props {
   children?: ReactNode;
   headingLevel?: number;
-  title?: string;
+  title: string;
   id?: string;
   testId?: string;
   success?: boolean;
@@ -25,17 +25,17 @@ export const NotificationBanner = ({
       }`}
       id={id}
       data-testid={testId}
+      role="region"
+      aria-labelledby="govuk-notification-banner-title"
     >
-      {title && (
-        <div className="govuk-notification-banner__header">
-          <HeadingLevel
-            className="govuk-notification-banner__title"
-            id="govuk-notification-banner-title"
-          >
-            {title}
-          </HeadingLevel>
-        </div>
-      )}
+      <div className="govuk-notification-banner__header">
+        <HeadingLevel
+          className="govuk-notification-banner__title"
+          id="govuk-notification-banner-title"
+        >
+          {title}
+        </HeadingLevel>
+      </div>
       <div className="govuk-notification-banner__content">
         <p className="govuk-notification-banner__heading">{children}</p>
       </div>

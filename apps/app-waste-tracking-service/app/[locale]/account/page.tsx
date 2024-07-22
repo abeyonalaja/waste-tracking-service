@@ -6,32 +6,37 @@ import { getServerSession } from 'next-auth';
 import { Page } from '@wts/ui/shared-ui/server';
 import { redirect, Link } from '@wts/ui/navigation';
 import { headers } from 'next/headers';
-import { getUserPaymentStatus } from '@wts/app-waste-tracking-service/feature-service-charge';
+import {
+  getUserPaymentStatus,
+  formatExpiryDate,
+} from '@wts/app-waste-tracking-service/feature-service-charge';
 import { PaymentReference } from '@wts/api/waste-tracking-gateway';
 import { cookies } from 'next/headers';
 import { options } from '../../api/auth/[...nextauth]/options';
+import { differenceInDays } from 'date-fns';
 
 export const metadata = {
   title: 'Waste tracking service',
 };
 
 export default async function Index(): Promise<JSX.Element> {
+  const t = await getTranslations({ namespace: 'accountPage' });
   const session = await getServerSession(options);
   let serviceChargePaid = false;
+  let showServiceChargeReminder = false;
+  let serviceChargeExpiryDate = '';
 
-  // Redirect to sign in page if not logged-in
   if (!session || !session.user) {
     return redirect('/auth/signin');
   }
 
-  // Guard against missing token
   if (session.token === undefined || session.token === null) {
     console.error('No session or token present');
     return redirect('/404');
   }
 
-  // Check if user has paid the service charge if feature is enabled
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
+
   if (serviceChargeEnabled) {
     const headerList = headers();
     const hostname = headerList.get('host') || '';
@@ -46,20 +51,24 @@ export default async function Index(): Promise<JSX.Element> {
 
     const paymentReference = (await response.json()) as PaymentReference;
     serviceChargePaid = paymentReference.serviceChargePaid;
-    const cookieStore = cookies();
-    const serviceChargeGuidanceViewed = cookieStore.get(
-      'serviceChargeGuidanceViewed',
-    );
 
-    // If service charge is not paid and they have not viewed the guidance,
-    // redirect to the guidance page
-    // TODO: Add check for data_admin role when user-roles are implemented
-    if (!serviceChargePaid && !serviceChargeGuidanceViewed) {
-      return redirect('/service-charge/guidance');
+    if (serviceChargePaid) {
+      const daysUntilExpiry = differenceInDays(
+        new Date(paymentReference.expiryDate),
+        new Date(),
+      );
+      showServiceChargeReminder = daysUntilExpiry < 28;
+      serviceChargeExpiryDate = formatExpiryDate(paymentReference.expiryDate);
+    } else {
+      const serviceChargeGuidanceViewed = cookies().get(
+        'serviceChargeGuidanceViewed',
+      );
+
+      if (!serviceChargeGuidanceViewed) {
+        return redirect('/service-charge/guidance');
+      }
     }
   }
-
-  const t = await getTranslations({ namespace: 'accountPage' });
 
   return (
     <Page>
@@ -68,10 +77,31 @@ export default async function Index(): Promise<JSX.Element> {
           <GovUK.GridCol>
             <GovUK.NotificationBanner title="Important">
               {t('serviceChargeBanner.one')}
-              <Link className=" " href="/service-charge/guidance">
+              <Link
+                className="govuk-notification-banner__link"
+                href="/service-charge/guidance"
+              >
                 {t('serviceChargeBanner.link')}
               </Link>
               {t('serviceChargeBanner.two')}
+            </GovUK.NotificationBanner>
+          </GovUK.GridCol>
+        </GovUK.GridRow>
+      )}
+      {showServiceChargeReminder && (
+        <GovUK.GridRow>
+          <GovUK.GridCol>
+            <GovUK.NotificationBanner title="Important">
+              {t('serviceChargeRenewalBanner.text', {
+                date: serviceChargeExpiryDate,
+              })}
+              <Link
+                className="govuk-notification-banner__link"
+                href="/service-charge/guidance"
+              >
+                {t('serviceChargeRenewalBanner.link')}
+              </Link>
+              .
             </GovUK.NotificationBanner>
           </GovUK.GridCol>
         </GovUK.GridRow>

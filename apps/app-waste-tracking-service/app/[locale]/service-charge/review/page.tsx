@@ -42,20 +42,13 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
   const hostname = headerList.get('host') || '';
   let response: Response;
 
-  // Check that user's organisation has not already paid the
-  // service charge to prevent them from paying twice
   try {
     response = await getUserPaymentStatus(hostname, session?.token as string);
   } catch (error) {
     console.error(error);
     return redirect('/404');
   }
-  const { serviceChargePaid, renewalDate } =
-    (await response.json()) as PaymentReference;
-
-  if (serviceChargePaid) {
-    return redirect('/account');
-  }
+  const { renewalDate } = (await response.json()) as PaymentReference;
 
   return (
     <Page>

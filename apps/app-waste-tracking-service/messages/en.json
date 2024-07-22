@@ -11,6 +11,10 @@
       "link": "Pay your service charge ",
       "two": "to have full access."
     },
+    "serviceChargeRenewalBanner": {
+      "text": "You need to pay the service charge by {date} to keep full access to the waste tracking service. ",
+      "link": "Pay your service charge now"
+    },
     "title": "Move or export waste",
     "cards": {
       "UKWM": {
@@ -109,7 +113,7 @@
       "success": {
         "panel": {
           "title": "Your payment was successful",
-          "text": "Your payment reference is "
+          "text": "Your payment reference is"
         },
         "body": {
           "headingOne": "What happens next",
