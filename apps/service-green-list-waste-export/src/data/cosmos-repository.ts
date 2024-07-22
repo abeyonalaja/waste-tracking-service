@@ -102,7 +102,8 @@ function getListQuery(
                         ORDER BY
                         c['value']['collectionDate']['actualDate']['year']  ${order},
                         c['value']['collectionDate']['actualDate']['month']  ${order},
-                        c['value']['collectionDate']['actualDate']['day'] ${order}`,
+                        c['value']['collectionDate']['actualDate']['day'] ${order},
+                        c['value']['submissionState']['timestamp'] ${order}`,
             parameters: [
               {
                 name: '@accountId',
