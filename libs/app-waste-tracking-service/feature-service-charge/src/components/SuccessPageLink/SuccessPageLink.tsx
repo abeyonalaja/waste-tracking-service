@@ -15,6 +15,7 @@ export function SuccessPageLink({
   return (
     <Link
       href="/account"
+      className={'govuk-link govuk-link--no-visited-state'}
       onClick={(e: React.MouseEvent) => {
         e.preventDefault();
         window.scrollTo(0, 0);

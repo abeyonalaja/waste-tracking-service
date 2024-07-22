@@ -5,7 +5,6 @@ import { getUserPaymentStatus } from '@wts/app-waste-tracking-service/feature-se
 import { headers } from 'next/headers';
 import process from 'node:process';
 import type { PaymentReference } from '@wts/api/waste-tracking-gateway';
-import styles from './page.module.css';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
 import { Link, redirect } from '@wts/ui/navigation';
@@ -65,16 +64,19 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
           <GovUK.Heading level={2} size="m" id="payment-amount">
             {t('headingTwo')}
           </GovUK.Heading>
-          <table className="govuk-table" aria-labelledby="payment-amount">
+          <table
+            className="govuk-table govuk-!-margin-bottom-8"
+            aria-labelledby="payment-amount"
+          >
             <tbody className="govuk-table__body">
-              <tr className={`govuk-table__row ${styles.tableRow}`}>
+              <tr className={`govuk-table__row`}>
                 <th
                   scope="row"
-                  className={`govuk-table__header ${styles.tableHeader}`}
+                  className={`govuk-table__header govuk-!-width-one-half`}
                 >
                   {t('tableHeading')}
                 </th>
-                <td className={`govuk-table__cell ${styles.tableData}`}>
+                <td className={`govuk-table__cell govuk-!-width-one-half`}>
                   {`£20.00`}
                 </td>
               </tr>
@@ -87,7 +89,10 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
               returnUrl={`${returnUrlbase}/service-charge/result`}
               apiUrl={apiUrl}
             />
-            <Link href="/account" className="govuk-link">
+            <Link
+              href="/account"
+              className="govuk-link govuk-link--no-visited-state"
+            >
               {t('buttonCancel')}
             </Link>
           </GovUK.ButtonGroup>

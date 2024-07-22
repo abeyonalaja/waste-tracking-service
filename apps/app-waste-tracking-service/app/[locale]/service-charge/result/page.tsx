@@ -5,7 +5,6 @@ import { options } from '../../../api/auth/[...nextauth]/options';
 import { headers, cookies } from 'next/headers';
 import process from 'node:process';
 import type { PaymentRecord } from '@wts/api/payment';
-import styles from './page.module.css';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
 import {
@@ -106,39 +105,38 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
             </GovUK.Heading>
             <table className="govuk-table" aria-labelledby="payment-summary">
               <tbody className="govuk-table__body">
-                <tr className={`govuk-table__row ${styles.tableRow}`}>
+                <tr className={`govuk-table__row`}>
                   <th
                     scope="row"
                     id="payment-for-label"
-                    className={`govuk-table__header  ${styles.tableHeader}`}
+                    className={`govuk-table__header govuk-!-font-weight-regular govuk-!-width-one-half`}
                   >
                     {t('success.table.headingOne')}
                   </th>
                   <td
-                    className={`govuk-table__cell ${styles.tableData}`}
+                    className={`govuk-table__cell govuk-!-width-one-half`}
                     id="payment-for-value"
                   >
                     {paymentRecord.description}
                   </td>
                 </tr>
-                <tr className={`govuk-table__row  ${styles.tableRow}`}>
+                <tr className={`govuk-table__row`}>
                   <th
                     scope="row"
                     id="payment-amount-label"
-                    className={`govuk-table__header govuk-!-font-weight-regular ${styles.tableHeader}`}
+                    className={`govuk-table__header govuk-!-font-weight-regular`}
                   >
                     {t('success.table.headingTwo')}
                   </th>
-                  <td
-                    id="payment-for-value"
-                    className={`govuk-table__cell ${styles.tableData}`}
-                  >
+                  <td id="payment-for-value" className={`govuk-table__cell`}>
                     {`£${(paymentRecord.amount / 100).toFixed(2)}`}
                   </td>
                 </tr>
               </tbody>
             </table>
-            <SuccessPageLink label={t('success.link')} />
+            <GovUK.Paragraph>
+              <SuccessPageLink label={t('success.link')} />
+            </GovUK.Paragraph>
           </GovUK.GridCol>
         </GovUK.GridRow>
       </Page>
