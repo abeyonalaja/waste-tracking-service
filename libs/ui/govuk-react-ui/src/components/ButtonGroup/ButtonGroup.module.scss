@@ -1,7 +1,7 @@
 @import 'node_modules/govuk-frontend/dist/govuk/base';
 
 .govukButtonGroup {
-  align-items: start;
+  align-items: start !important;
   form {
     width: 100%;
     @include govuk-media-query($from: tablet) {
