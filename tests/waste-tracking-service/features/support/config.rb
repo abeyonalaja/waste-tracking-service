@@ -24,6 +24,7 @@ require 'axe-capybara'
 require 'to_words'
 require 'nokogiri'
 require 'yaml'
+require 'active_support/all'
 
 World(Capybara::DSL)
 

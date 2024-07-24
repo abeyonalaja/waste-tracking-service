@@ -53,3 +53,16 @@ end
 And(/^I see success payment page translated correctly$/) do
   SuccessPaymentPage.new.check_page_translation
 end
+
+And(/^I verify payment warning banner is displayed$/) do
+  WasteTrackingLandingPage.new.pay_header
+  WasteTrackingLandingPage.new.check_payment_banner_displayed
+end
+
+When(/^I click the Cancel payment link$/) do
+  EnterPaymentDetailsPage.new.cancel_payment
+end
+
+And(/^I click the Cancel and go back to try the payment again link$/) do
+  EnterPaymentDetailsPage.new.redirect_url
+end

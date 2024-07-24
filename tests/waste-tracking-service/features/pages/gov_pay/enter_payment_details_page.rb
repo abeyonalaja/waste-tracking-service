@@ -2,6 +2,7 @@
 
 # this page is for Gov pay Enter Payment Details Page details
 class EnterPaymentDetailsPage < GenericPage
+  include ErrorBox
 
   TITLE = 'Enter payment details'
 
@@ -74,7 +75,11 @@ class EnterPaymentDetailsPage < GenericPage
   end
 
   def cancel_payment
-    find('input#cancel-payment').click
+    find('cancel-payment').click
+  end
+
+  def redirect_url
+    find('return-url').click
   end
 
 end
