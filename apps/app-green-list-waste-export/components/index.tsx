@@ -30,6 +30,7 @@ import { Paragraph } from './Paragraph';
 import { RadiosDivider } from './RadiosDivider';
 import { RadioList } from './RadioList';
 import { SaveReturnButton } from './SaveReturnButton';
+import { ServiceChargeBanner } from './ServiceChargeBanner';
 import { SubmissionNotFound } from './SubmissionNotFound';
 import { SubmissionSummary } from './SubmissionSummary';
 import { SubmittedSummary } from './SubmittedSummary';
@@ -73,6 +74,7 @@ export {
   RadiosDivider,
   RadioList,
   SaveReturnButton,
+  ServiceChargeBanner,
   SubmissionNotFound,
   SubmissionSummary,
   SubmittedSummary,

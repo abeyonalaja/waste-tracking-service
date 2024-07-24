@@ -18,6 +18,7 @@ export default function handler(
     LANGUAGES_ENABLED: process.env.NEXT_PUBLIC_LANGUAGES_ENABLED
       ? BooleanFromString(process.env.NEXT_PUBLIC_LANGUAGES_ENABLED)
       : false,
+    SERVICE_CHARGE_ENABLED: process.env.SERVICE_CHARGE_ENABLED,
     GATEWAY_URL: process.env.NEXT_PUBLIC_GATEWAY_URL
       ? process.env.NEXT_PUBLIC_GATEWAY_URL
       : undefined,

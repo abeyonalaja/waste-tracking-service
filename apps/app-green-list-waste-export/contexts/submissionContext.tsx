@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
 export interface ISubmissionContextProps {
-  featureFlags: { multiples: boolean; languages: boolean } | null;
+  featureFlags: {
+    multiples: boolean;
+    languages: boolean;
+    serviceCharge: boolean;
+  } | null;
   submission: { id; reference } | null;
   setSubmission: (submission) => void;
 }

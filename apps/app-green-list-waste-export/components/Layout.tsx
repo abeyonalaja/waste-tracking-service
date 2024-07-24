@@ -19,6 +19,7 @@ export default function Layout({ children }: LayoutProps): React.ReactNode {
   const ff = {
     multiples: false,
     languages: false,
+    serviceCharge: false,
   };
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Layout({ children }: LayoutProps): React.ReactNode {
 
         ff.multiples = data.MULTIPLES_ENABLED;
         ff.languages = data.LANGUAGES_ENABLED;
+        ff.serviceCharge = data.SERVICE_CHARGE_ENABLED;
 
         setFeatureFlags(ff);
         setGaId(data.GOOGLE_ANALYTICS_ACCOUNT);

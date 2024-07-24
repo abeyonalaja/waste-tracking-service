@@ -8,6 +8,7 @@ import {
   BreadCrumbLink,
   BreadcrumbWrap,
   NotificationBanner,
+  ServiceChargeBanner,
 } from 'components';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
@@ -131,6 +132,8 @@ function Index(): React.ReactNode {
         footer={<Footer />}
         beforeChildren={<BreadCrumbs />}
       >
+        {featureFlags?.serviceCharge && <ServiceChargeBanner />}
+
         {context === 'unauthorized' && (
           <NotificationBanner
             type="important"

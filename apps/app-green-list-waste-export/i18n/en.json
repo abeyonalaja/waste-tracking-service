@@ -728,5 +728,11 @@
   "validation.recovery.facility.code": "Enter a recovery code",
   "validation.recovery.facility.another": "Select yes if you want to add another facility",
   "validation.template.name": "The template name must only include letters a to z, numbers, spaces, hyphens, brackets, apostrophes and back slashes",
-  "validation.template.description": "Description must be 100 characters or less"
+  "validation.template.description": "Description must be 100 characters or less",
+  "serviceChargeBanner.tag": "Important",
+  "serviceChargeBanner.one": "You have limited access to this service. ",
+  "serviceChargeBanner.link": "Pay your service charge",
+  "serviceChargeBanner.two": " to have full access.",
+  "serviceChargeRenewalBanner.text": "You need to pay the service charge by {{date}} to keep full access to the waste tracking service. ",
+  "serviceChargeRenewalBanner.link": "Pay your service charge now"
 }

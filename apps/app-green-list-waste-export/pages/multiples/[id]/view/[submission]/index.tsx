@@ -18,9 +18,9 @@ import {
 } from 'components';
 import useApiConfig from 'utils/useApiConfig';
 import styled from 'styled-components';
-import axios from 'axios';
 import { Loader } from 'features/multiples';
 import { WarningText } from 'govuk-react';
+import axios from 'axios';
 
 const StyledWarningText = styled(WarningText)`
   margin-bottom: 30px;
