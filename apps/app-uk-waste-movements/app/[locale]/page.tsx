@@ -72,7 +72,7 @@ export default async function Index(): Promise<JSX.Element> {
         />
       }
     >
-      {!serviceChargePaid && (
+      {serviceChargeEnabled && !serviceChargePaid && (
         <GovUK.GridRow>
           <GovUK.GridCol>
             <GovUK.NotificationBanner title="Important">
@@ -88,7 +88,7 @@ export default async function Index(): Promise<JSX.Element> {
           </GovUK.GridCol>
         </GovUK.GridRow>
       )}
-      {showServiceChargeReminder && (
+      {serviceChargeEnabled && showServiceChargeReminder && (
         <GovUK.GridRow>
           <GovUK.GridCol>
             <GovUK.NotificationBanner title="Important">
