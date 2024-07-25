@@ -34,7 +34,7 @@ export function ServiceChargeBanner(): React.ReactElement {
   if (data.data.serviceChargePaid === false) {
     return (
       <GovUK.GridRow>
-        <GovUK.GridCol setWidth="two-thirds">
+        <GovUK.GridCol>
           <div
             className="govuk-notification-banner"
             role="region"

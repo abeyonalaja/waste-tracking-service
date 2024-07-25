@@ -74,7 +74,7 @@ export default async function Index(): Promise<JSX.Element> {
     <Page>
       {serviceChargeEnabled && !serviceChargePaid && (
         <GovUK.GridRow>
-          <GovUK.GridCol>
+          <GovUK.GridCol size="two-thirds-from-desktop">
             <GovUK.NotificationBanner title="Important">
               {t('serviceChargeBanner.one')}
               <Link
@@ -90,7 +90,7 @@ export default async function Index(): Promise<JSX.Element> {
       )}
       {serviceChargeEnabled && showServiceChargeReminder && (
         <GovUK.GridRow>
-          <GovUK.GridCol>
+          <GovUK.GridCol size="two-thirds-from-desktop">
             <GovUK.NotificationBanner title="Important">
               {t('serviceChargeRenewalBanner.text', {
                 date: serviceChargeExpiryDate,

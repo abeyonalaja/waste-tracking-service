@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
-import { DashboardCard } from '@wts/app-uk-waste-movements/feature-homepage/server';
+import { NewWasteMovementsCard } from '@wts/app-uk-waste-movements/feature-homepage/server';
 import { Breadcrumbs } from '@wts/ui/shared-ui';
 import { getServerSession } from 'next-auth';
 import { options } from '../api/auth/[...nextauth]/options';
@@ -19,7 +19,7 @@ export const metadata = {
 };
 
 export default async function Index(): Promise<JSX.Element> {
-  const t = await getTranslations('moveWastePage');
+  const t = await getTranslations('homePage');
   let serviceChargePaid = false;
   let showServiceChargeReminder = false;
   let serviceChargeExpiryDate = '';
@@ -74,7 +74,7 @@ export default async function Index(): Promise<JSX.Element> {
     >
       {serviceChargeEnabled && !serviceChargePaid && (
         <GovUK.GridRow>
-          <GovUK.GridCol>
+          <GovUK.GridCol size="two-thirds-from-desktop">
             <GovUK.NotificationBanner title="Important">
               {t('serviceChargeBanner.one')}
               <Link
@@ -90,7 +90,7 @@ export default async function Index(): Promise<JSX.Element> {
       )}
       {serviceChargeEnabled && showServiceChargeReminder && (
         <GovUK.GridRow>
-          <GovUK.GridCol>
+          <GovUK.GridCol size="two-thirds-from-desktop">
             <GovUK.NotificationBanner title="Important">
               {t('serviceChargeRenewalBanner.text', {
                 date: serviceChargeExpiryDate,
@@ -109,7 +109,7 @@ export default async function Index(): Promise<JSX.Element> {
       <GovUK.Heading size={'l'} level={1}>
         {t('title')}
       </GovUK.Heading>
-      <DashboardCard />
+      <NewWasteMovementsCard />
     </Page>
   );
 }

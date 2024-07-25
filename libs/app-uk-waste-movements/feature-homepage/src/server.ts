@@ -1,3 +1,3 @@
 // Use this file to export React server components
 
-export { DashboardCard } from './components/DashboardCard';
+export { NewWasteMovementsCard } from './components/NewWasteMovementsCard';
