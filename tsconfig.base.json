@@ -91,7 +91,10 @@
       "@wts/util/dapr-winston-logging": [
         "libs/util/dapr-winston-logging/src/index.ts"
       ],
-      "@wts/util/invocation": ["libs/util/invocation/src/index.ts"]
+      "@wts/util/invocation": ["libs/util/invocation/src/index.ts"],
+      "@wts/util/shared-validation": [
+        "libs/util/shared-validation/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
