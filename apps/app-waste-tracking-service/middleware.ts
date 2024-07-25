@@ -1,13 +1,12 @@
-import createMiddleware from 'next-intl/middleware';
+import { withAuth } from 'next-auth/middleware';
 
-import { locales, localePrefix } from './navigation';
-
-export default createMiddleware({
-  defaultLocale: 'en',
-  localePrefix,
-  locales,
+export default withAuth({
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+  },
 });
 
 export const config = {
-  matcher: ['/', '/(cy|en)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)'],
+  matcher: ['/account/:path*', '/service-charge/:path*'],
 };

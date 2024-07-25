@@ -1,4 +1,8 @@
 {
+  "app": {
+    "title": "Symud ac olrhain gwastraff",
+    "phaseBanner": "Mae hwn yn wasanaeth newydd."
+  },
   "404": {
     "title": "Page not found",
     "paragraph1": "If you typed the web address, check it is correct.",

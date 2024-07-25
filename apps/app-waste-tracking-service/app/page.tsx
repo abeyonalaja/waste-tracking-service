@@ -1,5 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Link, redirect } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { Page } from '@wts/ui/shared-ui/server';
 import { getServerSession } from 'next-auth';
 import { getTranslations } from 'next-intl/server';
@@ -10,7 +11,6 @@ export const metadata = {
 
 export default async function HomePage(): Promise<JSX.Element> {
   const session = await getServerSession();
-
   if (session && session.user) {
     redirect('/account');
   }

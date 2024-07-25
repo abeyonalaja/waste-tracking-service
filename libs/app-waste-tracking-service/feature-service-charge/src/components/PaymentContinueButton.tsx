@@ -8,7 +8,7 @@ import { useCookies } from 'react-cookie';
 
 interface PaymentContinueButtonProps {
   label: string;
-  token: string;
+  token: string | null;
   returnUrl: string;
   apiUrl: string;
 }

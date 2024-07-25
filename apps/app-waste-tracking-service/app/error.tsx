@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Page } from '@wts/ui/shared-ui/server';
 
 interface ErrorPageProps {

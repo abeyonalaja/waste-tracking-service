@@ -11,16 +11,6 @@ export function middleware(req: NextRequest): NextResponse {
     redirectRequired = true;
   }
 
-  if (newUrl.includes('/en/')) {
-    newUrl = newUrl.replace('/en/', '/');
-    redirectRequired = true;
-  }
-
-  if (newUrl.includes('/cy/')) {
-    newUrl = newUrl.replace('/cy/', '/');
-    redirectRequired = true;
-  }
-
   if (redirectRequired) {
     return NextResponse.redirect(new URL(newUrl, req.url));
   }

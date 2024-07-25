@@ -1,4 +1,8 @@
 {
+  "app": {
+    "title": "Move and track waste",
+    "phaseBanner": "This is a new service."
+  },
   "404": {
     "title": "Page not found",
     "paragraph1": "If you typed the web address, check it is correct.",

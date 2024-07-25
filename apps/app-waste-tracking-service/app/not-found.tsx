@@ -1,4 +1,4 @@
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import { Page } from '@wts/ui/shared-ui/server';

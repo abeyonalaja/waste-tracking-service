@@ -1,14 +1,9 @@
-'use client';
-import { usePathname as useNextPathname } from 'next/navigation';
-import { usePathname, useRouter, Link } from '@wts/ui/navigation';
 import styles from './LanguageSwitcher.module.scss';
+import { getLocale } from 'next-intl/server';
+import LanguageSwitcherLink from './LanguageSwitcherLink';
 
-export function LanguageSwitcher(): JSX.Element {
-  const intlPathname = usePathname();
-  const router = useRouter();
-  const fullPathName = useNextPathname();
-  const locale = fullPathName.split('/')[1];
-
+export async function LanguageSwitcher(): Promise<JSX.Element> {
+  const locale = await getLocale();
   return (
     <nav aria-label="Language switcher" className={styles.container}>
       <ul className={styles.languageToggle}>
@@ -16,40 +11,14 @@ export function LanguageSwitcher(): JSX.Element {
           {locale === 'en' ? (
             <span aria-current="true">English</span>
           ) : (
-            <Link
-              hrefLang="en"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(intlPathname, { locale: 'en' });
-              }}
-              className={`govuk-link govuk-link--no-visited-state`}
-            >
-              <span className="govuk-visually-hidden">
-                Use this service in{' '}
-              </span>
-              English
-            </Link>
+            <LanguageSwitcherLink locale={'en'}>English</LanguageSwitcherLink>
           )}
         </li>
         <li>
           {locale === 'cy' ? (
             <span aria-current="true">Cymraeg</span>
           ) : (
-            <Link
-              hrefLang="cy"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(intlPathname, { locale: 'cy' });
-              }}
-              className={`govuk-link govuk-link--no-visited-state`}
-            >
-              <span className="govuk-visually-hidden">
-                Use this service in{' '}
-              </span>
-              Cymraeg
-            </Link>
+            <LanguageSwitcherLink locale={'cy'}>Cymraeg</LanguageSwitcherLink>
           )}
         </li>
       </ul>

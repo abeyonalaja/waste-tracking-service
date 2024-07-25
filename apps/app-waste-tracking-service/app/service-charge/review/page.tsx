@@ -1,13 +1,14 @@
 import { getTranslations } from 'next-intl/server';
 import { getServerSession } from 'next-auth';
-import { options } from '../../../api/auth/[...nextauth]/options';
+import { options } from '../../api/auth/[...nextauth]/options';
 import { getUserPaymentStatus } from '@wts/app-waste-tracking-service/feature-service-charge';
 import { headers } from 'next/headers';
 import process from 'node:process';
 import type { PaymentReference } from '@wts/api/waste-tracking-gateway';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
-import { Link, redirect } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import {
   PaymentContinueButton,
   formatExpiryDate,
@@ -28,10 +29,6 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
   }
   const session = await getServerSession(options);
 
-  if (!session || session.token === undefined || session.token === null) {
-    console.error('No session or token present');
-    return redirect('/404');
-  }
   if (!returnUrlbase || !apiUrl) {
     console.error('No return URL or API present');
     return redirect('/404');
@@ -40,14 +37,15 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
   const headerList = headers();
   const hostname = headerList.get('host') || '';
   let response: Response;
+  let formattedRenewalDate = '';
 
   try {
     response = await getUserPaymentStatus(hostname, session?.token as string);
+    const { renewalDate } = (await response.json()) as PaymentReference;
+    formattedRenewalDate = formatExpiryDate(renewalDate);
   } catch (error) {
     console.error(error);
-    return redirect('/404');
   }
-  const { renewalDate } = (await response.json()) as PaymentReference;
 
   return (
     <Page>
@@ -57,7 +55,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
           <GovUK.Heading>{t('headingOne')}</GovUK.Heading>
           <GovUK.Paragraph>
             {t.rich('paragraphOne', {
-              date: formatExpiryDate(renewalDate),
+              date: formattedRenewalDate,
               strong: (chunks) => <strong>{chunks}</strong>,
             })}
           </GovUK.Paragraph>
@@ -85,7 +83,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
           <GovUK.ButtonGroup>
             <PaymentContinueButton
               label={t('buttonAction')}
-              token={session.token}
+              token={session?.token || null}
               returnUrl={`${returnUrlbase}/service-charge/result`}
               apiUrl={apiUrl}
             />

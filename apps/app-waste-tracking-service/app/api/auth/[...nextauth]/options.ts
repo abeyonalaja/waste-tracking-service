@@ -33,7 +33,10 @@ export const options: NextAuthOptions = {
     signOut: '/auth/signout',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  jwt: { maxAge: 60 * 60 * 24 * 30 },
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 15,
+  },
   callbacks: {
     async session({ session, token }) {
       session.token = token.id_token;

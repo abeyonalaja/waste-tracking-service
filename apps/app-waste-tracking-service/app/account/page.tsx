@@ -1,10 +1,11 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { GridRow, LinkCard } from '../../components';
+import { GridRow, LinkCard } from '../components';
 import { getTranslations } from 'next-intl/server';
 import UserHeading from './_components/UserHeading';
 import { getServerSession } from 'next-auth';
 import { Page } from '@wts/ui/shared-ui/server';
-import { redirect, Link } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { headers } from 'next/headers';
 import {
   getUserPaymentStatus,
@@ -12,7 +13,7 @@ import {
 } from '@wts/app-waste-tracking-service/feature-service-charge';
 import { PaymentReference } from '@wts/api/waste-tracking-gateway';
 import { cookies } from 'next/headers';
-import { options } from '../../api/auth/[...nextauth]/options';
+import { options } from '../api/auth/[...nextauth]/options';
 import { differenceInDays } from 'date-fns';
 
 export const metadata = {
@@ -20,53 +21,41 @@ export const metadata = {
 };
 
 export default async function Index(): Promise<JSX.Element> {
-  const t = await getTranslations({ namespace: 'accountPage' });
   const session = await getServerSession(options);
   let serviceChargePaid = false;
   let showServiceChargeReminder = false;
   let serviceChargeExpiryDate = '';
 
-  if (!session || !session.user) {
-    return redirect('/auth/signin');
-  }
-
-  if (session.token === undefined || session.token === null) {
-    console.error('No session or token present');
-    return redirect('/404');
-  }
-
+  const t = await getTranslations({ namespace: 'accountPage' });
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
 
   if (serviceChargeEnabled) {
     const headerList = headers();
     const hostname = headerList.get('host') || '';
     let response: Response;
-
     try {
-      response = await getUserPaymentStatus(hostname, session.token as string);
+      response = await getUserPaymentStatus(hostname, session?.token as string);
+      const paymentReference = (await response.json()) as PaymentReference;
+      serviceChargePaid = paymentReference.serviceChargePaid;
+
+      if (serviceChargePaid) {
+        const daysUntilExpiry = differenceInDays(
+          new Date(paymentReference.expiryDate),
+          new Date(),
+        );
+        showServiceChargeReminder = daysUntilExpiry < 28;
+        serviceChargeExpiryDate = formatExpiryDate(paymentReference.expiryDate);
+      } else {
+        const serviceChargeGuidanceViewed = cookies().get(
+          'serviceChargeGuidanceViewed',
+        );
+
+        if (!serviceChargeGuidanceViewed) {
+          return redirect('/service-charge/guidance');
+        }
+      }
     } catch (error) {
       console.error('Error fetching payments', error);
-      return redirect('/404');
-    }
-
-    const paymentReference = (await response.json()) as PaymentReference;
-    serviceChargePaid = paymentReference.serviceChargePaid;
-
-    if (serviceChargePaid) {
-      const daysUntilExpiry = differenceInDays(
-        new Date(paymentReference.expiryDate),
-        new Date(),
-      );
-      showServiceChargeReminder = daysUntilExpiry < 28;
-      serviceChargeExpiryDate = formatExpiryDate(paymentReference.expiryDate);
-    } else {
-      const serviceChargeGuidanceViewed = cookies().get(
-        'serviceChargeGuidanceViewed',
-      );
-
-      if (!serviceChargeGuidanceViewed) {
-        return redirect('/service-charge/guidance');
-      }
     }
   }
 
@@ -79,7 +68,7 @@ export default async function Index(): Promise<JSX.Element> {
               {t('serviceChargeBanner.one')}
               <Link
                 className="govuk-notification-banner__link"
-                href="/service-charge/guidance"
+                href="/service-charge"
               >
                 {t('serviceChargeBanner.link')}
               </Link>

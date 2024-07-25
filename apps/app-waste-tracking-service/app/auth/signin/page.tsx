@@ -1,10 +1,9 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import SignInButton from './_components/SignInButton';
-import { getServerSession } from 'next-auth';
-import { redirect } from '../../../../navigation';
-import { Loading } from '../../../components/Loading';
+import { getServerSession, Session } from 'next-auth';
+import { redirect } from 'next/navigation';
 import React, { Suspense } from 'react';
-import { Page } from '@wts/ui/shared-ui/server';
+import { Page, Loading } from '@wts/ui/shared-ui/server';
 
 export const metadata = {
   title: 'Waste tracking service',
@@ -15,8 +14,7 @@ export default async function Index({
 }: {
   searchParams: Record<string, string>;
 }): Promise<JSX.Element> {
-  const session = await getServerSession();
-
+  const session: Session | null = await getServerSession();
   if (session) {
     const { callbackUrl } = searchParams;
     redirect(callbackUrl ? callbackUrl.toString() : '/account');

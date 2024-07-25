@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
-import { getServerSession } from 'next-auth';
-import { redirect } from '@wts/ui/navigation';
-import { options } from '../../../api/auth/[...nextauth]/options';
+import { getServerSession, Session } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { options } from '../../api/auth/[...nextauth]/options';
 import { headers, cookies } from 'next/headers';
 import process from 'node:process';
 import type { PaymentRecord } from '@wts/api/payment';
@@ -30,15 +30,10 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
   const referenceId = cookies().get('referenceId');
   if (referenceId === undefined) {
     console.error('No payment ID present');
-    return redirect('/404');
+    redirect('/404');
   }
 
-  // Redirect user if not logged in with an active session
-  const session = await getServerSession(options);
-  if (!session || session.token === undefined || session.token === null) {
-    console.error('No session or token present');
-    return redirect('/404');
-  }
+  const session: Session | null = await getServerSession(options);
 
   let protocol = 'https';
   const headerList = headers();
@@ -56,12 +51,12 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
     response = await fetch(`${apiUrl}/payments/${referenceId.value}`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${session.token}`,
+        Authorization: `Bearer ${session?.token}`,
       },
     });
   } catch (error) {
     console.error(error);
-    return redirect('/404');
+    redirect('/404');
   }
 
   if (!response.ok) {
