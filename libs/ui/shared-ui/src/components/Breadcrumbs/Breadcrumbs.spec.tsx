@@ -22,7 +22,7 @@ describe('Breadcrumbs', () => {
     expect(getByText('Page 2')).toBeTruthy();
   });
 
-  it('adds aria-current="page" to the last breadcrumb without href', () => {
+  it('adds aria-current="page" to the last breadcrumb without an href', () => {
     const { getByText } = render(
       <NextIntlClientProvider locale="en">
         <Breadcrumbs items={items} />
