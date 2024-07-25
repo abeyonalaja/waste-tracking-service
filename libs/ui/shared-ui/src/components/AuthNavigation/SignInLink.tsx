@@ -1,6 +1,6 @@
 'use client';
 import { signIn } from 'next-auth/react';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 
 export function SignInLink(): JSX.Element {
   return (

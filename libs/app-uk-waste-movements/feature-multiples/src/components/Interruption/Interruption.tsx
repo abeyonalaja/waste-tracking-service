@@ -2,7 +2,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import styles from './Interruption.module.scss';
 import { useTranslations } from 'next-intl';
 import { InterruptionButton } from '../InterruptionButton';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { HTML } from '@wts/ui/shared-ui/server';
 
 export function Interruption(): JSX.Element {

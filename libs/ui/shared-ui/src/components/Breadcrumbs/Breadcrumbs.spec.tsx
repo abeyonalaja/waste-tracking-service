@@ -45,8 +45,8 @@ describe('Breadcrumbs', () => {
 
     expect(homeLink).toBeTruthy();
 
-    expect(homeLink.getAttribute('href')).toBe('/en/home');
-    expect(page1Link.getAttribute('href')).toBe('/en/page1');
+    expect(homeLink.getAttribute('href')).toBe('/home');
+    expect(page1Link.getAttribute('href')).toBe('/page1');
   });
 
   it('sets custom testId prop', () => {

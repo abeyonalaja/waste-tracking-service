@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Link as LocaleLink } from '@wts/ui/navigation';
+import Link from 'next/link';
 export function Details(): React.ReactNode {
   const page = useTranslations('multiples.guidancePage');
 
@@ -51,9 +51,9 @@ export function Details(): React.ReactNode {
       </GovUK.List>
       <GovUK.Paragraph>
         {page('details.technicalIssue.contentTwo')}
-        <LocaleLink href={`mailto:${page('details.technicalIssue.email')}`}>
+        <Link href={`mailto:${page('details.technicalIssue.email')}`}>
           {page('details.technicalIssue.email')}
-        </LocaleLink>
+        </Link>
         .
       </GovUK.Paragraph>
       <GovUK.SectionBreak size="m" visible={false} />

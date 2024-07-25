@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 
 export function ErrorInstructions(): JSX.Element {
   const t = useTranslations('multiples.errors.instructions');

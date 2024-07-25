@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 

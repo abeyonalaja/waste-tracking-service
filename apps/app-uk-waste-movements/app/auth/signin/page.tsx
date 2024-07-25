@@ -1,6 +1,6 @@
 import SignInButton from './_components/SignInButton';
 import { getServerSession } from 'next-auth';
-import { redirect } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
 import { Loading, Page } from '@wts/ui/shared-ui/server';
 import React, { Suspense } from 'react';
 

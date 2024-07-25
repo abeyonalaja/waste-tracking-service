@@ -28,7 +28,7 @@ describe('ErrorInstructions component', () => {
 
     const guidanceLink = screen.getByRole('link');
 
-    expect(guidanceLink).toHaveAttribute('href', '/en/multiples/guidance');
+    expect(guidanceLink).toHaveAttribute('href', '/multiples/guidance');
   });
 
   it('displays a link to the guidance page which opens in new tab', () => {

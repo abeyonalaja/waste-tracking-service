@@ -1,6 +1,6 @@
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from '@wts/ui/navigation';
+import { useRouter } from 'next/navigation';
 import { Loading } from '@wts/ui/shared-ui/server';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import styles from './StatusChecker.module.scss';

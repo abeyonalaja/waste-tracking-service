@@ -3,7 +3,7 @@ import { BackLink, Page } from '@wts/ui/shared-ui/server';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { ValidationCancel } from '@wts/app-uk-waste-movements/feature-multiples/server';
 import { getServerSession, Session } from 'next-auth';
-import { options } from '../../../../api/auth/[...nextauth]/options';
+import { options } from './../../../api/auth/[...nextauth]/options';
 
 export const metadata: Metadata = {
   title: 'Creating multiple waste movements',

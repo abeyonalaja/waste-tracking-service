@@ -9,8 +9,8 @@ jest.mock('next-auth/next', () => ({
   getServerSession: jest.fn(() => Promise.resolve(mockedSession)),
 }));
 
-jest.mock('@wts/ui/navigation', () => ({
-  ...jest.requireActual('@wts/ui/navigation'),
+jest.mock('next/navigation', () => ({
+  ...jest.requireActual('next/navigation'),
   useRouter: () => {
     return {
       replace: jest.fn(),

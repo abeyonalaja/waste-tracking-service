@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { InterruptionButton } from './InterruptionButton';
-import { useRouter } from '@wts/ui/navigation';
+import { useRouter } from 'next/navigation';
 import '@testing-library/jest-dom';
 
-jest.mock('@wts/ui/navigation');
+jest.mock('next/navigation');
 
 describe('InterruptionButton component', () => {
   it('Renders with a label from props', () => {

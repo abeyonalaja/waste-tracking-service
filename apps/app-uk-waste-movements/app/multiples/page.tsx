@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { getServerSession } from 'next-auth';
-import { options } from '../../api/auth/[...nextauth]/options';
+import { options } from './../api/auth/[...nextauth]/options';
 import { getTranslations } from 'next-intl/server';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import {

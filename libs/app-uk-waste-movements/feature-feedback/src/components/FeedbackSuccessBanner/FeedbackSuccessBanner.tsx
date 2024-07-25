@@ -1,7 +1,8 @@
 'use client';
 
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Link, useRouter } from '@wts/ui/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useNewWindow } from '@wts/ui/shared-ui';
 export interface successStrings {
   bannerTitle: string;

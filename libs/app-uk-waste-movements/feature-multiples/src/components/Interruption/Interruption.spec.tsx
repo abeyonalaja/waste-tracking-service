@@ -9,8 +9,8 @@ jest.mock('next-auth/next', () => ({
   getServerSession: jest.fn(() => Promise.resolve(mockedSession)),
 }));
 
-jest.mock('@wts/ui/navigation', () => ({
-  ...jest.requireActual('@wts/ui/navigation'),
+jest.mock('next/navigation', () => ({
+  ...jest.requireActual('next/navigation'),
   useRouter: (): jest.Mock => jest.fn(),
 }));
 
@@ -61,7 +61,7 @@ describe('Interruption component', () => {
       name: 'How to create multiple new waste movements using the CSV template (opens in new tab)',
     });
 
-    expect(link).toHaveAttribute('href', '/en/multiples/guidance');
+    expect(link).toHaveAttribute('href', '/multiples/guidance');
   });
 
   it('Has a continue button', () => {

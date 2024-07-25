@@ -1,6 +1,6 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
-import { Link as LocaleLink } from '@wts/ui/navigation';
+import Link from 'next/link';
 export function Content(): React.ReactNode {
   const page = useTranslations('multiples.guidancePage');
 
@@ -8,32 +8,24 @@ export function Content(): React.ReactNode {
     <>
       <GovUK.List type="unordered">
         <GovUK.ListItem>
-          <LocaleLink href="#details">{page('content.linkOne')}</LocaleLink>
+          <Link href="#details">{page('content.linkOne')}</Link>
         </GovUK.ListItem>
         <GovUK.ListItem>
-          <LocaleLink href="#yourUniqueReference">
-            {page('content.linkTwo')}
-          </LocaleLink>
+          <Link href="#yourUniqueReference">{page('content.linkTwo')}</Link>
         </GovUK.ListItem>
         <GovUK.ListItem>
-          <LocaleLink href="#producerAndCollectionDetails">
+          <Link href="#producerAndCollectionDetails">
             {page('content.linkThree')}
-          </LocaleLink>
+          </Link>
         </GovUK.ListItem>
         <GovUK.ListItem>
-          <LocaleLink href="#collectionDetails">
-            {page('content.linkFour')}
-          </LocaleLink>
+          <Link href="#collectionDetails">{page('content.linkFour')}</Link>
         </GovUK.ListItem>
         <GovUK.ListItem>
-          <LocaleLink href="#receiverDetails">
-            {page('content.linkFive')}
-          </LocaleLink>
+          <Link href="#receiverDetails">{page('content.linkFive')}</Link>
         </GovUK.ListItem>
         <GovUK.ListItem>
-          <LocaleLink href="#ewcCodesAndDescription">
-            {page('content.linkSix')}
-          </LocaleLink>
+          <Link href="#ewcCodesAndDescription">{page('content.linkSix')}</Link>
         </GovUK.ListItem>
       </GovUK.List>
       <GovUK.SectionBreak size="m" visible={false} />

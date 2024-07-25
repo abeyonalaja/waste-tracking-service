@@ -68,7 +68,7 @@ describe('Instructions component', () => {
       name: 'how to create multiple new waste movements using the CSV template (opens in new tab)',
     });
 
-    expect(guidanceLink).toHaveAttribute('href', '/en/multiples/guidance');
+    expect(guidanceLink).toHaveAttribute('href', '/multiples/guidance');
   });
 
   test('contains a bulletpointed link to the guidance page', () => {
@@ -82,7 +82,7 @@ describe('Instructions component', () => {
       name: 'How to create multiple new waste movements using the CSV template (opens in new tab)',
     });
 
-    expect(guidanceLink).toHaveAttribute('href', '/en/multiples/guidance');
+    expect(guidanceLink).toHaveAttribute('href', '/multiples/guidance');
   });
 
   test('contains an in-line link to the template download', () => {

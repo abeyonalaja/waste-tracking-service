@@ -48,7 +48,7 @@ describe('DashboardCard', () => {
     });
 
     expect(singleMovementSectionHeading).toBeInTheDocument();
-    expect(singleMovementSectionLink).toHaveAttribute('href', '/en/single');
+    expect(singleMovementSectionLink).toHaveAttribute('href', '/single');
   });
 
   it('renders with a section for multiple movements', () => {
@@ -67,10 +67,7 @@ describe('DashboardCard', () => {
     });
 
     expect(multipleMovementSectionHeading).toBeInTheDocument();
-    expect(multipleMovementSectionLink).toHaveAttribute(
-      'href',
-      '/en/multiples',
-    );
+    expect(multipleMovementSectionLink).toHaveAttribute('href', '/multiples');
   });
 
   it('renders with a section for all movements', () => {

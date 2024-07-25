@@ -2,7 +2,7 @@
 
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { CharacterCount } from '@wts/ui/shared-ui';
-import { useRouter } from '@wts/ui/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNewWindow } from '@wts/ui/shared-ui';

@@ -7,7 +7,7 @@ import styles from './SubmittedFilters.module.scss';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Accordion, AccordionSection } from '@wts/ui/shared-ui/server';
 import { useSearchParams } from 'next/navigation';
-import { useRouter, usePathname } from '@wts/ui/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export interface SubmittedPageFormData {
   wasteMovementId: string;

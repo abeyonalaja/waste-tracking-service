@@ -1,6 +1,6 @@
 'use client';
 import React, { ReactNode } from 'react';
-import { useRouter } from '@wts/ui/navigation';
+import { useRouter } from 'next/navigation';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { add } from 'date-fns';
 

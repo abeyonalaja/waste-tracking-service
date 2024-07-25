@@ -1,5 +1,5 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 export function NewWasteMovementsCard(): JSX.Element {

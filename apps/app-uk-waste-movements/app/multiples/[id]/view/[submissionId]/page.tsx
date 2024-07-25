@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { options } from '../../../../../api/auth/[...nextauth]/options';
+import { options } from './../../../../api/auth/[...nextauth]/options';
 import { getSubmission } from '@wts/app-uk-waste-movements/feature-multiples';
 import { UkwmDraftSubmission } from '@wts/api/waste-tracking-gateway';
 import { headers } from 'next/headers';
@@ -8,7 +8,7 @@ import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page } from '@wts/ui/shared-ui/server';
 import { BackLink } from '@wts/ui/shared-ui';
 import { Metadata } from 'next';
-import { redirect } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
 
 interface PageProps {
   params: {

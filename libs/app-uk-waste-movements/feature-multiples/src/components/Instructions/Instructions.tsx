@@ -1,7 +1,7 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useTranslations } from 'next-intl';
 import styles from './Instructions.module.scss';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { HTML, CSV } from '@wts/ui/shared-ui/server';
 
 export function Instructions(): React.ReactNode {

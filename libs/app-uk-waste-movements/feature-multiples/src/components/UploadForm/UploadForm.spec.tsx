@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { UploadForm } from './UploadForm';
 
-jest.mock('@wts/ui/navigation', () => ({
+jest.mock('next/navigation', () => ({
   useRouter: (): null => null,
 }));
 
@@ -19,6 +19,7 @@ const strings = {
   summaryLabel: 'There is a problem',
   missingFileError: 'Upload a file',
   invalidFileTypeError: 'Invalid file type',
+  exceedsFileSizeError: 'File size exceeds 15MB',
 };
 
 function MockChild(): JSX.Element {

@@ -8,7 +8,7 @@ import {
 import { getTranslations } from 'next-intl/server';
 import { Page } from '@wts/ui/shared-ui/server';
 import { getServerSession } from 'next-auth/next';
-import { options } from '../../api/auth/[...nextauth]/options';
+import { options } from './../api/auth/[...nextauth]/options';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

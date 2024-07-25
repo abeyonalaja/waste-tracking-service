@@ -1,5 +1,5 @@
 import styles from './AuthNavigation.module.scss';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { SignInLink } from './SignInLink';
 import { SignOutLink } from './SignOutLink';

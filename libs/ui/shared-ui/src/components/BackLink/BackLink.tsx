@@ -1,5 +1,6 @@
 'use client';
-import { Link, useRouter } from '@wts/ui/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   text?: string;

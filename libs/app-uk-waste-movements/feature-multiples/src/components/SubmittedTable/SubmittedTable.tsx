@@ -1,4 +1,4 @@
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import styles from './SubmittedTable.module.scss';
 import { BulkSubmissionPartialSummary } from '@wts/api/uk-waste-movements-bulk';
 import { useTranslations } from 'next-intl';

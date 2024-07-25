@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
-import { options } from '../../../api/auth/[...nextauth]/options';
+import { options } from './../../api/auth/[...nextauth]/options';
 import { getTranslations } from 'next-intl/server';
-import { redirect } from '@wts/ui/navigation';
+import { redirect } from 'next/navigation';
 import { UkwmBulkSubmission } from '@wts/api/waste-tracking-gateway';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { Page, BackLink } from '@wts/ui/shared-ui/server';

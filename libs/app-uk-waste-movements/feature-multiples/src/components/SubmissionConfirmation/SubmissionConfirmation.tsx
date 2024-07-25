@@ -5,7 +5,7 @@ import {
   Panel,
   Paragraph,
 } from '@wts/ui/govuk-react-ui';
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { DownloadCSVLink } from './DownloadCSVLink';
 

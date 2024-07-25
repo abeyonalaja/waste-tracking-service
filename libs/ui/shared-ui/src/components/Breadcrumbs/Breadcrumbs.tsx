@@ -1,4 +1,4 @@
-import { Link } from '@wts/ui/navigation';
+import Link from 'next/link';
 
 interface breadcrumbLink {
   text: string;
