@@ -7,6 +7,9 @@ resources:
   limits:
     cpu: 50m
     memory: 256Mi
+secret:
+  env:
+    SERVICE_CHARGE_ENABLED: 'true'
 ingress:
   enabled: true
   className: 'nginx'

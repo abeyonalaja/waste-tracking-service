@@ -11,6 +11,7 @@ secret:
   env:
     NEXT_PUBLIC_MULTIPLES_ENABLED: 'true'
     NEXT_PUBLIC_LANGUAGES_ENABLED: 'false'
+    SERVICE_CHARGE_ENABLED: 'false'
 ingress:
   enabled: true
   className: 'nginx'
