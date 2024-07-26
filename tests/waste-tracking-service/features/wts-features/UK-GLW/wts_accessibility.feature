@@ -1237,3 +1237,38 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
     Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Service charge Description page
+    Given I navigate to service charge page after login on DCID portal
+    Then the "Description" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+  Scenario: Check WTS Accessibility for - Service charge Annual charge page
+    Given I navigate to service charge page after login on DCID portal
+    And I click Pay service charge button
+    When the "Annual Charge" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
+
+      #not running this scenario in the pipeline since we can't rerun the DCID user.
+  @ignore @manual
+  Scenario: Check WTS Accessibility for - Service charge Payment successful page
+    Given I navigate to service charge page after login on DCID portal
+    And I click Pay service charge button
+    Then the "Annual Charge" page is displayed
+    When I click Continue button
+    Then I should see enter payment detail page is displayed
+    When I enter the payment details for "successful_payment"
+    And I click Continue button
+    Then I should see confirm your payment page is displayed
+    And I complete the payment process
+    Then the "Success Payment" page is displayed
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+    Then the page should be axe clean according to: best-practice and checking: aria-roles, definition-list
