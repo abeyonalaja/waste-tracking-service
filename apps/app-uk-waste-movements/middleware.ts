@@ -6,3 +6,7 @@ export default withAuth({
     signOut: '/auth/signout',
   },
 });
+
+export const config = {
+  matcher: ['/((?!api|assets|_next/static|_next/image|favicon.ico).*)'],
+};
