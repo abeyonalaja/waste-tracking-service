@@ -2,6 +2,7 @@ import {
   CosmosClient,
   FeedResponse,
   Item,
+  ItemResponse,
   Items,
   QueryIterator,
 } from '@azure/cosmos';
@@ -9,7 +10,7 @@ import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import { Logger } from 'winston';
 import CosmosRepository from './cosmos-repository';
-import { DbContainerNameKey, GetDraftsDto } from '../model';
+import { DbContainerNameKey, GetDraftsDto, Draft } from '../model';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -85,8 +86,8 @@ describe(CosmosRepository, () => {
         wasteInformation: {},
         receiver: {},
         producerAndCollection: {},
-        submissionDeclaration: {},
-        submissionState: {},
+        declaration: {},
+        state: {},
       };
 
       mockFetchAll.mockResolvedValueOnce({
@@ -138,6 +139,256 @@ describe(CosmosRepository, () => {
         values: mockDraftSubmissions,
       });
       expect(mockFetchAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('saveRecord', () => {
+    it('successfully saves a new record', async () => {
+      const accountId = faker.string.uuid();
+      const record = {
+        id: '1',
+        transactionId: '123',
+        wasteInformation: {
+          status: 'Complete',
+          wasteTypes: [
+            {
+              ewcCode: '20 03 01',
+              wasteDescription: 'Mixed municipal waste',
+              physicalForm: 'Solid',
+              wasteQuantity: 100,
+              quantityUnit: 'Tonne',
+              wasteQuantityType: 'ActualData',
+              chemicalAndBiologicalComponents: [
+                {
+                  name: 'Component1',
+                  concentration: 50,
+                  concentrationUnit: '%',
+                },
+              ],
+              hasHazardousProperties: false,
+              containsPops: false,
+            },
+          ],
+          wasteTransportation: {
+            numberAndTypeOfContainers: '10 x 20ft containers',
+          },
+        },
+        receiver: {
+          status: 'Complete',
+          value: {
+            authorizationType: 'Type1',
+            environmentalPermitNumber: 'EPN123',
+            contact: {
+              organisationName: 'Organisation1',
+              name: 'Contact1',
+              email: 'contact1@example.com',
+              phone: '1234567890',
+            },
+            address: {
+              addressLine1: 'Address Line 1',
+              townCity: 'City1',
+              country: 'Country1',
+            },
+          },
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'REF123',
+            address: {
+              status: 'Complete',
+              addressLine1: 'Address Line 2',
+              townCity: 'City2',
+              country: 'Country2',
+            },
+            contact: {
+              status: 'Complete',
+              organisationName: 'Organisation2',
+              name: 'Contact2',
+              email: 'contact2@example.com',
+              phone: '0987654321',
+            },
+          },
+          wasteCollection: {
+            wasteSource: 'Commercial',
+            localAuthority: 'LA1',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              addressLine1: 'Address Line 3',
+              townCity: 'City3',
+              country: 'Country3',
+            },
+          },
+        },
+        carrier: {
+          status: 'Complete',
+          value: {
+            contact: {
+              organisationName: 'Organisation2',
+              name: 'Contact2',
+              email: 'contact2@example.com',
+              phone: '0987654321',
+            },
+            address: {
+              addressLine1: 'Address Line 2',
+              townCity: 'City2',
+              country: 'Country2',
+            },
+          },
+        },
+        declaration: {
+          status: 'Complete',
+          values: {
+            declarationTimestamp: new Date(),
+            transactionId: '123',
+          },
+        },
+        state: {
+          status: 'SubmittedWithActuals',
+          timestamp: new Date(),
+        },
+      } as Draft;
+
+      mockRead.mockResolvedValueOnce({
+        resource: undefined,
+      } as unknown as ItemResponse<object>);
+
+      mockCreate.mockResolvedValueOnce({
+        resource: record,
+      } as unknown as ItemResponse<object>);
+
+      await subject.saveRecord('drafts', record, accountId);
+
+      expect(mockCreate).toBeCalled();
+      expect(mockPatch).not.toBeCalled();
+    });
+
+    it('successfully updates an existing record', async () => {
+      const accountId = faker.string.uuid();
+      const record = {
+        id: '1',
+        transactionId: '123',
+        wasteInformation: {
+          status: 'Complete',
+          wasteTypes: [
+            {
+              ewcCode: '20 03 01',
+              wasteDescription: 'Mixed municipal waste',
+              physicalForm: 'Solid',
+              wasteQuantity: 100,
+              quantityUnit: 'Tonne',
+              wasteQuantityType: 'ActualData',
+              chemicalAndBiologicalComponents: [
+                {
+                  name: 'Component1',
+                  concentration: 50,
+                  concentrationUnit: '%',
+                },
+              ],
+              hasHazardousProperties: false,
+              containsPops: false,
+            },
+          ],
+          wasteTransportation: {
+            numberAndTypeOfContainers: '10 x 20ft containers',
+          },
+        },
+        receiver: {
+          status: 'Complete',
+          value: {
+            authorizationType: 'Type1',
+            environmentalPermitNumber: 'EPN123',
+            contact: {
+              organisationName: 'Organisation1',
+              name: 'Contact1',
+              email: 'contact1@example.com',
+              phone: '1234567890',
+            },
+            address: {
+              addressLine1: 'Address Line 1',
+              townCity: 'City1',
+              country: 'Country1',
+            },
+          },
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'REF123',
+            address: {
+              status: 'Complete',
+              addressLine1: 'Address Line 2',
+              townCity: 'City2',
+              country: 'Country2',
+            },
+            contact: {
+              status: 'Complete',
+              organisationName: 'Organisation2',
+              name: 'Contact2',
+              email: 'contact2@example.com',
+              phone: '0987654321',
+            },
+          },
+          wasteCollection: {
+            wasteSource: 'Commercial',
+            localAuthority: 'LA1',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              addressLine1: 'Address Line 3',
+              townCity: 'City3',
+              country: 'Country3',
+            },
+          },
+        },
+        carrier: {
+          status: 'Complete',
+          value: {
+            contact: {
+              organisationName: 'Organisation2',
+              name: 'Contact2',
+              email: 'contact2@example.com',
+              phone: '0987654321',
+            },
+            address: {
+              addressLine1: 'Address Line 2',
+              townCity: 'City2',
+              country: 'Country2',
+            },
+          },
+        },
+        declaration: {
+          status: 'Complete',
+          values: {
+            declarationTimestamp: new Date(),
+            transactionId: '123',
+          },
+        },
+        state: {
+          status: 'SubmittedWithActuals',
+          timestamp: new Date(),
+        },
+      } as Draft;
+
+      mockRead.mockResolvedValueOnce({
+        resource: record,
+      } as unknown as ItemResponse<object>);
+
+      mockCreate.mockResolvedValueOnce({
+        resource: record,
+      } as unknown as ItemResponse<object>);
+
+      await subject.saveRecord('drafts', record, accountId);
+
+      expect(mockCreate).not.toBeCalled();
+      expect(mockPatch).toBeCalled();
     });
   });
 });

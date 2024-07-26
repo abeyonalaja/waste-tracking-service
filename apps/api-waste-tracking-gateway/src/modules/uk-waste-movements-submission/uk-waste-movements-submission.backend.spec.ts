@@ -47,10 +47,10 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
         carrier: {
           status: 'NotStarted',
         },
-        submissionDeclaration: {
+        declaration: {
           status: 'NotStarted',
         },
-        submissionState: {
+        state: {
           status: 'SubmittedWithEstimates',
           timestamp: new Date(),
         },

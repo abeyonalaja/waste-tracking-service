@@ -4,7 +4,7 @@ import * as api from '@wts/api/uk-waste-movements';
 import { LoggerService } from '@wts/util/dapr-winston-logging';
 import { fromBoom } from '@wts/util/invocation';
 import * as winston from 'winston';
-import { SubmissionController, validateSubmission } from './controller';
+import { SubmissionController, validateSubmission } from './controller/draft';
 import { DaprReferenceDataClient } from '@wts/client/reference-data';
 import {
   GetEWCCodesResponse,
@@ -111,35 +111,35 @@ try {
   });
 
   await server.invoker.listen(
-    api.validateSubmissions.name,
+    api.validateMultipleDrafts.name,
     async ({ body }) => {
       if (body === undefined) {
         return fromBoom(Boom.badRequest('Missing body'));
       }
 
-      const request = JSON.parse(body) as api.ValidateSubmissionsRequest;
-      if (!validateSubmission.validateSubmissionsRequest(request)) {
+      const request = JSON.parse(body) as api.ValidateMultipleDraftsRequest;
+      if (!validateSubmission.validateMultipleDraftsRequest(request)) {
         return fromBoom(Boom.badRequest());
       }
 
-      return await submissionController.validateSubmissions(request);
+      return await submissionController.validateMultipleDrafts(request);
     },
     { method: HttpMethod.POST },
   );
 
   await server.invoker.listen(
-    api.createSubmissions.name,
+    api.createMultipleDrafts.name,
     async ({ body }) => {
       if (body === undefined) {
         return fromBoom(Boom.badRequest('Missing body'));
       }
 
-      const request = JSON.parse(body) as api.CreateSubmissionsRequest;
-      if (!validateSubmission.validateCreateSubmissionsRequest(request)) {
+      const request = JSON.parse(body) as api.CreateMultipleDraftsRequest;
+      if (!validateSubmission.validateCreateMultipleDraftsRequest(request)) {
         return fromBoom(Boom.badRequest());
       }
 
-      return await submissionController.createSubmissions(request);
+      return await submissionController.createMultipleDrafts(request);
     },
     { method: HttpMethod.POST },
   );

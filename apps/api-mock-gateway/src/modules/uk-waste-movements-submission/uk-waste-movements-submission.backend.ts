@@ -183,8 +183,8 @@ export function getUkwmSubmission({
     carrier: v.carrier,
     receiver: v.receiver,
     producerAndCollection: v.producerAndCollection,
-    submissionDeclaration: v.submissionDeclaration,
-    submissionState: v.submissionState,
+    declaration: v.declaration,
+    state: v.state,
   } as UkwmDraftSubmission;
 
   return Promise.resolve(submission);

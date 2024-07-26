@@ -1,22 +1,23 @@
 import {
   CosmosClient,
   Database,
+  PatchOperation,
   SqlParameter,
   SqlQuerySpec,
 } from '@azure/cosmos';
 import Boom from '@hapi/boom';
 import { Logger } from 'winston';
 import {
-  DraftSubmission,
+  Draft,
   DbContainerNameKey,
   GetDraftsResult,
   GetDraftsDto,
 } from '../model';
 import { IRepository } from './repository';
 
-type RecordData<T> = T;
+type RecordData<T> = T & { accountId: string };
 
-export default class CosmosRepository implements IRepository<DraftSubmission> {
+export default class CosmosRepository implements IRepository<Draft> {
   private cosmosDb: Database;
 
   constructor(
@@ -31,7 +32,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
   async createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: DraftSubmission[],
+    values: Draft[],
   ): Promise<void> {
     const records = values.map((s) => {
       return {
@@ -59,7 +60,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
   async getDraft(
     containerName: DbContainerNameKey,
     id: string,
-  ): Promise<DraftSubmission> {
+  ): Promise<Draft> {
     const querySpec = {
       query: 'SELECT * FROM c WHERE c.id = @id',
       parameters: [
@@ -79,7 +80,7 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
       throw Boom.notFound();
     }
 
-    const data = items[0].value as RecordData<DraftSubmission>;
+    const data = items[0].value as RecordData<Draft>;
 
     return {
       id: data.id,
@@ -88,8 +89,8 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
       receiver: data.receiver,
       carrier: data.carrier,
       producerAndCollection: data.producerAndCollection,
-      submissionDeclaration: data.submissionDeclaration,
-      submissionState: data.submissionState,
+      declaration: data.declaration,
+      state: data.state,
     };
   }
 
@@ -232,5 +233,63 @@ export default class CosmosRepository implements IRepository<DraftSubmission> {
       totalRecords: countItems[0],
       values: dataItems,
     };
+  }
+
+  async saveRecord(
+    containerName: DbContainerNameKey,
+    value: Draft,
+    accountId: string,
+  ): Promise<void> {
+    const data: RecordData<Draft> = {
+      ...value,
+      accountId,
+    };
+    try {
+      const { resource: item } = await this.cosmosDb
+        .container(this.cosmosContainerMap.get(containerName) as string)
+        .item(data.id, data.accountId)
+        .read();
+
+      if (!item) {
+        const createItem = {
+          id: data.id,
+          value: data,
+          partitionKey: data.accountId,
+        };
+        await this.cosmosDb
+          .container(this.cosmosContainerMap.get(containerName) as string)
+          .items.create(createItem);
+      } else {
+        const replaceOperation: PatchOperation[] = [
+          {
+            op: 'replace',
+            path: '/value',
+            value: data,
+          },
+        ];
+        await this.cosmosDb
+          .container(this.cosmosContainerMap.get(containerName) as string)
+          .item(data.id, data.accountId)
+          .patch(replaceOperation);
+      }
+    } catch (err) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 409
+      ) {
+        throw Boom.conflict(
+          `A ${containerName.substring(
+            0,
+            containerName.length - 1,
+          )} with this name already exists`,
+        );
+      }
+      this.logger.error('Unknown error thrown from Cosmos client', {
+        error: err,
+      });
+      throw Boom.internal();
+    }
   }
 }

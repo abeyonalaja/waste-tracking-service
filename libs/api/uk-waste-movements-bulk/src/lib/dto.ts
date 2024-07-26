@@ -1,9 +1,5 @@
 import { Response } from '@wts/util/invocation';
-import {
-  DraftSubmission,
-  Field,
-  Submission,
-} from '@wts/api/uk-waste-movements';
+import { Draft, Field, SimpleDraft } from '@wts/api/uk-waste-movements';
 
 export type Method = Readonly<{
   name: string;
@@ -92,16 +88,16 @@ export interface PagedSubmissionData {
 export type GetBulkSubmissionsResponse = Response<PagedSubmissionData>;
 
 export type PartialSubmission = Omit<
-  Submission,
-  'id' | 'submissionDeclaration' | 'submissionState'
+  SimpleDraft,
+  'id' | 'declaration' | 'state'
 >;
 
 export type SubmittedPartialSubmission = Omit<
-  Submission & { transactionId: string },
-  'submissionDeclaration' | 'submissionState'
+  SimpleDraft & { transactionId: string },
+  'declaration' | 'state'
 >;
 
-export type BulkSubmissionFullSummary = Readonly<DraftSubmission>;
+export type BulkSubmissionFullSummary = Readonly<Draft>;
 
 export interface BulkSubmissionPartialSummary {
   id: string;

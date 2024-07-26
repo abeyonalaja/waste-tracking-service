@@ -215,24 +215,6 @@ export const wasteInformation: SchemaObject = {
   },
 };
 
-export const draftSubmissionDeclaration: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    CannotStart: { properties: {} },
-    NotStarted: { properties: {} },
-    Complete: {
-      properties: {
-        values: {
-          properties: {
-            transactionId: { type: 'string' },
-            declarationTimestamp: { type: 'timestamp' },
-          },
-        },
-      },
-    },
-  },
-};
-
 const bulkSubmissionState: SchemaObject = {
   discriminator: 'status',
   mapping: {

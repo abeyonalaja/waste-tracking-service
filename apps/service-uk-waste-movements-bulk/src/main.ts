@@ -31,9 +31,9 @@ import {
   isServiceBusError,
 } from '@azure/service-bus';
 import {
-  CreateSubmissionsResponse,
+  CreateMultipleDraftsResponse,
   Field,
-  ValidateSubmissionsResponse,
+  ValidateMultipleDraftsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 
@@ -409,7 +409,7 @@ while (execute) {
             for (let i = 0; i < records.value.rows.length; i += chunkSize) {
               const chunk = records.value.rows.slice(i, i + chunkSize);
 
-              let response: ValidateSubmissionsResponse;
+              let response: ValidateMultipleDraftsResponse;
               try {
                 response = await daprUkwmClient.validateSubmissions({
                   accountId: body.data.accountId,
@@ -629,7 +629,7 @@ while (execute) {
         for (let i = 0; i < batchRows.length; i += chunkSize) {
           const chunk = batchRows.slice(i, i + chunkSize);
 
-          let response: CreateSubmissionsResponse;
+          let response: CreateMultipleDraftsResponse;
           try {
             const rowContent: api.SubmittedPartialSubmission[] = [];
 

@@ -193,8 +193,8 @@ export interface UkwmDraftSubmission {
   receiver: UkwmDraftReceiverDetail;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
   carrier: UkwmDraftCarrierDetail;
-  submissionDeclaration: UkwmDraftSubmissionDeclaration;
-  submissionState: UkwmSubmissionState;
+  declaration: UkwmDraftSubmissionDeclaration;
+  state: UkwmSubmissionState;
 }
 
 export type UkwmDraftCarrierDetail =

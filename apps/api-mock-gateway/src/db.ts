@@ -1775,14 +1775,14 @@ export const db: DB = {
           },
         },
       },
-      submissionDeclaration: {
+      declaration: {
         status: 'Complete',
         values: {
           declarationTimestamp: new Date(),
           transactionId: 'TX123456',
         },
       },
-      submissionState: {
+      state: {
         status: 'SubmittedWithEstimates',
         timestamp: new Date(),
       },

@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { expect, jest } from '@jest/globals';
 import winston from 'winston';
-import SubmissionController from './submission-controller';
-import { DraftSubmission, GetDraftsResult, validation } from '../model';
-import { CosmosRepository } from '../data';
+import SubmissionController from './controller';
+import { Draft, GetDraftsResult, validation } from '../../model';
+import { CosmosRepository } from '../../data';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -143,7 +143,7 @@ describe(SubmissionController, () => {
   describe('validateSubmissions', () => {
     it('passes submission validation', async () => {
       const accountId = faker.string.uuid();
-      const response = await subject.validateSubmissions({
+      const response = await subject.validateMultipleDrafts({
         accountId: accountId,
         padIndex: 2,
         values: [
@@ -362,7 +362,7 @@ describe(SubmissionController, () => {
     it('fails submission validation on all sections', async () => {
       const accountId = faker.string.uuid();
 
-      const response = await subject.validateSubmissions({
+      const response = await subject.validateMultipleDrafts({
         accountId: accountId,
         padIndex: 2,
         values: [
@@ -629,7 +629,7 @@ describe(SubmissionController, () => {
 
   describe('createSubmissions', () => {
     it('creates submissions', async () => {
-      const response = await subject.createSubmissions({
+      const response = await subject.createMultipleDrafts({
         accountId: faker.string.uuid(),
         values: [
           {
@@ -754,7 +754,7 @@ describe(SubmissionController, () => {
   describe('getDraft', () => {
     it('successfully returns value from the repository', async () => {
       const id = faker.string.uuid();
-      const value: DraftSubmission = {
+      const value: Draft = {
         id: id,
         transactionId: '',
         wasteInformation: {
@@ -769,10 +769,10 @@ describe(SubmissionController, () => {
         carrier: {
           status: 'NotStarted',
         },
-        submissionDeclaration: {
+        declaration: {
           status: 'NotStarted',
         },
-        submissionState: {
+        state: {
           status: 'SubmittedWithEstimates',
           timestamp: new Date(),
         },

@@ -10,16 +10,16 @@ import {
   ValidationResult,
   WasteTypeDetailFlattened,
   SubmissionValidationReferenceData,
-} from '../model';
-import { validationRules } from '../lib';
-import { CosmosRepository } from '../data';
+} from '../../model';
+import { validationRules } from '../../lib';
+import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
 
 export type Handler<Request, Response> = (
   request: Request,
 ) => Promise<Response>;
 
-const submissionsContainerName = 'drafts';
+const draftsContainerName = 'drafts';
 
 export default class SubmissionController {
   constructor(
@@ -28,9 +28,9 @@ export default class SubmissionController {
     private referenceData: SubmissionValidationReferenceData,
   ) {}
 
-  validateSubmissions: Handler<
-    api.ValidateSubmissionsRequest,
-    api.ValidateSubmissionsResponse
+  validateMultipleDrafts: Handler<
+    api.ValidateMultipleDraftsRequest,
+    api.ValidateMultipleDraftsResponse
   > = async ({ accountId, padIndex, values }) => {
     try {
       let index = padIndex;
@@ -433,9 +433,9 @@ export default class SubmissionController {
     }
   };
 
-  createSubmissions: Handler<
-    api.CreateSubmissionsRequest,
-    api.CreateSubmissionsResponse
+  createMultipleDrafts: Handler<
+    api.CreateMultipleDraftsRequest,
+    api.CreateMultipleDraftsResponse
   > = async ({ accountId, values }) => {
     try {
       const submissions = values.map((s) => {
@@ -465,7 +465,18 @@ export default class SubmissionController {
 
         const producerAndCollection: api.ProducerAndWasteCollectionDetail = {
           status: 'Complete',
-          producer: s.producer,
+          producer: {
+            reference: s.producer.reference,
+            sicCode: s.producer.sicCode,
+            address: {
+              status: 'Complete',
+              ...s.producer.address,
+            },
+            contact: {
+              status: 'Complete',
+              ...s.producer.contact,
+            },
+          },
           wasteCollection: s.wasteCollection,
         };
 
@@ -479,7 +490,7 @@ export default class SubmissionController {
           value: s.carrier,
         };
 
-        const draftSubmissionDeclaration: api.DraftSubmissionDeclaration = {
+        const draftDeclaration: api.DraftDeclaration = {
           status: 'Complete',
           values: {
             declarationTimestamp: new Date(),
@@ -487,7 +498,7 @@ export default class SubmissionController {
           },
         };
 
-        const submissionState: api.Submission['submissionState'] = {
+        const state: api.Draft['state'] = {
           status: s.wasteTypes.some((wt) => {
             wt.wasteQuantityType == 'EstimateData';
           })
@@ -502,12 +513,12 @@ export default class SubmissionController {
           receiver: draftReceiver,
           wasteInformation: wasteInformation,
           carrier: draftCarrier,
-          submissionDeclaration: draftSubmissionDeclaration,
-          submissionState,
+          declaration: draftDeclaration,
+          state,
         };
       });
       await this.repository.createBulkRecords(
-        submissionsContainerName,
+        draftsContainerName,
         accountId,
         submissions,
       );
@@ -527,9 +538,9 @@ export default class SubmissionController {
   }) => {
     try {
       const draft = (await this.repository.getDraft(
-        submissionsContainerName,
+        draftsContainerName,
         id,
-      )) as api.DraftSubmission;
+      )) as api.Draft;
       return success(draft);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -546,7 +557,7 @@ export default class SubmissionController {
   ) => {
     try {
       const result = await this.repository.getDrafts(
-        submissionsContainerName,
+        draftsContainerName,
         request.page,
         request.pageSize || 16,
         request.collectionDate,

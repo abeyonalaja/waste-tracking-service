@@ -1,4 +1,4 @@
-import { Submission } from '../submission.dto';
+import { SimpleDraft } from '../draft.dto';
 
 export type Field =
   | 'Reference'
@@ -83,10 +83,7 @@ export interface InvalidAttributeCombinationError {
   code: number;
 }
 
-export type Value = Omit<
-  Submission,
-  'id' | 'submissionDeclaration' | 'submissionState'
->;
+export type Value = Omit<SimpleDraft, 'id' | 'declaration' | 'state'>;
 
 export interface Error {
   index: number;

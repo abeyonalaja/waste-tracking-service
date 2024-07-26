@@ -1,16 +1,13 @@
-import { DbContainerNameKey, DraftSubmission, GetDraftsResult } from '../model';
+import { DbContainerNameKey, Draft, GetDraftsResult } from '../model';
 
 export interface IRepository<T> {
   createBulkRecords(
     containerName: DbContainerNameKey,
     accountId: string,
-    values: Omit<T, 'submissionDeclaration' | 'submissionState'>[],
+    values: Omit<T, 'declaration' | 'state'>[],
   ): Promise<void>;
 
-  getDraft(
-    containerName: DbContainerNameKey,
-    id: string,
-  ): Promise<DraftSubmission>;
+  getDraft(containerName: DbContainerNameKey, id: string): Promise<Draft>;
 
   getDrafts(
     contanerName: DbContainerNameKey,
@@ -21,4 +18,9 @@ export interface IRepository<T> {
     producerName?: string,
     wasteMovementId?: string,
   ): Promise<GetDraftsResult>;
+  saveRecord(
+    containerName: DbContainerNameKey,
+    value: T,
+    accountId: string,
+  ): Promise<void>;
 }

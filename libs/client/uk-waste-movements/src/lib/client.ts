@@ -1,15 +1,15 @@
 import { DaprClient, HttpMethod } from '@dapr/dapr';
 import {
-  CreateSubmissionsRequest,
-  CreateSubmissionsResponse,
+  CreateMultipleDraftsRequest,
+  CreateMultipleDraftsResponse,
   GetDraftRequest,
   GetDraftResponse,
-  ValidateSubmissionsRequest,
-  ValidateSubmissionsResponse,
-  createSubmissions,
+  ValidateMultipleDraftsRequest,
+  ValidateMultipleDraftsResponse,
+  createMultipleDrafts,
   GetDraftsRequest,
   GetDraftsResponse,
-  validateSubmissions,
+  validateMultipleDrafts,
   getDrafts,
   getDraft,
 } from '@wts/api/uk-waste-movements';
@@ -21,25 +21,25 @@ export class DaprUkWasteMovementsClient {
   ) {}
 
   async validateSubmissions(
-    req: ValidateSubmissionsRequest,
-  ): Promise<ValidateSubmissionsResponse> {
+    req: ValidateMultipleDraftsRequest,
+  ): Promise<ValidateMultipleDraftsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
-      validateSubmissions.name,
+      validateMultipleDrafts.name,
       HttpMethod.POST,
       req,
-    )) as ValidateSubmissionsResponse;
+    )) as ValidateMultipleDraftsResponse;
   }
 
   async createSubmissions(
-    req: CreateSubmissionsRequest,
-  ): Promise<CreateSubmissionsResponse> {
+    req: CreateMultipleDraftsRequest,
+  ): Promise<CreateMultipleDraftsResponse> {
     return (await this.daprClient.invoker.invoke(
       this.ukWasteMovementsAppId,
-      createSubmissions.name,
+      createMultipleDrafts.name,
       HttpMethod.POST,
       req,
-    )) as CreateSubmissionsResponse;
+    )) as CreateMultipleDraftsResponse;
   }
 
   async getDraft(req: GetDraftRequest): Promise<GetDraftResponse> {

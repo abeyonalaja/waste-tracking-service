@@ -1,34 +1,10 @@
-export * as submissionSchema from './submission.schema';
 export * as draftSchema from './draft.schema';
-export type {
-  Submission,
-  ReceiverDetail,
-  WasteSource,
-  WasteTransport,
-  PhysicalForm,
-  QuantityUnit,
-  SubmissionState,
-  SubmissionConfirmation,
-  ValidateSubmissionsRequest,
-  ValidateSubmissionsResponse,
-  ProducerDetail,
-  WasteCollectionDetail,
-  Address,
-  Contact,
-  WasteTransportationDetail,
-  WasteTypeDetail,
-  ExpectedWasteCollectionDate,
-  WasteQuantityType,
-  CreateSubmissionsRequest,
-  CreateSubmissionsResponse,
-  DbContainerNameKey,
-  CarrierDetail,
-} from './submission.dto';
+export type {} from './submission.dto';
 
 export type {
   DraftReceiverDetail,
-  DraftSubmissionDeclaration,
-  DraftSubmission,
+  Declaration,
+  Draft,
   WasteInformation,
   ProducerAndWasteCollectionDetail,
   GetDraftRequest,
@@ -38,16 +14,37 @@ export type {
   GetDraftsResponse,
   GetDraftsResult,
   GetDraftsDto,
+  ReceiverDetail,
+  WasteSource,
+  WasteTransport,
+  PhysicalForm,
+  QuantityUnit,
+  DraftState,
+  ValidateMultipleDraftsRequest,
+  ValidateMultipleDraftsResponse,
+  ProducerDetail,
+  WasteCollectionDetail,
+  Address,
+  Contact,
+  WasteTransportationDetail,
+  WasteTypeDetail,
+  ExpectedWasteCollectionDate,
+  WasteQuantityType,
+  CreateMultipleDraftsRequest,
+  CreateMultipleDraftsResponse,
+  DbContainerNameKey,
+  CarrierDetail,
+  DraftDeclaration,
+  SimpleDraft,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
 
 export {
-  validateSubmissions,
-  createSubmissions,
   getDraft,
-} from './submission.dto';
-
-export { getDrafts } from './draft.dto';
+  getDrafts,
+  createMultipleDrafts,
+  validateMultipleDrafts,
+} from './draft.dto';
 
 export * as validation from './validation';
