@@ -10,6 +10,7 @@ import {
   WasteCodeType,
   Pop,
   LocalAuthority,
+  SICCode,
 } from '../model';
 
 export type Handler<Request, Response> = (
@@ -24,6 +25,7 @@ const disposalCodesId = 'disposal-codes';
 const hazardousCodesId = 'hazardous-codes';
 const popCodesId = 'pops';
 const localAuthoritiesId = 'local-authorities';
+const sicCodesId = 'sic-codes';
 
 export default class ReferenceDataController {
   constructor(
@@ -155,6 +157,37 @@ export default class ReferenceDataController {
         return fromBoom(Boom.internal());
       }
     };
+
+  getSICCodes: Handler<null, api.GetSICCodesResponse> = async () => {
+    try {
+      return success(await this.repository.getList<SICCode>(sicCodesId));
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  createSICCodes: Handler<
+    api.CreateSICCodesRequest,
+    api.CreateSICCodesResponse
+  > = async (values) => {
+    try {
+      return success(
+        await this.repository.saveList<SICCode>(sicCodesId, values),
+      ) as api.CreateSICCodesResponse;
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 
   createWasteCodes: Handler<
     api.CreateWasteCodesRequest,

@@ -7,6 +7,7 @@ export {
   getHazardousCodes,
   getPops,
   getLocalAuthorities,
+  getSICCodes,
   createWasteCodes,
   createEWCCodes,
   createCountries,
@@ -14,6 +15,7 @@ export {
   createDisposalCodes,
   createHazardousCodes,
   createPops,
+  createSICCodes,
 } from './reference-data.dto';
 
 export type {
@@ -23,6 +25,7 @@ export type {
   RecoveryCode,
   Pop,
   LocalAuthority,
+  SICCode,
   GetWasteCodesResponse,
   GetEWCCodesResponse,
   GetEWCCodesRequest,
@@ -33,6 +36,7 @@ export type {
   GetHazardousCodesResponse,
   GetPopsResponse,
   GetLocalAuthoritiesResponse,
+  GetSICCodesResponse,
   CreateWasteCodesRequest,
   CreateWasteCodesResponse,
   CreateEWCCodesRequest,
@@ -47,6 +51,8 @@ export type {
   CreateHazardousCodesResponse,
   CreatePopsRequest,
   CreatePopsResponse,
+  CreateSICCodesRequest,
+  CreateSICCodesResponse,
 } from './reference-data.dto';
 
 export * as schema from './reference-data.schema';

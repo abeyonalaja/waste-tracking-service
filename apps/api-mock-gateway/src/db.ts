@@ -17,6 +17,7 @@ import {
   UkwmSubmissionFlattenedDownload,
   UkwmRowWithMessage,
   UkwmColumnWithMessage,
+  ListSICCodesResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { CreatedPayment, PaymentRecord } from '@wts/api/payment';
 
@@ -59,6 +60,7 @@ export interface DB {
   ukwmColumns: UkwmColumnWithAccountId[];
   paymentDrafts: CreatedPaymentWithAccountId[];
   payments: PaymentRecordWithAccountId[];
+  sicCodes: ListSICCodesResponse;
 }
 
 export const db: DB = {
@@ -3927,4 +3929,405 @@ export const db: DB = {
   ],
   paymentDrafts: [],
   payments: [],
+  sicCodes: [
+    {
+      code: '01110',
+      description: {
+        en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+        cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+      },
+    },
+    {
+      code: '01120',
+      description: {
+        en: 'Growing of rice',
+        cy: 'Tyfu rîs',
+      },
+    },
+    {
+      code: '01130',
+      description: {
+        en: 'Growing of vegetables and melons, roots and tubers',
+        cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+      },
+    },
+    {
+      code: '01140',
+      description: {
+        en: 'Growing of sugar cane',
+        cy: 'Tyfu siwgr',
+      },
+    },
+    {
+      code: '01150',
+      description: {
+        en: 'Growing of tobacco',
+        cy: 'Tyfu tybaco',
+      },
+    },
+    {
+      code: '01160',
+      description: {
+        en: 'Growing of fibre crops',
+        cy: 'Tyfu cnydau ffibr',
+      },
+    },
+    {
+      code: '01190',
+      description: {
+        en: 'Growing of other non-perennial crops',
+        cy: 'Tyfu cnydau anhynodol eraill',
+      },
+    },
+    {
+      code: '01210',
+      description: {
+        en: 'Growing of grapes',
+        cy: 'Tyfu grawn',
+      },
+    },
+    {
+      code: '01220',
+      description: {
+        en: 'Growing of tropical and subtropical fruits',
+        cy: 'Tyfu ffrwythau trofannol a isdrofannol',
+      },
+    },
+    {
+      code: '01230',
+      description: {
+        en: 'Growing of citrus fruits',
+        cy: 'Tyfu ffrwythau citrus',
+      },
+    },
+    {
+      code: '01240',
+      description: {
+        en: 'Growing of pome fruits and stone fruits',
+        cy: 'Tyfu ffrwythau pum a ffrwythau cerrig',
+      },
+    },
+    {
+      code: '01250',
+      description: {
+        en: 'Growing of other tree and bush fruits and nuts',
+        cy: 'Tyfu ffrwythau a choed eraill a chnau',
+      },
+    },
+    {
+      code: '01260',
+      description: {
+        en: 'Growing of oleaginous fruits',
+        cy: 'Tyfu ffrwythau olewog',
+      },
+    },
+    {
+      code: '01270',
+      description: {
+        en: 'Growing of beverage crops',
+        cy: 'Tyfu cnydau diodydd',
+      },
+    },
+    {
+      code: '01280',
+      description: {
+        en: 'Growing of spices, aromatic, drug and pharmaceutical crops',
+        cy: 'Tyfu ber spices, arolyddol, cyffuriau a cnydau fferyllol',
+      },
+    },
+    {
+      code: '01290',
+      description: {
+        en: 'Growing of other perennial crops',
+        cy: 'Tyfu cnydau parhaol eraill',
+      },
+    },
+    {
+      code: '01300',
+      description: {
+        en: 'Plant propagation',
+        cy: 'Plannu',
+      },
+    },
+    {
+      code: '01410',
+      description: {
+        en: 'Raising of dairy cattle',
+        cy: 'Coddi gwartheg llaeth',
+      },
+    },
+    {
+      code: '01420',
+      description: {
+        en: 'Raising of other cattle and buffaloes',
+        cy: 'Coddi gwartheg a bffalô eraill',
+      },
+    },
+    {
+      code: '01430',
+      description: {
+        en: 'Raising of horses and other equines',
+        cy: 'Coddi ceffylau a cheffylau eraill',
+      },
+    },
+    {
+      code: '01440',
+      description: {
+        en: 'Raising of camels and camelids',
+        cy: 'Coddi camelau a camelids',
+      },
+    },
+    {
+      code: '01450',
+      description: {
+        en: 'Raising of sheep and goats',
+        cy: 'Coddi defaid a geifr',
+      },
+    },
+    {
+      code: '01460',
+      description: {
+        en: 'Raising of swine/pigs',
+        cy: 'Coddi moch',
+      },
+    },
+    {
+      code: '01470',
+      description: {
+        en: 'Raising of poultry',
+        cy: 'Coddi dofednod',
+      },
+    },
+    {
+      code: '01490',
+      description: {
+        en: 'Raising of other animals',
+        cy: 'Coddi anifeiliaid eraill',
+      },
+    },
+    {
+      code: '01500',
+      description: {
+        en: 'Mixed farming',
+        cy: 'Ffermio cymysg',
+      },
+    },
+    {
+      code: '01610',
+      description: {
+        en: 'Support activities for crop production',
+        cy: 'Gweithgareddau cefnogi cynhyrchu cnydau',
+      },
+    },
+    {
+      code: '01621',
+      description: {
+        en: 'Farm animal boarding and care',
+        cy: 'Bwrddio a gofal anifeiliaid fferm',
+      },
+    },
+    {
+      code: '01629',
+      description: {
+        en: 'Support activities for animal production (other than farm animal boarding and care) n.e.c.',
+        cy: 'Gweithgareddau cefnogi cynhyrchu anifeiliaid (heblaw bwrddio a gofal anifeiliaid fferm) n.e.c.',
+      },
+    },
+    {
+      code: '01630',
+      description: {
+        en: 'Post-harvest crop activities',
+        cy: 'Gweithgareddau ar ôl cynaeafu cnydau',
+      },
+    },
+    {
+      code: '01640',
+      description: {
+        en: 'Seed processing for propagation',
+        cy: 'Prosesu hadau ar gyfer plannu',
+      },
+    },
+    {
+      code: '01700',
+      description: {
+        en: 'Hunting, trapping and related service activities',
+        cy: 'Hela, dal a gweithgareddau gwasanaeth cysylltiedig',
+      },
+    },
+    {
+      code: '02100',
+      description: {
+        en: 'Silviculture and other forestry activities',
+        cy: 'Silviculture a gweithgareddau fforestry eraill',
+      },
+    },
+    {
+      code: '02200',
+      description: {
+        en: 'Logging',
+        cy: 'Coedwigo',
+      },
+    },
+    {
+      code: '02300',
+      description: {
+        en: 'Gathering of wild growing non-wood products',
+        cy: `Casglu cynnyrch anghyffredin sy'n tyfu'n wyllt`,
+      },
+    },
+    {
+      code: '02400',
+      description: {
+        en: 'Support services to forestry',
+        cy: 'Gwasanaethau cefnogi fforestry',
+      },
+    },
+    {
+      code: '03110',
+      description: {
+        en: 'Marine fishing',
+        cy: 'Pysgota morol',
+      },
+    },
+    {
+      code: '03120',
+      description: {
+        en: 'Freshwater fishing',
+        cy: 'Pysgota dŵr ffres',
+      },
+    },
+    {
+      code: '03210',
+      description: {
+        en: 'Marine aquaculture',
+        cy: 'Acwakiltwyr morol',
+      },
+    },
+    {
+      code: '03220',
+      description: {
+        en: 'Freshwater aquaculture',
+        cy: 'Acwakiltwyr dŵr ffres',
+      },
+    },
+    {
+      code: '05101',
+      description: {
+        en: 'Deep coal mines',
+        cy: 'Mwyngloddiau glo dwfn',
+      },
+    },
+    {
+      code: '05102',
+      description: {
+        en: 'Open cast coal working',
+        cy: 'Gweithio glo glud agored',
+      },
+    },
+    {
+      code: '05200',
+      description: {
+        en: 'Mining of lignite',
+        cy: 'Mwyngloddio lignit',
+      },
+    },
+    {
+      code: '06100',
+      description: {
+        en: 'Extraction of crude petroleum',
+        cy: 'Echdynnu petrolewm crud',
+      },
+    },
+    {
+      code: '06200',
+      description: {
+        en: 'Extraction of natural gas',
+        cy: 'Echdynnu nwy naturiol',
+      },
+    },
+    {
+      code: '07100',
+      description: {
+        en: 'Mining of iron ores',
+        cy: 'Mwyngloddio mwyn haearn',
+      },
+    },
+    {
+      code: '07210',
+      description: {
+        en: 'Mining of uranium and thorium ores',
+        cy: 'Mwyngloddio mwyn uranium a thorium',
+      },
+    },
+    {
+      code: '07290',
+      description: {
+        en: 'Mining of other non-ferrous metal ores',
+        cy: 'Mwyngloddio mwyn metelau anhaearn eraill',
+      },
+    },
+    {
+      code: '08110',
+      description: {
+        en: 'Quarrying of ornamental and building stone, limestone, gypsum, chalk and slate',
+        cy: 'Chwarelwaith cerrig addurnol ac adeiladu, calchfaen, gips, creigiau a lechen',
+      },
+    },
+    {
+      code: '08121',
+      description: {
+        en: 'Extraction of crude petroleum',
+        cy: 'Echdynnu petrolewm crud',
+      },
+    },
+    {
+      code: '08122',
+      description: {
+        en: 'Extraction of natural gas',
+        cy: 'Echdynnu nwy naturiol',
+      },
+    },
+    {
+      code: '08910',
+      description: {
+        en: 'Mining of chemical and fertiliser minerals',
+        cy: 'Mwyngloddio mwyn cemegol a mwynau gwrtaith',
+      },
+    },
+    {
+      code: '08920',
+      description: {
+        en: 'Extraction of peat',
+        cy: 'Echdynnu mawn',
+      },
+    },
+    {
+      code: '08930',
+      description: {
+        en: 'Extraction of salt',
+        cy: 'Echdynnu halen',
+      },
+    },
+    {
+      code: '08990',
+      description: {
+        en: 'Other mining and quarrying n.e.c.',
+        cy: 'Mwyngloddio a chwarelwaith eraill n.e.c.',
+      },
+    },
+    {
+      code: '09100',
+      description: {
+        en: 'Support activities for petroleum and natural gas extraction',
+        cy: 'Gweithgareddau cefnogi echdynnu petrolewm a nwy naturiol',
+      },
+    },
+    {
+      code: '09900',
+      description: {
+        en: 'Support activities for other mining and quarrying',
+        cy: 'Gweithgareddau cefnogi mwyngloddio a chwarelwaith eraill',
+      },
+    },
+  ],
 };

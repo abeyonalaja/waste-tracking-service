@@ -11,6 +11,7 @@ import {
   GetPopsResponse,
   GetRecoveryCodesResponse,
   GetWasteCodesResponse,
+  GetSICCodesResponse,
 } from '@wts/api/reference-data';
 
 jest.mock('winston', () => ({
@@ -29,6 +30,7 @@ const mockClientReferenceData = {
   getPops: jest.fn<DaprReferenceDataClient['getPops']>(),
   getLocalAuthorities:
     jest.fn<DaprReferenceDataClient['getLocalAuthorities']>(),
+  getSICCodes: jest.fn<DaprReferenceDataClient['getSICCodes']>(),
 };
 
 describe('ReferenceDataServiceBackend', () => {
@@ -45,6 +47,8 @@ describe('ReferenceDataServiceBackend', () => {
     mockClientReferenceData.getDisposalCodes.mockClear();
     mockClientReferenceData.getHazardousCodes.mockClear();
     mockClientReferenceData.getPops.mockClear();
+    mockClientReferenceData.getLocalAuthorities.mockClear();
+    mockClientReferenceData.getSICCodes.mockClear();
   });
 
   it('should return waste codes when response is successful', async () => {
@@ -363,5 +367,43 @@ describe('ReferenceDataServiceBackend', () => {
 
     await expect(subject.listLocalAuthorities()).rejects.toThrow();
     expect(mockClientReferenceData.getLocalAuthorities).toHaveBeenCalled();
+  });
+
+  it('should return sic codes when response is successful', async () => {
+    const mockResponse: GetSICCodesResponse = {
+      success: true,
+      value: [
+        {
+          code: '01110',
+          description: {
+            en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+            cy: 'Tyfu grawnfwyd (ac eithrio reis), cnydau llygadlys a hadau olew',
+          },
+        },
+      ],
+    };
+
+    mockClientReferenceData.getSICCodes.mockResolvedValue(mockResponse);
+
+    const result = await subject.listSICCodes();
+
+    expect(result).toEqual(mockResponse.value);
+    expect(mockClientReferenceData.getSICCodes).toHaveBeenCalled();
+  });
+
+  it('should throw an error when listSICCodes response is not successful', async () => {
+    const mockResponse: GetSICCodesResponse = {
+      success: false,
+      error: {
+        message: 'Error message',
+        statusCode: 500,
+        name: '',
+      },
+    };
+
+    mockClientReferenceData.getSICCodes.mockResolvedValue(mockResponse);
+
+    await expect(subject.listSICCodes()).rejects.toThrow();
+    expect(mockClientReferenceData.getSICCodes).toHaveBeenCalled();
   });
 });

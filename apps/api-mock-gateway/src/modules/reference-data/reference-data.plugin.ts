@@ -9,6 +9,7 @@ import {
   listHazardousCodes,
   listPops,
   listLocalAuthorities,
+  listSICCodes,
 } from './reference-data.backend';
 import { InternalServerError } from '../../lib/errors';
 
@@ -126,6 +127,17 @@ export default class ReferenceDataPlugin {
     this.server.get(`${this.prefix}/local-authorities`, async (req, res) => {
       try {
         res.jsonp(await listLocalAuthorities(this.db));
+      } catch (error) {
+        console.log('Unknown error', { error: error });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError(`An internal server error occurred`));
+      }
+    });
+
+    this.server.get(`${this.prefix}/sic-codes`, async (req, res) => {
+      try {
+        res.jsonp(await listSICCodes(this.db));
       } catch (error) {
         console.log('Unknown error', { error: error });
         return res

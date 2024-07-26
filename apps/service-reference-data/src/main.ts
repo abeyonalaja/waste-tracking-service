@@ -128,6 +128,14 @@ await server.invoker.listen(
 );
 
 await server.invoker.listen(
+  api.getSICCodes.name,
+  async () => {
+    return await referenceDataController.getSICCodes(null);
+  },
+  { method: HttpMethod.POST },
+);
+
+await server.invoker.listen(
   api.getLocalAuthorities.name,
   async () => {
     return await referenceDataController.getLocalAuthorities(null);
@@ -250,6 +258,23 @@ await server.invoker.listen(
     }
 
     return await referenceDataController.createPops(request);
+  },
+  { method: HttpMethod.POST },
+);
+
+await server.invoker.listen(
+  api.createSICCodes.name,
+  async ({ body }) => {
+    if (body === undefined) {
+      return fromBoom(Boom.badRequest('Missing body'));
+    }
+
+    const request = JSON.parse(body) as api.CreateSICCodesRequest;
+    if (request === undefined) {
+      return fromBoom(Boom.badRequest());
+    }
+
+    return await referenceDataController.createSICCodes(request);
   },
   { method: HttpMethod.POST },
 );

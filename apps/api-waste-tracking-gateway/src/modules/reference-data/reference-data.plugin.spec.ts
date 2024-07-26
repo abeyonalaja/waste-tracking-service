@@ -21,6 +21,7 @@ const mockBackend = {
   listPops: jest.fn<() => Promise<api.ListPopsResponse>>(),
   listLocalAuthorities:
     jest.fn<() => Promise<api.ListlocalAuthoritiesResponse>>(),
+  listSICCodes: jest.fn<() => Promise<api.ListSICCodesResponse>>(),
 };
 
 const app = server({

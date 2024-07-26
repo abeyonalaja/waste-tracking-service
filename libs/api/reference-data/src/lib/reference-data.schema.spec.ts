@@ -8,6 +8,7 @@ import {
   GetLocalAuthoritiesResponse,
   GetPopsResponse,
   GetRecoveryCodesResponse,
+  GetSICCodesResponse,
   GetWasteCodesResponse,
 } from './reference-data.dto';
 import {
@@ -19,6 +20,7 @@ import {
   getLocalAuthoritiesResponse,
   getPopsResponse,
   getRecoveryCodesResponse,
+  getSICCodesResponse,
   getWasteCodesResponse,
 } from './reference-data.schema';
 
@@ -335,6 +337,39 @@ describe('Reference-Data tests', () => {
           message: 'Bad request',
         },
       });
+    });
+  });
+
+  describe('GetSICCodesResponse', () => {
+    const validate = ajv.compile<GetSICCodesResponse>(getSICCodesResponse);
+
+    it('getSICCodes is compatible with success value', () => {
+      const value: GetSICCodesResponse = {
+        success: true,
+        value: [
+          {
+            code: '01110',
+            description: {
+              en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+              cy: 'Tyfu grawnfwyd (heblaw rys), cnydau llygadwy a hadau olewydd',
+            },
+          },
+        ],
+      };
+
+      expect(validate(value)).toBe(true);
+    });
+
+    it('is compatible with error value', () => {
+      const value: GetSICCodesResponse = {
+        success: false,
+        error: {
+          statusCode: 400,
+          name: 'BadRequest',
+          message: 'Bad request',
+        },
+      };
+      expect(validate(value)).toBe(true);
     });
   });
 });

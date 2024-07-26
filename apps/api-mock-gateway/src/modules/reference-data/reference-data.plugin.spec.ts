@@ -93,4 +93,14 @@ describe('ReferenceDataPlugin', () => {
       expect.any(Function),
     );
   });
+
+  it('Expect POSTing instead of GETting SIC Codes to not be allowed', async () => {
+    const mockPost = jest.fn();
+    server.post = mockPost;
+    await plugin.register();
+    expect(mockPost).not.toHaveBeenCalledWith(
+      '/reference-data/sic-codes',
+      expect.any(Function),
+    );
+  });
 });

@@ -36,9 +36,15 @@ export interface RecoveryCode {
 export interface Pop {
   name: LanguageDescription;
 }
+
 export interface LocalAuthority {
   name: LanguageDescription;
   country: LanguageDescription;
+}
+
+export interface SICCode {
+  code: string;
+  description: LanguageDescription;
 }
 
 export interface GetCountriesRequest {
@@ -57,6 +63,7 @@ export type GetDisposalCodesResponse = Response<WasteCode[]>;
 export type GetHazardousCodesResponse = Response<WasteCode[]>;
 export type GetPopsResponse = Response<Pop[]>;
 export type GetLocalAuthoritiesResponse = Response<LocalAuthority[]>;
+export type GetSICCodesResponse = Response<SICCode[]>;
 
 export type CreateWasteCodesRequest = WasteCodeType[];
 export type CreateWasteCodesResponse = Response<WasteCodeType[]>;
@@ -72,6 +79,8 @@ export type CreateHazardousCodesRequest = WasteCode[];
 export type CreateHazardousCodesResponse = Response<WasteCode[]>;
 export type CreatePopsRequest = Pop[];
 export type CreatePopsResponse = Response<Pop[]>;
+export type CreateSICCodesRequest = SICCode[];
+export type CreateSICCodesResponse = Response<SICCode[]>;
 
 export const getWasteCodes: Method = {
   name: 'getWasteCodes',
@@ -105,6 +114,10 @@ export const getLocalAuthorities: Method = {
   name: 'getLocalAuthorities',
 };
 
+export const getSICCodes: Method = {
+  name: 'getSICCodes',
+};
+
 export const createWasteCodes: Method = {
   name: 'createWasteCodes',
 };
@@ -131,4 +144,8 @@ export const createHazardousCodes: Method = {
 
 export const createPops: Method = {
   name: 'createPops',
+};
+
+export const createSICCodes: Method = {
+  name: 'createSICCodes',
 };

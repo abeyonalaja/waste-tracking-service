@@ -238,3 +238,27 @@ export const getLocalAuthoritiesResponse: SchemaObject = {
     },
   },
 };
+
+export const getSICCodesResponse: SchemaObject = {
+  properties: {
+    success: {
+      type: 'boolean',
+    },
+  },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: {
+      elements: {
+        properties: {
+          code: { type: 'string' },
+          description: {
+            properties: {
+              en: { type: 'string' },
+              cy: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};

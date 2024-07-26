@@ -285,9 +285,61 @@ describe(ReferenceDataController, () => {
       expect(response.value[0].country.en).toEqual('England');
       expect(response.value[0].country.cy).toEqual('Lloegr');
     });
+
+    it('listSICCodes', async () => {
+      const value = [
+        {
+          code: '01110',
+          value: {
+            description: {
+              en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+              cy: 'Tyfu grawn (heblaw reis), cnydau llygadwy a hadau olewydd',
+            },
+          },
+        },
+      ];
+
+      mockRepository.getList.mockResolvedValueOnce(value);
+
+      const response = await subject.getSICCodes(null);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(response.value[0]).toEqual({
+        code: '01110',
+        value: {
+          description: {
+            en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+            cy: 'Tyfu grawn (heblaw reis), cnydau llygadwy a hadau olewydd',
+          },
+        },
+      });
+    });
   });
 
   describe('Create Codes', () => {
+    it('createSICCodes', async () => {
+      const value = [
+        {
+          code: '99998',
+          description: {
+            en: 'English SIC Code Description',
+            cy: 'Welsh SIC Code Description',
+          },
+        },
+      ];
+
+      const response = await subject.createSICCodes(value);
+      expect(response.success).toBe(true);
+      if (!response.success) {
+        return;
+      }
+
+      expect(mockRepository.saveList).toBeCalledWith('sic-codes', value);
+    });
+
     it('createWasteCodes', async () => {
       const value = [
         {

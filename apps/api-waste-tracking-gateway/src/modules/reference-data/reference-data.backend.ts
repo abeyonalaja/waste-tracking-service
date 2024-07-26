@@ -7,6 +7,7 @@ import {
   GetLocalAuthoritiesResponse,
   GetPopsResponse,
   GetRecoveryCodesResponse,
+  GetSICCodesResponse,
   GetWasteCodesResponse,
 } from '@wts/api/reference-data';
 import * as api from '@wts/api/waste-tracking-gateway';
@@ -22,6 +23,7 @@ export interface ReferenceDataBackend {
   listHazardousCodes(): Promise<api.ListHazardousCodesResponse>;
   listPops(): Promise<api.ListPopsResponse>;
   listLocalAuthorities(): Promise<api.ListlocalAuthoritiesResponse>;
+  listSICCodes(): Promise<api.ListSICCodesResponse>;
 }
 
 export class ReferenceDataServiceBackend implements ReferenceDataBackend {
@@ -155,6 +157,23 @@ export class ReferenceDataServiceBackend implements ReferenceDataBackend {
     let response: GetLocalAuthoritiesResponse;
     try {
       response = await this.client.getLocalAuthorities();
+    } catch (error) {
+      this.logger.error(error);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+    return response.value;
+  }
+
+  async listSICCodes(): Promise<api.ListSICCodesResponse> {
+    let response: GetSICCodesResponse;
+    try {
+      response = await this.client.getSICCodes();
     } catch (error) {
       this.logger.error(error);
       throw Boom.internal();

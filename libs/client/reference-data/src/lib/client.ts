@@ -39,6 +39,11 @@ import {
   GetEWCCodesRequest,
   GetLocalAuthoritiesResponse,
   getLocalAuthorities,
+  getSICCodes,
+  GetSICCodesResponse,
+  CreateSICCodesRequest,
+  CreateSICCodesResponse,
+  createSICCodes,
 } from '@wts/api/reference-data';
 
 export class DaprReferenceDataClient {
@@ -111,6 +116,14 @@ export class DaprReferenceDataClient {
       getLocalAuthorities.name,
       HttpMethod.POST,
     )) as GetLocalAuthoritiesResponse;
+  }
+
+  async getSICCodes(): Promise<GetSICCodesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      getSICCodes.name,
+      HttpMethod.POST,
+    )) as GetSICCodesResponse;
   }
 
   async createWasteCodes(
@@ -186,5 +199,16 @@ export class DaprReferenceDataClient {
       HttpMethod.POST,
       req,
     )) as CreatePopsResponse;
+  }
+
+  async createSICCodes(
+    req: CreateSICCodesRequest,
+  ): Promise<CreateSICCodesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.referenceDataAppId,
+      createSICCodes.name,
+      HttpMethod.POST,
+      req,
+    )) as CreateSICCodesResponse;
   }
 }

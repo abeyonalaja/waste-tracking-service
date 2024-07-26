@@ -36,6 +36,11 @@ export interface LocalAuthority {
   country: LanguageDescription;
 }
 
+export interface SICCode {
+  code: string;
+  description: LanguageDescription;
+}
+
 export type ListWasteCodesResponse = WasteCodeType[];
 export type ListEWCCodesResponse = WasteCode[];
 export type ListCountriesResponse = Country[];
@@ -44,3 +49,4 @@ export type ListDisposalCodesResponse = WasteCode[];
 export type ListHazardousCodesResponse = WasteCode[];
 export type ListPopsResponse = Pop[];
 export type ListlocalAuthoritiesResponse = LocalAuthority[];
+export type ListSICCodesResponse = SICCode[];

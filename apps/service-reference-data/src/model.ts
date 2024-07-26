@@ -6,3 +6,4 @@ export type Country = api.Country;
 export type RecoveryCode = api.RecoveryCode;
 export type Pop = api.Pop;
 export type LocalAuthority = api.LocalAuthority;
+export type SICCode = api.SICCode;

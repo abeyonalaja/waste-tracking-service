@@ -7,6 +7,7 @@ import {
   listHazardousCodes,
   listPops,
   listLocalAuthorities,
+  listSICCodes,
 } from './reference-data.backend';
 import { DB } from '../../db';
 
@@ -23,6 +24,7 @@ describe('Reference Data Backend', () => {
       hazarodusCodes: [],
       pops: [],
       localAuthorities: [],
+      sicCodes: [],
     } as unknown as DB;
   });
 
@@ -70,5 +72,10 @@ describe('Reference Data Backend', () => {
   it('returns local authorities', async () => {
     const result = await listLocalAuthorities(db);
     expect(result).toEqual(db.localAuthorities);
+  });
+
+  it('returns sic codes', async () => {
+    const result = await listSICCodes(db);
+    expect(result).toEqual(db.sicCodes);
   });
 });
