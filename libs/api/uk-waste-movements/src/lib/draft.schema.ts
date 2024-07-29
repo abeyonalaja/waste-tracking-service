@@ -12,6 +12,7 @@ import {
   WasteTypeDetail,
   CarrierDetail,
   ValidateMultipleDraftsRequest,
+  CreateDraftRequest,
 } from './draft.dto';
 
 export const wasteType: JTDSchemaType<WasteTypeDetail> = {
@@ -233,6 +234,25 @@ export const draftProducer: SchemaObject = {
   },
 };
 
+export const draftWasteCollection: SchemaObject = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: {
+      properties: {},
+    },
+    Started: {
+      optionalProperties: {
+        ...wasteCollection.properties,
+        ...wasteCollection.optionalProperties,
+      },
+    },
+    Complete: {
+      properties: wasteCollection.properties,
+      optionalProperties: wasteCollection.optionalProperties,
+    },
+  },
+};
+
 export const producerAndWasteCollectionDetail: SchemaObject = {
   discriminator: 'status',
   mapping: {
@@ -240,7 +260,7 @@ export const producerAndWasteCollectionDetail: SchemaObject = {
     Complete: {
       properties: {
         producer: draftProducer,
-        wasteCollection: wasteCollection,
+        wasteCollection: draftWasteCollection,
       },
     },
   },
@@ -276,7 +296,7 @@ export const declaration: SchemaObject = {
     },
     Complete: {
       properties: {
-        values: {
+        value: {
           properties: {
             declarationTimestamp: { type: 'timestamp' },
             transactionId: { type: 'string' },
@@ -311,7 +331,6 @@ export const state: SchemaObject = {
 export const draftSubmission: SchemaObject = {
   properties: {
     id: { type: 'string' },
-    transactionId: { type: 'string' },
     wasteInformation: wasteInformation,
     receiver: draftReceiver,
     producerAndCollection: producerAndWasteCollectionDetail,
@@ -784,5 +803,12 @@ export const createMultipleDraftsRequest: SchemaObject = {
         },
       },
     },
+  },
+};
+
+export const createDraftRequest: JTDSchemaType<CreateDraftRequest> = {
+  properties: {
+    accountId: { type: 'string' },
+    reference: { type: 'string' },
   },
 };

@@ -383,12 +383,21 @@ export interface DraftProducer {
   address: DraftAddress;
 }
 
+export type DraftWasteCollection =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<WasteCollectionDetail>)
+  | ({ status: 'Complete' } & WasteCollectionDetail);
+
 export type ProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<{
+      producer: DraftProducer;
+      wasteCollection: DraftWasteCollection;
+    }>)
   | {
       status: 'Complete';
       producer: DraftProducer;
-      wasteCollection: WasteCollectionDetail;
+      wasteCollection: DraftWasteCollection;
     };
 
 export type WasteInformation =
@@ -403,7 +412,7 @@ export type DraftDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
-      values: Declaration;
+      value: Declaration;
     };
 
 export type DraftCarrierDetail =
@@ -414,6 +423,7 @@ export type DraftCarrierDetail =
     };
 
 export type DraftStateStatus =
+  | 'InProgress'
   | 'SubmittedWithEstimates'
   | 'SubmittedWithActuals'
   | 'UpdatedWithActuals';
@@ -425,7 +435,6 @@ export interface DraftState {
 
 export interface Draft {
   id: string;
-  transactionId: string;
   wasteInformation: WasteInformation;
   receiver: DraftReceiverDetail;
   producerAndCollection: ProducerAndWasteCollectionDetail;
@@ -502,3 +511,10 @@ export const createMultipleDrafts: Method = {
 };
 
 export type DbContainerNameKey = 'drafts';
+
+export type CreateDraftRequest = AccountIdRequest &
+  Pick<DraftProducer, 'reference'>;
+export type CreateDraftResponse = Response<Draft>;
+export const createDraft: Method = {
+  name: 'createDraft',
+};

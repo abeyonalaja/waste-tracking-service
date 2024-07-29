@@ -4,6 +4,7 @@ import winston from 'winston';
 import SubmissionController from './controller';
 import { Draft, GetDraftsResult, validation } from '../../model';
 import { CosmosRepository } from '../../data';
+import { v4 as uuidv4 } from 'uuid';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -11,10 +12,23 @@ jest.mock('winston', () => ({
   })),
 }));
 
+const mockUuid = jest.fn<typeof uuidv4>();
+
+jest.mock('uuid', () => ({
+  v4: () => mockUuid(),
+}));
+
+jest
+  .useFakeTimers({
+    advanceTimers: false,
+  })
+  .setSystemTime(new Date(2022, 2, 1));
+
 const mockRepository = {
   createBulkRecords: jest.fn<CosmosRepository['createBulkRecords']>(),
   getDraft: jest.fn<CosmosRepository['getDraft']>(),
   getDrafts: jest.fn<CosmosRepository['getDrafts']>(),
+  saveRecord: jest.fn<CosmosRepository['saveRecord']>(),
 };
 
 const ewcCodes = [
@@ -138,6 +152,8 @@ describe(SubmissionController, () => {
     mockRepository.createBulkRecords.mockClear();
     mockRepository.getDraft.mockClear();
     mockRepository.getDrafts.mockClear();
+    mockRepository.saveRecord.mockClear();
+    mockUuid.mockClear();
   });
 
   describe('validateSubmissions', () => {
@@ -743,6 +759,7 @@ describe(SubmissionController, () => {
           },
         ],
       });
+
       expect(response.success).toBe(true);
       if (response.success) {
         expect(mockRepository.createBulkRecords).toBeCalled();
@@ -756,7 +773,6 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const value: Draft = {
         id: id,
-        transactionId: '',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -815,6 +831,54 @@ describe(SubmissionController, () => {
       if (response.success) {
         expect(response.value).toEqual(mockData);
         return;
+      }
+    });
+  });
+
+  describe('createDraft', () => {
+    it('successfully creates a draft using the repository', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const ref = 'testRef';
+
+      mockRepository.saveRecord.mockResolvedValue();
+      mockUuid.mockReturnValue(id);
+
+      const response = await subject.createDraft({ accountId, reference: ref });
+
+      const expectedDraft = {
+        carrier: { status: 'NotStarted' },
+        declaration: { status: 'CannotStart' },
+        id: id,
+        producerAndCollection: {
+          producer: {
+            address: { status: 'NotStarted' },
+            contact: { status: 'NotStarted' },
+            reference: 'testRef',
+            sicCode: '',
+          },
+          status: 'Started',
+          wasteCollection: { status: 'NotStarted' },
+        },
+        receiver: { status: 'NotStarted' },
+        state: { status: 'InProgress', timestamp: new Date() },
+        wasteInformation: { status: 'NotStarted' },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value.producerAndCollection.status).toBe('Started');
+
+        if (response.value.producerAndCollection.status === 'Started') {
+          expect(response.value.producerAndCollection.producer?.reference).toBe(
+            ref,
+          );
+        }
       }
     });
   });

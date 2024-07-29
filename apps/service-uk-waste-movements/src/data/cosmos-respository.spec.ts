@@ -82,7 +82,7 @@ describe(CosmosRepository, () => {
       const mockContainerName = 'drafts';
       const mockDraftSubmission = {
         id: mockId,
-        transactionId: 'testTransactionId',
+        carrier: {},
         wasteInformation: {},
         receiver: {},
         producerAndCollection: {},
@@ -147,7 +147,6 @@ describe(CosmosRepository, () => {
       const accountId = faker.string.uuid();
       const record = {
         id: '1',
-        transactionId: '123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -242,7 +241,7 @@ describe(CosmosRepository, () => {
         },
         declaration: {
           status: 'Complete',
-          values: {
+          value: {
             declarationTimestamp: new Date(),
             transactionId: '123',
           },
@@ -271,7 +270,6 @@ describe(CosmosRepository, () => {
       const accountId = faker.string.uuid();
       const record = {
         id: '1',
-        transactionId: '123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -366,7 +364,7 @@ describe(CosmosRepository, () => {
         },
         declaration: {
           status: 'Complete',
-          values: {
+          value: {
             declarationTimestamp: new Date(),
             transactionId: '123',
           },

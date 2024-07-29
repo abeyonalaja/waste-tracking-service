@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals';
 import {
+  CreateDraftRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
 } from './uk-waste-movements-submission.backend';
@@ -7,6 +8,7 @@ import { server } from '@hapi/hapi';
 import winston from 'winston';
 import ukWasteMovementsBulkSubmissionPlugin from './uk-waste-movements-submission.plugin';
 import {
+  UkwmCreateDraftResponse,
   UkwmGetDraftsRequest,
   UkwmGetDraftsResult,
   UkwmSubmission,
@@ -26,6 +28,8 @@ const mockBackend = {
   getUkwmSubmission: jest.fn<(ref: SubmissionRef) => Promise<UkwmSubmission>>(),
   getDrafts:
     jest.fn<(request: UkwmGetDraftsRequest) => Promise<UkwmGetDraftsResult>>(),
+  createDraft:
+    jest.fn<(request: CreateDraftRef) => Promise<UkwmCreateDraftResponse>>(),
 };
 
 const app = server({
@@ -88,6 +92,19 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.getDrafts.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('POST /drafts', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'POST',
+        url: `/ukwm/drafts`,
+      };
+
+      mockBackend.createDraft.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

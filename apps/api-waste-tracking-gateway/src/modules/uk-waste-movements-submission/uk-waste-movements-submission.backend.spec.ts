@@ -4,6 +4,7 @@ import { ServiceUkWasteMovementsSubmissionBackend } from './uk-waste-movements-s
 import { Logger } from 'winston';
 import { faker } from '@faker-js/faker';
 import {
+  CreateDraftResponse,
   GetDraftResponse,
   GetDraftsResponse,
 } from '@wts/api/uk-waste-movements';
@@ -17,6 +18,7 @@ jest.mock('winston', () => ({
 const mockClient = {
   getDraft: jest.fn<DaprUkWasteMovementsClient['getDraft']>(),
   getDrafts: jest.fn<DaprUkWasteMovementsClient['getDrafts']>(),
+  createDraft: jest.fn<DaprUkWasteMovementsClient['createDraft']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -34,7 +36,6 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       success: true,
       value: {
         id: id,
-        transactionId: '',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -95,5 +96,54 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
 
     expect(result.values[0].id).toEqual(id);
     expect(mockClient.getDrafts).toBeCalled();
+  });
+
+  it('creates draft', async () => {
+    const mockGetDraftsResponse: CreateDraftResponse = {
+      success: true,
+      value: {
+        id: faker.string.uuid(),
+        producerAndCollection: {
+          status: 'Started',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            reference: '123456',
+            sicCode: '123456',
+          },
+          wasteCollection: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'InProgress',
+          timestamp: faker.date.anytime(),
+        },
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+      },
+    };
+    mockClient.createDraft.mockResolvedValueOnce(mockGetDraftsResponse);
+    const result = await subject.createDraft({
+      accountId: faker.string.uuid(),
+      reference: '123456',
+    });
+
+    expect(result).toEqual(mockGetDraftsResponse.value);
+    expect(mockClient.createDraft).toBeCalled();
   });
 });

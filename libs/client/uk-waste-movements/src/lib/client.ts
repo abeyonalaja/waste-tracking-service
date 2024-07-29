@@ -12,6 +12,9 @@ import {
   validateMultipleDrafts,
   getDrafts,
   getDraft,
+  CreateDraftRequest,
+  CreateDraftResponse,
+  createDraft,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -58,5 +61,14 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as GetDraftsResponse;
+  }
+
+  async createDraft(req: CreateDraftRequest): Promise<CreateDraftResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      createDraft.name,
+      HttpMethod.POST,
+      req,
+    )) as CreateDraftResponse;
   }
 }

@@ -2,10 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Submission } from './Submission';
-import { UkwmDraftSubmission } from '@wts/api/waste-tracking-gateway';
+import { UkwmDraft } from '@wts/api/waste-tracking-gateway';
 
-const mockData: UkwmDraftSubmission = {
-  transactionId: '12345',
+const mockData: UkwmDraft = {
   id: '12345',
   wasteInformation: {
     status: 'Complete',
@@ -36,12 +35,14 @@ const mockData: UkwmDraftSubmission = {
     producer: {
       reference: 'test ref',
       contact: {
+        status: 'Complete',
         organisationName: 'Producer Org',
         name: 'Producer Name',
         email: 'producer@example.com',
         phone: '1234567890',
       },
       address: {
+        status: 'Complete',
         addressLine1: '123 Street',
         townCity: 'City',
         postcode: 'AB12 3CD',
@@ -50,6 +51,7 @@ const mockData: UkwmDraftSubmission = {
       sicCode: 'SIC1234',
     },
     wasteCollection: {
+      status: 'Complete',
       expectedWasteCollectionDate: {
         day: '01',
         month: '01',
@@ -102,14 +104,14 @@ const mockData: UkwmDraftSubmission = {
       },
     },
   },
-  submissionDeclaration: {
+  declaration: {
     status: 'Complete',
-    values: {
+    value: {
       declarationTimestamp: new Date(),
       transactionId: 'WM2405_FDF4428F',
     },
   },
-  submissionState: {
+  state: {
     status: 'SubmittedWithEstimates',
     timestamp: new Date(),
   },
@@ -119,7 +121,9 @@ describe('Submission component', () => {
   it('renders correctly with provided data', () => {
     render(<Submission data={mockData} />);
 
-    expect(screen.getByText('Your reference: 12345')).toBeInTheDocument();
+    expect(
+      screen.getByText('Your reference: WM2405_FDF4428F'),
+    ).toBeInTheDocument();
     expect(screen.getByText('Waste movement record')).toBeInTheDocument();
     expect(screen.getByText('About the waste')).toBeInTheDocument();
     expect(

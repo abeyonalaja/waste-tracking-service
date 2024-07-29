@@ -1,6 +1,7 @@
 import { Application } from 'express';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import {
+  createDraft,
   getDrafts,
   getUkwmSubmission,
 } from './uk-waste-movements-submission.backend';
@@ -11,6 +12,8 @@ import {
   NotFoundError,
 } from '../../lib/errors';
 import { isValid } from 'date-fns';
+import { User } from '../../lib/user';
+import { validateCreateDraftRequest } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
   constructor(
@@ -80,6 +83,30 @@ export default class UkwmSubmissionPlugin {
       } catch (err) {
         if (err instanceof CustomError) {
           return res.status(err.statusCode).json({ message: err.message });
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.post(`${this.prefix}/drafts`, async (req, res) => {
+      try {
+        if (!validateCreateDraftRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+
+        const user = req.user as User;
+        const result = await createDraft(
+          req.body.reference,
+          user.credentials.accountId,
+        );
+
+        return res.status(201).json(result);
+      } catch (err) {
+        if (err instanceof CustomError) {
+          return res.status(err.statusCode).json(err);
         }
         console.log('Unknown error', { error: err });
         return res

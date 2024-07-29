@@ -10,6 +10,7 @@ import {
   ValidationResult,
   WasteTypeDetailFlattened,
   SubmissionValidationReferenceData,
+  Draft,
 } from '../../model';
 import { validationRules } from '../../lib';
 import { CosmosRepository } from '../../data';
@@ -477,7 +478,10 @@ export default class SubmissionController {
               ...s.producer.contact,
             },
           },
-          wasteCollection: s.wasteCollection,
+          wasteCollection: {
+            status: 'Complete',
+            ...s.wasteCollection,
+          },
         };
 
         const draftReceiver: api.DraftReceiverDetail = {
@@ -492,7 +496,7 @@ export default class SubmissionController {
 
         const draftDeclaration: api.DraftDeclaration = {
           status: 'Complete',
-          values: {
+          value: {
             declarationTimestamp: new Date(),
             transactionId: s.transactionId,
           },
@@ -524,6 +528,7 @@ export default class SubmissionController {
       );
       return success(undefined);
     } catch (err) {
+      console.error(err);
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
       }
@@ -575,4 +580,60 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
+    async (request) => {
+      try {
+        const draft: Draft = {
+          id: uuidv4(),
+          producerAndCollection: {
+            status: 'Started',
+            producer: {
+              contact: {
+                status: 'NotStarted',
+              },
+              address: {
+                status: 'NotStarted',
+              },
+              sicCode: '',
+              reference: request.reference,
+            },
+            wasteCollection: {
+              status: 'NotStarted',
+            },
+          },
+          carrier: {
+            status: 'NotStarted',
+          },
+          receiver: {
+            status: 'NotStarted',
+          },
+          wasteInformation: {
+            status: 'NotStarted',
+          },
+          declaration: {
+            status: 'CannotStart',
+          },
+          state: {
+            status: 'InProgress',
+            timestamp: new Date(),
+          },
+        };
+
+        await this.repository.saveRecord(
+          draftsContainerName,
+          draft,
+          request.accountId,
+        );
+
+        return success(draft);
+      } catch (err) {
+        if (err instanceof Boom.Boom) {
+          return fromBoom(err);
+        }
+
+        this.logger.error('Unknown error', { error: err });
+        return fromBoom(Boom.internal());
+      }
+    };
 }

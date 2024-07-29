@@ -13,7 +13,7 @@ import {
   UkwmBulkSubmission,
   Submission,
   ListlocalAuthoritiesResponse,
-  UkwmDraftSubmission,
+  UkwmDraft,
   UkwmSubmissionFlattenedDownload,
   UkwmRowWithMessage,
   UkwmColumnWithMessage,
@@ -27,6 +27,7 @@ export type DraftSubmissionWithAccount = DraftSubmission & {
 export type SubmissionWithAccount = Submission & { accountId: string };
 export type TemplateWithAccount = Template & { accountId: string };
 export type BulkWithAccount = BulkSubmission & { accountId: string };
+export type UkwmDraftWithAccount = UkwmDraft & { accountId: string };
 export type UkwmBulkWithAccount = UkwmBulkSubmission & { accountId: string };
 export type UkwmRowWithAccountId = UkwmRowWithMessage & { accountId: string };
 export type UkwmColumnWithAccountId = UkwmColumnWithMessage & {
@@ -54,7 +55,7 @@ export interface DB {
   localAuthorities: ListlocalAuthoritiesResponse;
   batches: BulkWithAccount[];
   ukwmBatches: UkwmBulkWithAccount[];
-  ukwmDrafts: UkwmDraftSubmission[];
+  ukwmDrafts: UkwmDraftWithAccount[];
   ukwmDownload: UkwmSubmissionFlattenedDownload[];
   ukwmRows: UkwmRowWithAccountId[];
   ukwmColumns: UkwmColumnWithAccountId[];
@@ -1671,8 +1672,8 @@ export const db: DB = {
   ukwmBatches: [],
   ukwmDrafts: [
     {
+      accountId: '123',
       id: '123',
-      transactionId: '456',
       wasteInformation: {
         status: 'Complete',
         wasteTypes: [
@@ -1745,12 +1746,14 @@ export const db: DB = {
           reference: 'REF123',
           sicCode: 'SIC5678',
           contact: {
+            status: 'Complete',
             organisationName: 'Waste Producer Inc.',
             name: 'Jane Doe',
             email: 'janedoe@example.com',
             phone: '+1234567890',
           },
           address: {
+            status: 'Complete',
             addressLine1: '456 Avenue',
             townCity: 'Pleven',
             postcode: '5800',
@@ -1758,6 +1761,7 @@ export const db: DB = {
           },
         },
         wasteCollection: {
+          status: 'Complete',
           wasteSource: 'Industrial',
           brokerRegistrationNumber: 'BRN123',
           carrierRegistrationNumber: 'CRN456',
@@ -1777,7 +1781,7 @@ export const db: DB = {
       },
       declaration: {
         status: 'Complete',
-        values: {
+        value: {
           declarationTimestamp: new Date(),
           transactionId: 'TX123456',
         },

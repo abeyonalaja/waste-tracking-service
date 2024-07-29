@@ -36,6 +36,8 @@ export type {
   CarrierDetail,
   DraftDeclaration,
   SimpleDraft,
+  CreateDraftRequest,
+  CreateDraftResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -45,6 +47,7 @@ export {
   getDrafts,
   createMultipleDrafts,
   validateMultipleDrafts,
+  createDraft,
 } from './draft.dto';
 
 export * as validation from './validation';

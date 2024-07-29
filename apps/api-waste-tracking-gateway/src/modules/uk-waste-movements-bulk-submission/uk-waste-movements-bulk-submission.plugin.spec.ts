@@ -151,7 +151,7 @@ describe('UkWasteMovementsBulkSubmissionPlugin', () => {
     it("Responds 404 if column doesn't exist", async () => {
       const options = {
         method: 'GET',
-        url: `/ukwm-batches/${faker.string.uuid()}/columns/${faker.string.sample()}`,
+        url: `/ukwm-batches/${faker.string.uuid()}/columns/testCol`,
       };
 
       mockBackend.getColumn.mockRejectedValue(Boom.notFound());

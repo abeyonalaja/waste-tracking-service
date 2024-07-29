@@ -10,7 +10,7 @@ export * from './validation-rules';
 export function validateProducerOrganisationName(
   organsationName?: string,
   message?: ErrorMessage,
-): ValidationResult {
+): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
 
   const trimmedOrganisationName = organsationName?.trim();
@@ -64,7 +64,7 @@ export function validateProducerOrganisationName(
 export function validateProducerReference(
   reference?: string,
   message?: ErrorMessage,
-): ValidationResult {
+): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
 
   const trimmedReference = reference?.trim();

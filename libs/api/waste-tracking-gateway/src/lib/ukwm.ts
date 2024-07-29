@@ -113,7 +113,7 @@ export interface UkwmSubmission {
   submissionState: UkwmSubmissionState;
 }
 
-export interface UkwmDraft {
+export interface UkwmGetDraftsDto {
   id: string;
   wasteMovementId: string;
   producerName: string;
@@ -138,7 +138,7 @@ export interface UkwmGetDraftsResult {
   totalRecords: number;
   totalPages: number;
   page: number;
-  values: UkwmDraft[];
+  values: UkwmGetDraftsDto[];
 }
 
 export type UkwmWasteInformation =
@@ -156,12 +156,38 @@ export type UkwmDraftReceiverDetail =
       value: UkwmReceiverDetail;
     };
 
+type DraftAddress =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<UkwmAddress>)
+  | ({ status: 'Complete' } & UkwmAddress);
+
+type DraftContact =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<UkwmContact>)
+  | ({ status: 'Complete' } & UkwmContact);
+
+export interface UkwmDraftProducer {
+  reference: string;
+  sicCode?: string;
+  contact: DraftContact;
+  address: DraftAddress;
+}
+
+export type UkwmDraftWasteCollection =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<UkwmWasteCollectionDetail>)
+  | ({ status: 'Complete' } & UkwmWasteCollectionDetail);
+
 export type UkwmProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<{
+      producer: UkwmDraftProducer;
+      wasteCollection: UkwmDraftWasteCollection;
+    }>)
   | {
       status: 'Complete';
-      producer: UkwmProducerDetail;
-      wasteCollection: UkwmWasteCollectionDetail;
+      producer: UkwmDraftProducer;
+      wasteCollection: UkwmDraftWasteCollection;
     };
 
 export interface UkwmSubmissionDeclaration {
@@ -173,10 +199,11 @@ export type UkwmDraftSubmissionDeclaration =
   | { status: 'CannotStart' | 'NotStarted' }
   | {
       status: 'Complete';
-      values: UkwmSubmissionDeclaration;
+      value: UkwmSubmissionDeclaration;
     };
 
 export type UkwmSubmissionStateStatus =
+  | 'InProgress'
   | 'SubmittedWithEstimates'
   | 'SubmittedWithActuals'
   | 'UpdatedWithActuals';
@@ -186,9 +213,8 @@ export interface UkwmSubmissionState {
   timestamp: Date;
 }
 
-export interface UkwmDraftSubmission {
+export interface UkwmDraft {
   id: string;
-  transactionId: string;
   wasteInformation: UkwmWasteInformation;
   receiver: UkwmDraftReceiverDetail;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
@@ -204,4 +230,7 @@ export type UkwmDraftCarrierDetail =
       value: UkwmCarrierDetail;
     };
 
-export type GetUkwmSubmissionResponse = UkwmDraftSubmission;
+export type GetUkwmSubmissionResponse = UkwmDraft;
+
+export type UkwmCreateDraftRequest = Pick<UkwmDraftProducer, 'reference'>;
+export type UkwmCreateDraftResponse = UkwmDraft;

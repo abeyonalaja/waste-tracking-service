@@ -1,8 +1,16 @@
 import { validateProducerReference } from './validation-rules';
 
 describe('Producer reference validation', () => {
-  it('should return valid true when reference is valid', () => {
-    const result = validateProducerReference('123456789012');
+  it.each([
+    '123456789012',
+    'asd-123',
+    '123/123',
+    '123\\123',
+    '132_123',
+    '3454   123',
+    'ABC_01/02/2025',
+  ])('should return valid true when reference is valid (%s)', (ref) => {
+    const result = validateProducerReference(ref);
     expect(result.valid).toBe(true);
   });
 

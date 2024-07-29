@@ -3,6 +3,7 @@ import {
   draftSchema,
   CreateMultipleDraftsRequest,
   ValidateMultipleDraftsRequest,
+  CreateDraftRequest,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -20,4 +21,8 @@ export const validateCreateMultipleDraftsRequest =
 
 export const validateGetDraftsRequest = ajv.compile<GetDraftRequest>(
   draftSchema.getDraftsRequest,
+);
+
+export const validateCreateDraftsRequest = ajv.compile<CreateDraftRequest>(
+  draftSchema.createDraftRequest,
 );

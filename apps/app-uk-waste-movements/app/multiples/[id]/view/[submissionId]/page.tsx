@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { options } from './../../../../api/auth/[...nextauth]/options';
 import { getSubmission } from '@wts/app-uk-waste-movements/feature-multiples';
-import { UkwmDraftSubmission } from '@wts/api/waste-tracking-gateway';
+import { UkwmDraft } from '@wts/api/waste-tracking-gateway';
 import { headers } from 'next/headers';
 import { Submission } from '@wts/app-uk-waste-movements/feature-multiples/server';
 import * as GovUK from '@wts/ui/govuk-react-ui';
@@ -42,7 +42,7 @@ export default async function SingleRecord({
     token,
   );
 
-  const submission: UkwmDraftSubmission = await response.json();
+  const submission: UkwmDraft = await response.json();
 
   return (
     <Page beforeChildren={<BackLink href={'../view'} />}>

@@ -4,6 +4,7 @@ import Boom from '@hapi/boom';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { UkWasteMovementsSubmissionBackend } from './uk-waste-movements-submission.backend';
 import { isValid } from 'date-fns';
+import { validateCreateDraftRequest } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
   backend: UkWasteMovementsSubmissionBackend;
@@ -22,7 +23,7 @@ const plugin: Plugin<PluginOptions> = {
           const value = await backend.getUkwmSubmission({
             id: params.id,
           });
-          return value as dto.GetUkwmSubmissionResponse;
+          return value;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
@@ -52,7 +53,7 @@ const plugin: Plugin<PluginOptions> = {
             );
             if (
               !isValid(collectionDate) ||
-              !(collectionDate.getMonth() + 1 === Number(dateArr[1]))
+              collectionDate.getMonth() + 1 !== Number(dateArr[1])
             ) {
               return Boom.badRequest('Invalid collection date');
             }
@@ -78,11 +79,40 @@ const plugin: Plugin<PluginOptions> = {
           };
 
           const result = await backend.getDrafts(req);
-          return result as dto.UkwmGetDraftsResult;
+          return result;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             return err;
           }
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/drafts',
+      handler: async function ({ payload }, h) {
+        if (!validateCreateDraftRequest(payload)) {
+          return Boom.badRequest();
+        }
+        const reference = (payload as dto.UkwmCreateDraftRequest)?.reference;
+        try {
+          return h
+            .response(
+              await backend.createDraft({
+                reference,
+                accountId: h.request.auth.credentials.accountId as string,
+              }),
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
           logger.error('Unknown error', { error: err });
           return Boom.internal();
         }

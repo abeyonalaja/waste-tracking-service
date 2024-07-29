@@ -1,11 +1,12 @@
 import {
   UkwmSubmission,
   UkwmGetDraftsResult,
-  UkwmDraftSubmission,
+  UkwmDraft,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
-import { NotFoundError } from '../../lib/errors';
+import { BadRequestError, NotFoundError } from '../../lib/errors';
+import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
 
 export interface UkwmSubmissionRef {
   id: string;
@@ -169,23 +170,78 @@ export function getDrafts(
 
 export function getUkwmSubmission({
   id,
-}: UkwmSubmissionRef): Promise<UkwmDraftSubmission> {
+}: UkwmSubmissionRef): Promise<UkwmDraft> {
   const value = db.ukwmDrafts.find((d) => d.id == id);
   if (value === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  const v = value as UkwmDraftSubmission;
-  const submission: UkwmDraftSubmission = {
+  const v = value as UkwmDraft;
+  const submission: UkwmDraft = {
     id: v.id,
-    transactionId: v.transactionId,
     wasteInformation: v.wasteInformation,
     carrier: v.carrier,
     receiver: v.receiver,
     producerAndCollection: v.producerAndCollection,
     declaration: v.declaration,
     state: v.state,
-  } as UkwmDraftSubmission;
+  } as UkwmDraft;
 
   return Promise.resolve(submission);
+}
+
+export function createDraft(
+  reference: string,
+  accountId: string,
+): Promise<UkwmDraft> {
+  const referenceValidationResult =
+    ukwmValidation.validationRules.validateProducerReference(reference);
+  if (!referenceValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError('Validation error', referenceValidationResult.errors),
+    );
+  }
+
+  const draft: UkwmDraft = {
+    id: uuidv4(),
+    producerAndCollection: {
+      status: 'Started',
+      producer: {
+        contact: {
+          status: 'NotStarted',
+        },
+        address: {
+          status: 'NotStarted',
+        },
+        sicCode: '',
+        reference: reference,
+      },
+      wasteCollection: {
+        status: 'NotStarted',
+      },
+    },
+    carrier: {
+      status: 'NotStarted',
+    },
+    declaration: {
+      status: 'NotStarted',
+    },
+    receiver: {
+      status: 'NotStarted',
+    },
+    wasteInformation: {
+      status: 'NotStarted',
+    },
+    state: {
+      status: 'InProgress',
+      timestamp: new Date(),
+    },
+  };
+
+  db.ukwmDrafts.push({
+    ...draft,
+    accountId,
+  });
+
+  return Promise.resolve(draft);
 }

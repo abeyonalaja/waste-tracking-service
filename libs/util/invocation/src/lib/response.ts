@@ -11,6 +11,7 @@ export type Response<T> =
         statusCode: number;
         name: string;
         message: string;
+        data?: unknown;
       };
     };
 
@@ -25,6 +26,7 @@ export function fromBoom<T>(boom: Boom): Response<T> {
       statusCode: boom.output.statusCode,
       name: boom.output.payload.error,
       message: boom.message,
+      data: boom.data,
     },
   };
 }

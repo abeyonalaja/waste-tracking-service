@@ -84,7 +84,6 @@ export default class CosmosRepository implements IRepository<Draft> {
 
     return {
       id: data.id,
-      transactionId: data.transactionId,
       wasteInformation: data.wasteInformation,
       receiver: data.receiver,
       carrier: data.carrier,
@@ -110,7 +109,7 @@ export default class CosmosRepository implements IRepository<Draft> {
     let dataQuery = `SELECT distinct value
                   {
                       id: c["id"],
-                      wasteMovementId: c['value'].transactionId, 
+                      wasteMovementId: c['value'].declaration['value'].transactionId, 
                       name: c["value"].producerAndCollection.producer.contact.organisationName,
                       ewcCode: c["value"].wasteInformation.wasteTypes[0].ewcCode,
                       collectionDate: {
@@ -122,7 +121,7 @@ export default class CosmosRepository implements IRepository<Draft> {
                   FROM c JOIN wt IN c["value"].wasteInformation.wasteTypes`;
 
     if (wasteMovementId) {
-      dataQuery += ` WHERE c["value"].transactionId = @wasteMovementId`;
+      dataQuery += `WHERE c['value'].declaration['value'].transactionId = @wasteMovementId`;
       const dataByTransactionIdQuerySpec: SqlQuerySpec = {
         query: dataQuery,
         parameters: [

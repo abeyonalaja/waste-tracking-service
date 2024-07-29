@@ -11,7 +11,7 @@ import {
 } from '@wts/ui/govuk-react-ui';
 import { Accordion, AccordionSection } from '@wts/ui/shared-ui/server';
 import {
-  UkwmDraftSubmission,
+  UkwmDraft,
   UkwmWasteTypeDetail,
 } from '@wts/api/waste-tracking-gateway';
 import { useState } from 'react';
@@ -23,7 +23,7 @@ import { FormatPopConcentrate } from './FormatPopConcentrate';
 import { slugify } from '../../utils';
 
 interface SubmissionProps {
-  data: UkwmDraftSubmission;
+  data: UkwmDraft;
 }
 
 const wasteQuantitiesMap: { [key: string]: string } = {
@@ -51,8 +51,12 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
 
   return (
     <>
-      <Caption id={`reference-${data.transactionId}`}>
-        Your reference: {data.transactionId}
+      <Caption
+        id={`reference-${data.declaration.status === 'Complete' && data.declaration.value.transactionId}`}
+      >
+        Your reference:{' '}
+        {data.declaration.status === 'Complete' &&
+          data.declaration.value.transactionId}
       </Caption>
       <Heading>Waste movement record</Heading>
       <Accordion
@@ -194,91 +198,99 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           toggle={toggleSection}
           status={data.producerAndCollection.status}
         >
-          {data.producerAndCollection.status === 'Complete' && (
-            <SummaryList
-              items={[
-                {
-                  key: 'Producer organisation name',
-                  value:
-                    data.producerAndCollection.producer.contact
-                      .organisationName,
-                },
-                {
-                  key: 'Producer address',
-                  value: (
-                    <>
-                      {data.producerAndCollection.producer.address.addressLine1}
-                      <br />
-                      {data.producerAndCollection.producer.address.townCity}
-                      <br />
-                      {data.producerAndCollection.producer.address.postcode}
-                      <br />
-                      {data.producerAndCollection.producer.address.country}
-                    </>
-                  ),
-                },
-                {
-                  key: 'Producer contact name',
-                  value: data.producerAndCollection.producer.contact.name,
-                },
-                {
-                  key: 'Producer contact email address',
-                  value: data.producerAndCollection.producer.contact.email,
-                },
-                {
-                  key: 'Producer contact phone number',
-                  value: data.producerAndCollection.producer.contact.phone,
-                },
-                {
-                  key: 'Producer Standard Industrial Classification (SIC) code',
-                  value: data.producerAndCollection.producer.sicCode,
-                },
-                {
-                  key: 'Waste collection address',
-                  value: (
-                    <>
-                      {
-                        data.producerAndCollection.wasteCollection.address
-                          .addressLine1
-                      }
-                      <br />
-                      {
-                        data.producerAndCollection.wasteCollection.address
-                          .townCity
-                      }
-                      <br />
-                      {
-                        data.producerAndCollection.wasteCollection.address
-                          .postcode
-                      }
-                      <br />
-                      {
-                        data.producerAndCollection.wasteCollection.address
-                          .country
-                      }
-                    </>
-                  ),
-                },
-                {
-                  key: 'Local authority',
-                  value:
-                    data.producerAndCollection.wasteCollection.localAuthority,
-                },
-                {
-                  key: 'Waste source',
-                  value: data.producerAndCollection.wasteCollection.wasteSource,
-                },
-                {
-                  key: 'Broker registration number',
-                  value: data.producerAndCollection.wasteCollection
-                    .brokerRegistrationNumber
-                    ? data.producerAndCollection.wasteCollection
-                        .brokerRegistrationNumber
-                    : 'Not provided',
-                },
-              ]}
-            />
-          )}
+          {data.producerAndCollection.status === 'Complete' &&
+            data.producerAndCollection.producer.address.status === 'Complete' &&
+            data.producerAndCollection.producer.contact.status === 'Complete' &&
+            data.producerAndCollection.wasteCollection.status ===
+              'Complete' && (
+              <SummaryList
+                items={[
+                  {
+                    key: 'Producer organisation name',
+                    value:
+                      data.producerAndCollection.producer.contact
+                        .organisationName,
+                  },
+                  {
+                    key: 'Producer address',
+                    value: (
+                      <>
+                        {
+                          data.producerAndCollection.producer.address
+                            .addressLine1
+                        }
+                        <br />
+                        {data.producerAndCollection.producer.address.townCity}
+                        <br />
+                        {data.producerAndCollection.producer.address.postcode}
+                        <br />
+                        {data.producerAndCollection.producer.address.country}
+                      </>
+                    ),
+                  },
+                  {
+                    key: 'Producer contact name',
+                    value: data.producerAndCollection.producer.contact.name,
+                  },
+                  {
+                    key: 'Producer contact email address',
+                    value: data.producerAndCollection.producer.contact.email,
+                  },
+                  {
+                    key: 'Producer contact phone number',
+                    value: data.producerAndCollection.producer.contact.phone,
+                  },
+                  {
+                    key: 'Producer Standard Industrial Classification (SIC) code',
+                    value: data.producerAndCollection.producer.sicCode,
+                  },
+                  {
+                    key: 'Waste collection address',
+                    value: (
+                      <>
+                        {
+                          data.producerAndCollection.wasteCollection.address
+                            .addressLine1
+                        }
+                        <br />
+                        {
+                          data.producerAndCollection.wasteCollection.address
+                            .townCity
+                        }
+                        <br />
+                        {
+                          data.producerAndCollection.wasteCollection.address
+                            .postcode
+                        }
+                        <br />
+                        {
+                          data.producerAndCollection.wasteCollection.address
+                            .country
+                        }
+                      </>
+                    ),
+                  },
+                  {
+                    key: 'Local authority',
+                    value:
+                      data.producerAndCollection.wasteCollection.localAuthority,
+                  },
+                  {
+                    key: 'Waste source',
+                    value:
+                      data.producerAndCollection.wasteCollection.wasteSource,
+                  },
+                  {
+                    key: 'Broker registration number',
+                    value: data.producerAndCollection.wasteCollection
+                      .brokerRegistrationNumber
+                      ? data.producerAndCollection.wasteCollection
+                          .brokerRegistrationNumber
+                      : 'Not provided',
+                  },
+                ]}
+              />
+            )}
         </AccordionSection>
         <AccordionSection
           id="carrierDetails"

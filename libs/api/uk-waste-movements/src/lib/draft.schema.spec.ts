@@ -2,6 +2,7 @@ import Ajv from 'ajv/dist/jtd';
 import { faker } from '@faker-js/faker';
 import {
   CarrierDetail,
+  CreateDraftRequest,
   CreateMultipleDraftsRequest,
   GetDraftResponse,
   GetDraftsRequest,
@@ -27,6 +28,7 @@ import {
   validateMultipleDraftsRequest,
   validateMultipleDraftsResponse,
   createMultipleDraftsRequest,
+  createDraftRequest,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -38,7 +40,6 @@ describe('getDraftResponse', () => {
       success: true,
       value: {
         id: '',
-        transactionId: '',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -68,7 +69,6 @@ describe('getDraftResponse', () => {
       success: true,
       value: {
         id: '1',
-        transactionId: '123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -131,6 +131,7 @@ describe('getDraftResponse', () => {
             },
           },
           wasteCollection: {
+            status: 'Complete',
             wasteSource: 'Commercial',
             localAuthority: 'LA1',
             expectedWasteCollectionDate: {
@@ -163,7 +164,7 @@ describe('getDraftResponse', () => {
         },
         declaration: {
           status: 'Complete',
-          values: {
+          value: {
             declarationTimestamp: new Date(),
             transactionId: '123',
           },
@@ -757,6 +758,19 @@ describe('createMultipleDraftsRequest', () => {
           },
         },
       ],
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('createDraftRequest', () => {
+  const validate = ajv.compile<CreateDraftRequest>(createDraftRequest);
+
+  it('is compatible with dto value', () => {
+    const value: CreateDraftRequest = {
+      accountId: faker.string.uuid(),
+      reference: faker.string.sample(),
     };
 
     expect(validate(value)).toBe(true);

@@ -27,11 +27,11 @@ export interface FieldFormatError {
   args?: string[];
 }
 
-export type ValidationResult =
+export type ValidationResult<T> =
   | {
       valid: true;
       accountId?: string;
-      value: string;
+      value: T;
     }
   | {
       valid: false;
