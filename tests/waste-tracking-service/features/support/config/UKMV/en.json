@@ -120,7 +120,7 @@
       "home": "Home",
       "current": "Move waste in the UK"
     },
-    "title": "Symud gwastraff yn y DU",
+    "title": "Move and track waste in the UK",
     "name": "{name}",
     "titleTwo": "Move, export or import waste",
     "cardTitle": "Create new waste movements",
@@ -128,7 +128,18 @@
     "cardTitleTwo": "Multiple waste movements",
     "cardLink": "Create a new multiple waste movement",
     "cardOneTitle": "Start a new waste movement",
-    "cardOneContent": "Create multiple new waste movements"
+    "cardOneContent": "Create multiple new waste movements",
+
+    "newWasteMovements": {
+      "title": "New waste movements",
+      "description": "Create a single waste movement, upload a CSV file of multiple movements, or continue a draft waste movement.",
+      "singleMovementTitle": "Single waste movement",
+      "singleMovementLink": "Create a new waste movement",
+      "multipleMovementTitle": "Multiple waste movements",
+      "multipleMovementLink": "Create multiple new waste movements",
+      "allMovementsTitle": "All waste movements",
+      "allMovementsLinkAbsent": "There are no created waste movements yet."
+    }
   },
   "feedbackPage": {
     "form": {
