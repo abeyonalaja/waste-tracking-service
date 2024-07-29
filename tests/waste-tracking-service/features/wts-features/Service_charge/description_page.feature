@@ -13,3 +13,16 @@ Feature: AS A WTS user
     And I click the "Pay your service charge" link
     Then the "Description" page is displayed
 
+  Scenario: User navigates to GLW app without paying and verify payment banner is present
+    Given I navigate to service charge page after login on DCID portal
+    Then the "Waste Tracking Landing" page is displayed
+    And I verify payment warning banner is displayed
+    And I click Green list waste app card
+    And I verify payment warning banner is displayed
+
+  Scenario: User navigates to UKWM app without paying and verify payment banner is present
+    Given I navigate to service charge page after login on DCID portal
+    Then the "Waste Tracking Landing" page is displayed
+    And I verify payment warning banner is displayed
+    And I click UKWM app card
+    And I verify payment warning banner is displayed

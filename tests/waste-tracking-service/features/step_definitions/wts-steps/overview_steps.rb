@@ -79,5 +79,4 @@ Given(/^I navigate to service charge page after login on DCID portal$/) do
   DescriptionPage.new.page_refresh
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
-  DescriptionPage.new.check_page_displayed
 end

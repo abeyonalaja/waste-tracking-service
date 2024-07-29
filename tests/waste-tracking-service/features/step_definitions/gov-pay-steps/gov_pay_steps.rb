@@ -66,3 +66,11 @@ end
 And(/^I click the Cancel and go back to try the payment again link$/) do
   EnterPaymentDetailsPage.new.redirect_url
 end
+
+And(/^I click Green list waste app card$/) do
+  WasteTrackingLandingPage.new.create_green_list_waste_record
+end
+
+And(/^I click UKWM app card$/) do
+  WasteTrackingLandingPage.new.move_waste_in_uk_card
+end
