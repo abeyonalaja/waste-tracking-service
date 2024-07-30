@@ -18,3 +18,10 @@ Feature: AS A Waste Controller
     Then I should see UKWM home page correctly translated
     And I click HOME breadcrumb
     Then the "Waste Tracking Landing" page is displayed
+
+  @govpay
+  Scenario: User should see limited access
+    Given I login into UKWM app
+    When the "Service Home" page is displayed
+    And I verify payment warning banner is displayed
+    And I click the "Pay your service charge" link
