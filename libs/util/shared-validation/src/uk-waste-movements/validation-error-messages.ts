@@ -28,6 +28,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
     cy: `Rhaid i’r cyfeirnod unigryw fod yn llai na ${constraints.ReferenceChar.max} o gymeriadau`,
   },
   [codes.producerInvalidReference]: {
-    en: 'The reference must only include letters a to z, and numbers',
+    en: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+    cy: "Rhaid i'r cyfeirnod gynnwys llythrennau a i z yn unig, a rhifau",
   },
 };

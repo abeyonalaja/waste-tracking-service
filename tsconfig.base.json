@@ -55,6 +55,12 @@
       "@wts/app-uk-waste-movements/feature-multiples/server": [
         "libs/app-uk-waste-movements/feature-multiples/src/server.ts"
       ],
+      "@wts/app-uk-waste-movements/feature-single": [
+        "libs/app-uk-waste-movements/feature-single/src/index.ts"
+      ],
+      "@wts/app-uk-waste-movements/feature-single/server": [
+        "libs/app-uk-waste-movements/feature-single/src/server.ts"
+      ],
       "@wts/app-waste-tracking-service/feature-service-charge": [
         "libs/app-waste-tracking-service/feature-service-charge/src/index.ts"
       ],

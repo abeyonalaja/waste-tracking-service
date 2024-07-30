@@ -8,6 +8,7 @@ interface Props {
   id: string;
   name: string;
   value?: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   hint?: string;
   error?: string;
@@ -18,6 +19,7 @@ export const Input = ({
   id,
   name,
   value,
+  onChange,
   label,
   hint,
   error,
@@ -28,7 +30,13 @@ export const Input = ({
       {label && <Label text={label} inputId={id} />}
       {hint && <Hint text={hint} />}
       {error && <ErrorMessage text={error} />}
-      <TextInput id={id} name={name} value={value} error={error} />
+      <TextInput
+        id={id}
+        name={name}
+        value={value}
+        onChange={onChange}
+        error={error}
+      />
     </FormGroup>
   );
 };

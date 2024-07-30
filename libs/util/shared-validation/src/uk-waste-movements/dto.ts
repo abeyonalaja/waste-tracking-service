@@ -39,6 +39,10 @@ export type ValidationResult<T> =
       errors: FieldFormatError[];
     };
 
+export type uiValidationResult = ValidationResult<string> & {
+  href?: string;
+};
+
 export interface ValidationErrorMessages {
   [code: number]: {
     [locale: string]: string | { csv: string; api: string; ui: string };
