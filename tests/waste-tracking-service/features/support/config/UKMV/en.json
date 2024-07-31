@@ -500,5 +500,28 @@
         }
       }
     }
+  },
+  "single": {
+    "uniqueReference": {
+      "backLink": "Back",
+      "caption": "Create a waste movement",
+      "title": "What is your unique reference for this waste movement?",
+      "description": "Your unique reference can be anything that helps you to identify your movement. For example, it could match a reference on a system you already use.",
+      "allowed": {
+        "text": "This can be a maximum of 20 characters, and can include:",
+        "itemOne": "letters",
+        "itemTwo": "numbers",
+        "itemThree": "hyphens",
+        "itemFour": "slashes",
+        "itemFive": "underscores",
+        "itemSix": "spaces"
+      },
+      "example": "For example, ABC_ 01/02/2025.",
+      "form": {
+        "errorSummaryHeading": "There is a problem",
+        "inputLabel": "Enter a reference",
+        "buttonLabel": "Save and continue"
+      }
+    }
   }
 }
