@@ -46,7 +46,7 @@ export default async function Index(): Promise<JSX.Element> {
       response = await getUserPaymentStatus(hostname, session.token as string);
     } catch (error) {
       console.error('Error fetching payments', error);
-      return redirect('/404');
+      return redirect('/error');
     }
 
     const paymentReference = (await response.json()) as PaymentReference;

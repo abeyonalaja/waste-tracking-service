@@ -69,16 +69,19 @@ export function UniqueReferenceForm({
 
     let response: Response;
     try {
-      response = await fetch('http://localhost:3000/api/ukwm/drafts', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+      response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            reference: formValues.uniqueReference,
+          }),
         },
-        body: JSON.stringify({
-          reference: formValues.uniqueReference,
-        }),
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();
