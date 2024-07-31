@@ -10,6 +10,7 @@ import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
 
 export interface UkwmSubmissionRef {
   id: string;
+  accountId: string;
 }
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
@@ -168,23 +169,25 @@ export function getDrafts(
   };
 }
 
-export function getUkwmSubmission({
+export function getDraft({
   id,
+  accountId,
 }: UkwmSubmissionRef): Promise<UkwmDraft> {
-  const value = db.ukwmDrafts.find((d) => d.id == id);
+  const value = db.ukwmDrafts.find(
+    (d) => d.id === id && d.accountId === accountId,
+  );
   if (value === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  const v = value as UkwmDraft;
   const submission: UkwmDraft = {
-    id: v.id,
-    wasteInformation: v.wasteInformation,
-    carrier: v.carrier,
-    receiver: v.receiver,
-    producerAndCollection: v.producerAndCollection,
-    declaration: v.declaration,
-    state: v.state,
+    id: value.id,
+    wasteInformation: value.wasteInformation,
+    receiver: value.receiver,
+    carrier: value.carrier,
+    producerAndCollection: value.producerAndCollection,
+    declaration: value.declaration,
+    state: value.state,
   } as UkwmDraft;
 
   return Promise.resolve(submission);
@@ -224,7 +227,7 @@ export function createDraft(
       status: 'NotStarted',
     },
     declaration: {
-      status: 'NotStarted',
+      status: 'CannotStart',
     },
     receiver: {
       status: 'NotStarted',

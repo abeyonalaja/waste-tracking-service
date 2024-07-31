@@ -79,6 +79,7 @@ describe(CosmosRepository, () => {
   describe('getDraft', () => {
     it('retrieves a draft with the associated id', async () => {
       const mockId = faker.string.uuid();
+      const mockAccountId = faker.string.uuid();
       const mockContainerName = 'drafts';
       const mockDraftSubmission = {
         id: mockId,
@@ -90,14 +91,18 @@ describe(CosmosRepository, () => {
         state: {},
       };
 
-      mockFetchAll.mockResolvedValueOnce({
-        resources: [{ value: mockDraftSubmission }],
-      } as unknown as FeedResponse<object>);
+      mockRead.mockResolvedValueOnce({
+        resource: { value: mockDraftSubmission },
+      } as unknown as ItemResponse<object>);
 
-      const result = await subject.getDraft(mockContainerName, mockId);
+      const result = await subject.getDraft(
+        mockContainerName,
+        mockId,
+        mockAccountId,
+      );
 
       expect(result).toEqual(mockDraftSubmission);
-      expect(mockFetchAll).toHaveBeenCalled();
+      expect(mockRead).toHaveBeenCalled();
     });
   });
 

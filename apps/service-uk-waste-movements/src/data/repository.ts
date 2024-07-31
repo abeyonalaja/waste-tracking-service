@@ -7,7 +7,11 @@ export interface IRepository<T> {
     values: Omit<T, 'declaration' | 'state'>[],
   ): Promise<void>;
 
-  getDraft(containerName: DbContainerNameKey, id: string): Promise<Draft>;
+  getDraft(
+    containerName: DbContainerNameKey,
+    id: string,
+    accountId: string,
+  ): Promise<Draft>;
 
   getDrafts(
     contanerName: DbContainerNameKey,

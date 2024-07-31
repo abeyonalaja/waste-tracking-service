@@ -794,7 +794,10 @@ describe(SubmissionController, () => {
         },
       };
       mockRepository.getDraft.mockResolvedValue(value);
-      const response = await subject.getDraft({ id });
+      const response = await subject.getDraft({
+        id,
+        accountId: faker.string.uuid(),
+      });
       expect(response.success).toBe(true);
       if (response.success) {
         expect(response.value.id).toEqual(id);

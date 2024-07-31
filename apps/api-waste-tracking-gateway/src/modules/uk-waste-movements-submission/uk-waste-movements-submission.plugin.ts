@@ -18,10 +18,11 @@ const plugin: Plugin<PluginOptions> = {
     server.route({
       method: 'GET',
       path: '/drafts/{id}',
-      handler: async function ({ params }) {
+      handler: async function ({ params }, h) {
         try {
-          const value = await backend.getUkwmSubmission({
+          const value = await backend.getDraft({
             id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
           });
           return value;
         } catch (err) {

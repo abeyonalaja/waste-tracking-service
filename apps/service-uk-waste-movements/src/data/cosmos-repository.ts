@@ -60,27 +60,18 @@ export default class CosmosRepository implements IRepository<Draft> {
   async getDraft(
     containerName: DbContainerNameKey,
     id: string,
+    accountId: string,
   ): Promise<Draft> {
-    const querySpec = {
-      query: 'SELECT * FROM c WHERE c.id = @id',
-      parameters: [
-        {
-          name: '@id',
-          value: id,
-        },
-      ],
-    };
-
-    const { resources: items } = await this.cosmosDb
+    const { resource: item } = await this.cosmosDb
       .container(this.cosmosContainerMap.get(containerName) as string)
-      .items.query(querySpec)
-      .fetchAll();
+      .item(id, accountId)
+      .read();
 
-    if (items.length === 0) {
+    if (!item) {
       throw Boom.notFound();
     }
 
-    const data = items[0].value as RecordData<Draft>;
+    const data = item.value as RecordData<Draft>;
 
     return {
       id: data.id,

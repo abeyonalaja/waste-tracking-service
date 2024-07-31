@@ -443,7 +443,7 @@ export interface Draft {
   state: DraftState;
 }
 
-export type GetDraftRequest = IdRequest;
+export type GetDraftRequest = AccountIdRequest & IdRequest;
 export type GetDraftResponse = Response<Draft>;
 export const getDraft: Method = {
   name: 'getDraft',

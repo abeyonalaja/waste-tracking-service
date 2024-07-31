@@ -15,6 +15,7 @@ import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 
 export interface SubmissionRef {
   id: string;
+  accountId: string;
 }
 
 export interface CreateDraftRef {
@@ -23,7 +24,7 @@ export interface CreateDraftRef {
 }
 
 export interface UkWasteMovementsSubmissionBackend {
-  getUkwmSubmission(ref: SubmissionRef): Promise<UkwmDraft>;
+  getDraft(ref: SubmissionRef): Promise<UkwmDraft>;
   getDrafts(request: UkwmGetDraftsRequest): Promise<UkwmGetDraftsResult>;
   createDraft(request: CreateDraftRef): Promise<UkwmCreateDraftResponse>;
 }
@@ -35,11 +36,12 @@ export class ServiceUkWasteMovementsSubmissionBackend
     protected client: DaprUkWasteMovementsClient,
     protected logger: Logger,
   ) {}
-  async getUkwmSubmission({ id }: SubmissionRef): Promise<UkwmDraft> {
+  async getDraft({ id, accountId }: SubmissionRef): Promise<UkwmDraft> {
     let response: GetDraftResponse;
     try {
       response = (await this.client.getDraft({
         id,
+        accountId,
       })) as GetDraftResponse;
     } catch (err) {
       this.logger.error(err);

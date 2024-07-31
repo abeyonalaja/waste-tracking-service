@@ -3,7 +3,7 @@ import * as dto from '@wts/api/waste-tracking-gateway';
 import {
   createDraft,
   getDrafts,
-  getUkwmSubmission,
+  getDraft,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -75,8 +75,10 @@ export default class UkwmSubmissionPlugin {
 
     this.server.get(`${this.prefix}/drafts/:id`, async (req, res) => {
       try {
-        const value = await getUkwmSubmission({
+        const user = req.user as User;
+        const value = await getDraft({
           id: req.params.id,
+          accountId: user.credentials.accountId,
         });
 
         return res.json(value as dto.GetUkwmSubmissionResponse);

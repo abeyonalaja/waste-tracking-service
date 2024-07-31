@@ -540,11 +540,13 @@ export default class SubmissionController {
 
   getDraft: Handler<api.GetDraftRequest, api.GetDraftResponse> = async ({
     id,
+    accountId,
   }) => {
     try {
       const draft = (await this.repository.getDraft(
         draftsContainerName,
         id,
+        accountId,
       )) as api.Draft;
       return success(draft);
     } catch (err) {

@@ -30,7 +30,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
     mockClient.getDraft.mockClear();
   });
 
-  it('returns submission', async () => {
+  it('returns draft', async () => {
     const id = faker.string.uuid();
     const mockGetDraftResponse: GetDraftResponse = {
       success: true,
@@ -57,13 +57,15 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
         },
       },
     };
+    const accountId = faker.string.uuid();
     mockClient.getDraft.mockResolvedValueOnce(mockGetDraftResponse);
-    const result = await subject.getUkwmSubmission({
+    const result = await subject.getDraft({
       id,
+      accountId,
     });
 
     expect(result.id).toEqual(id);
-    expect(mockClient.getDraft).toBeCalledWith({ id });
+    expect(mockClient.getDraft).toBeCalledWith({ id, accountId });
   });
 
   it('returns drafts', async () => {
