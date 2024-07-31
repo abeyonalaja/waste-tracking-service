@@ -3,3 +3,5 @@ export const producerCharTooManyOrganisationName = 11002;
 export const producerEmptyReference = 11019;
 export const producerCharTooManyReference = 11021;
 export const producerInvalidReference = 11022;
+export const postcodeEmpty = 13001;
+export const postcodeInvalid = 13002;

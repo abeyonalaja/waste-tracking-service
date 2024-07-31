@@ -4,6 +4,7 @@ export type Context = 'csv' | 'api' | 'ui';
 
 export type Field =
   | 'Reference'
+  | 'Postcode'
   | 'Producer organisation name'
   | 'Producer address line 1'
   | 'Producer address line 2'

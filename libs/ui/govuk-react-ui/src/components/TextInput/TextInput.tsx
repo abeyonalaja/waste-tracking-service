@@ -4,8 +4,9 @@ interface Props {
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
-  hint?: string;
   error?: string;
+  autoComplete?: string;
+  additionalClassName?: string;
   testId?: string;
 }
 
@@ -15,20 +16,20 @@ export const TextInput = ({
   value,
   onChange,
   error,
+  autoComplete,
+  additionalClassName,
   testId,
-  hint,
 }: Props): JSX.Element => {
   return (
     <input
-      className={`govuk-input ${error ? 'govuk-input--error' : ''}`}
+      className={`govuk-input ${additionalClassName ? additionalClassName : ''} ${error ? 'govuk-input--error' : ''}`}
       id={id}
       name={name}
       type="text"
       value={value}
+      autoComplete={autoComplete}
       onChange={onChange}
       data-testid={testId}
-      title={hint} // Add title attribute
-      placeholder={hint} // Add placeholder attribute
     />
   );
 };

@@ -129,6 +129,60 @@ export function validateProducerReference(
   };
 }
 
+export function validatePostcode(
+  value: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const errors: FieldFormatError[] = [];
+
+  if (!value) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Postcode',
+          code: errorCodes.postcodeEmpty,
+          message: message
+            ? getErrorMessage(
+                errorCodes.postcodeEmpty,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  const postcodeRegex = new RegExp(constraints.PostcodeRegex.pattern);
+
+  if (!postcodeRegex.test(value)) {
+    errors.push({
+      field: 'Postcode',
+      code: errorCodes.postcodeInvalid,
+      message: message
+        ? getErrorMessage(
+            errorCodes.postcodeInvalid,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      errors: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: value,
+  };
+}
+
 export function validateProducerDetailSection(
   value: ProducerDetailFlattened,
   message?: ErrorMessage,

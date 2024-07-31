@@ -6,3 +6,7 @@ export const ReferenceChar = {
 export const FreeTextChar = {
   max: 250,
 };
+
+export const PostcodeRegex = {
+  pattern: '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$',
+};

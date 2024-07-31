@@ -8,10 +8,12 @@ interface Props {
   id: string;
   name: string;
   value?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   hint?: string;
   error?: string;
+  inputAdditionalClassName?: string;
+  inputAutoComplete?: string;
   testId?: string;
 }
 
@@ -23,6 +25,8 @@ export const Input = ({
   label,
   hint,
   error,
+  inputAdditionalClassName,
+  inputAutoComplete,
   testId,
 }: Props): JSX.Element => {
   return (
@@ -34,8 +38,10 @@ export const Input = ({
         id={id}
         name={name}
         value={value}
-        onChange={onChange}
         error={error}
+        autoComplete={inputAutoComplete}
+        additionalClassName={inputAdditionalClassName}
+        onChange={onChange}
       />
     </FormGroup>
   );

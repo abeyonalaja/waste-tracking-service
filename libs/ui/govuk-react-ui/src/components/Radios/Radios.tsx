@@ -2,7 +2,7 @@ import { FormGroup } from '../FormGroup';
 import { Hint } from '../Hint';
 import { ErrorMessage } from '../ErrorMessage';
 
-interface Option {
+export interface Option {
   text: string;
   value: string;
 }
@@ -23,7 +23,6 @@ interface Props {
 
 export const Radios = ({
   name,
-  value,
   legendText,
   legendSize = 'm',
   options,
@@ -53,8 +52,7 @@ export const Radios = ({
           `}
         >
           {options.map((option, index) => {
-            const radioId =
-              name.replace(' ', '').toLowerCase() + '-radio-' + index + 1;
+            const radioId = `${name.replace(' ', '').toLowerCase()}-radio-${index + 1}`;
             return (
               <div key={`radio-option-${index}`} className="govuk-radios__item">
                 <input
@@ -63,7 +61,6 @@ export const Radios = ({
                   name={name}
                   value={option.value}
                   id={radioId}
-                  checked={value === option.value}
                   onChange={onchange}
                 />
                 <label

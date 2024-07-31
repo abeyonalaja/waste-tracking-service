@@ -504,6 +504,36 @@
         "inputLabel": "Enter a reference",
         "buttonLabel": "Save and continue"
       }
+    },
+    "postcode": {
+      "input": {
+        "label": "Search by postcode",
+        "hint": "For example, AA31AB or M2 6LW"
+      },
+      "buildingName": {
+        "label": "Building name or number (optional)",
+        "hint": "For example, 15 or Heron House"
+      },
+      "button": "Search postcode",
+      "manualLink": "Or enter the address manually",
+      "buttonSecondary": "Save and return"
+    },
+    "producer": {
+      "caption": "Producer and waste collection details",
+      "postcode": {
+        "search": {
+          "heading": "What is the producer’s address?",
+          "intro": "The producer is the business or organisation that created the waste."
+        },
+        "results": {
+          "heading": "Select the producer’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found",
+          "intro": "Try searching again or enter the address manually"
+        }
+      }
     }
   }
 }

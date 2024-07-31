@@ -31,4 +31,12 @@ export const validationErrorMessages: ValidationErrorMessages = {
     en: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
     cy: "Rhaid i'r cyfeirnod gynnwys llythrennau a i z yn unig, a rhifau",
   },
+  [codes.postcodeEmpty]: {
+    en: 'Enter a postcode',
+    cy: 'Rhowch god post',
+  },
+  [codes.postcodeInvalid]: {
+    en: 'Enter a real postcode',
+    cy: 'Rhowch god post go iawn',
+  },
 };
