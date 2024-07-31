@@ -16,8 +16,11 @@ export default function TaskListPage({ params }: PageProps): React.ReactNode {
         <GovUK.GridCol size="two-thirds">
           <GovUK.Caption>{params.id}</GovUK.Caption>
           <GovUK.Heading>Task list</GovUK.Heading>
-          <Link href={`/single/${params.id}/producer/address`}>
-            Producer address
+          <Link
+            href={`/single/${params.id}/producer/address`}
+            id="tasklist-link-producer-address"
+          >
+            Producer organisation address
           </Link>
         </GovUK.GridCol>
       </GovUK.GridRow>
