@@ -1,5 +1,5 @@
 image:
-  tag: '3.1.8'
+  tag: '1.0.6'
 resources:
   requests:
     cpu: 50m
@@ -18,5 +18,5 @@ secret:
     GOVUK_PAY_API_URL: 'https://publicapi.payments.service.gov.uk'
 serviceAccount:
   annotations:
-    azure.workload.identity/client-id: ''
+    azure.workload.identity/client-id: 0cf0f254-ebc5-409f-86cf-008990e5c852
     azure.workload.identity/tenant-id: 770a2450-0227-4c62-90c7-4e38537f1102
