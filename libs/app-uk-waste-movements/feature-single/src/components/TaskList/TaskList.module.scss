@@ -1,0 +1,22 @@
+@import 'node_modules/govuk-frontend/dist/govuk/base';
+
+.details {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-top: 1px solid #b1b4b6;
+  padding-top: 10px;
+}
+
+.details > :nth-child(2) {
+  align-self: flex-end;
+  margin-bottom: 15px;
+  @include govuk-media-query(tablet) {
+    margin-bottom: 20px;
+  }
+}
+
+.firstSection,
+.firstTask {
+  border-top: none !important;
+}

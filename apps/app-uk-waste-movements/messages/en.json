@@ -498,11 +498,34 @@
         "itemFive": "underscores",
         "itemSix": "spaces"
       },
-      "example": "For example, ABC_ 01/02/2025.",
+      "example": "For example, 'ABC_ 01/02/2025'",
       "form": {
         "errorSummaryHeading": "There is a problem",
         "inputLabel": "Enter a reference",
         "buttonLabel": "Save and continue"
+      }
+    },
+    "taskList": {
+      "tags": {
+        "completed": "Completed",
+        "incomplete": "Incomplete",
+        "inProgress": "In progress",
+        "notStarted": "Not started yet",
+        "cannotStart": "Cannot start yet"
+      },
+      "breadCrumbs": {
+        "one": "Home",
+        "two": "Move and track waste in the UK",
+        "three": "Create a new waste movement"
+      },
+      "caption": "Unique reference",
+      "title": "Create a single waste movement",
+      "producerAndCollection": {
+        "heading": "Waste producer and collection details",
+        "description": "Details of the waste producer and waste collection",
+        "taskOne": "Producer organisation address",
+        "taskTwo": "Producer organisation contact details",
+        "taskThree": "Waste collection details"
       }
     },
     "postcode": {

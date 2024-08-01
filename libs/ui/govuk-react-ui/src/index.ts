@@ -38,3 +38,6 @@ export { Textarea } from './components/Textarea';
 export { TextInput } from './components/TextInput';
 export { WarningText } from './components/WarningText';
 export { WidthContainer } from './components/WidthContainer';
+
+// Types
+export type { TagColour } from './components/Tag';
