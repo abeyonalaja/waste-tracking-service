@@ -9,7 +9,7 @@ metadata:
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
 spec:
-  minAvailable: {{ include "app-waste-tracking-service.pdbMinAvailable" . }}
+  minAvailable: {{ .Values.minAvailable }}
   selector:
     matchLabels:
       {{- include "app-waste-tracking-service.selectorLabels" . | nindent 6 }}

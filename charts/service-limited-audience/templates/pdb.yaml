@@ -9,7 +9,7 @@ metadata:
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
 spec:
-  minAvailable: {{ include "service-limited-audience.pdbMinAvailable" . }}
+  minAvailable: {{ .Values.minAvailable }}
   selector:
     matchLabels:
       {{- include "service-limited-audience.selectorLabels" . | nindent 6 }}

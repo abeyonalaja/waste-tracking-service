@@ -5,8 +5,11 @@
 # Custom labels for a deployment
 labels: {}
 
-# Number of pod replicas if horizontal pod autoscaler is not enable
-replicaCount: 1
+# Number of pod replicas if horizontal pod autoscaler is not enabled
+replicaCount: 2
+
+# Number of pods that should always be available and running
+minAvailable: 1
 
 # Profile of the image used to create the pod containers
 image:
@@ -82,7 +85,7 @@ secret:
 # Profile of the horizontal pod autoscaler used to create pod replicas
 autoscaling:
   enabled: true
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
   targetMemoryAverageValue: 200Mi

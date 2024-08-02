@@ -9,7 +9,7 @@ metadata:
     {{ $name | quote }}: {{ $value | quote }}
     {{- end }}
 spec:
-  minAvailable: {{ include "service-uk-waste-movements-bulk.pdbMinAvailable" . }}
+  minAvailable: {{ .Values.minAvailable }}
   selector:
     matchLabels:
       {{- include "service-uk-waste-movements-bulk.selectorLabels" . | nindent 6 }}
