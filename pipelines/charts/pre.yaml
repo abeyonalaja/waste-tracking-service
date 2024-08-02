@@ -1,26 +1,26 @@
 api-waste-tracking-gateway:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 app-green-list-waste-export:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.3.3-main.1d5cba36'
 app-uk-waste-movements:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.3.3-main.1d5cba36'
 app-waste-tracking-service:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-address:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-feedback:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-green-list-waste-export:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-green-list-waste-export-bulk:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-limited-audience:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-payment:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-reference-data:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-uk-waste-movements:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
 service-uk-waste-movements-bulk:
-  version: '0.2.0-main.4f43c70d'
+  version: '0.2.2-main.1d5cba36'
