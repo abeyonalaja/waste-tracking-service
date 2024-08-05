@@ -8,9 +8,9 @@ Given(/^I login to waste tracking portal$/) do
   set_feature_cookies
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
-  WasteTrackingLandingPage.new.wait_for_element('link-card-GLW')
-  WasteTrackingLandingPage.new.check_page_displayed
-  WasteTrackingLandingPage.new.create_green_list_waste_record
+  AccountPage.new.wait_for_element('link-card-GLW')
+  AccountPage.new.check_page_displayed
+  AccountPage.new.create_green_list_waste_record
   ExportWasteFromUkPage.new.check_page_displayed
   ViewCookiesPage.new.reject_analytics_cookies_button if @reset_cookies == true
 end

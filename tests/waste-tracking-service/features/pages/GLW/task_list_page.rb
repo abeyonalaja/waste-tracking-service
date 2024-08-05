@@ -72,6 +72,8 @@ class TaskListPage < GenericPage
       Translations.value 'exportJourney.submitAnExport.statusOne'
     when 'cannot start yet'
       Translations.value 'exportJourney.submitAnExport.statusZero'
+    when 'not started yet'
+      'Not started yet'
     when 'in progress'
       'IN PROGRESS'
     else

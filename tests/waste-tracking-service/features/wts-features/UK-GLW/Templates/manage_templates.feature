@@ -249,7 +249,7 @@ Feature: Manage templates page
     And I complete Treatment of waste section
     Then the "Template task list" page is displayed
     And I verify update success banner is displayed
-    And the task "Recovery facility details" should be "COMPLETED"
+    And the task "Recovery facility details" should be "IN PROGRESS"
     And I click the "Recovery facility" link
 
   Scenario: User cancel template update and verify task status is not changed

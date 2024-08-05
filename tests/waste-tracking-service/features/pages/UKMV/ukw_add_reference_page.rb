@@ -38,4 +38,8 @@ class UkwmAddReferencePage < GenericPage
   def enter_reference(reference)
     fill_in REFERENCE_FIELD_ID, with: reference, visible: false
   end
+
+  def current_url
+    page.current_url
+  end
 end

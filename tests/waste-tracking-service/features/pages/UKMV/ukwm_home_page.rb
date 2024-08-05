@@ -29,4 +29,8 @@ class UkwmHomePage < GenericPage
     expect(self).to have_text SUB_TITLE
   end
 
+  def create_ukm_single_waste_movement
+    click_link 'Create a new waste movement'
+  end
+
 end

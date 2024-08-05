@@ -466,11 +466,11 @@ Feature: Check your report page
     When I click on Interim site contact Change link
     Then I should see interim site contact details pre-populated
     When I click the Save and return to draft
-#    And I click the "Check your record" link
-#    And I wait for a second
-#    When I click on Interim site recovery code Change link
-#    Then I should see previously selected interim recovery code
-#    When I click the Save and return to draft
+    And I click the "Check your record" link
+    And I wait for a second
+    When I click on Interim site recovery code Change link
+    Then I should see previously selected interim recovery code
+    When I click the Save and return to draft
     And I click the "Check your record" link
     And I wait for a second
     When I click on Recovery facility address Change link

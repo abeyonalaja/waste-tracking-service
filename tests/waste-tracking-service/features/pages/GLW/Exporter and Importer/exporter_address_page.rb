@@ -46,7 +46,7 @@ class ExporterAddressPage < GenericPage
   end
 
   def find_address
-    click_on Translations.value 'postcode.findButton'
+    click_button Translations.value 'postcode.findButton'
   end
 
   def enter_address_manually
