@@ -73,7 +73,7 @@ export default async function TaskListPage({
     >
       <GovUK.GridRow>
         <GovUK.GridCol>
-          <p className="govuk-heading-l">
+          <p className="govuk-heading-l" id="unique-reference-caption">
             <GovUK.Caption>{t('caption')}</GovUK.Caption>
             {draft.producerAndCollection.producer.reference}
           </p>
