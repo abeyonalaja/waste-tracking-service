@@ -190,6 +190,34 @@ export function validatePostcode(
   };
 }
 
+export function validateAddressSelection(
+  value: string | undefined,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  if (!value) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'AddressSelection',
+          code: errorCodes.addressSelectionEmpty,
+          message: message
+            ? getErrorMessage(
+                errorCodes.addressSelectionEmpty,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+  return {
+    valid: true,
+    value: value,
+  };
+}
+
 export function validateProducerBuildingNameOrNumber(
   buildingNameOrNumber: string,
   message?: ErrorMessage,
@@ -485,16 +513,15 @@ export function validateProducerAddressDetails(
 
   let producerBuildingNameOrNumber: ValidationResult<
     ProducerDetail['address']['buildingNameOrNumber']
-  > = {
-    valid: false,
-    errors: [],
-  };
+  >;
 
   if (value.buildingNameOrNumber?.trim()) {
     producerBuildingNameOrNumber = validateProducerBuildingNameOrNumber(
       value.buildingNameOrNumber,
       message,
     );
+  } else {
+    producerBuildingNameOrNumber = { valid: true, value: '' };
   }
 
   const producerAddressLine1 = validateProducerAddressLine1(
@@ -504,16 +531,14 @@ export function validateProducerAddressDetails(
 
   let producerAddressLine2: ValidationResult<
     ProducerDetail['address']['addressLine2']
-  > = {
-    valid: false,
-    errors: [],
-  };
-
+  >;
   if (value.addressLine2?.trim()) {
     producerAddressLine2 = validateProducerAddressLine2(
       value.addressLine2,
       message,
     );
+  } else {
+    producerAddressLine2 = { valid: true, value: '' };
   }
 
   const producerTownCity = validateProducerTownCity(value.townCity, message);
@@ -698,7 +723,7 @@ export function validateProducerDetailSection(
 
   if (value.producerAddressLine2?.trim()) {
     producerAddressLine2 = validateProducerAddressLine2(
-      value.producerAddressLine1,
+      value.producerAddressLine2,
       message,
     );
   }

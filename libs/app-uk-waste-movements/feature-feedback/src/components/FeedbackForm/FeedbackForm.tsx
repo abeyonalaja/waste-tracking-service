@@ -138,7 +138,7 @@ export function FeedbackForm({
           <GovUK.Radios
             name="feedback"
             options={feedbackRadios}
-            onchange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               methods.setValue('rating', Number(e.target.value));
             }}
             value={String(methods.watch('rating'))}

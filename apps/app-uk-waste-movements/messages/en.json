@@ -535,10 +535,31 @@
       },
       "buildingName": {
         "label": "Building name or number (optional)",
-        "hint": "For example, 15 or Heron House"
+        "hint": "For example, 15 or Technology House"
+      },
+      "addressLine1": {
+        "label": "Address line 1",
+        "hint": "Use a comma to separate multiple lines"
+      },
+      "addressLine2": {
+        "label": "Address line 2 (optional)",
+        "hint": "Use a comma to separate multiple lines"
+      },
+      "townCity": {
+        "label": "Town or city"
+      },
+      "country": {
+        "label": "Country"
+      },
+      "postcodeManual": {
+        "label": "Postcode (optional)"
       },
       "button": "Search postcode",
       "manualLink": "Or enter the address manually",
+      "manualLinkShort": "Enter the address manually",
+      "searchAgain": "Search again",
+      "legend": "Select an address",
+      "buttonSave": "Save and continue",
       "buttonSecondary": "Save and return"
     },
     "producer": {
@@ -555,6 +576,15 @@
         "noResults": {
           "heading": "No address found",
           "intro": "Try searching again or enter the address manually"
+        },
+        "confirmation": {
+          "heading": "Confirm the producer’s address"
+        },
+        "manual": {
+          "heading": "What is the producer’s address?"
+        },
+        "edit": {
+          "heading": "Edit the producer’s address"
         }
       }
     }

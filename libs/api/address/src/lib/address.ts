@@ -5,6 +5,7 @@ export type Method = Readonly<{
 }>;
 
 export interface Address {
+  buildingNameOrNumber?: string;
   addressLine1: string;
   addressLine2?: string;
   townCity: string;

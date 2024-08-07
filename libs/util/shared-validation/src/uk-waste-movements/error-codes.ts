@@ -25,3 +25,4 @@ export const producerInvalidFax = 11023;
 
 export const postcodeEmpty = 13001;
 export const postcodeInvalid = 13002;
+export const addressSelectionEmpty = 13003;

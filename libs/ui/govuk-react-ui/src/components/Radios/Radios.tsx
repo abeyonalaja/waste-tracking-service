@@ -11,34 +11,38 @@ interface Props {
   name: string;
   value?: string;
   legendText?: string;
-  legendSize?: 's' | 'm' | 'l';
+  legendSize?: 's' | 'm' | 'l' | null;
+  legendHidden?: boolean;
   options: Option[];
   hint?: string;
   error?: string;
   small?: boolean;
   inline?: boolean;
-  onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
 }
 
 export const Radios = ({
   name,
+  value,
   legendText,
-  legendSize = 'm',
+  legendSize,
+  legendHidden = false,
   options,
   hint,
   error,
   small,
   inline,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onchange = (): void => {},
+  onChange,
   testId,
 }: Props): JSX.Element => {
   return (
     <FormGroup error={!!error}>
       <fieldset className="govuk-fieldset">
         <legend
-          className={`govuk-fieldset__legend govuk-fieldset__legend--${legendSize}`}
+          className={`govuk-fieldset__legend ${legendSize ? `govuk-fieldset__legend--${legendSize}` : ''} ${
+            legendHidden ? `govuk-visually-hidden` : ''
+          }`}
         >
           {legendText}
         </legend>
@@ -61,7 +65,8 @@ export const Radios = ({
                   name={name}
                   value={option.value}
                   id={radioId}
-                  onChange={onchange}
+                  onChange={onChange}
+                  checked={option.value === value}
                 />
                 <label
                   className="govuk-label govuk-radios__label"

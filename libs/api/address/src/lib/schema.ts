@@ -27,6 +27,7 @@ const addressResponse: JTDSchemaType<Address> = {
     country: { type: 'string' },
   },
   optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
     addressLine2: { type: 'string' },
   },
 };

@@ -25,19 +25,14 @@ export function uiValidation<T>(
     value: T,
     options: {
       locale: Locale;
-      context?: Context;
+      context: Context;
     },
   ) => uiValidationResult,
   href: string,
-  locale: Locale,
-  context?: Context,
+  locale: Locale = 'en',
+  context: Context = 'ui',
 ): uiValidationResult {
-  let validatedResult;
-  if (context) {
-    validatedResult = validationRule(value, { locale, context });
-  } else {
-    validatedResult = validationRule(value, { locale });
-  }
+  const validatedResult = validationRule(value, { locale, context });
 
   if (validatedResult.valid) {
     return validatedResult;

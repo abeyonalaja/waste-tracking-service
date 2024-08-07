@@ -1,9 +1,10 @@
+'use client';
 import styles from './LanguageSwitcher.module.scss';
-import { getLocale } from 'next-intl/server';
 import LanguageSwitcherLink from './LanguageSwitcherLink';
+import { useLocale } from 'next-intl';
 
-export async function LanguageSwitcher(): Promise<JSX.Element> {
-  const locale = await getLocale();
+export function LanguageSwitcher(): JSX.Element {
+  const locale: string = useLocale();
   return (
     <nav aria-label="Language switcher" className={styles.container}>
       <ul className={styles.languageToggle}>

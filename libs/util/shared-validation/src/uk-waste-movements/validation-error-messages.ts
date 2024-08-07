@@ -178,9 +178,21 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: 'Enter a real postcode',
     },
     cy: {
-      csv: 'Rhowch god post go iawn',
-      api: 'Rhowch god post go iawn',
-      ui: 'Rhowch god post go iawn',
+      csv: 'Rhowch god post dilys',
+      api: 'Rhowch god post dilys',
+      ui: 'Rhowch god post dilys',
+    },
+  },
+  [codes.addressSelectionEmpty]: {
+    en: {
+      csv: 'Select an address',
+      api: 'Select an address',
+      ui: 'Select an address',
+    },
+    cy: {
+      csv: 'Dewiswch gyfeiriad',
+      api: 'Dewiswch gyfeiriad',
+      ui: 'Dewiswch gyfeiriad',
     },
   },
   [codes.producerEmptyAddressLine1]: {
@@ -267,6 +279,18 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhowch god post go iawn`,
     },
   },
+  [codes.producerCharTooManyBuildingNameOrNumber]: {
+    en: {
+      csv: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
+      api: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
+      ui: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
+    },
+    cy: {
+      csv: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
 
   [codes.producerInvalidCountry]: {
     en: {
@@ -278,18 +302,6 @@ export const validationErrorMessages: ValidationErrorMessages = {
       csv: `Rhaid i’r wlad fod yn un o Loegr, Cymru, yr Alban, neu Gogledd Iwerddon`,
       api: `Rhaid i’r wlad fod yn un o Loegr, Cymru, yr Alban, neu Gogledd Iwerddon`,
       ui: `Rhaid i’r wlad fod yn un o Loegr, Cymru, yr Alban, neu Gogledd Iwerddon`,
-    },
-  },
-  [codes.producerCharTooManyBuildingNameOrNumber]: {
-    en: {
-      csv: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
-      api: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
-      ui: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
-    },
-    cy: {
-      csv: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
-      api: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
-      ui: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
     },
   },
 };

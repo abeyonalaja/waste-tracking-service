@@ -8,8 +8,9 @@ interface Props {
   start?: boolean;
   text?: string;
   href?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => Promise<void> | void;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
   testId?: string;
   id?: string;
 }
@@ -23,6 +24,7 @@ export const Button = ({
   href,
   onClick,
   disabled,
+  type,
   testId,
   id,
 }: Props): JSX.Element => {
@@ -35,6 +37,7 @@ export const Button = ({
         data-testid={testId}
         onClick={onClick}
         disabled={disabled}
+        type={type || undefined}
         id={id}
       >
         {text || children}

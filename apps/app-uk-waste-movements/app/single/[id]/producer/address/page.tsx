@@ -1,71 +1,117 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { Page } from '@wts/ui/shared-ui/server';
 import { AddressSearch } from '@wts/app-uk-waste-movements/feature-single';
 import { Metadata } from 'next';
-import { useTranslations } from 'next-intl';
 import { getServerSession } from 'next-auth';
 import { options } from '../../../../api/auth/[...nextauth]/options';
-import { BackLink } from '@wts/ui/shared-ui/server';
+import { getTranslations } from 'next-intl/server';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Producer details',
+  title: 'Producer address details',
 };
 
-export default async function ProducerAddressPage(): Promise<JSX.Element> {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+export default async function ProducerAddressPage({
+  params,
+}: PageProps): Promise<JSX.Element> {
   const session = await getServerSession(options);
-  const SearchContent = () => {
-    const t = useTranslations('single.producer');
+  const t = await getTranslations('single.postcode');
+
+  const headerList = headers();
+  let hostname = headerList.get('host') || '';
+  let protocol = 'https';
+
+  if (hostname.indexOf('localhost') === 0) {
+    hostname = 'localhost:3000';
+    protocol = 'http';
+  }
+  const apiUrl = `${protocol}://${hostname}/api`;
+
+  let response: Response;
+  try {
+    response = await fetch(`${apiUrl}/ukwm/drafts/${params.id}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        Authorization: `Bearer ${session?.token}`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return redirect('/error');
+  }
+
+  const draft = await response.json();
+  const status = draft.producerAndCollection.producer.address.status;
+  const defaultView = status !== 'NotStarted' ? 'edit' : 'search';
+  let savedFormValues;
+
+  if (status !== 'NotStarted') {
+    const address = draft.producerAndCollection.producer.address;
+    savedFormValues = {
+      postcode: address.postcode,
+      buildingNameOrNumber: address.buildingNameOrNumber,
+      addressLine1: address.addressLine1,
+      addressLine2: address.addressLine2,
+      townCity: address.townCity,
+      country: address.country,
+    };
+  }
+
+  const content = {
+    inputLabel: t('input.label'),
+    inputHint: t('input.hint'),
+    buildingNameLabel: t('buildingName.label'),
+    buildingNameHint: t('buildingName.hint'),
+    addressLine1Label: t('addressLine1.label'),
+    addressLine1Hint: t('addressLine1.hint'),
+    addressLine2Label: t('addressLine2.label'),
+    addressLine2Hint: t('addressLine2.hint'),
+    townCityLabel: t('townCity.label'),
+    postcodeLabel: t('postcodeManual.label'),
+    countryLabel: t('country.label'),
+    button: t('button'),
+    buttonSave: t('buttonSave'),
+    manualLink: t('manualLink'),
+    manualLinkShort: t('manualLinkShort'),
+    searchAgain: t('searchAgain'),
+    legend: t('legend'),
+    buttonSecondary: t('buttonSecondary'),
+  };
+
+  const CreateContent = async (key: string) => {
+    const t = await getTranslations('single.producer');
     return (
       <>
         <GovUK.Caption>{t('caption')}</GovUK.Caption>
-        <GovUK.Heading size={'l'} level={1}>
-          {t('postcode.search.heading')}
+        <GovUK.Heading size="l" level={1}>
+          {t(`postcode.${key}.heading`)}
         </GovUK.Heading>
-        <GovUK.Paragraph>{t('postcode.search.intro')}</GovUK.Paragraph>
+        {key === 'search' && (
+          <GovUK.Paragraph>{t('postcode.search.intro')}</GovUK.Paragraph>
+        )}
       </>
     );
-  };
-
-  const ResultsContent = () => {
-    const t = useTranslations('single.producer');
-    return (
-      <>
-        <GovUK.Caption>{t('caption')}</GovUK.Caption>
-        <GovUK.Heading size={'l'} level={1}>
-          {t('postcode.results.heading')}
-        </GovUK.Heading>
-      </>
-    );
-  };
-
-  const NoResultsContent = () => {
-    const t = useTranslations('single.producer');
-    return (
-      <>
-        <GovUK.Caption>{t('caption')}</GovUK.Caption>
-        <GovUK.Heading size={'l'} level={1}>
-          {t('postcode.noResults.heading')}
-        </GovUK.Heading>
-      </>
-    );
-  };
-
-  const BackLinkWrap = () => {
-    return <BackLink href={'../'} />;
   };
 
   return (
-    <Page beforeChildren={<BackLinkWrap />}>
-      <GovUK.GridRow>
-        <GovUK.GridCol size={'two-thirds'}>
-          <AddressSearch
-            searchContent={<SearchContent />}
-            resultsContent={<ResultsContent />}
-            noResultsContent={<NoResultsContent />}
-            token={session?.token}
-          />
-        </GovUK.GridCol>
-      </GovUK.GridRow>
-    </Page>
+    <AddressSearch
+      defaultView={defaultView}
+      searchContent={await CreateContent('search')}
+      resultsContent={await CreateContent('results')}
+      noResultsContent={await CreateContent('noResults')}
+      confirmationContent={await CreateContent('confirmation')}
+      manualContent={await CreateContent('manual')}
+      editContent={await CreateContent('edit')}
+      token={session?.token}
+      content={content}
+      id={params.id}
+      savedFormValues={savedFormValues}
+    />
   );
 }

@@ -1,1 +1,1 @@
-export { FormErrors, ErrorSummaryErrors } from './types';
+export type { FormErrors, ErrorSummaryErrors } from './types';

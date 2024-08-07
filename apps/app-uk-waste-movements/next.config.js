@@ -20,6 +20,10 @@ const nextConfig = {
   },
   experimental: {
     instrumentationHook: true,
+    staleTimes: {
+      dynamic: 0,
+      static: 180,
+    },
   },
 };
 
