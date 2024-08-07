@@ -563,8 +563,8 @@
       "buttonSecondary": "Save and return",
       "notFound": "We could not find an address that matches",
       "notFoundPrompt": "You can search again or enter the address manually.",
-      "addressFound": "address found for",
-      "addressesFound": "addresses found for",
+      "addressFound": "address was found for",
+      "addressesFound": "addresses were found for",
       "useAddress": "Use this address and continue",
       "useDifferentAddress": "Use a different address"
     },
