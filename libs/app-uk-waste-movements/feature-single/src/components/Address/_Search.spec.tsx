@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Search } from './_Search';
 
+window.scrollTo = jest.fn();
+
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),

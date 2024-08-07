@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 
 interface Props {
+  type?: 'submit' | 'reset' | 'button';
   children?: ReactNode;
   secondary?: boolean;
   inverse?: boolean;
@@ -10,12 +11,12 @@ interface Props {
   href?: string;
   onClick?: (e: React.MouseEvent) => Promise<void> | void;
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset' | undefined;
   testId?: string;
   id?: string;
 }
 
 export const Button = ({
+  type,
   children,
   secondary,
   inverse,
@@ -24,7 +25,6 @@ export const Button = ({
   href,
   onClick,
   disabled,
-  type,
   testId,
   id,
 }: Props): JSX.Element => {
@@ -35,9 +35,9 @@ export const Button = ({
           inverse ? 'govuk-button--inverse' : ''
         } ${start ? 'govuk-button--start' : ''}`}
         data-testid={testId}
+        type={type}
         onClick={onClick}
         disabled={disabled}
-        type={type || undefined}
         id={id}
       >
         {text || children}

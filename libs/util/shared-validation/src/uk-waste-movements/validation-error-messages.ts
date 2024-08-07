@@ -3,30 +3,6 @@ import * as constraints from './constraints';
 import { ValidationErrorMessages } from './dto';
 
 export const validationErrorMessages: ValidationErrorMessages = {
-  [codes.producerEmptyOrganisationName]: {
-    en: {
-      csv: 'Enter the producer organisation name',
-      api: 'Enter the producer organisation name',
-      ui: 'Enter the producer organisation name',
-    },
-    cy: {
-      csv: 'Rhowch enw’r sefydliad cynhyrchu',
-      api: 'Rhowch enw’r sefydliad cynhyrchu',
-      ui: 'Rhowch enw’r sefydliad cynhyrchu',
-    },
-  },
-  [codes.producerCharTooManyOrganisationName]: {
-    en: {
-      csv: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
-      api: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
-      ui: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
-    },
-    cy: {
-      csv: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
-      api: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
-      ui: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
-    },
-  },
   [codes.producerEmptyReference]: {
     en: {
       csv: 'Enter a unique reference',
@@ -63,11 +39,35 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
     },
   },
+  [codes.producerEmptyOrganisationName]: {
+    en: {
+      csv: 'Enter an organisation name',
+      api: 'Enter an organisation name',
+      ui: 'Enter an organisation name',
+    },
+    cy: {
+      csv: 'Rhowch enw’r sefydliad cynhyrchu',
+      api: 'Rhowch enw’r sefydliad cynhyrchu',
+      ui: 'Rhowch enw’r sefydliad cynhyrchu',
+    },
+  },
+  [codes.producerCharTooManyOrganisationName]: {
+    en: {
+      csv: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
   [codes.producerEmptyContactFullName]: {
     en: {
-      csv: `Enter the producer's contact person`,
-      api: `Enter the producer's contact person`,
-      ui: `Enter the producer's contact person`,
+      csv: `Enter an organisation contact person`,
+      api: `Enter an organisation contact person`,
+      ui: `Enter an organisation contact person`,
     },
     cy: {
       csv: 'Rhowch enw person cyswllt y cynhyrchydd',
@@ -77,9 +77,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerCharTooManyContactFullName]: {
     en: {
-      csv: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
-      api: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
-      ui: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      csv: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
     },
     cy: {
       csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
@@ -89,9 +89,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerEmptyEmail]: {
     en: {
-      csv: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
-      api: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
-      ui: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      csv: `Enter an email address`,
+      api: `Enter an email addresss`,
+      ui: `Enter an email address`,
     },
     cy: {
       csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
@@ -101,9 +101,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerCharTooManyEmail]: {
     en: {
-      csv: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
-      api: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
-      ui: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
+      csv: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
     },
     cy: {
       csv: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
@@ -113,9 +113,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerInvalidEmail]: {
     en: {
-      csv: `Enter a real email address for the producer's contact`,
-      api: `Enter a real email address for the producer's contact`,
-      ui: `Enter a real email address for the producer's contact`,
+      csv: `Enter an email address in the correct format, like name@example.com`,
+      api: `Enter an email address in the correct format, like name@example.com`,
+      ui: `Enter an email address in the correct format, like name@example.com`,
     },
     cy: {
       csv: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
@@ -125,9 +125,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerEmptyPhone]: {
     en: {
-      csv: `Enter a producer's contact phone number`,
-      api: `Enter a producer's contact phone number`,
-      ui: `Enter a producer's contact phone number`,
+      csv: `Enter a phone number`,
+      api: `Enter a phone number`,
+      ui: `Enter a phone number`,
     },
     cy: {
       csv: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
@@ -137,9 +137,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerInvalidPhone]: {
     en: {
-      csv: `Enter a real phone number for the producer's contact`,
-      api: `Enter a real phone number for the producer's contact`,
-      ui: `Enter a real phone number for the producer's contact`,
+      csv: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
     },
     cy: {
       csv: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
@@ -149,9 +149,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.producerInvalidFax]: {
     en: {
-      csv: `Enter a real fax number for the producer's contact`,
-      api: `Enter a real fax number for the producer's contact`,
-      ui: `Enter a real fax number for the producer's contact`,
+      csv: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
     },
     cy: {
       csv: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',

@@ -591,6 +591,28 @@
         "edit": {
           "heading": "Edit the producer’s address"
         }
+      },
+      "contactDetails": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What are the producer’s contact details?",
+        "form": {
+          "errorSummaryHeading": "There is a problem",
+          "labelOne": "Full name of organisation",
+          "labelTwo": "Organisation contact person",
+          "hintOne": "Full name",
+          "labelThree": "Email address",
+          "labelFour": "Phone number",
+          "hintTwo": "Include the area or country code",
+          "labelFive": "Fax number (optional)",
+          "buttonOne": "Save and continue",
+          "buttonTwo": "Save and return"
+        }
+      },
+      "sicCodes": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What are the producer’s SIC (standard industry classification) codes?"
       }
     }
   }

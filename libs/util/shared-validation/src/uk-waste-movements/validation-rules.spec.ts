@@ -368,8 +368,7 @@ describe('Producer organisation name validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11002,
         field: 'Producer organisation name',
-        message:
-          'The producer organisation name must be less than 250 characters',
+        message: 'The organisation name can only be 250 characters or less',
       });
     }
   });

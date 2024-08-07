@@ -4,10 +4,10 @@ import { Breadcrumbs } from '@wts/ui/shared-ui';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { getTranslations } from 'next-intl/server';
 import { TaskList } from '@wts/app-uk-waste-movements/feature-single';
-import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
+import { generateApiUrl } from '../../../utils';
 
 export const metadata: Metadata = {
   title: 'Create a new single waste movement',
@@ -25,16 +25,7 @@ export default async function TaskListPage({
 }: PageProps): Promise<React.ReactNode> {
   const t = await getTranslations('single.taskList');
   const session = await getServerSession(options);
-
-  const headerList = headers();
-  let hostname = headerList.get('host') || '';
-  let protocol = 'https';
-
-  if (hostname.indexOf('localhost') === 0) {
-    hostname = 'localhost:3000';
-    protocol = 'http';
-  }
-  const apiUrl = `${protocol}://${hostname}/api`;
+  const apiUrl = generateApiUrl();
 
   let response: Response;
   try {
@@ -48,6 +39,14 @@ export default async function TaskListPage({
   } catch (error) {
     console.error(error);
     return redirect('/error');
+  }
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return redirect('/404');
+    } else {
+      return redirect('/error');
+    }
   }
 
   const draft = await response.json();
@@ -92,7 +91,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('producerAndCollection.taskTwo'),
-                    href: '/',
+                    href: `${params.id}/producer/contact`,
                     status: draft.producerAndCollection.producer.contact.status,
                   },
                   {
