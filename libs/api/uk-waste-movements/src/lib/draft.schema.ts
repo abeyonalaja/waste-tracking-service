@@ -101,7 +101,20 @@ const address: JTDSchemaType<Address> = {
     country: { type: 'string' },
   },
   optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
     addressLine2: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+};
+
+const partialAddress: JTDSchemaType<Partial<Address>> = {
+  properties: {},
+  optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
+    addressLine1: { type: 'string' },
+    addressLine2: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
     postcode: { type: 'string' },
   },
 };
@@ -810,5 +823,45 @@ export const createDraftRequest: JTDSchemaType<CreateDraftRequest> = {
   properties: {
     accountId: { type: 'string' },
     reference: { type: 'string' },
+  },
+};
+
+export const getDraftProducerAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const setDraftProducerAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: address,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftProducerAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: partialAddress,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftProducerAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftAddress,
+  },
+};
+
+export const setDraftProducerAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
   },
 };

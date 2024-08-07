@@ -43,6 +43,7 @@ const address: JTDSchemaType<Address> = {
     country: { type: 'string' },
   },
   optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
     addressLine2: { type: 'string' },
     postcode: { type: 'string' },
   },

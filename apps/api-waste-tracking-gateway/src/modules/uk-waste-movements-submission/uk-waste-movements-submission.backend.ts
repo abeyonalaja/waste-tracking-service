@@ -3,6 +3,8 @@ import {
   UkwmDraft,
   UkwmGetDraftsResult,
   UkwmCreateDraftResponse,
+  UkwmDraftAddress,
+  UkwmAddress,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -10,8 +12,10 @@ import {
   GetDraftResponse,
   GetDraftsResponse,
   CreateDraftResponse,
+  GetDraftProducerAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
+import { Response } from '@wts/util/invocation';
 
 export interface SubmissionRef {
   id: string;
@@ -27,6 +31,14 @@ export interface UkWasteMovementsSubmissionBackend {
   getDraft(ref: SubmissionRef): Promise<UkwmDraft>;
   getDrafts(request: UkwmGetDraftsRequest): Promise<UkwmGetDraftsResult>;
   createDraft(request: CreateDraftRef): Promise<UkwmCreateDraftResponse>;
+  setDraftProducerAddressDetails(
+    ref: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftProducerAddressDetails({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -94,5 +106,57 @@ export class ServiceUkWasteMovementsSubmissionBackend
     }
 
     return response.value as UkwmCreateDraftResponse;
+  }
+
+  async setDraftProducerAddressDetails(
+    { id, accountId }: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: Response<void>;
+    try {
+      response = await this.client.setDraftProducerAddressDetails({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
+
+  async getDraftProducerAddressDetails({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined> {
+    let response: GetDraftProducerAddressDetailsResponse;
+    try {
+      response = await this.client.getDraftProducerAddressDetails({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value;
+    } else {
+      return response;
+    }
   }
 }

@@ -2,6 +2,7 @@ import { SimpleDraft } from '../draft.dto';
 
 export type Field =
   | 'Reference'
+  | 'Producer building name or number'
   | 'Producer organisation name'
   | 'Producer address line 1'
   | 'Producer address line 2'

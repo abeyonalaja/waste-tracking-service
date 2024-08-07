@@ -49,6 +49,7 @@ export type QuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type WasteQuantityType = 'EstimateData' | 'ActualData';
 
 export interface Address {
+  buildingNameOrNumber?: string;
   addressLine1: string;
   addressLine2?: string;
   townCity: string;
@@ -517,4 +518,25 @@ export type CreateDraftRequest = AccountIdRequest &
 export type CreateDraftResponse = Response<Draft>;
 export const createDraft: Method = {
   name: 'createDraft',
+};
+
+export type SetDraftProducerAddressDetailsRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Address> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Address } & { saveAsDraft: false });
+
+export type SetDraftProducerAddressDetailsResponse = Response<void>;
+
+export const setDraftProducerAddressDetails: Method = {
+  name: 'setDraftProducerAddressDetails',
+};
+
+export type GetDraftProducerAddressDetailsRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftProducerAddressDetailsResponse =
+  | Response<DraftAddress>
+  | undefined;
+export const getDraftProducerAddressDetails: Method = {
+  name: 'getDraftProducerAddressDetails',
 };

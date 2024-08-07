@@ -2,7 +2,9 @@ import { Application } from 'express';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import {
   createDraft,
+  getDraftProducerAddressDetails,
   getDrafts,
+  setDraftProducerAddressDetails,
   getDraft,
 } from './uk-waste-movements-submission.backend';
 import {
@@ -13,7 +15,11 @@ import {
 } from '../../lib/errors';
 import { isValid } from 'date-fns';
 import { User } from '../../lib/user';
-import { validateCreateDraftRequest } from './uk-waste-movements-submission.validation';
+import {
+  validateCreateDraftRequest,
+  validateSetDraftProducerAddressRequest,
+  validateSetPartialDraftProducerAddressRequest,
+} from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
   constructor(
@@ -116,5 +122,83 @@ export default class UkwmSubmissionPlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
+    this.server.get(
+      `${this.prefix}/drafts/:id/producer-address`,
+      async (req, res) => {
+        try {
+          const user = req.user as User;
+          const value = await getDraftProducerAddressDetails({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+          });
+          return res.json(
+            value as dto.UkwmGetDraftProducerAddressDetailsResponse,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ message: err.message });
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.put(
+      `${this.prefix}/drafts/:id/producer-address`,
+      async (req, res) => {
+        const saveAsDraftStr = req.query['saveAsDraft'] as string | undefined;
+
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+
+        const saveAsDraft: boolean = saveAsDraftStr === 'true';
+
+        if (!saveAsDraft) {
+          if (!validateSetDraftProducerAddressRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        } else {
+          if (!validateSetPartialDraftProducerAddressRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        }
+        const request =
+          req.body as dto.UkwmSetDraftProducerAddressDetailsRequest;
+        const user = req.user as User;
+        try {
+          await setDraftProducerAddressDetails(
+            {
+              id: req.params.id,
+              accountId: user.credentials.accountId,
+            },
+            request,
+            saveAsDraft,
+          );
+          return res.json(
+            request as dto.UkwmSetDraftProducerAddressDetailsRequest,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json(err);
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
   }
 }

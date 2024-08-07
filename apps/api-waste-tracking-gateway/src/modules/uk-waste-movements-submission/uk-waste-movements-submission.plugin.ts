@@ -4,7 +4,11 @@ import Boom from '@hapi/boom';
 import * as dto from '@wts/api/waste-tracking-gateway';
 import { UkWasteMovementsSubmissionBackend } from './uk-waste-movements-submission.backend';
 import { isValid } from 'date-fns';
-import { validateCreateDraftRequest } from './uk-waste-movements-submission.validation';
+import {
+  validateCreateDraftRequest,
+  validateSetDraftProducerAddressDetailsRequest,
+  validateSetPartialDraftProducerAddressDetailsRequest,
+} from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
   backend: UkWasteMovementsSubmissionBackend;
@@ -108,6 +112,74 @@ const plugin: Plugin<PluginOptions> = {
               }),
             )
             .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/producer-address',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftProducerAddressDetails({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftProducerAddressDetailsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/producer-address',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftProducerAddressDetailsRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validateSetPartialDraftProducerAddressDetailsRequest(payload)) {
+            return Boom.badRequest();
+          }
+        }
+        const request =
+          payload as dto.UkwmSetDraftProducerAddressDetailsRequest;
+        try {
+          await backend.setDraftProducerAddressDetails(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
+          return request;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             err.output.payload.data = err?.data;

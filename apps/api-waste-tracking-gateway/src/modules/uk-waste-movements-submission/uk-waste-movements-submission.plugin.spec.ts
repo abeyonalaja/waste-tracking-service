@@ -12,6 +12,7 @@ import {
   UkwmGetDraftsRequest,
   UkwmGetDraftsResult,
   UkwmSubmission,
+  UkwmDraftAddress,
 } from '@wts/api/waste-tracking-gateway';
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
@@ -30,6 +31,16 @@ const mockBackend = {
     jest.fn<(request: UkwmGetDraftsRequest) => Promise<UkwmGetDraftsResult>>(),
   createDraft:
     jest.fn<(request: CreateDraftRef) => Promise<UkwmCreateDraftResponse>>(),
+  setDraftProducerAddressDetails:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        value: UkwmDraftAddress,
+        saveAsDraft?: boolean,
+      ) => Promise<void>
+    >(),
+  getDraftProducerAddressDetails:
+    jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -105,6 +116,36 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.createDraft.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/producer-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/producer-address`,
+      };
+
+      mockBackend.getDraftProducerAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/producer-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/producer-address`,
+      };
+
+      mockBackend.setDraftProducerAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

@@ -10,6 +10,7 @@ export type UkwmQuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
 
 export interface UkwmAddress {
+  buildingNameOrNumber?: string;
   addressLine1: string;
   addressLine2?: string;
   townCity: string;
@@ -234,3 +235,12 @@ export type GetUkwmSubmissionResponse = UkwmDraft;
 
 export type UkwmCreateDraftRequest = Pick<UkwmDraftProducer, 'reference'>;
 export type UkwmCreateDraftResponse = UkwmDraft;
+
+export type UkwmGetDraftProducerAddressDetailsResponse = DraftAddress;
+
+export type UkwmSetDraftProducerAddressDetailsRequest = UkwmAddress;
+
+export type UkwmDraftAddress =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<UkwmAddress>)
+  | ({ status: 'Complete' } & UkwmAddress);

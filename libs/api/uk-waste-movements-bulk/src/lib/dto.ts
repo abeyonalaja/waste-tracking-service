@@ -157,6 +157,7 @@ export interface ProducerDetailFlattened {
   producerContactName: string;
   producerContactEmail: string;
   producerContactPhone: string;
+  producerBuildingNameOrNumber?: string;
   producerAddressLine1: string;
   producerAddressLine2?: string;
   producerTownCity: string;

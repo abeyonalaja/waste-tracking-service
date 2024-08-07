@@ -345,6 +345,7 @@ while (execute) {
             const columnErrorsObj: {
               [key in Field]: api.ErrorColumnDetail[];
             } = {
+              'Producer building name or number': [],
               'Producer address line 1': [],
               'Producer address line 2': [],
               'Producer contact name': [],

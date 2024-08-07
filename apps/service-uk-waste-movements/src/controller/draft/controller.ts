@@ -12,6 +12,7 @@ import {
   SubmissionValidationReferenceData,
   Draft,
 } from '../../model';
+import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
 import { validationRules } from '../../lib';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
@@ -638,4 +639,117 @@ export default class SubmissionController {
         return fromBoom(Boom.internal());
       }
     };
+
+  setDraftProducerAddressDetails: Handler<
+    api.SetDraftProducerAddressDetailsRequest,
+    api.SetDraftProducerAddressDetailsResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        draft.producerAndCollection.status !== 'NotStarted' &&
+        draft.producerAndCollection.producer
+      ) {
+        if (
+          draft.producerAndCollection.producer.address.status === 'Complete'
+        ) {
+          return fromBoom(Boom.badRequest('Producer address already complete'));
+        }
+
+        if (saveAsDraft) {
+          const partialProducerAddressDetailsValidation =
+            ukwmValidation.validationRules.validatePartialProducerAddressDetails(
+              value,
+            );
+
+          if (!partialProducerAddressDetailsValidation.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                partialProducerAddressDetailsValidation.errors,
+              ),
+            );
+          }
+
+          draft.producerAndCollection.producer.address = {
+            status: 'Started',
+            ...value,
+          };
+        } else {
+          const producerAddressDetailsValidation =
+            ukwmValidation.validationRules.validateProducerAddressDetails(
+              value,
+            );
+
+          if (!producerAddressDetailsValidation.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                producerAddressDetailsValidation.errors,
+              ),
+            );
+          }
+
+          draft.producerAndCollection.producer.address = {
+            status: 'Complete',
+            ...value,
+          };
+        }
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftProducerAddressDetails: Handler<
+    api.GetDraftProducerAddressDetailsRequest,
+    api.GetDraftProducerAddressDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        draft.producerAndCollection.status !== 'NotStarted' &&
+        draft.producerAndCollection.producer
+      ) {
+        return success(draft.producerAndCollection.producer.address);
+      }
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

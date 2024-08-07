@@ -10,3 +10,7 @@ export const FreeTextChar = {
 export const PostcodeRegex = {
   pattern: '^[A-Za-z]{1,2}\\d{1,2}[A-Za-z]?\\s?\\d[A-Za-z]{2}$',
 };
+
+export const PostcodeChar = {
+  max: 9,
+};

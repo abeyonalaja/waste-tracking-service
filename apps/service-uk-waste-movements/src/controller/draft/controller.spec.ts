@@ -5,6 +5,7 @@ import SubmissionController from './controller';
 import { Draft, GetDraftsResult, validation } from '../../model';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
+import { SetDraftProducerAddressDetailsRequest } from '@wts/api/uk-waste-movements';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -882,6 +883,259 @@ describe(SubmissionController, () => {
             ref,
           );
         }
+      }
+    });
+  });
+
+  describe('getDraftProducerAddressDetails', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const draft: Draft = {
+      id: id,
+      wasteInformation: {
+        status: 'NotStarted',
+      },
+      receiver: {
+        status: 'NotStarted',
+      },
+      producerAndCollection: {
+        status: 'Complete',
+        producer: {
+          reference: 'testRef',
+          sicCode: '01110',
+          contact: {
+            status: 'Complete',
+            organisationName: 'Test Organisation',
+            name: 'Test Name',
+            email: 'test@example.com',
+            phone: '0123456789',
+          },
+          address: {
+            status: 'Complete',
+            buildingNameOrNumber: '123',
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 1',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England [EN]',
+          },
+        },
+        wasteCollection: {
+          status: 'Complete',
+          wasteSource: 'Industrial',
+          brokerRegistrationNumber: 'BRN123456',
+          carrierRegistrationNumber: 'CRN123456',
+          localAuthority: 'Local Authority 1',
+          expectedWasteCollectionDate: {
+            day: '01',
+            month: '01',
+            year: '2025',
+          },
+          address: {
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 2',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England [EN]',
+          },
+        },
+      },
+      carrier: {
+        status: 'NotStarted',
+      },
+      declaration: {
+        status: 'NotStarted',
+      },
+      state: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+
+    it('successfully returns the producer address details', async () => {
+      mockRepository.getDraft.mockResolvedValue(draft);
+
+      const response = await subject.getDraftProducerAddressDetails({
+        id,
+        accountId,
+      });
+
+      if (response) {
+        expect(response.success).toBe(true);
+        if (response.success) {
+          expect(response.value).toEqual({
+            status: 'Complete',
+            buildingNameOrNumber: '123',
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 1',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England [EN]',
+          });
+        }
+      }
+    });
+  });
+
+  describe('setDraftProducerAddressDetails', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const draft: Draft = {
+      id: id,
+      wasteInformation: {
+        status: 'NotStarted',
+      },
+      receiver: {
+        status: 'NotStarted',
+      },
+      producerAndCollection: {
+        status: 'Started',
+        producer: {
+          reference: 'testRef',
+          sicCode: '01110',
+          contact: {
+            status: 'Complete',
+            organisationName: 'Test Organisation',
+            name: 'Test Name',
+            email: 'test@example.com',
+            phone: '0123456789',
+          },
+          address: {
+            status: 'Started',
+            buildingNameOrNumber: '123123',
+            addressLine1: '123123 Main St',
+            addressLine2: 'Building 123',
+            townCity: 'Manchester',
+            postcode: 'SW1A 1AB',
+            country: 'Albania [AB]',
+          },
+        },
+        wasteCollection: {
+          status: 'Complete',
+          wasteSource: 'Industrial',
+          brokerRegistrationNumber: 'BRN123456',
+          carrierRegistrationNumber: 'CRN123456',
+          localAuthority: 'Local Authority 1',
+          expectedWasteCollectionDate: {
+            day: '01',
+            month: '01',
+            year: '2025',
+          },
+          address: {
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 2',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England [EN]',
+          },
+        },
+      },
+      carrier: {
+        status: 'NotStarted',
+      },
+      declaration: {
+        status: 'NotStarted',
+      },
+      state: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+
+    it('successfully sets the producer address details', async () => {
+      const updatedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Started',
+          producer: {
+            reference: 'testRef',
+            sicCode: '01110',
+            contact: {
+              status: 'Complete',
+              organisationName: 'Test Organisation',
+              name: 'Test Name',
+              email: 'test@example.com',
+              phone: '0123456789',
+            },
+            address: {
+              status: 'Complete',
+              buildingNameOrNumber: '123',
+              addressLine1: '123 Real Street',
+              addressLine2: 'Real Avenue',
+              townCity: 'London',
+              postcode: 'SW1A 1AA',
+              country: 'England',
+            },
+          },
+          wasteCollection: {
+            status: 'Complete',
+            wasteSource: 'Industrial',
+            brokerRegistrationNumber: 'BRN123456',
+            carrierRegistrationNumber: 'CRN123456',
+            localAuthority: 'Local Authority 1',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              addressLine1: '123 Main St',
+              addressLine2: 'Building 2',
+              townCity: 'London',
+              postcode: 'SW1A 1AA',
+              country: 'England [EN]',
+            },
+          },
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
+      };
+
+      const request: SetDraftProducerAddressDetailsRequest = {
+        id: id,
+        accountId: accountId,
+        value: {
+          buildingNameOrNumber: '123',
+          addressLine1: '123 Real Street',
+          addressLine2: 'Real Avenue',
+          townCity: 'London',
+          postcode: 'SW1A 1AA',
+          country: 'England',
+        },
+        saveAsDraft: false,
+      };
+
+      mockRepository.getDraft.mockResolvedValue(draft);
+
+      const response = await subject.setDraftProducerAddressDetails(request);
+
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        updatedDraft,
+        accountId,
+      );
+
+      if (response.success) {
+        expect(response.value).toBeUndefined();
       }
     });
   });

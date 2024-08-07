@@ -38,6 +38,10 @@ export type {
   SimpleDraft,
   CreateDraftRequest,
   CreateDraftResponse,
+  SetDraftProducerAddressDetailsRequest,
+  SetDraftProducerAddressDetailsResponse,
+  GetDraftProducerAddressDetailsRequest,
+  GetDraftProducerAddressDetailsResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -48,6 +52,8 @@ export {
   createMultipleDrafts,
   validateMultipleDrafts,
   createDraft,
+  setDraftProducerAddressDetails,
+  getDraftProducerAddressDetails,
 } from './draft.dto';
 
 export * as validation from './validation';

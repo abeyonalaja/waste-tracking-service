@@ -213,6 +213,92 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.setDraftProducerAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftProducerAddressDetailsRequest;
+
+      if (!request.saveAsDraft) {
+        if (
+          !validateSubmission.validateSetDraftProducerAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      } else {
+        if (
+          !validateSubmission.validateSetPartialDraftProducerAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      }
+
+      return await submissionController.setDraftProducerAddressDetails(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.getDraftProducerAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.GetDraftProducerAddressDetailsRequest;
+      if (request == undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (
+        !validateSubmission.validateGetDraftProducerAddressDetailsRequest(
+          request,
+        )
+      ) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftProducerAddressDetails(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.getDraftProducerAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.GetDraftProducerAddressDetailsRequest;
+      if (request == undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (
+        !validateSubmission.validateGetDraftProducerAddressDetailsRequest(
+          request,
+        )
+      ) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftProducerAddressDetails(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

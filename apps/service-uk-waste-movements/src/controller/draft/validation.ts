@@ -4,6 +4,8 @@ import {
   CreateMultipleDraftsRequest,
   ValidateMultipleDraftsRequest,
   CreateDraftRequest,
+  SetDraftProducerAddressDetailsRequest,
+  GetDraftProducerAddressDetailsRequest,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -26,3 +28,18 @@ export const validateGetDraftsRequest = ajv.compile<GetDraftRequest>(
 export const validateCreateDraftsRequest = ajv.compile<CreateDraftRequest>(
   draftSchema.createDraftRequest,
 );
+
+export const validateSetDraftProducerAddressDetailsRequest =
+  ajv.compile<SetDraftProducerAddressDetailsRequest>(
+    draftSchema.setDraftProducerAddressDetailsRequest,
+  );
+
+export const validateSetPartialDraftProducerAddressDetailsRequest =
+  ajv.compile<SetDraftProducerAddressDetailsRequest>(
+    draftSchema.setPartialDraftProducerAddressDetailsRequest,
+  );
+
+export const validateGetDraftProducerAddressDetailsRequest =
+  ajv.compile<GetDraftProducerAddressDetailsRequest>(
+    draftSchema.getDraftProducerAddressDetailsRequest,
+  );

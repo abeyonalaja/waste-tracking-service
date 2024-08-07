@@ -7,7 +7,11 @@ import {
   CreateDraftResponse,
   GetDraftResponse,
   GetDraftsResponse,
+  GetDraftProducerAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
+
+import { Response } from '@wts/util/invocation';
+import { UkwmAddress } from '@wts/api/waste-tracking-gateway';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -19,6 +23,10 @@ const mockClient = {
   getDraft: jest.fn<DaprUkWasteMovementsClient['getDraft']>(),
   getDrafts: jest.fn<DaprUkWasteMovementsClient['getDrafts']>(),
   createDraft: jest.fn<DaprUkWasteMovementsClient['createDraft']>(),
+  setDraftProducerAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['setDraftProducerAddressDetails']>(),
+  getDraftProducerAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['getDraftProducerAddressDetails']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -147,5 +155,78 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
 
     expect(result).toEqual(mockGetDraftsResponse.value);
     expect(mockClient.createDraft).toBeCalled();
+  });
+
+  it('sets producer address details on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftProducerAddressDetailsResponse: Response<void> = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setDraftProducerAddressDetails.mockResolvedValueOnce(
+      mockSetDraftProducerAddressDetailsResponse,
+    );
+
+    const value: UkwmAddress = {
+      addressLine1: '123 Main St',
+      addressLine2: 'Building 1',
+      townCity: 'London',
+      country: 'England [EN]',
+      postcode: 'SW1A 1AA',
+    };
+
+    await subject.setDraftProducerAddressDetails(
+      { id, accountId },
+      value,
+      true,
+    );
+
+    expect(mockClient.setDraftProducerAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(mockClient.setDraftProducerAddressDetails).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftProducerAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets producer contact detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftProducerAddressDetailsResponse: GetDraftProducerAddressDetailsResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 1',
+          townCity: 'London',
+          country: 'England [EN]',
+          postcode: 'SW1A 1AA',
+        },
+      };
+
+    mockClient.getDraftProducerAddressDetails.mockResolvedValueOnce(
+      mockGetDraftProducerAddressDetailsResponse,
+    );
+
+    const result = await subject.getDraftProducerAddressDetails({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftProducerAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftProducerAddressDetailsResponse.value);
   });
 });
