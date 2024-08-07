@@ -26,6 +26,7 @@ export type {
   WasteCollectionDetail,
   Address,
   Contact,
+  DraftContact,
   WasteTransportationDetail,
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
@@ -42,6 +43,10 @@ export type {
   SetDraftProducerAddressDetailsResponse,
   GetDraftProducerAddressDetailsRequest,
   GetDraftProducerAddressDetailsResponse,
+  GetDraftProducerContactDetailRequest,
+  GetDraftProducerContactDetailResponse,
+  SetDraftProducerContactDetailRequest,
+  SetDraftProducerContactDetailResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -54,6 +59,8 @@ export {
   createDraft,
   setDraftProducerAddressDetails,
   getDraftProducerAddressDetails,
+  getDraftProducerContactDetail,
+  setDraftProducerContactDetail,
 } from './draft.dto';
 
 export * as validation from './validation';

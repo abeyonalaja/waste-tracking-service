@@ -6,6 +6,7 @@ import { Draft, GetDraftsResult, validation } from '../../model';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
 import { SetDraftProducerAddressDetailsRequest } from '@wts/api/uk-waste-movements';
+import { SetDraftProducerContactDetailRequest } from '@wts/api/uk-waste-movements';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -1134,6 +1135,248 @@ describe(SubmissionController, () => {
         accountId,
       );
 
+      if (response.success) {
+        expect(response.value).toBeUndefined();
+      }
+    });
+  });
+
+  describe('getDraftProducerContactDetail', () => {
+    it('successfully gets producer contact detail from a draft', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCode: '12345',
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '987-654-3210',
+              fax: '123-456-7890',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            status: 'Complete',
+            wasteSource: 'Industrial',
+            brokerRegistrationNumber: 'BRN123456',
+            carrierRegistrationNumber: 'CRN654321',
+            localAuthority: 'Local Authority Name',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              addressLine1: '456 Secondary St',
+              addressLine2: 'Building 2',
+              townCity: 'Othertown',
+              postcode: '67890',
+              country: 'CountryName',
+            },
+          },
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftProducerContactDetail({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'Started',
+          organisationName: 'Producer Org',
+          name: 'Jane Doe',
+          email: 'jane.doe@example.com',
+          phone: '987-654-3210',
+          fax: '123-456-7890',
+        },
+      });
+    });
+
+    it('returns undefined if producer and collection status is neither complete or started', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'NotStarted',
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftProducerContactDetail({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'NotStarted',
+        },
+      });
+    });
+  });
+
+  describe('setDraftProducerContactDetail', () => {
+    it('successfully sets producer contact detail on a draft', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCode: '12345',
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: SetDraftProducerContactDetailRequest = {
+        id: id,
+        accountId: accountId,
+        value: {
+          organisationName: 'Producer Org',
+          name: 'Jane Doe',
+          email: 'jane.doe@example.com',
+        },
+        saveAsDraft: true,
+      };
+      const response = await subject.setDraftProducerContactDetail(request);
+      const expectedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCode: '12345',
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          status: 'NotStarted',
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
       if (response.success) {
         expect(response.value).toBeUndefined();
       }

@@ -752,4 +752,110 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  getDraftProducerContactDetail: Handler<
+    api.GetDraftProducerContactDetailRequest,
+    api.GetDraftProducerContactDetailResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        (draft.producerAndCollection.status === 'Started' ||
+          draft.producerAndCollection.status === 'Complete') &&
+        draft.producerAndCollection.producer
+      ) {
+        return success(draft.producerAndCollection.producer.contact);
+      } else {
+        return success({ status: 'NotStarted' });
+      }
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftProducerContactDetail: Handler<
+    api.SetDraftProducerContactDetailRequest,
+    api.SetDraftProducerContactDetailResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (value.organisationName && value.name && value.email && value.phone) {
+        saveAsDraft = false;
+      }
+
+      if (saveAsDraft) {
+        const partialProducerContactDetailValidationResult =
+          ukwmValidation.validationRules.validatePartialProducerContactDetailSection(
+            value,
+          );
+        if (!partialProducerContactDetailValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            partialProducerContactDetailValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      } else {
+        const producerContactDetailValidationResult =
+          ukwmValidation.validationRules.validateProducerContactDetailSection(
+            value as api.Contact,
+          );
+        if (!producerContactDetailValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            producerContactDetailValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      }
+      const draftContact: api.DraftContact = saveAsDraft
+        ? { status: 'Started', ...(value as Promise<api.Contact>) }
+        : { status: 'Complete', ...(value as api.Contact) };
+      if (
+        draft.producerAndCollection.status === 'Started' ||
+        draft.producerAndCollection.status === 'Complete'
+      ) {
+        if (draft.producerAndCollection.producer) {
+          draft.producerAndCollection.producer.contact = draftContact;
+        }
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

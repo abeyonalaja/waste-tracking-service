@@ -8,8 +8,14 @@ import {
   validateProducerPostcode,
   validateProducerTownCity,
   validateProducerAddressDetails,
+  validateProducerContactEmail,
+  validateProducerContactFax,
+  validateProducerContactOrganisationName,
+  validateProducerContactPerson,
+  validateProducerContactPhone,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
+
 describe('Producer reference validation', () => {
   it.each([
     '123456789012',
@@ -361,7 +367,8 @@ describe('Producer organisation name validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11002,
         field: 'Producer organisation name',
-        message: 'Producer organisation name must be less than 250 characters',
+        message:
+          'The producer organisation name must be less than 250 characters',
       });
     }
   });
@@ -404,6 +411,94 @@ describe('Producer Address Details Validation', () => {
       context: 'ui',
     });
 
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer's contact person validation`, () => {
+  it('should return valid true when organisation name is valid', () => {
+    const result = validateProducerContactOrganisationName('GroupexOOD');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when organisation name is empty', () => {
+    const result = validateProducerContactOrganisationName();
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when organisation name exceeds 250 characters', () => {
+    const organisationName = faker.string.sample(251);
+    const result = validateProducerContactOrganisationName(organisationName);
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer's contact person validation`, () => {
+  it('should return valid true when person is valid', () => {
+    const result = validateProducerContactPerson('Ivan Ivanov');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when person is empty', () => {
+    const result = validateProducerContactPerson();
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when person exceeds 250 characters', () => {
+    const producerContactPerson = faker.string.sample(251);
+    const result = validateProducerContactPerson(producerContactPerson);
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer's contact email validation`, () => {
+  it('should return valid true when email is valid', () => {
+    const result = validateProducerContactEmail('john@gmail.com');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when email is empty', () => {
+    const result = validateProducerContactEmail();
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when email is invalid', () => {
+    const result = validateProducerContactEmail('john123');
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when email exceeds 250 characters', () => {
+    const producerContactEmail = faker.string.sample(251);
+    const result = validateProducerContactEmail(producerContactEmail);
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer's contact phone validation`, () => {
+  it('should return valid true when phone is valid', () => {
+    const result = validateProducerContactPhone('01903230482');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when phone is empty', () => {
+    const result = validateProducerContactPhone();
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when phone is invalid', () => {
+    const result = validateProducerContactPhone('21315');
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer's contact fax validation`, () => {
+  it('should return valid true when fax is valid', () => {
+    const result = validateProducerContactFax('00-44 1234 567890');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when fax is invalid', () => {
+    const result = validateProducerContactFax('21315');
     expect(result.valid).toBe(false);
   });
 });

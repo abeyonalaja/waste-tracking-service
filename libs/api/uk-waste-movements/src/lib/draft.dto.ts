@@ -62,6 +62,7 @@ export interface Contact {
   name: string;
   email: string;
   phone: string;
+  fax?: string;
 }
 
 export interface ProducerDetail {
@@ -372,7 +373,7 @@ type DraftAddress =
   | ({ status: 'Started' } & Partial<Address>)
   | ({ status: 'Complete' } & Address);
 
-type DraftContact =
+export type DraftContact =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<Contact>)
   | ({ status: 'Complete' } & Contact);
@@ -539,4 +540,21 @@ export type GetDraftProducerAddressDetailsResponse =
   | undefined;
 export const getDraftProducerAddressDetails: Method = {
   name: 'getDraftProducerAddressDetails',
+};
+
+export type GetDraftProducerContactDetailRequest = IdRequest & AccountIdRequest;
+export type GetDraftProducerContactDetailResponse = Response<DraftContact>;
+export const getDraftProducerContactDetail: Method = {
+  name: 'getDraftProducerContactDetail',
+};
+
+export type SetDraftProducerContactDetailRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Contact> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Contact } & { saveAsDraft: false });
+
+export type SetDraftProducerContactDetailResponse = Response<void>;
+export const setDraftProducerContactDetail: Method = {
+  name: 'setDraftProducerContactDetail',
 };

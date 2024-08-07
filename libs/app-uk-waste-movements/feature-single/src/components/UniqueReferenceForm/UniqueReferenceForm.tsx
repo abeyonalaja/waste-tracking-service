@@ -52,6 +52,7 @@ export function UniqueReferenceForm({
       ukwmValidation.validationRules.validateProducerReference,
       '#unique-reference',
       locale,
+      'ui',
     );
 
     if (!referenceValidationResult.valid) {

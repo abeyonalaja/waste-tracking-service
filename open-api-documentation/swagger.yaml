@@ -43,71 +43,6 @@ paths:
           required: false
           schema:
             type: string
-  /api/payments:
-    get:
-      tags:
-        - payments
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetPaymentResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters: []
-    post:
-      tags:
-        - payments
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreatePaymentResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreatePaymentRequest'
   /api/submissions:
     get:
       tags:
@@ -254,35 +189,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateTemplateRequest'
-  /api/batches/{id}:
-    get:
-      tags:
-        - bulk-submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetBulkSubmissionResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
   /api/reference-data/countries:
     get:
       tags:
@@ -456,6 +362,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListRecoveryCodesResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/reference-data/sic-codes:
+    get:
+      tags:
+        - reference-data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSICCodesResponse'
         '404':
           description: Not Found
           content:
@@ -668,7 +597,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmDraftsResponse'
+                $ref: '#/components/schemas/UkwmGetDraftsResult'
         '404':
           description: Not Found
           content:
@@ -712,6 +641,34 @@ paths:
           required: false
           schema:
             type: string
+    post:
+      tags:
+        - ukwm
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmCreateDraftResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UkwmCreateDraftRequest'
   /api/ukwm-batches/{id}:
     get:
       tags:
@@ -722,7 +679,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmBatchResponse'
+                $ref: '#/components/schemas/UkwmBulkSubmission'
         '400':
           description: Bad Request
           content:
@@ -747,36 +704,7 @@ paths:
           required: true
           schema:
             type: string
-  /api/batches/{id}/submissions:
-    get:
-      tags:
-        - bulk-submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetBulkSubmissionsResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-  /api/submissions/{id}/submission-confirmation:
+  /api/submissions/{id}/submission-declaration:
     get:
       tags:
         - submission
@@ -786,7 +714,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetSubmissionConfirmationResponse'
+                $ref: '#/components/schemas/GetSubmissionDeclarationResponse'
         '404':
           description: Not Found
           content:
@@ -814,7 +742,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PutSubmissionConfirmationResponse'
+                $ref: '#/components/schemas/PutSubmissionDeclarationResponse'
         '400':
           description: Bad Request
           content:
@@ -844,8 +772,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutSubmissionConfirmationRequest'
-  /api/submissions/{id}/recovery-facility:
+              $ref: '#/components/schemas/PutSubmissionDeclarationRequest'
+  /api/submissions/{id}/transit-countries:
     get:
       tags:
         - submission
@@ -855,7 +783,145 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListRecoveryFacilityDetailResponse'
+                $ref: '#/components/schemas/GetTransitCountriesResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutTransitCountriesResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutTransitCountriesRequest'
+  /api/submissions/{id}/collection-detail:
+    get:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCollectionDetailResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetCollectionDetailResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCollectionDetailRequest'
+  /api/submissions/{id}/carriers:
+    get:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCarriersResponse'
         '404':
           description: Not Found
           content:
@@ -883,7 +949,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateRecoveryFacilityDetailRequest'
+                $ref: '#/components/schemas/CreateCarriersResponse'
         '400':
           description: Bad Request
           content:
@@ -913,8 +979,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateRecoveryFacilityDetailRequest'
-  /api/submissions/{id}/exit-location:
+              $ref: '#/components/schemas/CreateCarriersRequest'
+  /api/submissions/{id}/importer-detail:
     get:
       tags:
         - submission
@@ -924,7 +990,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetExitLocationResponse'
+                $ref: '#/components/schemas/GetImporterDetailResponse'
         '404':
           description: Not Found
           content:
@@ -952,7 +1018,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PutExitLocationResponse'
+                $ref: '#/components/schemas/PutImporterDetailResponse'
         '400':
           description: Bad Request
           content:
@@ -982,8 +1048,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutExitLocationRequest'
-  /api/submissions/{id}/collection-date:
+              $ref: '#/components/schemas/PutImporterDetailRequest'
+  /api/submissions/{id}/reference:
     get:
       tags:
         - submission
@@ -993,92 +1059,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCollectionDateResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: submitted
-          in: query
-          required: false
-          schema:
-            type: string
-    put:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutCollectionDateResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: submitted
-          in: query
-          required: false
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutDraftCollectionDateRequest'
-  /api/submissions/{id}/exporter-detail:
-    get:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetExporterDetailResponse'
+                $ref: '#/components/schemas/GetReferenceResponse'
         '404':
           description: Not Found
           content:
@@ -1106,7 +1087,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PutExporterDetailResponse'
+                $ref: '#/components/schemas/PutReferenceResponse'
         '400':
           description: Bad Request
           content:
@@ -1136,7 +1117,76 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutExporterDetailRequest'
+              $ref: '#/components/schemas/PutReferenceRequest'
+  /api/submissions/{id}/waste-description:
+    get:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWasteDescriptionResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutWasteDescriptionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutWasteDescriptionRequest'
   /api/submissions/{id}/waste-quantity:
     get:
       tags:
@@ -1222,7 +1272,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PutDraftWasteQuantityRequest'
-  /api/submissions/{id}/waste-description:
+  /api/submissions/{id}/exporter-detail:
     get:
       tags:
         - submission
@@ -1232,7 +1282,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetWasteDescriptionResponse'
+                $ref: '#/components/schemas/GetExporterDetailResponse'
         '404':
           description: Not Found
           content:
@@ -1260,7 +1310,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PutWasteDescriptionResponse'
+                $ref: '#/components/schemas/PutExporterDetailResponse'
         '400':
           description: Bad Request
           content:
@@ -1290,8 +1340,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutWasteDescriptionRequest'
-  /api/submissions/{id}/reference:
+              $ref: '#/components/schemas/PutExporterDetailRequest'
+  /api/submissions/{id}/collection-date:
     get:
       tags:
         - submission
@@ -1301,7 +1351,92 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetReferenceResponse'
+                $ref: '#/components/schemas/GetCollectionDateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: submitted
+          in: query
+          required: false
+          schema:
+            type: string
+    put:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutCollectionDateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: submitted
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutDraftCollectionDateRequest'
+  /api/submissions/{id}/exit-location:
+    get:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetExitLocationResponse'
         '404':
           description: Not Found
           content:
@@ -1329,7 +1464,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PutReferenceResponse'
+                $ref: '#/components/schemas/PutExitLocationResponse'
         '400':
           description: Bad Request
           content:
@@ -1359,8 +1494,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PutReferenceRequest'
-  /api/submissions/{id}/importer-detail:
+              $ref: '#/components/schemas/PutExitLocationRequest'
+  /api/submissions/{id}/recovery-facility:
     get:
       tags:
         - submission
@@ -1370,76 +1505,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetImporterDetailResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-    put:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutImporterDetailResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutImporterDetailRequest'
-  /api/submissions/{id}/carriers:
-    get:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetCarriersResponse'
+                $ref: '#/components/schemas/ListRecoveryFacilityDetailResponse'
         '404':
           description: Not Found
           content:
@@ -1467,7 +1533,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCarriersResponse'
+                $ref: '#/components/schemas/CreateRecoveryFacilityDetailRequest'
         '400':
           description: Bad Request
           content:
@@ -1497,8 +1563,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCarriersRequest'
-  /api/submissions/{id}/collection-detail:
+              $ref: '#/components/schemas/CreateRecoveryFacilityDetailRequest'
+  /api/submissions/{id}/submission-confirmation:
     get:
       tags:
         - submission
@@ -1508,7 +1574,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCollectionDetailResponse'
+                $ref: '#/components/schemas/GetSubmissionConfirmationResponse'
         '404':
           description: Not Found
           content:
@@ -1536,7 +1602,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SetCollectionDetailResponse'
+                $ref: '#/components/schemas/PutSubmissionConfirmationResponse'
         '400':
           description: Bad Request
           content:
@@ -1566,145 +1632,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetCollectionDetailRequest'
-  /api/submissions/{id}/transit-countries:
-    get:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetTransitCountriesResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-    put:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutTransitCountriesResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutTransitCountriesRequest'
-  /api/submissions/{id}/submission-declaration:
-    get:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetSubmissionDeclarationResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-    put:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PutSubmissionDeclarationResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PutSubmissionDeclarationRequest'
+              $ref: '#/components/schemas/PutSubmissionConfirmationRequest'
   /api/templates/{id}/transit-countries:
     get:
       tags:
@@ -2267,7 +2195,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmSubmissionResponse'
+                $ref: '#/components/schemas/UkwmDraft'
         '400':
           description: Bad Request
           content:
@@ -2292,6 +2220,86 @@ paths:
           required: true
           schema:
             type: string
+  /api/ukwm/{id}/producer-contact:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUkwmDraftProducerContactDetailResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmDraftProducerContact'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: saveAsDraft
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UkwmSetDraftProducerContactRequestCombined'
   /api/ukwm-batches/{id}/download:
     get:
       tags:
@@ -2337,7 +2345,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmSubmissionsResponse'
+                $ref: '#/components/schemas/UkwmPagedSubmissionData'
         '400':
           description: Bad Request
           content:
@@ -2392,116 +2400,6 @@ paths:
           required: false
           schema:
             type: string
-  /api/submissions/{id}/carriers/{carrierId}:
-    get:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetCarriersResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: carrierId
-          in: path
-          required: true
-          schema:
-            type: string
-    delete:
-      tags:
-        - submission
-      responses:
-        '204':
-          description: No Content
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: carrierId
-          in: path
-          required: true
-          schema:
-            type: string
-    put:
-      tags:
-        - submission
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SetCarriersRequest'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: carrierId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SetCarriersRequest'
   /api/submissions/{id}/recovery-facility/{rfdId}:
     get:
       tags:
@@ -2612,6 +2510,116 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SetRecoveryFacilityDetailRequest'
+  /api/submissions/{id}/carriers/{carrierId}:
+    get:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCarriersResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: carrierId
+          in: path
+          required: true
+          schema:
+            type: string
+    delete:
+      tags:
+        - submission
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: carrierId
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetCarriersRequest'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: carrierId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCarriersRequest'
   /api/templates/{id}/recovery-facility/{rfdId}:
     get:
       tags:
@@ -2842,7 +2850,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmColumnWithMessageResponse'
+                $ref: '#/components/schemas/UkwmColumnWithMessage'
         '400':
           description: Bad Request
           content:
@@ -2882,7 +2890,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmRowWithMessageResponse'
+                $ref: '#/components/schemas/UkwmRowWithMessage'
         '400':
           description: Bad Request
           content:
@@ -2912,33 +2920,6 @@ paths:
           required: true
           schema:
             type: string
-  /api/batches:
-    post:
-      tags:
-        - bulk-submission
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/id'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
   /api/feedback:
     post:
       tags:
@@ -3020,68 +3001,6 @@ paths:
         - name: invitationToken
           in: query
           required: false
-          schema:
-            type: string
-  /api/batches/{id}/finalize:
-    post:
-      tags:
-        - bulk-submission
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json: {}
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-  /api/payments/{id}/cancel:
-    post:
-      tags:
-        - payments
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CancelPaymentResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
           schema:
             type: string
   /api/submissions/copy-template/{id}:
@@ -3234,41 +3153,6 @@ paths:
           required: true
           schema:
             type: string
-  /api/payments/{id}:
-    put:
-      tags:
-        - payments
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetPaymentResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
   /api/submissions/{id}/cancel:
     put:
       tags:
@@ -3351,8 +3235,270 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateTemplateRequest'
+  /api/payments:
+    get:
+      tags:
+        - payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPaymentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters: []
+    post:
+      tags:
+        - payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+  /api/batches/{id}:
+    get:
+      tags:
+        - bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBulkSubmissionResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/batches/{id}/submissions:
+    get:
+      tags:
+        - bulk-submission
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBulkSubmissionsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/batches:
+    post:
+      tags:
+        - bulk-submission
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/id'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+  /api/batches/{id}/finalize:
+    post:
+      tags:
+        - bulk-submission
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/payments/{id}/cancel:
+    post:
+      tags:
+        - payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelPaymentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/payments/{id}:
+    put:
+      tags:
+        - payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPaymentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
 components:
   schemas:
+    ListSICCodesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SICCode'
+    SICCode:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          $ref: '#/components/schemas/LanguageDescription'
+      required:
+        - code
+        - description
+      additionalProperties: false
     ListAddressesResponse:
       type: array
       items:
@@ -3375,6 +3521,14 @@ components:
         - townCity
         - postcode
         - country
+      additionalProperties: false
+    CreateBulkSubmissionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
       additionalProperties: false
     GetBulkSubmissionResponse:
       $ref: '#/components/schemas/BulkSubmission'
@@ -6480,7 +6634,58 @@ components:
       additionalProperties: false
     CancelPaymentResponse:
       not: {}
-    GetUkwmBatchResponse:
+    UkwmGetDraftsResult:
+      type: object
+      properties:
+        totalRecords:
+          type: number
+        totalPages:
+          type: number
+        page:
+          type: number
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/UkwmGetDraftsDto'
+      required:
+        - totalRecords
+        - totalPages
+        - page
+        - values
+      additionalProperties: false
+    UkwmGetDraftsDto:
+      type: object
+      properties:
+        id:
+          type: string
+        wasteMovementId:
+          type: string
+        producerName:
+          type: string
+        ewcCode:
+          type: string
+        collectionDate:
+          type: object
+          properties:
+            day:
+              type: string
+            month:
+              type: string
+            year:
+              type: string
+          required:
+            - day
+            - month
+            - year
+          additionalProperties: false
+      required:
+        - id
+        - wasteMovementId
+        - producerName
+        - ewcCode
+        - collectionDate
+      additionalProperties: false
+    UkwmBulkSubmission:
       type: object
       properties:
         id:
@@ -6594,112 +6799,10 @@ components:
         - type: string
         - type: string
           format: binary
-    GetUkwmRowWithMessageResponse:
+    UkwmDraft:
       type: object
       properties:
         id:
-          type: string
-        batchId:
-          type: string
-        accountId:
-          type: string
-        messages:
-          type: array
-          items:
-            type: string
-      required:
-        - id
-        - batchId
-        - accountId
-        - messages
-      additionalProperties: false
-    GetUkwmColumnWithMessageResponse:
-      type: object
-      properties:
-        columnRef:
-          type: string
-        batchId:
-          type: string
-        accountId:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              rowNumber:
-                type: number
-              messages:
-                type: array
-                items:
-                  type: string
-            required:
-              - rowNumber
-              - messages
-            additionalProperties: false
-      required:
-        - columnRef
-        - batchId
-        - accountId
-        - errors
-      additionalProperties: false
-    GetUkwmSubmissionsResponse:
-      type: object
-      properties:
-        totalRecords:
-          type: number
-        totalPages:
-          type: number
-        page:
-          type: number
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/UkwmBulkSubmissionPartialSummary'
-      required:
-        - totalRecords
-        - totalPages
-        - page
-        - values
-      additionalProperties: false
-    UkwmBulkSubmissionPartialSummary:
-      type: object
-      properties:
-        id:
-          type: string
-        wasteMovementId:
-          type: string
-        producerName:
-          type: string
-        ewcCode:
-          type: string
-        collectionDate:
-          type: object
-          properties:
-            day:
-              type: string
-            month:
-              type: string
-            year:
-              type: string
-          required:
-            - day
-            - month
-            - year
-          additionalProperties: false
-      required:
-        - id
-        - wasteMovementId
-        - producerName
-        - ewcCode
-        - collectionDate
-      additionalProperties: false
-    GetUkwmSubmissionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        transactionId:
           type: string
         wasteInformation:
           $ref: '#/components/schemas/UkwmWasteInformation'
@@ -6709,20 +6812,22 @@ components:
           $ref: '#/components/schemas/UkwmProducerAndWasteCollectionDetail'
         carrier:
           $ref: '#/components/schemas/UkwmDraftCarrierDetail'
-        submissionDeclaration:
+        declaration:
           $ref: '#/components/schemas/UkwmDraftSubmissionDeclaration'
-        submissionState:
+        state:
           $ref: '#/components/schemas/UkwmSubmissionState'
       required:
         - id
-        - transactionId
         - wasteInformation
         - receiver
         - producerAndCollection
         - carrier
-        - submissionDeclaration
-        - submissionState
+        - declaration
+        - state
       additionalProperties: false
+    GetUkwmDraftProducerContactDetailResponse:
+      oneOf:
+        - $ref: '#/components/schemas/UkwmDraftProducerContact'
     UkwmWasteInformation:
       discriminator:
         propertyName: status
@@ -6894,6 +6999,8 @@ components:
           type: string
         phone:
           type: string
+        fax:
+          type: string
       required:
         - organisationName
         - name
@@ -6928,13 +7035,21 @@ components:
           title: NotStarted
         - properties:
             producer:
-              $ref: '#/components/schemas/UkwmProducerDetail'
+              $ref: '#/components/schemas/UkwmDraftProducer'
             wasteCollection:
-              $ref: '#/components/schemas/UkwmWasteCollectionDetail'
+              $ref: '#/components/schemas/UkwmDraftWasteCollection'
+            status:
+              type: string
+          title: Started
+        - properties:
+            producer:
+              $ref: '#/components/schemas/UkwmDraftProducer'
+            wasteCollection:
+              $ref: '#/components/schemas/UkwmDraftWasteCollection'
             status:
               type: string
           title: Complete
-    UkwmProducerDetail:
+    UkwmDraftProducer:
       type: object
       properties:
         reference:
@@ -6942,35 +7057,126 @@ components:
         sicCode:
           type: string
         contact:
-          $ref: '#/components/schemas/UkwmContact'
+          $ref: '#/components/schemas/UkwmDraftProducerContact'
         address:
-          $ref: '#/components/schemas/UkwmAddress'
+          $ref: '#/components/schemas/UkwmDraftProducerContactAddress'
       required:
         - reference
         - contact
         - address
       additionalProperties: false
-    UkwmWasteCollectionDetail:
-      type: object
-      properties:
-        wasteSource:
-          type: string
-        brokerRegistrationNumber:
-          type: string
-        carrierRegistrationNumber:
-          type: string
-        localAuthority:
-          type: string
-        expectedWasteCollectionDate:
-          $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
-        address:
-          $ref: '#/components/schemas/UkwmWasteCollectionAddress'
-      required:
-        - wasteSource
-        - localAuthority
-        - expectedWasteCollectionDate
-        - address
-      additionalProperties: false
+    UkwmDraftProducerContact:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmDraftProducerContactAddress:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmDraftWasteCollection:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            wasteSource:
+              type: string
+            brokerRegistrationNumber:
+              type: string
+            carrierRegistrationNumber:
+              type: string
+            localAuthority:
+              type: string
+            expectedWasteCollectionDate:
+              $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
+            address:
+              $ref: '#/components/schemas/UkwmWasteCollectionAddress'
+            status:
+              type: string
+          title: Started
+        - properties:
+            wasteSource:
+              type: string
+            brokerRegistrationNumber:
+              type: string
+            carrierRegistrationNumber:
+              type: string
+            localAuthority:
+              type: string
+            expectedWasteCollectionDate:
+              $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
+            address:
+              $ref: '#/components/schemas/UkwmWasteCollectionAddress'
+            status:
+              type: string
+          title: Complete
     UkwmExpectedWasteCollectionDate:
       type: object
       properties:
@@ -7035,7 +7241,7 @@ components:
                 - CannotStart
                 - NotStarted
         - properties:
-            values:
+            value:
               $ref: '#/components/schemas/UkwmSubmissionDeclaration'
             status:
               type: string
@@ -7067,10 +7273,11 @@ components:
     UkwmSubmissionStateStatus:
       type: string
       enum:
+        - InProgress
         - SubmittedWithEstimates
         - SubmittedWithActuals
         - UpdatedWithActuals
-    GetUkwmDraftsResponse:
+    UkwmPagedSubmissionData:
       type: object
       properties:
         totalRecords:
@@ -7082,14 +7289,14 @@ components:
         values:
           type: array
           items:
-            $ref: '#/components/schemas/UkwmDraft'
+            $ref: '#/components/schemas/UkwmBulkSubmissionPartialSummary'
       required:
         - totalRecords
         - totalPages
         - page
         - values
       additionalProperties: false
-    UkwmDraft:
+    UkwmBulkSubmissionPartialSummary:
       type: object
       properties:
         id:
@@ -7121,6 +7328,57 @@ components:
         - ewcCode
         - collectionDate
       additionalProperties: false
+    UkwmColumnWithMessage:
+      type: object
+      properties:
+        columnRef:
+          type: string
+        batchId:
+          type: string
+        accountId:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              rowNumber:
+                type: number
+              messages:
+                type: array
+                items:
+                  type: string
+            required:
+              - rowNumber
+              - messages
+            additionalProperties: false
+      required:
+        - columnRef
+        - batchId
+        - accountId
+        - errors
+      additionalProperties: false
+    UkwmRowWithMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        batchId:
+          type: string
+        accountId:
+          type: string
+        messages:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - batchId
+        - accountId
+        - messages
+      additionalProperties: false
+    UkwmCreateDraftResponse:
+      $ref: '#/components/schemas/UkwmDraft'
     CreateSubmissionRequest:
       properties:
         reference:
@@ -7815,3 +8073,42 @@ components:
           format: int32
       required:
         - returnUrl
+    UkwmCreateDraftRequest:
+      properties:
+        reference:
+          type: string
+      required:
+        - reference
+    UkwmSetDraftProducerContactRequest:
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        fax:
+          type: string
+      required:
+        - organisationName
+        - name
+        - email
+        - phone
+    UkwmSetPartialDraftProducerContactRequest:
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        fax:
+          type: string
+    UkwmSetDraftProducerContactRequestCombined:
+      oneOf:
+        - $ref: '#/components/schemas/UkwmSetDraftProducerContactRequest'
+        - $ref: '#/components/schemas/UkwmSetPartialDraftProducerContactRequest'

@@ -126,7 +126,18 @@ const contact: JTDSchemaType<Contact> = {
     email: { type: 'string' },
     phone: { type: 'string' },
   },
-  optionalProperties: {},
+  optionalProperties: { fax: { type: 'string' } },
+};
+
+const partialContact: JTDSchemaType<Partial<Contact>> = {
+  properties: {},
+  optionalProperties: {
+    organisationName: { type: 'string' },
+    name: { type: 'string' },
+    email: { type: 'string' },
+    phone: { type: 'string' },
+    fax: { type: 'string' },
+  },
 };
 
 export const receiver: SchemaObject = {
@@ -816,6 +827,39 @@ export const createMultipleDraftsRequest: SchemaObject = {
         },
       },
     },
+  },
+};
+
+export const setDraftProducerContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: contact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftProducerContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: partialContact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftProducerContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const getDraftProducerContactDetailResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftContact,
   },
 };
 

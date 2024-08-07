@@ -21,5 +21,7 @@ export const producerEmptyReference = 11019;
 export const producerCharTooFewReference = 11020;
 export const producerCharTooManyReference = 11021;
 export const producerInvalidReference = 11022;
+export const producerInvalidFax = 11023;
+
 export const postcodeEmpty = 13001;
 export const postcodeInvalid = 13002;

@@ -4,11 +4,19 @@ import {
   UkwmDraft,
   UkwmDraftAddress,
   UkwmAddress,
+  UkwmDraftContact,
+  UkwmContact,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
 import { BadRequestError, NotFoundError } from '../../lib/errors';
 import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
+import { DraftContact } from '@wts/api/uk-waste-movements';
+
+export interface UkwmDraftRef {
+  id: string;
+  accountId: string;
+}
 
 export interface UkwmSubmissionRef {
   id: string;
@@ -331,5 +339,86 @@ export function setDraftProducerAddressDetails(
       };
     }
   }
+  return Promise.resolve();
+}
+
+export function getDraftProducerContactDetail({
+  id,
+  accountId,
+}: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+  if (
+    (draft.producerAndCollection.status === 'Started' ||
+      draft.producerAndCollection.status === 'Complete') &&
+    draft.producerAndCollection.producer
+  ) {
+    return Promise.resolve(draft.producerAndCollection.producer.contact);
+  }
+  return Promise.resolve({ status: 'NotStarted' });
+}
+
+export function setDraftProducerContactDetail(
+  ref: UkwmDraftRef,
+  value: UkwmContact,
+  saveAsDraft?: boolean,
+): Promise<void> {
+  const { id, accountId } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (value.organisationName && value.name && value.email && value.phone) {
+    saveAsDraft = false;
+  }
+
+  if (saveAsDraft) {
+    const partialProducerContactDetailValidationResult =
+      ukwmValidation.validationRules.validatePartialProducerContactDetailSection(
+        value,
+      );
+    if (!partialProducerContactDetailValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          partialProducerContactDetailValidationResult.errors,
+        ),
+      );
+    }
+  } else {
+    const producerContactDetailValidationResult =
+      ukwmValidation.validationRules.validateProducerContactDetailSection(
+        value,
+      );
+    if (!producerContactDetailValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          producerContactDetailValidationResult.errors,
+        ),
+      );
+    }
+  }
+  const draftContact: DraftContact = {
+    status: saveAsDraft ? 'Started' : 'Complete',
+    ...value,
+  };
+
+  if (
+    draft.producerAndCollection.status === 'Started' ||
+    draft.producerAndCollection.status === 'Complete'
+  ) {
+    if (draft.producerAndCollection.producer) {
+      draft.producerAndCollection.producer.contact = draftContact;
+    }
+  }
+
   return Promise.resolve();
 }

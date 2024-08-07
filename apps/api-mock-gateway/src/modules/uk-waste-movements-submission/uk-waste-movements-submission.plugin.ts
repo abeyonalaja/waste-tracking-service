@@ -3,9 +3,11 @@ import * as dto from '@wts/api/waste-tracking-gateway';
 import {
   createDraft,
   getDraftProducerAddressDetails,
+  getDraftProducerContactDetail,
   getDrafts,
   setDraftProducerAddressDetails,
   getDraft,
+  setDraftProducerContactDetail,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -19,6 +21,8 @@ import {
   validateCreateDraftRequest,
   validateSetDraftProducerAddressRequest,
   validateSetPartialDraftProducerAddressRequest,
+  validateSetDraftProducerContactRequest,
+  validateSetPartialDraftProducerContactRequest,
 } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
@@ -186,6 +190,81 @@ export default class UkwmSubmissionPlugin {
           );
           return res.json(
             request as dto.UkwmSetDraftProducerAddressDetailsRequest,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json(err);
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.get(
+      `${this.prefix}/drafts/:id/producer-contact`,
+      async (req, res) => {
+        const user = req.user as User;
+        try {
+          const value = await getDraftProducerContactDetail({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+          });
+          return res.json(
+            value as dto.UkwmGetDraftProducerContactDetailResponse,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ message: err.message });
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.put(
+      `${this.prefix}/drafts/:id/producer-contact`,
+      async (req, res) => {
+        const saveAsDraftStr = req.query['saveAsDraft'] as string | undefined;
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftProducerContactRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        } else {
+          if (!validateSetPartialDraftProducerContactRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        }
+        const request =
+          req.body as dto.UkwmSetDraftProducerContactDetailRequest;
+        const user = req.user as User;
+        try {
+          await setDraftProducerContactDetail(
+            {
+              id: req.params.id,
+              accountId: user.credentials.accountId,
+            },
+            request,
+            saveAsDraft,
+          );
+          return res.json(
+            request as dto.UkwmSetDraftProducerContactDetailRequest,
           );
         } catch (err) {
           if (err instanceof CustomError) {

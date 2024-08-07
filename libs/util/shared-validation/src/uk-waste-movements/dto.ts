@@ -14,6 +14,7 @@ export type Field =
   | 'Producer contact name'
   | 'Producer contact email address'
   | 'Producer contact phone number'
+  | 'Producer fax number'
   | 'Producer Standard Industrial Classification (SIC) code';
 
 export interface ErrorMessage {

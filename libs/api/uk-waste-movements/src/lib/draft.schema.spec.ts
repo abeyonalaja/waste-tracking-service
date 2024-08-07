@@ -4,11 +4,14 @@ import {
   CarrierDetail,
   CreateDraftRequest,
   CreateMultipleDraftsRequest,
+  GetDraftProducerContactDetailRequest,
+  GetDraftProducerContactDetailResponse,
   GetDraftResponse,
   GetDraftsRequest,
   GetDraftsResponse,
   ProducerDetail,
   ReceiverDetail,
+  SetDraftProducerContactDetailRequest,
   ValidateMultipleDraftsRequest,
   ValidateMultipleDraftsResponse,
   WasteCollectionDetail,
@@ -36,6 +39,10 @@ import {
   setDraftProducerAddressDetailsRequest,
   setPartialDraftProducerAddressDetailsRequest,
   getDraftProducerAddressDetailsResponse,
+  setDraftProducerContactDetailRequest,
+  setPartialDraftProducerContactDetailRequest,
+  getDraftProducerContactDetailRequest,
+  getDraftProducerContactDetailResponse,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -858,6 +865,82 @@ describe('getDraftProducerAddressDetailsResponse', () => {
         townCity: 'London',
         postcode: 'W1A 1AA',
         country: 'England',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftProducerContactDetailRequest', () => {
+  const validate = ajv.compile<SetDraftProducerContactDetailRequest>(
+    setDraftProducerContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftProducerContactDetailRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        organisationName: 'Tech Innovators Inc.',
+        name: 'John Doe',
+        email: 'john.doe@techinnovators.com',
+        phone: '+1234567890',
+        fax: '+0987654321',
+      },
+      saveAsDraft: false,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setPartialDraftProducerContactDetailRequest', () => {
+  const validate = ajv.compile<SetDraftProducerContactDetailRequest>(
+    setPartialDraftProducerContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftProducerContactDetailRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        name: 'Jane Smith',
+        email: 'jane.smith@techinnovators.com',
+      },
+      saveAsDraft: true,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftProducerContactDetailRequest', () => {
+  const validate = ajv.compile<GetDraftProducerContactDetailRequest>(
+    getDraftProducerContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftProducerContactDetailRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftProducerContactDetailResponse', () => {
+  const validate = ajv.compile<GetDraftProducerContactDetailResponse>(
+    getDraftProducerContactDetailResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftProducerContactDetailResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        organisationName: 'Tech Innovators Inc.',
+        name: 'John Doe',
+        email: 'john.doe@techinnovators.com',
+        phone: '01903230482',
+        fax: '01903230482',
       },
     };
 

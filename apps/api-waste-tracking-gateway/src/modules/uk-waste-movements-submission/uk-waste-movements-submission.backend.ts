@@ -5,6 +5,9 @@ import {
   UkwmCreateDraftResponse,
   UkwmDraftAddress,
   UkwmAddress,
+  UkwmDraftContact,
+  UkwmGetDraftProducerContactDetailResponse,
+  UkwmContact,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -13,9 +16,16 @@ import {
   GetDraftsResponse,
   CreateDraftResponse,
   GetDraftProducerAddressDetailsResponse,
+  GetDraftProducerContactDetailResponse,
+  SetDraftProducerContactDetailResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
+
+export interface UkwmDraftRef {
+  id: string;
+  accountId: string;
+}
 
 export interface SubmissionRef {
   id: string;
@@ -39,6 +49,14 @@ export interface UkWasteMovementsSubmissionBackend {
   getDraftProducerAddressDetails({
     id,
   }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
+  setDraftProducerContactDetail(
+    ref: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftProducerContactDetail({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftContact | undefined>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -157,6 +175,55 @@ export class ServiceUkWasteMovementsSubmissionBackend
       return response.value;
     } else {
       return response;
+    }
+  }
+
+  async getDraftProducerContactDetail({
+    id,
+    accountId,
+  }: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+    let response: GetDraftProducerContactDetailResponse;
+    try {
+      response = await this.client.getDraftProducerContactDetail({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value as UkwmGetDraftProducerContactDetailResponse;
+    }
+  }
+
+  async setDraftProducerContactDetail(
+    { id, accountId }: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: SetDraftProducerContactDetailResponse;
+    try {
+      response = await this.client.setDraftProducerContactDetail({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
     }
   }
 }

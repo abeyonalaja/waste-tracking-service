@@ -1,6 +1,7 @@
 import {
   UkwmCreateDraftRequest,
   UkwmAddress,
+  UkwmContact,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -36,5 +37,30 @@ export const validateSetPartialDraftProducerAddressRequest = ajv.compile<
     townCity: { type: 'string' },
     country: { type: 'string' },
     postcode: { type: 'string' },
+  },
+});
+
+export const validateSetDraftProducerContactRequest = ajv.compile<UkwmContact>({
+  properties: {
+    organisationName: { type: 'string' },
+    name: { type: 'string' },
+    email: { type: 'string' },
+    phone: { type: 'string' },
+  },
+  optionalProperties: {
+    fax: { type: 'string' },
+  },
+});
+
+export const validateSetPartialDraftProducerContactRequest = ajv.compile<
+  Partial<UkwmContact>
+>({
+  properties: {},
+  optionalProperties: {
+    organisationName: { type: 'string' },
+    name: { type: 'string' },
+    email: { type: 'string' },
+    phone: { type: 'string' },
+    fax: { type: 'string' },
   },
 });

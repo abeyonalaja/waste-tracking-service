@@ -16,28 +16,172 @@ export const validationErrorMessages: ValidationErrorMessages = {
     },
   },
   [codes.producerCharTooManyOrganisationName]: {
-    en: `Producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
-    cy: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    en: {
+      csv: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
+      api: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
+      ui: `The producer organisation name must be less than ${constraints.FreeTextChar.max} characters`,
+    },
+    cy: {
+      csv: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
   },
   [codes.producerEmptyReference]: {
-    en: 'Enter a unique reference',
-    cy: 'Rhowch gyfeirnod unigryw',
+    en: {
+      csv: 'Enter a unique reference',
+      api: 'Enter a unique reference',
+      ui: 'Enter a unique reference',
+    },
+    cy: {
+      csv: 'Rhowch gyfeirnod unigryw',
+      api: 'Rhowch gyfeirnod unigryw',
+      ui: 'Rhowch gyfeirnod unigryw',
+    },
   },
   [codes.producerCharTooManyReference]: {
-    en: `The unique reference must be ${constraints.ReferenceChar.max} characters or less`,
-    cy: `Rhaid i’r cyfeirnod unigryw fod yn llai na ${constraints.ReferenceChar.max} o gymeriadau`,
+    en: {
+      csv: `The unique reference must be ${constraints.ReferenceChar.max} characters or less`,
+      api: `The unique reference must be ${constraints.ReferenceChar.max} characters or less`,
+      ui: `The unique reference must be ${constraints.ReferenceChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i’r cyfeirnod unigryw fod yn ${constraints.ReferenceChar.max} nod neu lai`,
+      api: `Rhaid i’r cyfeirnod unigryw fod yn ${constraints.ReferenceChar.max} nod neu lai`,
+      ui: `Rhaid i’r cyfeirnod unigryw fod yn ${constraints.ReferenceChar.max} nod neu lai`,
+    },
   },
   [codes.producerInvalidReference]: {
-    en: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
-    cy: "Rhaid i'r cyfeirnod gynnwys llythrennau a i z yn unig, a rhifau",
+    en: {
+      csv: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+      api: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+      ui: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+    },
+    cy: {
+      csv: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+      api: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+      ui: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+    },
+  },
+  [codes.producerEmptyContactFullName]: {
+    en: {
+      csv: `Enter the producer's contact person`,
+      api: `Enter the producer's contact person`,
+      ui: `Enter the producer's contact person`,
+    },
+    cy: {
+      csv: 'Rhowch enw person cyswllt y cynhyrchydd',
+      api: 'Rhowch enw person cyswllt y cynhyrchydd',
+      ui: 'Rhowch enw person cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.producerCharTooManyContactFullName]: {
+    en: {
+      csv: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      api: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      ui: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.producerEmptyEmail]: {
+    en: {
+      csv: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      api: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+      ui: `The producer's contact person must be less than ${constraints.FreeTextChar.max} characters`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.producerCharTooManyEmail]: {
+    en: {
+      csv: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
+      api: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
+      ui: `The producer's contact email address must be less than ${constraints.FreeTextChar.max} characters`,
+    },
+    cy: {
+      csv: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.producerInvalidEmail]: {
+    en: {
+      csv: `Enter a real email address for the producer's contact`,
+      api: `Enter a real email address for the producer's contact`,
+      ui: `Enter a real email address for the producer's contact`,
+    },
+    cy: {
+      csv: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.producerEmptyPhone]: {
+    en: {
+      csv: `Enter a producer's contact phone number`,
+      api: `Enter a producer's contact phone number`,
+      ui: `Enter a producer's contact phone number`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.producerInvalidPhone]: {
+    en: {
+      csv: `Enter a real phone number for the producer's contact`,
+      api: `Enter a real phone number for the producer's contact`,
+      ui: `Enter a real phone number for the producer's contact`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.producerInvalidFax]: {
+    en: {
+      csv: `Enter a real fax number for the producer's contact`,
+      api: `Enter a real fax number for the producer's contact`,
+      ui: `Enter a real fax number for the producer's contact`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
   },
   [codes.postcodeEmpty]: {
-    en: 'Enter a postcode',
-    cy: 'Rhowch god post',
+    en: {
+      csv: 'Enter a postcode',
+      api: 'Enter a postcode',
+      ui: 'Enter a postcode',
+    },
+    cy: {
+      csv: 'Rhowch god post',
+      api: 'Rhowch god post',
+      ui: 'Rhowch god post',
+    },
   },
   [codes.postcodeInvalid]: {
-    en: 'Enter a real postcode',
-    cy: 'Rhowch god post go iawn',
+    en: {
+      csv: 'Enter a real postcode',
+      api: 'Enter a real postcode',
+      ui: 'Enter a real postcode',
+    },
+    cy: {
+      csv: 'Rhowch god post go iawn',
+      api: 'Rhowch god post go iawn',
+      ui: 'Rhowch god post go iawn',
+    },
   },
   [codes.producerEmptyAddressLine1]: {
     en: {

@@ -8,6 +8,8 @@ import {
   validateCreateDraftRequest,
   validateSetDraftProducerAddressDetailsRequest,
   validateSetPartialDraftProducerAddressDetailsRequest,
+  validateSetDraftProducerContactRequest,
+  validateSetPartialDraftProducerContactRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -172,6 +174,71 @@ const plugin: Plugin<PluginOptions> = {
           payload as dto.UkwmSetDraftProducerAddressDetailsRequest;
         try {
           await backend.setDraftProducerAddressDetails(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/producer-contact',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftProducerContactDetail({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftProducerContactDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/producer-contact',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftProducerContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validateSetPartialDraftProducerContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        }
+        const request = payload as dto.UkwmSetDraftProducerContactDetailRequest;
+        try {
+          await backend.setDraftProducerContactDetail(
             {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,

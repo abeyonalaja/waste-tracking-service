@@ -56,7 +56,9 @@ const contact: JTDSchemaType<Contact> = {
     email: { type: 'string' },
     phone: { type: 'string' },
   },
-  optionalProperties: {},
+  optionalProperties: {
+    fax: { type: 'string' },
+  },
 };
 
 export const producer: JTDSchemaType<ProducerDetail> = {

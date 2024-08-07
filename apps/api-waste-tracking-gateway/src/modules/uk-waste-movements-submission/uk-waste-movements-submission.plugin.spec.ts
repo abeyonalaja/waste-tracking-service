@@ -3,12 +3,14 @@ import {
   CreateDraftRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
+  UkwmDraftRef,
 } from './uk-waste-movements-submission.backend';
 import { server } from '@hapi/hapi';
 import winston from 'winston';
 import ukWasteMovementsBulkSubmissionPlugin from './uk-waste-movements-submission.plugin';
 import {
   UkwmCreateDraftResponse,
+  UkwmDraftContact,
   UkwmGetDraftsRequest,
   UkwmGetDraftsResult,
   UkwmSubmission,
@@ -40,6 +42,16 @@ const mockBackend = {
       ) => Promise<void>
     >(),
   getDraftProducerAddressDetails:
+    jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
+  setDraftProducerContactDetail:
+    jest.fn<
+      (
+        ref: UkwmDraftRef,
+        value: UkwmDraftContact,
+        saveAsDraft?: boolean,
+      ) => Promise<void>
+    >(),
+  getDraftProducerContactDetail:
     jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
 };
 
@@ -144,6 +156,36 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.setDraftProducerAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/producer-contact', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/producer-contact`,
+      };
+
+      mockBackend.getDraftProducerContactDetail.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/producer-contact', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/producer-contact`,
+      };
+
+      mockBackend.setDraftProducerContactDetail.mockRejectedValue(
         Boom.badRequest(),
       );
       const response = await app.inject(options);

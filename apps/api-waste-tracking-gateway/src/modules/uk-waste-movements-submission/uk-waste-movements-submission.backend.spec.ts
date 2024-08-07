@@ -5,10 +5,13 @@ import { Logger } from 'winston';
 import { faker } from '@faker-js/faker';
 import {
   CreateDraftResponse,
+  GetDraftProducerContactDetailResponse,
   GetDraftResponse,
   GetDraftsResponse,
   GetDraftProducerAddressDetailsResponse,
+  SetDraftProducerContactDetailResponse,
 } from '@wts/api/uk-waste-movements';
+import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
 import { Response } from '@wts/util/invocation';
 import { UkwmAddress } from '@wts/api/waste-tracking-gateway';
@@ -27,6 +30,10 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['setDraftProducerAddressDetails']>(),
   getDraftProducerAddressDetails:
     jest.fn<DaprUkWasteMovementsClient['getDraftProducerAddressDetails']>(),
+  setDraftProducerContactDetail:
+    jest.fn<DaprUkWasteMovementsClient['setDraftProducerContactDetail']>(),
+  getDraftProducerContactDetail:
+    jest.fn<DaprUkWasteMovementsClient['getDraftProducerContactDetail']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -228,5 +235,72 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftProducerAddressDetailsResponse.value);
+  });
+
+  it('sets producer contact detail on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftProducerContactDetailResponse: SetDraftProducerContactDetailResponse =
+      {
+        success: true,
+        value: undefined,
+      };
+
+    mockClient.setDraftProducerContactDetail.mockResolvedValueOnce(
+      mockSetDraftProducerContactDetailResponse,
+    );
+    const value: UkwmContact = {
+      organisationName: 'Org name',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '123-456-7890',
+    };
+
+    await subject.setDraftProducerContactDetail({ id, accountId }, value, true);
+
+    expect(mockClient.setDraftProducerContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(mockClient.setDraftProducerContactDetail).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftProducerContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets producer contact detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftProducerContactDetailResponse: GetDraftProducerContactDetailResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          organisationName: 'Org name',
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          phone: '123-456-7890',
+        },
+      };
+
+    mockClient.getDraftProducerContactDetail.mockResolvedValueOnce(
+      mockGetDraftProducerContactDetailResponse,
+    );
+
+    const result = await subject.getDraftProducerContactDetail({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftProducerContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftProducerContactDetailResponse.value);
   });
 });

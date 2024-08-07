@@ -299,6 +299,56 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.getDraftProducerContactDetail.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(
+        body,
+      ) as api.GetDraftProducerContactDetailRequest;
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftProducerContactDetail(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.setDraftProducerContactDetail.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftProducerContactDetailRequest;
+      if (request.saveAsDraft) {
+        if (
+          !validateSubmission.validateSetPartialDraftProducerContactDetailRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      } else {
+        if (
+          !validateSubmission.validateSetDraftProducerContactDetailRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      }
+      return await submissionController.setDraftProducerContactDetail(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

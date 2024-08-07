@@ -9,6 +9,18 @@ export type UkwmPhysicalForm =
 export type UkwmQuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
 
+export interface UkwmAccountIdRequest {
+  accountId: string;
+}
+export interface UkwmIdRequest {
+  id: string;
+}
+
+export type UkwmDraftContact =
+  | { status: 'NotStarted' }
+  | ({ status: 'Started' } & Partial<UkwmContact>)
+  | ({ status: 'Complete' } & UkwmContact);
+
 export interface UkwmAddress {
   buildingNameOrNumber?: string;
   addressLine1: string;
@@ -23,6 +35,7 @@ export interface UkwmContact {
   name: string;
   email: string;
   phone: string;
+  fax?: string;
 }
 
 export interface UkwmWasteCollectionAddress {
@@ -244,3 +257,9 @@ export type UkwmDraftAddress =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<UkwmAddress>)
   | ({ status: 'Complete' } & UkwmAddress);
+
+export type UkwmGetDraftProducerContactDetailResponse =
+  | DraftContact
+  | undefined;
+
+export type UkwmSetDraftProducerContactDetailRequest = UkwmContact;

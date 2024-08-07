@@ -3,7 +3,7 @@ import * as constraints from './constraints';
 import * as errorCodes from './error-codes';
 import { getErrorMessage } from './util';
 import type { ErrorMessage, ValidationResult, FieldFormatError } from './dto';
-import { ProducerDetail, ProducerDetailFlattened } from './model';
+import { Contact, ProducerDetail, ProducerDetailFlattened } from './model';
 
 export * from './validation-rules';
 
@@ -768,5 +768,410 @@ export function validateProducerDetailSection(
   return {
     valid: false,
     value: errors,
+  };
+}
+
+export function validateProducerContactOrganisationName(
+  contactOrganisationName?: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const errors: FieldFormatError[] = [];
+
+  const trimmedContactOrganisationName = contactOrganisationName?.trim();
+  if (!trimmedContactOrganisationName) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer organisation name',
+          code: errorCodes.producerEmptyOrganisationName,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerEmptyOrganisationName,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (trimmedContactOrganisationName.length > constraints.FreeTextChar.max) {
+    errors.push({
+      field: 'Producer organisation name',
+      code: errorCodes.producerCharTooManyOrganisationName,
+      message: message
+        ? getErrorMessage(
+            errorCodes.producerCharTooManyOrganisationName,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      errors: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedContactOrganisationName,
+  };
+}
+
+export function validateProducerContactPerson(
+  contactPerson?: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const errors: FieldFormatError[] = [];
+
+  const trimmedContactPerson = contactPerson?.trim();
+  if (!trimmedContactPerson) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer contact name',
+          code: errorCodes.producerEmptyContactFullName,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerEmptyContactFullName,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (trimmedContactPerson.length > constraints.FreeTextChar.max) {
+    errors.push({
+      field: 'Producer contact name',
+      code: errorCodes.producerCharTooManyContactFullName,
+      message: message
+        ? getErrorMessage(
+            errorCodes.producerCharTooManyContactFullName,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      errors: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedContactPerson,
+  };
+}
+
+export function validateProducerContactEmail(
+  contactEmail?: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const errors: FieldFormatError[] = [];
+
+  const trimmedContactEmail = contactEmail?.trim();
+
+  if (!trimmedContactEmail) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer contact email address',
+          code: errorCodes.producerEmptyEmail,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerEmptyEmail,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (trimmedContactEmail.length > constraints.FreeTextChar.max) {
+    errors.push({
+      field: 'Producer contact email address',
+      code: errorCodes.producerCharTooManyEmail,
+      message: message
+        ? getErrorMessage(
+            errorCodes.producerCharTooManyEmail,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (!regex.emailRegex.test(trimmedContactEmail)) {
+    errors.push({
+      field: 'Producer contact email address',
+      code: errorCodes.producerInvalidEmail,
+      message: message
+        ? getErrorMessage(
+            errorCodes.producerInvalidEmail,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      errors: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedContactEmail,
+  };
+}
+
+export function validateProducerContactPhone(
+  phoneNumber?: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const errors: FieldFormatError[] = [];
+  const trimmedPhoneNumber = phoneNumber?.trim();
+
+  if (!trimmedPhoneNumber) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer contact phone number',
+          code: errorCodes.producerEmptyPhone,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerEmptyPhone,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (!regex.phoneRegex.test(trimmedPhoneNumber)) {
+    errors.push({
+      field: 'Producer contact phone number',
+      code: errorCodes.producerInvalidPhone,
+      message: message
+        ? getErrorMessage(
+            errorCodes.producerInvalidPhone,
+            message.locale,
+            message.context,
+          )
+        : undefined,
+    });
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      errors: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedPhoneNumber,
+  };
+}
+
+export function validateProducerContactFax(
+  faxNumber?: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const trimmedFaxNumber = faxNumber?.trim();
+
+  if (trimmedFaxNumber && !regex.faxRegex.test(trimmedFaxNumber)) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer fax number',
+          code: errorCodes.producerInvalidFax,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerInvalidFax,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedFaxNumber || '',
+  };
+}
+
+export function validateProducerContactDetailSection(
+  value: Contact,
+  message?: ErrorMessage,
+): ValidationResult<Contact> {
+  const errors: FieldFormatError[] = [];
+
+  const producerContactOrganisationName =
+    validateProducerContactOrganisationName(value.organisationName, message);
+
+  const producerContactPerson = validateProducerContactPerson(
+    value.name,
+    message,
+  );
+
+  const producerContactEmail = validateProducerContactEmail(
+    value.email,
+    message,
+  );
+
+  const producerContactPhone = validateProducerContactPhone(
+    value.phone,
+    message,
+  );
+
+  const producerContactFax = validateProducerContactFax(value.fax, message);
+
+  if (
+    producerContactOrganisationName.valid &&
+    producerContactPerson.valid &&
+    producerContactEmail.valid &&
+    producerContactPhone.valid &&
+    producerContactFax.valid
+  ) {
+    return {
+      valid: true,
+      value: {
+        organisationName: producerContactOrganisationName.value,
+        name: producerContactPerson.value,
+        email: producerContactEmail.value,
+        phone: producerContactPhone.value,
+        fax: producerContactFax.value,
+      },
+    };
+  }
+
+  if (!producerContactOrganisationName.valid) {
+    errors.push(...(producerContactOrganisationName.errors || []));
+  }
+
+  if (!producerContactPerson.valid) {
+    errors.push(...(producerContactPerson.errors || []));
+  }
+
+  if (!producerContactEmail.valid) {
+    errors.push(...(producerContactEmail.errors || []));
+  }
+
+  if (!producerContactPhone.valid) {
+    errors.push(...(producerContactPhone.errors || []));
+  }
+
+  if (!producerContactFax.valid) {
+    errors.push(...(producerContactFax.errors || []));
+  }
+
+  return {
+    valid: false,
+    errors: errors,
+  };
+}
+
+export function validatePartialProducerContactDetailSection(
+  value: Partial<Contact>,
+  message?: ErrorMessage,
+): ValidationResult<Partial<Contact>> {
+  const errors: FieldFormatError[] = [];
+
+  const validatedFields: Partial<Contact> = {};
+
+  if (value.organisationName) {
+    const producerContactOrganisationName =
+      validateProducerContactOrganisationName(value.organisationName, message);
+    if (producerContactOrganisationName.valid) {
+      validatedFields.organisationName = producerContactOrganisationName.value;
+    } else {
+      errors.push(...(producerContactOrganisationName.errors || []));
+    }
+  }
+
+  if (value.name) {
+    const producerContactPerson = validateProducerContactPerson(
+      value.name,
+      message,
+    );
+    if (producerContactPerson.valid) {
+      validatedFields.name = producerContactPerson.value;
+    } else {
+      errors.push(...(producerContactPerson.errors || []));
+    }
+  }
+
+  if (value.email) {
+    const producerContactEmail = validateProducerContactEmail(
+      value.email,
+      message,
+    );
+    if (producerContactEmail.valid) {
+      validatedFields.email = producerContactEmail.value;
+    } else {
+      errors.push(...(producerContactEmail.errors || []));
+    }
+  }
+
+  if (value.phone) {
+    const producerContactPhone = validateProducerContactPhone(
+      value.phone,
+      message,
+    );
+    if (producerContactPhone.valid) {
+      validatedFields.phone = producerContactPhone.value;
+    } else {
+      errors.push(...(producerContactPhone.errors || []));
+    }
+  }
+
+  if (value.fax) {
+    const producerContactFax = validateProducerContactFax(value.fax, message);
+    if (producerContactFax.valid) {
+      validatedFields.fax = producerContactFax.value;
+    } else {
+      errors.push(...(producerContactFax.errors || []));
+    }
+  }
+
+  if (errors.length === 0) {
+    return {
+      valid: true,
+      value: validatedFields,
+    };
+  }
+
+  return {
+    valid: false,
+    errors: errors,
   };
 }
