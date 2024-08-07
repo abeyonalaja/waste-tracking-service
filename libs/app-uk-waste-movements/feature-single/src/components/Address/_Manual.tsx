@@ -233,7 +233,7 @@ export function Manual({
               name="country"
               options={countryOptions}
               small
-              legendText="Country"
+              legendText={content.countryLabel}
               onChange={handleChange}
               value={formValues.country}
               error={formErrors.country?.errors?.[0]?.message}

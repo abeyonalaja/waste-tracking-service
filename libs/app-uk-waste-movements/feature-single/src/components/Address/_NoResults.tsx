@@ -1,5 +1,5 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
-import { FormValues, ViewType } from './types';
+import { ContentStrings, FormValues, ViewType } from './types';
 import Link from 'next/link';
 import { Page } from '@wts/ui/shared-ui/server';
 
@@ -8,6 +8,7 @@ interface NoResultsProps {
   formValues: FormValues;
   updateFormValues: (formValues: FormValues) => void;
   updateView: (view: ViewType) => void;
+  content: ContentStrings;
 }
 
 const defaultFormValues: FormValues = {
@@ -25,6 +26,7 @@ export function NoResults({
   formValues,
   updateFormValues,
   updateView,
+  content,
 }: NoResultsProps): JSX.Element {
   const handleClick = (e: React.MouseEvent, view: 'search' | 'manual') => {
     e.preventDefault();
@@ -44,19 +46,19 @@ export function NoResults({
         <GovUK.GridCol size="two-thirds">
           {noResultsContent}
           <GovUK.Paragraph>
-            We could not find an address that matches {formValues.postcode}
+            {content.notFound} {formValues.postcode}
             {formValues.buildingNameOrNumber &&
               ` and ${formValues.buildingNameOrNumber}`}
-            . You can search again or enter the address manually.
+            . {content.notFoundPrompt}
           </GovUK.Paragraph>
           <GovUK.Paragraph>
             <Link href="#" onClick={(e) => handleClick(e, 'search')}>
-              Search again
+              {content.searchAgain}
             </Link>
           </GovUK.Paragraph>
           <GovUK.Paragraph mb={8}>
             <Link href="#" onClick={(e) => handleClick(e, 'manual')}>
-              Enter the address manually
+              {content.manualLinkShort}
             </Link>
           </GovUK.Paragraph>
           <GovUK.ButtonGroup>

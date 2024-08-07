@@ -12,8 +12,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { Page } from '@wts/ui/shared-ui/server';
+import { useRouter } from 'next/navigation';
 
 interface ResultsProps {
+  id: string;
+  token: string | null | undefined;
   resultsContent: React.ReactNode;
   formValues: FormValues;
   addressData?: AddressSearchResult[];
@@ -23,6 +26,8 @@ interface ResultsProps {
 }
 
 export function Results({
+  id,
+  token,
   resultsContent,
   formValues,
   addressData,
@@ -31,6 +36,7 @@ export function Results({
   content,
 }: ResultsProps): JSX.Element {
   const locale = useLocale() as ukwmValidation.Locale;
+  const router = useRouter();
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -38,7 +44,14 @@ export function Results({
     updateFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = async (event: React.FormEvent): Promise<void> => {
+  const handleSecondaryButton = async (event: React.MouseEvent) => {
+    await handleSubmit(event, true);
+  };
+
+  const handleSubmit = async (
+    event: React.FormEvent,
+    returnToDraft = false,
+  ): Promise<void> => {
     event.preventDefault();
     const errors: FormErrors = {};
 
@@ -57,7 +70,11 @@ export function Results({
       return;
     }
     setFormErrors({});
-    updateView('confirm');
+    if (returnToDraft) {
+      await handleSave();
+    } else {
+      updateView('confirm');
+    }
   };
 
   const handleBackLink = (event: React.MouseEvent) => {
@@ -69,6 +86,29 @@ export function Results({
       buildingNameOrNumber: '',
     });
     updateView('search');
+  };
+
+  const handleSave = async () => {
+    let response: Response;
+    try {
+      response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/producer-address?saveAsDraft=true`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: formValues.addressSelection,
+        },
+      );
+      if (response.ok) {
+        router.push(`/single/${id}`);
+      }
+    } catch (error) {
+      console.error(error);
+      router.push('/error');
+    }
   };
 
   return (
@@ -85,7 +125,11 @@ export function Results({
           {addressData && (
             <>
               <GovUK.Paragraph>
-                {addressData.length} addresses found for {formValues.postcode}.{' '}
+                {addressData.length}{' '}
+                {addressData.length === 1
+                  ? content.addressFound
+                  : content.addressesFound}{' '}
+                {formValues.postcode}.{' '}
                 <Link
                   href="#"
                   onClick={(e) => {
@@ -108,7 +152,11 @@ export function Results({
                 />
                 <GovUK.ButtonGroup>
                   <GovUK.Button text={content.buttonSave} />
-                  <GovUK.Button text={content.buttonSecondary} secondary />
+                  <GovUK.Button
+                    text={content.buttonSecondary}
+                    secondary
+                    onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
+                  />
                 </GovUK.ButtonGroup>
               </form>
             </>

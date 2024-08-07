@@ -1,19 +1,25 @@
 'use client';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { formatAddress } from './formatAddress';
-import { AddressSearchResult, FormValues, ViewType } from './types';
+import {
+  AddressSearchResult,
+  ContentStrings,
+  FormValues,
+  ViewType,
+} from './types';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Page } from '@wts/ui/shared-ui/server';
 
 interface ConfirmProps {
+  id: string;
   token: string | null | undefined;
   confirmationContent: React.ReactNode;
   formValues: FormValues;
   addressData?: AddressSearchResult[];
   updateFormValues: (formValues: FormValues) => void;
   updateView: (view: ViewType) => void;
-  id: string;
+  content: ContentStrings;
 }
 
 const defaultFormValues: FormValues = {
@@ -27,13 +33,14 @@ const defaultFormValues: FormValues = {
 };
 
 export function Confirm({
+  id,
   token,
   confirmationContent,
   formValues,
   addressData,
   updateFormValues,
   updateView,
-  id,
+  content,
 }: ConfirmProps): JSX.Element {
   const router = useRouter();
   const handleSearchAgain = (e: React.MouseEvent) => {
@@ -100,10 +107,12 @@ export function Confirm({
             {addressData && (
               <GovUK.Paragraph>
                 {addressData.length}{' '}
-                {addressData.length > 1 ? 'addresses' : 'address'} found for{' '}
+                {addressData.length === 1
+                  ? content.addressFound
+                  : content.addressesFound}{' '}
                 {formValues.postcode}.{' '}
                 <Link href="#" onClick={handleSearchAgain}>
-                  Search again
+                  {content.searchAgain}
                 </Link>
               </GovUK.Paragraph>
             )}
@@ -112,19 +121,19 @@ export function Confirm({
             </GovUK.InsetText>
             <GovUK.ButtonGroup>
               <GovUK.Button
-                text="Use this address and continue"
+                text={content.useAddress}
                 id="button-save-continue"
               />
               <GovUK.Button
                 secondary
-                text="Save and return"
+                text={content.buttonSecondary}
                 id="button-save-and-return"
                 onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
               />
             </GovUK.ButtonGroup>
             <GovUK.Paragraph>
               <Link href="#" onClick={handleSearchAgain}>
-                Use a different address
+                {content.useDifferentAddress}
               </Link>
             </GovUK.Paragraph>
           </form>

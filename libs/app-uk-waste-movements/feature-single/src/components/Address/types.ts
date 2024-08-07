@@ -40,4 +40,10 @@ export interface ContentStrings {
   searchAgain: string;
   legend: string;
   buttonSecondary: string;
+  notFound: string;
+  notFoundPrompt: string;
+  addressFound: string;
+  addressesFound: string;
+  useAddress: string;
+  useDifferentAddress: string;
 }

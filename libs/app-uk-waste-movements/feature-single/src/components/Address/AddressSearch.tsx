@@ -72,6 +72,8 @@ export function AddressSearch({
       case 'results':
         return (
           <Results
+            id={id}
+            token={token}
             resultsContent={resultsContent}
             formValues={formValues}
             addressData={addressData}
@@ -87,18 +89,20 @@ export function AddressSearch({
             formValues={formValues}
             updateFormValues={setFormValues}
             updateView={setView}
+            content={content}
           />
         );
       case 'confirm':
         return (
           <Confirm
+            id={id}
             token={token}
             confirmationContent={confirmationContent}
             formValues={formValues}
             addressData={addressData}
             updateFormValues={setFormValues}
             updateView={setView}
-            id={id}
+            content={content}
           />
         );
       case 'manual':

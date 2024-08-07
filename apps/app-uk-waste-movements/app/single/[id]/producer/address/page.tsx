@@ -82,6 +82,12 @@ export default async function ProducerAddressPage({
     searchAgain: t('searchAgain'),
     legend: t('legend'),
     buttonSecondary: t('buttonSecondary'),
+    notFound: t('notFound'),
+    notFoundPrompt: t('notFoundPrompt'),
+    addressFound: t('addressFound'),
+    addressesFound: t('addressesFound'),
+    useAddress: t('useAddress'),
+    useDifferentAddress: t('useDifferentAddress'),
   };
 
   const CreateContent = async (key: string) => {

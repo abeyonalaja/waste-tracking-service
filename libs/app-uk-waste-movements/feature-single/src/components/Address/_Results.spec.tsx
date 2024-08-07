@@ -6,6 +6,12 @@ interface MockPage {
   children: React.ReactNode;
 }
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 jest.mock('@wts/ui/shared-ui/server', () => ({
   Page: ({ children }: MockPage) => <div>{children}</div>,
 }));
@@ -20,6 +26,8 @@ const mockUpdateFormValues = jest.fn();
 const mockUpdateView = jest.fn();
 
 const defaultProps = {
+  id: 'mock-id',
+  token: 'mock-token',
   resultsContent: <div>Results Content</div>,
   formValues: {
     postcode: 'AA1 1AA',
@@ -57,6 +65,12 @@ const defaultProps = {
     searchAgain: 'Search again',
     legend: 'Select an address',
     buttonSecondary: 'Save and return',
+    notFound: 'Address not found',
+    notFoundPrompt: 'Enter the address manually',
+    addressFound: 'Address found',
+    addressesFound: 'Addresses found',
+    useAddress: 'Use this address and continue',
+    useDifferentAddress: 'Use a different address',
   },
 };
 
@@ -68,9 +82,7 @@ describe('Address search results page', () => {
 
   it('displays correct number of addresses found', () => {
     render(<Results {...defaultProps} />);
-    expect(
-      screen.getByText('1 addresses found for AA1 1AA.'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('1 Address found AA1 1AA.')).toBeInTheDocument();
   });
 
   it('calls updateView on search again link click', () => {

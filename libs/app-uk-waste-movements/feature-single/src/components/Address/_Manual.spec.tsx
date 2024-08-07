@@ -62,6 +62,12 @@ const defaultProps = {
     manualLinkShort: 'Enter the address manually',
     searchAgain: 'Search again',
     legend: 'Select an address',
+    notFound: 'Address not found',
+    notFoundPrompt: 'Enter the address manually',
+    addressFound: 'Address found',
+    addressesFound: 'Addresses found',
+    useAddress: 'Use this address and continue',
+    useDifferentAddress: 'Use a different address',
   },
   mode: undefined,
 };

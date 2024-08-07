@@ -25,6 +25,32 @@ const defaultProps = {
   },
   updateFormValues: mockUpdateFormValues,
   updateView: mockUpdateView,
+  content: {
+    buildingNameLabel: 'Building Name or Number',
+    buildingNameHint: 'Enter the building name or number',
+    addressLine1Label: 'Address Line 1',
+    addressLine1Hint: 'Enter the first line of the address',
+    addressLine2Label: 'Address Line 2',
+    addressLine2Hint: 'Enter the second line of the address',
+    townCityLabel: 'Town/City',
+    postcodeLabel: 'Postcode',
+    buttonSave: 'Save and continue',
+    buttonSecondary: 'Save and return',
+    inputLabel: 'Postcode',
+    inputHint: 'Enter your postcode',
+    button: 'Search',
+    manualLink: 'Enter the address manually',
+    countryLabel: 'Country',
+    manualLinkShort: 'Enter the address manually',
+    searchAgain: 'Search again',
+    legend: 'Select an address',
+    notFound: 'Address not found',
+    notFoundPrompt: 'Enter the address manually',
+    addressFound: 'Address found',
+    addressesFound: 'Addresses found',
+    useAddress: 'Use this address and continue',
+    useDifferentAddress: 'Use a different address',
+  },
 };
 
 describe('No address found page', () => {
@@ -37,7 +63,7 @@ describe('No address found page', () => {
     render(<NoResults {...defaultProps} />);
     expect(
       screen.getByText(
-        'We could not find an address that matches AA1 1AA and Building. You can search again or enter the address manually.',
+        'Address not found AA1 1AA and Building. Enter the address manually',
       ),
     ).toBeTruthy();
   });
@@ -50,9 +76,7 @@ describe('No address found page', () => {
       />,
     );
     expect(
-      screen.getByText(
-        'We could not find an address that matches AA1 1AA. You can search again or enter the address manually.',
-      ),
+      screen.getByText('Address not found AA1 1AA. Enter the address manually'),
     ).toBeTruthy();
   });
 

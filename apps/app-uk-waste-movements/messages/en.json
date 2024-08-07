@@ -560,7 +560,13 @@
       "searchAgain": "Search again",
       "legend": "Select an address",
       "buttonSave": "Save and continue",
-      "buttonSecondary": "Save and return"
+      "buttonSecondary": "Save and return",
+      "notFound": "We could not find an address that matches",
+      "notFoundPrompt": "You can search again or enter the address manually.",
+      "addressFound": "address found for",
+      "addressesFound": "addresses found for",
+      "useAddress": "Use this address and continue",
+      "useDifferentAddress": "Use a different address"
     },
     "producer": {
       "caption": "Producer and waste collection details",
@@ -574,8 +580,7 @@
           "intro": "{count} addresses were found for {postcode}"
         },
         "noResults": {
-          "heading": "No address found",
-          "intro": "Try searching again or enter the address manually"
+          "heading": "No address found"
         },
         "confirmation": {
           "heading": "Confirm the producer’s address"
