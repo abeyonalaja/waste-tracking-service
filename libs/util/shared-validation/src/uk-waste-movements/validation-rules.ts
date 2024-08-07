@@ -3,7 +3,7 @@ import * as constraints from './constraints';
 import * as errorCodes from './error-codes';
 import { getErrorMessage } from './util';
 import type { ErrorMessage, ValidationResult, FieldFormatError } from './dto';
-import { Contact, ProducerDetail, ProducerDetailFlattened } from './model';
+import { Contact, ProducerDetail } from './model';
 
 export * from './validation-rules';
 
@@ -510,76 +510,91 @@ export function validateProducerAddressDetails(
   message?: ErrorMessage,
 ): ValidationResult<ProducerDetail['address']> {
   const errors: FieldFormatError[] = [];
+  const addressToReturn: ProducerDetail['address'] = {
+    addressLine1: '',
+    townCity: '',
+    postcode: '',
+    country: '',
+  };
 
-  let producerBuildingNameOrNumber: ValidationResult<
-    ProducerDetail['address']['buildingNameOrNumber']
-  >;
-
-  if (value.buildingNameOrNumber?.trim()) {
-    producerBuildingNameOrNumber = validateProducerBuildingNameOrNumber(
-      value.buildingNameOrNumber,
+  if (value.buildingNameOrNumber && value.buildingNameOrNumber.trim() !== '') {
+    const producerBuildingNameOrNumber: ValidationResult<
+      ProducerDetail['address']['buildingNameOrNumber']
+    > = validateProducerBuildingNameOrNumber(
+      value.buildingNameOrNumber.trim() as string,
       message,
     );
-  } else {
-    producerBuildingNameOrNumber = { valid: true, value: '' };
+
+    if (producerBuildingNameOrNumber.valid) {
+      addressToReturn.buildingNameOrNumber = producerBuildingNameOrNumber.value;
+    } else {
+      producerBuildingNameOrNumber.errors?.forEach((error) =>
+        errors.push(error),
+      );
+    }
   }
 
   const producerAddressLine1 = validateProducerAddressLine1(
     value.addressLine1,
     message,
   );
+  if (producerAddressLine1.valid) {
+    addressToReturn.addressLine1 = producerAddressLine1.value;
+  } else {
+    producerAddressLine1.errors?.forEach((error) => errors.push(error));
+  }
 
-  let producerAddressLine2: ValidationResult<
-    ProducerDetail['address']['addressLine2']
-  >;
-  if (value.addressLine2?.trim()) {
-    producerAddressLine2 = validateProducerAddressLine2(
-      value.addressLine2,
+  if (value.addressLine2 && value.addressLine2?.trim() !== '') {
+    const producerAddressLine2: ValidationResult<
+      ProducerDetail['address']['addressLine2']
+    > = validateProducerAddressLine2(
+      value.addressLine2.trim() as string,
       message,
     );
-  } else {
-    producerAddressLine2 = { valid: true, value: '' };
+
+    if (producerAddressLine2.valid) {
+      addressToReturn.addressLine2 = producerAddressLine2.value;
+    } else {
+      producerAddressLine2.errors?.forEach((error) => errors.push(error));
+    }
   }
 
   const producerTownCity = validateProducerTownCity(value.townCity, message);
+  if (producerTownCity.valid) {
+    addressToReturn.townCity = producerTownCity.value;
+  } else {
+    producerTownCity.errors?.forEach((error) => errors.push(error));
+  }
 
-  let producerPostcode: ValidationResult<
-    ProducerDetail['address']['postcode']
-  > = {
-    valid: false,
-    errors: [],
-  };
+  if (value.postcode && value.postcode?.trim() !== '') {
+    const producerPostcode: ValidationResult<
+      ProducerDetail['address']['postcode']
+    > = validateProducerPostcode(value.postcode.trim() as string, message);
 
-  if (value.postcode?.trim()) {
-    producerPostcode = validateProducerPostcode(value.postcode, message);
+    if (producerPostcode.valid) {
+      addressToReturn.postcode = producerPostcode.value;
+    } else {
+      producerPostcode.errors?.forEach((error) => errors.push(error));
+    }
   }
 
   const producerCountry = validateProducerCountry(value.country, message);
+  if (producerCountry.valid) {
+    addressToReturn.country = producerCountry.value;
+  } else {
+    producerCountry.errors?.forEach((error) => errors.push(error));
+  }
 
-  if (
-    producerBuildingNameOrNumber.valid &&
-    producerAddressLine1.valid &&
-    producerAddressLine2.valid &&
-    producerTownCity.valid &&
-    producerPostcode.valid &&
-    producerCountry.valid
-  ) {
+  if (errors.length > 0) {
     return {
-      valid: true,
-      value: {
-        buildingNameOrNumber: producerBuildingNameOrNumber.value,
-        addressLine1: producerAddressLine1.value,
-        addressLine2: producerAddressLine2.value,
-        townCity: producerTownCity.value,
-        postcode: producerPostcode.value,
-        country: producerCountry.value,
-      },
+      valid: false,
+      errors: errors,
     };
   }
 
   return {
-    valid: false,
-    errors: errors,
+    valid: true,
+    value: addressToReturn,
   };
 }
 
@@ -676,123 +691,185 @@ export function validatePartialProducerAddressDetails(
 }
 
 export function validateProducerDetailSection(
-  value: ProducerDetailFlattened,
+  value: ProducerDetail,
   message?: ErrorMessage,
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ProducerDetail } {
   const errors: FieldFormatError[] = [];
+  const detailsToReturn: ProducerDetail = {
+    reference: '',
+    sicCode: '',
+    contact: {
+      organisationName: '',
+      name: '',
+      email: '',
+      phone: '',
+    },
+    address: {
+      addressLine1: '',
+      townCity: '',
+      postcode: '',
+      country: '',
+    },
+  };
 
   const producerOrganisationName = validateProducerOrganisationName(
-    value.producerOrganisationName,
-    message,
-  );
-  const producerReference = validateProducerReference(
-    value.customerReference,
+    value.contact.organisationName,
     message,
   );
 
-  let producerBuildingNameOrNumber:
-    | { valid: false; errors: FieldFormatError[] }
-    | {
-        valid: true;
-        value: ProducerDetail['address']['buildingNameOrNumber'];
-      } = {
-    valid: false,
-    errors: [],
-  };
-
-  if (value.producerBuildingNameOrNumber?.trim()) {
-    producerBuildingNameOrNumber = validateProducerBuildingNameOrNumber(
-      value.producerBuildingNameOrNumber,
-      message,
-    );
-  }
-
-  const producerAddressLine1 = validateProducerAddressLine1(
-    value.producerAddressLine1,
-    message,
-  );
-
-  let producerAddressLine2:
-    | { valid: false; errors: FieldFormatError[] }
-    | { valid: true; value: ProducerDetail['address']['addressLine2'] } = {
-    valid: false,
-    errors: [],
-  };
-
-  if (value.producerAddressLine2?.trim()) {
-    producerAddressLine2 = validateProducerAddressLine2(
-      value.producerAddressLine2,
-      message,
-    );
-  }
-
-  const producerTownCity = validateProducerTownCity(
-    value.producerTownCity,
-    message,
-  );
-
-  let producerPostcode:
-    | { valid: false; errors: FieldFormatError[] }
-    | { valid: true; value: ProducerDetail['address']['postcode'] } = {
-    valid: false,
-    errors: [],
-  };
-
-  if (value.producerPostcode?.trim()) {
-    producerPostcode = validateProducerPostcode(value.producerCountry, message);
-  }
-
-  const producerCountry = validateProducerCountry(
-    value.producerCountry,
-    message,
-  );
-
-  if (
-    producerOrganisationName.valid &&
-    producerReference.valid &&
-    producerBuildingNameOrNumber.valid &&
-    producerAddressLine1.valid &&
-    producerAddressLine2.valid &&
-    producerTownCity.valid &&
-    producerPostcode.valid &&
-    producerCountry.valid
-  ) {
-    return {
-      valid: true,
-      value: {
-        reference: producerReference.value,
-        sicCode: '',
-        contact: {
-          organisationName: producerOrganisationName.value,
-          name: '',
-          email: '',
-          phone: '',
-        },
-        address: {
-          buildingNameOrNumber: producerBuildingNameOrNumber.value,
-          addressLine1: producerAddressLine1.value,
-          addressLine2: producerAddressLine2.value,
-          townCity: producerTownCity.value,
-          postcode: producerPostcode.value,
-          country: producerCountry.value,
-        },
-      },
-    };
-  }
-
-  if (!producerOrganisationName.valid) {
+  if (producerOrganisationName.valid) {
+    detailsToReturn.contact.organisationName = producerOrganisationName.value;
+  } else {
     producerOrganisationName.errors?.forEach((error) => errors.push(error));
   }
 
-  if (!producerReference.valid) {
+  const producerReference = validateProducerReference(value.reference, message);
+
+  if (producerReference.valid) {
+    detailsToReturn.reference = producerReference.value;
+  } else {
     producerReference.errors?.forEach((error) => errors.push(error));
   }
 
+  if (
+    value.address.buildingNameOrNumber !== undefined &&
+    value.address.buildingNameOrNumber?.trim() !== ''
+  ) {
+    const producerBuildingNameOrNumber: ValidationResult<
+      ProducerDetail['address']['buildingNameOrNumber']
+    > = validateProducerBuildingNameOrNumber(
+      value.address.buildingNameOrNumber as string,
+      message,
+    );
+
+    if (producerBuildingNameOrNumber.valid) {
+      detailsToReturn.address.buildingNameOrNumber =
+        producerBuildingNameOrNumber.value;
+    } else {
+      producerBuildingNameOrNumber.errors?.forEach((error) =>
+        errors.push(error),
+      );
+    }
+  }
+
+  const producerAddressLine1 = validateProducerAddressLine1(
+    value.address.addressLine1,
+    message,
+  );
+  if (producerAddressLine1.valid) {
+    detailsToReturn.address.addressLine1 = producerAddressLine1.value;
+  } else {
+    producerAddressLine1.errors?.forEach((error) => errors.push(error));
+  }
+
+  if (
+    value.address.addressLine2 !== null &&
+    value.address.addressLine2?.trim() !== ''
+  ) {
+    const producerAddressLine2: ValidationResult<
+      ProducerDetail['address']['addressLine2']
+    > = validateProducerAddressLine2(
+      value.address.addressLine2 as string,
+      message,
+    );
+
+    if (producerAddressLine2.valid) {
+      detailsToReturn.address.addressLine2 = producerAddressLine2.value;
+    } else {
+      producerAddressLine2.errors?.forEach((error) => errors.push(error));
+    }
+  }
+
+  const producerTownCity = validateProducerTownCity(
+    value.address.townCity,
+    message,
+  );
+  if (producerTownCity.valid) {
+    detailsToReturn.address.townCity = producerTownCity.value;
+  } else {
+    producerTownCity.errors?.forEach((error) => errors.push(error));
+  }
+
+  if (
+    value.address.townCity !== null &&
+    value.address.townCity?.trim() !== ''
+  ) {
+    const producerPostcode: ValidationResult<
+      ProducerDetail['address']['postcode']
+    > = validateProducerPostcode(value.address.postcode as string, message);
+
+    if (producerPostcode.valid) {
+      detailsToReturn.address.postcode = producerPostcode.value;
+    } else {
+      producerPostcode.errors?.forEach((error) => errors.push(error));
+    }
+  }
+
+  const producerCountry = validateProducerCountry(
+    value.address.country,
+    message,
+  );
+  if (producerCountry.valid) {
+    detailsToReturn.address.country = producerCountry.value;
+  } else {
+    producerCountry.errors?.forEach((error) => errors.push(error));
+  }
+
+  const producerContactName = validateProducerContactPerson(
+    value.contact.name,
+    message,
+  );
+  if (producerContactName.valid) {
+    detailsToReturn.contact.name = producerContactName.value;
+  } else {
+    producerContactName.errors?.forEach((error) => errors.push(error));
+  }
+
+  const producerContactEmail = validateProducerContactEmail(
+    value.contact.email,
+    message,
+  );
+  if (producerContactEmail.valid) {
+    detailsToReturn.contact.email = producerContactEmail.value;
+  } else {
+    producerContactEmail.errors?.forEach((error) => errors.push(error));
+  }
+
+  const producerContactPhone = validateProducerContactPhone(
+    value.contact.phone,
+    message,
+  );
+
+  if (producerContactPhone.valid) {
+    detailsToReturn.contact.phone = producerContactPhone.value;
+  } else {
+    producerContactPhone.errors?.forEach((error) => errors.push(error));
+  }
+
+  if (value.contact.fax !== null && value.contact.fax?.trim() !== '') {
+    const producerContactFax: ValidationResult<
+      ProducerDetail['contact']['fax']
+    > = validateProducerContactFax(value.contact.fax as string, message);
+
+    if (producerContactFax.valid) {
+      detailsToReturn.contact.fax = producerContactFax.value;
+    } else {
+      producerContactFax.errors?.forEach((error) => errors.push(error));
+    }
+  }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
   return {
-    valid: false,
-    value: errors,
+    valid: true,
+    value: detailsToReturn,
   };
 }
 

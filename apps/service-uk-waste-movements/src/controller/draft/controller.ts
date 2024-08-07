@@ -701,7 +701,7 @@ export default class SubmissionController {
 
           draft.producerAndCollection.producer.address = {
             status: 'Complete',
-            ...value,
+            ...producerAddressDetailsValidation.value,
           };
         }
       }

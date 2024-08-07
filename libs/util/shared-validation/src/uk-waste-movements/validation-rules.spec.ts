@@ -13,6 +13,7 @@ import {
   validateProducerContactOrganisationName,
   validateProducerContactPerson,
   validateProducerContactPhone,
+  validatePartialProducerAddressDetails,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -396,6 +397,25 @@ describe('Producer Address Details Validation', () => {
     }
   });
 
+  it('should return valid true when an optional field is missing', () => {
+    const addressDetails = {
+      addressLine1: faker.datatype.string(10),
+      townCity: faker.datatype.string(10),
+      country: 'England',
+      postcode: 'SW1A1AA',
+    };
+
+    const result = validateProducerAddressDetails(addressDetails, {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.value).toEqual(addressDetails);
+    }
+  });
+
   it('should return valid false when any address detail is invalid', () => {
     const addressDetails = {
       buildingNameOrNumber: faker.datatype.string(10),
@@ -407,6 +427,65 @@ describe('Producer Address Details Validation', () => {
     };
 
     const result = validateProducerAddressDetails(addressDetails, {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe('validatePartialProducerAddressDetails', () => {
+  it('should return valid true when all address details are valid', () => {
+    const addressDetails = {
+      buildingNameOrNumber: faker.datatype.string(10),
+      addressLine1: faker.datatype.string(10),
+      addressLine2: faker.datatype.string(10),
+      townCity: faker.datatype.string(10),
+      country: 'England',
+      postcode: 'SW1A1AA',
+    };
+
+    const result = validatePartialProducerAddressDetails(addressDetails, {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.value).toEqual(addressDetails);
+    }
+  });
+
+  it('should return valid true when a mandatory field is missing', () => {
+    const addressDetails = {
+      townCity: faker.datatype.string(10),
+      country: 'England',
+      postcode: 'SW1A1AA',
+    };
+
+    const result = validatePartialProducerAddressDetails(addressDetails, {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.value).toEqual(addressDetails);
+    }
+  });
+
+  it('should return valid false when any address detail is invalid', () => {
+    const addressDetails = {
+      buildingNameOrNumber: faker.datatype.string(10),
+      addressLine1: faker.datatype.string(10),
+      addressLine2: faker.datatype.string(10),
+      townCity: faker.datatype.string(10),
+      country: 'England',
+      postcode: '123',
+    };
+
+    const result = validatePartialProducerAddressDetails(addressDetails, {
       locale: 'en',
       context: 'ui',
     });
