@@ -38,6 +38,7 @@ end
 
 def set_feature_cookies
   TestStatus.feature_flag&.each do |feature, value|
+    Log.info("Setting feature flag: #{feature} to #{value}")
     add_custom_cookie(feature, value)
   end
 end

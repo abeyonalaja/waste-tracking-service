@@ -517,6 +517,7 @@
   "loading": "Loading",
   "location": "Location",
   "manageYourTemplates.title": "Your templates",
+  "multiples.uploadForm.button": "Upload",
   "multiples.errorSummaryPage.errorList.heading": "Review the guidance on",
   "multiples.errorSummaryPage.errorList.rowCorrection": "Correct all errors for row {{rowNumber}}",
   "multiples.errorSummaryPage.errorList.rowCorrection.para": "Check the list below for the error descriptions before correcting these errors in your file.",

@@ -1,6 +1,6 @@
 require 'report_builder'
 
-json_reports = Dir.glob('reports/parallel/*.json')
+json_reports = Dir.glob('reports/*.json')
 
 puts json_reports
 

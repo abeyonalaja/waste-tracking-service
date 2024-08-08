@@ -5,7 +5,7 @@ module FileUploadHelper
 
   @file_type = {
     PDF: 'testpdf.pdf',
-    VALID: '9_data.csv',
+    VALID: '9_valid.csv',
     INVALID: 'test-csv-failed.csv',
     VALID_UKWM_CSV: 'UKWM_correct_all_waste_types_with_estimate.csv'
   }
