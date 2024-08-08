@@ -261,7 +261,7 @@ describe('Producer country validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11008,
         field: 'Producer country',
-        message: 'Enter a country',
+        message: 'Select a country',
       });
     }
   });

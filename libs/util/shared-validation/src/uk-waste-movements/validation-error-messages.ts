@@ -259,7 +259,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
     en: {
       csv: `Enter a country`,
       api: `Enter a country`,
-      ui: `Enter a country`,
+      ui: `Select a country`,
     },
     cy: {
       csv: `Rhowch wlad`,

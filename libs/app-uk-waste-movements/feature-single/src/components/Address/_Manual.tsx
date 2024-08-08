@@ -87,15 +87,27 @@ export function Manual({
 
     if (!buildingNameValidationResult.valid)
       errors.buildingNameOrNumber = buildingNameValidationResult;
-    if (!addressLine1ValidationResult.valid)
+    if (
+      !addressLine1ValidationResult.valid &&
+      (!returnToDraft || formValues.addressLine1)
+    )
       errors.addressLine1 = addressLine1ValidationResult;
-    if (!addressLine2ValidationResult.valid)
+    if (
+      !addressLine2ValidationResult.valid &&
+      (!returnToDraft || formValues.addressLine2)
+    )
       errors.addressLine2 = addressLine2ValidationResult;
-    if (!townCityValidationResult.valid)
+    if (
+      !townCityValidationResult.valid &&
+      (!returnToDraft || formValues.townCity)
+    )
       errors.townCity = townCityValidationResult;
-    if (!postcodeValidationResult.valid)
+    if (!postcodeValidationResult.valid && formValues.postcode)
       errors.postcode = postcodeValidationResult;
-    if (!countryValidationResult.valid)
+    if (
+      !countryValidationResult.valid &&
+      (!returnToDraft || formValues.country)
+    )
       errors.country = countryValidationResult;
 
     if (formHasErrors(errors)) {
