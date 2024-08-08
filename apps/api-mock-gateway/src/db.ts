@@ -1761,8 +1761,10 @@ export const db: DB = {
           },
         },
         wasteCollection: {
-          status: 'Complete',
-          wasteSource: 'Industrial',
+          wasteSource: {
+            status: 'Complete',
+            value: 'Industrial',
+          },
           brokerRegistrationNumber: 'BRN123',
           carrierRegistrationNumber: 'CRN456',
           localAuthority: 'Local authority 1',
@@ -1772,6 +1774,7 @@ export const db: DB = {
             year: '2024',
           },
           address: {
+            status: 'Complete',
             addressLine1: '789 Street',
             townCity: 'Pleven',
             postcode: '5800',

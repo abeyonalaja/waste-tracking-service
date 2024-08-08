@@ -187,10 +187,18 @@ export interface UkwmDraftProducer {
   address: DraftAddress;
 }
 
-export type UkwmDraftWasteCollection =
+export type UkwmDraftWasteSource =
   | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<UkwmWasteCollectionDetail>)
-  | ({ status: 'Complete' } & UkwmWasteCollectionDetail);
+  | ({ status: 'Complete' } & { value: string });
+
+export interface UkwmDraftWasteCollection {
+  wasteSource: UkwmDraftWasteSource;
+  brokerRegistrationNumber?: string;
+  carrierRegistrationNumber?: string;
+  localAuthority?: string;
+  expectedWasteCollectionDate?: UkwmExpectedWasteCollectionDate;
+  address: DraftAddress;
+}
 
 export type UkwmProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }

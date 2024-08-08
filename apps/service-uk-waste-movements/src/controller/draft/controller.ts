@@ -480,8 +480,21 @@ export default class SubmissionController {
             },
           },
           wasteCollection: {
-            status: 'Complete',
-            ...s.wasteCollection,
+            address: {
+              status: 'Complete',
+              ...s.wasteCollection.address,
+            },
+            expectedWasteCollectionDate:
+              s.wasteCollection.expectedWasteCollectionDate,
+            localAuthority: s.wasteCollection.localAuthority,
+            wasteSource: {
+              status: 'Complete',
+              value: s.wasteCollection.wasteSource,
+            },
+            brokerRegistrationNumber:
+              s.wasteCollection.brokerRegistrationNumber,
+            carrierRegistrationNumber:
+              s.wasteCollection.carrierRegistrationNumber,
           },
         };
 
@@ -602,7 +615,12 @@ export default class SubmissionController {
               reference: request.reference,
             },
             wasteCollection: {
-              status: 'NotStarted',
+              address: {
+                status: 'NotStarted',
+              },
+              wasteSource: {
+                status: 'NotStarted',
+              },
             },
           },
           carrier: {

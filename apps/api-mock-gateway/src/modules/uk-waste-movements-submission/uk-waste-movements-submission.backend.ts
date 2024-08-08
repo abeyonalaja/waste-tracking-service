@@ -235,7 +235,12 @@ export function createDraft(
         reference: reference,
       },
       wasteCollection: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        wasteSource: {
+          status: 'NotStarted',
+        },
       },
     },
     carrier: {

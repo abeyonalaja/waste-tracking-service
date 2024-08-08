@@ -636,11 +636,11 @@ export function validateWasteCollectionDetailSection(
       },
       localAuthority: value.wasteCollectionLocalAuthority,
       address: {
-        addressLine1: value.wasteCollectionAddressLine1,
+        addressLine1: value.wasteCollectionAddressLine1 || '',
         addressLine2: value.wasteCollectionAddressLine2,
-        townCity: value.wasteCollectionTownCity,
+        townCity: value.wasteCollectionTownCity || '',
         postcode: value.wasteCollectionPostcode,
-        country: value.wasteCollectionCountry,
+        country: value.wasteCollectionCountry || '',
       },
     },
   };

@@ -863,7 +863,14 @@ describe(SubmissionController, () => {
             sicCode: '',
           },
           status: 'Started',
-          wasteCollection: { status: 'NotStarted' },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
         },
         receiver: { status: 'NotStarted' },
         state: { status: 'InProgress', timestamp: new Date() },
@@ -922,8 +929,10 @@ describe(SubmissionController, () => {
           },
         },
         wasteCollection: {
-          status: 'Complete',
-          wasteSource: 'Industrial',
+          wasteSource: {
+            status: 'Complete',
+            value: 'Industrial',
+          },
           brokerRegistrationNumber: 'BRN123456',
           carrierRegistrationNumber: 'CRN123456',
           localAuthority: 'Local Authority 1',
@@ -933,6 +942,7 @@ describe(SubmissionController, () => {
             year: '2025',
           },
           address: {
+            status: 'Complete',
             addressLine1: '123 Main St',
             addressLine2: 'Building 2',
             townCity: 'London',
@@ -1012,8 +1022,10 @@ describe(SubmissionController, () => {
           },
         },
         wasteCollection: {
-          status: 'Complete',
-          wasteSource: 'Industrial',
+          wasteSource: {
+            status: 'Complete',
+            value: 'Industrial',
+          },
           brokerRegistrationNumber: 'BRN123456',
           carrierRegistrationNumber: 'CRN123456',
           localAuthority: 'Local Authority 1',
@@ -1023,6 +1035,7 @@ describe(SubmissionController, () => {
             year: '2025',
           },
           address: {
+            status: 'Complete',
             addressLine1: '123 Main St',
             addressLine2: 'Building 2',
             townCity: 'London',
@@ -1075,8 +1088,10 @@ describe(SubmissionController, () => {
             },
           },
           wasteCollection: {
-            status: 'Complete',
-            wasteSource: 'Industrial',
+            wasteSource: {
+              status: 'Complete',
+              value: 'Industrial',
+            },
             brokerRegistrationNumber: 'BRN123456',
             carrierRegistrationNumber: 'CRN123456',
             localAuthority: 'Local Authority 1',
@@ -1086,6 +1101,7 @@ describe(SubmissionController, () => {
               year: '2025',
             },
             address: {
+              status: 'Complete',
               addressLine1: '123 Main St',
               addressLine2: 'Building 2',
               townCity: 'London',
@@ -1176,8 +1192,10 @@ describe(SubmissionController, () => {
             },
           },
           wasteCollection: {
-            status: 'Complete',
-            wasteSource: 'Industrial',
+            wasteSource: {
+              status: 'Complete',
+              value: 'Commercial',
+            },
             brokerRegistrationNumber: 'BRN123456',
             carrierRegistrationNumber: 'CRN654321',
             localAuthority: 'Local Authority Name',
@@ -1187,6 +1205,7 @@ describe(SubmissionController, () => {
               year: '2025',
             },
             address: {
+              status: 'Complete',
               addressLine1: '456 Secondary St',
               addressLine2: 'Building 2',
               townCity: 'Othertown',
@@ -1296,7 +1315,12 @@ describe(SubmissionController, () => {
             },
           },
           wasteCollection: {
-            status: 'NotStarted',
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
           },
         },
         carrier: {
@@ -1351,7 +1375,12 @@ describe(SubmissionController, () => {
             },
           },
           wasteCollection: {
-            status: 'NotStarted',
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
           },
         },
         carrier: {

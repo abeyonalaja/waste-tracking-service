@@ -8,7 +8,6 @@ import {
   Contact,
   ExpectedWasteCollectionDate,
   ProducerDetail,
-  WasteCollectionAddress,
   WasteTypeDetail,
   CarrierDetail,
   ValidateMultipleDraftsRequest,
@@ -176,16 +175,6 @@ export const producer: JTDSchemaType<ProducerDetail> = {
   },
 };
 
-export const wasteCollectionAddress: JTDSchemaType<WasteCollectionAddress> = {
-  optionalProperties: {
-    addressLine1: { type: 'string' },
-    addressLine2: { type: 'string' },
-    townCity: { type: 'string' },
-    country: { type: 'string' },
-    postcode: { type: 'string' },
-  },
-};
-
 export const wasteCollectionDate: JTDSchemaType<ExpectedWasteCollectionDate> = {
   properties: {
     day: { type: 'string' },
@@ -196,7 +185,7 @@ export const wasteCollectionDate: JTDSchemaType<ExpectedWasteCollectionDate> = {
 
 export const wasteCollection: SchemaObject = {
   properties: {
-    address: wasteCollectionAddress,
+    address: address,
     wasteSource: {
       enum: ['Household', 'Commercial'],
     },
@@ -258,22 +247,30 @@ export const draftProducer: SchemaObject = {
   },
 };
 
-export const draftWasteCollection: SchemaObject = {
+export const draftWasteSource: SchemaObject = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
       properties: {},
     },
-    Started: {
-      optionalProperties: {
-        ...wasteCollection.properties,
-        ...wasteCollection.optionalProperties,
+    Complete: {
+      properties: {
+        value: { type: 'string' },
       },
     },
-    Complete: {
-      properties: wasteCollection.properties,
-      optionalProperties: wasteCollection.optionalProperties,
-    },
+  },
+};
+
+export const draftWasteCollection: SchemaObject = {
+  properties: {
+    address: draftAddress,
+    wasteSource: draftWasteSource,
+  },
+  optionalProperties: {
+    localAuthority: { type: 'string' },
+    expectedWasteCollectionDate: wasteCollectionDate,
+    brokerRegistrationNumber: { type: 'string' },
+    carrierRegistrationNumber: { type: 'string' },
   },
 };
 

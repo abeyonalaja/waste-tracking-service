@@ -84,20 +84,12 @@ export interface WasteCollectionDetail {
   carrierRegistrationNumber?: string;
   localAuthority: string;
   expectedWasteCollectionDate: ExpectedWasteCollectionDate;
-  address: WasteCollectionAddress;
+  address: Address;
 }
 
 export interface CarrierDetail {
   contact: Contact;
   address: Address;
-}
-
-export interface WasteCollectionAddress {
-  addressLine1?: string;
-  addressLine2?: string;
-  townCity?: string;
-  postcode?: string;
-  country?: string;
 }
 
 export interface ReceiverDetail {
@@ -378,6 +370,10 @@ export type DraftContact =
   | ({ status: 'Started' } & Partial<Contact>)
   | ({ status: 'Complete' } & Contact);
 
+export type DraftWasteSource =
+  | { status: 'NotStarted' }
+  | ({ status: 'Complete' } & { value: string });
+
 export interface DraftProducer {
   reference: string;
   sicCode?: string;
@@ -385,10 +381,14 @@ export interface DraftProducer {
   address: DraftAddress;
 }
 
-export type DraftWasteCollection =
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<WasteCollectionDetail>)
-  | ({ status: 'Complete' } & WasteCollectionDetail);
+export interface DraftWasteCollection {
+  wasteSource: DraftWasteSource;
+  brokerRegistrationNumber?: string;
+  carrierRegistrationNumber?: string;
+  localAuthority?: string;
+  expectedWasteCollectionDate?: ExpectedWasteCollectionDate;
+  address: DraftAddress;
+}
 
 export type ProducerAndWasteCollectionDetail =
   | { status: 'NotStarted' }

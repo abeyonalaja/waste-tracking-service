@@ -201,7 +201,9 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           {data.producerAndCollection.status === 'Complete' &&
             data.producerAndCollection.producer.address.status === 'Complete' &&
             data.producerAndCollection.producer.contact.status === 'Complete' &&
-            data.producerAndCollection.wasteCollection.status ===
+            data.producerAndCollection.wasteCollection.address.status ===
+              'Complete' &&
+            data.producerAndCollection.wasteCollection.wasteSource.status ===
               'Complete' && (
               <SummaryList
                 items={[
@@ -278,7 +280,8 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   {
                     key: 'Waste source',
                     value:
-                      data.producerAndCollection.wasteCollection.wasteSource,
+                      data.producerAndCollection.wasteCollection.wasteSource
+                        .value,
                   },
                   {
                     key: 'Broker registration number',

@@ -51,20 +51,23 @@ const mockData: UkwmDraft = {
       sicCode: 'SIC1234',
     },
     wasteCollection: {
-      status: 'Complete',
       expectedWasteCollectionDate: {
         day: '01',
         month: '01',
         year: '2024',
       },
       address: {
+        status: 'Complete',
         addressLine1: '456 Avenue',
         townCity: 'Town',
         postcode: 'CD34 5EF',
         country: 'Country',
       },
       localAuthority: 'Local Authority',
-      wasteSource: 'Waste Source',
+      wasteSource: {
+        status: 'Complete',
+        value: 'Waste Source',
+      },
       brokerRegistrationNumber: 'BRN12345',
     },
   },

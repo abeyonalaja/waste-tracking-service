@@ -133,7 +133,12 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
             sicCode: '123456',
           },
           wasteCollection: {
-            status: 'NotStarted',
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
           },
         },
         carrier: {

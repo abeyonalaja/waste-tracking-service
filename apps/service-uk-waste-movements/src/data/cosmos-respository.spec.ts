@@ -214,7 +214,10 @@ describe(CosmosRepository, () => {
             },
           },
           wasteCollection: {
-            wasteSource: 'Commercial',
+            wasteSource: {
+              status: 'Complete',
+              value: 'Commercial',
+            },
             localAuthority: 'LA1',
             expectedWasteCollectionDate: {
               day: '01',
@@ -222,6 +225,7 @@ describe(CosmosRepository, () => {
               year: '2025',
             },
             address: {
+              status: 'Complete',
               addressLine1: 'Address Line 3',
               townCity: 'City3',
               country: 'Country3',
@@ -337,7 +341,10 @@ describe(CosmosRepository, () => {
             },
           },
           wasteCollection: {
-            wasteSource: 'Commercial',
+            wasteSource: {
+              status: 'Complete',
+              value: 'Commercial',
+            },
             localAuthority: 'LA1',
             expectedWasteCollectionDate: {
               day: '01',
@@ -345,6 +352,7 @@ describe(CosmosRepository, () => {
               year: '2025',
             },
             address: {
+              status: 'Complete',
               addressLine1: 'Address Line 3',
               townCity: 'City3',
               country: 'Country3',
