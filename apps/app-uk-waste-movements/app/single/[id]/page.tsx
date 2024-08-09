@@ -97,7 +97,9 @@ export default async function TaskListPage({
                   {
                     name: t('producerAndCollection.taskThree'),
                     href: '/',
-                    status: draft.producerAndCollection.wasteCollection.status,
+                    status:
+                      draft.producerAndCollection.wasteCollection.address
+                        .status,
                   },
                 ],
               },
