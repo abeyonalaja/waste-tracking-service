@@ -677,12 +677,6 @@ export default class SubmissionController {
         draft.producerAndCollection.status !== 'NotStarted' &&
         draft.producerAndCollection.producer
       ) {
-        if (
-          draft.producerAndCollection.producer.address.status === 'Complete'
-        ) {
-          return fromBoom(Boom.badRequest('Producer address already complete'));
-        }
-
         if (saveAsDraft) {
           const partialProducerAddressDetailsValidation =
             ukwmValidation.validationRules.validatePartialProducerAddressDetails(
