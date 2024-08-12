@@ -23,6 +23,9 @@ export const producerCharTooManyReference = 11021;
 export const producerInvalidReference = 11022;
 export const producerInvalidFax = 11023;
 
+export const wasteCollectionMissingWasteSource = 12009;
+export const wasteCollectionInvalidWasteSource = 12010;
+
 export const postcodeEmpty = 13001;
 export const postcodeInvalid = 13002;
 export const addressSelectionEmpty = 13003;

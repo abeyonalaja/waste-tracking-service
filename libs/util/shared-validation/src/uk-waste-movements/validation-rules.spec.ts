@@ -14,6 +14,7 @@ import {
   validateProducerContactPerson,
   validateProducerContactPhone,
   validatePartialProducerAddressDetails,
+  validateWasteSourceSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -577,6 +578,28 @@ describe(`Producer's contact fax validation`, () => {
 
   it('should return valid false when fax is invalid', () => {
     const result = validateProducerContactFax('21315');
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Waste source`, () => {
+  it('should return valid true when wasteSource is valid', () => {
+    const result = validateWasteSourceSection('Industrial');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid true when wasteSource is different string versions of construction and demolition', () => {
+    const result = validateWasteSourceSection('Construction And Demolition');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when waste source is missing', () => {
+    const result = validateWasteSourceSection('');
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when waste source is invalid', () => {
+    const result = validateWasteSourceSection('Public');
     expect(result.valid).toBe(false);
   });
 });

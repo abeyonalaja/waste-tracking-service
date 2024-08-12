@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 import {
   CreateDraftRef,
+  SetWasteSourceRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
   UkwmDraftRef,
@@ -53,6 +54,12 @@ const mockBackend = {
     >(),
   getDraftProducerContactDetail:
     jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
+  setDraftWasteSource:
+    jest.fn<
+      ({ id, accountId, wasteSource }: SetWasteSourceRef) => Promise<void>
+    >(),
+  getDraftWasteSource:
+    jest.fn<({ id, accountId }: SubmissionRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -188,6 +195,32 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       mockBackend.setDraftProducerContactDetail.mockRejectedValue(
         Boom.badRequest(),
       );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/waste-source', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/waste-source`,
+      };
+
+      mockBackend.getDraftWasteSource.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/waste-source', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/waste-source`,
+      };
+
+      mockBackend.setDraftWasteSource.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

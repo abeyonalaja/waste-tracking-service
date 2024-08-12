@@ -10,6 +10,8 @@ import {
   GetDraftsResponse,
   GetDraftProducerAddressDetailsResponse,
   SetDraftProducerContactDetailResponse,
+  SetDraftWasteSourceResponse,
+  GetDraftWasteSourceResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -34,6 +36,10 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['setDraftProducerContactDetail']>(),
   getDraftProducerContactDetail:
     jest.fn<DaprUkWasteMovementsClient['getDraftProducerContactDetail']>(),
+  setDraftWasteSource:
+    jest.fn<DaprUkWasteMovementsClient['setDraftWasteSource']>(),
+  getDraftWasteSource:
+    jest.fn<DaprUkWasteMovementsClient['getDraftWasteSource']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -307,5 +313,60 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftProducerContactDetailResponse.value);
+  });
+
+  it('sets waste source on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftWasteSourceResponse: SetDraftWasteSourceResponse = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setDraftWasteSource.mockResolvedValueOnce(
+      mockSetDraftWasteSourceResponse,
+    );
+    const wasteSource = 'Industrial';
+
+    await subject.setDraftWasteSource({ id, accountId, wasteSource });
+
+    expect(mockClient.setDraftWasteSource).toHaveBeenCalledWith({
+      id,
+      accountId,
+      wasteSource,
+    });
+    expect(mockClient.setDraftWasteSource).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftWasteSource).toHaveBeenCalledWith({
+      id,
+      accountId,
+      wasteSource,
+    });
+  });
+
+  it('gets waste source from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftWasteSourceResponse: GetDraftWasteSourceResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        value: 'Industrial',
+      },
+    };
+
+    mockClient.getDraftWasteSource.mockResolvedValueOnce(
+      mockGetDraftWasteSourceResponse,
+    );
+
+    const result = await subject.getDraftWasteSource({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftWasteSource).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftWasteSourceResponse.value);
   });
 });

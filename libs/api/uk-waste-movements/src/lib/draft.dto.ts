@@ -13,6 +13,7 @@ export interface IdRequest {
 }
 
 export type WasteSource = 'Household' | 'Commercial';
+
 export type WasteTransport =
   | 'Road'
   | 'Rail'
@@ -557,4 +558,17 @@ export type SetDraftProducerContactDetailRequest =
 export type SetDraftProducerContactDetailResponse = Response<void>;
 export const setDraftProducerContactDetail: Method = {
   name: 'setDraftProducerContactDetail',
+};
+
+export type GetDraftWasteSourceRequest = IdRequest & AccountIdRequest;
+export type GetDraftWasteSourceResponse = Response<DraftWasteSource>;
+export const getDraftWasteSource: Method = {
+  name: 'getDraftWasteSource',
+};
+
+export type SetDraftWasteSourceRequest = IdRequest &
+  AccountIdRequest & { wasteSource: string };
+export type SetDraftWasteSourceResponse = Response<void>;
+export const setDraftWasteSource: Method = {
+  name: 'setDraftWasteSource',
 };

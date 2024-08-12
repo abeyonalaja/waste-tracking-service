@@ -6,6 +6,7 @@ import {
   UkwmAddress,
   UkwmDraftContact,
   UkwmContact,
+  UkwmDraftWasteSource,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
@@ -21,6 +22,12 @@ export interface UkwmDraftRef {
 export interface UkwmSubmissionRef {
   id: string;
   accountId: string;
+}
+
+export interface UkwmSetWasteSourceRef {
+  id: string;
+  accountId: string;
+  wasteSource: string;
 }
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
@@ -431,5 +438,60 @@ export function setDraftProducerContactDetail(
     }
   }
 
+  return Promise.resolve();
+}
+
+export function getDraftWasteSource({
+  id,
+  accountId,
+}: UkwmDraftRef): Promise<UkwmDraftWasteSource> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+  if (
+    (draft.producerAndCollection.status === 'Started' ||
+      draft.producerAndCollection.status === 'Complete') &&
+    draft.producerAndCollection.wasteCollection
+  ) {
+    return Promise.resolve(
+      draft.producerAndCollection.wasteCollection.wasteSource,
+    );
+  }
+  return Promise.resolve({ status: 'NotStarted' });
+}
+
+export function setDraftWasteSource(ref: UkwmSetWasteSourceRef): Promise<void> {
+  const { id, accountId, wasteSource } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  const wasteSourceValidationResult =
+    ukwmValidation.validationRules.validateWasteSourceSection(wasteSource);
+  if (!wasteSourceValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        wasteSourceValidationResult.errors,
+      ),
+    );
+  }
+  if (
+    draft.producerAndCollection.status === 'Started' ||
+    draft.producerAndCollection.status === 'Complete'
+  ) {
+    if (draft.producerAndCollection.wasteCollection) {
+      draft.producerAndCollection.wasteCollection.wasteSource = {
+        status: 'Complete',
+        value: wasteSource,
+      };
+    }
+  }
   return Promise.resolve();
 }

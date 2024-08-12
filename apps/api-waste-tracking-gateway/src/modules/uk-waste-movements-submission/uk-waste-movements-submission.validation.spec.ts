@@ -3,6 +3,7 @@ import {
   validateCreateDraftRequest,
   validateSetDraftProducerAddressDetailsRequest,
   validateSetDraftProducerContactRequest,
+  validateSetDraftWasteSource,
 } from './uk-waste-movements-submission.validation';
 
 describe('validateCreateDraftRequest', () => {
@@ -115,6 +116,24 @@ describe('validateSetDraftProducerContactRequest', () => {
         email: faker.internet.email(),
         phone: faker.phone.number(),
         fax: faker.phone.number(),
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('validateSetDraftWasteSourceRequest', () => {
+  const validate = validateSetDraftWasteSource;
+
+  it('Rejects invalid values', () => {
+    expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
+    expect(validate(faker.lorem.word())).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        wasteSource: 'Industrial',
       }),
     ).toBe(true);
   });

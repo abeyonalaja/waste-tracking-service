@@ -7,6 +7,9 @@ import {
   SetDraftProducerAddressDetailsRequest,
   GetDraftProducerAddressDetailsRequest,
   SetDraftProducerContactDetailRequest,
+  SetDraftWasteSourceRequest,
+  GetDraftProducerContactDetailRequest,
+  GetDraftWasteSourceRequest,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -45,6 +48,11 @@ export const validateGetDraftProducerAddressDetailsRequest =
     draftSchema.getDraftProducerAddressDetailsRequest,
   );
 
+export const validateGetDraftContactDetailRequest =
+  ajv.compile<GetDraftProducerContactDetailRequest>(
+    draftSchema.getDraftProducerContactDetailRequest,
+  );
+
 export const validateSetDraftProducerContactDetailRequest =
   ajv.compile<SetDraftProducerContactDetailRequest>(
     draftSchema.setDraftProducerContactDetailRequest,
@@ -53,4 +61,14 @@ export const validateSetDraftProducerContactDetailRequest =
 export const validateSetPartialDraftProducerContactDetailRequest =
   ajv.compile<SetDraftProducerContactDetailRequest>(
     draftSchema.setPartialDraftProducerContactDetailRequest,
+  );
+
+export const validateSetDraftWasteSourceRequest =
+  ajv.compile<SetDraftWasteSourceRequest>(
+    draftSchema.setDraftWasteSourceRequest,
+  );
+
+export const validateGetDraftWasteSourceRequest =
+  ajv.compile<GetDraftWasteSourceRequest>(
+    draftSchema.getDraftWasteSourceRequest,
   );

@@ -7,6 +7,25 @@ import { Contact, ProducerDetail } from './model';
 
 export * from './validation-rules';
 
+function titleCaseSpacesRemoved(str: string) {
+  return str
+    .trim()
+    .toLowerCase()
+    .split(' ')
+    .map(function (s) {
+      return s.replace(s[0], s[0].toUpperCase());
+    })
+    .join(' ')
+    .replace(/\s/g, '');
+}
+
+const wasteSources = [
+  'Commercial',
+  'Industrial',
+  'ConstructionAndDemolition',
+  'Household',
+];
+
 const fourNationsCountries = [
   'England',
   'Scotland',
@@ -1275,5 +1294,56 @@ export function validatePartialProducerContactDetailSection(
   return {
     valid: false,
     errors: errors,
+  };
+}
+
+export function validateWasteSourceSection(
+  value: string,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const trimmedWasteSource = value.trim();
+  if (!trimmedWasteSource) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Waste Collection Details Waste Source',
+          code: errorCodes.wasteCollectionMissingWasteSource,
+          message: message
+            ? getErrorMessage(
+                errorCodes.wasteCollectionMissingWasteSource,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  value = titleCaseSpacesRemoved(value);
+
+  if (!wasteSources.includes(value)) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Waste Collection Details Waste Source',
+          code: errorCodes.wasteCollectionInvalidWasteSource,
+          message: message
+            ? getErrorMessage(
+                errorCodes.wasteCollectionInvalidWasteSource,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedWasteSource,
   };
 }

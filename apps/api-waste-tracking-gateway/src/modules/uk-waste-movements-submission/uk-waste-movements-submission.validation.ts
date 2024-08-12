@@ -2,6 +2,7 @@ import {
   UkwmCreateDraftRequest,
   UkwmAddress,
   UkwmContact,
+  UkwmSetDraftWasteSourceRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -65,3 +66,8 @@ export const validateSetPartialDraftProducerContactRequest = ajv.compile<
     fax: { type: 'string' },
   },
 });
+
+export const validateSetDraftWasteSource =
+  ajv.compile<UkwmSetDraftWasteSourceRequest>({
+    properties: { wasteSource: { type: 'string' } },
+  });

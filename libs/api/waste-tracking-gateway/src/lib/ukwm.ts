@@ -271,3 +271,9 @@ export type UkwmGetDraftProducerContactDetailResponse =
   | undefined;
 
 export type UkwmSetDraftProducerContactDetailRequest = UkwmContact;
+
+export type UkwmGetDraftWasteSourceResponse = UkwmDraftWasteSource;
+
+export interface UkwmSetDraftWasteSourceRequest {
+  wasteSource: string;
+}

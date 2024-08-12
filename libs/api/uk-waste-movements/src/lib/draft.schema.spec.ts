@@ -20,6 +20,8 @@ import {
   GetDraftProducerAddressDetailsRequest,
   SetDraftProducerAddressDetailsRequest,
   GetDraftProducerAddressDetailsResponse,
+  SetDraftWasteSourceRequest,
+  GetDraftWasteSourceResponse,
 } from './draft.dto';
 import {
   carrier,
@@ -43,6 +45,8 @@ import {
   setPartialDraftProducerContactDetailRequest,
   getDraftProducerContactDetailRequest,
   getDraftProducerContactDetailResponse,
+  setDraftWasteSourceRequest,
+  getDraftWasteSourceResponse,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -947,6 +951,37 @@ describe('getDraftProducerContactDetailResponse', () => {
       },
     };
 
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftWasteSource', () => {
+  const validate = ajv.compile<SetDraftWasteSourceRequest>(
+    setDraftWasteSourceRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftWasteSourceRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      wasteSource: 'Industrial',
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftWasteSourceResponse', () => {
+  const validate = ajv.compile<GetDraftWasteSourceResponse>(
+    getDraftWasteSourceResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftWasteSourceResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        value: 'Industrial',
+      },
+    };
     expect(validate(value)).toBe(true);
   });
 });

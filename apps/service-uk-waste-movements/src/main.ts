@@ -349,6 +349,42 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.getDraftWasteSource.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(body) as api.GetDraftWasteSourceRequest;
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (!validateSubmission.validateGetDraftWasteSourceRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftWasteSource(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.setDraftWasteSource.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(body) as api.SetDraftWasteSourceRequest;
+      if (!validateSubmission.validateSetDraftWasteSourceRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+      return await submissionController.setDraftWasteSource(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

@@ -870,4 +870,91 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  getDraftWasteSource: Handler<
+    api.GetDraftWasteSourceRequest,
+    api.GetDraftWasteSourceResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        (draft.producerAndCollection.status === 'Started' ||
+          draft.producerAndCollection.status === 'Complete') &&
+        draft.producerAndCollection.wasteCollection
+      ) {
+        return success(draft.producerAndCollection.wasteCollection.wasteSource);
+      } else {
+        return success({ status: 'NotStarted' });
+      }
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftWasteSource: Handler<
+    api.SetDraftWasteSourceRequest,
+    api.SetDraftWasteSourceResponse
+  > = async ({ id, accountId, wasteSource }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      const wasteSourceValidationResult =
+        ukwmValidation.validationRules.validateWasteSourceSection(wasteSource);
+      if (!wasteSourceValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          wasteSourceValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
+
+      if (
+        draft.producerAndCollection.status === 'Started' ||
+        draft.producerAndCollection.status === 'Complete'
+      ) {
+        if (draft.producerAndCollection.wasteCollection) {
+          draft.producerAndCollection.wasteCollection.wasteSource = {
+            status: 'Complete',
+            value: wasteSource,
+          };
+        }
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

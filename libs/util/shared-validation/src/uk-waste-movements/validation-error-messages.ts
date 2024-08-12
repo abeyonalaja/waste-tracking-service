@@ -304,4 +304,28 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i’r wlad fod yn un o Loegr, Cymru, yr Alban, neu Gogledd Iwerddon`,
     },
   },
+  [codes.wasteCollectionMissingWasteSource]: {
+    en: {
+      csv: `Enter a waste source`,
+      api: `Enter a waste source`,
+      ui: `Enter a waste source`,
+    },
+    cy: {
+      csv: `Rhowch ffynhonnell gwastraff`,
+      api: `Rhowch ffynhonnell gwastraff`,
+      ui: `Rhowch ffynhonnell gwastraff`,
+    },
+  },
+  [codes.wasteCollectionInvalidWasteSource]: {
+    en: {
+      csv: `The waste source must only be Commercial,Industrial,Construction and demolition or Household`,
+      api: `The waste source must only be Commercial,Industrial,Construction and demolition or Household`,
+      ui: `The waste source must only be Commercial,Industrial,Construction and demolition or Household`,
+    },
+    cy: {
+      csv: `Rhaid i’r ffynhonnell gwastraff fod yn Unigol, Diwydiannol, Adeiladu a dymchwel neu Aelwydydd yn unig`,
+      api: `Rhaid i’r ffynhonnell gwastraff fod yn Unigol, Diwydiannol, Adeiladu a dymchwel neu Aelwydydd yn unig`,
+      ui: `Rhaid i’r ffynhonnell gwastraff fod yn Unigol, Diwydiannol, Adeiladu a dymchwel neu Aelwydydd yn unig`,
+    },
+  },
 };

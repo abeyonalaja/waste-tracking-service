@@ -27,6 +27,11 @@ import {
   getDraftProducerContactDetail,
   GetDraftProducerContactDetailRequest,
   GetDraftProducerContactDetailResponse,
+  SetDraftWasteSourceRequest,
+  SetDraftWasteSourceResponse,
+  GetDraftWasteSourceRequest,
+  GetDraftWasteSourceResponse,
+  getDraftWasteSource,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -126,5 +131,27 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftProducerContactDetailResponse;
+  }
+
+  async getDraftWasteSource(
+    req: GetDraftWasteSourceRequest,
+  ): Promise<GetDraftWasteSourceResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftWasteSource.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftWasteSourceResponse;
+  }
+
+  async setDraftWasteSource(
+    req: SetDraftWasteSourceRequest,
+  ): Promise<SetDraftWasteSourceResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      this.setDraftWasteSource.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftWasteSourceResponse;
   }
 }

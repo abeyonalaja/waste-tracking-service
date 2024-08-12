@@ -17,7 +17,8 @@ export type Field =
   | 'Producer contact email address'
   | 'Producer contact phone number'
   | 'Producer fax number'
-  | 'Producer Standard Industrial Classification (SIC) code';
+  | 'Producer Standard Industrial Classification (SIC) code'
+  | 'Waste Collection Details Waste Source';
 
 export interface ErrorMessage {
   locale: Locale;

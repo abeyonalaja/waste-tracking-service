@@ -3482,6 +3482,162 @@ paths:
           required: true
           schema:
             type: string
+  /api/ukwm/drafts/{id}/producer-address:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftProducerAddressDetailsResponse
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmAddress'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: saveAsDraft
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UkwmSetDraftProducerAddressDetailsCombined'
+  /api/ukwm/drafts/{id}/waste-source:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmGetDraftWasteSourceResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmSetDraftWasteSourceRequest'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDraftWasteSourceRequest'
 components:
   schemas:
     ListSICCodesResponse:
@@ -6161,6 +6317,90 @@ components:
           title: Complete
     CreateSubmissionResponse:
       $ref: '#/components/schemas/DraftSubmission'
+    UkwmGetDraftProducerAddressDetailsResponse:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            buildingNameOrNumber:
+              type: string
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            buildingNameOrNumber:
+              type: string
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmAddress:
+      type: object
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        postcode:
+          type: string
+        country:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+      additionalProperties: false
+    UkwmGetDraftWasteSourceResponse:
+      $ref: '#/components/schemas/UkwmDraftWasteSource'
+    UkwmDraftWasteSource:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            value:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmSetDraftWasteSourceRequest:
+      type: object
+      properties:
+        wasteSource:
+          type: string
+      required:
+        - wasteSource
+      additionalProperties: false
     PutSubmissionCancellationRequest:
       discriminator:
         propertyName: type
@@ -6826,8 +7066,7 @@ components:
         - state
       additionalProperties: false
     GetUkwmDraftProducerContactDetailResponse:
-      oneOf:
-        - $ref: '#/components/schemas/UkwmDraftProducerContact'
+      $ref: '#/components/schemas/UkwmDraftProducerContact'
     UkwmWasteInformation:
       discriminator:
         propertyName: status
@@ -7006,24 +7245,6 @@ components:
         - name
         - email
         - phone
-      additionalProperties: false
-    UkwmAddress:
-      type: object
-      properties:
-        addressLine1:
-          type: string
-        addressLine2:
-          type: string
-        townCity:
-          type: string
-        postcode:
-          type: string
-        country:
-          type: string
-      required:
-        - addressLine1
-        - townCity
-        - country
       additionalProperties: false
     UkwmProducerAndWasteCollectionDetail:
       discriminator:
@@ -8112,3 +8333,45 @@ components:
       oneOf:
         - $ref: '#/components/schemas/UkwmSetDraftProducerContactRequest'
         - $ref: '#/components/schemas/UkwmSetPartialDraftProducerContactRequest'
+    SetDraftProducerAddressDetailsRequest:
+      properties:
+        addressLine1:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        buildingNameOrNumber:
+          type: string
+        addressLine2:
+          type: string
+        postcode:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+    SetDraftPartialProducerAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    UkwmSetDraftProducerAddressDetailsCombined:
+      oneOf:
+        - $ref: '#/components/schemas/SetDraftProducerAddressDetailsRequest'
+        - $ref: '#/components/schemas/SetDraftPartialProducerAddressDetailsRequest'
+    SetDraftWasteSourceRequest:
+      properties:
+        wasteSource:
+          type: string
+      required:
+        - wasteSource

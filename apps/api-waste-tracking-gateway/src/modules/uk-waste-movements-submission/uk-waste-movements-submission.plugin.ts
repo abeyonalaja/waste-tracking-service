@@ -10,6 +10,7 @@ import {
   validateSetPartialDraftProducerAddressDetailsRequest,
   validateSetDraftProducerContactRequest,
   validateSetPartialDraftProducerContactRequest,
+  validateSetDraftWasteSource,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -246,6 +247,54 @@ const plugin: Plugin<PluginOptions> = {
             request,
             saveAsDraft,
           );
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/waste-source',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftWasteSource({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftWasteSourceResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/waste-source',
+      handler: async function ({ params, payload }, h) {
+        if (!validateSetDraftWasteSource(payload)) {
+          return Boom.badRequest();
+        }
+        const request = payload as dto.UkwmSetDraftWasteSourceRequest;
+        try {
+          await backend.setDraftWasteSource({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+            wasteSource: request.wasteSource,
+          });
           return request;
         } catch (err) {
           if (err instanceof Boom.Boom) {

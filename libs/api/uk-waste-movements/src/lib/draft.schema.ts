@@ -261,6 +261,10 @@ export const draftWasteSource: SchemaObject = {
   },
 };
 
+export const wasteSource: SchemaObject = {
+  properties: { wasteSource: { type: 'string' } },
+};
+
 export const draftWasteCollection: SchemaObject = {
   properties: {
     address: draftAddress,
@@ -904,5 +908,28 @@ export const setDraftProducerAddressDetailsResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
+  },
+};
+
+export const getDraftWasteSourceRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const getDraftWasteSourceResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftWasteSource,
+  },
+};
+
+export const setDraftWasteSourceRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    wasteSource: { type: 'string' },
   },
 };

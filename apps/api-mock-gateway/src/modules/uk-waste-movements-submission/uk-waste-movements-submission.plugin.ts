@@ -8,6 +8,8 @@ import {
   setDraftProducerAddressDetails,
   getDraft,
   setDraftProducerContactDetail,
+  setDraftWasteSource,
+  getDraftWasteSource,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -23,6 +25,7 @@ import {
   validateSetPartialDraftProducerAddressRequest,
   validateSetDraftProducerContactRequest,
   validateSetPartialDraftProducerContactRequest,
+  validateSetDraftWasteSource,
 } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
@@ -266,6 +269,59 @@ export default class UkwmSubmissionPlugin {
           return res.json(
             request as dto.UkwmSetDraftProducerContactDetailRequest,
           );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json(err);
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.get(
+      `${this.prefix}/drafts/:id/waste-source`,
+      async (req, res) => {
+        const user = req.user as User;
+        try {
+          const value = await getDraftWasteSource({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+          });
+          return res.json(value as dto.UkwmGetDraftWasteSourceResponse);
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ message: err.message });
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.put(
+      `${this.prefix}/drafts/:id/waste-source`,
+      async (req, res) => {
+        if (!validateSetDraftWasteSource(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+        const request = req.body as dto.UkwmSetDraftWasteSourceRequest;
+        const user = req.user as User;
+        try {
+          await setDraftWasteSource({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+            wasteSource: request.wasteSource,
+          });
+          return res.json(request);
         } catch (err) {
           if (err instanceof CustomError) {
             return res.status(err.statusCode).json(err);

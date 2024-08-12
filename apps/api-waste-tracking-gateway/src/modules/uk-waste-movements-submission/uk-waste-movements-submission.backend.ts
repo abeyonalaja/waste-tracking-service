@@ -8,6 +8,8 @@ import {
   UkwmDraftContact,
   UkwmGetDraftProducerContactDetailResponse,
   UkwmContact,
+  UkwmDraftWasteSource,
+  UkwmGetDraftWasteSourceResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -18,6 +20,8 @@ import {
   GetDraftProducerAddressDetailsResponse,
   GetDraftProducerContactDetailResponse,
   SetDraftProducerContactDetailResponse,
+  SetDraftWasteSourceResponse,
+  GetDraftWasteSourceResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -35,6 +39,12 @@ export interface SubmissionRef {
 export interface CreateDraftRef {
   reference: string;
   accountId: string;
+}
+
+export interface SetWasteSourceRef {
+  id: string;
+  accountId: string;
+  wasteSource: string;
 }
 
 export interface UkWasteMovementsSubmissionBackend {
@@ -57,6 +67,11 @@ export interface UkWasteMovementsSubmissionBackend {
   getDraftProducerContactDetail({
     id,
   }: SubmissionRef): Promise<UkwmDraftContact | undefined>;
+  getDraftWasteSource({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftWasteSource>;
+  setDraftWasteSource(ref: SetWasteSourceRef): Promise<void>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -214,6 +229,54 @@ export class ServiceUkWasteMovementsSubmissionBackend
         accountId,
         value,
         saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
+
+  async getDraftWasteSource({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftWasteSource> {
+    let response: GetDraftWasteSourceResponse;
+    try {
+      response = await this.client.getDraftWasteSource({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value as UkwmGetDraftWasteSourceResponse;
+  }
+
+  async setDraftWasteSource({
+    id,
+    accountId,
+    wasteSource,
+  }: SetWasteSourceRef): Promise<void> {
+    let response: SetDraftWasteSourceResponse;
+    try {
+      response = await this.client.setDraftWasteSource({
+        id,
+        accountId,
+        wasteSource,
       });
     } catch (err) {
       this.logger.error(err);
