@@ -19,10 +19,25 @@ class UkwmTaskListPage < GenericPage
   end
 
   def has_completed_badge_for_task?(task_name, status)
-    task_name = 'recovery-facility-or-laboratory' if ['Laboratory details', 'Recovery facility details'].include?(task_name)
     task_name += '-status'
-
     find(task_name.downcase.gsub(' ', '-')).text == task_status(status)
+  end
+
+  def task_status(status)
+    case status.downcase
+    when 'completed'
+      Translations.value 'single.taskList.tags.completed'
+    when 'not started'
+      Translations.value 'single.taskList.tags.notStarted'
+    when 'cannot start yet'
+      Translations.value 'single.taskList.tags.cannotStart'
+    when 'not started yet'
+      'Not started yet'
+    when 'in progress'
+      Translations.value 'single.taskList.tags.inProgress'
+    else
+      raise 'Invalid status option'
+    end
   end
 
   def waste_producer_collection_details_status

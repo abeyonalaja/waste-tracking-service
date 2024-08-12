@@ -10,7 +10,7 @@ Then(/^I should UKWM single journey waste movement page is correctly displayed$/
 end
 
 And(/^the UKWM task "([^"]*)" should be "([^"]*)"$/) do |task_name, task_status|
-  expect(TaskListPage.new).to have_completed_badge_for_task task_name, task_status
+  expect(UkwmTaskListPage.new).to have_completed_badge_for_task task_name, task_status
 end
 
 Then(/^I should see waste producer and waste collection status should be "([^"]*)"$/) do |status|

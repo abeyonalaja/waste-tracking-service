@@ -19,7 +19,7 @@ And(/^I click "([^"]*)" link should display "([^"]*)" page$/) do |link, page_nam
 end
 
 And(/^I click the button Save and continue$/) do
-  click_button Translations.value 'saveButton'
+  click_button Translations.value 'single.postcode.buttonSave'
 end
 
 When(/^I click the Save and return to draft$/) do
@@ -100,4 +100,10 @@ And(/^I switch to new tab$/) do
   switch_to_window(windows.last)
 end
 
+Then(/^I click save and return button$/) do
+  click_on Translations.value 'single.postcode.buttonSecondary'
+end
 
+When(/^I click the button Use this address and Continue$/) do
+  click_on Translations.value 'single.postcode.useAddress'
+end

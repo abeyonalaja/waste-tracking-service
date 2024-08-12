@@ -1,4 +1,4 @@
-@UKMV @ignore
+@UKMV
 Feature: AS A waste controller
   I NEED to be able to add my unique reference ID to a waste record
   SO THAT I can easily retrieve the waste record
@@ -18,7 +18,7 @@ Feature: AS A waste controller
     Then the "Ukwm Add Reference" page is displayed
     And I enter valid ukw reference
     And I click the button Save and continue
-    # Then the "Ukwm Task List" page is displayed
+    Then the "Ukwm Task List" page is displayed
 
   Scenario: User navigates to UKM add reference page and not enter reference
     Given I login into UKWM app

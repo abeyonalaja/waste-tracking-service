@@ -2,6 +2,12 @@
 
 # common components across the submit export
 module CommonComponents
+  BUILDING_NAME_OR_NUMBER = 'buildingNameOrNumber'
+  ADDRESS_LINE_1 = 'addressLine1'
+  ADDRESS_LINE_2 = 'addressLine2'
+  ADDRESS_LINE_TOWN_CITY = 'townCity'
+  ADDRESS_LINE_POSTCODE = 'postcode'
+
   ADDRESS_FIELD_ID = 'address'
   COUNTRY_FIELD_ID = 'country'
   NAME_FIELD_ID = 'name'
@@ -21,6 +27,36 @@ module CommonComponents
   COUNTRY = 'ENGLAND'
   NEW_COUNTRY = 'WALES'
   ADDRESS = '123abc, some street,town,city,United Kingdom, AB1 2CD'
+  BUILDING_NAME_NUMBER = Faker::Address.street_address
+  ADDRESS_1 = Faker::Address.street_name
+  ADDRESS_2 = Faker::Address.secondary_address
+  TOWN_CITY = Faker::Address.city
+  UK_POSTCODE = 'SW1P 4DF'
+
+  def enter_building_name_number(page)
+    fill_in BUILDING_NAME_OR_NUMBER, with: BUILDING_NAME_NUMBER, visible: false
+    TestStatus.set_test_status("#{page}_building_name_number".to_sym, BUILDING_NAME_NUMBER)
+  end
+
+  def enter_address_1(page)
+    fill_in ADDRESS_LINE_1, with: ADDRESS_1, visible: false
+    TestStatus.set_test_status("#{page}_address_line_1".to_sym, ADDRESS_1)
+  end
+
+  def enter_address_2(page)
+    fill_in ADDRESS_LINE_2, with: ADDRESS_2, visible: false
+    TestStatus.set_test_status("#{page}_address_line_2".to_sym, ADDRESS_2)
+  end
+
+  def enter_town_and_city(page)
+    fill_in ADDRESS_LINE_TOWN_CITY, with: TOWN_CITY, visible: false
+    TestStatus.set_test_status("#{page}_town_and_city".to_sym, TOWN_CITY)
+  end
+
+  def enter_postcode(page)
+    fill_in ADDRESS_LINE_POSTCODE, with: UK_POSTCODE, visible: false
+    TestStatus.set_test_status("#{page}_postcode".to_sym, UK_POSTCODE)
+  end
 
   def enter_address(page)
     fill_in ADDRESS_FIELD_ID, with: ADDRESS, visible: false
@@ -152,6 +188,87 @@ module CommonComponents
   def select_first_country
     first('country', minimum: 1).click
     find('country__option--0').click
+  end
+
+  def address_line_building_name
+    find('address-buildingNameOrNumber').text
+  end
+
+  def address_line_one
+    find('address-addressLine1').text
+  end
+
+  def address_line_two
+    find('address-addressLine2').text
+  end
+
+  def address_line_three
+    find('address-townCity').text
+  end
+
+  def address_line_four
+    find('address-postcode').text
+  end
+
+  def address_line_five
+    find('address-country').text
+  end
+
+  def address_line_building
+    find('buildingNameOrNumber').value
+  end
+
+  def address_line_1
+    find('addressLine1').value
+  end
+
+  def address_line_2
+    find('addressLine2').value
+  end
+
+  def address_town_city
+    find('townCity').value
+  end
+
+  def address_postcode
+    find('postcode').value
+  end
+
+  def address_country
+    find('country').value
+  end
+
+  def fill_organisation_name(name)
+    fill_in 'organisation-name', with: name
+  end
+
+  def fill_organisation_contact_person(contact_person)
+    fill_in 'organisation-contact-person', with: contact_person
+  end
+
+  def fill_email_address(email)
+    fill_in 'email-address', with: email
+  end
+
+  def fill_phone_number(phone_number)
+    fill_in 'phone-number', with: phone_number
+  end
+
+  def fill_fax_number(fax_number)
+    fill_in 'fax-number', with: fax_number
+  end
+
+  def option_checked?(selected_country)
+    find(countries.fetch(selected_country), visible: false).checked?
+  end
+
+  def countries
+    {
+      'England' => 'country-radio-1',
+      'Scotland' => 'country-radio-2',
+      'Wales' => 'country-radio-3',
+      'Northern Ireland' => 'country-radio-4'
+    }
   end
 
 end

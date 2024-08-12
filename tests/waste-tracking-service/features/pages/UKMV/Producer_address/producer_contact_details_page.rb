@@ -3,7 +3,7 @@
 # this page is for Producer Contact Details page
 class ProducerContactDetailsPage < GenericPage
 
-  TITLE = Translations.ukmv_value ''
+  TITLE = Translations.ukmv_value 'producer.contactDetails.heading'
   ORG_NAME_FIELD_ID = ''
   FULL_NAME_FIELD_ID = ''
   EMAIL_FIELD_ID = ''

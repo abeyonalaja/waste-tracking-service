@@ -1,13 +1,12 @@
-@UKMV @ignore
+@UKMV @enter_producer_address
 Feature: AS A Waste controller
   I NEED to be able to add a waste producer organisation address detail
   SO THAT I have the address where the waste is coming from captured on the system
 
-
   @translation
   Scenario: User navigates to Whats producer address page, verify its correctly translated and enters valid postcode
-    Given I login into UKWM app
-    When I navigate to the UKWM task list page with reference
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
     And I click the "Producer organisation address" link
     Then the "Whats producer address" page is displayed
     And I verify whats producer address page is correctly translated
@@ -18,8 +17,8 @@ Feature: AS A Waste controller
 
   @translation
   Scenario: User navigates to Whats producer address page and enters postcode which does not return any address
-    Given I login into UKWM app
-    When I navigate to the UKWM task list page with reference
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
     And I click the "Producer organisation address" link
     Then the "Whats producer address" page is displayed
     And I verify whats producer address page is correctly translated
@@ -29,12 +28,12 @@ Feature: AS A Waste controller
     And I verify no address found page is correctly translated
 
   Scenario: User navigates to Whats producer address page and not entering postcode before clicking search button
-    Given I login into UKWM app
-    When I navigate to the UKWM task list page with reference
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
     And I click the "Producer organisation address" link
     Then the "Whats producer address" page is displayed
     And I click search postcode button
-    Then I remain on the Whats producer address page with an "<string>" error message displayed
+    Then I remain on the Whats producer address page with an "Enter a postcode" error message displayed
 
 
 

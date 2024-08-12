@@ -522,6 +522,116 @@
         "inputLabel": "Enter a reference",
         "buttonLabel": "Save and continue"
       }
+    },
+    "taskList": {
+      "tags": {
+        "completed": "Completed",
+        "incomplete": "Incomplete",
+        "inProgress": "In progress",
+        "notStarted": "Not started yet",
+        "cannotStart": "Cannot start yet"
+      },
+      "breadCrumbs": {
+        "one": "Home",
+        "two": "Move and track waste in the UK",
+        "three": "Create a new waste movement"
+      },
+      "caption": "Unique reference",
+      "title": "Create a single waste movement",
+      "producerAndCollection": {
+        "heading": "Waste producer and collection details",
+        "description": "Details of the waste producer and waste collection",
+        "taskOne": "Producer organisation address",
+        "taskTwo": "Producer organisation contact details",
+        "taskThree": "Waste collection details"
+      }
+    },
+    "postcode": {
+      "input": {
+        "label": "Search by postcode",
+        "hint": "For example, AA31AB or M2 6LW"
+      },
+      "buildingName": {
+        "label": "Building name or number (optional)",
+        "hint": "For example, 15 or Technology House"
+      },
+      "addressLine1": {
+        "label": "Address line 1",
+        "hint": "Use a comma to separate multiple lines"
+      },
+      "addressLine2": {
+        "label": "Address line 2 (optional)",
+        "hint": "Use a comma to separate multiple lines"
+      },
+      "townCity": {
+        "label": "Town or city"
+      },
+      "country": {
+        "label": "Country"
+      },
+      "postcodeManual": {
+        "label": "Postcode (optional)"
+      },
+      "button": "Search postcode",
+      "manualLink": "Or enter the address manually",
+      "manualLinkShort": "Enter the address manually",
+      "searchAgain": "Search again",
+      "legend": "Select an address",
+      "buttonSave": "Save and continue",
+      "buttonSecondary": "Save and return",
+      "notFound": "We could not find an address that matches",
+      "notFoundPrompt": "You can search again or enter the address manually.",
+      "addressFound": "address was found for",
+      "addressesFound": "addresses were found for",
+      "useAddress": "Use this address and continue",
+      "useDifferentAddress": "Use a different address"
+    },
+    "producer": {
+      "caption": "Producer and waste collection details",
+      "postcode": {
+        "search": {
+          "heading": "What is the producer’s address?",
+          "intro": "The producer is the business or organisation that created the waste."
+        },
+        "results": {
+          "heading": "Select the producer’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found"
+        },
+        "confirmation": {
+          "heading": "Confirm the producer’s address"
+        },
+        "manual": {
+          "heading": "What is the producer’s address?"
+        },
+        "edit": {
+          "heading": "Edit the producer’s address"
+        }
+      },
+      "contactDetails": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What are the producer’s contact details?",
+        "form": {
+          "errorSummaryHeading": "There is a problem",
+          "labelOne": "Full name of organisation",
+          "labelTwo": "Organisation contact person",
+          "hintOne": "Full name",
+          "labelThree": "Email address",
+          "labelFour": "Phone number",
+          "hintTwo": "Include the area or country code",
+          "labelFive": "Fax number (optional)",
+          "buttonOne": "Save and continue",
+          "buttonTwo": "Save and return"
+        }
+      },
+      "sicCodes": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What are the producer’s SIC (standard industry classification) codes?"
+      }
     }
   }
 }

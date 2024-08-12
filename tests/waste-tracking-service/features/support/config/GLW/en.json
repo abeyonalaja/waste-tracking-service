@@ -97,6 +97,8 @@
   "draftExports.breadcrumb": "Draft records",
   "draftExports.title": "Draft exports",
   "errorSummary.title": "There is a problem",
+  "single.postcode.buttonSecondary": "Save and return",
+  "single.postcode.buttonSave": "Save and continue",
   "exportJourney.exportHome.card.createRecord": "Create a new Annex VII record",
   "export.homepage.multiples.guidance.link": "How to create a multiple Annex VII record CSV template",
   "export.homepage.multiples.guidance.title": "Guidance",
